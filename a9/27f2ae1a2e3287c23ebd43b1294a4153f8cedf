@@ -1,0 +1,16 @@
+.harness/government/prime-flow.json
+  h_9e71e8b09f7cf2 59-70,81,95-100
+.harness/government/prime-flow.md
+  h_9e71e8b09f7cf2 4,10,22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "a927f2ae1a2e3287c23ebd43b1294a4153f8cedf",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

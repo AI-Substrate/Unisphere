@@ -1,0 +1,106 @@
+.harness/adopt.flow.json
+  h_9e71e8b09f7cf2 1-263
+.harness/adopt.flow.md
+  h_9e71e8b09f7cf2 1-46
+.harness/engineering-harness.md
+  h_9e71e8b09f7cf2 1-55
+.harness/extensions/boot/extension.test.mjs
+  h_9e71e8b09f7cf2 1-60
+.harness/extensions/boot/extension.ts
+  h_9e71e8b09f7cf2 1-35
+.harness/extensions/boot/instructions.md
+  h_9e71e8b09f7cf2 1-20
+.harness/extensions/checks/extension.ts
+  h_9e71e8b09f7cf2 1-16
+.harness/extensions/checks/instructions.md
+  h_9e71e8b09f7cf2 1-15
+.harness/records/harness-change/2026-09-07/001-initial-adoption.md
+  h_9e71e8b09f7cf2 1-33
+.harness/records/harness-change/2026-09-07/initial-adoption-evidence.json
+  h_9e71e8b09f7cf2 1-249
+.harness/records/retro/2026-09-07/001-harness-onboarding.md
+  h_9e71e8b09f7cf2 1-104
+.harness/records/retro/2026-09-07/002-scratch-protection.md
+  h_9e71e8b09f7cf2 1-36
+.harness/reports/harnessability/001-unisphere-pre-product/evidence.jsonl
+  h_9e71e8b09f7cf2 1-11
+.harness/reports/harnessability/001-unisphere-pre-product/report.json
+  h_9e71e8b09f7cf2 1-1043
+.harness/reports/harnessability/001-unisphere-pre-product/report.md
+  h_9e71e8b09f7cf2 1-346
+.harness/reports/harnessability/001-unisphere-pre-product/summary.md
+  h_9e71e8b09f7cf2 1-30
+.harness/reports/harnessability/latest.json
+  h_9e71e8b09f7cf2 1-1043
+.harness/reports/harnessability/latest.md
+  h_9e71e8b09f7cf2 1-346
+.harness/reports/harnessability/schema.json
+  h_9e71e8b09f7cf2 1-679
+.harness/skills.lock.json
+  h_9e71e8b09f7cf2 1-12
+.harness/temp/.gitignore
+  h_9e71e8b09f7cf2 1-3
+.pi/skills/eng-harness-0-harnessability-assessment/AUTHORING.md
+  h_9e71e8b09f7cf2 1-106
+.pi/skills/eng-harness-0-harnessability-assessment/README.md
+  h_9e71e8b09f7cf2 1-63
+.pi/skills/eng-harness-0-harnessability-assessment/SKILL.md
+  h_9e71e8b09f7cf2 1-1102
+.pi/skills/eng-harness-0-harnessability-assessment/templates/assessment-latest.json
+  h_9e71e8b09f7cf2 1-239
+.pi/skills/eng-harness-0-harnessability-assessment/templates/assessment-latest.md
+  h_9e71e8b09f7cf2 1-244
+.pi/skills/eng-harness-0-harnessability-assessment/templates/assessment-report.md
+  h_9e71e8b09f7cf2 1-185
+.pi/skills/eng-harness-0-harnessability-assessment/templates/assessment-report.schema.json
+  h_9e71e8b09f7cf2 1-679
+.pi/skills/eng-harness-0-harnessability-assessment/templates/canonical-boundary.txt
+  h_9e71e8b09f7cf2 1-2
+.pi/skills/eng-harness-0-harnessability-assessment/templates/codebase-affordance-record.json
+  h_9e71e8b09f7cf2 1-21
+.pi/skills/eng-harness-0-harnessability-assessment/templates/evidence-log.jsonl
+  h_9e71e8b09f7cf2 1-2
+.pi/skills/eng-harness-0-harnessability-assessment/templates/summary.md
+  h_9e71e8b09f7cf2 1-27
+.pi/skills/eng-harness-flow/SKILL.md
+  h_9e71e8b09f7cf2 1-161
+.pi/skills/eng-harness-flow/references/00-routing.md
+  h_9e71e8b09f7cf2 1-422
+.pi/skills/eng-harness-flow/references/coach.md
+  h_9e71e8b09f7cf2 1-136
+.pi/skills/eng-harness-flow/references/flight-plan-ops.md
+  h_9e71e8b09f7cf2 1-205
+.pi/skills/eng-harness-flow/references/getting-started.md
+  h_9e71e8b09f7cf2 1-307
+.pi/skills/eng-harness-flow/references/governance-doc.md
+  h_9e71e8b09f7cf2 1-71
+.pi/skills/eng-harness-flow/references/maturity-assessment.md
+  h_9e71e8b09f7cf2 1-44
+.pi/skills/eng-harness-flow/references/retro.schema.json
+  h_9e71e8b09f7cf2 1-141
+.pi/skills/eng-harness-flow/references/stages/add-extension.md
+  h_9e71e8b09f7cf2 1-95
+.pi/skills/eng-harness-flow/references/stages/adopt.md
+  h_9e71e8b09f7cf2 1-268
+.pi/skills/eng-harness-flow/references/stages/backpressure.md
+  h_9e71e8b09f7cf2 1-273
+.pi/skills/eng-harness-flow/references/stages/boot.md
+  h_9e71e8b09f7cf2 1-169
+.pi/skills/eng-harness-flow/references/stages/retro.md
+  h_9e71e8b09f7cf2 1-543
+AGENTS.md
+  h_9e71e8b09f7cf2 1-46
+skills-lock.json
+  h_9e71e8b09f7cf2 1-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "aca4631ea3c2448027ca3fabc5762c702dca401f",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

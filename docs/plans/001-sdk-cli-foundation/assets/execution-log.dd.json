@@ -76,6 +76,15 @@
             "execution-log.dd.json#entries/lg-0005",
             "backpressure.dd.json#rows/bp-0007"
           ]
+        },
+        {
+          "id": "lg-0007",
+          "at": "2026-09-07T05:54:51.925845+00:00",
+          "text": "Allthree ready calls succeeded after the real18-file v6 seal, but allthree native clone dispatches refused E473 because dispatch-service.ts requires PM HEAD equal sealed source while ready permits later receipt commits. Exact evidence assets/dispatch-native-refusal.json. Harness prime pij-varied-alpaca source-verified the supported0.14.0 ordering: fresh baseline-v7 pointer committed first, focused r6 receipt on disk uncommitted, seal on disk uncommitted, allthree dispatches at unchanged PM HEAD, then evidence commit. No reset, source relabelling, global change or fabricated receipt. Guide v7 SHA256 9a2977c85b3c025eafb434ef1306fc71bf3c35fcaa3bc39fd7784a97a868899d changes only receipt identity/version/timestamp; all18 source digests recomputed equal the real v6 seal6502b02b1060653436bed536fc229d796fa8e80ac4064a4fb464d2c015b1d242. lg-0006 actual3+10 proof remains valid for unchanged source; this entry supplies current guide applicability. dw4/tk1 are unchecked pending actual v7 seal; no new run or dispatch success claimed.",
+          "links": [
+            "execution-log.dd.json#entries/lg-0006",
+            "backpressure.dd.json#rows/bp-0007"
+          ]
         }
       ]
     }

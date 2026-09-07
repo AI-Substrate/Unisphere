@@ -229,6 +229,18 @@
         "from": "known",
         "to": "in_progress"
       }
+    },
+    {
+      "id": "UPD-008",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-07T05:17:32.264Z",
+      "details": {
+        "node": "phase-1",
+        "fields": [
+          "comments"
+        ]
+      }
     }
   ],
   "nodes": [
@@ -344,9 +356,15 @@
           "text": "Jordan answered 'yep' to Plan001 implementation scope, relayed by pij-female-varl. PM pij-right-kotallo authorized tasks/flow, real shared baseline, three gated full-clone Astra/high lanes, composition/proof and independent Opus/high reviews; local commits/evidence and dogfood reporting. No push/PR/main merge/destructive cleanup/global changes/private telemetry. Full scope: assets/implementation-authorization.json.",
           "source": "user",
           "kind": "decision"
+        },
+        {
+          "at": "2026-09-07T05:17:32.264Z",
+          "text": "Baseline R1 approved label was refused E475 due to two open medium findings; report preserved. Corrected baseline/guide v4 committed 633b9bf3c533188bde44e49a9d88f56a9b572bfd; guide hash 370eaee98d6122eb2581b158ca606236b3318db66d7b694ac16273746c4a3d9e. 13 scoped tests, clippy incl tests and fmt pass in assets/baseline-r2-final-checks.json. Independent focused r2 pending; no seal/dispatch release.",
+          "source": "agent",
+          "kind": "validation"
         }
       ],
-      "modified_at": "2026-09-07T04:56:57.659Z"
+      "modified_at": "2026-09-07T05:17:32.264Z"
     },
     {
       "id": "review-1",

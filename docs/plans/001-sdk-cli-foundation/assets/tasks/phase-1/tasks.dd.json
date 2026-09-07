@@ -124,7 +124,7 @@
             "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0006",
             "note": "Required instrument: guide vd-0001. Not executed at task authoring.",
-            "proven_by": "../../execution-log.dd.json#entries/lg-0001"
+            "proven_by": "../../execution-log.dd.json#entries/lg-0002"
           },
           {
             "id": "dw-0002",
@@ -132,7 +132,7 @@
             "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0007",
             "note": "Required instrument: guide vd-0001. Not executed at task authoring.",
-            "proven_by": "../../execution-log.dd.json#entries/lg-0001"
+            "proven_by": "../../execution-log.dd.json#entries/lg-0002"
           },
           {
             "id": "dw-0003",
@@ -140,7 +140,7 @@
             "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0008",
             "note": "Required instrument: guide vd-0001. Not executed at task authoring.",
-            "proven_by": "../../execution-log.dd.json#entries/lg-0001"
+            "proven_by": "../../execution-log.dd.json#entries/lg-0002"
           },
           {
             "id": "dw-0004",

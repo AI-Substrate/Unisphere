@@ -1,0 +1,40 @@
+{
+  "finding": "F-0007",
+  "source_sha": "633b9bf3c533188bde44e49a9d88f56a9b572bfd",
+  "entry": "lg-0002",
+  "repointed_assertions": [
+    "dw-0001",
+    "dw-0002",
+    "dw-0003"
+  ],
+  "evidence": "baseline-r2-final-checks.json",
+  "validation": {
+    "argv": [
+      "node_modules/.bin/ddocs",
+      "validate",
+      "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json"
+    ],
+    "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+    "exit_code": 0,
+    "stdout": "{\"command\":\"ddocs validate\",\"status\":\"ok\",\"timestamp\":\"2026-09-07T05:26:44.935Z\",\"data\":{\"path\":\"/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json\",\"schema\":\"builder/plan\",\"depth\":3,\"counts\":{\"error\":0,\"warn\":0},\"issues\":[]},\"next_action\":\"Run `ddocs build <path>` to regenerate the sibling markdown.\"}\n",
+    "stderr": "",
+    "data": {
+      "command": "ddocs validate",
+      "status": "ok",
+      "timestamp": "2026-09-07T05:26:44.935Z",
+      "data": {
+        "path": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json",
+        "schema": "builder/plan",
+        "depth": 3,
+        "counts": {
+          "error": 0,
+          "warn": 0
+        },
+        "issues": []
+      },
+      "next_action": "Run `ddocs build <path>` to regenerate the sibling markdown."
+    }
+  },
+  "code_changed": false,
+  "tests_rerun": false
+}

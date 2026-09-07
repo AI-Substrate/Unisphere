@@ -49,9 +49,9 @@ Current guide owns all interfaces/fences/check argv; latest independent approval
 
 | id | assertion | state | pressure | note | proven_by |
 | --- | --- | --- | --- | --- | --- |
-| dw-0001 | Core DTOs/ports and fixed-copy Failure constructors expose the approved typed contract; actual core/testkit library tests pass without SDK/CLI/app. | [x] checked | [bp-0006](../../backpressure.dd.md#rows) | Required instrument: guide vd-0001. Not executed at task authoring. | [lg-0001](../../execution-log.dd.md#entries) |
-| dw-0002 | FakeReader/FakeInspector record explicit inputs without ambient access; bounded fake reads and all shared config fixtures are usable independently. | [x] checked | [bp-0007](../../backpressure.dd.md#rows) | Required instrument: guide vd-0001. Not executed at task authoring. | [lg-0001](../../execution-log.dd.md#entries) |
-| dw-0003 | sealed_command constructs a child using only caller-authorized temporary paths, cleared environment and empty PATH; native launch requires an absolute executable. | [x] checked | [bp-0008](../../backpressure.dd.md#rows) | Required instrument: guide vd-0001. Not executed at task authoring. | [lg-0001](../../execution-log.dd.md#entries) |
+| dw-0001 | Core DTOs/ports and fixed-copy Failure constructors expose the approved typed contract; actual core/testkit library tests pass without SDK/CLI/app. | [x] checked | [bp-0006](../../backpressure.dd.md#rows) | Required instrument: guide vd-0001. Not executed at task authoring. | [lg-0002](../../execution-log.dd.md#entries) |
+| dw-0002 | FakeReader/FakeInspector record explicit inputs without ambient access; bounded fake reads and all shared config fixtures are usable independently. | [x] checked | [bp-0007](../../backpressure.dd.md#rows) | Required instrument: guide vd-0001. Not executed at task authoring. | [lg-0002](../../execution-log.dd.md#entries) |
+| dw-0003 | sealed_command constructs a child using only caller-authorized temporary paths, cleared environment and empty PATH; native launch requires an absolute executable. | [x] checked | [bp-0008](../../backpressure.dd.md#rows) | Required instrument: guide vd-0001. Not executed at task authoring. | [lg-0002](../../execution-log.dd.md#entries) |
 | dw-0004 | Independent source-bound baseline review is approved and Builder seals the committed contract files; composition-owned Cargo.lock exception is probed and any disagreement resolved. | [ ] unchecked | [bp-0007](../../backpressure.dd.md#rows) | Required instrument: guide review/seal. Not executed at task authoring. | — |
 
 ### tk-0002

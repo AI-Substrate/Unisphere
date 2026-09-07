@@ -241,6 +241,18 @@
           "comments"
         ]
       }
+    },
+    {
+      "id": "UPD-009",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-07T05:32:58.748Z",
+      "details": {
+        "node": "phase-1",
+        "fields": [
+          "comments"
+        ]
+      }
     }
   ],
   "nodes": [
@@ -362,9 +374,15 @@
           "text": "Baseline R1 approved label was refused E475 due to two open medium findings; report preserved. Corrected baseline/guide v4 committed 633b9bf3c533188bde44e49a9d88f56a9b572bfd; guide hash 370eaee98d6122eb2581b158ca606236b3318db66d7b694ac16273746c4a3d9e. 13 scoped tests, clippy incl tests and fmt pass in assets/baseline-r2-final-checks.json. Independent focused r2 pending; no seal/dispatch release.",
           "source": "agent",
           "kind": "validation"
+        },
+        {
+          "at": "2026-09-07T05:32:58.748Z",
+          "text": "Actual baseline seal succeeded: source8eafef5,17 frozen files,vd-0001 3+10 tests, independent approved r3. Evidence commit6c3d2920. All3 baseline-only units refused ready E471: Dependencies lack committed proof: tk-0001; next action asks composition receipt proof before lanes. Exact envelopes assets/baseline-ready-refusal.json. Escalated to pij-varied-alpaca; no fabricated composition, manual dispatch or global change.",
+          "source": "agent",
+          "kind": "warning"
         }
       ],
-      "modified_at": "2026-09-07T05:17:32.264Z"
+      "modified_at": "2026-09-07T05:32:58.748Z"
     },
     {
       "id": "review-1",

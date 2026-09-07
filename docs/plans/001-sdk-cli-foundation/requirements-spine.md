@@ -31,8 +31,12 @@ The first-class `harness builder new` command generated plan/guide/task/flow sca
 | RQ-016 | Primes author the initial product plan; PMs subsequently orchestrate implementation with their peers. | Explicit operator ownership instruction. |
 | RQ-017 | Services and other independent components can be built by separate agents against agreed contracts and composed later; a finished CLI must not be a prerequisite for service development. | Explicit operator fan-out instruction during planning. |
 | RQ-018 | Native-session reader experiments may proceed independently as Rust services/adapters under gitignored `scratch/`, for later integration when ready; they do not expand Plan001 shipping scope. | Explicit operator experiment authorization. |
-| RQ-019 | Run a Builder workshop on common output format and standard fields; no format has yet been selected. | Explicit output-format workshop request. |
+| RQ-019 | Run a Builder workshop on common output format and standard fields; the later standard-first decision is recorded separately in RQ-021. | Explicit output-format workshop request. |
 | RQ-020 | The common output must carry available pij peer names/identifiers, roles and related lineage/context, with honest provenance and unknowns rather than conflating them with model/provider identity. | "need pij names and roles etc in there too." |
+| RQ-021 | Give standard OTLP JSONL/GenAI fields the first chance; add inexpensive features/extensions only as concrete telemetry exposes needs, not big design up front. | Explicit operator format-direction decision. |
+| RQ-022 | Watch for lost or diluted native meaning and record actual examples before proposing the smallest fix; do not silently water data down to fit the common model. | Explicit operator fidelity instruction. |
+| RQ-023 | Each harness/storage-dialect adapter has one responsibility, returns the shared common semantic model and is covered by shared conformance plus harness-specific fixture/boundary tests. | Operator's adapter-contract check. |
+| RQ-024 | Adding an ordinary adapter should require only its implementation, registration metadata and fixtures, not changes across core or existing adapters; surface genuinely new semantics explicitly. | "Adding a new adapter should be trivial"; do not hide format complexity through data loss. |
 
 ## Working architectural direction — not a frozen design
 
@@ -63,7 +67,7 @@ These are findings and design pressures, not silently adopted requirements:
 | ID | Question | Status |
 |---|---|---|
 | Q-001 | Is there a standard OpenTelemetry on-disk file format for complete agent telemetry/session history, as opposed to a wire encoding or exporter convention? | Research found an official Development-stage OTLP JSONL file spec, but no complete native-session replay contract in the reviewed specs; see OF-001–008 in the research report. |
-| Q-002 | Should the canonical persisted representation be OTLP JSON/JSONL, a purpose-built session/event model with an OTLP mapping, or another established representation? | Open; compare semantics, stability, replay and consumer ergonomics. |
+| Q-002 | Should the canonical persisted representation be OTLP JSON/JSONL, a purpose-built session/event model with an OTLP mapping, or another established representation? | Direction resolved: standard-first OTLP JSONL/GenAI fields; alternate encoding only if observed limitations justify it. Detailed profile and conformance remain open. |
 | Q-003 | What must the initial SDK/CLI foundation actually do end to end, and which first adapter/fixture proves it without attempting the whole survey's ecosystem? | Resolved for Plan001: foundation only, with shared explicit configuration/diagnostics through SDK and CLI; native readers are separate scratch experiments, not required shipping behavior. |
 | Q-004 | What content, metadata, usage, lineage, lifecycle, update and rewind semantics must the common model preserve? | Open. |
 | Q-005 | What privacy modes and consent boundaries are required, including content export versus content entering the process? | Open. |
@@ -82,7 +86,7 @@ These are findings and design pressures, not silently adopted requirements:
 - OpenTelemetry file-format research: [assets/research/otel-common-format.md](assets/research/otel-common-format.md); findings/candidates only, no format choice.
 - First-consumer interview: [assets/requirements/flowspace3-interview.md](assets/requirements/flowspace3-interview.md); Flowspace3 needs must be separated from consumer-local policy.
 - Prime-authored foundation product plan: [plan.dd.json](plan.dd.json), generated [plan.dd.md](plan.dd.md), and [product-plan validation](assets/reviews/product-plan-validation.md); product intent is ready, implementation is not released.
-- Output-format workshop: [assets/workshops/001-output-format.md](assets/workshops/001-output-format.md); standard-field-first with proposed pij metadata, Status Review, no canonical format selected.
+- Output-format workshop: [assets/workshops/001-output-format.md](assets/workshops/001-output-format.md); operator-selected standard-first direction, proposed pij metadata and evidence-driven extensions; detailed profile remains Review.
 
 ## Dogfood log
 

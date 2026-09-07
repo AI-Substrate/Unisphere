@@ -4,7 +4,7 @@
 **Plan**: 001-sdk-cli-foundation
 **Spec / intent source**: [Requirements spine](../../requirements-spine.md), especially RQ-002–003, RQ-013–017 and Q-002, Q-004–006
 **Created**: 2026-09-07
-**Status**: Review
+**Status**: Review — operator selected a standard-first direction; detailed profile remains open
 **Target Proof Level**: Preferred Direction
 **Current Proof Level**: Preferred Direction
 
@@ -23,13 +23,13 @@
 
 Clarify what should be canonical, what should be a projection, and what evidence an eventual format choice requires. A fresh reader should be able to compare the three candidates, distinguish official facts from this recommendation, and identify the operator decisions still needed.
 
-**No output format has been settled.** This is a recommendation for review, not an approved decision, implementation-ready design, Rust API, JSON Schema or authorization to ship readers.
+**Direction selected: give standard OTLP JSONL and GenAI fields the first chance.** This is not a validated export, a frozen extension schema or permission to ship readers; add features when concrete telemetry demonstrates the need rather than designing them all upfront.
 
 ## Recommendation versus scope and decision
 
-**Provisionally recommend option B: a standard-aligned, typed, versioned session/event model with a documented OTLP JSONL projection. Start with existing OTLP and GenAI fields, not a bespoke message schema.** Represent those semantics ergonomically in Rust; add an explicit Unisphere profile only for demonstrated native-reader gaps. “Typed” describes the SDK API, not a reason to invent different field names or choose a separate on-disk encoding.
+**Operator decision, 2026-09-07: start with option A, OTLP LogsData JSONL and existing GenAI fields.** Keep the Rust API typed and ergonomic without inventing a separate persisted encoding. Add the smallest documented extension only when a real source field or required behavior is not represented adequately; preserve the already-requested pij metadata boundary.
 
-The rationale is separation of native identity/replay semantics, SDK ergonomics and telemetry encoding while reusing standard content semantics. A Rust API and a persistence format are separate decisions: all three candidates can expose the same typed, standard-aligned API. B would incur extra mapping/versioning work only where its canonical representation differs from OTLP; that cost must be justified against A. There is no demonstrated fidelity or ergonomics advantage yet. This recommendation does not settle an independently invented schema, canonical byte encoding or field extensions.
+This supersedes the earlier provisional recommendation for B. B remains a fallback only if concrete fidelity, compatibility or consumer evidence justifies its additional model/mapping cost; C waits for an actual multi-signal requirement. No speculative extension framework or alternate encoder is required before useful work starts.
 
 | Boundary | Meaning here | Not implied |
 |---|---|---|
@@ -40,7 +40,7 @@ The rationale is separation of native identity/replay semantics, SDK ergonomics 
 | OTLP projection | A documented mapping to a standard telemetry encoding | Native-store reconstruction or lossless export by default |
 | Flowspace3 projection | First-consumer indexing and presentation | Universal truncation, model dropping, thinking/tool-content dropping, PostgreSQL storage or turn-partition semantics |
 
-Main owns asking the operator and recording any decision. Neither this workshop nor the scratch experiments select a format or change the canonical plan/guide/requirements.
+The operator selected the standard-first direction; Main records subsequent decisions. Scratch observations and source-driven gaps inform profile refinements but do not silently change the canonical contract or expand Plan001 scope.
 
 ## Key questions
 
@@ -56,9 +56,9 @@ Main owns asking the operator and recording any decision. Neither this workshop 
 
 | Option | Shape | Strengths | Costs and unresolved risks | Position |
 |---|---|---|---|---|
-| **A — Canonical OTLP LogsData JSONL + semantic profile** | A log-signal journal using OTLP bodies/attributes and a documented Unisphere/GenAI profile for session facts | One canonical/export representation; standard file framing; existing telemetry tooling can parse the envelope; no separate wire projection for matching log events | Session identity, revisions, rewinds and retention still need custom semantics; generic tooling understands the envelope, not necessarily that profile; batching and ignored unknown fields complicate naive replay assumptions | **OPEN, viable alternative.** Prefer if an explicit log profile proves the required fidelity and ergonomics without undue semantic indirection |
-| **B — Standard-aligned typed session/event model + OTLP JSONL projection** | Start from standard GenAI fields/message parts; model native provenance and replay gaps explicitly; document any serialization-to-OTLP mapping | Domain-oriented SDK without semantic reinvention; explicit native evidence and replay semantics; encoding/convention changes can remain behind a versioned boundary | A distinct canonical encoding would create another representation to maintain and would not be directly consumable by generic OTel tooling; standard alignment alone does not prove mappings preserve every field | **PROVISIONALLY RECOMMENDED, not selected.** Retain only if comparisons justify divergence from A; no bespoke message schema is the default |
-| **C — Standard signal files + session manifest/index** | Separate OTLP logs, traces and metrics files; a separate manifest associates them with sessions and checkpoints | Natural multi-signal export; each signal remains independently consumable; useful if correlated traces/metrics are first-class deliverables | Cross-file consistency, publication/recovery, references and versioning need a contract; manifest is not standardized by the OTLP file spec; reconstruction is more involved than reading one journal | **OPEN, viable alternative.** Prefer if multi-signal delivery is an actual consumer requirement, not speculation |
+| **A — Canonical OTLP LogsData JSONL + semantic profile** | A log-signal journal using OTLP bodies/attributes and standard GenAI fields, with minimal documented extensions when needed | One canonical/export representation; standard file framing; existing telemetry tooling can parse the envelope | Native identity, updates, completeness and pij context still need evidence-backed mappings; generic tooling may not understand custom semantics | **SELECTED AS STARTING DIRECTION.** Prove against real telemetry and add only demonstrated gaps |
+| **B — Standard-aligned typed session/event model + OTLP JSONL projection** | A distinct canonical encoding plus an OTLP mapping, retaining standard GenAI meanings | Can isolate native reconstruction needs from transport if concrete evidence requires it | Another representation, mapping and compatibility surface to maintain | **NOT SELECTED.** Reconsider only when A demonstrably waters down required facts or behavior |
+| **C — Standard signal files + session manifest/index** | Separate OTLP logs/traces/metrics with cross-file session metadata | Useful for an actual multi-signal delivery requirement | Additional publication, recovery and association contracts | **DEFERRED BY NEED.** Do not build a bundle/manifest without a concrete requirement |
 
 B can later export a C-style bundle; that does not require making the bundle canonical now. A must keep traces/metrics out of its log-signal file. None of these options inherently defines message grouping, a turn, a cursor, exactly-once processing or native branch history.
 
@@ -217,9 +217,17 @@ Neither event illustration preserves native `messageId`, source offset, `vendorE
 
 Gitignored scratch is not a privacy control. Experiments use sanitized fixtures/source references, not real user session stores. Counts/cursor inspection must not print raw content. Preserving observations for an authorized experiment does not authorize their eventual retention or export by the product.
 
+### Incremental fidelity and adapter discipline
+
+- Start with standard fields. For each observed reduction, record the native fixture/field, what the current mapping loses or weakens, why a consumer needs it, and the smallest proposed mapping/extension; keep this in the existing evidence ledger rather than inventing a second schema programme.
+- Watch for erased tool linkage, merged message identities, lost unknown fields, zero substituted for unknown usage, invented timing precision and current pij roles stamped onto historical events. Unsupported meaning must be visible, not silently watered down.
+- The shipping contract is one single-responsibility adapter per harness/storage dialect, returning the same common semantic types. Shared framing/cursor helpers, serialization/export and optional registry enrichment stay outside harness-specific implementations.
+- New ordinary adapters should need only their isolated implementation, registration metadata and fixtures, with no changes to core or existing adapters. A genuinely new semantic requirement may need an explicit, reviewed profile change; easy registration is not a promise that every vendor format is simple.
+- Every adapter must pass a shared common-output conformance suite plus its own real-fixture/boundary tests. The current scratch readers are raw-observation experiments, not proof that this final normalization contract is implemented.
+
 ## Future comparison tests — proposals, not executed evidence
 
-Use the **same sanitized native fixtures and semantic expectations** for A, B and C. Record results per candidate, not only whether serialization parses. Freeze expected facts before implementation; the fixture matrix informs the fidelity decision rather than deciding it silently.
+Exercise A first with sanitized native fixtures and explicit expected facts. Use the scenarios below as relevant inputs expose risks, not an upfront implementation checklist. Build or compare B/C only if an observed limitation justifies them, using the same fixtures so a format change cannot hide lost meaning.
 
 | Scenario | Concrete exercise | Evidence that changes the choice |
 |---|---|---|
@@ -240,7 +248,7 @@ No tests, validation commands, Collector runs or reader runs were performed for 
 
 | ID | Decision / question | Status and owner |
 |---|---|---|
-| WF-001 | Choose A, B, C, or request comparison evidence. Is B's standard-aligned typed model/projection direction useful, or can the same typed API over canonical OTLP meet the need without another encoding? | **OPEN — operator choice; Main asks and records; no bespoke message schema selected** |
+| WF-001 | Select the starting format direction | **RESOLVED — operator chose standard-first A; try OTLP JSONL/GenAI fields and add small features as real telemetry demonstrates need, not BDUF** |
 | WF-002 | Define fidelity per ingestion/canonical/persistence/export boundary, including raw-byte vs parsed-JSON preservation, revisions, branches, rewinds, attachments and incomplete source data | **OPEN — operator intent needed; fixture comparison informs the contract** |
 | WF-003 | Define model/profile/native-adapter/spec versioning and unknown-field/unsupported-version behavior | **OPEN — no version or migration policy selected** |
 | WF-004 | Define consent, content-ingestion, raw retention, export/redaction and metadata-only boundaries | **OPEN — no privacy profile selected** |
@@ -248,6 +256,6 @@ No tests, validation commands, Collector runs or reader runs were performed for 
 | WF-006 | Determine whether first-class traces/metrics require a multi-file bundle or remain later derived projections | **OPEN — no manifest or storage layout selected** |
 | WF-007 | Define the pij profile: peer ID/name, orchestration role, parent/root lineage, namespace/lifetime, historical joins, per-fact provenance and validity time, unknown/conflict behavior and privacy | **OPEN — inclusion requested; extension names, values, representation and join guarantees are not finalized** |
 
-**Operator prompt for Main:** “The envelope and most GenAI fields are already standardized; we should start there, with an explicit profile for pij names/roles/lineage and native provenance/replay/completeness gaps. My provisional recommendation is a standard-aligned typed session/event model with a documented OTLP projection, not a bespoke message schema. Should canonical storage also be OTLP LogsData, should a distinct encoding first justify itself through comparisons, or is a multi-signal bundle required? A typed Rust API is compatible with any of these; historical attribution, fidelity, privacy, versioning and replay contracts remain open.”
+**Operator decision:** “yeah give standerd the first chance then as long as its cheap to add features then we can add htem as we need them rather than bduf. keep an eye out as we work aroudn what watering down we might see and want to include as we see output from various telemetry.”
 
-Record the operator's actual answer separately from this recommendation. Until then, **Status remains Review and no format is settled**. Any later direction choice alone is not proof of implementation readiness or lossless export.
+The direction is recorded; detailed profile semantics remain Review/Preferred Direction until exercised. Later requests also require single-responsibility harness adapters, common output and low-friction adapter addition. No runtime fidelity, final schema or interoperability proof is implied by those requirements.

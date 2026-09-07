@@ -1,0 +1,13 @@
+{
+  "command": [
+    "target/debug/unisphere",
+    "config",
+    "check"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+  "pty": true,
+  "result": "command succeeded; terminal-default human output observed",
+  "observed_text": "Configuration valid.\nSource roots (0):\n",
+  "scope": "Actual terminal success mode only; not a claim about all TTY/error cases",
+  "app_source_sha256": "412c5c5c78031732da0090a54bb20bf3082a4fd9d199988e9c8fdb5a3c77dd4c"
+}

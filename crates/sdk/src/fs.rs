@@ -37,7 +37,8 @@ impl ConfigReader for StdConfigReader {
 
 fn read_bounded(input: impl Read, max_bytes: usize) -> Result<Vec<u8>, ReadFailure> {
     let mut bytes = Vec::new();
-    input.take((max_bytes as u64).saturating_add(1))
+    input
+        .take((max_bytes as u64).saturating_add(1))
         .read_to_end(&mut bytes)
         .map_err(read_failure)?;
     if bytes.len() > max_bytes {
@@ -72,7 +73,10 @@ mod tests {
     fn io_categories_are_preserved_without_carrying_os_messages() {
         for (kind, expected) in [
             (io::ErrorKind::NotFound, ReadFailure::NotFound),
-            (io::ErrorKind::PermissionDenied, ReadFailure::PermissionDenied),
+            (
+                io::ErrorKind::PermissionDenied,
+                ReadFailure::PermissionDenied,
+            ),
             (io::ErrorKind::InvalidData, ReadFailure::Other),
         ] {
             assert_eq!(

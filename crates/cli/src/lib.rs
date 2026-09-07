@@ -43,9 +43,7 @@ pub fn run(
     let mode = args::mode(&args, context.stdout_is_terminal);
     match args::parse(args) {
         Action::Help(text) => output::emit(Response::Help(&text), mode, stdout, stderr),
-        Action::Version => {
-            output::emit(Response::Version(&context.version), mode, stdout, stderr)
-        }
+        Action::Version => output::emit(Response::Version(&context.version), mode, stdout, stderr),
         Action::InvalidArguments => output::emit(
             Response::Failure(&Failure::invalid_arguments(None)),
             mode,
@@ -56,7 +54,9 @@ pub fn run(
             let source = match check.config {
                 None => ConfigSource::Defaults,
                 Some(path) if path.is_absolute() => ConfigSource::File(path),
-                Some(path) if context.cwd.is_absolute() => ConfigSource::File(context.cwd.join(path)),
+                Some(path) if context.cwd.is_absolute() => {
+                    ConfigSource::File(context.cwd.join(path))
+                }
                 Some(_) => {
                     return output::emit(
                         Response::Failure(&Failure::invalid_arguments(None)),

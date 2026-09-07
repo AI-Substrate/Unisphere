@@ -1,0 +1,15 @@
+[package]
+name = "unisphere-app"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "unisphere"
+path = "src/main.rs"
+
+[dependencies]
+unisphere-sdk.workspace = true
+unisphere-cli.workspace = true

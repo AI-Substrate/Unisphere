@@ -54,12 +54,16 @@ fn json(response: Response<'_>, writer: &mut dyn Write) -> io::Result<()> {
             writer.write_all(b"}}\n")
         }
         Response::Version(version) => {
-            writer.write_all(b"{\"ok\":true,\"command\":\"version\",\"v\":1,\"data\":{\"version\":")?;
+            writer.write_all(
+                b"{\"ok\":true,\"command\":\"version\",\"v\":1,\"data\":{\"version\":",
+            )?;
             serde_json::to_writer(&mut *writer, version)?;
             writer.write_all(b"}}\n")
         }
         Response::Failure(failure) => {
-            writer.write_all(b"{\"ok\":false,\"command\":\"config.check\",\"v\":1,\"error\":{\"kind\":")?;
+            writer.write_all(
+                b"{\"ok\":false,\"command\":\"config.check\",\"v\":1,\"error\":{\"kind\":",
+            )?;
             serde_json::to_writer(&mut *writer, &failure.kind())?;
             writer.write_all(b",\"code\":")?;
             serde_json::to_writer(&mut *writer, failure.code())?;
@@ -82,7 +86,11 @@ fn human(response: Response<'_>, writer: &mut dyn Write) -> io::Result<()> {
         Response::Version(version) => writeln!(writer, "unisphere {version}"),
         Response::Report(report) => {
             writeln!(writer, "Configuration valid.")?;
-            writeln!(writer, "Source roots ({}):", report.configuration.source_roots.len())?;
+            writeln!(
+                writer,
+                "Source roots ({}):",
+                report.configuration.source_roots.len()
+            )?;
             for root in &report.configuration.source_roots {
                 writer.write_all(b"  ")?;
                 // JSON string escaping preserves exact values while preventing

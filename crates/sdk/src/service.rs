@@ -50,9 +50,10 @@ impl<R: ConfigReader> InspectionApi for Inspector<R> {
                 if !path.is_absolute() {
                     return Err(Failure::invalid_configuration(Some(file_location(path))));
                 }
-                let bytes = self.reader.read(path, MAX_CONFIG_BYTES).map_err(|kind| {
-                    Failure::configuration_read(kind, Some(file_location(path)))
-                })?;
+                let bytes = self
+                    .reader
+                    .read(path, MAX_CONFIG_BYTES)
+                    .map_err(|kind| Failure::configuration_read(kind, Some(file_location(path))))?;
                 // Defend the service boundary even if an injected reader violates
                 // its limit. Do not parse or copy that oversized result.
                 if bytes.len() > MAX_CONFIG_BYTES {
@@ -106,7 +107,10 @@ fn file_location(path: &Path) -> Location {
 fn parse_document(bytes: &[u8], path: Option<&Path>) -> Result<Option<Vec<String>>, Failure> {
     let mut location = ParseField::Document;
     let mut parser = serde_json::Deserializer::from_slice(bytes);
-    let document = parser.deserialize_map(DocumentVisitor { location: &mut location })
+    let document = parser
+        .deserialize_map(DocumentVisitor {
+            location: &mut location,
+        })
         .and_then(|document| {
             parser.end()?;
             Ok(document)
@@ -160,7 +164,9 @@ impl<'de> Visitor<'de> for DocumentVisitor<'_> {
                 return Err(M::Error::custom("duplicate source_roots field"));
             }
             // Do not deserialize Option: present null is invalid, not omission.
-            roots = Some(map.next_value_seed(RootsVisitor { location: &mut *self.location })?);
+            roots = Some(map.next_value_seed(RootsVisitor {
+                location: &mut *self.location,
+            })?);
         }
     }
 }

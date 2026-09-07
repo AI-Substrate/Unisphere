@@ -1,6 +1,8 @@
 use std::{ffi::OsString, path::PathBuf};
 
-use clap::{Args, ColorChoice, CommandFactory, FromArgMatches, Parser, Subcommand, error::ErrorKind};
+use clap::{
+    Args, ColorChoice, CommandFactory, FromArgMatches, Parser, Subcommand, error::ErrorKind,
+};
 
 #[derive(Parser)]
 #[command(
@@ -48,7 +50,11 @@ pub(crate) struct Check {
     #[arg(long, value_name = "PATH")]
     pub(crate) config: Option<PathBuf>,
     /// Replace source roots; repeat this option to preserve order and duplicates
-    #[arg(long = "source-root", value_name = "ROOT", conflicts_with = "clear_source_roots")]
+    #[arg(
+        long = "source-root",
+        value_name = "ROOT",
+        conflicts_with = "clear_source_roots"
+    )]
     pub(crate) source_roots: Option<Vec<String>>,
     /// Explicitly replace source roots with an empty list
     #[arg(long, conflicts_with = "source_roots")]

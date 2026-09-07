@@ -1,0 +1,25 @@
+crates/testkit/src/bin/unisphere-proof.rs
+  s_f1a7ee9f435ed3::t_1003bcc14cc196 66,340-345,421,465
+docs/plans/001-sdk-cli-foundation/assets/composition-ownership-refusal.json
+  s_f1a7ee9f435ed3::t_85e38534f02891 1-35
+docs/plans/001-sdk-cli-foundation/assets/execution-log.dd.json
+  s_f1a7ee9f435ed3::t_ae9c1d045f77d5 137-148
+docs/plans/001-sdk-cli-foundation/assets/execution-log.dd.md
+  s_f1a7ee9f435ed3::t_d3ae9efc525d5f 34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "560dbd2bf89b3ba030c2c8259c91e5b5f9417ecc",
+  "prompts": {},
+  "sessions": {
+    "s_f1a7ee9f435ed3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6616ca6a-61c0-4a92-b9be-3512605a2826",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

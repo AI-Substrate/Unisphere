@@ -1,0 +1,18 @@
+docs/plans/001-sdk-cli-foundation/assets/baseline-ready-refusal.json
+  h_9e71e8b09f7cf2 1-118
+docs/plans/001-sdk-cli-foundation/the-flow.json
+  h_9e71e8b09f7cf2 244-255,377-382,385
+docs/plans/001-sdk-cli-foundation/the-flow.md
+  h_9e71e8b09f7cf2 4,13,56
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "bbdb2b5020f5e18da4016d5cadfe58aca3ba8c0d",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

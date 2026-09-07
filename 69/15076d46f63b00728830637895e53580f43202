@@ -1,0 +1,132 @@
+docs/plans/001-sdk-cli-foundation/assets/baseline-v7-ready.json
+  h_9e71e8b09f7cf2 1-2654
+docs/plans/001-sdk-cli-foundation/assets/baseline-v7-seal-command.json
+  h_9e71e8b09f7cf2 1-139
+docs/plans/001-sdk-cli-foundation/assets/cli-lane-check-corrected.json
+  h_9e71e8b09f7cf2 1-14
+docs/plans/001-sdk-cli-foundation/assets/cli-lane-check-initial.json
+  h_9e71e8b09f7cf2 1-14
+docs/plans/001-sdk-cli-foundation/assets/coder-tooling-bootstrap.json
+  h_9e71e8b09f7cf2 1-47
+docs/plans/001-sdk-cli-foundation/assets/dispatch-allocation-refusal.json
+  h_9e71e8b09f7cf2 1-2775
+docs/plans/001-sdk-cli-foundation/assets/dispatch-fixed-tk-0002.json
+  h_9e71e8b09f7cf2 1-240
+docs/plans/001-sdk-cli-foundation/assets/dispatch-fixed-tk-0003.json
+  h_9e71e8b09f7cf2 1-238
+docs/plans/001-sdk-cli-foundation/assets/dispatch-fixed-tk-0005.json
+  h_9e71e8b09f7cf2 1-244
+docs/plans/001-sdk-cli-foundation/assets/execution-log.dd.json
+  h_9e71e8b09f7cf2 88-126
+docs/plans/001-sdk-cli-foundation/assets/execution-log.dd.md
+  h_9e71e8b09f7cf2 29-32
+docs/plans/001-sdk-cli-foundation/assets/native-bootstrap-metadata.json
+  h_9e71e8b09f7cf2 1-50
+docs/plans/001-sdk-cli-foundation/assets/postrelease-ack-tk-0002.json
+  h_9e71e8b09f7cf2 1-262
+docs/plans/001-sdk-cli-foundation/assets/postrelease-ack-tk-0003.json
+  h_9e71e8b09f7cf2 1-263
+docs/plans/001-sdk-cli-foundation/assets/postrelease-ack-tk-0005.json
+  h_9e71e8b09f7cf2 1-265
+docs/plans/001-sdk-cli-foundation/assets/prework-ack-dirty-diagnosis.json
+  h_9e71e8b09f7cf2 1-47
+docs/plans/001-sdk-cli-foundation/assets/prework-ack-tk-0002-refresh.json
+  h_9e71e8b09f7cf2 1-253
+docs/plans/001-sdk-cli-foundation/assets/prework-ack-tk-0002.json
+  h_9e71e8b09f7cf2 1-24
+docs/plans/001-sdk-cli-foundation/assets/prework-ack-tk-0003-corrected.json
+  h_9e71e8b09f7cf2 1-252
+docs/plans/001-sdk-cli-foundation/assets/prework-ack-tk-0003-refresh.json
+  h_9e71e8b09f7cf2 1-24
+docs/plans/001-sdk-cli-foundation/assets/prework-ack-tk-0003.json
+  h_9e71e8b09f7cf2 1-24
+docs/plans/001-sdk-cli-foundation/assets/prework-ack-tk-0005-refresh.json
+  h_9e71e8b09f7cf2 1-256
+docs/plans/001-sdk-cli-foundation/assets/prework-ack-tk-0005.json
+  h_9e71e8b09f7cf2 1-24
+docs/plans/001-sdk-cli-foundation/assets/reviews/baseline-opus-r6.md
+  h_9e71e8b09f7cf2 1-112
+docs/plans/001-sdk-cli-foundation/assets/runtime-fixed-readiness.json
+  h_9e71e8b09f7cf2 1-2657
+docs/plans/001-sdk-cli-foundation/assets/sdk-lane-check-initial.json
+  h_9e71e8b09f7cf2 1-14
+docs/plans/001-sdk-cli-foundation/assets/sdk-rustdoc-check.json
+  h_9e71e8b09f7cf2 1-13
+docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json
+  h_9e71e8b09f7cf2 26,36-37,57-58,76-77,83,99-100,118-119,133,141,149,154,157
+docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.md
+  h_9e71e8b09f7cf2 38-42,52-55
+docs/plans/001-sdk-cli-foundation/assets/team/ack-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86-release.dd.json
+  h_9e71e8b09f7cf2 1-55
+docs/plans/001-sdk-cli-foundation/assets/team/ack-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86-release.dd.md
+  h_9e71e8b09f7cf2 1-23
+docs/plans/001-sdk-cli-foundation/assets/team/ack-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86.dd.json
+  h_9e71e8b09f7cf2 1-55
+docs/plans/001-sdk-cli-foundation/assets/team/ack-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86.dd.md
+  h_9e71e8b09f7cf2 1-23
+docs/plans/001-sdk-cli-foundation/assets/team/ack-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86-release.dd.json
+  h_9e71e8b09f7cf2 1-57
+docs/plans/001-sdk-cli-foundation/assets/team/ack-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86-release.dd.md
+  h_9e71e8b09f7cf2 1-23
+docs/plans/001-sdk-cli-foundation/assets/team/ack-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.json
+  h_9e71e8b09f7cf2 1-56
+docs/plans/001-sdk-cli-foundation/assets/team/ack-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.md
+  h_9e71e8b09f7cf2 1-23
+docs/plans/001-sdk-cli-foundation/assets/team/ack-tk-0005-1ec7213488044ba083da3db7f45a958024a86c86-release.dd.json
+  h_9e71e8b09f7cf2 1-55
+docs/plans/001-sdk-cli-foundation/assets/team/ack-tk-0005-1ec7213488044ba083da3db7f45a958024a86c86-release.dd.md
+  h_9e71e8b09f7cf2 1-23
+docs/plans/001-sdk-cli-foundation/assets/team/ack-tk-0005-1ec7213488044ba083da3db7f45a958024a86c86.dd.json
+  h_9e71e8b09f7cf2 1-54
+docs/plans/001-sdk-cli-foundation/assets/team/ack-tk-0005-1ec7213488044ba083da3db7f45a958024a86c86.dd.md
+  h_9e71e8b09f7cf2 1-23
+docs/plans/001-sdk-cli-foundation/assets/team/baseline-v7.dd.json
+  h_9e71e8b09f7cf2 1-122
+docs/plans/001-sdk-cli-foundation/assets/team/baseline-v7.dd.md
+  h_9e71e8b09f7cf2 1-20
+docs/plans/001-sdk-cli-foundation/assets/team/basis-9a2977c85b3c025eafb434ef1306fc71bf3c35fcaa3bc39fd7784a97a868899d.json
+  h_9e71e8b09f7cf2 1-777
+docs/plans/001-sdk-cli-foundation/assets/team/dispatch-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86.dd.json
+  h_9e71e8b09f7cf2 1-139
+docs/plans/001-sdk-cli-foundation/assets/team/dispatch-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86.dd.md
+  h_9e71e8b09f7cf2 1-23
+docs/plans/001-sdk-cli-foundation/assets/team/dispatch-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.json
+  h_9e71e8b09f7cf2 1-142
+docs/plans/001-sdk-cli-foundation/assets/team/dispatch-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.md
+  h_9e71e8b09f7cf2 1-23
+docs/plans/001-sdk-cli-foundation/assets/team/dispatch-tk-0005-1ec7213488044ba083da3db7f45a958024a86c86.dd.json
+  h_9e71e8b09f7cf2 1-138
+docs/plans/001-sdk-cli-foundation/assets/team/dispatch-tk-0005-1ec7213488044ba083da3db7f45a958024a86c86.dd.md
+  h_9e71e8b09f7cf2 1-23
+docs/plans/001-sdk-cli-foundation/assets/team/packet-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86.dd.json
+  h_9e71e8b09f7cf2 1-112
+docs/plans/001-sdk-cli-foundation/assets/team/packet-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86.dd.md
+  h_9e71e8b09f7cf2 1-26
+docs/plans/001-sdk-cli-foundation/assets/team/packet-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.json
+  h_9e71e8b09f7cf2 1-110
+docs/plans/001-sdk-cli-foundation/assets/team/packet-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.md
+  h_9e71e8b09f7cf2 1-26
+docs/plans/001-sdk-cli-foundation/assets/team/packet-tk-0005-1ec7213488044ba083da3db7f45a958024a86c86.dd.json
+  h_9e71e8b09f7cf2 1-116
+docs/plans/001-sdk-cli-foundation/assets/team/packet-tk-0005-1ec7213488044ba083da3db7f45a958024a86c86.dd.md
+  h_9e71e8b09f7cf2 1-26
+docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-1ec7213-pij-xenacious-yarpen-r6.dd.json
+  h_9e71e8b09f7cf2 1-148
+docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-1ec7213-pij-xenacious-yarpen-r6.dd.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/001-sdk-cli-foundation/the-flow.json
+  h_9e71e8b09f7cf2 256-325,453-476,479-480
+docs/plans/001-sdk-cli-foundation/the-flow.md
+  h_9e71e8b09f7cf2 4,13,57-60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "6915076d46f63b00728830637895e53580f43202",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

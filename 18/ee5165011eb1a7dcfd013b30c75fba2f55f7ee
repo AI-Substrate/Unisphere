@@ -1,0 +1,52 @@
+Cargo.lock
+  h_9e71e8b09f7cf2 1-219
+Cargo.toml
+  h_9e71e8b09f7cf2 1-20
+crates/core/Cargo.toml
+  h_9e71e8b09f7cf2 1-10
+crates/core/src/config.rs
+  h_9e71e8b09f7cf2 1-55
+crates/core/src/errors.rs
+  h_9e71e8b09f7cf2 1-177
+crates/core/src/lib.rs
+  h_9e71e8b09f7cf2 1-15
+crates/core/src/ports.rs
+  h_9e71e8b09f7cf2 1-14
+crates/testkit/Cargo.toml
+  h_9e71e8b09f7cf2 1-13
+crates/testkit/fixtures/config/blank-root.json
+  h_9e71e8b09f7cf2 1
+crates/testkit/fixtures/config/empty.json
+  h_9e71e8b09f7cf2 1
+crates/testkit/fixtures/config/malformed.json
+  h_9e71e8b09f7cf2 1
+crates/testkit/fixtures/config/roots.json
+  h_9e71e8b09f7cf2 1
+crates/testkit/fixtures/config/wrong-type.json
+  h_9e71e8b09f7cf2 1
+crates/testkit/src/fakes.rs
+  h_9e71e8b09f7cf2 1-160
+crates/testkit/src/fixtures.rs
+  h_9e71e8b09f7cf2 1-68
+crates/testkit/src/lib.rs
+  h_9e71e8b09f7cf2 1-9
+crates/testkit/src/sealed.rs
+  h_9e71e8b09f7cf2 1-99
+docs/plans/001-sdk-cli-foundation/assets/baseline-check-initial.json
+  h_9e71e8b09f7cf2 1-15
+docs/plans/001-sdk-cli-foundation/assets/baseline-checks.json
+  h_9e71e8b09f7cf2 1-39
+rust-toolchain.toml
+  h_9e71e8b09f7cf2 1-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "18ee5165011eb1a7dcfd013b30c75fba2f55f7ee",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

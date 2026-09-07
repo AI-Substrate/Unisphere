@@ -1,0 +1,36 @@
+{
+  "purpose": "Native reviewer launch/configuration evidence only; not a review verdict or provider identity attestation",
+  "peer_id": "pij-angry-hekarro",
+  "requested": {
+    "harness": "omp",
+    "model": "github-copilot/claude-opus-5",
+    "effort": "high"
+  },
+  "spawn": {
+    "command": "pij-rs spawn --harness omp --bin omp --model github-copilot/claude-opus-5 --effort high --cwd /Users/jordanknight/substrate/unisphere/unishpere-main --parent pij-female-varl --name unisphere-guide-review --json",
+    "ok": true,
+    "session": "01a07a09-0d66-7000-8240-75cc3de1bec5",
+    "pane": "%4003",
+    "pid": 56117,
+    "proc_start": 20260907140327,
+    "folder": "/Users/jordanknight/substrate/unisphere/unishpere-main",
+    "model": "github-copilot/claude-opus-5",
+    "effort": "high",
+    "bound": true,
+    "dispatched": true
+  },
+  "state": {
+    "command": "pij-rs state pij-angry-hekarro --json",
+    "liveness": "active",
+    "harness": "omp",
+    "boundModel": "github-copilot/claude-opus-5",
+    "effort": "high",
+    "pid": 56117,
+    "cwd": "/Users/jordanknight/substrate/unisphere/unishpere-main"
+  },
+  "process": {
+    "command": "ps -p 56117 -o pid= -o command=",
+    "argv_observed": "56117 bun /Users/jordanknight/.npm-global/bin/omp --auto-approve --model github-copilot/claude-opus-5 --thinking high"
+  },
+  "gaps": ["No provider-served model attestation", "Native-file canary and actual review still required"]
+}

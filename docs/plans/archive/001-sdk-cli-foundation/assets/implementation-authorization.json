@@ -1,0 +1,26 @@
+{
+  "record_type": "operator-authorization",
+  "operator": "Jordan",
+  "relayed_by": "pij-female-varl",
+  "recipient_pm": "pij-right-kotallo",
+  "operator_response_as_relayed": "yep",
+  "scope": [
+    "Execute Plan001 foundation only",
+    "Author tasks and reconcile the canonical Builder flow",
+    "Implement and verify the shared baseline",
+    "Launch three independent full-clone OMP github-copilot/gpt-6-astra high coder lanes after current gates",
+    "Compose real SDK, CLI and proof tooling",
+    "Verify the composed foundation",
+    "Use independent OMP github-copilot/claude-opus-5 high baseline and composition reviewers",
+    "Retain scoped local commits and evidence",
+    "Report Builder dogfood experience to pij-varied-alpaca"
+  ],
+  "required_gates": ["Reviewed committed baseline", "Builder seal", "Current unit readiness", "Native dispatch and pristine acknowledgement", "Exact release observation and confirmation", "Builder composition import and exact-artifact verification", "Independent composition review"],
+  "excluded_without_separate_approval": ["Pushes", "PR creation", "Merges to main", "Destructive cleanup", "Global toolchain or configuration changes", "Real private telemetry access"],
+  "excluded_product_scope": ["Native readers", "Scratch experiment imports", "Telemetry output-profile implementation"],
+  "plan_sha256": "bc208a54522fe9d5d26c87d25270806ad72b6b0a53d9155ae4cff1b2871fe3cc",
+  "guide_sha256": "95da8bf6c3d65077ae18085a379c9c4f780571a7f2ef62d5ac1a65644ae6cdb0",
+  "handoff_commit": "5865a38566904989c384726761f2a4e503e47b7f",
+  "carry_forward": ["O1: report lockfile ownership checker disagreement rather than bypassing", "O2: independent bp-0008 no-network source inspection in composition review", "Record actual coherent toolchain; no green pin-only claim"],
+  "completion_instruction": "Do not stop after baseline or a phase while authorized work remains. Report gate outcomes with committed SHA and evidence paths. Preserve and report tool/guide mismatches rather than bypassing."
+}

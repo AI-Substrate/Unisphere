@@ -1,0 +1,54 @@
+{
+  "dd": {
+    "schema": "builder/packet"
+  },
+  "sections": [
+    {
+      "name": "ack",
+      "value": {
+        "record_type": "ack",
+        "id": "ack-tk-0005-1ec7213488044ba083da3db7f45a958024a86c86",
+        "nonce": "ee6d46f0-2efb-4db8-ae2c-b2f69818d9dd",
+        "recorded_at": "2026-09-07T07:14:13.088Z",
+        "unit_id": "tk-0005",
+        "peer_id": "pij-brave-cahir",
+        "packet_sha256": "be2787f8dbc5ee82738de1c4555a78dd991cd36c9b956ef6f0e414261721e7cf",
+        "baseline_sha": "1ec7213488044ba083da3db7f45a958024a86c86",
+        "native_root": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-proof",
+        "shell_cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-proof",
+        "canary_nonce": "c8e1cff9-ff0c-4e97-b623-c8a403f2c10d",
+        "observed": {
+          "peer_id": "pij-brave-cahir",
+          "root": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-proof",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/gpt-6-astra",
+          "effort": "high",
+          "native_session": "01a07ab0-a228-7000-90c8-680c27c0d596",
+          "pid": 38413,
+          "argv": [
+            "bun",
+            "/Users/jordanknight/.npm-global/bin/omp",
+            "--auto-approve",
+            "--model",
+            "github-copilot/gpt-6-astra",
+            "--thinking",
+            "high"
+          ],
+          "evidence": [
+            "Packet and canary read with native repository-relative read tool; digest verified by shasum -a 256.",
+            "git rev-parse HEAD confirmed baseline; pwd confirmed root.",
+            "pij whoami --json observed harness, native session and peer identity.",
+            "ps of persistent kernel parent observed PID and argv; model/effort are process configuration, not provider attestation.",
+            "Fresh pre-work observations after PM clone-local exclude repair: native relative packet/canary, HEAD/root, whoami and process argv unchanged."
+          ],
+          "gaps": [
+            "pij state --json refused with E-RS schema projection failure; text state observed active seat/root/harness/parent.",
+            "Provider-side model and effective reasoning effort are not independently attested."
+          ]
+        }
+      }
+    }
+  ],
+  "references": []
+}

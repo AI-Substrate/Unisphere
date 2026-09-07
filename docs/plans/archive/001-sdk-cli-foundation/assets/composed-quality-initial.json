@@ -1,0 +1,155 @@
+{
+  "argv": [
+    "harness",
+    "checks",
+    "--json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+  "exit_code": 1,
+  "stdout": "{\"command\":\"checks\",\"status\":\"error\",\"timestamp\":\"2026-09-07T08:06:07.903Z\",\"error\":{\"code\":\"E_PRODUCT_CHECK_FAILED\",\"message\":\"clippy failed (exit 101)\",\"details\":{\"toolchain\":{\"rustc\":{\"release\":\"1.95.0\",\"normalized_release\":\"1.95.0\",\"commit\":\"59807616e1fa2540724bfbac14d7976d7e4a3860\",\"commit_metadata\":\"emitted\",\"release_matches\":true,\"commit_matches\":true,\"approved\":true,\"provenance\":{\"invoked\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/rustc\",\"resolved\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/rustc\"},\"args\":[\"-vV\"],\"code\":0,\"stdout\":\"rustc 1.95.0 (59807616e 2026-04-14)\\nbinary: rustc\\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\\ncommit-date: 2026-04-14\\nhost: aarch64-apple-darwin\\nrelease: 1.95.0\\nLLVM version: 22.1.2\\n\",\"stderr\":\"\"},\"cargo\":{\"release\":\"1.95.0\",\"normalized_release\":\"1.95.0\",\"commit\":\"f2d3ce0bd7f24a49f8f72d9000448f8838c4e850\",\"commit_metadata\":\"emitted\",\"release_matches\":true,\"commit_matches\":true,\"approved\":true,\"provenance\":{\"invoked\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo\",\"resolved\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo\"},\"args\":[\"-vV\"],\"code\":0,\"stdout\":\"cargo 1.95.0 (f2d3ce0bd 2026-03-21)\\nrelease: 1.95.0\\ncommit-hash: f2d3ce0bd7f24a49f8f72d9000448f8838c4e850\\ncommit-date: 2026-03-21\\nhost: aarch64-apple-darwin\\nlibgit2: 1.9.2 (sys:0.20.4 vendored)\\nlibcurl: 8.7.1 (sys:0.4.83+curl-8.15.0 system ssl:(SecureTransport) LibreSSL/3.3.6)\\nssl: OpenSSL 3.5.4 30 Sep 2025\\nos: Mac OS 26.6.2 [64-bit]\\n\",\"stderr\":\"\"},\"clippy\":{\"release\":\"0.1.95\",\"normalized_release\":\"0.1.95\",\"commit\":\"59807616e1\",\"commit_metadata\":\"emitted\",\"release_matches\":true,\"commit_matches\":true,\"approved\":true,\"provenance\":{\"invoked\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo\",\"resolved\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo\"},\"args\":[\"clippy\",\"--version\"],\"code\":0,\"stdout\":\"clippy 0.1.95 (59807616e1 2026-04-14)\\n\",\"stderr\":\"\",\"binaries\":{\"cargo-clippy\":{\"invoked\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo-clippy\",\"resolved\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo-clippy\"},\"clippy-driver\":{\"invoked\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/clippy-driver\",\"resolved\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/clippy-driver\"}}},\"rustfmt\":{\"release\":\"1.9.0-stable\",\"normalized_release\":\"1.9.0\",\"commit\":\"59807616e1\",\"commit_metadata\":\"emitted\",\"release_matches\":true,\"commit_matches\":true,\"approved\":true,\"provenance\":{\"invoked\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo\",\"resolved\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo\"},\"args\":[\"fmt\",\"--version\"],\"code\":0,\"stdout\":\"rustfmt 1.9.0-stable (59807616e1 2026-04-14)\\n\",\"stderr\":\"\",\"binaries\":{\"cargo-fmt\":{\"invoked\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo-fmt\",\"resolved\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo-fmt\"},\"rustfmt\":{\"invoked\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/rustfmt\",\"resolved\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/rustfmt\"}}}},\"gates\":[{\"name\":\"format\",\"command\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo\",\"args\":[\"fmt\",\"--all\",\"--check\"],\"code\":0,\"stdout\":\"\",\"stderr\":\"\",\"ok\":true},{\"name\":\"clippy\",\"command\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo\",\"args\":[\"clippy\",\"--workspace\",\"--all-targets\",\"--locked\",\"--\",\"-D\",\"warnings\"],\"code\":101,\"stdout\":\"\",\"stderr\":\"    Checking utf8parse v0.2.2\\n    Checking anstyle v1.0.14\\n    Checking is_terminal_polyfill v1.70.2\\n    Checking anstyle-query v1.1.5\\n    Checking colorchoice v1.0.5\\n    Checking strsim v0.11.1\\n    Checking clap_lex v1.1.0\\n    Checking serde v1.0.229\\n    Checking anstyle-parse v1.0.0\\n    Checking unisphere-core v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/crates/core)\\n    Checking anstream v1.0.0\\n    Checking clap_builder v4.6.6\\n    Checking unisphere-testkit v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/crates/testkit)\\n    Checking unisphere-sdk v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/crates/sdk)\\nerror: this boolean expression can be simplified\\n  --> crates/testkit/src/bin/unisphere-proof.rs:66:16\\n   |\\n66 |               || !value[\\\"error\\\"][\\\"fix\\\"]\\n   |  ________________^\\n67 | |                 .as_str()\\n68 | |                 .is_some_and(|s| !s.is_empty()))\\n   | |_______________________________________________^\\n   |\\n   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#nonminimal_bool\\n   = note: `-D clippy::nonminimal-bool` implied by `-D warnings`\\n   = help: to override `-D warnings` add `#[allow(clippy::nonminimal_bool)]`\\nhelp: try\\n   |\\n66 ~             || value[\\\"error\\\"][\\\"fix\\\"]\\n67 ~                 .as_str().is_none_or(|s| s.is_empty()))\\n   |\\n\\nerror: this `if` statement can be collapsed\\n   --> crates/testkit/src/bin/unisphere-proof.rs:342:9\\n    |\\n342 | /         if let Some(path) = path {\\n343 | |             if sdk_value[\\\"error\\\"][\\\"location\\\"][\\\"path\\\"].as_str() != path.to_str() {\\n344 | |                 return Err(format!(\\n345 | |                     \\\"{name}: missing explicit file location {sdk_value}\\\"\\n...   |\\n348 | |         }\\n    | |_________^\\n    |\\n    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#collapsible_if\\n    = note: `-D clippy::collapsible-if` implied by `-D warnings`\\n    = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`\\nhelp: collapse nested if block\\n    |\\n342 ~         if let Some(path) = path\\n343 ~             && sdk_value[\\\"error\\\"][\\\"location\\\"][\\\"path\\\"].as_str() != path.to_str() {\\n344 |                 return Err(format!(\\n345 |                     \\\"{name}: missing explicit file location {sdk_value}\\\"\\n346 |                 ));\\n347 ~             }\\n    |\\n\\nerror: using a non-octal value to set unix file permissions\\n   --> crates/testkit/src/bin/unisphere-proof.rs:423:69\\n    |\\n423 |         fs::set_permissions(&unreadable, fs::Permissions::from_mode(0))\\n    |                                                                     ^ help: consider using an octal literal instead: `0o0`\\n    |\\n    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#non_octal_unix_permissions\\n    = note: `#[deny(clippy::non_octal_unix_permissions)]` on by default\\n\\nerror: this boolean expression can be simplified\\n   --> crates/testkit/src/bin/unisphere-proof.rs:467:12\\n    |\\n467 |         if !value[\\\"data\\\"][field].as_str().is_some_and(|s| !s.is_empty()) {\\n    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `value[\\\"data\\\"][field].as_str().is_none_or(|s| s.is_empty())`\\n    |\\n    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#nonminimal_bool\\n\\nerror: could not compile `unisphere-testkit` (bin \\\"unisphere-proof\\\") due to 4 previous errors\\nwarning: build failed, waiting for other jobs to finish...\\nerror: could not compile `unisphere-testkit` (bin \\\"unisphere-proof\\\" test) due to 4 previous errors\\n\",\"ok\":false}]}},\"next_action\":\"Run /Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo clippy --workspace --all-targets --locked -- -D warnings, fix the failure, then rerun harness checks --json.\"}\n",
+  "stderr": "",
+  "data": {
+    "command": "checks",
+    "status": "error",
+    "timestamp": "2026-09-07T08:06:07.903Z",
+    "error": {
+      "code": "E_PRODUCT_CHECK_FAILED",
+      "message": "clippy failed (exit 101)",
+      "details": {
+        "toolchain": {
+          "rustc": {
+            "release": "1.95.0",
+            "normalized_release": "1.95.0",
+            "commit": "59807616e1fa2540724bfbac14d7976d7e4a3860",
+            "commit_metadata": "emitted",
+            "release_matches": true,
+            "commit_matches": true,
+            "approved": true,
+            "provenance": {
+              "invoked": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/rustc",
+              "resolved": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/rustc"
+            },
+            "args": [
+              "-vV"
+            ],
+            "code": 0,
+            "stdout": "rustc 1.95.0 (59807616e 2026-04-14)\nbinary: rustc\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\ncommit-date: 2026-04-14\nhost: aarch64-apple-darwin\nrelease: 1.95.0\nLLVM version: 22.1.2\n",
+            "stderr": ""
+          },
+          "cargo": {
+            "release": "1.95.0",
+            "normalized_release": "1.95.0",
+            "commit": "f2d3ce0bd7f24a49f8f72d9000448f8838c4e850",
+            "commit_metadata": "emitted",
+            "release_matches": true,
+            "commit_matches": true,
+            "approved": true,
+            "provenance": {
+              "invoked": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo",
+              "resolved": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo"
+            },
+            "args": [
+              "-vV"
+            ],
+            "code": 0,
+            "stdout": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)\nrelease: 1.95.0\ncommit-hash: f2d3ce0bd7f24a49f8f72d9000448f8838c4e850\ncommit-date: 2026-03-21\nhost: aarch64-apple-darwin\nlibgit2: 1.9.2 (sys:0.20.4 vendored)\nlibcurl: 8.7.1 (sys:0.4.83+curl-8.15.0 system ssl:(SecureTransport) LibreSSL/3.3.6)\nssl: OpenSSL 3.5.4 30 Sep 2025\nos: Mac OS 26.6.2 [64-bit]\n",
+            "stderr": ""
+          },
+          "clippy": {
+            "release": "0.1.95",
+            "normalized_release": "0.1.95",
+            "commit": "59807616e1",
+            "commit_metadata": "emitted",
+            "release_matches": true,
+            "commit_matches": true,
+            "approved": true,
+            "provenance": {
+              "invoked": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo",
+              "resolved": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo"
+            },
+            "args": [
+              "clippy",
+              "--version"
+            ],
+            "code": 0,
+            "stdout": "clippy 0.1.95 (59807616e1 2026-04-14)\n",
+            "stderr": "",
+            "binaries": {
+              "cargo-clippy": {
+                "invoked": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo-clippy",
+                "resolved": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo-clippy"
+              },
+              "clippy-driver": {
+                "invoked": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/clippy-driver",
+                "resolved": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/clippy-driver"
+              }
+            }
+          },
+          "rustfmt": {
+            "release": "1.9.0-stable",
+            "normalized_release": "1.9.0",
+            "commit": "59807616e1",
+            "commit_metadata": "emitted",
+            "release_matches": true,
+            "commit_matches": true,
+            "approved": true,
+            "provenance": {
+              "invoked": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo",
+              "resolved": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo"
+            },
+            "args": [
+              "fmt",
+              "--version"
+            ],
+            "code": 0,
+            "stdout": "rustfmt 1.9.0-stable (59807616e1 2026-04-14)\n",
+            "stderr": "",
+            "binaries": {
+              "cargo-fmt": {
+                "invoked": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo-fmt",
+                "resolved": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo-fmt"
+              },
+              "rustfmt": {
+                "invoked": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/rustfmt",
+                "resolved": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/rustfmt"
+              }
+            }
+          }
+        },
+        "gates": [
+          {
+            "name": "format",
+            "command": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo",
+            "args": [
+              "fmt",
+              "--all",
+              "--check"
+            ],
+            "code": 0,
+            "stdout": "",
+            "stderr": "",
+            "ok": true
+          },
+          {
+            "name": "clippy",
+            "command": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo",
+            "args": [
+              "clippy",
+              "--workspace",
+              "--all-targets",
+              "--locked",
+              "--",
+              "-D",
+              "warnings"
+            ],
+            "code": 101,
+            "stdout": "",
+            "stderr": "    Checking utf8parse v0.2.2\n    Checking anstyle v1.0.14\n    Checking is_terminal_polyfill v1.70.2\n    Checking anstyle-query v1.1.5\n    Checking colorchoice v1.0.5\n    Checking strsim v0.11.1\n    Checking clap_lex v1.1.0\n    Checking serde v1.0.229\n    Checking anstyle-parse v1.0.0\n    Checking unisphere-core v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/crates/core)\n    Checking anstream v1.0.0\n    Checking clap_builder v4.6.6\n    Checking unisphere-testkit v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/crates/testkit)\n    Checking unisphere-sdk v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/crates/sdk)\nerror: this boolean expression can be simplified\n  --> crates/testkit/src/bin/unisphere-proof.rs:66:16\n   |\n66 |               || !value[\"error\"][\"fix\"]\n   |  ________________^\n67 | |                 .as_str()\n68 | |                 .is_some_and(|s| !s.is_empty()))\n   | |_______________________________________________^\n   |\n   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#nonminimal_bool\n   = note: `-D clippy::nonminimal-bool` implied by `-D warnings`\n   = help: to override `-D warnings` add `#[allow(clippy::nonminimal_bool)]`\nhelp: try\n   |\n66 ~             || value[\"error\"][\"fix\"]\n67 ~                 .as_str().is_none_or(|s| s.is_empty()))\n   |\n\nerror: this `if` statement can be collapsed\n   --> crates/testkit/src/bin/unisphere-proof.rs:342:9\n    |\n342 | /         if let Some(path) = path {\n343 | |             if sdk_value[\"error\"][\"location\"][\"path\"].as_str() != path.to_str() {\n344 | |                 return Err(format!(\n345 | |                     \"{name}: missing explicit file location {sdk_value}\"\n...   |\n348 | |         }\n    | |_________^\n    |\n    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#collapsible_if\n    = note: `-D clippy::collapsible-if` implied by `-D warnings`\n    = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`\nhelp: collapse nested if block\n    |\n342 ~         if let Some(path) = path\n343 ~             && sdk_value[\"error\"][\"location\"][\"path\"].as_str() != path.to_str() {\n344 |                 return Err(format!(\n345 |                     \"{name}: missing explicit file location {sdk_value}\"\n346 |                 ));\n347 ~             }\n    |\n\nerror: using a non-octal value to set unix file permissions\n   --> crates/testkit/src/bin/unisphere-proof.rs:423:69\n    |\n423 |         fs::set_permissions(&unreadable, fs::Permissions::from_mode(0))\n    |                                                                     ^ help: consider using an octal literal instead: `0o0`\n    |\n    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#non_octal_unix_permissions\n    = note: `#[deny(clippy::non_octal_unix_permissions)]` on by default\n\nerror: this boolean expression can be simplified\n   --> crates/testkit/src/bin/unisphere-proof.rs:467:12\n    |\n467 |         if !value[\"data\"][field].as_str().is_some_and(|s| !s.is_empty()) {\n    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `value[\"data\"][field].as_str().is_none_or(|s| s.is_empty())`\n    |\n    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#nonminimal_bool\n\nerror: could not compile `unisphere-testkit` (bin \"unisphere-proof\") due to 4 previous errors\nwarning: build failed, waiting for other jobs to finish...\nerror: could not compile `unisphere-testkit` (bin \"unisphere-proof\" test) due to 4 previous errors\n",
+            "ok": false
+          }
+        ]
+      }
+    },
+    "next_action": "Run /Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo clippy --workspace --all-targets --locked -- -D warnings, fix the failure, then rerun harness checks --json."
+  }
+}

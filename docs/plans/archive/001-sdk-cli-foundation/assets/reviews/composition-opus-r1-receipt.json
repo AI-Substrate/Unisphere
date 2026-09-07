@@ -1,0 +1,78 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "review",
+      "value": {
+        "record_type": "review",
+        "id": "review-composition-560dbd2-pij-xenacious-yarpen-r1",
+        "recorded_at": "2026-09-07T08:21:10Z",
+        "scope": "composition",
+        "subject_sha": "560dbd2bf89b3ba030c2c8259c91e5b5f9417ecc",
+        "plan": {
+          "path": "docs/plans/001-sdk-cli-foundation/plan.dd.json",
+          "sha256": "bc208a54522fe9d5d26c87d25270806ad72b6b0a53d9155ae4cff1b2871fe3cc"
+        },
+        "guide": {
+          "path": "docs/plans/001-sdk-cli-foundation/assets/impl-guide.dd.json",
+          "sha256": "9a2977c85b3c025eafb434ef1306fc71bf3c35fcaa3bc39fd7784a97a868899d"
+        },
+        "reviewer_id": "pij-xenacious-yarpen",
+        "requested": {
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5",
+          "effort": "high",
+          "source": {
+            "harness": "guide",
+            "model": "guide",
+            "effort": "guide"
+          }
+        },
+        "observed": {
+          "peer_id": "pij-xenacious-yarpen",
+          "root": "/Users/jordanknight/substrate/unisphere/unishpere-main",
+          "ready": true,
+          "evidence": [
+            "Subject verified at open: HEAD is 560dbd2bf89b3ba030c2c8259c91e5b5f9417ecc with a clean tree; plan recomputed from the committed blob as bc208a54522fe9d5d26c87d25270806ad72b6b0a53d9155ae4cff1b2871fe3cc and guide as 9a2977c85b3c025eafb434ef1306fc71bf3c35fcaa3bc39fd7784a97a868899d, both equal to the packet. All source was read via git show <sha>:<path> so the review binds committed bytes only.",
+            "THE E477 DELTA IS FORMATTING AND I PROVED IT RATHER THAN ACCEPTING IT. Imports are clean first: each unit's delivered commit is byte-identical to its imported commit over its owned tree, cdcb1d69 equals 9edfea2 on crates/sdk, 49654b0a equals fd04322 on crates/cli, d5d9a25 equals 83bb8e4 on crates/testkit. So all 1191 changed lines across the eleven E477-flagged files are PM integration work. Line counts cannot settle formatting because rustfmt rewrites line boundaries, so I normalised each file at both commits by stripping all whitespace and then rustfmt's added trailing commas and compared the residue: crates/cli/src/args.rs 2746 to 2746, crates/cli/src/output.rs 3366 to 3366, crates/sdk/src/fs.rs 2218 to 2218, crates/cli/src/lib.rs and crates/sdk/src/service.rs identical on whitespace strip alone, crates/cli/tests/frontend.rs 16034 to 16034 despite +392/-74 lines, crates/sdk/tests/public_api.rs 5310 to 5310, crates/sdk/tests/service_in_isolation.rs 9788 to 9788 despite +185/-63 lines. Formatting only, every one.",
+            "For the only two files with residue I diffed the normalised streams character by character: crates/testkit/src/bin/unisphere-arch-check.rs 5266 to 5274 and unisphere-proof.rs 16272 to 16273. Every difference is rustfmt converting an arm of the form arrow-expression-comma into arrow-brace-expression-brace, eleven such match arms in arch-check and one in proof. No identifier, literal, condition or control edge changed anywhere.",
+            "The four lint fixes are isolated in 560dbd2 alone, nine insertions against eleven deletions in one file, each a provable identity: the negation of is_some_and with a negated body rewritten as is_none_or twice, a nested if let collapsed into a let-chain, and from_mode(0) rewritten as from_mode(0o0). No suppression, no allow attribute, no weakened assertion. CONCLUSION: E477 is a declaration and path-fence gap, not smuggled source edits; the PM's claim is correct and is now correct on evidence.",
+            "The chain from my r6 approval holds end to end: team/baseline-v7.dd.json binds source_sha 1ec7213 and guide 9a2977c8, the exact commit and guide I approved at r6, and its review field carries digest e3c91d26 which is precisely my r6 receipt. Both r6 artifacts landed byte-identical to what I emitted, fd0d743b for the report and e3c91d26 for the receipt, discharging the closure I named last round. All three units record baseline_sha 1ec7213 and composition.dd.json cites baseline digest c9fabdbd which equals the committed baseline-v7 bytes.",
+            "The frozen contract survived composition: all 18 sealed files are byte-identical at 560dbd2 with zero digest mismatches. Three coder units and a PM integration touched none of it.",
+            "bp-0008 SOURCE-SURFACE JUDGEMENT, PERFORMED EXPLICITLY AND ON THE RECORD. core has nothing at all: no std::env, std::fs, std::net, std::process, no thread, no async, no unsafe, no FFI, sole dependency serde, forbid(unsafe_code). sdk has exactly one I/O call in the whole crate, File::open in fs.rs, reached only from ConfigSource::File after an absolute-path check, bounded to max_bytes plus one, with metadata taken from the open handle rather than the path so there is no TOCTOU window; zero environment reads, zero network, zero process launches, no threads, no async, forbid(unsafe_code). cli has zero ambient reads, every context value arrives through CliContext and writers are caller-owned. app is the imperative shell and the only place ambient state is read: env::current_dir, env::args_os and the compile-time CARGO_PKG_VERSION, which is exactly where a composition root should read it.",
+            "Dependency surface corroborates the judgement: the shipped closure from the manifests is serde, serde_json, clap and clap's rendering crates; tempfile and unisphere-testkit are dev-only and testkit is publish = false; no build.rs exists anywhere in the workspace. unisphere-arch-check enforces this kind-aware against cargo metadata --locked on DECLARED edges, so an optional or target-specific dependency cannot slip past on a machine that never builds it, and internal edges must use a local path so a registry substitute cannot impersonate an internal contract.",
+            "Sealed hostile-environment behaviour is real rather than decorative: sealed_command clears the environment, sets PATH to empty and redirects HOME/XDG/TMP into a temporary root, and hostile_consumer then runs the external SDK consumer four times, baseline plus HOME-poisoned plus XDG-poisoned plus UNISPHERE_CONFIG/UNISPHERE_CONFIG_PATH/UNISPHERE_SOURCE_ROOTS/UNISPHERE_OUTPUT-poisoned, with an ambient-must-not-win document planted at three plausible discovery paths, and requires byte-identical stdout across all four.",
+            "Proof tooling drives production rather than fixtures: it builds a genuine external Cargo project from a template with a runtime-resolved SDK path, builds unisphere-app with --locked, and performs a real cargo install --locked --path crates/app --root into a temporary root before invoking the installed binary from outside the checkout. require_file refuses every lane when a target is absent and absent_targets_fail_before_any_build asserts all three lanes fail with 'required target absent' while leaving the scratch directory uncreated, so a placeholder or the baseline core/testkit suite cannot satisfy composition.",
+            "The diagnostic-leak assertion is NOT vacuous, which I checked specifically: machine() rejects any stdout containing SENSITIVE-CONFIG-MARKER, and that marker really is embedded in malformed.json, UNKNOWN_KEY and INVALID_UTF8, so hostile bytes genuinely flow through the parser on every run. machine() also rejects non-JSON, extra newlines, stderr contamination, wrong ok/error discrimination and non-actionable errors; child failures retain status, stdout and stderr.",
+            "Documentation accuracy was checked against source rather than assumed: the invalid_arguments envelope printed in docs/cli.md matches output.rs field order and the errors.rs strings exactly, the success envelope matches, the THIRD_PARTY_NOTICES table of clap 4.6.6 / serde 1.0.229 / serde_json 1.0.151 / tempfile 3.27.0 matches Cargo.lock exactly, and LICENSE exists. Scope disclaimers are honest throughout: README states the no-network grade is source and dependency inspection rather than a runtime trace, docs/development.md states a workflow definition is not an observed CI result, and boot returns its three limitations inside the envelope rather than only in prose.",
+            "ac-000a's failing-verdict propagation is genuinely covered by executed regressions rather than prose: the checks and boot extensions carry eleven Node tests including 'failing product check preserves child evidence and stops later gates', 'failed product checks preserve exit/stdout/stderr and never start smoke', 'each required smoke failure prevents readiness and preserves failure evidence' and 'a real harness child failure is not laundered into readiness', and that test file is itself run as a gate inside checks.",
+            "Timing confirmed from the record: the candidate committed at 08:09:56Z and composed-boot-full.json, uncommitted PM evidence carrying subject_sha 560dbd2, reports checks at 08:12:07Z and boot ok with ready true at 08:12:31Z, all six gates and all three proofs at exit 0. That is the first evidence in this plan captured strictly AFTER its candidate commit. composed-quality-corrected.json at 08:07:43Z preceded the commit and describes the same working tree. In that run rustfmt emitted a commit hash and provenance_gaps was empty, so the accepted F8 null-commit path was not exercised and the local proof used a fully observed toolchain tuple, exactly as the packet states."
+          ],
+          "gaps": [
+            "NAMED PREREQUISITE: team/composition.dd.json carries files [], checks [] and NO artifact_sha. It is a real record of the import only, binding the baseline digest, three unit commits, packet digests and integration_sha 83bb8e44. First-class harness builder compose --verify has NOT succeeded; it refused E477 and the amendment is owned upstream. This approval therefore covers source and behaviour only and must not be presented as a compose verification.",
+            "When the amendment lands, artifact_sha must bind 560dbd2 or its successor. integration_sha 83bb8e44 predates crates/app entirely, which I verified by listing its tree, so that field alone attests nothing about the reviewed candidate.",
+            "Recommendation, not a finding: only the two crate-level doc examples in sdk/src/lib.rs are compiled by the rustdoc gate. The README, docs/sdk.md and docs/cli.md examples are correct today, I checked each against source, but nothing prevents drift. Smallest fix is a doc include such as #![doc = include_str!(\"../../../docs/sdk.md\")] so ac-000b's examples are compiled rather than proofread.",
+            "Recommendation, not a finding: checks resolves cargo through PATH and records toolchain.cargo.provenance.invoked precisely because rust-toolchain.toml does not enforce PATH, then boot parses that envelope but launches the three proof lanes with a bare cargo. Same PATH makes them the same binary in practice. Smallest fix is one line, taking the invoked path from the parsed envelope.",
+            "Recommendation, not a finding: unisphere-proof.rs, unisphere-arch-check.rs and fixtures/consumer/main.rs are committed mode 100755. Cosmetic; git update-index --chmod=-x.",
+            "I executed no build, test, linter, formatter, ddocs or harness verb and committed nothing. Every check result cited is a PM observation read from committed or supplied evidence, not my own execution. My independent contribution is that the source those results describe is the source at 560dbd2 and that the evidence's own digests and conclusions reproduce from committed bytes.",
+            "All eleven plan acceptance criteria remain unchecked in plan.dd.json. Marking them is Builder's act on the first-class receipt, not mine.",
+            "The proof lane isolates CARGO_HOME per run and therefore depends on registry availability for an uncached build. docs/development.md states this and scopes it to the build lane, not the product runtime; it is recorded here as a fact, not a defect.",
+            "The working tree was dirty at close with PM-owned in-flight files, the execution log and tasks plus five untracked assets including the boot capture. The review binds committed bytes at 560dbd2 and is unaffected.",
+            "Requested role settings, observed launch argv and the pij-rs registry binding are configuration evidence, not provider-served model attestation.",
+            "No native telemetry reader, collection readiness, real-terminal detection beyond the PM's single PTY success capture, or executed network-denial run is claimed by this review."
+          ]
+        },
+        "verdict": "approved",
+        "report": {
+          "path": "docs/plans/001-sdk-cli-foundation/assets/reviews/composition-opus-r1.md",
+          "sha256": "4359f0bbd82b4a4756edc3b39ef86c8dd53ecef32e627ae9395c8addeabfafa9"
+        },
+        "findings": []
+      }
+    }
+  ],
+  "references": []
+}

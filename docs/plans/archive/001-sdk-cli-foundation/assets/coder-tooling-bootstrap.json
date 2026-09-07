@@ -1,0 +1,47 @@
+[
+  {
+    "unit": "tk-0002",
+    "clone": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-sdk",
+    "package_link_target": "/Users/jordanknight/.npm-global/lib/node_modules/@ai-substrate/engineering-harness/node_modules/@ai-substrate/dd",
+    "probe": {
+      "argv": [
+        "node_modules/.bin/ddocs",
+        "--version"
+      ],
+      "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-sdk",
+      "exit_code": 0,
+      "stdout": "0.1.0\n",
+      "stderr": ""
+    }
+  },
+  {
+    "unit": "tk-0003",
+    "clone": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli",
+    "package_link_target": "/Users/jordanknight/.npm-global/lib/node_modules/@ai-substrate/engineering-harness/node_modules/@ai-substrate/dd",
+    "probe": {
+      "argv": [
+        "node_modules/.bin/ddocs",
+        "--version"
+      ],
+      "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli",
+      "exit_code": 0,
+      "stdout": "0.1.0\n",
+      "stderr": ""
+    }
+  },
+  {
+    "unit": "tk-0005",
+    "clone": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-proof",
+    "package_link_target": "/Users/jordanknight/.npm-global/lib/node_modules/@ai-substrate/engineering-harness/node_modules/@ai-substrate/dd",
+    "probe": {
+      "argv": [
+        "node_modules/.bin/ddocs",
+        "--version"
+      ],
+      "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-proof",
+      "exit_code": 0,
+      "stdout": "0.1.0\n",
+      "stderr": ""
+    }
+  }
+]

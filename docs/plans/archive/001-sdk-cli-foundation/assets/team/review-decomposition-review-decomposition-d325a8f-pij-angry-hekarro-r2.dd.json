@@ -1,0 +1,164 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "review",
+      "value": {
+        "record_type": "review",
+        "id": "review-decomposition-d325a8f-pij-angry-hekarro-r2",
+        "recorded_at": "2026-09-07T04:29:25Z",
+        "scope": "decomposition",
+        "subject_sha": "d325a8f60a3c97739b7c3b16e612110b5db84530",
+        "plan": {
+          "path": "docs/plans/001-sdk-cli-foundation/plan.dd.json",
+          "sha256": "bc208a54522fe9d5d26c87d25270806ad72b6b0a53d9155ae4cff1b2871fe3cc"
+        },
+        "guide": {
+          "path": "docs/plans/001-sdk-cli-foundation/assets/impl-guide.dd.json",
+          "sha256": "95da8bf6c3d65077ae18085a379c9c4f780571a7f2ef62d5ac1a65644ae6cdb0"
+        },
+        "reviewer_id": "pij-angry-hekarro",
+        "requested": {
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5",
+          "effort": "high",
+          "source": {
+            "harness": "guide",
+            "model": "guide",
+            "effort": "guide"
+          }
+        },
+        "observed": {
+          "peer_id": "pij-angry-hekarro",
+          "root": "/Users/jordanknight/substrate/unisphere/unishpere-main",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5",
+          "effort": "high",
+          "native_session": "01a07a09-0d66-7000-8240-75cc3de1bec5",
+          "pid": 56117,
+          "argv": [
+            "bun",
+            "/Users/jordanknight/.npm-global/bin/omp",
+            "--auto-approve",
+            "--model",
+            "github-copilot/claude-opus-5",
+            "--thinking",
+            "high"
+          ],
+          "evidence": [
+            "Native root unchanged and re-confirmed: relative reads resolve under /Users/jordanknight/substrate/unisphere/unishpere-main; every subject artifact was read by absolute path from /Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation. Native root is not claimed to be the subject worktree.",
+            "Subject verified: 'git rev-parse HEAD' in the builder worktree returned d325a8f60a3c97739b7c3b16e612110b5db84530 and 'git status --porcelain' was empty, so reviewed bytes are committed bytes with no untracked drift.",
+            "All three input digests re-derived twice each, from the worktree file and from the committed blob via 'git show HEAD:<path>', and they agree: plan bc208a54522fe9d5d26c87d25270806ad72b6b0a53d9155ae4cff1b2871fe3cc (unchanged from r1), guide 95da8bf6c3d65077ae18085a379c9c4f780571a7f2ef62d5ac1a65644ae6cdb0, backpressure 5e700e9aa22288422c94ea943c7407a0ddf7ba13f4dad50a5d113697718fc6fc.",
+            "Revision is a single commit d325a8f 'docs: close decomposition contract and proof gaps'; plan.dd.json is untouched, so the product promise was not edited to fit the evidence.",
+            "Guide v2 -> v3 compared structurally leaf by leaf rather than by eye: exactly 33 changed leaves, each read in full. Backpressure compared the same way: 4 changed leaves (bp-0003 proof, bp-0008 tier and proof, bp-0009 proof).",
+            "r1 structural cross-check re-run from scratch against v3: zero dangling #checks/vd-* and #acceptance_criteria/ac-* references; all 11 ACs carry exactly one capability owner; every owner resolves to a declared unit; zero write-fence overlaps across all five units.",
+            "F3 verified mechanically on v3: Cargo.lock appears in exactly one fence (tk-0004), is absent from baseline.files, and is absent from tk-0001.paths; tk-0001.paths length 11 -> 10 and tk-0004.paths 3 -> 4 are the only fence-length changes.",
+            "Waves and dependency edges unchanged and re-verified: tk-0001 wave 0; tk-0002/tk-0003/tk-0005 wave 1 depending on tk-0001 alone; tk-0004 wave 2 depending on all four. No sibling read or import was introduced by the revision.",
+            "No acceptance criterion lost proof: ac-0003 gained vd-000a, ac-0005 gained vd-000b, ac-0008 gained vd-0006; the only .len decrease anywhere in the guide is the intended Cargo.lock removal from tk-0001.paths.",
+            "Read-only throughout: digest recomputation, git rev-parse/status/log/diff --stat/show, and in-process parsing and comparison of the DD documents. No build, test, formatter, linter or project gate was run; no commit, push or coder launch; only the two r2-authorized paths were written, both new, with r1 report and receipts left untouched.",
+            "Prior review history: r1 receipt review-decomposition-1902f26-pij-angry-hekarro-v2 (verdict changes-requested, subject 1902f266518b11ad4e80cfaabc5e8f1551a50b5d, report sha256 a9c8b4105c7f094da5f31ae85ab5ec54b4b291d7beda0dd604c83dd2e5a90cf5) was accepted through harness builder review and is preserved unchanged; it is history, not approval of v3.",
+            "Identity/runtime evidence is carried forward from the accepted r1 canary and was not re-derived for this pass; peer_id, root, session, pid and argv are unchanged and the seat was not restarted between passes."
+          ],
+          "gaps": [
+            "No provider-served model attestation. Harness, model selector and effort are observable only as requested configuration in process argv (--thinking high) and in the pij-rs seat record (effort: high); provider-side model identity and reasoning effort remain explicitly unverified.",
+            "observed.argv is a whitespace tokenization of the flattened command string returned by 'ps -p 56117 -o command=' during the r1 canary; the kernel argv vector was not read element by element, so token boundaries are derived rather than separately observed.",
+            "Identity and runtime facts were observed during the r1 canary at 2026-09-07T04:13Z and are carried forward, not re-observed for this pass.",
+            "The toolchain was not re-probed for r2. F5's disposition is verified as guide text only; the host observation it records (Homebrew rustc/cargo 1.95.0, no rustup, newer clippy/rustfmt provenance) is the one made and reported at r1, and coder clone hosts remain uninspected.",
+            "Main's harness builder guide --check, DD validation and plan validation results were reported to me, not observed by me. They are structural checks and not product execution proof; this approval rests on my own reading.",
+            "No product source exists at this SHA, which is expected at guide stage. Every check in the guide is future work; none was executed or claimed, and this approval is not baseline sealing, dispatch authority or an implementation release.",
+            "O1's residual is a tool-behavior unknown: whether contracts --seal or compose --import attributes fence writes with wave-ordering awareness was not and could not be tested read-only."
+          ]
+        },
+        "verdict": "approved",
+        "report": {
+          "path": "docs/plans/001-sdk-cli-foundation/assets/reviews/decomposition-opus-review-r2.md",
+          "sha256": "e7d3f37fec13225a35529dbd81421895059c64222c352d1c304e457062524a1b"
+        },
+        "findings": [
+          {
+            "id": "F1",
+            "severity": "medium",
+            "description": "Failure construction surface is now specified: private fields plus public constructors invalid_configuration(Option<Location>), configuration_read(ReadFailure, Option<Location>) and invalid_arguments(Option<Location>), with accessors kind/location/read_failure/code/message/fix/retryable and Error/Display. invalid_arguments is what lets tk-0003 emit UNI-ARGS-INVALID from a clap rejection without reaching into sealed core. Code/message/fix copy is stated core-owned and never caller-controlled, keeping SDK/CLI parity structural; the diagnostic-safety rule now names clap Debug output alongside parser and UTF-8 errors. Both wave-1 lanes are dispatchable without a pending contract negotiation.",
+            "disposition": "fixed",
+            "evidence": "impl-guide.dd.json#architecture/contracts[4] at d325a8f, read in full (998 chars); changed leaf confirmed by structural v2->v3 diff."
+          },
+          {
+            "id": "F2",
+            "severity": "medium",
+            "description": "Nested live Cargo manifests are prohibited under testkit fixtures. contracts[2] requires Cargo.toml.template/graph data materialized into isolated temporary roots, and tk-0005.interface repeats it operationally including the residual I raised on acceptance: SDK path dependencies are calculated at runtime from explicit repository context and no machine-private absolute path is baked into committed fixtures, which is what keeps the templates compliant with ac-0009. Negative architecture fixtures fall under the same rule, which they require since a forbidden-edge fixture is itself a manifest.",
+            "disposition": "fixed",
+            "evidence": "impl-guide.dd.json#architecture/contracts[2] and #units/tk-0005/interface at d325a8f, both read in full."
+          },
+          {
+            "id": "F3",
+            "severity": "medium",
+            "description": "Cargo.lock has exactly one fence. Verified mechanically on v3: present in tk-0004.paths only, absent from tk-0001.paths, absent from baseline.files, and no fence pair overlaps. The wave-0 materialization exception is written down in four places rather than inferred: contracts[2], tk-0001.interface, tk-0004.interface ('the sole Cargo.lock fence across the lifecycle, including initial generated lockfile prep before baseline sealing') and composition.steps[1]. Reviewer's counter-proposal to list the path in both PM units is withdrawn: guide-service.ts:261-269 rejects duplicate fences unconditionally, so it would fail the real validator. Residual tracked as O1.",
+            "disposition": "fixed",
+            "evidence": "Mechanical check at d325a8f: Cargo.lock fences == ['tk-0004']; 'Cargo.lock' in baseline.files == False; fence overlaps == []. impl-guide.dd.json#architecture/contracts[2], #units/tk-0001/interface, #units/tk-0004/interface, #composition/steps[1]."
+          },
+          {
+            "id": "F4",
+            "severity": "medium",
+            "description": "Ambient-read and no-network proof corrected without weakening the product promise; plan.dd.json is untouched. ac-0003 now lists vd-0002 and vd-000a, and vd-000a requires running the built consumer under sealed hostile HOME/XDG_*/UNISPHERE_* values in separate subprocesses asserting unchanged explicit configuration, with an explicit prohibition on mutating process-global env in parallel tests, which answers the edition-2024 set_var hazard. ac-0008's path states in the artifact that no-network is a restricted dependency/source-surface review claim rather than an executed syscall-trace claim; bp-0008 drops from computational to human-judgement with a named REVIEW leg; a new contracts[14] states dependency absence is not a syscall trace; and review.proof gains a clause requiring that judgement to be reported separately from executed subprocess tests. Discharge ownership tracked as O2.",
+            "disposition": "fixed",
+            "evidence": "impl-guide.dd.json#capabilities/ac-0003/proof, #capabilities/ac-0008/path and /proof, #checks/vd-000a, #architecture/contracts[14], #review/proof[4]; backpressure.dd.json#rows/bp-0003/proof and #rows/bp-0008/tier+proof at 5e700e9a."
+          },
+          {
+            "id": "F5",
+            "severity": "medium",
+            "description": "Toolchain pin is now a request, not enforcement. contracts[13] states rust-toolchain.toml is 'only a rustup request, not proof of enforcement', records the observed host state (Homebrew rustc/cargo 1.95.0, no rustup, newer clippy/rustfmt provenance), and requires tk-0005 checks to record actual rustc/cargo/clippy/rustfmt version and provenance and enforce a coherent approved suite before any product gate, with mismatch yielding a named failed prerequisite and never a green pin claim. tk-0005.notes and vd-000d carry the same obligation; bp-0009 names it; no automatic global install is authorized. ac-0009's documented toolchain becomes evidence rather than a file.",
+            "disposition": "fixed",
+            "evidence": "impl-guide.dd.json#architecture/contracts[13], #units/tk-0005/notes, #checks/vd-000d; backpressure.dd.json#rows/bp-0009/proof."
+          },
+          {
+            "id": "F6",
+            "severity": "low",
+            "description": "tk-0002.interface adds the #[path] isolation constraint verbatim: service.rs must be self-contained, using absolute unisphere_core::/serde_json:: dependency paths with no crate::/super:: references to facade or sibling modules, so vd-0002's independent service compilation will compile as specified.",
+            "disposition": "fixed",
+            "evidence": "impl-guide.dd.json#units/tk-0002/interface at d325a8f."
+          },
+          {
+            "id": "F7",
+            "severity": "low",
+            "description": "ac-0005 gains vd-000b, and vd-000b now exercises explicit --human success and failure alongside captured/default JSON with stdout/stderr routing assertions, while stating that real TTY detection beyond injected/explicit modes is not claimed. Reachable behavior is executed against the installed binary and the unreachable claim is named rather than implied.",
+            "disposition": "fixed",
+            "evidence": "impl-guide.dd.json#capabilities/ac-0005/proof and #checks/vd-000b at d325a8f."
+          },
+          {
+            "id": "F8",
+            "severity": "low",
+            "description": "sealed_command is now an exact baseline contract: sealed_command(binary:&Path, temp_root:&Path)->std::io::Result<std::process::Command>, requiring an absolute executable, clearing the environment, setting PATH=\"\", retaining only explicitly required platform variables and never inheriting HOME/XDG_*/UNISPHERE_*/tokens. It separates the two environments explicitly: cargo/rustc use a separate explicit build environment, then the built product runs through sealed_command with Node/OMP/Builder inaccessible, and hostile values are set on the child Command before spawn. Requiring an absolute binary is what makes PATH=\"\" workable rather than self-defeating, so 'Node unavailable at product runtime' is now a mechanism rather than an assertion.",
+            "disposition": "fixed",
+            "evidence": "impl-guide.dd.json#architecture/contracts[10] at d325a8f, read in full (1105 chars)."
+          },
+          {
+            "id": "F9",
+            "severity": "low",
+            "description": "contracts[5] assigns both oversize paths: oversized Inline returns Failure::invalid_configuration(None) / UNI-CONFIG-INVALID without invoking ConfigReader, and oversized File is ReadFailure::TooLarge mapped to configuration_read(...) / UNI-CONFIG-READ with file location, with neither path attempting an unbounded copy. The 'without invoking ConfigReader' clause makes the inline branch assertable against FakeReader's call recorder rather than merely described.",
+            "disposition": "fixed",
+            "evidence": "impl-guide.dd.json#architecture/contracts[5] at d325a8f."
+          },
+          {
+            "id": "O1",
+            "severity": "low",
+            "description": "New observation, not a defect in v3: tk-0004 is wave 2 and depends on all four other units, yet its fence authorizes the Cargo.lock write that occurs during wave-0 baseline prep. The guide documents the exception in four places and this is the only shape that passes the duplicate-fence checker, so it is the correct call. The residual is a tool-behavior unknown that could not be tested read-only: if contracts --seal or compose --import ever attributes fence writes with wave-ordering awareness, the baseline lockfile commit is where it will surface, and the documented exception will need to be honored by the tool rather than only by the guide. Suggested safeguard: treat it as a dogfood probe at baseline sealing and report a tool/guide disagreement to pij-varied-alpaca.",
+            "disposition": "accepted",
+            "evidence": "impl-guide.dd.json#units/tk-0004 wave 2 with depends_on [tk-0001,tk-0002,tk-0003,tk-0005] versus #units/tk-0001/interface and #composition/steps[1] authorizing wave-0 materialization; verified mechanically that Cargo.lock has a single fence."
+          },
+          {
+            "id": "O2",
+            "severity": "low",
+            "description": "New observation, not a defect in v3: ac-0008's accountable owner is tk-0004 (PM), but its no-network leg is now an explicitly independent source-surface review, which the PM structurally cannot discharge. The mechanism exists and is written down, so the only risk is that the composition review packet omits it and the leg is silently skipped. Smallest safeguard: name the bp-0008 source-surface inspection explicitly in the composition reviewer's packet, exactly as this packet named the F1-F9 dispositions. Nothing is owed at decomposition stage because no source exists to inspect.",
+            "disposition": "accepted",
+            "evidence": "impl-guide.dd.json#capabilities/ac-0008/owner tk-0004 against #review/proof[4] requiring independent inspection; backpressure.dd.json#rows/bp-0008 tier human-judgement with REVIEW leg."
+          }
+        ]
+      }
+    }
+  ],
+  "references": []
+}

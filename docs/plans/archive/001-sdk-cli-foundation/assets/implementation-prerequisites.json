@@ -1,0 +1,168 @@
+{
+  "boot": {
+    "argv": [
+      "harness",
+      "boot",
+      "--json"
+    ],
+    "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+    "exit_code": 2,
+    "stdout": "{\"command\":\"boot\",\"status\":\"unconfigured\",\"timestamp\":\"2026-09-07T04:52:18.232Z\",\"next_action\":\"Product readiness is unproven because `harness checks --json` is unconfigured. Establish the product build/test lane and wire it into .harness/extensions/checks/extension.ts; then configure the real product readiness/smoke command here and rerun `harness boot --json`.\"}\n",
+    "stderr": "",
+    "data": {
+      "command": "boot",
+      "status": "unconfigured",
+      "timestamp": "2026-09-07T04:52:18.232Z",
+      "next_action": "Product readiness is unproven because `harness checks --json` is unconfigured. Establish the product build/test lane and wire it into .harness/extensions/checks/extension.ts; then configure the real product readiness/smoke command here and rerun `harness boot --json`."
+    }
+  },
+  "task_validation": [
+    {
+      "argv": [
+        "harness",
+        "plan",
+        "validate",
+        "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/plan.dd.json"
+      ],
+      "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+      "exit_code": 0,
+      "stdout": "{\"command\":\"plan validate\",\"status\":\"ok\",\"timestamp\":\"2026-09-07T04:55:48.356Z\",\"data\":{\"path\":\"/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/plan.dd.json\",\"depth\":3,\"mode\":\"summary\",\"counts\":{\"error\":0,\"warn\":0,\"semantic\":{\"items\":430,\"completable\":48,\"open\":48,\"contradictions\":0,\"orphans\":0,\"in_scope\":430}},\"issues\":[],\"findings\":[],\"summary\":\"48 of 48 completable item(s) are still open \u2014 run with --complete for the per-row list, or --address <address> to scope the read.\"},\"next_action\":\"48 of 48 completable item(s) are still open \u2014 run with --complete for the per-row list, or --address <address> to scope the read.\"}\n",
+      "stderr": "",
+      "data": {
+        "command": "plan validate",
+        "status": "ok",
+        "timestamp": "2026-09-07T04:55:48.356Z",
+        "data": {
+          "path": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/plan.dd.json",
+          "depth": 3,
+          "mode": "summary",
+          "counts": {
+            "error": 0,
+            "warn": 0,
+            "semantic": {
+              "items": 430,
+              "completable": 48,
+              "open": 48,
+              "contradictions": 0,
+              "orphans": 0,
+              "in_scope": 430
+            }
+          },
+          "issues": [],
+          "findings": [],
+          "summary": "48 of 48 completable item(s) are still open \u2014 run with --complete for the per-row list, or --address <address> to scope the read."
+        },
+        "next_action": "48 of 48 completable item(s) are still open \u2014 run with --complete for the per-row list, or --address <address> to scope the read."
+      }
+    },
+    {
+      "argv": [
+        "node_modules/.bin/ddocs",
+        "validate",
+        "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json"
+      ],
+      "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+      "exit_code": 0,
+      "stdout": "{\"command\":\"ddocs validate\",\"status\":\"ok\",\"timestamp\":\"2026-09-07T04:55:48.286Z\",\"data\":{\"path\":\"/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json\",\"schema\":\"builder/plan\",\"depth\":3,\"counts\":{\"error\":0,\"warn\":0},\"issues\":[]},\"next_action\":\"Run `ddocs build <path>` to regenerate the sibling markdown.\"}\n",
+      "stderr": "",
+      "data": {
+        "command": "ddocs validate",
+        "status": "ok",
+        "timestamp": "2026-09-07T04:55:48.286Z",
+        "data": {
+          "path": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json",
+          "schema": "builder/plan",
+          "depth": 3,
+          "counts": {
+            "error": 0,
+            "warn": 0
+          },
+          "issues": []
+        },
+        "next_action": "Run `ddocs build <path>` to regenerate the sibling markdown."
+      }
+    },
+    {
+      "argv": [
+        "node_modules/.bin/ddocs",
+        "build",
+        "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json",
+        "--check"
+      ],
+      "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+      "exit_code": 0,
+      "stdout": "{\"command\":\"ddocs build\",\"status\":\"ok\",\"timestamp\":\"2026-09-07T04:55:48.266Z\",\"data\":{\"path\":\"/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json\",\"sibling\":\"/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.md\",\"schema\":\"builder/plan\",\"bytes\":13104,\"adapter_warnings\":[],\"refreshed_bases\":[],\"refresh_issues\":[],\"file_findings\":[],\"drift\":false},\"next_action\":\"Nothing to do \u2014 the committed markdown matches the document.\"}\n",
+      "stderr": "",
+      "data": {
+        "command": "ddocs build",
+        "status": "ok",
+        "timestamp": "2026-09-07T04:55:48.266Z",
+        "data": {
+          "path": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json",
+          "sibling": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.md",
+          "schema": "builder/plan",
+          "bytes": 13104,
+          "adapter_warnings": [],
+          "refreshed_bases": [],
+          "refresh_issues": [],
+          "file_findings": [],
+          "drift": false
+        },
+        "next_action": "Nothing to do \u2014 the committed markdown matches the document."
+      }
+    }
+  ],
+  "guide_exit_initial": {
+    "argv": [
+      "harness",
+      "builder",
+      "advance",
+      "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/plan.dd.json",
+      "--now",
+      "phase-1"
+    ],
+    "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+    "exit_code": 1,
+    "stdout": "{\"command\":\"builder advance\",\"status\":\"error\",\"timestamp\":\"2026-09-07T04:56:28.258Z\",\"error\":{\"code\":\"E475\",\"message\":\"Command failed: pij-rs whoami --json\",\"details\":{\"code\":2,\"stdout\":\"{\\\"ok\\\":false,\\\"command\\\":\\\"pij whoami\\\",\\\"v\\\":2,\\\"meta\\\":\\\"no caller context reached rs, so there is no seat to name. This route needs a pane (`?pane=%N`, or `caller.TMUX_PANE`) or a seat id (`?seat=<id>`, or `caller.PIJ_SESSION_ID`). Refusing rather than guessing: with one seat in the store a guess would even look right.\\\",\\\"error\\\":\\\"refused\\\"}\\n\",\"stderr\":\"\",\"ok\":false}},\"next_action\":\"Resolve the reported failure and retry; no force or rollback was performed.\"}\n",
+    "stderr": "",
+    "data": {
+      "command": "builder advance",
+      "status": "error",
+      "timestamp": "2026-09-07T04:56:28.258Z",
+      "error": {
+        "code": "E475",
+        "message": "Command failed: pij-rs whoami --json",
+        "details": {
+          "code": 2,
+          "stdout": "{\"ok\":false,\"command\":\"pij whoami\",\"v\":2,\"meta\":\"no caller context reached rs, so there is no seat to name. This route needs a pane (`?pane=%N`, or `caller.TMUX_PANE`) or a seat id (`?seat=<id>`, or `caller.PIJ_SESSION_ID`). Refusing rather than guessing: with one seat in the store a guess would even look right.\",\"error\":\"refused\"}\n",
+          "stderr": "",
+          "ok": false
+        }
+      },
+      "next_action": "Resolve the reported failure and retry; no force or rollback was performed."
+    }
+  },
+  "guide_exit_identity_retry": {
+    "argv": [
+      "harness",
+      "builder",
+      "advance",
+      "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/plan.dd.json",
+      "--now",
+      "phase-1"
+    ],
+    "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+    "exit_code": 0,
+    "stdout": "{\"command\":\"builder advance\",\"status\":\"ok\",\"timestamp\":\"2026-09-07T04:56:42.806Z\",\"data\":{\"flow\":\"/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/the-flow.json\",\"now\":\"phase-1\"}}\n",
+    "stderr": "",
+    "data": {
+      "command": "builder advance",
+      "status": "ok",
+      "timestamp": "2026-09-07T04:56:42.806Z",
+      "data": {
+        "flow": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/the-flow.json",
+        "now": "phase-1"
+      }
+    }
+  }
+}

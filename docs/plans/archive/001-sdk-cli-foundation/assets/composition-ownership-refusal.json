@@ -1,0 +1,35 @@
+{
+  "argv": [
+    "harness",
+    "builder",
+    "compose",
+    "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/plan.dd.json",
+    "--verify",
+    "0b1190412b42da25be363b0e5799ff12261d1d96"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+  "exit_code": 1,
+  "envelope": {
+    "command": "builder compose",
+    "status": "error",
+    "timestamp": "2026-09-07T07:59:22.876Z",
+    "error": {
+      "code": "E477",
+      "message": "Undeclared PM integration changes.",
+      "details": [
+        "AGENTS.md",
+        "crates/cli/src/args.rs",
+        "crates/cli/src/lib.rs",
+        "crates/cli/src/output.rs",
+        "crates/cli/tests/frontend.rs",
+        "crates/sdk/src/fs.rs",
+        "crates/sdk/src/service.rs",
+        "crates/sdk/tests/public_api.rs",
+        "crates/sdk/tests/service_in_isolation.rs",
+        "crates/testkit/src/bin/unisphere-arch-check.rs",
+        "crates/testkit/src/bin/unisphere-proof.rs"
+      ]
+    },
+    "next_action": "Declare integration ownership in the reviewed guide; do not smuggle worker-path edits."
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "review": "baseline-opus-r1.md",
+  "r1_gate": "Rejected E475: approved with open material findings; not accepted as clean approval",
+  "findings": [
+    {
+      "id": "F-0001",
+      "action": "Corrected guide v4 toolchain prose; actual installed rustup evidence replaces incomplete historical PATH inference",
+      "status": "implemented-awaiting-independent-r2"
+    },
+    {
+      "id": "F-0002",
+      "action": "Guide matches releases and commit identities, never absolute install path or entire version string",
+      "status": "implemented-awaiting-independent-r2"
+    },
+    {
+      "id": "F-0003",
+      "action": "CLI guide interface already forbids SDK/app dependencies; explicit tk-0003 supplement reinforces no inheritance of predeclared SDK dependency",
+      "status": "accepted-dispatch-guardrail"
+    },
+    {
+      "id": "F-0004",
+      "action": "Require scoped harness commits; coder packet excludes Cargo.lock and Builder import must enforce fence",
+      "status": "accepted-import-guardrail"
+    },
+    {
+      "id": "F-0005",
+      "action": "Shared NON_OBJECT/UNKNOWN_KEY/DUPLICATE_KEY/NON_STRING_ROOT/INVALID_UTF8 plus oversized_document(); expanded vd-0004 parity description; 13 baseline tests and test-target clippy pass",
+      "status": "implemented-awaiting-independent-r2"
+    },
+    {
+      "id": "F-0006",
+      "action": "Host path provenance intentionally retained locally; publication requires separate approval and path review",
+      "status": "accepted-publication-restriction"
+    }
+  ]
+}

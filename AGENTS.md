@@ -1,6 +1,6 @@
 # Unisphere
 
-Common-format telemetry collector for agent harnesses, delivered as a Rust SDK and a thin CLI. Product implementation has not begun; no canonical application build/test/run lane exists. Main-branch system setup is operator-authorized; product work belongs in isolated Builder plan workspaces. Coordinate shared-file ownership with active peers.
+Common-format telemetry collector for agent harnesses, delivered as a Rust SDK and a thin CLI. The current foundation implements explicit source-root configuration inspection through the SDK and CLI; native readers and telemetry collection are not included. `harness checks --json` and `harness boot --json` expose the product quality and foundation smoke lanes. Main-branch system setup is operator-authorized; product work belongs in isolated Builder plan workspaces. Coordinate shared-file ownership with active peers.
 
 ## Governance — new primes start here
 
@@ -33,7 +33,7 @@ Read `.harness/engineering-harness.md` before non-trivial work. At session start
 3. `harness doctor --json` — inspect extension loading, convention complaints, and machine-attribution warnings separately.
 4. `harness instructions boot` then `harness boot --json` — attempt readiness before changing product code.
 
-`checks` and `boot` currently return **unconfigured (exit 2)**. This is missing product proof, not success. Do not claim the collector runs or add meaningless checks to make onboarding green. Implement the canonical product lane first, then wire it into these extensions.
+`checks` observes the documented toolchain and runs the Rust, architecture and harness regression gates; `boot` adds real SDK/CLI parity, external SDK consumption and temporary installed-CLI smoke. Read the actual status, exit code and readiness scope on every run. A passing `configuration-sdk-cli-foundation` result is not evidence of native telemetry collection, and absent or failed proof must never be presented as success.
 
 Project-local pi skills live under `.pi/skills/`. `/eng-harness-flow` is the front door: use `--hook pre-flight` at work start, `--hook pre-coding` once scope is agreed, `--hook post-coding` at a work-unit handoff, and `--hook post-flight` at task closeout. If skills are not loaded, read `.pi/skills/eng-harness-flow/SKILL.md` and follow it inline. The router remains on adoption until real product readiness is available.
 

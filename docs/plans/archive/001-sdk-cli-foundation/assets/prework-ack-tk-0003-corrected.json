@@ -1,0 +1,252 @@
+{
+  "argv": [
+    "harness",
+    "builder",
+    "ack",
+    "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/plan.dd.json",
+    "--receipt",
+    "/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli/.harness/temp/ack-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86-session-id.json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+  "exit_code": 0,
+  "stdout": "{\"command\":\"builder ack\",\"status\":\"ok\",\"timestamp\":\"2026-09-07T07:18:40.658Z\",\"data\":{\"dispatch\":{\"ref\":{\"path\":\"docs/plans/001-sdk-cli-foundation/assets/team/dispatch-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.json\",\"sha256\":\"ffd8d247a956839f4ea5e5b8cd2f5f3243a19b23139f85cd073b3110faf027f0\"},\"value\":{\"record_type\":\"dispatch\",\"id\":\"dispatch-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86\",\"recorded_at\":\"2026-09-07T07:06:32.767Z\",\"unit_id\":\"tk-0003\",\"packet\":{\"path\":\"docs/plans/001-sdk-cli-foundation/assets/team/packet-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.json\",\"sha256\":\"e99c81186cb4a1c7a58135199a418beb88c28ecd934ba6faaf01a98c75b2445f\"},\"baseline\":{\"path\":\"docs/plans/001-sdk-cli-foundation/assets/team/baseline-v7.dd.json\",\"sha256\":\"c9fabdbdb8f7ccc0093f178cf5111d175f12e7cc310196a47372d5aa9da0c92c\"},\"allocation\":{\"path\":\"/Users/jordanknight/substrate/unisphere/unishpere-main/.git/builder/allocations/allocation-al-002-ba4dc441-30eb-490b-a26e-a4f7955e1599.dd.json\",\"sha256\":\"994fd10124a91444166e38c06ba0e863d3297f008c13a5e9e7a8d7166fdd3806\"},\"requested\":{\"role\":\"coder\",\"harness\":\"omp\",\"model\":\"github-copilot/gpt-6-astra\",\"effort\":\"high\",\"source\":{\"harness\":\"override\",\"model\":\"override\",\"effort\":\"override\"}},\"observed\":{\"peer_id\":\"pij-standard-impala\",\"root\":\"/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli\",\"ready\":true,\"harness\":\"omp\",\"model\":\"github-copilot/gpt-6-astra\",\"effort\":\"high\",\"native_session\":\"01a07ab0-a224-7000-af38-3738da86dae6\",\"pid\":38381,\"evidence\":[\"pij-rs state: {\\\"id\\\":\\\"pij-standard-impala\\\",\\\"liveness\\\":\\\"active\\\",\\\"cwd\\\":\\\"/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli\\\",\\\"harness\\\":\\\"omp\\\",\\\"boundModel\\\":\\\"github-copilot/gpt-6-astra\\\",\\\"effort\\\":\\\"high\\\",\\\"pid\\\":38381,\\\"procStart\\\":20260907170629,\\\"parent\\\":\\\"pij-right-kotallo\\\"}\",\"pij-rs list: {\\\"id\\\":\\\"pij-standard-impala\\\",\\\"session\\\":\\\"01a07ab0-a224-7000-af38-3738da86dae6\\\",\\\"folder\\\":\\\"/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli\\\",\\\"proc\\\":{\\\"pid\\\":38381,\\\"proc_start\\\":20260907170629},\\\"harness\\\":\\\"omp\\\",\\\"model\\\":\\\"github-copilot/gpt-6-astra\\\",\\\"effort\\\":\\\"high\\\"}\",\"Native relative read of packet and canary succeeded; packet SHA-256 independently computed.\",\"git rev-parse HEAD matched baseline; pwd and native kernel cwd matched packet workspace.\",\"pij state text view reported harness omp, parent pij-right-kotallo and expected cwd.\",\"Process ancestry observed omp PID 38381, model and --thinking high; developer runtime context independently names model github-copilot/gpt-6-astra.\",\"PI_SESSION_FILE supplies native session binding.\",\"Fresh pre-work re-observation after PM local-exclude change: native relative packet/canary, HEAD, shell/native roots, pij state, PI_SESSION_FILE and live PID/argv unchanged.\",\"Native session header at /Users/jordanknight/.omp/agent/sessions/-substrate-unisphere-unisphere-plan001-cli/2026-09-07T07-06-31-332Z_01a07ab0-a224-7000-af38-3738da86dae6.jsonl:2 supplies id 01a07ab0-a224-7000-af38-3738da86dae6; adjacent model_change/thinking_level_change record github-copilot/gpt-6-astra and high.\"],\"gaps\":[\"Provider-served inference identity is unverified; these observations bind launch/session configuration only.\",\"Native public state does not expose process argv or environment; the peer acknowledgement must name its observation limits.\",\"Requested and process launch settings are not provider attestation.\",\"pij state --json exited 4: schema projection refused because rs role differs from orchestrationRole and 14 further fields are absent.\"],\"argv\":[\"bun\",\"/Users/jordanknight/.npm-global/bin/omp\",\"--auto-approve\",\"--model\",\"github-copilot/gpt-6-astra\",\"--thinking\",\"high\"]},\"seed_files\":[{\"path\":\"docs/plans/001-sdk-cli-foundation/plan.dd.json\",\"sha256\":\"bc208a54522fe9d5d26c87d25270806ad72b6b0a53d9155ae4cff1b2871fe3cc\"},{\"path\":\"docs/plans/001-sdk-cli-foundation/plan.dd.md\",\"sha256\":\"8910d82cb2b16bb6bb2dde9eba92a1d652a834047f7e599527fac7faced933de\"},{\"path\":\"docs/plans/001-sdk-cli-foundation/assets/impl-guide.dd.json\",\"sha256\":\"9a2977c85b3c025eafb434ef1306fc71bf3c35fcaa3bc39fd7784a97a868899d\"},{\"path\":\"docs/plans/001-sdk-cli-foundation/assets/impl-guide.dd.md\",\"sha256\":\"e5a676efaa8a2e4b44644dd1e977f287b2675c408e7a1f10db20816866da7ae3\"},{\"path\":\"docs/plans/001-sdk-cli-foundation/assets/team/baseline-v7.dd.json\",\"sha256\":\"c9fabdbdb8f7ccc0093f178cf5111d175f12e7cc310196a47372d5aa9da0c92c\"},{\"path\":\"docs/plans/001-sdk-cli-foundation/assets/team/baseline-v7.dd.md\",\"sha256\":\"8ff386d7f1e7687e5d9589031baa589e7ef53f0ef7ddd1e81d341bfbd1716fda\"},{\"path\":\"docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-1ec7213-pij-xenacious-yarpen-r6.dd.json\",\"sha256\":\"e3c91d26195974f6d761e7993a30945fcd6dd6a5c3a7dff6e94115322c188073\"},{\"path\":\"docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-1ec7213-pij-xenacious-yarpen-r6.dd.md\",\"sha256\":\"ba76e49506cc42b46ebfc68230de6c121785be4f5ca55aae7fd2d61f061d5243\"},{\"path\":\"docs/plans/001-sdk-cli-foundation/assets/team/canary-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.txt\",\"sha256\":\"449b0923f6b1059bb5894b18295ab3774c278fe7bb68128cddbec17b89367ce1\"},{\"path\":\"docs/plans/001-sdk-cli-foundation/assets/team/packet-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.json\",\"sha256\":\"e99c81186cb4a1c7a58135199a418beb88c28ecd934ba6faaf01a98c75b2445f\"},{\"path\":\"docs/plans/001-sdk-cli-foundation/assets/team/packet-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.md\",\"sha256\":\"2a7d08855d5e84830c2af7d38151fd8970f1ee2811df0de124019f0f71144bf4\"}],\"acknowledgement\":{\"path\":\"docs/plans/001-sdk-cli-foundation/assets/team/ack-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.json\",\"sha256\":\"b8c0d9588fb091599ba59f2504adf304102467cab9d6d0505d6c459a4feae4b7\"},\"release\":{\"message_id\":\"9e5b4b55-68c0-4972-89e2-603f34f4dadc\",\"outcome\":\"queued\",\"recorded_at\":\"2026-09-07T07:18:40.655Z\"}}},\"packet\":{\"ref\":{\"path\":\"docs/plans/001-sdk-cli-foundation/assets/team/packet-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.json\",\"sha256\":\"e99c81186cb4a1c7a58135199a418beb88c28ecd934ba6faaf01a98c75b2445f\"},\"value\":{\"record_type\":\"packet\",\"id\":\"packet-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86\",\"recorded_at\":\"2026-09-07T07:06:32.532Z\",\"nonce\":\"9e5b4b55-68c0-4972-89e2-603f34f4dadc\",\"unit\":{\"id\":\"tk-0003\",\"name\":\"Coder B CLI frontend\",\"role\":\"coder\",\"responsibility\":\"Implement unisphere-cli as a frontend library with clap parsing, explicit context, machine/human rendering and exit behavior; test solely through core InspectionApi/FakeInspector. Production executable wiring is PM-owned.\",\"paths\":[\"crates/cli/**\",\"docs/cli.md\"],\"reads\":[{\"owner\":\"tk-0001\",\"paths\":[\"Cargo.toml\",\"crates/core/**\",\"crates/testkit/Cargo.toml\",\"crates/testkit/src/lib.rs\",\"crates/testkit/src/fakes.rs\",\"crates/testkit/src/sealed.rs\",\"crates/testkit/src/fixtures.rs\",\"crates/testkit/fixtures/config/**\"]}],\"interface\":\"pub run(args, &CliContext, &dyn InspectionApi, stdout, stderr)->u8, exact command grammar/envelope/exit rules above. Expose CliContext and run only as needed by unisphere-app. Testkit is dev-dependency only. Never depend on unisphere-sdk/app, call a sibling implementation, or add a fake production main.\",\"depends_on\":[\"tk-0001\"],\"wave\":1,\"acceptance\":[\"../plan.dd.json#acceptance_criteria/ac-0004\",\"../plan.dd.json#acceptance_criteria/ac-0005\",\"../plan.dd.json#acceptance_criteria/ac-0006\",\"../plan.dd.json#acceptance_criteria/ac-0008\",\"../plan.dd.json#acceptance_criteria/ac-000b\"],\"proof\":[\"impl-guide.dd.json#checks/vd-0003\"],\"notes\":\"Can be implemented/tested before SDK exists; baseline FakeInspector records requests and supplies deterministic results. No changes to root manifests/lockfile or shared core fixtures; request contract changes through PM.\"},\"plan\":{\"path\":\"docs/plans/001-sdk-cli-foundation/plan.dd.json\",\"sha256\":\"bc208a54522fe9d5d26c87d25270806ad72b6b0a53d9155ae4cff1b2871fe3cc\"},\"guide\":{\"path\":\"docs/plans/001-sdk-cli-foundation/assets/impl-guide.dd.json\",\"sha256\":\"9a2977c85b3c025eafb434ef1306fc71bf3c35fcaa3bc39fd7784a97a868899d\"},\"baseline\":{\"path\":\"docs/plans/001-sdk-cli-foundation/assets/team/baseline-v7.dd.json\",\"sha256\":\"c9fabdbdb8f7ccc0093f178cf5111d175f12e7cc310196a47372d5aa9da0c92c\"},\"allocation\":{\"path\":\"/Users/jordanknight/substrate/unisphere/unishpere-main/.git/builder/allocations/allocation-al-002-ba4dc441-30eb-490b-a26e-a4f7955e1599.dd.json\",\"sha256\":\"994fd10124a91444166e38c06ba0e863d3297f008c13a5e9e7a8d7166fdd3806\"},\"workspace\":\"/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli\",\"parent\":\"pij-right-kotallo\",\"requested\":{\"role\":\"coder\",\"harness\":\"omp\",\"model\":\"github-copilot/gpt-6-astra\",\"effort\":\"high\",\"source\":{\"harness\":\"override\",\"model\":\"override\",\"effort\":\"override\"}},\"forbidden\":[\".the-flow-state.json\",\"the-flow.json\",\"the-flow.md\",\"docs/plans/001-sdk-cli-foundation/plan.dd.json\",\"docs/plans/001-sdk-cli-foundation/assets/impl-guide.dd.json\",\"docs/plans/001-sdk-cli-foundation/assets/team\",\".harness/government/\",\"All source paths outside unit.paths; sibling implementations; global settings and deployed skills.\",\"Pushes, merges, canonical lifecycle mutations and nested peers without PM approval.\"],\"canary\":{\"path\":\"docs/plans/001-sdk-cli-foundation/assets/team/canary-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.txt\"},\"instructions\":[\"ACKNOWLEDGEMENT ONLY. Read this packet and the canary through native repository-relative file tools, not shell cwd or absolute-path substitution.\",\"Confirm HEAD 1ec7213488044ba083da3db7f45a958024a86c86, native root /Users/jordanknight/substrate/unisphere/unisphere-plan001-cli, peer/session/PID and observed runtime configuration. Requested launch settings are not provider attestation; omit unspecified effort and name observation gaps.\",\"Before work, write a raw AckReceipt JSON with record_type ack, id ack-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86, nonce equal to packet.nonce, recorded_at, unit_id, peer_id, packet_sha256, baseline_sha (full Git SHA), native_root, shell_cwd, canary_nonce and observed. RuntimeObservation includes peer_id, root, ready, evidence, gaps and only actually observed harness/model/effort/native_session/pid/argv.\",\"Send its path and SHA-256 to pij-right-kotallo for ingestion through builder ack <plan> --receipt <path>. Do not edit source until an IMPLEMENTATION RELEASE names your peer, unit, nonce and exact packet digest. Queued transport is not observed receipt.\",\"Only after observing that exact release, natively re-read this packet and canary and create a NEW raw AckReceipt with id ack-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86-release. Keep the same unit/peer/packet/baseline/root/canary and freshly observed runtime bindings; set nonce to the already-issued release.message_id, independently of packet.nonce. Use your actual receipt creation time as recorded_at: it must not precede release.recorded_at minus 5000 ms or exceed PM ingestion time plus 5000 ms. Never reuse or overwrite the pre-work receipt.\",\"Send the new post-release receipt path and SHA-256 to pij-right-kotallo for the SAME builder ack <plan> --receipt <path> command before import. This confirms an existing grant; it never requests or sends a second grant. Continue the already-authorized scoped work without waiting for another release.\",\"After release, implement the complete unit responsibility/interface/acceptance within unit.paths; consume frozen reads rather than sibling implementation code. Already-working descendants can confirm their retained release without replaying work. Report scoped committed delivery and evidence to the PM.\"]}}}}\n",
+  "stderr": "",
+  "data": {
+    "command": "builder ack",
+    "status": "ok",
+    "timestamp": "2026-09-07T07:18:40.658Z",
+    "data": {
+      "dispatch": {
+        "ref": {
+          "path": "docs/plans/001-sdk-cli-foundation/assets/team/dispatch-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.json",
+          "sha256": "ffd8d247a956839f4ea5e5b8cd2f5f3243a19b23139f85cd073b3110faf027f0"
+        },
+        "value": {
+          "record_type": "dispatch",
+          "id": "dispatch-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86",
+          "recorded_at": "2026-09-07T07:06:32.767Z",
+          "unit_id": "tk-0003",
+          "packet": {
+            "path": "docs/plans/001-sdk-cli-foundation/assets/team/packet-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.json",
+            "sha256": "e99c81186cb4a1c7a58135199a418beb88c28ecd934ba6faaf01a98c75b2445f"
+          },
+          "baseline": {
+            "path": "docs/plans/001-sdk-cli-foundation/assets/team/baseline-v7.dd.json",
+            "sha256": "c9fabdbdb8f7ccc0093f178cf5111d175f12e7cc310196a47372d5aa9da0c92c"
+          },
+          "allocation": {
+            "path": "/Users/jordanknight/substrate/unisphere/unishpere-main/.git/builder/allocations/allocation-al-002-ba4dc441-30eb-490b-a26e-a4f7955e1599.dd.json",
+            "sha256": "994fd10124a91444166e38c06ba0e863d3297f008c13a5e9e7a8d7166fdd3806"
+          },
+          "requested": {
+            "role": "coder",
+            "harness": "omp",
+            "model": "github-copilot/gpt-6-astra",
+            "effort": "high",
+            "source": {
+              "harness": "override",
+              "model": "override",
+              "effort": "override"
+            }
+          },
+          "observed": {
+            "peer_id": "pij-standard-impala",
+            "root": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli",
+            "ready": true,
+            "harness": "omp",
+            "model": "github-copilot/gpt-6-astra",
+            "effort": "high",
+            "native_session": "01a07ab0-a224-7000-af38-3738da86dae6",
+            "pid": 38381,
+            "evidence": [
+              "pij-rs state: {\"id\":\"pij-standard-impala\",\"liveness\":\"active\",\"cwd\":\"/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli\",\"harness\":\"omp\",\"boundModel\":\"github-copilot/gpt-6-astra\",\"effort\":\"high\",\"pid\":38381,\"procStart\":20260907170629,\"parent\":\"pij-right-kotallo\"}",
+              "pij-rs list: {\"id\":\"pij-standard-impala\",\"session\":\"01a07ab0-a224-7000-af38-3738da86dae6\",\"folder\":\"/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli\",\"proc\":{\"pid\":38381,\"proc_start\":20260907170629},\"harness\":\"omp\",\"model\":\"github-copilot/gpt-6-astra\",\"effort\":\"high\"}",
+              "Native relative read of packet and canary succeeded; packet SHA-256 independently computed.",
+              "git rev-parse HEAD matched baseline; pwd and native kernel cwd matched packet workspace.",
+              "pij state text view reported harness omp, parent pij-right-kotallo and expected cwd.",
+              "Process ancestry observed omp PID 38381, model and --thinking high; developer runtime context independently names model github-copilot/gpt-6-astra.",
+              "PI_SESSION_FILE supplies native session binding.",
+              "Fresh pre-work re-observation after PM local-exclude change: native relative packet/canary, HEAD, shell/native roots, pij state, PI_SESSION_FILE and live PID/argv unchanged.",
+              "Native session header at /Users/jordanknight/.omp/agent/sessions/-substrate-unisphere-unisphere-plan001-cli/2026-09-07T07-06-31-332Z_01a07ab0-a224-7000-af38-3738da86dae6.jsonl:2 supplies id 01a07ab0-a224-7000-af38-3738da86dae6; adjacent model_change/thinking_level_change record github-copilot/gpt-6-astra and high."
+            ],
+            "gaps": [
+              "Provider-served inference identity is unverified; these observations bind launch/session configuration only.",
+              "Native public state does not expose process argv or environment; the peer acknowledgement must name its observation limits.",
+              "Requested and process launch settings are not provider attestation.",
+              "pij state --json exited 4: schema projection refused because rs role differs from orchestrationRole and 14 further fields are absent."
+            ],
+            "argv": [
+              "bun",
+              "/Users/jordanknight/.npm-global/bin/omp",
+              "--auto-approve",
+              "--model",
+              "github-copilot/gpt-6-astra",
+              "--thinking",
+              "high"
+            ]
+          },
+          "seed_files": [
+            {
+              "path": "docs/plans/001-sdk-cli-foundation/plan.dd.json",
+              "sha256": "bc208a54522fe9d5d26c87d25270806ad72b6b0a53d9155ae4cff1b2871fe3cc"
+            },
+            {
+              "path": "docs/plans/001-sdk-cli-foundation/plan.dd.md",
+              "sha256": "8910d82cb2b16bb6bb2dde9eba92a1d652a834047f7e599527fac7faced933de"
+            },
+            {
+              "path": "docs/plans/001-sdk-cli-foundation/assets/impl-guide.dd.json",
+              "sha256": "9a2977c85b3c025eafb434ef1306fc71bf3c35fcaa3bc39fd7784a97a868899d"
+            },
+            {
+              "path": "docs/plans/001-sdk-cli-foundation/assets/impl-guide.dd.md",
+              "sha256": "e5a676efaa8a2e4b44644dd1e977f287b2675c408e7a1f10db20816866da7ae3"
+            },
+            {
+              "path": "docs/plans/001-sdk-cli-foundation/assets/team/baseline-v7.dd.json",
+              "sha256": "c9fabdbdb8f7ccc0093f178cf5111d175f12e7cc310196a47372d5aa9da0c92c"
+            },
+            {
+              "path": "docs/plans/001-sdk-cli-foundation/assets/team/baseline-v7.dd.md",
+              "sha256": "8ff386d7f1e7687e5d9589031baa589e7ef53f0ef7ddd1e81d341bfbd1716fda"
+            },
+            {
+              "path": "docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-1ec7213-pij-xenacious-yarpen-r6.dd.json",
+              "sha256": "e3c91d26195974f6d761e7993a30945fcd6dd6a5c3a7dff6e94115322c188073"
+            },
+            {
+              "path": "docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-1ec7213-pij-xenacious-yarpen-r6.dd.md",
+              "sha256": "ba76e49506cc42b46ebfc68230de6c121785be4f5ca55aae7fd2d61f061d5243"
+            },
+            {
+              "path": "docs/plans/001-sdk-cli-foundation/assets/team/canary-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.txt",
+              "sha256": "449b0923f6b1059bb5894b18295ab3774c278fe7bb68128cddbec17b89367ce1"
+            },
+            {
+              "path": "docs/plans/001-sdk-cli-foundation/assets/team/packet-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.json",
+              "sha256": "e99c81186cb4a1c7a58135199a418beb88c28ecd934ba6faaf01a98c75b2445f"
+            },
+            {
+              "path": "docs/plans/001-sdk-cli-foundation/assets/team/packet-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.md",
+              "sha256": "2a7d08855d5e84830c2af7d38151fd8970f1ee2811df0de124019f0f71144bf4"
+            }
+          ],
+          "acknowledgement": {
+            "path": "docs/plans/001-sdk-cli-foundation/assets/team/ack-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.json",
+            "sha256": "b8c0d9588fb091599ba59f2504adf304102467cab9d6d0505d6c459a4feae4b7"
+          },
+          "release": {
+            "message_id": "9e5b4b55-68c0-4972-89e2-603f34f4dadc",
+            "outcome": "queued",
+            "recorded_at": "2026-09-07T07:18:40.655Z"
+          }
+        }
+      },
+      "packet": {
+        "ref": {
+          "path": "docs/plans/001-sdk-cli-foundation/assets/team/packet-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.json",
+          "sha256": "e99c81186cb4a1c7a58135199a418beb88c28ecd934ba6faaf01a98c75b2445f"
+        },
+        "value": {
+          "record_type": "packet",
+          "id": "packet-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86",
+          "recorded_at": "2026-09-07T07:06:32.532Z",
+          "nonce": "9e5b4b55-68c0-4972-89e2-603f34f4dadc",
+          "unit": {
+            "id": "tk-0003",
+            "name": "Coder B CLI frontend",
+            "role": "coder",
+            "responsibility": "Implement unisphere-cli as a frontend library with clap parsing, explicit context, machine/human rendering and exit behavior; test solely through core InspectionApi/FakeInspector. Production executable wiring is PM-owned.",
+            "paths": [
+              "crates/cli/**",
+              "docs/cli.md"
+            ],
+            "reads": [
+              {
+                "owner": "tk-0001",
+                "paths": [
+                  "Cargo.toml",
+                  "crates/core/**",
+                  "crates/testkit/Cargo.toml",
+                  "crates/testkit/src/lib.rs",
+                  "crates/testkit/src/fakes.rs",
+                  "crates/testkit/src/sealed.rs",
+                  "crates/testkit/src/fixtures.rs",
+                  "crates/testkit/fixtures/config/**"
+                ]
+              }
+            ],
+            "interface": "pub run(args, &CliContext, &dyn InspectionApi, stdout, stderr)->u8, exact command grammar/envelope/exit rules above. Expose CliContext and run only as needed by unisphere-app. Testkit is dev-dependency only. Never depend on unisphere-sdk/app, call a sibling implementation, or add a fake production main.",
+            "depends_on": [
+              "tk-0001"
+            ],
+            "wave": 1,
+            "acceptance": [
+              "../plan.dd.json#acceptance_criteria/ac-0004",
+              "../plan.dd.json#acceptance_criteria/ac-0005",
+              "../plan.dd.json#acceptance_criteria/ac-0006",
+              "../plan.dd.json#acceptance_criteria/ac-0008",
+              "../plan.dd.json#acceptance_criteria/ac-000b"
+            ],
+            "proof": [
+              "impl-guide.dd.json#checks/vd-0003"
+            ],
+            "notes": "Can be implemented/tested before SDK exists; baseline FakeInspector records requests and supplies deterministic results. No changes to root manifests/lockfile or shared core fixtures; request contract changes through PM."
+          },
+          "plan": {
+            "path": "docs/plans/001-sdk-cli-foundation/plan.dd.json",
+            "sha256": "bc208a54522fe9d5d26c87d25270806ad72b6b0a53d9155ae4cff1b2871fe3cc"
+          },
+          "guide": {
+            "path": "docs/plans/001-sdk-cli-foundation/assets/impl-guide.dd.json",
+            "sha256": "9a2977c85b3c025eafb434ef1306fc71bf3c35fcaa3bc39fd7784a97a868899d"
+          },
+          "baseline": {
+            "path": "docs/plans/001-sdk-cli-foundation/assets/team/baseline-v7.dd.json",
+            "sha256": "c9fabdbdb8f7ccc0093f178cf5111d175f12e7cc310196a47372d5aa9da0c92c"
+          },
+          "allocation": {
+            "path": "/Users/jordanknight/substrate/unisphere/unishpere-main/.git/builder/allocations/allocation-al-002-ba4dc441-30eb-490b-a26e-a4f7955e1599.dd.json",
+            "sha256": "994fd10124a91444166e38c06ba0e863d3297f008c13a5e9e7a8d7166fdd3806"
+          },
+          "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli",
+          "parent": "pij-right-kotallo",
+          "requested": {
+            "role": "coder",
+            "harness": "omp",
+            "model": "github-copilot/gpt-6-astra",
+            "effort": "high",
+            "source": {
+              "harness": "override",
+              "model": "override",
+              "effort": "override"
+            }
+          },
+          "forbidden": [
+            ".the-flow-state.json",
+            "the-flow.json",
+            "the-flow.md",
+            "docs/plans/001-sdk-cli-foundation/plan.dd.json",
+            "docs/plans/001-sdk-cli-foundation/assets/impl-guide.dd.json",
+            "docs/plans/001-sdk-cli-foundation/assets/team",
+            ".harness/government/",
+            "All source paths outside unit.paths; sibling implementations; global settings and deployed skills.",
+            "Pushes, merges, canonical lifecycle mutations and nested peers without PM approval."
+          ],
+          "canary": {
+            "path": "docs/plans/001-sdk-cli-foundation/assets/team/canary-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.txt"
+          },
+          "instructions": [
+            "ACKNOWLEDGEMENT ONLY. Read this packet and the canary through native repository-relative file tools, not shell cwd or absolute-path substitution.",
+            "Confirm HEAD 1ec7213488044ba083da3db7f45a958024a86c86, native root /Users/jordanknight/substrate/unisphere/unisphere-plan001-cli, peer/session/PID and observed runtime configuration. Requested launch settings are not provider attestation; omit unspecified effort and name observation gaps.",
+            "Before work, write a raw AckReceipt JSON with record_type ack, id ack-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86, nonce equal to packet.nonce, recorded_at, unit_id, peer_id, packet_sha256, baseline_sha (full Git SHA), native_root, shell_cwd, canary_nonce and observed. RuntimeObservation includes peer_id, root, ready, evidence, gaps and only actually observed harness/model/effort/native_session/pid/argv.",
+            "Send its path and SHA-256 to pij-right-kotallo for ingestion through builder ack <plan> --receipt <path>. Do not edit source until an IMPLEMENTATION RELEASE names your peer, unit, nonce and exact packet digest. Queued transport is not observed receipt.",
+            "Only after observing that exact release, natively re-read this packet and canary and create a NEW raw AckReceipt with id ack-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86-release. Keep the same unit/peer/packet/baseline/root/canary and freshly observed runtime bindings; set nonce to the already-issued release.message_id, independently of packet.nonce. Use your actual receipt creation time as recorded_at: it must not precede release.recorded_at minus 5000 ms or exceed PM ingestion time plus 5000 ms. Never reuse or overwrite the pre-work receipt.",
+            "Send the new post-release receipt path and SHA-256 to pij-right-kotallo for the SAME builder ack <plan> --receipt <path> command before import. This confirms an existing grant; it never requests or sends a second grant. Continue the already-authorized scoped work without waiting for another release.",
+            "After release, implement the complete unit responsibility/interface/acceptance within unit.paths; consume frozen reads rather than sibling implementation code. Already-working descendants can confirm their retained release without replaying work. Report scoped committed delivery and evidence to the PM."
+          ]
+        }
+      }
+    }
+  }
+}

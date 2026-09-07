@@ -4,57 +4,85 @@ import { copyFileSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
+import { runBoot } from './boot.mjs';
 
-// These exercise harness composition only, never claim to test the collector.
-const cases = [
-  { name: 'missing checks cannot imply readiness', gate: null, status: 'degraded', exit: 0 },
-  { name: 'the real unconfigured gate stays unconfigured', gate: 'actual', status: 'unconfigured', exit: 2 },
-  { name: 'failed checks preserve diagnostics', gate: "ctx.error('E_FIXTURE', 'fixture failure', { next_action: 'Repair the fixture gate.' })", status: 'error', exit: 1 },
-  { name: 'passing checks alone cannot imply readiness', gate: 'ctx.ok({ passed: true })', status: 'degraded', exit: 0 },
-  { name: 'degraded checks cannot imply readiness', gate: "ctx.degraded({ passed: false }, 'Resolve the fixture warning.')", status: 'degraded', exit: 0 },
-];
-
-for (const scenario of cases) {
-  test(scenario.name, () => {
-    const cwd = mkdtempSync(join(tmpdir(), 'unisphere-boot-'));
-    try {
-      const boot = join(cwd, '.harness/extensions/boot');
-      mkdirSync(boot, { recursive: true });
-      copyFileSync(new URL('./extension.ts', import.meta.url), join(boot, 'extension.ts'));
-      copyFileSync(new URL('./instructions.md', import.meta.url), join(boot, 'instructions.md'));
-      if (scenario.gate !== null) {
-        const checks = join(cwd, '.harness/extensions/checks');
-        mkdirSync(checks);
-        if (scenario.gate === 'actual') {
-          copyFileSync(new URL('../checks/extension.ts', import.meta.url), join(checks, 'extension.ts'));
-        } else {
-          writeFileSync(join(checks, 'extension.js'), `export default {
-            kind: 'extension', name: 'checks', summary: 'Isolated test fixture',
-            verbs: { checks: { summary: 'Fixture quality gate', run(ctx) { return ${scenario.gate}; } } }
-          };\n`);
-        }
-        writeFileSync(join(checks, 'instructions.md'), '# Isolated harness test fixture\n');
-      }
-      const result = spawnSync('harness', ['boot', '--json'], {
-        cwd, encoding: 'utf8', timeout: 15_000,
-        env: { ...process.env, HARNESS_NO_TELEMETRY: '1', HARNESS_NO_TELEMETRY_AUTOSYNC: '1' },
-      });
-      assert.ifError(result.error);
-      assert.equal(result.status, scenario.exit, result.stderr || result.stdout);
-      const envelope = JSON.parse(result.stdout);
-      assert.equal(envelope.command, 'boot');
-      assert.equal(envelope.status, scenario.status);
-      assert.ok(envelope.next_action);
-      if (scenario.status === 'degraded') assert.equal(envelope.data.ready, false);
-      if (scenario.gate === 'actual') assert.match(envelope.next_action, /product build\/test lane/i);
-      if (scenario.status === 'error') {
-        assert.equal(envelope.error.code, 'E_CHECKS_FAILED');
-        assert.match(envelope.error.details.stdout, /fixture failure/);
-      }
-      if (scenario.gate?.startsWith('ctx.ok')) assert.equal(envelope.data.checks.status, 'ok');
-      if (scenario.gate?.startsWith('ctx.degraded')) assert.equal(envelope.data.checks.status, 'degraded');
-    } finally {
-      rmSync(cwd, { recursive: true, force: true });
-    }
-  });
+function context(exec, exists = true) {
+  return {
+    fs: { exists: () => exists }, exec,
+    ok: data => ({ status: 'ok', data }),
+    degraded: (data, next_action) => ({ status: 'degraded', data, next_action }),
+    unconfigured: next_action => ({ status: 'unconfigured', next_action }),
+    error: (code, message, extra) => ({ status: 'error', error: { code, message, ...extra } }),
+  };
 }
+const good = { ok: true, code: 0, stdout: '{"command":"checks","status":"ok"}', stderr: '' };
+
+test('missing, unconfigured, malformed and degraded gates cannot imply readiness', async () => {
+  const missing = await runBoot(context(() => assert.fail('must not spawn'), false));
+  assert.equal(missing.data.ready, false);
+  for (const [result, status] of [
+    [{ ok: false, code: 2, stdout: '', stderr: '' }, 'unconfigured'],
+    [{ ...good, stdout: 'not json' }, 'error'],
+    [{ ...good, stdout: '{"command":"checks","status":"degraded"}' }, 'degraded'],
+    [{ ...good, stdout: '{"command":"other","status":"ok"}' }, 'degraded'],
+  ]) {
+    let calls = 0;
+    const verdict = await runBoot(context(async () => { calls += 1; return result; }));
+    assert.equal(verdict.status, status);
+    assert.equal(calls, 1);
+    assert.notEqual(verdict.data?.ready, true);
+  }
+});
+
+test('failed product checks preserve exit/stdout/stderr and never start smoke', async () => {
+  let calls = 0;
+  const verdict = await runBoot(context(async () => { calls += 1; return { ok: false, code: 17, stdout: 'output', stderr: 'failure' }; }));
+  assert.equal(calls, 1);
+  assert.equal(verdict.error.code, 'E_CHECKS_FAILED');
+  assert.equal(verdict.error.details.code, 17);
+  assert.equal(verdict.error.details.stdout, 'output');
+  assert.equal(verdict.error.details.stderr, 'failure');
+});
+
+test('each required smoke failure prevents readiness and preserves failure evidence', async () => {
+  for (let failed = 0; failed < 3; failed += 1) {
+    let calls = 0;
+    const verdict = await runBoot(context(async () => {
+      const index = calls++;
+      if (index === 0) return good;
+      return index === failed + 1 ? { ok: false, code: 19, stdout: 'smoke-out', stderr: 'smoke-error' } : { ...good, stdout: 'passed' };
+    }));
+    assert.equal(verdict.error.code, 'E_FOUNDATION_SMOKE');
+    assert.equal(calls, failed + 2);
+    assert.equal(verdict.error.details.proofs.at(-1).stderr, 'smoke-error');
+  }
+});
+
+test('only complete quality and assembled proofs establish foundation readiness', async () => {
+  const calls = [];
+  const verdict = await runBoot(context(async (command, args) => { calls.push([command, args]); return good; }));
+  assert.equal(verdict.data.ready, true);
+  assert.equal(verdict.data.scope, 'configuration-sdk-cli-foundation');
+  assert.equal(calls.length, 4);
+  assert.deepEqual(calls.slice(1).map(([, args]) => args.at(-1)), ['composition', 'sdk-consumer', 'installed-cli']);
+  assert.match(verdict.data.limitations.join(' '), /No native telemetry/);
+});
+
+test('a real harness child failure is not laundered into readiness', () => {
+  const cwd = mkdtempSync(join(tmpdir(), 'unisphere-boot-'));
+  try {
+    const boot = join(cwd, '.harness/extensions/boot');
+    const checks = join(cwd, '.harness/extensions/checks');
+    mkdirSync(boot, { recursive: true });
+    mkdirSync(checks, { recursive: true });
+    for (const file of ['extension.ts', 'boot.mjs', 'instructions.md']) copyFileSync(new URL(`./${file}`, import.meta.url), join(boot, file));
+    writeFileSync(join(checks, 'extension.js'), `export default { kind: 'extension', name: 'checks', summary: 'Controlled failure', verbs: { checks: { summary: 'Fail product check', run(ctx) { return ctx.error('E_FIXTURE', 'fixture failure', { next_action: 'Repair fixture.' }); } } } };\n`);
+    writeFileSync(join(checks, 'instructions.md'), '# Controlled harness fixture\n');
+    const result = spawnSync('harness', ['boot', '--json'], { cwd, encoding: 'utf8', timeout: 15_000, env: { ...process.env, HARNESS_NO_TELEMETRY: '1', HARNESS_NO_TELEMETRY_AUTOSYNC: '1' } });
+    assert.ifError(result.error);
+    assert.equal(result.status, 1, result.stderr || result.stdout);
+    const envelope = JSON.parse(result.stdout);
+    assert.equal(envelope.error.code, 'E_CHECKS_FAILED');
+    assert.match(envelope.error.details.stdout, /fixture failure/);
+  } finally { rmSync(cwd, { recursive: true, force: true }); }
+});

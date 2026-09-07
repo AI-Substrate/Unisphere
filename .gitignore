@@ -22,3 +22,6 @@ target
 
 # Local Builder document-authoring tooling, not a Rust runtime dependency
 node_modules/
+
+# Experimental native readers; never imported by shipping crates
+/scratch/

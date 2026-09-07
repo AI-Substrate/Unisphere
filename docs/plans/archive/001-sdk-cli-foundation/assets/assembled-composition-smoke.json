@@ -1,0 +1,18 @@
+{
+  "argv": [
+    "cargo",
+    "run",
+    "--locked",
+    "-p",
+    "unisphere-testkit",
+    "--bin",
+    "unisphere-proof",
+    "--",
+    "composition"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+  "exit_code": 0,
+  "stdout": "foundation proof composition: passed (temporary isolated build and product runtime; no telemetry-reader claim)\n",
+  "stderr": "   Compiling unisphere-testkit v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/crates/testkit)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.93s\n     Running `target/debug/unisphere-proof composition`\n",
+  "source_state": "candidate0b119041 plus4mechanical clippy fixes; not yet new committed candidate"
+}

@@ -1,0 +1,146 @@
+{
+  "dd": {
+    "schema": "builder/backpressure"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Foundation acceptance proof selection — not execution evidence",
+        "plan": "../plan.dd.json#meta",
+        "certainty": "Proven",
+        "basis_sha": "bc208a54522fe9d5d26c87d25270806ad72b6b0a53d9155ae4cff1b2871fe3cc"
+      }
+    },
+    {
+      "name": "rows",
+      "value": [
+        {
+          "id": "bp-0001",
+          "criterion": "An external Rust application consumes the SDK from the checkout through ordinary Cargo dependency configuration and invokes the configuration/diagnostic use case in-process, without spawning the CLI or requiring a daemon, database, ML service or caller-created async runtime.",
+          "phase": "ph-415a",
+          "mode": "BUILD",
+          "tier": "computational",
+          "proof": "BUILD→RUN: external-consumer Cargo fixture invoking the public SDK; include the behavioral test in the future cargo test --workspace lane. No product Cargo workspace exists yet.",
+          "state": "checked",
+          "probe": "Current repository contains only planning/harness setup; Flowspace3 core/public library patterns inspected.",
+          "receipt": "execution-log.dd.json#entries/lg-0010"
+        },
+        {
+          "id": "bp-0002",
+          "criterion": "The shared configuration use case accepts a documented minimal configuration for caller-supplied source roots, produces the effective settings and diagnostics deterministically, treats an empty root list as valid, and rejects malformed documents, blank root entries and incompatible value types with field/path-specific errors rather than panicking or substituting guessed values. It does not inspect session content.",
+          "phase": "ph-415a",
+          "mode": "BUILD",
+          "tier": "computational",
+          "proof": "BUILD→RUN: table-driven public configuration tests, invalid-input boundaries and deterministic repeated calls under cargo test --workspace; exact configuration syntax is fixed by the reviewed guide.",
+          "state": "checked",
+          "probe": "Flowspace3 pure config resolve/validation source inspected; no corresponding Unisphere implementation exists.",
+          "receipt": "execution-log.dd.json#entries/lg-0010"
+        },
+        {
+          "id": "bp-0003",
+          "criterion": "Configuration precedence is documented and identical in SDK and CLI: defaults are overridden by explicitly supplied configuration, then explicit caller/CLI overrides; omitted values retain defaults. Library calls do not read ambient HOME, process environment or global config implicitly.",
+          "phase": "ph-415a",
+          "mode": "BUILD",
+          "tier": "computational",
+          "proof": "BUILD→RUN: SDK precedence tests plus unisphere-proof sdk-consumer executed under sealed hostile HOME/XDG_*/UNISPHERE_* in separate child processes; assert identical explicit configuration. No process-global environment mutation. Exact argv: guide vd-0002 and vd-000a.",
+          "state": "checked",
+          "probe": "Flowspace3 pure layering and sealed subprocess helpers inspected; this plan intentionally does not inherit its full FS3_* environment namespace.",
+          "receipt": "execution-log.dd.json#entries/lg-0010"
+        },
+        {
+          "id": "bp-0004",
+          "criterion": "The installable CLI exposes help/version and the shared configuration/diagnostic operation; on equivalent successful and invalid inputs its semantic data/error agrees with direct SDK invocation. A missing or unreadable explicit config file produces a named failure, not success or an empty configuration.",
+          "phase": "ph-415a",
+          "mode": "BUILD",
+          "tier": "computational",
+          "proof": "BUILD→RUN: real CLI subprocess smoke against temporary valid/malformed/missing/unreadable configuration plus direct SDK comparison; wired into the future harness boot/checks lane.",
+          "state": "checked",
+          "probe": "Existing boot/checks extensions are unconfigured and provide no product smoke; Flowspace3 CLI contract tests are reference material only.",
+          "receipt": "execution-log.dd.json#entries/lg-0010"
+        },
+        {
+          "id": "bp-0005",
+          "criterion": "Machine-mode CLI output has a documented versioned success/error envelope and remains parseable without terminal decoration; explicit output selection takes precedence over terminal detection, and piped/captured output defaults to machine mode. Human output is derived from the same result, logs do not corrupt stdout, and successful operations, operational/configuration failures and invalid CLI invocation have documented distinct exit behavior.",
+          "phase": "ph-415a",
+          "mode": "BUILD",
+          "tier": "computational",
+          "proof": "BUILD→RUN: pipe/PTY-or-injected-terminal/output-selection/error-routing subprocess cases and SDK/CLI result parity under cargo test --workspace; exact flags/envelope keys belong to the guide.",
+          "state": "checked",
+          "probe": "Flowspace3 core/output.rs and core/envelope.rs inspected; reusing patterns does not adopt their command vocabulary or telemetry payload schema.",
+          "receipt": "execution-log.dd.json#entries/lg-0010"
+        },
+        {
+          "id": "bp-0006",
+          "criterion": "Public failures are actionable and typed: callers can distinguish invalid configuration from explicit input I/O failures without parsing prose; CLI failures carry a stable category/code, a useful location when known and remediation guidance, without dumping secrets, full config documents or unrelated session content.",
+          "phase": "ph-415a",
+          "mode": "BUILD",
+          "tier": "computational",
+          "proof": "BUILD→RUN: typed failure matching, hostile-value redaction and CLI error-envelope checks with deterministic injected failures; future cargo test --workspace.",
+          "state": "checked",
+          "probe": "Flowspace3 catalog/envelope source inspected; no Unisphere taxonomy or implementation exists yet.",
+          "receipt": "execution-log.dd.json#entries/lg-0010"
+        },
+        {
+          "id": "bp-0007",
+          "criterion": "Foundation services are executable in isolation through their public contracts with injected dependencies before a CLI or sibling adapter implementation exists; automated dependency checks reject core/service dependencies on the CLI or concrete outer adapters, and a deliberate forbidden-edge fixture makes the check fail.",
+          "phase": "ph-415a",
+          "mode": "BUILD",
+          "tier": "computational",
+          "proof": "BUILD→RUN: independent service contract suite plus a dependency-rule negative fixture checked through the future architecture check and harness checks. Exact crate layout/rules are authored in the guide.",
+          "state": "checked",
+          "probe": "Flowspace3 testkit architecture allowlist and fake-source contract patterns inspected; user explicitly requires parallel service construction without CLI completion.",
+          "receipt": "execution-log.dd.json#entries/lg-0010"
+        },
+        {
+          "id": "bp-0008",
+          "criterion": "Tests and smoke scenarios are deterministic, parallel-safe and isolated from real user configuration/session stores: temporary paths and explicit injected settings are used, foundation operations do not write outside supplied test/workspace paths or start hidden background workers, and ordinary library invocation performs no network calls.",
+          "phase": "ph-415a",
+          "mode": "BUILD",
+          "tier": "human-judgement",
+          "proof": "BUILD→RUN: isolated service tests and sealed CLI/external-consumer smoke (guide vd-0002/0003/0004/000a), plus vd-0006 dependency-surface checks. REVIEW: independent source inspection for ambient reads, networking/client calls, process launch, FFI and unsafe escapes in core/SDK. The no-network promise requires this named judgement; no syscall-trace or runtime network-denial result is claimed.",
+          "state": "checked",
+          "probe": "Flowspace3 sealed process test helper inspected; no product side-effect surface is implemented.",
+          "receipt": "execution-log.dd.json#entries/lg-0010"
+        },
+        {
+          "id": "bp-0009",
+          "criterion": "A fresh checkout with the documented Rust toolchain and declared dependencies can build/test the SDK and install/run the CLI locally; SDK consumption and the installed CLI do not require Node/DD/Builder tooling at runtime, repository-private absolute paths, or unpublished sibling binaries.",
+          "phase": "ph-415a",
+          "mode": "BUILD",
+          "tier": "computational",
+          "proof": "BUILD→RUN: external Cargo consumer and installed CLI proof (guide vd-000a/000b), with actual compiler/cargo/clippy/rustfmt version/provenance recorded and checked for a coherent approved toolchain before product gates. rust-toolchain.toml is a request, not evidence that Homebrew binaries obey it.",
+          "state": "checked",
+          "probe": "Current setup uses repo-local DD only for planning; no Rust manifest/lockfile/package exists yet.",
+          "receipt": "execution-log.dd.json#entries/lg-0010"
+        },
+        {
+          "id": "bp-000a",
+          "criterion": "The repository engineering harness exposes one real product validation lane and a meaningful foundation boot/smoke lane; a passing lane proves the delivered configuration/SDK/CLI behavior and must not claim native telemetry collection or reader support. A deliberately failing product check propagates a failing verdict.",
+          "phase": "ph-415a",
+          "mode": "EXTEND",
+          "tier": "computational",
+          "proof": "EXTEND→RUN: replace current unconfigured checks/boot implementation with the future Rust validation and assembled SDK/CLI smoke, then run harness checks --json and harness boot --json with success/failure cases.",
+          "state": "checked",
+          "probe": "Read .harness/engineering-harness.md: existing checks/boot are explicitly unconfigured; prior harness composition tests prove only envelope behavior.",
+          "receipt": "execution-log.dd.json#entries/lg-0010"
+        },
+        {
+          "id": "bp-000b",
+          "criterion": "A new consumer can follow documented SDK and CLI examples to reproduce a successful configuration check and an actionable failure; docs state foundation-only capabilities and version/support limits, and any substantial Flowspace3/git-ai code reuse retains applicable licence and provenance notices.",
+          "phase": "ph-415a",
+          "mode": "BUILD",
+          "tier": "computational",
+          "proof": "BUILD→RUN: executable SDK rustdoc/example and documented CLI smoke; review current capability/notice documentation against shipped behavior. This is not registry publication or broad platform support.",
+          "state": "checked",
+          "probe": "Flowspace3 LICENSE and concrete reuse candidates inspected; no Unisphere product usage docs exist yet.",
+          "receipt": "execution-log.dd.json#entries/lg-0010"
+        }
+      ]
+    },
+    {
+      "name": "sensors",
+      "value": []
+    }
+  ]
+}

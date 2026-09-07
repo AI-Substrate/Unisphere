@@ -1,0 +1,34 @@
+docs/plans/001-sdk-cli-foundation/assets/baseline-v6-seal-command.json
+  h_9e71e8b09f7cf2 1-139
+docs/plans/001-sdk-cli-foundation/assets/execution-log.dd.json
+  h_9e71e8b09f7cf2 69-78
+docs/plans/001-sdk-cli-foundation/assets/execution-log.dd.md
+  h_9e71e8b09f7cf2 27
+docs/plans/001-sdk-cli-foundation/assets/reviews/baseline-opus-r5.md
+  h_9e71e8b09f7cf2 1-124
+docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json
+  h_9e71e8b09f7cf2 26,36-37,129,137,145,150,153
+docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.md
+  h_9e71e8b09f7cf2 38,52-55
+docs/plans/001-sdk-cli-foundation/assets/team/baseline-v6.dd.json
+  h_9e71e8b09f7cf2 1-122
+docs/plans/001-sdk-cli-foundation/assets/team/baseline-v6.dd.md
+  h_9e71e8b09f7cf2 1-20
+docs/plans/001-sdk-cli-foundation/assets/team/basis-096ef3c06daff0c337a80768e2aa83c3bef2ca45803a2c0e152b91ff662b4191.json
+  h_9e71e8b09f7cf2 1-777
+docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-412842e-pij-xenacious-yarpen-r5.dd.json
+  h_9e71e8b09f7cf2 1-146
+docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-412842e-pij-xenacious-yarpen-r5.dd.md
+  h_9e71e8b09f7cf2 1-24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "4a6fdfe1427fa59f8bd530b037e6b636b6ae708e",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

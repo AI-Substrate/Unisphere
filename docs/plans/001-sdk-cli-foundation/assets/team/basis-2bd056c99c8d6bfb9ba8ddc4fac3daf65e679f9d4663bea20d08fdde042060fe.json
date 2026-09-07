@@ -8,8 +8,8 @@
       "value": {
         "title": "Unisphere foundation: independent SDK, CLI and proof lanes",
         "plan": "../plan.dd.json#meta",
-        "version": 6,
-        "updated": "2026-09-07T05:41:51.724351+00:00"
+        "version": 5,
+        "updated": "2026-09-07T05:35:00.455207+00:00"
       }
     },
     {
@@ -445,7 +445,7 @@
         "proof": [
           "impl-guide.dd.json#checks/vd-0001"
         ],
-        "receipt": "team/baseline-v6.dd.json"
+        "receipt": "team/baseline.dd.json"
       }
     },
     {

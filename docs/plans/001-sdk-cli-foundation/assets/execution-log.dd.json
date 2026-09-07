@@ -56,6 +56,16 @@
             "execution-log.dd.json#entries/lg-0003",
             "backpressure.dd.json#rows/bp-0007"
           ]
+        },
+        {
+          "id": "lg-0005",
+          "at": "2026-09-07T05:41:52.061575+00:00",
+          "text": "Actual r4 approval was accepted, but expanded reseal refused E472 because existing baseline.dd.json is immutable: requested review does not match existing seal. No18-file seal or new baseline-test execution is claimed. Exact refusal assets/baseline-reseal-refusal.json. Followed its next_action: guide v6 selects fresh team/baseline-v6.dd.json identity; existing baseline.dd.json remains byte-identical SHA256a665d6971e0aaad60008a7cb9ba6fcbcdaf238f511e8175afdf0f59f459cff46 (also preserved in baseline-history-8eafef5.json). Current guide SHA256 096ef3c06daff0c337a80768e2aa83c3bef2ca45803a2c0e152b91ff662b4191. Only receipt identity/version/timestamp changed from approved v5; all18 freeze entries, source/contracts/check argv unchanged. lg-0004 source-digest applicability and lg-0002 actual3+10/clippy/fmt proof therefore carry unchanged; dw1/2/3 refer here for current guide applicability. dw4/tk1 remain unchecked pending fresh review and actual seal.",
+          "links": [
+            "execution-log.dd.json#entries/lg-0004",
+            "execution-log.dd.json#entries/lg-0002",
+            "backpressure.dd.json#rows/bp-0007"
+          ]
         }
       ]
     }

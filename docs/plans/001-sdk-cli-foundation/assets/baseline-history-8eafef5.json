@@ -1,0 +1,118 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "baseline",
+      "value": {
+        "record_type": "baseline",
+        "id": "baseline-8eafef5ef7dd5e798d8c869f3fb367c884789948",
+        "recorded_at": "2026-09-07T05:30:55.566Z",
+        "source_sha": "8eafef5ef7dd5e798d8c869f3fb367c884789948",
+        "plan": {
+          "path": "docs/plans/001-sdk-cli-foundation/plan.dd.json",
+          "sha256": "bc208a54522fe9d5d26c87d25270806ad72b6b0a53d9155ae4cff1b2871fe3cc"
+        },
+        "guide": {
+          "path": "docs/plans/001-sdk-cli-foundation/assets/impl-guide.dd.json",
+          "sha256": "370eaee98d6122eb2581b158ca606236b3318db66d7b694ac16273746c4a3d9e"
+        },
+        "files": [
+          {
+            "path": "Cargo.toml",
+            "sha256": "9295b5b133b9be39489a8732267ab51460da74d3673f51239f2423288d15400a"
+          },
+          {
+            "path": "rust-toolchain.toml",
+            "sha256": "24ef3b9d3edbd850aa386cb0a98e10450b0030991a4537cb359f54d49dbbb33a"
+          },
+          {
+            "path": "crates/core/Cargo.toml",
+            "sha256": "1ec11db2836c85c8ba9dd482618208055232ead77e24e18e70173ea8a1302e3a"
+          },
+          {
+            "path": "crates/core/src/lib.rs",
+            "sha256": "77a5986097e51dce9da94ec1578d989c8a81cfb9c5f2dfcbef241c91aed86145"
+          },
+          {
+            "path": "crates/core/src/config.rs",
+            "sha256": "0fb63620aea203c99850480e6e87e7ec71dade3b2103363c21b1c9d7f5fc243d"
+          },
+          {
+            "path": "crates/core/src/errors.rs",
+            "sha256": "f7bd2335beb585c1da17a4003a34c9bd19520de678a3c02662b6cc5219c18ebb"
+          },
+          {
+            "path": "crates/core/src/ports.rs",
+            "sha256": "750ef3dfabb8e2169f9fbc4267e139365d88977f3858f908f277415077b151af"
+          },
+          {
+            "path": "crates/testkit/Cargo.toml",
+            "sha256": "b0b0a8b0049ddac66bb6eb991219caa67591c25f041a7c3df1514369295f247c"
+          },
+          {
+            "path": "crates/testkit/src/lib.rs",
+            "sha256": "753db70a6ac622ca61c335292a8b9acd180a51aebdada7de69cc5a1ccc76ab8e"
+          },
+          {
+            "path": "crates/testkit/src/fakes.rs",
+            "sha256": "832b811268e98a7d6c12042f0a06b5e9ce545606903b12b5187a62ecc5382a72"
+          },
+          {
+            "path": "crates/testkit/src/sealed.rs",
+            "sha256": "38db251b2870d5431170a1da3c2b0da6cb4791850350d4793c54dd5089aed952"
+          },
+          {
+            "path": "crates/testkit/src/fixtures.rs",
+            "sha256": "aa915f1065888bf7e5061b37607430722e6c4a58e14d006f4943f2b420887e6c"
+          },
+          {
+            "path": "crates/testkit/fixtures/config/empty.json",
+            "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+          },
+          {
+            "path": "crates/testkit/fixtures/config/roots.json",
+            "sha256": "275bb5a287208e583d7c6629d5c223ab2b031d2ff32195e6eb354672178507fe"
+          },
+          {
+            "path": "crates/testkit/fixtures/config/wrong-type.json",
+            "sha256": "17b8a57fe2fe97be1b647541721248c7d22b3592ba070043ea5ff7dbed004c21"
+          },
+          {
+            "path": "crates/testkit/fixtures/config/blank-root.json",
+            "sha256": "c2d53dccfade52d50d2a3811f4d0c4d22150f916bf905753f5ead4a6a6b7e6a8"
+          },
+          {
+            "path": "crates/testkit/fixtures/config/malformed.json",
+            "sha256": "e77247777bb4cd1612bae6a6e190ed2feec9f4dca309c14da41cf578da67af53"
+          }
+        ],
+        "checks": [
+          {
+            "id": "vd-0001",
+            "command": "cargo",
+            "args": [
+              "test",
+              "-p",
+              "unisphere-core",
+              "-p",
+              "unisphere-testkit",
+              "--lib"
+            ],
+            "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+            "exit_code": 0,
+            "stdout": "\nrunning 3 tests\ntest config::tests::omitted_and_explicit_empty_overrides_remain_distinct ... ok\ntest errors::tests::public_constructors_preserve_typed_categories_and_location ... ok\ntest errors::tests::display_does_not_include_caller_supplied_location_text ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 10 tests\ntest fakes::tests::inspector_records_requests_for_both_success_and_error ... ok\ntest fixtures::tests::duplicate_fixture_retains_both_keys_in_the_input_stream ... ok\ntest fixtures::tests::invalid_documents_and_read_failures_have_explicit_expected_categories ... ok\ntest fakes::tests::fakes_are_parallel_safe_without_shared_environment ... ok\ntest fixtures::tests::valid_documents_express_empty_and_uninterpreted_roots ... ok\ntest fakes::tests::reader_records_limits_and_returns_isolated_values_or_typed_failures ... ok\ntest fakes::tests::relative_fixture_paths_are_rejected - should panic ... ok\ntest sealed::tests::rejects_relative_paths_before_creating_directories ... ok\ntest sealed::tests::constructs_without_executing_and_replaces_ambient_configuration ... ok\ntest fixtures::tests::oversized_fixture_is_valid_json_but_exceeds_the_limit ... ok\n\ntest result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n",
+            "stderr": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.76s\n     Running unittests src/lib.rs (target/debug/deps/unisphere_core-272d23499bb5d6dd)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_testkit-3415a2399ecf93c1)\n",
+            "recorded_at": "2026-09-07T05:30:55.551Z"
+          }
+        ],
+        "review": {
+          "path": "docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-8eafef5-pij-xenacious-yarpen-r3.dd.json",
+          "sha256": "55f2ada27f3a1b94fb9b011b9042f8e11b691b83b0c710ad7bdcc650d47da2c2"
+        }
+      }
+    }
+  ],
+  "references": []
+}

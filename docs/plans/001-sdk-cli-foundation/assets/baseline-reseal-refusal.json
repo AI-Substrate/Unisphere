@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "harness",
+    "builder",
+    "contracts",
+    "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/plan.dd.json",
+    "--seal",
+    "--review",
+    "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-8b43aa9-pij-xenacious-yarpen-r4.dd.json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+  "exit_code": 1,
+  "stdout": "{\"command\":\"builder contracts\",\"status\":\"error\",\"timestamp\":\"2026-09-07T05:41:08.739Z\",\"error\":{\"code\":\"E472\",\"message\":\"Existing baseline receipt is immutable and cannot be reused for this attempt: /Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/assets/team/baseline.dd.json\",\"details\":\"The requested review does not match the existing seal.\"},\"next_action\":\"Preserve any existing seal. Select a fresh guide.baseline.receipt identity before committing revised guide/inputs, obtaining their review and running contracts --seal.\"}\n",
+  "stderr": "",
+  "data": {
+    "command": "builder contracts",
+    "status": "error",
+    "timestamp": "2026-09-07T05:41:08.739Z",
+    "error": {
+      "code": "E472",
+      "message": "Existing baseline receipt is immutable and cannot be reused for this attempt: /Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/assets/team/baseline.dd.json",
+      "details": "The requested review does not match the existing seal."
+    },
+    "next_action": "Preserve any existing seal. Select a fresh guide.baseline.receipt identity before committing revised guide/inputs, obtaining their review and running contracts --seal."
+  }
+}

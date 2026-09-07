@@ -1,0 +1,16 @@
+docs/plans/001-sdk-cli-foundation/assets/baseline-v6-ready.json
+  h_9e71e8b09f7cf2 1-2654
+docs/plans/001-sdk-cli-foundation/assets/dispatch-native-refusal.json
+  h_9e71e8b09f7cf2 1-2793
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "500108f52369f0aa0e33901d46c5cf65283b4d9e",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

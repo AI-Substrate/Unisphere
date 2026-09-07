@@ -1,0 +1,34 @@
+docs/plans/001-sdk-cli-foundation/assets/baseline-proof-link-repair.json
+  h_9e71e8b09f7cf2 1-40
+docs/plans/001-sdk-cli-foundation/assets/execution-log.dd.json
+  h_9e71e8b09f7cf2 28-40
+docs/plans/001-sdk-cli-foundation/assets/execution-log.dd.md
+  h_9e71e8b09f7cf2 23
+docs/plans/001-sdk-cli-foundation/assets/reviews/baseline-opus-r2.md
+  h_9e71e8b09f7cf2 1-182
+docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json
+  h_9e71e8b09f7cf2 127,135,143
+docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.md
+  h_9e71e8b09f7cf2 52-54
+docs/plans/001-sdk-cli-foundation/assets/team/basis-370eaee98d6122eb2581b158ca606236b3318db66d7b694ac16273746c4a3d9e.json
+  h_9e71e8b09f7cf2 1-776
+docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-633b9bf-pij-xenacious-yarpen-r2.dd.json
+  h_9e71e8b09f7cf2 1-149
+docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-633b9bf-pij-xenacious-yarpen-r2.dd.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/001-sdk-cli-foundation/the-flow.json
+  h_9e71e8b09f7cf2 232-243,359-364,367
+docs/plans/001-sdk-cli-foundation/the-flow.md
+  h_9e71e8b09f7cf2 4,13,55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "8eafef5ef7dd5e798d8c869f3fb367c884789948",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

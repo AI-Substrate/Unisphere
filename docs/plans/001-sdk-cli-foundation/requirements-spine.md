@@ -45,7 +45,7 @@ The proposed names are **hexagonal architecture / ports and adapters**, **functi
 - Traits are justified at genuine variation points; crate count, exact signatures, sync/async policy, public exports and feature flags remain undecided.
 - Shared source-adapter contracts, dependency-direction checks and a real composed SDK/CLI scenario are proof candidates; their exact acceptance criteria belong to the future plan/guide.
 
-No Rust product code or tests have been implemented. Harness onboarding tests do not prove a working SDK or collector.
+No shipping foundation SDK/CLI code or tests have been implemented. Separately authorized native-reader prototypes live only in gitignored `scratch/`; their checks do not satisfy Plan001 acceptance. Harness onboarding tests likewise do not prove a working SDK or collector.
 
 ## Product research context to preserve
 
@@ -64,7 +64,7 @@ These are findings and design pressures, not silently adopted requirements:
 |---|---|---|
 | Q-001 | Is there a standard OpenTelemetry on-disk file format for complete agent telemetry/session history, as opposed to a wire encoding or exporter convention? | Research found an official Development-stage OTLP JSONL file spec, but no complete native-session replay contract in the reviewed specs; see OF-001–008 in the research report. |
 | Q-002 | Should the canonical persisted representation be OTLP JSON/JSONL, a purpose-built session/event model with an OTLP mapping, or another established representation? | Open; compare semantics, stability, replay and consumer ergonomics. |
-| Q-003 | What must the initial SDK/CLI foundation actually do end to end, and which first adapter/fixture proves it without attempting the whole survey's ecosystem? | Open; avoid both empty scaffolding and unapproved scope expansion. |
+| Q-003 | What must the initial SDK/CLI foundation actually do end to end, and which first adapter/fixture proves it without attempting the whole survey's ecosystem? | Resolved for Plan001: foundation only, with shared explicit configuration/diagnostics through SDK and CLI; native readers are separate scratch experiments, not required shipping behavior. |
 | Q-004 | What content, metadata, usage, lineage, lifecycle, update and rewind semantics must the common model preserve? | Open. |
 | Q-005 | What privacy modes and consent boundaries are required, including content export versus content entering the process? | Open. |
 | Q-006 | Which consumers own scheduling, cancellation, cursor/parser-state persistence and recovery, and what guarantees does the SDK provide? | Open. |
@@ -81,6 +81,8 @@ These are findings and design pressures, not silently adopted requirements:
 - Research output belongs under this folder's `assets/research/`; link verified findings here without changing a candidate into an approved decision.
 - OpenTelemetry file-format research: [assets/research/otel-common-format.md](assets/research/otel-common-format.md); findings/candidates only, no format choice.
 - First-consumer interview: [assets/requirements/flowspace3-interview.md](assets/requirements/flowspace3-interview.md); Flowspace3 needs must be separated from consumer-local policy.
+- Prime-authored foundation product plan: [plan.dd.json](plan.dd.json), generated [plan.dd.md](plan.dd.md), and [product-plan validation](assets/reviews/product-plan-validation.md); product intent is ready, implementation is not released.
+- Output-format workshop: [assets/workshops/001-output-format.md](assets/workshops/001-output-format.md); standard-field-first with proposed pij metadata, Status Review, no canonical format selected.
 
 ## Dogfood log
 

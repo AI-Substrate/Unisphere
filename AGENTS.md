@@ -1,6 +1,27 @@
 # Unisphere
 
-Common-format telemetry collector for agent harnesses. Product implementation has not begun; no canonical application build/test/run lane exists. Work on `main` during system setup, as directed by the operator, and coordinate shared-file ownership with active peers.
+Common-format telemetry collector for agent harnesses, delivered as a Rust SDK and a thin CLI. Product implementation has not begun; no canonical application build/test/run lane exists. Main-branch system setup is operator-authorized; product work belongs in isolated Builder plan workspaces. Coordinate shared-file ownership with active peers.
+
+## Governance — new primes start here
+
+Governance is the standing **orphan `prime-governance` branch**, not `main` and not a product-plan branch. Its permanent worktree on this machine is `/Users/jordanknight/substrate/unisphere/unisphere-governance`; the government root is `.harness/government/` inside that worktree. Discover the actual path with `git worktree list --porcelain` by matching `branch refs/heads/prime-governance` rather than deriving it from the current plan directory.
+
+1. Read that worktree's `AGENTS.md`, then `.harness/government/orient-local.md`, `spine.md`, and `baton-book.md` by absolute path; inspect the portfolio through `harness flow show --path <absolute-government-root>/prime-flow.json`.
+2. Inspect `pij list --prime --json` and reconcile the repository identity with the spine and the operator; a missing local directory or a narrow peer listing does not prove that no prime exists. This seed appoints no prime, and no agent may designate itself over another seat.
+3. If the branch exists but has no worktree, restore it into a new explicit directory with `git worktree add --lock --reason 'Permanent Unisphere governance' <path> prime-governance`; inspect local/remote refs first and never force, reset, or overwrite a conflicting checkout.
+4. Only if governance is genuinely absent and the operator authorizes bootstrap, follow `/pij prime` and its `references/prime/rituals/bootstrap.md` sections 2–4: create an orphan `prime-governance` branch in a permanent worktree, seed the per-repo orientation, spine, baton book and CLI-owned portfolio, then record the designated writer. Use `git worktree add --orphan -b prime-governance --lock --reason 'Permanent Unisphere governance' <new-path>` on Git versions supporting it; never use `harness builder new` to create government.
+
+The designated prime is the only government writer; PMs and coders read it. Never merge governance into product branches, put code there, or retire its locked worktree with a plan. Commits still use `harness commit`; a standing governance branch is not authorization to push.
+
+Keep product plans, guides, tasks, execution/review evidence and code together on their Builder plan branches, then land them through the approved PR workflow. Keep engineering-harness extensions, onboarding reports, retrospectives and local skills with the product repository: do not move all of `.harness/` into government. At each plan closeout the prime reconciles the portfolio/rulings with exact delivery evidence; branch isolation alone does not keep government current.
+
+## Builder and code composition
+
+Use `/builder` for research → product plan → implementation guide → tasks → implementation/review → closeout/ship. Use the installed `harness builder` commands for managed plan allocation, readiness, dispatch and evidence; do not substitute the legacy `harness team` grammar. Read the live command help and capability checks before allocation. Repo-local `node_modules/.bin/ddocs` is the document-authoring tool, not a Rust runtime dependency.
+
+The architectural direction is **hexagonal architecture (ports and adapters)** with a **functional core / imperative shell**, constructor injection and an explicit composition root: CLI → SDK/application services → core contracts; concrete source adapters implement those contracts and depend inward. No dependency from core/services back to CLI or concrete adapters, no hidden service locator, and no mandatory daemon, HTTP server or ML stack. The implementation guide owns the final crate layout, service interfaces, dependency checks and shared adapter-contract tests; these directions are not an implemented-code claim.
+
+Builder can create plan worktrees, but the inspected installed dispatcher currently supports OMP coders only and refuses linked-worktree coder allocations. Recheck the installed capability before dispatch and select clones explicitly when required; never silently change the requested isolation or review model.
 
 <!-- BEGIN harness:onboarding -->
 ## Engineering harness

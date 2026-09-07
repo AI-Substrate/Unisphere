@@ -9,7 +9,8 @@
         "title": "Usable independent SDK and CLI foundation",
         "slug": "phase-1",
         "status": "ready",
-        "summary": "Five guide-owned units; PM baseline, three baseline-only coder lanes, PM composition. All assertions are unchecked until observed proof."
+        "summary": "Five guide-owned units; PM baseline, three baseline-only coder lanes, PM composition. All assertions are unchecked until observed proof.",
+        "log": "../../execution-log.dd.json#entries"
       }
     },
     {

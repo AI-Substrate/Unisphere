@@ -134,6 +134,18 @@
             "backpressure.dd.json#rows/bp-0005",
             "backpressure.dd.json#rows/bp-0007"
           ]
+        },
+        {
+          "id": "lg-000d",
+          "at": "2026-09-07T08:09:56.396482+00:00",
+          "text": "Post-import candidate0b119041 first-class compose verification refused E477 before checks: exact PMformattedworker paths plus AGENTS.md absent from PM unit paths, although guide prose assigns PMformatting. Actual product quality then caught4proofbinlint issues; PM fixed equivalent bool predicates, collapsed if and octal0 with lane owner coordination (no suppressions). Actual harnesschecks now passes; actual unisphere-proof composition, sdk-consumer and installed-cli all passed. These are real behavioral results, NOT a replacement for the still-owed first-class verify receipt. Correct source retained: reverting requiredfmt/lint fixes would knowingly fail mandatorychecks. Upstream owner acknowledges post-import amendment absent (row48); no guide/packet/receipt restamp, duplicate import or baseline cycle performed. Narrow accepted SDKserde/facade/toolchain metadata clarifications are lg-000a; original deliverables retained.",
+          "links": [
+            "execution-log.dd.json#entries/lg-000a",
+            "backpressure.dd.json#rows/bp-0001",
+            "backpressure.dd.json#rows/bp-0004",
+            "backpressure.dd.json#rows/bp-0009",
+            "backpressure.dd.json#rows/bp-000a"
+          ]
         }
       ]
     }

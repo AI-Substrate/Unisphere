@@ -16,7 +16,7 @@
 | complexity | — |
 | summary | Five guide-owned units; PM baseline, three baseline-only coder lanes, PM composition. All assertions are unchecked until observed proof. |
 | backpressure | — |
-| log | — |
+| log | [entries](../../execution-log.dd.md#entries) |
 | mode | — |
 | plan_version | — |
 | created | — |

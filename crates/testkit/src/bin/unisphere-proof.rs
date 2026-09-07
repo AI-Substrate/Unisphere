@@ -63,9 +63,7 @@ fn machine(output: &Output, code: i32, command: &str) -> ProofResult<Value> {
     }
     if code != 0
         && (value["error"]["retryable"] != false
-            || !value["error"]["fix"]
-                .as_str()
-                .is_some_and(|s| !s.is_empty()))
+            || value["error"]["fix"].as_str().is_none_or(|s| s.is_empty()))
     {
         return Err(format!(
             "{command}: error lacks actionable fixed diagnostics {value}"
@@ -339,12 +337,12 @@ fn parity_case(
         if sdk_value["error"]["kind"] != kind || sdk_value["error"]["code"] != expected_code {
             return Err(format!("{name}: wrong typed failure {sdk_value}"));
         }
-        if let Some(path) = path {
-            if sdk_value["error"]["location"]["path"].as_str() != path.to_str() {
-                return Err(format!(
-                    "{name}: missing explicit file location {sdk_value}"
-                ));
-            }
+        if let Some(path) = path
+            && sdk_value["error"]["location"]["path"].as_str() != path.to_str()
+        {
+            return Err(format!(
+                "{name}: missing explicit file location {sdk_value}"
+            ));
         }
     }
     Ok(())
@@ -420,7 +418,7 @@ fn composition(repo: &Path, scratch: &Path) -> ProofResult<()> {
         use std::os::unix::fs::PermissionsExt;
         let unreadable = scratch.join("unreadable.json");
         fs::write(&unreadable, fixtures::EMPTY).map_err(|e| e.to_string())?;
-        fs::set_permissions(&unreadable, fs::Permissions::from_mode(0))
+        fs::set_permissions(&unreadable, fs::Permissions::from_mode(0o0))
             .map_err(|e| e.to_string())?;
         let result = parity_case(
             &cli,
@@ -464,7 +462,7 @@ fn installed_cli(repo: &Path, scratch: &Path) -> ProofResult<()> {
     ] {
         let output = run_product(&cli, &scratch.join(command), &strings(&[flag]))?;
         let value = machine(&output, 0, command)?;
-        if !value["data"][field].as_str().is_some_and(|s| !s.is_empty()) {
+        if value["data"][field].as_str().is_none_or(|s| s.is_empty()) {
             return Err(format!("{command}: missing {field}"));
         }
         let human = run_product(

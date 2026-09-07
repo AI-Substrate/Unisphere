@@ -1,0 +1,26 @@
+docs/plans/001-sdk-cli-foundation/assets/baseline-path-diagnosis.json
+  h_9e71e8b09f7cf2 1-174
+docs/plans/001-sdk-cli-foundation/assets/execution-log.dd.json
+  h_9e71e8b09f7cf2 49-58
+docs/plans/001-sdk-cli-foundation/assets/execution-log.dd.md
+  h_9e71e8b09f7cf2 25
+docs/plans/001-sdk-cli-foundation/assets/impl-guide.dd.json
+  h_9e71e8b09f7cf2 11-12,427
+docs/plans/001-sdk-cli-foundation/assets/impl-guide.dd.md
+  h_9e71e8b09f7cf2 14-15,72
+docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json
+  h_9e71e8b09f7cf2 26,36-37,129,137,145,150
+docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.md
+  h_9e71e8b09f7cf2 38,52-55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "8b43aa9ea5a253aaf004abe2506c7bb949a898ab",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

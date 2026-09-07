@@ -1,0 +1,19 @@
+docs/plans/001-sdk-cli-foundation/assets/baseline-review-r1-ingestion.json
+  s_61dfe47e9838df::t_e8d5c3bbbe1bc5 1-154
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "633b9bf3c533188bde44e49a9d88f56a9b572bfd",
+  "prompts": {},
+  "sessions": {
+    "s_61dfe47e9838df": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cbe08128-4097-4473-9f99-71e9415824f6",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

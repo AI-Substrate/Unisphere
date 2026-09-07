@@ -1,0 +1,265 @@
+{
+  "captured_at": "2026-09-07T08:14:52.664716+00:00",
+  "scope": "Harness friction only; product progress lives in execution-log/task/status records",
+  "buckets": [
+    {
+      "agent": "pij-right-kotallo",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+      "read_result": {
+        "argv": [
+          "harness",
+          "observe",
+          "--list",
+          "--agent",
+          "pij-right-kotallo",
+          "--json"
+        ],
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+        "exit_code": 0,
+        "stdout": "{\"command\":\"observe\",\"status\":\"ok\",\"timestamp\":\"2026-09-07T08:13:07.827Z\",\"data\":{\"observations\":[{\"id\":\"DL-001\",\"kind\":\"difficulty\",\"description\":\"Plan001 pre-flight boot returned unconfigured exit 2; actual product lane remains absent. Native report from eval lacked acting identity; use explicit current PIJ_SESSION_ID with pij-rs, not legacy registry inference.\",\"severity\":\"degrading\",\"fp\":\"ebb2afce501a\",\"first_seen_at\":\"2026-09-07T04:52:59.172Z\",\"bucket\":\"pij-right-kotallo\"},{\"id\":\"DL-002\",\"kind\":\"difficulty\",\"description\":\"Builder guide exit E475 because eval subprocess had no native caller context. Explicit current PIJ_SESSION_ID=pij-right-kotallo restored observed seat binding; identical advance succeeded without gate bypass. Evidence: assets/implementation-prerequisites.json.\",\"severity\":\"degrading\",\"fp\":\"6c8dc35aebce\",\"first_seen_at\":\"2026-09-07T04:56:57.795Z\",\"bucket\":\"pij-right-kotallo\"},{\"id\":\"GFT-001\",\"kind\":\"gift\",\"description\":\"Baseline reviewer returned approved with two open medium findings. Builder review correctly refused E475. Original evidence retained; PM corrected guide/toolchain and shared fixtures, committed 633b9bf3c533188bde44e49a9d88f56a9b572bfd and requested focused independent r2.\",\"fp\":\"cd90becfc311\",\"first_seen_at\":\"2026-09-07T05:17:31.539Z\",\"bucket\":\"pij-right-kotallo\"},{\"id\":\"DL-003\",\"kind\":\"difficulty\",\"description\":\"Review receipt must be builder/team DD envelope while AckReceipt/UnitDelivery are raw JSON. PM initial raw review packet caused E470; wrapping unchanged reviewer content reached the correct E475 semantic check. Encode distinct receipt examples in role packet templates.\",\"severity\":\"degrading\",\"fp\":\"22b7254ca018\",\"first_seen_at\":\"2026-09-07T05:17:31.996Z\",\"bucket\":\"pij-right-kotallo\"},{\"id\":\"DL-004\",\"kind\":\"difficulty\",\"description\":\"Independent baseline review caught checked assertions pointing to an older source/run despite a committed digest-bound current proof artifact. DD validates link shape, not freshness of the behavior/source described by the target entry. Repointed dw1/2/3 to lg-0002 and preserved both runs.\",\"severity\":\"degrading\",\"suggested_encoding\":\"Add source-manifest binding and stale checked-proof diagnostics to execution receipts rather than infer freshness from prose\",\"fp\":\"195dba661c0a\",\"first_seen_at\":\"2026-09-07T05:27:40.639Z\",\"bucket\":\"pij-right-kotallo\"},{\"id\":\"DL-005\",\"kind\":\"difficulty\",\"description\":\"Actual contracts seal succeeds with17 frozen files and13 tests, but all three baseline-only coder ready calls refuse E471 Dependencies lack committed proof: tk-0001 and demand composition receipt proof before dispatch. This may create a baseline-to-composition cycle. Exact envelopes in assets/baseline-ready-refusal.json; no composition fabricated.\",\"severity\":\"blocking\",\"fp\":\"93401b50e9a8\",\"first_seen_at\":\"2026-09-07T05:31:51.576Z\",\"bucket\":\"pij-right-kotallo\"},{\"id\":\"DL-006\",\"kind\":\"difficulty\",\"description\":\"Expanded baseline reseal after r4 approval refused E472 because baseline.dd.json is immutable. The fresh baseline receipt identity must be selected in the guide BEFORE committed-subject review; otherwise a metadata-only rereview is required. Preserved old seal and followed next_action in guide6.\",\"severity\":\"degrading\",\"suggested_encoding\":\"Rebaseline preflight diagnoses immutable receipt reuse before requesting independent review and names the fresh-identity step\",\"fp\":\"443daf9f2dd5\",\"first_seen_at\":\"2026-09-07T05:42:55.053Z\",\"bucket\":\"pij-right-kotallo\"},{\"id\":\"DL-007\",\"kind\":\"difficulty\",\"description\":\"All3 unit ready calls report ready/zeroissues after actual18-file seal. All3 clone dispatches then refuse E473 Native Git root or HEAD does not match frozen workspace baseline: observed PM root is correct plan worktree but HEAD is4a6fdfe (seal-evidence-only commit), sealed source412842e. Exact outputs assets/dispatch-native-refusal.json. No root/model swap or source reset attempted.\",\"severity\":\"blocking\",\"fp\":\"f2f4ca291eb9\",\"first_seen_at\":\"2026-09-07T05:49:52.316Z\",\"bucket\":\"pij-right-kotallo\"},{\"id\":\"DL-008\",\"kind\":\"difficulty\",\"description\":\"At unchanged sealedHEAD1ec72134, v7seal and allthree ready checks pass; allthree nativeclone dispatches now pass priorE473 boundary but fail E470 Unit allocation requires its live parent, canonical plan, unit and recorded base. Explicit --parent pij-right-kotallo, --unit and --kind clone supplied. Evidence remains uncommitted per supported sequence; no second plan allocated.\",\"severity\":\"blocking\",\"fp\":\"9598d7e2f874\",\"first_seen_at\":\"2026-09-07T06:04:02.070Z\",\"bucket\":\"pij-right-kotallo\"},{\"id\":\"DL-009\",\"kind\":\"difficulty\",\"description\":\"Post-import compose verify E477 rejects PM formatting of coder paths although guide assigns formatting to PM. Existing composition receipt forbids reimport; material guide amendment invalidates baseline. Reverting correct formatting and4lintfixes would force requiredfmt/clippy gates red, so no honest completed lifecycle path exists without supported integration amendment. Actual checks pass after fixes; preserved red ownershipgate and requested upstream path rather than fabricating completion.\",\"severity\":\"blocking\",\"fp\":\"d1331aa33076\",\"first_seen_at\":\"2026-09-07T08:08:48.079Z\",\"bucket\":\"pij-right-kotallo\"}],\"buckets_scanned\":[\"pij-right-kotallo\"],\"malformed_skipped\":0},\"next_action\":\"Drain: save what matters via `harness record retro`, then `harness observe --clear`.\"}\n",
+        "stderr": "",
+        "data": {
+          "command": "observe",
+          "status": "ok",
+          "timestamp": "2026-09-07T08:13:07.827Z",
+          "data": {
+            "observations": [
+              {
+                "id": "DL-001",
+                "kind": "difficulty",
+                "description": "Plan001 pre-flight boot returned unconfigured exit 2; actual product lane remains absent. Native report from eval lacked acting identity; use explicit current PIJ_SESSION_ID with pij-rs, not legacy registry inference.",
+                "severity": "degrading",
+                "fp": "ebb2afce501a",
+                "first_seen_at": "2026-09-07T04:52:59.172Z",
+                "bucket": "pij-right-kotallo"
+              },
+              {
+                "id": "DL-002",
+                "kind": "difficulty",
+                "description": "Builder guide exit E475 because eval subprocess had no native caller context. Explicit current PIJ_SESSION_ID=pij-right-kotallo restored observed seat binding; identical advance succeeded without gate bypass. Evidence: assets/implementation-prerequisites.json.",
+                "severity": "degrading",
+                "fp": "6c8dc35aebce",
+                "first_seen_at": "2026-09-07T04:56:57.795Z",
+                "bucket": "pij-right-kotallo"
+              },
+              {
+                "id": "GFT-001",
+                "kind": "gift",
+                "description": "Baseline reviewer returned approved with two open medium findings. Builder review correctly refused E475. Original evidence retained; PM corrected guide/toolchain and shared fixtures, committed 633b9bf3c533188bde44e49a9d88f56a9b572bfd and requested focused independent r2.",
+                "fp": "cd90becfc311",
+                "first_seen_at": "2026-09-07T05:17:31.539Z",
+                "bucket": "pij-right-kotallo"
+              },
+              {
+                "id": "DL-003",
+                "kind": "difficulty",
+                "description": "Review receipt must be builder/team DD envelope while AckReceipt/UnitDelivery are raw JSON. PM initial raw review packet caused E470; wrapping unchanged reviewer content reached the correct E475 semantic check. Encode distinct receipt examples in role packet templates.",
+                "severity": "degrading",
+                "fp": "22b7254ca018",
+                "first_seen_at": "2026-09-07T05:17:31.996Z",
+                "bucket": "pij-right-kotallo"
+              },
+              {
+                "id": "DL-004",
+                "kind": "difficulty",
+                "description": "Independent baseline review caught checked assertions pointing to an older source/run despite a committed digest-bound current proof artifact. DD validates link shape, not freshness of the behavior/source described by the target entry. Repointed dw1/2/3 to lg-0002 and preserved both runs.",
+                "severity": "degrading",
+                "suggested_encoding": "Add source-manifest binding and stale checked-proof diagnostics to execution receipts rather than infer freshness from prose",
+                "fp": "195dba661c0a",
+                "first_seen_at": "2026-09-07T05:27:40.639Z",
+                "bucket": "pij-right-kotallo"
+              },
+              {
+                "id": "DL-005",
+                "kind": "difficulty",
+                "description": "Actual contracts seal succeeds with17 frozen files and13 tests, but all three baseline-only coder ready calls refuse E471 Dependencies lack committed proof: tk-0001 and demand composition receipt proof before dispatch. This may create a baseline-to-composition cycle. Exact envelopes in assets/baseline-ready-refusal.json; no composition fabricated.",
+                "severity": "blocking",
+                "fp": "93401b50e9a8",
+                "first_seen_at": "2026-09-07T05:31:51.576Z",
+                "bucket": "pij-right-kotallo"
+              },
+              {
+                "id": "DL-006",
+                "kind": "difficulty",
+                "description": "Expanded baseline reseal after r4 approval refused E472 because baseline.dd.json is immutable. The fresh baseline receipt identity must be selected in the guide BEFORE committed-subject review; otherwise a metadata-only rereview is required. Preserved old seal and followed next_action in guide6.",
+                "severity": "degrading",
+                "suggested_encoding": "Rebaseline preflight diagnoses immutable receipt reuse before requesting independent review and names the fresh-identity step",
+                "fp": "443daf9f2dd5",
+                "first_seen_at": "2026-09-07T05:42:55.053Z",
+                "bucket": "pij-right-kotallo"
+              },
+              {
+                "id": "DL-007",
+                "kind": "difficulty",
+                "description": "All3 unit ready calls report ready/zeroissues after actual18-file seal. All3 clone dispatches then refuse E473 Native Git root or HEAD does not match frozen workspace baseline: observed PM root is correct plan worktree but HEAD is4a6fdfe (seal-evidence-only commit), sealed source412842e. Exact outputs assets/dispatch-native-refusal.json. No root/model swap or source reset attempted.",
+                "severity": "blocking",
+                "fp": "f2f4ca291eb9",
+                "first_seen_at": "2026-09-07T05:49:52.316Z",
+                "bucket": "pij-right-kotallo"
+              },
+              {
+                "id": "DL-008",
+                "kind": "difficulty",
+                "description": "At unchanged sealedHEAD1ec72134, v7seal and allthree ready checks pass; allthree nativeclone dispatches now pass priorE473 boundary but fail E470 Unit allocation requires its live parent, canonical plan, unit and recorded base. Explicit --parent pij-right-kotallo, --unit and --kind clone supplied. Evidence remains uncommitted per supported sequence; no second plan allocated.",
+                "severity": "blocking",
+                "fp": "9598d7e2f874",
+                "first_seen_at": "2026-09-07T06:04:02.070Z",
+                "bucket": "pij-right-kotallo"
+              },
+              {
+                "id": "DL-009",
+                "kind": "difficulty",
+                "description": "Post-import compose verify E477 rejects PM formatting of coder paths although guide assigns formatting to PM. Existing composition receipt forbids reimport; material guide amendment invalidates baseline. Reverting correct formatting and4lintfixes would force requiredfmt/clippy gates red, so no honest completed lifecycle path exists without supported integration amendment. Actual checks pass after fixes; preserved red ownershipgate and requested upstream path rather than fabricating completion.",
+                "severity": "blocking",
+                "fp": "d1331aa33076",
+                "first_seen_at": "2026-09-07T08:08:48.079Z",
+                "bucket": "pij-right-kotallo"
+              }
+            ],
+            "buckets_scanned": [
+              "pij-right-kotallo"
+            ],
+            "malformed_skipped": 0
+          },
+          "next_action": "Drain: save what matters via `harness record retro`, then `harness observe --clear`."
+        }
+      },
+      "cleared": false
+    },
+    {
+      "agent": "pij-partial-koi",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-sdk",
+      "read_result": {
+        "argv": [
+          "harness",
+          "observe",
+          "--list",
+          "--agent",
+          "pij-partial-koi",
+          "--json"
+        ],
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-sdk",
+        "exit_code": 0,
+        "stdout": "{\"command\":\"observe\",\"status\":\"ok\",\"timestamp\":\"2026-09-07T08:13:07.827Z\",\"data\":{\"observations\":[{\"id\":\"DL-001\",\"kind\":\"difficulty\",\"description\":\"tk-0002 release injection omits release.message_id required by post-release ack; requested canonical ID from PM. SDK duplicate-key requirement also conflicts with serde-free dependency fence; requested ruling before expansion. Baseline boot unconfigured; PM owns SDK validation.\",\"severity\":\"degrading\",\"fp\":\"f45f356139fc\",\"first_seen_at\":\"2026-09-07T07:19:10.330Z\",\"bucket\":\"pij-partial-koi\"}],\"buckets_scanned\":[\"pij-partial-koi\"],\"malformed_skipped\":0},\"next_action\":\"Drain: save what matters via `harness record retro`, then `harness observe --clear`.\"}\n",
+        "stderr": "",
+        "data": {
+          "command": "observe",
+          "status": "ok",
+          "timestamp": "2026-09-07T08:13:07.827Z",
+          "data": {
+            "observations": [
+              {
+                "id": "DL-001",
+                "kind": "difficulty",
+                "description": "tk-0002 release injection omits release.message_id required by post-release ack; requested canonical ID from PM. SDK duplicate-key requirement also conflicts with serde-free dependency fence; requested ruling before expansion. Baseline boot unconfigured; PM owns SDK validation.",
+                "severity": "degrading",
+                "fp": "f45f356139fc",
+                "first_seen_at": "2026-09-07T07:19:10.330Z",
+                "bucket": "pij-partial-koi"
+              }
+            ],
+            "buckets_scanned": [
+              "pij-partial-koi"
+            ],
+            "malformed_skipped": 0
+          },
+          "next_action": "Drain: save what matters via `harness record retro`, then `harness observe --clear`."
+        }
+      },
+      "cleared": false
+    },
+    {
+      "agent": "pij-standard-impala",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli",
+      "read_result": {
+        "argv": [
+          "harness",
+          "observe",
+          "--list",
+          "--agent",
+          "pij-standard-impala",
+          "--json"
+        ],
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli",
+        "exit_code": 0,
+        "stdout": "{\"command\":\"observe\",\"status\":\"ok\",\"timestamp\":\"2026-09-07T08:13:07.827Z\",\"data\":{\"observations\":[{\"id\":\"DL-001\",\"kind\":\"difficulty\",\"description\":\"Builder raw AckReceipt packet does not state native_session UUID shape; PI_SESSION_FILE path was rejected and required fresh receipt. Release injection also omits labeled release.message_id/recorded_at and needed PM metadata.\",\"severity\":\"degrading\",\"fp\":\"7f63c8832fa7\",\"first_seen_at\":\"2026-09-07T07:20:43.196Z\",\"bucket\":\"pij-standard-impala\"},{\"id\":\"DL-002\",\"kind\":\"difficulty\",\"description\":\"PM vd-0003 caught mutable dyn Write lifetime invariance when selecting stdout/stderr into one binding. Corrected with branch-local render and flush; public run API unchanged. Coder validation remains PM-owned.\",\"severity\":\"degrading\",\"fp\":\"2e27d2c3d84e\",\"first_seen_at\":\"2026-09-07T07:30:17.462Z\",\"bucket\":\"pij-standard-impala\"}],\"buckets_scanned\":[\"pij-standard-impala\"],\"malformed_skipped\":0},\"next_action\":\"Drain: save what matters via `harness record retro`, then `harness observe --clear`.\"}\n",
+        "stderr": "",
+        "data": {
+          "command": "observe",
+          "status": "ok",
+          "timestamp": "2026-09-07T08:13:07.827Z",
+          "data": {
+            "observations": [
+              {
+                "id": "DL-001",
+                "kind": "difficulty",
+                "description": "Builder raw AckReceipt packet does not state native_session UUID shape; PI_SESSION_FILE path was rejected and required fresh receipt. Release injection also omits labeled release.message_id/recorded_at and needed PM metadata.",
+                "severity": "degrading",
+                "fp": "7f63c8832fa7",
+                "first_seen_at": "2026-09-07T07:20:43.196Z",
+                "bucket": "pij-standard-impala"
+              },
+              {
+                "id": "DL-002",
+                "kind": "difficulty",
+                "description": "PM vd-0003 caught mutable dyn Write lifetime invariance when selecting stdout/stderr into one binding. Corrected with branch-local render and flush; public run API unchanged. Coder validation remains PM-owned.",
+                "severity": "degrading",
+                "fp": "2e27d2c3d84e",
+                "first_seen_at": "2026-09-07T07:30:17.462Z",
+                "bucket": "pij-standard-impala"
+              }
+            ],
+            "buckets_scanned": [
+              "pij-standard-impala"
+            ],
+            "malformed_skipped": 0
+          },
+          "next_action": "Drain: save what matters via `harness record retro`, then `harness observe --clear`."
+        }
+      },
+      "cleared": false
+    },
+    {
+      "agent": "pij-brave-cahir",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-proof",
+      "read_result": {
+        "argv": [
+          "harness",
+          "observe",
+          "--list",
+          "--agent",
+          "pij-brave-cahir",
+          "--json"
+        ],
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-proof",
+        "exit_code": 0,
+        "stdout": "{\"command\":\"observe\",\"status\":\"ok\",\"timestamp\":\"2026-09-07T08:13:07.827Z\",\"data\":{\"observations\":[{\"id\":\"DL-001\",\"kind\":\"difficulty\",\"description\":\"Proof lane validation is PM-owned; independent consumer cannot run until SDK/app composition, and release message required separate metadata delivery to bind receipt. Preserve missing toolchain commit metadata explicitly.\",\"severity\":\"degrading\",\"fp\":\"514029ee694a\",\"first_seen_at\":\"2026-09-07T07:24:36.805Z\",\"bucket\":\"pij-brave-cahir\"}],\"buckets_scanned\":[\"pij-brave-cahir\"],\"malformed_skipped\":0},\"next_action\":\"Drain: save what matters via `harness record retro`, then `harness observe --clear`.\"}\n",
+        "stderr": "",
+        "data": {
+          "command": "observe",
+          "status": "ok",
+          "timestamp": "2026-09-07T08:13:07.827Z",
+          "data": {
+            "observations": [
+              {
+                "id": "DL-001",
+                "kind": "difficulty",
+                "description": "Proof lane validation is PM-owned; independent consumer cannot run until SDK/app composition, and release message required separate metadata delivery to bind receipt. Preserve missing toolchain commit metadata explicitly.",
+                "severity": "degrading",
+                "fp": "514029ee694a",
+                "first_seen_at": "2026-09-07T07:24:36.805Z",
+                "bucket": "pij-brave-cahir"
+              }
+            ],
+            "buckets_scanned": [
+              "pij-brave-cahir"
+            ],
+            "malformed_skipped": 0
+          },
+          "next_action": "Drain: save what matters via `harness record retro`, then `harness observe --clear`."
+        }
+      },
+      "cleared": false
+    }
+  ]
+}

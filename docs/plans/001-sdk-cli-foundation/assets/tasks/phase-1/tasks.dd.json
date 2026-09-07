@@ -41,7 +41,7 @@
           "id": "tk-0002",
           "title": "Coder A SDK and configuration service",
           "phase": "ph-415a",
-          "state": "unchecked",
+          "state": "checked",
           "success": "Implement unisphere-sdk: pure JSON configuration parsing/resolution, Inspector<R> orchestration over core ports, bounded StdConfigReader and public facade/rustdoc. Own focused SDK tests and documentation.",
           "notes": "Guide unit tk-0002; wave 1; dependencies tk-0001. Exact fences/interfaces: ../../impl-guide.dd.json#units/tk-0002. Requested roles and proof are guide-owned; no coder validation/formatting mid-flight.",
           "satisfies": [
@@ -56,13 +56,14 @@
             "../../../plan.dd.json#acceptance_criteria/ac-000b"
           ],
           "done": "tasks.dd.json#done_when/tk-0002",
-          "note": "Runtime prerequisite changed; resuming actual ready/dispatch/ack gates. No release or implementation success claimed yet."
+          "note": "All lane assertions exercised by PM in actual composed boot; final whole-plan acceptance and first-class compose receipt remain pending.",
+          "receipt": "../../execution-log.dd.json#entries/lg-000e"
         },
         {
           "id": "tk-0003",
           "title": "Coder B CLI frontend",
           "phase": "ph-415a",
-          "state": "unchecked",
+          "state": "checked",
           "success": "Implement unisphere-cli as a frontend library with clap parsing, explicit context, machine/human rendering and exit behavior; test solely through core InspectionApi/FakeInspector. Production executable wiring is PM-owned.",
           "notes": "Guide unit tk-0003; wave 1; dependencies tk-0001. Exact fences/interfaces: ../../impl-guide.dd.json#units/tk-0003. Requested roles and proof are guide-owned; no coder validation/formatting mid-flight.",
           "satisfies": [
@@ -75,7 +76,8 @@
             "../../../plan.dd.json#acceptance_criteria/ac-000b"
           ],
           "done": "tasks.dd.json#done_when/tk-0003",
-          "note": "Runtime prerequisite changed; resuming actual ready/dispatch/ack gates. No release or implementation success claimed yet."
+          "note": "All lane assertions exercised by PM in actual composed boot; final whole-plan acceptance and first-class compose receipt remain pending.",
+          "receipt": "../../execution-log.dd.json#entries/lg-000e"
         },
         {
           "id": "tk-0004",
@@ -98,13 +100,13 @@
             "../../../plan.dd.json#acceptance_criteria/ac-000a"
           ],
           "done": "tasks.dd.json#done_when/tk-0004",
-          "note": "Blocked on three undispatched coder deliveries; no composition implementation or acceptance claim. Current canonical handoff: ../../execution-log.dd.json#entries/lg-0009. Preserve fixed PM HEAD; await corrected supported runtime."
+          "note": "Real app/quality/parity/externalconsumer/installedCLI/boot exercised; independent source review and first-class compose receipt still pending (row48), so task remains unchecked."
         },
         {
           "id": "tk-0005",
           "title": "Coder C proof and development tooling",
           "phase": "ph-415a",
-          "state": "unchecked",
+          "state": "checked",
           "success": "Implement kind-aware dependency checks with negative fixtures, standalone proof executables, isolated external SDK/install/CLI smoke runners, engineering-harness wrappers and development/CI documentation. Tools can be developed against baseline contracts before SDK/CLI/app exist.",
           "notes": "Guide unit tk-0005; wave 1; dependencies tk-0001. Exact fences/interfaces: ../../impl-guide.dd.json#units/tk-0005. Requested roles and proof are guide-owned; no coder validation/formatting mid-flight.",
           "satisfies": [
@@ -117,7 +119,8 @@
             "../../../plan.dd.json#acceptance_criteria/ac-000b"
           ],
           "done": "tasks.dd.json#done_when/tk-0005",
-          "note": "Runtime prerequisite changed; resuming actual ready/dispatch/ack gates. No release or implementation success claimed yet."
+          "note": "All lane assertions exercised by PM in actual composed boot; final whole-plan acceptance and first-class compose receipt remain pending.",
+          "receipt": "../../execution-log.dd.json#entries/lg-000e"
         }
       ]
     },
@@ -162,90 +165,102 @@
           {
             "id": "dw-0005",
             "assertion": "SDK validates every supplied layer, malformed/non-UTF8/duplicate/unknown-key/type/blank/oversized inputs and preserves valid roots exactly.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0002",
-            "note": "Required instrument: guide vd-0002. Not executed at task authoring."
+            "note": "Required instrument: guide vd-0002. Not executed at task authoring.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-000e"
           },
           {
             "id": "dw-0006",
             "assertion": "Defaults < explicit document < explicit override precedence includes omitted retention and Some([]) clearing, without implicit ambient reads.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0003",
-            "note": "Required instrument: guide vd-0002. Not executed at task authoring."
+            "note": "Required instrument: guide vd-0002. Not executed at task authoring.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-000e"
           },
           {
             "id": "dw-0007",
             "assertion": "Bounded explicit absolute-file reader maps missing/permission/oversize safely; actual service module executes without adapter/facade/sibling imports.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0006",
-            "note": "Required instrument: guide vd-0002. Not executed at task authoring."
+            "note": "Required instrument: guide vd-0002. Not executed at task authoring.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-000e"
           }
         ],
         "tk-0003": [
           {
             "id": "dw-0008",
             "assertion": "CLI frontend exercises argument parsing, config-path resolution and all override requests against FakeInspector without SDK dependency.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0007",
-            "note": "Required instrument: guide vd-0003. Not executed at task authoring."
+            "note": "Required instrument: guide vd-0003. Not executed at task authoring.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-000e"
           },
           {
             "id": "dw-0009",
             "assertion": "JSON/human/terminal precedence, help/version, stable envelopes, LF framing, stream routing, exit0/1/2 and writer failure behavior meet the contract.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0005",
-            "note": "Required instrument: guide vd-0003. Not executed at task authoring."
+            "note": "Required instrument: guide vd-0003. Not executed at task authoring.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-000e"
           },
           {
             "id": "dw-000a",
             "assertion": "CLI failures use core-owned safe diagnostics without leaking hostile argument/config values.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0006",
-            "note": "Required instrument: guide vd-0003. Not executed at task authoring."
+            "note": "Required instrument: guide vd-0003. Not executed at task authoring.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-000e"
           }
         ],
         "tk-0004": [
           {
             "id": "dw-000b",
             "assertion": "Real assembled app and SDK agree on valid/malformed/missing/unreadable/oversized inputs and diagnostic secrecy.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0004",
-            "note": "Required instrument: guide vd-0004. Not executed at task authoring."
+            "note": "Required instrument: guide vd-0004. Not executed at task authoring.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-000e"
           },
           {
             "id": "dw-000c",
             "assertion": "External temporary Cargo consumer exercises SDK facade/injection under sealed hostile environments without CLI/Node/daemon runtime dependencies.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0001",
-            "note": "Required instrument: guide vd-000a. Not executed at task authoring."
+            "note": "Required instrument: guide vd-000a. Not executed at task authoring.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-000e"
           },
           {
             "id": "dw-000d",
             "assertion": "CLI installs into a temporary root and executes outside the checkout with empty runtime PATH, including machine defaults and human success/failure stream checks.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0009",
-            "note": "Required instrument: guide vd-000b. Not executed at task authoring."
+            "note": "Required instrument: guide vd-000b. Not executed at task authoring.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-000e"
           },
           {
             "id": "dw-000e",
             "assertion": "Composed workspace tests, clippy, formatting, architecture and rustdoc checks pass on an observed coherent toolchain.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0009",
-            "note": "Required instrument: guide vd-0006/0007/0008/0009/000c. Not executed at task authoring."
+            "note": "Required instrument: guide vd-0006/0007/0008/0009/000c. Not executed at task authoring.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-000e"
           },
           {
             "id": "dw-000f",
             "assertion": "Harness checks and foundation-only boot pass; injected child failures propagate a failing readiness verdict.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-000a",
-            "note": "Required instrument: guide vd-000d/000e/000f. Not executed at task authoring."
+            "note": "Required instrument: guide vd-000d/000e/000f. Not executed at task authoring.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-000e"
           },
           {
             "id": "dw-0010",
             "assertion": "SDK/CLI/README/development examples reproduce success and actionable failure; scope/platform limits and reuse provenance are accurate.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-000b",
-            "note": "Required instrument: guide vd-000a/000b/000c. Not executed at task authoring."
+            "note": "Required instrument: guide vd-000a/000b/000c. Not executed at task authoring.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-000e"
           },
           {
             "id": "dw-0011",
@@ -259,23 +274,26 @@
           {
             "id": "dw-0012",
             "assertion": "Proof-tool binary unit tests run on baseline alone; kind-aware graph allowlist rejects forbidden normal/dev/build edges using negative fixtures.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0007",
-            "note": "Required instrument: guide vd-0005. Not executed at task authoring."
+            "note": "Required instrument: guide vd-0005. Not executed at task authoring.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-000e"
           },
           {
             "id": "dw-0013",
             "assertion": "Proof runners materialize only temporary packages from template manifests, preserve child failure evidence, and fail honestly when product targets are absent.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0008",
-            "note": "Required instrument: guide vd-0005. Not executed at task authoring."
+            "note": "Required instrument: guide vd-0005. Not executed at task authoring.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-000e"
           },
           {
             "id": "dw-0014",
             "assertion": "Checks/boot wrappers and documented local/CI lane enforce observed coherent rustc/cargo/clippy/rustfmt provenance and propagate child failure, without global changes.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-000a",
-            "note": "Required instrument: guide vd-000f. Not executed at task authoring."
+            "note": "Required instrument: guide vd-000f. Not executed at task authoring.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-000e"
           }
         ]
       }

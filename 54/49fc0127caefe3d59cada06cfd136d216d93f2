@@ -1,0 +1,24 @@
+.gitignore
+  h_9e71e8b09f7cf2 25-27
+.harness/records/retro/2026-09-07/003-foundation-plan-reader-experiments.md
+  h_9e71e8b09f7cf2 1-49
+docs/plans/001-sdk-cli-foundation/assets/research/scratch-reader-proof.md
+  h_9e71e8b09f7cf2 1-51
+docs/plans/001-sdk-cli-foundation/assets/reviews/workshop-verification.md
+  h_9e71e8b09f7cf2 1-11
+docs/plans/001-sdk-cli-foundation/assets/workshops/001-output-format.md
+  h_9e71e8b09f7cf2 1-253
+docs/plans/001-sdk-cli-foundation/requirements-spine.md
+  h_9e71e8b09f7cf2 48,67,84-85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "5449fc0127caefe3d59cada06cfd136d216d93f2",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

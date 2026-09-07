@@ -85,6 +85,45 @@
             "execution-log.dd.json#entries/lg-0006",
             "backpressure.dd.json#rows/bp-0007"
           ]
+        },
+        {
+          "id": "lg-0008",
+          "at": "2026-09-07T06:03:07.787814+00:00",
+          "text": "Actual v7 seal succeeded at fixedsource1ec7213488044ba083da3db7f45a958024a86c86 with guideSHA2569a2977c85b3c025eafb434ef1306fc71bf3c35fcaa3bc39fd7784a97a868899d and independent approved r6 digeste3c91d26195974f6d761e7993a30945fcd6dd6a5c3a7dff6e94115322c188073. New immutable team/baseline-v7.dd.json digestc9fabdbdb8f7ccc0093f178cf5111d175f12e7cc310196a47372d5aa9da0c92c freezes18 files; Builder actually executed vd-0001 exit0 (3 core+10 testkit). Allthree ready results are ready with zeroissues, retained in baseline-v7-ready.json. This supersedes lg-0006 for current seal without editing any oldseal. Review/seal/task evidence deliberately remains uncommitted until allthree native dispatches complete, per source-verified E473 ordering. Dispatch outcome and product ACs are not claimed here.",
+          "links": [
+            "execution-log.dd.json#entries/lg-0006",
+            "execution-log.dd.json#entries/lg-0007",
+            "backpressure.dd.json#rows/bp-0007"
+          ]
+        },
+        {
+          "id": "lg-0009",
+          "at": "2026-09-07T06:11:23.295617+00:00",
+          "text": "Owner-directed HOLD at fixedHEAD1ec7213488044ba083da3db7f45a958024a86c86. Guidev7/r6 independently approved; actual18-file baseline-v7 sealed (13 tests) and tk0002/tk0003/tk0005 ready all passed. Allthree nativeclone dispatches then refused E470: Unit allocation requires its live parent, canonical plan, unit and recorded base. Source-confirmed Builder row46: acts/builder.ts:257 provision pass-through and dispatch-service.ts:1029-1038 omit parent AllocationRecord; allocation-store.ts:489-503 requires it. Original live parent allocation al-001-4437fdce-9332-4eed-9398-7651d0ab20e2 remains intact. Exact evidence assets/dispatch-allocation-refusal.json; r6review/seal/ready/dispatch-refusal records retained on disk UNCOMMITTED. Runtime owner pij-varied-alpaca owns correction after PR198; pij-female-varl directs hold. No further guide changes, reviews, retries, manual allocations, source resets, commits or global changes while prerequisite is unchanged. Resume only after owner-confirmed corrected supported runtime: actualready -> native dispatch -> prework ack/release -> fresh post-release confirmation -> verified deliveries/composition/review. Keep all11 productACs unclaimed. Notify pij-female-varl when runtime availability changes.",
+          "links": [
+            "execution-log.dd.json#entries/lg-0008",
+            "backpressure.dd.json#rows/bp-0007"
+          ]
+        },
+        {
+          "id": "lg-000a",
+          "at": "2026-09-07T07:33:29.580822+00:00",
+          "text": "PM implementation clarifications accepted by oversight: (D1) SDK may declare existing serde.workspace and use serde visitors alongside core/serde_json; this corrects an overly narrow third-party import list, not a new package, shared API/fence or outward dependency, and avoids a custom JSON grammar. (D2) SDK facade reexports existing core ConfigReader, InspectionApi, ReadFailure and MAX_CONFIG_BYTES alongside DTO/error types so an SDK-only external consumer can inject a reader. (D3) F8 toolchain checks compare all release versions and available emitted commit identities; missing formatter commit metadata is an explicit warning/provenance gap, not a false match or sole failure. Missing executable, mismatch or failed probe still fails. Active packet/guide bytes remain frozen for binding; these narrow corrections are explicit inputs to docs, architecture allowlist and independent composition review. No baseline ceremony repeated and no new proof grade.",
+          "links": [
+            "../plan.dd.json#acceptance_criteria/ac-0001",
+            "../plan.dd.json#acceptance_criteria/ac-0002",
+            "../plan.dd.json#acceptance_criteria/ac-0007"
+          ]
+        },
+        {
+          "id": "lg-000b",
+          "at": "2026-09-07T07:35:11.667243+00:00",
+          "text": "Corrected runtime45ac8b2b yielded three actual dispatches exit0/statusok at07:06:32Z: tk0002 pij-partial-koi, tk0003 pij-standard-impala, tk0005 pij-brave-cahir, distinct fullclones, configured/observed OMP github-copilot/gpt-6-astra high. Allthree native prework acknowledgements accepted; releases issued with IDs7ae4d03c-a61d-4bde-92e3-fdea4c8a8374 /9e5b4b55-68c0-4972-89e2-603f34f4dadc /ee6d46f0-2efb-4db8-ae2c-b2f69818d9dd. Allthree fresh post-release acknowledgements accepted by Builder, release.outcome delivered. Evidence dispatch-fixed-tk-000{2,3,5}.json and postrelease-ack-tk-000{2,3,5}.json. Row46 exercised end-to-end; row45 live case used HEAD==sealed source1ec72134, descendant branch remains unit-test evidence only. Native startup .serena metadata preserved and excluded only through clone-local .git/info/exclude (owner-supported row47); no frozen/global/source change. SDK cdcb1d69 passed24tests+2rustdoc; CLI initial2f3a1169 failed mutable-writer lifetime compilation, corrected49654b0a passed18tests. These are isolated lane checks, not composition acceptance. Allallocation gates completed before this evidence commit; source snapshots and prior failures preserved.",
+          "links": [
+            "execution-log.dd.json#entries/lg-0008",
+            "execution-log.dd.json#entries/lg-0009",
+            "backpressure.dd.json#rows/bp-0007"
+          ]
         }
       ]
     }

@@ -1,0 +1,24 @@
+{
+  "argv": [
+    "harness",
+    "builder",
+    "ack",
+    "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/plan.dd.json",
+    "--receipt",
+    "/Users/jordanknight/substrate/unisphere/unisphere-plan001-sdk/.harness/temp/ack-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86.json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+  "exit_code": 1,
+  "stdout": "{\"command\":\"builder ack\",\"status\":\"error\",\"timestamp\":\"2026-09-07T07:10:14.377Z\",\"error\":{\"code\":\"E474\",\"message\":\"Checkout changed before work release; only exact immutable seed files may be untracked.\"},\"next_action\":\"Keep work paused. Re-read the exact native packet and root challenge, then submit a fresh matching acknowledgement.\"}\n",
+  "stderr": "",
+  "data": {
+    "command": "builder ack",
+    "status": "error",
+    "timestamp": "2026-09-07T07:10:14.377Z",
+    "error": {
+      "code": "E474",
+      "message": "Checkout changed before work release; only exact immutable seed files may be untracked."
+    },
+    "next_action": "Keep work paused. Re-read the exact native packet and root challenge, then submit a fresh matching acknowledgement."
+  }
+}

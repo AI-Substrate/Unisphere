@@ -1,0 +1,50 @@
+{
+  "reason": "Native OMP/Serena startup metadata preserved; clone-local exclusion supported by harness owner row47, no source/frozen/global policy change",
+  "clones": [
+    {
+      "unit": "tk-0002",
+      "local_exclude": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-sdk/.git/info/exclude",
+      "rule": "/.serena/",
+      "preserved": [
+        {
+          "path": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-sdk/.serena/.gitignore",
+          "sha256": "21d5dcb497df8b257d94919bdadcfe75b75d085d0f7b77ac2d8a813a9ca6e758"
+        },
+        {
+          "path": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-sdk/.serena/project.yml",
+          "sha256": "789df3a408b30a4162c62db08324a7e0b0f855b6fe823802d63ea1ee5acdf84c"
+        }
+      ]
+    },
+    {
+      "unit": "tk-0003",
+      "local_exclude": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli/.git/info/exclude",
+      "rule": "/.serena/",
+      "preserved": [
+        {
+          "path": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli/.serena/.gitignore",
+          "sha256": "21d5dcb497df8b257d94919bdadcfe75b75d085d0f7b77ac2d8a813a9ca6e758"
+        },
+        {
+          "path": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli/.serena/project.yml",
+          "sha256": "423909441fb9149dd38153060be66270c0bd48c41bd8c6e91f7feda4cf0e4bcf"
+        }
+      ]
+    },
+    {
+      "unit": "tk-0005",
+      "local_exclude": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-proof/.git/info/exclude",
+      "rule": "/.serena/",
+      "preserved": [
+        {
+          "path": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-proof/.serena/.gitignore",
+          "sha256": "21d5dcb497df8b257d94919bdadcfe75b75d085d0f7b77ac2d8a813a9ca6e758"
+        },
+        {
+          "path": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-proof/.serena/project.yml",
+          "sha256": "f5863d7df31ebf30ec371662d415315d87ee3c179ca940388551ba58c27b3b8c"
+        }
+      ]
+    }
+  ]
+}

@@ -23,7 +23,7 @@
           "id": "tk-0001",
           "title": "PM contract baseline",
           "phase": "ph-415a",
-          "state": "unchecked",
+          "state": "checked",
           "success": "PM pij-right-kotallo implements the smallest real shared core types/ports/errors and testkit fakes/fixtures, root workspace/dependency policy and isolated test helpers, then commits and seals the baseline. No SDK/CLI stub behavior.",
           "notes": "Guide unit tk-0001; wave 0; dependencies none. Exact fences/interfaces: ../../impl-guide.dd.json#units/tk-0001. Requested roles and proof are guide-owned; no coder validation/formatting mid-flight.",
           "satisfies": [],
@@ -33,8 +33,8 @@
             "../../../plan.dd.json#acceptance_criteria/ac-0008"
           ],
           "done": "tasks.dd.json#done_when/tk-0001",
-          "receipt": "../../team/baseline-v6.dd.json",
-          "note": "v6 seal succeeded; new v7 identity supports seal-dispatch-commit ordering required by native E473 defect. Await actual v7 seal, no source changes."
+          "receipt": "../../team/baseline-v7.dd.json",
+          "note": "Current v7 eighteen-file seal actually passed; evidence pending post-dispatch commit by supported ordering, no product AC claim."
         },
         {
           "id": "tk-0002",
@@ -54,7 +54,8 @@
             "../../../plan.dd.json#acceptance_criteria/ac-0008",
             "../../../plan.dd.json#acceptance_criteria/ac-000b"
           ],
-          "done": "tasks.dd.json#done_when/tk-0002"
+          "done": "tasks.dd.json#done_when/tk-0002",
+          "note": "Runtime prerequisite changed; resuming actual ready/dispatch/ack gates. No release or implementation success claimed yet."
         },
         {
           "id": "tk-0003",
@@ -72,13 +73,14 @@
             "../../../plan.dd.json#acceptance_criteria/ac-0008",
             "../../../plan.dd.json#acceptance_criteria/ac-000b"
           ],
-          "done": "tasks.dd.json#done_when/tk-0003"
+          "done": "tasks.dd.json#done_when/tk-0003",
+          "note": "Runtime prerequisite changed; resuming actual ready/dispatch/ack gates. No release or implementation success claimed yet."
         },
         {
           "id": "tk-0004",
           "title": "PM production composition and acceptance",
           "phase": "ph-415a",
-          "state": "unchecked",
+          "state": "blocked",
           "success": "PM pij-right-kotallo imports verified coder deliveries, adds unisphere-app executable wiring, resolves integration without changing unit internals silently, regenerates PM-owned assets and verifies the exact composed commit.",
           "notes": "Guide unit tk-0004; wave 2; dependencies tk-0001, tk-0002, tk-0003, tk-0005. Exact fences/interfaces: ../../impl-guide.dd.json#units/tk-0004. Requested roles and proof are guide-owned; no coder validation/formatting mid-flight.",
           "satisfies": [
@@ -94,7 +96,8 @@
             "../../../plan.dd.json#acceptance_criteria/ac-0007",
             "../../../plan.dd.json#acceptance_criteria/ac-000a"
           ],
-          "done": "tasks.dd.json#done_when/tk-0004"
+          "done": "tasks.dd.json#done_when/tk-0004",
+          "note": "Blocked on three undispatched coder deliveries; no composition implementation or acceptance claim. Current canonical handoff: ../../execution-log.dd.json#entries/lg-0009. Preserve fixed PM HEAD; await corrected supported runtime."
         },
         {
           "id": "tk-0005",
@@ -112,7 +115,8 @@
             "../../../plan.dd.json#acceptance_criteria/ac-0009",
             "../../../plan.dd.json#acceptance_criteria/ac-000b"
           ],
-          "done": "tasks.dd.json#done_when/tk-0005"
+          "done": "tasks.dd.json#done_when/tk-0005",
+          "note": "Runtime prerequisite changed; resuming actual ready/dispatch/ack gates. No release or implementation success claimed yet."
         }
       ]
     },
@@ -126,7 +130,7 @@
             "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0006",
             "note": "Required instrument: guide vd-0001. Not executed at task authoring.",
-            "proven_by": "../../execution-log.dd.json#entries/lg-0007"
+            "proven_by": "../../execution-log.dd.json#entries/lg-0008"
           },
           {
             "id": "dw-0002",
@@ -134,7 +138,7 @@
             "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0007",
             "note": "Required instrument: guide vd-0001. Not executed at task authoring.",
-            "proven_by": "../../execution-log.dd.json#entries/lg-0007"
+            "proven_by": "../../execution-log.dd.json#entries/lg-0008"
           },
           {
             "id": "dw-0003",
@@ -142,15 +146,15 @@
             "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0008",
             "note": "Required instrument: guide vd-0001. Not executed at task authoring.",
-            "proven_by": "../../execution-log.dd.json#entries/lg-0007"
+            "proven_by": "../../execution-log.dd.json#entries/lg-0008"
           },
           {
             "id": "dw-0004",
             "assertion": "Independent source-bound baseline review is approved and Builder seals the committed contract files; composition-owned Cargo.lock exception is probed and any disagreement resolved.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0007",
             "note": "Required instrument: guide review/seal. Not executed at task authoring.",
-            "proven_by": "../../execution-log.dd.json#entries/lg-0006"
+            "proven_by": "../../execution-log.dd.json#entries/lg-0008"
           }
         ],
         "tk-0002": [

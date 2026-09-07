@@ -1,0 +1,35 @@
+docs/plans/archive/001-sdk-cli-foundation/assets/backpressure.dd.json
+  s_61dfe47e9838df::t_385ec69bd33ad7 11,25-27,36-38,47-49,58-60,69-71,80-82,91-93,102-104,113-115,124-126,135-137
+docs/plans/archive/001-sdk-cli-foundation/assets/backpressure.dd.md
+  s_61dfe47e9838df::t_34d6727e1f247b 15,23-33
+docs/plans/archive/001-sdk-cli-foundation/assets/execution-log.dd.json
+  s_61dfe47e9838df::t_4d7dcd922dfb7c 176-185
+docs/plans/archive/001-sdk-cli-foundation/assets/execution-log.dd.md
+  s_61dfe47e9838df::t_28b1dbc86425a5 37
+docs/plans/archive/001-sdk-cli-foundation/assets/manual-closeout-authorization.json
+  s_61dfe47e9838df::t_f5019ba5ceab60 1-45
+docs/plans/archive/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json
+  s_61dfe47e9838df::t_3a5405db45eb56 38,59,79,86,103,122,268,270-272
+docs/plans/archive/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.md
+  s_61dfe47e9838df::t_b7b246bec4cde4 38-42,75-83
+docs/plans/archive/001-sdk-cli-foundation/plan.dd.json
+  s_61dfe47e9838df::t_971774b2cb944c 17-18,52-54,59-61,66-68,73-75,80-82,87-89,94-96,101-103,108-110,115-117,122-124,135,258
+docs/plans/archive/001-sdk-cli-foundation/plan.dd.md
+  s_61dfe47e9838df::t_172ca5f202a7de 19,23,59-69,77,171
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "8623dd9b1b07eaf2c6834741544141fcbb5734eb",
+  "prompts": {},
+  "sessions": {
+    "s_61dfe47e9838df": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cbe08128-4097-4473-9f99-71e9415824f6",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

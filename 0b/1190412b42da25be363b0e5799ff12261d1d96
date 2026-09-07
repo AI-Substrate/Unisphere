@@ -1,0 +1,54 @@
+AGENTS.md
+  h_9e71e8b09f7cf2 3,36
+Cargo.lock
+  h_9e71e8b09f7cf2 5-54,67-112,140-151,182-187,268-273,304-321,329-338,348-353
+README.md
+  h_9e71e8b09f7cf2 2-93
+THIRD_PARTY_NOTICES.md
+  h_9e71e8b09f7cf2 1-30
+crates/app/Cargo.toml
+  h_9e71e8b09f7cf2 1-15
+crates/app/src/main.rs
+  h_9e71e8b09f7cf2 1-38
+crates/cli/src/args.rs
+  h_9e71e8b09f7cf2 3-5,53-57
+crates/cli/src/lib.rs
+  h_9e71e8b09f7cf2 46,57-59
+crates/cli/src/output.rs
+  h_9e71e8b09f7cf2 57-59,64-66,89-93
+crates/cli/tests/frontend.rs
+  h_9e71e8b09f7cf2 1-5,17-21,42-46,60-64,70-77,104-107,113-121,123-129,134-144,150-160,166-173,175-186,189-192,194-204,206-209,214-217,219-223,225-228,238-240,245-248,253-257,292-296,299-302,319-340,345-348,351-361,371-375,379-383,391-395,400-402,421-425,427-432,441-443,449-452,464-470,487-496,501-505,508-514,523-534,536-539,549-557,559-575,584-590,593-596,605-615,617-631,634-637,650-653,678-688,691-697,704-706,720-743,747-761
+crates/sdk/src/fs.rs
+  h_9e71e8b09f7cf2 40-41,76-79
+crates/sdk/src/service.rs
+  h_9e71e8b09f7cf2 53-56,110-113,167-169
+crates/sdk/tests/public_api.rs
+  h_9e71e8b09f7cf2 63-66,73-78,81-85,90-91,94-97,110-113,121-124,136-139,143-146,148-151,156-165
+crates/sdk/tests/service_in_isolation.rs
+  h_9e71e8b09f7cf2 48-50,54-65,69-76,86-94,100-107,110-112,119-121,125-132,142-145,147-155,165-171,181-183,185-192,194-209,218-234,239-241,246-253,258-264,272-277,291-294,296-298,312-317,355-362,368-371,373-376,378-382,397-399,401-406
+crates/testkit/src/bin/unisphere-arch-check.rs
+  h_9e71e8b09f7cf2 4-9,16-21,23-28,34-42,46-51,54-61,64-73,76-85,88-91,96-98,104-106,117-118,120-125,131-133,138-139,148-151,159-161,165-171,177-192,204-212
+crates/testkit/src/bin/unisphere-proof.rs
+  h_9e71e8b09f7cf2 4-10,16-18,22-30,35-43,45-51,54-58,60-62,64-72,93-107,109-110,112-114,116-120,122-126,128-130,134-136,139-140,161-168,177-180,182-199,211-217,221-223,225-243,249-256,258-265,270-272,276-279,285-287,291-307,309-313,316-320,328-330,334-338,344-346,356-368,375-385,391-399,401-409,423-435,445-459,461-464,467-474,476-478,484-493,495-504,506-519,521-525,530-535,539-549,556-558,561-563,566-568,571-574,577-578,583-586,593-596,627-631,639-653
+docs/plans/001-sdk-cli-foundation/assets/app-smoke-json.json
+  h_9e71e8b09f7cf2 1-27
+docs/plans/001-sdk-cli-foundation/assets/app-smoke-pty.json
+  h_9e71e8b09f7cf2 1-13
+docs/plans/001-sdk-cli-foundation/assets/team/composition.dd.json
+  h_9e71e8b09f7cf2 1-49
+docs/plans/001-sdk-cli-foundation/assets/team/composition.dd.md
+  h_9e71e8b09f7cf2 1-20
+docs/plans/001-sdk-cli-foundation/assets/unit-import-command.json
+  h_9e71e8b09f7cf2 1-65
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "0b1190412b42da25be363b0e5799ff12261d1d96",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

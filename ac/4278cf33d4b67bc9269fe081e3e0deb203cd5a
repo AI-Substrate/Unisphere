@@ -1,0 +1,22 @@
+docs/plans/archive/001-sdk-cli-foundation/assets/execution-log.dd.json
+  h_9e71e8b09f7cf2 186-193
+docs/plans/archive/001-sdk-cli-foundation/assets/execution-log.dd.md
+  h_9e71e8b09f7cf2 38
+docs/plans/archive/001-sdk-cli-foundation/assets/local-main-landing.json
+  h_9e71e8b09f7cf2 1-72
+docs/plans/archive/001-sdk-cli-foundation/the-flow.json
+  h_9e71e8b09f7cf2 11-12,531-542,806-811,814
+docs/plans/archive/001-sdk-cli-foundation/the-flow.md
+  h_9e71e8b09f7cf2 4,16,71
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "ac4278cf33d4b67bc9269fe081e3e0deb203cd5a",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

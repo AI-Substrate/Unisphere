@@ -23,7 +23,7 @@
           "id": "tk-0001",
           "title": "PM contract baseline",
           "phase": "ph-415a",
-          "state": "unchecked",
+          "state": "checked",
           "success": "PM pij-right-kotallo implements the smallest real shared core types/ports/errors and testkit fakes/fixtures, root workspace/dependency policy and isolated test helpers, then commits and seals the baseline. No SDK/CLI stub behavior.",
           "notes": "Guide unit tk-0001; wave 0; dependencies none. Exact fences/interfaces: ../../impl-guide.dd.json#units/tk-0001. Requested roles and proof are guide-owned; no coder validation/formatting mid-flight.",
           "satisfies": [],
@@ -33,8 +33,8 @@
             "../../../plan.dd.json#acceptance_criteria/ac-0008"
           ],
           "done": "tasks.dd.json#done_when/tk-0001",
-          "receipt": "../../team/baseline.dd.json",
-          "note": "Prior17-file seal succeeded; expanded18-file seal includes unchanged .gitignore and needs current-guide review/reseal before dispatch."
+          "receipt": "../../team/baseline-v6.dd.json",
+          "note": "Current18-file baseline independently reviewed and actually sealed; no product AC/composition claim."
         },
         {
           "id": "tk-0002",
@@ -126,7 +126,7 @@
             "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0006",
             "note": "Required instrument: guide vd-0001. Not executed at task authoring.",
-            "proven_by": "../../execution-log.dd.json#entries/lg-0005"
+            "proven_by": "../../execution-log.dd.json#entries/lg-0006"
           },
           {
             "id": "dw-0002",
@@ -134,7 +134,7 @@
             "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0007",
             "note": "Required instrument: guide vd-0001. Not executed at task authoring.",
-            "proven_by": "../../execution-log.dd.json#entries/lg-0005"
+            "proven_by": "../../execution-log.dd.json#entries/lg-0006"
           },
           {
             "id": "dw-0003",
@@ -142,15 +142,15 @@
             "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0008",
             "note": "Required instrument: guide vd-0001. Not executed at task authoring.",
-            "proven_by": "../../execution-log.dd.json#entries/lg-0005"
+            "proven_by": "../../execution-log.dd.json#entries/lg-0006"
           },
           {
             "id": "dw-0004",
             "assertion": "Independent source-bound baseline review is approved and Builder seals the committed contract files; composition-owned Cargo.lock exception is probed and any disagreement resolved.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0007",
             "note": "Required instrument: guide review/seal. Not executed at task authoring.",
-            "proven_by": "../../execution-log.dd.json#entries/lg-0003"
+            "proven_by": "../../execution-log.dd.json#entries/lg-0006"
           }
         ],
         "tk-0002": [

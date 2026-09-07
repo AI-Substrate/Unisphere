@@ -66,6 +66,16 @@
             "execution-log.dd.json#entries/lg-0002",
             "backpressure.dd.json#rows/bp-0007"
           ]
+        },
+        {
+          "id": "lg-0006",
+          "at": "2026-09-07T05:47:12.158764+00:00",
+          "text": "Actual expanded baseline seal succeeded against source412842e36204b42d579553429a2e6a80f5feaecc and guide v6 SHA256096ef3c06daff0c337a80768e2aa83c3bef2ca45803a2c0e152b91ff662b4191. Independent r5 approved with zero open findings; canonical review digest9889c2f3a295dbdc87b49db3c7817530825a0b16af697285acc76bb9ab4def79. harness builder contracts --seal --review <canonical-r5> exited0 and actually re-executed vd-0001:3 core+10 testkit tests passed. New immutable team/baseline-v6.dd.json digest6502b02b1060653436bed536fc229d796fa8e80ac4064a4fb464d2c015b1d242 freezes18 files including unchanged .gitignore; Cargo.lock excluded under composition ownership. This supersedes lg-0003 for current seal applicability without editing that historical17-file seal or any old record. Full command/output: assets/baseline-v6-seal-command.json. dw1/2/3/4 and tk1 can now be checked; product ACs/composition remain unproven.",
+          "links": [
+            "execution-log.dd.json#entries/lg-0003",
+            "execution-log.dd.json#entries/lg-0005",
+            "backpressure.dd.json#rows/bp-0007"
+          ]
         }
       ]
     }

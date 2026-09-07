@@ -1,6 +1,6 @@
 # Phase 1 implementation context
 
-Product intent: `../../../plan.dd.json`. Architecture, exact APIs, write/read fences and argv checks: `../../impl-guide.dd.json` v3. Selected proof: `../../backpressure.dd.json`. Authorization: `../../implementation-authorization.json`. Task/assertion state lives only in `tasks.dd.json`.
+Product intent: `../../../plan.dd.json`. Architecture, exact APIs, write/read fences and argv checks: current `../../impl-guide.dd.json`. Selected proof: `../../backpressure.dd.json`. Authorization: `../../implementation-authorization.json`. Task/assertion state lives only in `tasks.dd.json`.
 
 ## Construction order
 

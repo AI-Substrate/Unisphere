@@ -14,7 +14,7 @@
     },
     {
       "name": "summary",
-      "value": "Approved guide v3 owns all interfaces/fences/check argv. PM tk-0001 precedes independent tk-0002 SDK, tk-0003 CLI frontend and tk-0005 proof/tooling; PM tk-0004 composes them. Shared contracts are real, not SDK/CLI scaffolds. See context-brief.md."
+      "value": "Current guide owns all interfaces/fences/check argv; latest independent approval and seal are required before dispatch. PM tk-0001 precedes independent tk-0002 SDK, tk-0003 CLI frontend and tk-0005 proof/tooling; PM tk-0004 composes them. See context-brief.md."
     },
     {
       "name": "tasks",
@@ -121,23 +121,26 @@
           {
             "id": "dw-0001",
             "assertion": "Core DTOs/ports and fixed-copy Failure constructors expose the approved typed contract; actual core/testkit library tests pass without SDK/CLI/app.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0006",
-            "note": "Required instrument: guide vd-0001. Not executed at task authoring."
+            "note": "Required instrument: guide vd-0001. Not executed at task authoring.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0001"
           },
           {
             "id": "dw-0002",
             "assertion": "FakeReader/FakeInspector record explicit inputs without ambient access; bounded fake reads and all shared config fixtures are usable independently.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0007",
-            "note": "Required instrument: guide vd-0001. Not executed at task authoring."
+            "note": "Required instrument: guide vd-0001. Not executed at task authoring.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0001"
           },
           {
             "id": "dw-0003",
             "assertion": "sealed_command constructs a child using only caller-authorized temporary paths, cleared environment and empty PATH; native launch requires an absolute executable.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0008",
-            "note": "Required instrument: guide vd-0001. Not executed at task authoring."
+            "note": "Required instrument: guide vd-0001. Not executed at task authoring.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0001"
           },
           {
             "id": "dw-0004",

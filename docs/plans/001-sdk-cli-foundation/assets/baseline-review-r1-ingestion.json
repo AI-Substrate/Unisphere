@@ -1,0 +1,154 @@
+{
+  "receipt": {
+    "record_type": "review",
+    "id": "rv-plan001-baseline-opus-r1",
+    "recorded_at": "2026-09-07T05:09:27Z",
+    "scope": "decomposition",
+    "subject_sha": "18ee5165011eb1a7dcfd013b30c75fba2f55f7ee",
+    "plan": {
+      "path": "docs/plans/001-sdk-cli-foundation/plan.dd.json",
+      "sha256": "bc208a54522fe9d5d26c87d25270806ad72b6b0a53d9155ae4cff1b2871fe3cc"
+    },
+    "guide": {
+      "path": "docs/plans/001-sdk-cli-foundation/assets/impl-guide.dd.json",
+      "sha256": "95da8bf6c3d65077ae18085a379c9c4f780571a7f2ef62d5ac1a65644ae6cdb0"
+    },
+    "reviewer_id": "pij-xenacious-yarpen",
+    "requested": {
+      "role": "reviewer",
+      "harness": "omp",
+      "model": "github-copilot/claude-opus-5",
+      "effort": "high",
+      "source": {
+        "harness": "guide",
+        "model": "guide",
+        "effort": "guide"
+      }
+    },
+    "observed": {
+      "peer_id": "pij-xenacious-yarpen",
+      "root": "/Users/jordanknight/substrate/unisphere/unishpere-main",
+      "ready": true,
+      "harness": "omp",
+      "model": "github-copilot/claude-opus-5",
+      "effort": "high",
+      "native_session": "01a07a3d-65bd-7000-94f8-ed07580732a7",
+      "pid": 76651,
+      "argv": [
+        "bun",
+        "/Users/jordanknight/.npm-global/bin/omp",
+        "--auto-approve",
+        "--model",
+        "github-copilot/claude-opus-5",
+        "--thinking",
+        "high"
+      ],
+      "evidence": [
+        "Native root is the main clone, not a linked worktree: `.git` is a directory, `git rev-parse --git-dir` == `--git-common-dir` == `.git`, and `git worktree list --porcelain` lists /Users/jordanknight/substrate/unisphere/unishpere-main first as the primary worktree on refs/heads/main @ e233129626d05ee15d957057b80825f590bf2812.",
+        "Self process observation: PID 76651, argv `bun /Users/jordanknight/.npm-global/bin/omp --auto-approve --model github-copilot/claude-opus-5 --thinking high`; parent PID 76635 is `pij-rs __spawn-child` carrying PIJ_SESSION_ID=pij-xenacious-yarpen and PIJ_SPAWN_ID=s-c0807667c6a417f13594238e505da52e; grandparent PID 6569 is `tmux new-session -t chainglass`; TMUX_PANE=%4014; OMPCODE=1.",
+        "pij-rs seat registry (`pij-rs list --json`) binds pij-xenacious-yarpen to harness omp, model github-copilot/claude-opus-5, effort high, session 01a07a3d-65bd-7000-94f8-ed07580732a7, pane %4014, pid 76651, folder /Users/jordanknight/substrate/unisphere/unishpere-main, parent pij-right-kotallo, spawn_id s-c0807667c6a417f13594238e505da52e. Registry binding and launch argv agree on all three requested axes.",
+        "Reviewer is independent of the PM identity pij-right-kotallo (distinct seat, session 01a079f0-114d-7000-833f-6c723ffb5028, pid 18955) and is not an implementation runtime; no coder lane has been dispatched at this SHA.",
+        "Subject workspace /Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation inspected read-only at HEAD == 18ee5165011eb1a7dcfd013b30c75fba2f55f7ee; plan and guide sha256 verified identical at working tree and at the subject SHA.",
+        "Commit file set equals impl-guide.dd.json#baseline/files (17 files, none missing) plus Cargo.lock and the two committed evidence assets; no out-of-fence file landed.",
+        "Independent test-count corroboration without execution: committed test functions number 11 (core config 1, core errors 2, testkit fakes 4, testkit fixtures 2, testkit sealed 2), matching the 3+8 recorded in assets/baseline-checks.json for vd-0001 exit 0.",
+        "Committed Cargo.lock resolves 26 packages containing unisphere-core and unisphere-testkit only, with no unisphere-sdk/unisphere-cli/clap entry, proving the workspace locks and builds with sibling crates absent and that uninherited [workspace.dependencies] path entries are not resolved.",
+        "Baseline safety surface inspected at source level: #![forbid(unsafe_code)] in both crates; unisphere-core imports only std::path/std::fmt/std::error/serde with zero fs/env/process/net/FFI usage; unisphere-testkit's only ambient touches are std::fs::create_dir_all under the caller-supplied absolute temp_root, std::process::Command construction with no spawn/output/status anywhere in the crate, and a Windows-only std::env::var_os(\"SystemRoot\") read; the locked dependency graph contains no HTTP client, async runtime, database or ML crate.",
+        "Host toolchain probed read-only from the native root: /opt/homebrew/bin/rustc is `rustc 1.95.0 (59807616e 2026-04-14) (Homebrew)` and rustup is absent from the default PATH, while ~/.cargo/bin/rustup exists and ~/.rustup/toolchains contains 1.57.0, 1.85.0, 1.95.0, 1.98.0, nightly-2026-08-08 and stable for aarch64-apple-darwin; Homebrew clippy is 0.1.95 and rustfmt 1.9.0, the same versions as the rustup 1.95.0 suite."
+      ],
+      "gaps": [
+        "No build, test, formatter, linter or harness verb was executed by this reviewer; PM-recorded evidence in assets/baseline-checks.json and assets/baseline-check-initial.json is the sole execution basis for the vd-0001 and scoped-clippy claims, and it was not independently re-run.",
+        "The ac-0008/bp-0008 judgement in this review is a restricted dependency-and-source-surface inspection of the committed baseline only. It is not an executed network-denial test, not a syscall trace, and it makes no claim about the not-yet-written SDK; the separate composition-review obligation dw-0011 is untouched.",
+        "No claim is made about absence of historical global toolchain mutation; only the recorded command-local selection and the current host state were observable.",
+        "Requested role settings and observed launch argv plus pij-rs registry binding are configuration evidence, not provider-served model attestation.",
+        "Uncommitted PM canonical progress bookkeeping (reported by the PM to have checked dw-0001/dw-0002/dw-0003 and recorded lg-0001) was deliberately not reviewed; this receipt is bound to committed subject bytes only, where every acceptance criterion and every done_when assertion remains unchecked.",
+        "Runtime collector seal probing for the commit remains PM responsibility and was not attempted."
+      ]
+    },
+    "verdict": "approved",
+    "report": {
+      "path": "docs/plans/001-sdk-cli-foundation/assets/reviews/baseline-opus-r1.md",
+      "sha256": "baec146043eaf12999756d8f7696befcb92968f7b0c886a5f8049bc14af999cf"
+    },
+    "findings": [
+      {
+        "id": "F-0001",
+        "severity": "medium",
+        "disposition": "open",
+        "description": "impl-guide.dd.json#architecture/contracts Toolchain contract asserts the host has Homebrew rustc/cargo 1.95.0, no rustup, and newer clippy/rustfmt provenance. Independently false: ~/.cargo/bin/rustup exists with six installed toolchains including 1.95.0-aarch64-apple-darwin (whose bin directory supplied the recorded baseline probes), and Homebrew clippy 0.1.95 / rustfmt 1.9.0 are the same versions as the rustup suite, not newer. No committed baseline file depends on this prose, so it does not block sealing, but dw-0014 requires tk-0005 checks to enforce the documented approved coherent toolchain and the documentation is wrong. PM must reconcile the guide text against assets/toolchain-observation.json, stating the approved tuple as release plus commit-hash, before tk-0005 is released. Reviewer is fenced out of guide edits.",
+        "evidence": "docs/plans/001-sdk-cli-foundation/assets/impl-guide.dd.json#architecture/contracts vs assets/toolchain-observation.json; host probes: /opt/homebrew/bin/rustc -V, /opt/homebrew/bin/clippy-driver -V, /opt/homebrew/bin/rustfmt -V, ls ~/.rustup/toolchains, ls -l ~/.cargo/bin/rustup"
+      },
+      {
+        "id": "F-0002",
+        "severity": "low",
+        "disposition": "accepted",
+        "description": "Two distribution-distinct but version-identical Rust 1.95.0 suites are installed (Homebrew on the default PATH; rustup toolchain used for the recorded probes), sharing rustc commit 59807616e and cargo commit f2d3ce0bd. If tk-0005 checks pin the recorded absolute rustup path or an exact -Vv string, the documented gate will fail on an otherwise-correct Homebrew-default shell for no product reason. Match on release plus commit-hash and record the resolved path as evidence.",
+        "evidence": "assets/toolchain-observation.json probes vs /opt/homebrew/bin/{rustc,cargo,clippy-driver,rustfmt} -V on the reviewer host"
+      },
+      {
+        "id": "F-0003",
+        "severity": "low",
+        "disposition": "accepted",
+        "description": "Root Cargo.toml [workspace.dependencies] pre-declares unisphere-sdk = { path = \"crates/sdk\" } and unisphere-cli = { path = \"crates/cli\" } for directories that do not exist at the sealed baseline. Proven inert by the committed lock (26 packages, neither entry nor clap present) and by vd-0001 passing. Residual risk is contractual: it reduces a tk-0003 violation of 'CLI frontend must not import unisphere-sdk' to a single inherited line, and vd-0006 (the kind-aware graph check that would catch it) does not exist until tk-0005 lands. Restate the prohibition in the tk-0003 dispatch packet.",
+        "evidence": "Cargo.toml [workspace.dependencies]; Cargo.lock at 18ee5165 (26 [[package]] entries)"
+      },
+      {
+        "id": "F-0004",
+        "severity": "low",
+        "disposition": "accepted",
+        "description": "Cargo.lock is committed and not covered by .gitignore, so it dirties locally in every lane that adds a crate (tk-0003 pulls clap). The 'coders never deliver lockfile changes' rule is prose-only and a `git add -A` defeats it. Dispatch packets should require path-scoped commits limited to each unit fence, and import verification should reject a delivery touching Cargo.lock.",
+        "evidence": ".gitignore and Cargo.lock at 18ee5165; impl-guide.dd.json#units/tk-0001 and #units/tk-0004 lockfile fences"
+      },
+      {
+        "id": "F-0005",
+        "severity": "medium",
+        "disposition": "open",
+        "description": "The shared fixture surface is narrower than the documented validation rules and is fenced against all three coders. crates/testkit/src/fixtures.rs covers empty, valid-roots, wrong-type, blank-root, malformed plus NotFound/PermissionDenied categories, but the guide's configuration semantics and dw-0005 also require rejecting non-object documents, unknown keys, duplicate known keys, non-string root elements, non-UTF8 bytes and oversized input, and rk-0003 claims shared sensitive-marker malformed AND invalid-UTF8 fixtures across vd-0002/vd-0003/vd-0004 when no invalid-UTF8 or oversize fixture exists. tk-0002/tk-0003 hold crates/testkit/** read-only and tk-0005 is told not to change the baseline testkit lib, so no lane can add them, and vd-0004's same-input SDK-versus-app comparison loses those cases. Not blocking, because lanes may define crate-local negative inputs. PM decision required before dispatch: either extend fixtures.rs under tk-0001 ownership with an invalid-UTF8 byte constant and an oversize generator helper, or explicitly authorize lane-local negative fixtures and correct rk-0003's wording.",
+        "evidence": "crates/testkit/src/fixtures.rs and crates/testkit/fixtures/config/*.json at 18ee5165; impl-guide.dd.json#architecture/contracts (Configuration semantics, Baseline fake/fixture contract), #risks/rk-0003; tasks.dd.json#done_when/tk-0002 dw-0005"
+      },
+      {
+        "id": "F-0006",
+        "severity": "low",
+        "disposition": "accepted",
+        "description": "assets/toolchain-observation.json embeds the operator's full PATH including private directories, and both evidence assets embed the absolute workspace path. This is legitimate provenance for an execution record and is not the ac-0009 prohibition (which targets product code and committed fixtures, and the committed fixtures are clean), but workspace.package.repository points at a public GitHub remote and push is a separately authorized gate. Decide before the first push whether host PATH belongs in history.",
+        "evidence": "assets/toolchain-observation.json selection.PATH; assets/baseline-checks.json cwd; Cargo.toml workspace.package.repository"
+      }
+    ]
+  },
+  "ingestion": {
+    "argv": [
+      "harness",
+      "builder",
+      "review",
+      "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/plan.dd.json",
+      "--receipt",
+      "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/.harness/temp/plan001-baseline-review-receipt-r1.json"
+    ],
+    "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+    "exit_code": 1,
+    "stdout": "{\"command\":\"builder review\",\"status\":\"error\",\"timestamp\":\"2026-09-07T05:12:49.104Z\",\"error\":{\"code\":\"E470\",\"message\":\"/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/.harness/temp/plan001-baseline-review-receipt-r1.json must be a builder/team document.\",\"details\":[{\"class\":\"document-invalid\",\"location\":\"$.dd\",\"message\":\"dd must be an object\"},{\"class\":\"document-invalid\",\"location\":\"$.sections\",\"message\":\"sections must be an array\"}]},\"next_action\":\"Use the corresponding packaged Builder schema and canonical DD JSON source.\"}\n",
+    "stderr": "",
+    "data": {
+      "command": "builder review",
+      "status": "error",
+      "timestamp": "2026-09-07T05:12:49.104Z",
+      "error": {
+        "code": "E470",
+        "message": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/.harness/temp/plan001-baseline-review-receipt-r1.json must be a builder/team document.",
+        "details": [
+          {
+            "class": "document-invalid",
+            "location": "$.dd",
+            "message": "dd must be an object"
+          },
+          {
+            "class": "document-invalid",
+            "location": "$.sections",
+            "message": "sections must be an array"
+          }
+        ]
+      },
+      "next_action": "Use the corresponding packaged Builder schema and canonical DD JSON source."
+    }
+  },
+  "pm_disposition": "Hold dispatch; resolve open medium findings before accepting current baseline"
+}

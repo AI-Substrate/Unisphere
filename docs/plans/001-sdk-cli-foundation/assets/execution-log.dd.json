@@ -1,0 +1,32 @@
+{
+  "dd": {
+    "schema": "builder/execution-log"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Observed implementation evidence",
+        "plan": "../plan.dd.json#meta"
+      }
+    },
+    {
+      "name": "entries",
+      "value": [
+        {
+          "id": "lg-0001",
+          "at": "2026-09-07T05:05:28.340587+00:00",
+          "text": "Baseline commit 18ee5165011eb1a7dcfd013b30c75fba2f55f7ee: cargo test -p unisphere-core -p unisphere-testkit --lib exited 0 (3 core, 8 testkit); scoped cargo clippy --lib -D warnings exited 0. Cwd allocated Plan001 worktree. Command/output receipts: assets/baseline-checks.json; coherent command-local toolchain: assets/toolchain-observation.json. These prove baseline contracts/fakes/fixtures/helper only; independent review/seal and all assembled ACs remain unfulfilled.",
+          "links": [
+            "../plan.dd.json#acceptance_criteria/ac-0006",
+            "../plan.dd.json#acceptance_criteria/ac-0007",
+            "../plan.dd.json#acceptance_criteria/ac-0008",
+            "backpressure.dd.json#rows/bp-0006",
+            "backpressure.dd.json#rows/bp-0007",
+            "backpressure.dd.json#rows/bp-0008"
+          ]
+        }
+      ]
+    }
+  ]
+}

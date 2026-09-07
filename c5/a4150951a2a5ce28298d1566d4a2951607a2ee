@@ -1,0 +1,28 @@
+docs/plans/001-sdk-cli-foundation/assets/implementation-authorization.json
+  h_9e71e8b09f7cf2 1-26
+docs/plans/001-sdk-cli-foundation/assets/implementation-prerequisites.json
+  h_9e71e8b09f7cf2 1-168
+docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/context-brief.md
+  h_9e71e8b09f7cf2 1-21
+docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json
+  h_9e71e8b09f7cf2 9,11-12,17,21-115,119-270,344
+docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.md
+  h_9e71e8b09f7cf2 2,12,15,17,30,36-42,48-91
+docs/plans/001-sdk-cli-foundation/assets/toolchain-observation.json
+  h_9e71e8b09f7cf2 1-49
+docs/plans/001-sdk-cli-foundation/the-flow.json
+  h_9e71e8b09f7cf2 6,34-231,239,248-258,264,275-285,291,303-313,319-320,340-349,409,426-436,442,458-468,532-543
+docs/plans/001-sdk-cli-foundation/the-flow.md
+  h_9e71e8b09f7cf2 4,6,10-13,20-21,32,37,41-60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "c5a4150951a2a5ce28298d1566d4a2951607a2ee",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

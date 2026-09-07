@@ -1,0 +1,27 @@
+docs/plans/001-sdk-cli-foundation/assets/baseline-history-8eafef5.json
+  s_61dfe47e9838df::t_d529654d1e416b 1-118
+docs/plans/001-sdk-cli-foundation/assets/reviews/baseline-opus-r4.md
+  s_61dfe47e9838df::t_e5e625792918a7 1-118
+docs/plans/001-sdk-cli-foundation/assets/team/basis-2bd056c99c8d6bfb9ba8ddc4fac3daf65e679f9d4663bea20d08fdde042060fe.json
+  s_61dfe47e9838df::t_07c6e5b40e4007 1-777
+docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-8b43aa9-pij-xenacious-yarpen-r4.dd.json
+  s_61dfe47e9838df::t_e95eb9762fdc05 1-145
+docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-8b43aa9-pij-xenacious-yarpen-r4.dd.md
+  s_61dfe47e9838df::t_76de9296617191 1-24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "412842e36204b42d579553429a2e6a80f5feaecc",
+  "prompts": {},
+  "sessions": {
+    "s_61dfe47e9838df": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cbe08128-4097-4473-9f99-71e9415824f6",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

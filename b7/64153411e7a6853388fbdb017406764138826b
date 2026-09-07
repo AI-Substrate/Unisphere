@@ -1,0 +1,18 @@
+docs/plans/001-sdk-cli-foundation/assets/reviews/workshop-verification.md
+  h_9e71e8b09f7cf2 5,11
+docs/plans/001-sdk-cli-foundation/assets/workshops/001-output-format.md
+  h_9e71e8b09f7cf2 7,26,30,32,43,59-61,220-227,230,251,259,261
+docs/plans/001-sdk-cli-foundation/requirements-spine.md
+  h_9e71e8b09f7cf2 34,36-39,70,89
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "b764153411e7a6853388fbdb017406764138826b",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+docs/plans/001-sdk-cli-foundation/assets/harness-friction-custody.json
+  s_f1a7ee9f435ed3::t_ce7f8ca3c95e75 1-265
+docs/plans/001-sdk-cli-foundation/assets/integration-amendment-inputs.json
+  s_f1a7ee9f435ed3::t_11c934013b05ca 1-34
+docs/plans/001-sdk-cli-foundation/assets/retro-parser-check.json
+  s_f1a7ee9f435ed3::t_66868d5eda2bf2 1-338
+docs/plans/001-sdk-cli-foundation/assets/reviews/composition-opus-r1.md
+  s_a003bfa141bd2a::t_1335261794d013 1-197
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "126423b7eaf9912158a67676cddaa0d3ed306de1",
+  "prompts": {},
+  "sessions": {
+    "s_a003bfa141bd2a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1155ef96-b6e6-4a2b-8e33-02cc8480db23",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    },
+    "s_f1a7ee9f435ed3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6616ca6a-61c0-4a92-b9be-3512605a2826",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

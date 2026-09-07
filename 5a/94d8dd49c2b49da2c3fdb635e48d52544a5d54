@@ -1,0 +1,23 @@
+.harness/government/prime-flow.json
+  s_61dfe47e9838df::t_aa4853b9d8e28f 35-46,57-66
+.harness/government/prime-flow.md
+  s_61dfe47e9838df::t_820858a47dbd33 4,10,16-20
+.harness/government/spine.md
+  s_61dfe47e9838df::t_888d2aa284338d 4,14-16,28,35-38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "5a94d8dd49c2b49da2c3fdb635e48d52544a5d54",
+  "prompts": {},
+  "sessions": {
+    "s_61dfe47e9838df": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cbe08128-4097-4473-9f99-71e9415824f6",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

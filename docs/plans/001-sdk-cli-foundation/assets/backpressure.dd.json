@@ -1,0 +1,24 @@
+{
+  "dd": {
+    "schema": "builder/backpressure"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Backpressure survey",
+        "plan": "../plan.dd.json#meta",
+        "certainty": "Partial"
+      }
+    },
+    {
+      "name": "rows",
+      "value": []
+    },
+    {
+      "name": "sensors",
+      "value": []
+    }
+  ],
+  "references": []
+}

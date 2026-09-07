@@ -1,0 +1,329 @@
+{
+  "dd": {
+    "schema": "builder/impl-guide"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Text conversion: injected services and explicit composition",
+        "plan": "../plan.dd.json#meta",
+        "version": 1
+      }
+    },
+    {
+      "name": "architecture",
+      "value": {
+        "principles": "One immutable Document contract; parser and renderer know no sibling implementation. Source/sink are injected. Only the PM composition root wires real filesystem I/O.",
+        "composition_root": "skills/builder/examples/cli.mjs",
+        "contracts": [
+          "skills/builder/examples/contracts.mjs: documentFromLines(string[]) returns frozen {lines: readonly string[]}"
+        ]
+      }
+    },
+    {
+      "name": "fan_out",
+      "value": {
+        "decision": "coders",
+        "rationale": "Parser and renderer are independently executable against the frozen Document and fake reader/writer. Composition follows both; file count is not the rationale."
+      }
+    },
+    {
+      "name": "capabilities",
+      "value": [
+        {
+          "id": "cp-0001",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0001",
+          "owner": "tk-0002",
+          "path": "CLI source -> injected parser -> immutable Document",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002"
+          ]
+        },
+        {
+          "id": "cp-0002",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0002",
+          "owner": "tk-0003",
+          "path": "Document -> injected renderer -> escaped HTML bytes",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0003"
+          ]
+        },
+        {
+          "id": "cp-0003",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0003",
+          "owner": "tk-0004",
+          "path": "Real CLI source file -> parser -> renderer -> output file",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0004"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "units",
+      "value": [
+        {
+          "id": "tk-0001",
+          "name": "Contracts",
+          "role": "pm",
+          "responsibility": "Immutable Document DTO and validation; no I/O.",
+          "paths": [
+            "skills/builder/examples/contracts.mjs"
+          ],
+          "reads": [],
+          "interface": "Immutable Document DTO and validation; no I/O.",
+          "depends_on": [],
+          "wave": 0,
+          "acceptance": [],
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0001"
+          ]
+        },
+        {
+          "id": "tk-0002",
+          "name": "Parser",
+          "role": "coder",
+          "responsibility": "createParser({read}): async (path) => Document; injected read rejects normally.",
+          "paths": [
+            "skills/builder/examples/parser.mjs"
+          ],
+          "reads": [
+            {
+              "owner": "tk-0001",
+              "paths": [
+                "skills/builder/examples/contracts.mjs"
+              ]
+            }
+          ],
+          "interface": "createParser({read}): async (path) => Document; injected read rejects normally.",
+          "depends_on": [
+            "tk-0001"
+          ],
+          "wave": 1,
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0001"
+          ],
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002"
+          ]
+        },
+        {
+          "id": "tk-0003",
+          "name": "Renderer",
+          "role": "coder",
+          "responsibility": "createRenderer({write}): async (Document,path) => {path,bytes}; escapes HTML.",
+          "paths": [
+            "skills/builder/examples/renderer.mjs"
+          ],
+          "reads": [
+            {
+              "owner": "tk-0001",
+              "paths": [
+                "skills/builder/examples/contracts.mjs"
+              ]
+            }
+          ],
+          "interface": "createRenderer({write}): async (Document,path) => {path,bytes}; escapes HTML.",
+          "depends_on": [
+            "tk-0001"
+          ],
+          "wave": 1,
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0002"
+          ],
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0003"
+          ]
+        },
+        {
+          "id": "tk-0004",
+          "name": "Composition",
+          "role": "pm",
+          "responsibility": "createConvert({parse,render}): async (source,destination) => render result; explicit I/O only in cli.mjs.",
+          "paths": [
+            "skills/builder/examples/compose.mjs",
+            "skills/builder/examples/cli.mjs",
+            "skills/builder/examples/verify.mjs",
+            "skills/builder/examples/bad.mjs",
+            "skills/builder/examples/solo.mjs",
+            "skills/builder/examples/lifecycle.mjs",
+            "skills/builder/examples/proof-recipe.mjs"
+          ],
+          "reads": [
+            {
+              "owner": "tk-0001",
+              "paths": [
+                "skills/builder/examples/contracts.mjs"
+              ]
+            },
+            {
+              "owner": "tk-0002",
+              "paths": [
+                "skills/builder/examples/parser.mjs"
+              ]
+            },
+            {
+              "owner": "tk-0003",
+              "paths": [
+                "skills/builder/examples/renderer.mjs"
+              ]
+            }
+          ],
+          "interface": "createConvert({parse,render}): async (source,destination) => render result; explicit I/O only in cli.mjs.",
+          "depends_on": [
+            "tk-0001",
+            "tk-0002",
+            "tk-0003"
+          ],
+          "wave": 2,
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0003"
+          ],
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0004"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "baseline",
+      "value": {
+        "files": [
+          "skills/builder/examples/contracts.mjs"
+        ],
+        "proof": [
+          "impl-guide.dd.json#checks/vd-0001"
+        ],
+        "receipt": "team/baseline.dd.json"
+      }
+    },
+    {
+      "name": "isolation",
+      "value": {
+        "mode": "clone-per-coder",
+        "allocation_owner": "harness",
+        "note": "Native roots and canaries checked separately; owner is not checkout kind."
+      }
+    },
+    {
+      "name": "roles",
+      "value": [
+        {
+          "id": "rl-0001",
+          "role": "coder",
+          "harness": "omp",
+          "model": "github-copilot/gpt-6-astra"
+        },
+        {
+          "id": "rl-0002",
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5"
+        }
+      ]
+    },
+    {
+      "name": "checks",
+      "value": [
+        {
+          "id": "vd-0001",
+          "description": "Exercise contracts observable contract",
+          "command": "node",
+          "args": [
+            "skills/builder/examples/verify.mjs",
+            "--case",
+            "contracts"
+          ],
+          "cwd": ".",
+          "timeout_ms": 30000
+        },
+        {
+          "id": "vd-0002",
+          "description": "Exercise parser observable contract",
+          "command": "node",
+          "args": [
+            "skills/builder/examples/verify.mjs",
+            "--case",
+            "parser"
+          ],
+          "cwd": ".",
+          "timeout_ms": 30000
+        },
+        {
+          "id": "vd-0003",
+          "description": "Exercise renderer observable contract",
+          "command": "node",
+          "args": [
+            "skills/builder/examples/verify.mjs",
+            "--case",
+            "renderer"
+          ],
+          "cwd": ".",
+          "timeout_ms": 30000
+        },
+        {
+          "id": "vd-0004",
+          "description": "Exercise composition observable contract",
+          "command": "node",
+          "args": [
+            "skills/builder/examples/verify.mjs",
+            "--case",
+            "composition"
+          ],
+          "cwd": ".",
+          "timeout_ms": 30000
+        }
+      ]
+    },
+    {
+      "name": "composition",
+      "value": {
+        "owner": "tk-0004",
+        "order": [
+          "tk-0002",
+          "tk-0003"
+        ],
+        "steps": [
+          "Import only the fenced commits after baseline/packet verification.",
+          "Wire filesystem reader/writer in cli.mjs and commit the composed artifact.",
+          "Run composition verification and independently review the exact artifact SHA."
+        ],
+        "proof": [
+          "impl-guide.dd.json#checks/vd-0004"
+        ]
+      }
+    },
+    {
+      "name": "review",
+      "value": {
+        "when": "Guide approval before dispatch; exact committed composition after verification.",
+        "inputs": [
+          "Product plan",
+          "Implementation guide",
+          "Exact subject SHA",
+          "Actual command receipts"
+        ],
+        "proof": [
+          "Independent requested/observed reviewer, subject and document digests, findings and dispositions."
+        ]
+      }
+    },
+    {
+      "name": "risks",
+      "value": [
+        {
+          "id": "rk-0001",
+          "text": "Mutable hidden state defeats file-based fan-out.",
+          "check": "node skills/builder/examples/verify.mjs --case bad"
+        },
+        {
+          "id": "rk-0002",
+          "text": "Atomic ledger reservation should stay solo.",
+          "check": "node skills/builder/examples/verify.mjs --case solo"
+        }
+      ]
+    }
+  ],
+  "references": []
+}

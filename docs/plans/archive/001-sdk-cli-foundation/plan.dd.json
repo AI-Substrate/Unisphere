@@ -14,7 +14,8 @@
         "backpressure": "assets/backpressure.dd.json#rows",
         "mode": "Simple",
         "complexity": "CS-3",
-        "confidence": "Product scope is explicit; implementation feasibility and exact public contracts require the guide and applicable proof. No acceptance criterion is proven yet."
+        "confidence": "Product checks and independent source review passed. Operator authorized manual closeout and archive; missing formal Builder composition receipt remains a named limitation, not fabricated proof.",
+        "log": "assets/execution-log.dd.json#entries"
       }
     },
     {
@@ -48,68 +49,79 @@
         {
           "id": "ac-0001",
           "claim": "An external Rust application consumes the SDK from the checkout through ordinary Cargo dependency configuration and invokes the configuration/diagnostic use case in-process, without spawning the CLI or requiring a daemon, database, ML service or caller-created async runtime.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-0001"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0001",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0010"
         },
         {
           "id": "ac-0002",
           "claim": "The shared configuration use case accepts a documented minimal configuration for caller-supplied source roots, produces the effective settings and diagnostics deterministically, treats an empty root list as valid, and rejects malformed documents, blank root entries and incompatible value types with field/path-specific errors rather than panicking or substituting guessed values. It does not inspect session content.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-0002"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0002",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0010"
         },
         {
           "id": "ac-0003",
           "claim": "Configuration precedence is documented and identical in SDK and CLI: defaults are overridden by explicitly supplied configuration, then explicit caller/CLI overrides; omitted values retain defaults. Library calls do not read ambient HOME, process environment or global config implicitly.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-0003"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0003",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0010"
         },
         {
           "id": "ac-0004",
           "claim": "The installable CLI exposes help/version and the shared configuration/diagnostic operation; on equivalent successful and invalid inputs its semantic data/error agrees with direct SDK invocation. A missing or unreadable explicit config file produces a named failure, not success or an empty configuration.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-0004"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0004",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0010"
         },
         {
           "id": "ac-0005",
           "claim": "Machine-mode CLI output has a documented versioned success/error envelope and remains parseable without terminal decoration; explicit output selection takes precedence over terminal detection, and piped/captured output defaults to machine mode. Human output is derived from the same result, logs do not corrupt stdout, and successful operations, operational/configuration failures and invalid CLI invocation have documented distinct exit behavior.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-0005"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0005",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0010"
         },
         {
           "id": "ac-0006",
           "claim": "Public failures are actionable and typed: callers can distinguish invalid configuration from explicit input I/O failures without parsing prose; CLI failures carry a stable category/code, a useful location when known and remediation guidance, without dumping secrets, full config documents or unrelated session content.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-0006"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0006",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0010"
         },
         {
           "id": "ac-0007",
           "claim": "Foundation services are executable in isolation through their public contracts with injected dependencies before a CLI or sibling adapter implementation exists; automated dependency checks reject core/service dependencies on the CLI or concrete outer adapters, and a deliberate forbidden-edge fixture makes the check fail.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-0007"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0007",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0010"
         },
         {
           "id": "ac-0008",
           "claim": "Tests and smoke scenarios are deterministic, parallel-safe and isolated from real user configuration/session stores: temporary paths and explicit injected settings are used, foundation operations do not write outside supplied test/workspace paths or start hidden background workers, and ordinary library invocation performs no network calls.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-0008"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0008",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0010"
         },
         {
           "id": "ac-0009",
           "claim": "A fresh checkout with the documented Rust toolchain and declared dependencies can build/test the SDK and install/run the CLI locally; SDK consumption and the installed CLI do not require Node/DD/Builder tooling at runtime, repository-private absolute paths, or unpublished sibling binaries.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-0009"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0009",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0010"
         },
         {
           "id": "ac-000a",
           "claim": "The repository engineering harness exposes one real product validation lane and a meaningful foundation boot/smoke lane; a passing lane proves the delivered configuration/SDK/CLI behavior and must not claim native telemetry collection or reader support. A deliberately failing product check propagates a failing verdict.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-000a"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000a",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0010"
         },
         {
           "id": "ac-000b",
           "claim": "A new consumer can follow documented SDK and CLI examples to reproduce a successful configuration check and an actionable failure; docs state foundation-only capabilities and version/support limits, and any substantial Flowspace3/git-ai code reuse retains applicable licence and provenance notices.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-000b"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000b",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0010"
         }
       ]
     },
@@ -120,7 +132,7 @@
           "id": "ph-415a",
           "title": "Usable independent SDK and CLI foundation",
           "brief": "One integrated outcome checkpoint: external Rust consumption, shared configuration/diagnostics, CLI parity and isolated proof. Internal unit waves are defined by the reviewed guide, not a serial SDK-then-CLI phase order.",
-          "state": "unchecked",
+          "state": "checked",
           "tasks": "assets/tasks/phase-1/tasks.dd.json#tasks",
           "objective": "Deliver real foundation behavior through the SDK and CLI without shipping native readers or settling the telemetry format.",
           "delivers": [
@@ -243,7 +255,7 @@
     },
     {
       "name": "implementation_summary",
-      "value": ""
+      "value": "Delivered Rust SDK/CLI explicit-configuration foundation with real app wiring, safe typed errors, isolated proofs and usage docs. All11 product ACs accepted from executed proof and independent source review. Operator directed manual archive/localmain landing around Builder E477; formal compose receipt remains absent. No native telemetry readers shipped."
     },
     {
       "name": "key_findings",

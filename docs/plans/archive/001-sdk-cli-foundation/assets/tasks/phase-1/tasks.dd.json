@@ -35,7 +35,7 @@
           ],
           "done": "tasks.dd.json#done_when/tk-0001",
           "receipt": "../../team/baseline-v7.dd.json",
-          "note": "Current v7 eighteen-file seal actually passed; evidence pending post-dispatch commit by supported ordering, no product AC claim."
+          "note": "Completed on observed product proof and independent source review; operator-authorized manual closeout explicitly waives absent formal Builder composition receipt only."
         },
         {
           "id": "tk-0002",
@@ -56,7 +56,7 @@
             "../../../plan.dd.json#acceptance_criteria/ac-000b"
           ],
           "done": "tasks.dd.json#done_when/tk-0002",
-          "note": "All lane assertions exercised by PM in actual composed boot; final whole-plan acceptance and first-class compose receipt remain pending.",
+          "note": "Completed on observed product proof and independent source review; operator-authorized manual closeout explicitly waives absent formal Builder composition receipt only.",
           "receipt": "../../execution-log.dd.json#entries/lg-000e"
         },
         {
@@ -76,14 +76,14 @@
             "../../../plan.dd.json#acceptance_criteria/ac-000b"
           ],
           "done": "tasks.dd.json#done_when/tk-0003",
-          "note": "All lane assertions exercised by PM in actual composed boot; final whole-plan acceptance and first-class compose receipt remain pending.",
+          "note": "Completed on observed product proof and independent source review; operator-authorized manual closeout explicitly waives absent formal Builder composition receipt only.",
           "receipt": "../../execution-log.dd.json#entries/lg-000e"
         },
         {
           "id": "tk-0004",
           "title": "PM production composition and acceptance",
           "phase": "ph-415a",
-          "state": "blocked",
+          "state": "checked",
           "success": "PM pij-right-kotallo imports verified coder deliveries, adds unisphere-app executable wiring, resolves integration without changing unit internals silently, regenerates PM-owned assets and verifies the exact composed commit.",
           "notes": "Guide unit tk-0004; wave 2; dependencies tk-0001, tk-0002, tk-0003, tk-0005. Exact fences/interfaces: ../../impl-guide.dd.json#units/tk-0004. Requested roles and proof are guide-owned; no coder validation/formatting mid-flight.",
           "satisfies": [
@@ -100,7 +100,7 @@
             "../../../plan.dd.json#acceptance_criteria/ac-000a"
           ],
           "done": "tasks.dd.json#done_when/tk-0004",
-          "note": "Real app/quality/parity/externalconsumer/installedCLI/boot exercised; independent source review and first-class compose receipt still pending (row48), so task remains unchecked."
+          "note": "Completed on observed product proof and independent source review; operator-authorized manual closeout explicitly waives absent formal Builder composition receipt only."
         },
         {
           "id": "tk-0005",
@@ -119,7 +119,7 @@
             "../../../plan.dd.json#acceptance_criteria/ac-000b"
           ],
           "done": "tasks.dd.json#done_when/tk-0005",
-          "note": "All lane assertions exercised by PM in actual composed boot; final whole-plan acceptance and first-class compose receipt remain pending.",
+          "note": "Completed on observed product proof and independent source review; operator-authorized manual closeout explicitly waives absent formal Builder composition receipt only.",
           "receipt": "../../execution-log.dd.json#entries/lg-000e"
         }
       ]
@@ -265,9 +265,11 @@
           {
             "id": "dw-0011",
             "assertion": "Independent Opus high composition review approves the exact Builder-verified commit and explicitly inspects bp-0008 core/SDK no-network/ambient/process/FFI/unsafe surfaces.",
-            "state": "unchecked",
+            "state": "human-skipped",
             "pressure": "../../backpressure.dd.json#rows/bp-0008",
-            "note": "Required instrument: guide composition review. Not executed at task authoring."
+            "note": "Only the formal Builder-verified-commit requirement is waived by the operator. Independent Opus source/behavior approval and bp0008 inspection actually completed; proof in lg-000f. No formal compose success is claimed.",
+            "receipt": "Just get on with it, please. We don't need to worry about this. We're just dog fooding builder. If it's not working and blocking us, then we work around it. Thanks",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0010"
           }
         ],
         "tk-0005": [

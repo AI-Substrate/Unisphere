@@ -3,11 +3,11 @@
   "kind": "flight-plan",
   "slug": "sdk-cli-foundation",
   "nav": {
-    "now": "phase-1",
+    "now": "ship",
     "next": null,
     "intent": "Collect requirements and research for Unisphere base Rust SDK, thin CLI, architecture and tests; requirements-spine.md is not an approved plan; dogfood Builder and report to pij-varied-alpaca",
     "bag": {
-      "status": "active",
+      "status": "archived",
       "requirements_spine": "docs/plans/001-sdk-cli-foundation/requirements-spine.md"
     }
   },
@@ -323,6 +323,210 @@
           "comments"
         ]
       }
+    },
+    {
+      "id": "UPD-014",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-07T22:01:57.821Z",
+      "details": {
+        "node": "phase-1",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "UPD-015",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-07T22:01:57.960Z",
+      "details": {
+        "node": "observe-1",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-009",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-07T22:01:58.124Z",
+      "details": {
+        "node": "observe-1",
+        "from": "known",
+        "to": "done",
+        "chore": {
+          "kind": "command",
+          "importance": "recommended"
+        }
+      }
+    },
+    {
+      "id": "UPD-016",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-07T22:01:58.259Z",
+      "details": {
+        "node": "retro-1",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-010",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-07T22:01:58.391Z",
+      "details": {
+        "node": "retro-1",
+        "from": "known",
+        "to": "done",
+        "chore": {
+          "kind": "command",
+          "importance": "recommended"
+        }
+      }
+    },
+    {
+      "id": "STA-011",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-07T22:01:58.548Z",
+      "details": {
+        "node": "phase-1",
+        "from": "in_progress",
+        "to": "done"
+      }
+    },
+    {
+      "id": "CUR-004",
+      "kind": "cursor-moved",
+      "origin": "engine",
+      "fired_at": "2026-09-07T22:01:58.745Z",
+      "details": {
+        "from": "phase-1",
+        "to": "review-1"
+      }
+    },
+    {
+      "id": "UPD-017",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-07T22:01:58.888Z",
+      "details": {
+        "node": "review-1",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-012",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-07T22:01:59.066Z",
+      "details": {
+        "node": "review-1",
+        "from": "assumed",
+        "to": "done"
+      }
+    },
+    {
+      "id": "CUR-005",
+      "kind": "cursor-moved",
+      "origin": "engine",
+      "fired_at": "2026-09-07T22:01:59.202Z",
+      "details": {
+        "from": "review-1",
+        "to": "post-flight"
+      }
+    },
+    {
+      "id": "UPD-018",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-07T22:01:59.345Z",
+      "details": {
+        "node": "retro-harvest",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-013",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-07T22:01:59.478Z",
+      "details": {
+        "node": "retro-harvest",
+        "from": "known",
+        "to": "done",
+        "chore": {
+          "kind": "command",
+          "importance": "recommended"
+        }
+      }
+    },
+    {
+      "id": "UPD-019",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-07T22:01:59.640Z",
+      "details": {
+        "node": "post-flight",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "UPD-020",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-07T22:01:59.802Z",
+      "details": {
+        "node": "post-flight",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-014",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-07T22:02:21.728Z",
+      "details": {
+        "node": "post-flight",
+        "from": "assumed",
+        "to": "done"
+      }
+    },
+    {
+      "id": "CUR-006",
+      "kind": "cursor-moved",
+      "origin": "engine",
+      "fired_at": "2026-09-07T22:02:22.220Z",
+      "details": {
+        "from": "post-flight",
+        "to": "ship"
+      }
+    },
+    {
+      "id": "UPD-021",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-07T22:02:22.348Z",
+      "details": {
+        "node": "ship",
+        "fields": [
+          "comments"
+        ]
+      }
     }
   ],
   "nodes": [
@@ -411,13 +615,21 @@
       "type": "phase",
       "phase": 1,
       "label": "P1: Usable independent SDK and CLI foundation",
-      "status": "in_progress",
+      "status": "done",
       "command": "/builder 6 implement",
       "next": [
         "review-1"
       ],
       "dd_link": {
-        "address": "docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json#tasks"
+        "address": "docs/plans/archive/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json#tasks",
+        "basis_sha": "5c9fe211532dcad28acfcc9782c0dd01ed503542563aa0393acdd05e1ce3090e",
+        "reading": {
+          "status": "complete",
+          "terminal": 5,
+          "total": 5,
+          "incomplete": [],
+          "at": "2026-09-07T22:01:58.745Z"
+        }
       },
       "instructions": [
         "Implement exactly ONE phase from the reviewed guide and selected proof approach; the PM owns canonical task state and execution receipts, workers return fenced committed deliveries.",
@@ -474,16 +686,22 @@
           "text": "Corrected runtime45ac8b2b yielded three actual dispatches exit0/statusok at07:06:32Z: tk0002 pij-partial-koi, tk0003 pij-standard-impala, tk0005 pij-brave-cahir, distinct fullclones, configured/observed OMP github-copilot/gpt-6-astra high. Allthree native prework acknowledgements accepted; releases issued with IDs7ae4d03c-a61d-4bde-92e3-fdea4c8a8374 /9e5b4b55-68c0-4972-89e2-603f34f4dadc /ee6d46f0-2efb-4db8-ae2c-b2f69818d9dd. Allthree fresh post-release acknowledgements accepted by Builder, release.outcome delivered. Evidence dispatch-fixed-tk-000{2,3,5}.json and postrelease-ack-tk-000{2,3,5}.json. Row46 exercised end-to-end; row45 live case used HEAD==sealed source1ec72134, descendant branch remains unit-test evidence only. Native startup .serena metadata preserved and excluded only through clone-local .git/info/exclude (owner-supported row47); no frozen/global/source change. SDK cdcb1d69 passed24tests+2rustdoc; CLI initial2f3a1169 failed mutable-writer lifetime compilation, corrected49654b0a passed18tests. These are isolated lane checks, not composition acceptance. Allallocation gates completed before this evidence commit; source snapshots and prior failures preserved.",
           "source": "agent",
           "kind": "validation"
+        },
+        {
+          "at": "2026-09-07T22:01:57.821Z",
+          "text": "Just get on with it, please. We don't need to worry about this. We're just dog fooding builder. If it's not working and blocking us, then we work around it. Thanks",
+          "source": "user",
+          "kind": "decision"
         }
       ],
-      "modified_at": "2026-09-07T07:35:12.027Z",
-      "ran_at": "2026-09-07T06:11:24.288Z"
+      "modified_at": "2026-09-07T22:01:58.548Z",
+      "ran_at": "2026-09-07T22:01:58.548Z"
     },
     {
       "id": "review-1",
       "type": "review",
       "label": "Review: P1",
-      "status": "assumed",
+      "status": "done",
       "command": "/builder 7 review",
       "next": [
         "post-flight"
@@ -495,21 +713,39 @@
         "Done when the verdict is recorded (one finding line) and either accepted or routed to a fix-loop.",
         "Review the exact composed artifact and current plan/guide basis. Record an independent composition ReviewReceipt with harness builder review <plan> --receipt <path>; unavailable review stays unfulfilled.",
         "Close only criteria proven by observed receipts through node_modules/.bin/ddocs. Whole-plan --complete is not a review-exit gate: closeout work is still future work."
-      ]
+      ],
+      "comments": [
+        {
+          "at": "2026-09-07T22:01:58.888Z",
+          "text": "Independent source/behavior approval preserved at assets/reviews/composition-opus-r1; productbytes unchanged. Formal Builderverified conjunct waived by operator, not fabricated; see manual-closeout-authorization.json.",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "modified_at": "2026-09-07T22:01:59.066Z",
+      "ran_at": "2026-09-07T22:01:59.066Z"
     },
     {
       "id": "post-flight",
       "type": "post-flight",
       "label": "Post-flight",
-      "status": "assumed",
+      "status": "done",
       "command": "/builder 7b post-flight",
       "next": [
         "ship"
       ],
       "zone": "postflight",
       "dd_link": {
-        "address": "docs/plans/001-sdk-cli-foundation/plan.dd.json",
-        "check": "plan-validate"
+        "address": "docs/plans/archive/001-sdk-cli-foundation/plan.dd.json",
+        "check": "plan-validate",
+        "basis_sha": "0fab1aa00fa3dd4d1c317f1addad89af89a89e9d32b84ec1261fe0e20c5ca31c",
+        "reading": {
+          "status": "complete",
+          "terminal": 1,
+          "total": 1,
+          "incomplete": [],
+          "at": "2026-09-07T22:02:22.220Z"
+        }
       },
       "instructions": [
         "Close out the flight BEFORE any ship: every phase and review is done; the terminal harness harvest fires at this edge, then the plan folder is archived — this stage runs whether or not the work ever ships.",
@@ -517,7 +753,23 @@
         "Whole-plan completion gates this node's EXIT after closeout evidence: harness plan validate <archived plan> --complete must be green. Never pre-check closeout to leave an earlier review.",
         "If the gate refuses and departing anyway is the HUMAN's decision, they pass --force — it records a defended override. An agent may not force a dd gate on its own judgment.",
         "Tidy is separate: harness builder tidy <allocation> --preservation <receipt> re-verifies ownership, runtime release and surviving bytes/refs; external ownership or idle-only evidence cannot authorize removal."
-      ]
+      ],
+      "comments": [
+        {
+          "at": "2026-09-07T22:01:59.639Z",
+          "text": "Just get on with it, please. We don't need to worry about this. We're just dog fooding builder. If it's not working and blocking us, then we work around it. Thanks",
+          "source": "user",
+          "kind": "decision"
+        },
+        {
+          "at": "2026-09-07T22:01:59.802Z",
+          "text": "Manual closeout with operator accepted absentBuilderreceipt. post-flight.md records proof/review/limits; experiments backed up outside allplanroots, workspaces retained. Fullplan archived next; never claimed builder close ran.",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "modified_at": "2026-09-07T22:02:21.728Z",
+      "ran_at": "2026-09-07T22:02:21.728Z"
     },
     {
       "id": "ship",
@@ -531,7 +783,16 @@
         "Get the work out — push the branch, open a PR (using the repo's PR guidance), watch its CI checks, and report problems; the merge itself is optional.",
         "Run /builder 8 ship --plan \"<plan path>\" — the plan folder was archived at post-flight, so resolve --plan under docs/plans/archive/<ord>-<slug>/; push and PR-open each pause for a separate confirm, and any merge waits for a typed PROCEED.",
         "Done when the PR is open and its checks are green (or the failures are reported with a fix-loop offer); a diverged base hands off to 8c reconcile."
-      ]
+      ],
+      "comments": [
+        {
+          "at": "2026-09-07T22:02:22.348Z",
+          "text": "Operator requested getthemin tomain, then supplied PROCEED, then authorized manualworkaround. Landing is localmain only; remote push/PR not claimed.",
+          "source": "user",
+          "kind": "decision"
+        }
+      ],
+      "modified_at": "2026-09-07T22:02:22.348Z"
     },
     {
       "id": "backpressure",
@@ -602,7 +863,7 @@
       "id": "observe-1",
       "type": "observe",
       "label": "Observe: P1",
-      "status": "known",
+      "status": "done",
       "branch_of": "phase-1",
       "next": [
         "phase-1"
@@ -619,13 +880,23 @@
         "Match model tier to work: chores -> cheap subagent, analysis -> Opus-class, judgement -> lead; context may override (§ Shared conventions).",
         "Terminalize at phase end BEFORE the retro drain, receipt first, status second: harness flow comment --path <flow-path> --node observe-1 --kind validation --source agent --text \"captures:<count> pointer:<real capture record> time:<…>\" THEN harness flow status --path <flow-path> --node observe-1 --to done — done only after at least one real capture. Human decline instead: harness flow comment --path <flow-path> --node observe-1 --kind decision --source user --text \"<their verbatim words>\" THEN harness flow status --path <flow-path> --node observe-1 --to skipped.",
         "Environment friction is work, not an apology: fix small things, otherwise `harness observe` it — is this environment working for us? (builder SKILL.md invariant #14)"
-      ]
+      ],
+      "comments": [
+        {
+          "at": "2026-09-07T22:01:57.960Z",
+          "text": "Completed actual capture/drain; original observations retained in assets/harness-friction-custody.json and committed retrospective005-plan001-composition-friction. Current own-bucket read and harvest in assets/manual-postflight-harvest.json.",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "modified_at": "2026-09-07T22:01:58.124Z",
+      "ran_at": "2026-09-07T22:01:58.124Z"
     },
     {
       "id": "retro-1",
       "type": "harness-retro",
       "label": "Retro: P1 (drain)",
-      "status": "known",
+      "status": "done",
       "branch_of": "phase-1",
       "next": [
         "phase-1"
@@ -639,13 +910,23 @@
         "Post-coding seam: drain this phase's observe buffer into durable retro notes before moving on.",
         "Run /eng-harness-flow --hook post-coding --json — a REAL invocation; narrate its envelope verbatim.",
         "Runs after this phase's observe chore is terminalized (real capture receipt, or human decline). On done, receipt first, status second: harness flow comment --path <flow-path> --node retro-1 --kind validation --source agent --text \"verdict:<…> time:<…>\" (router missing / envelope noop/UNAVAILABLE → text \"decision:unavailable reason:<…> time:<…>\" — a completed attempt, not a skip) THEN harness flow status --path <flow-path> --node retro-1 --to done. Mandatory unless the human declines — a decline is: harness flow comment --path <flow-path> --node retro-1 --kind decision --source user --text \"<their verbatim words>\" THEN harness flow status --path <flow-path> --node retro-1 --to skipped."
-      ]
+      ],
+      "comments": [
+        {
+          "at": "2026-09-07T22:01:58.259Z",
+          "text": "Post-coding eng-harness-flow inline attempt: own-bucket actualread/harvest complete, original durablefriction retained, no new progress-only observations; see manual-postflight-harvest.json.",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "modified_at": "2026-09-07T22:01:58.391Z",
+      "ran_at": "2026-09-07T22:01:58.391Z"
     },
     {
       "id": "retro-harvest",
       "type": "harness-retro",
       "label": "Retro: post-flight (harvest)",
-      "status": "known",
+      "status": "done",
       "branch_of": "post-flight",
       "next": [
         "post-flight"
@@ -659,7 +940,17 @@
         "Post-flight seam: the terminal long-horizon harvest — fold this flight's learnings into durable memory at the pre-ship close-out, BEFORE the plan folder archives (so it runs even on work that never ships).",
         "Run /eng-harness-flow --hook post-flight --json — a REAL invocation; narrate its envelope verbatim.",
         "On done, receipt first, status second: harness flow comment --path <flow-path> --node retro-harvest --kind validation --source agent --text \"verdict:<…> time:<…>\" (router missing / envelope noop/UNAVAILABLE → text \"decision:unavailable reason:<…> time:<…>\" — a completed attempt, not a skip) THEN harness flow status --path <flow-path> --node retro-harvest --to done. Mandatory unless the human declines — a decline is: harness flow comment --path <flow-path> --node retro-harvest --kind decision --source user --text \"<their verbatim words>\" THEN harness flow status --path <flow-path> --node retro-harvest --to skipped."
-      ]
+      ],
+      "comments": [
+        {
+          "at": "2026-09-07T22:01:59.345Z",
+          "text": "Post-flight eng-harness-flow followed inline: actual retro insights harvested and ownbucket read; durable harnessfriction preserved, highestvalueencoding offered/recorded in post-flight.md; no peer buckets cleared.",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "modified_at": "2026-09-07T22:01:59.478Z",
+      "ran_at": "2026-09-07T22:01:59.478Z"
     },
     {
       "id": "workshop-output-format",
@@ -674,5 +965,5 @@
       "branch_of": "plan"
     }
   ],
-  "plan_dir": "docs/plans/001-sdk-cli-foundation"
+  "plan_dir": "docs/plans/archive/001-sdk-cli-foundation"
 }

@@ -173,6 +173,16 @@
             "execution-log.dd.json#entries/lg-000e",
             "backpressure.dd.json#rows/bp-0008"
           ]
+        },
+        {
+          "id": "lg-0010",
+          "at": "2026-09-07T21:59:48.426899+00:00",
+          "text": "Operator-directed manual closeout/archive and local main integration. Verbatim authorization: Just get on with it, please. We don't need to worry about this. We're just dog fooding builder. If it's not working and blocking us, then we work around it. Thanks Prior typed merge confirmation: PROCEED. Product evidence remains real: composed-boot-full.json at source560dbd2bf89b3ba030c2c8259c91e5b5f9417ecc records all6 quality gates and3 real proof modes exit0, readiness true; independent composition-opus-r1 source/behavior review approved that same source including bp0008 source inspection with zero open material findings. A current Git comparison against candidate126423b7eaf9912158a67676cddaa0d3ed306de1 confirms product source/manifest/lock/toolchain/extensions/usage docs unchanged. All11 product ACs are accepted on that evidence, NOT a fabricated Builder receipt. The exact-Builder-verified conjunct of dw0011 is human-skipped solely because old Builder E477 prevents formal record creation and operator explicitly authorized workaround. No amendment, compose.artifact_sha, check receipt or preservation receipt is invented. Keep historical failed commands and independent review unchanged. Manualarchive will preserve relative corpus and use CLI flow relocation; all workspaces/scratch stay intact. Localmain merge authorized; no remote publication or retirement claimed.",
+          "links": [
+            "execution-log.dd.json#entries/lg-000e",
+            "execution-log.dd.json#entries/lg-000f",
+            "backpressure.dd.json#rows/bp-0008"
+          ]
         }
       ]
     }

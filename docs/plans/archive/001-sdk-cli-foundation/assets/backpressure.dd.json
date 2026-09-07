@@ -8,7 +8,7 @@
       "value": {
         "title": "Foundation acceptance proof selection — not execution evidence",
         "plan": "../plan.dd.json#meta",
-        "certainty": "Confident",
+        "certainty": "Proven",
         "basis_sha": "bc208a54522fe9d5d26c87d25270806ad72b6b0a53d9155ae4cff1b2871fe3cc"
       }
     },
@@ -22,8 +22,9 @@
           "mode": "BUILD",
           "tier": "computational",
           "proof": "BUILD→RUN: external-consumer Cargo fixture invoking the public SDK; include the behavioral test in the future cargo test --workspace lane. No product Cargo workspace exists yet.",
-          "state": "unchecked",
-          "probe": "Current repository contains only planning/harness setup; Flowspace3 core/public library patterns inspected."
+          "state": "checked",
+          "probe": "Current repository contains only planning/harness setup; Flowspace3 core/public library patterns inspected.",
+          "receipt": "execution-log.dd.json#entries/lg-0010"
         },
         {
           "id": "bp-0002",
@@ -32,8 +33,9 @@
           "mode": "BUILD",
           "tier": "computational",
           "proof": "BUILD→RUN: table-driven public configuration tests, invalid-input boundaries and deterministic repeated calls under cargo test --workspace; exact configuration syntax is fixed by the reviewed guide.",
-          "state": "unchecked",
-          "probe": "Flowspace3 pure config resolve/validation source inspected; no corresponding Unisphere implementation exists."
+          "state": "checked",
+          "probe": "Flowspace3 pure config resolve/validation source inspected; no corresponding Unisphere implementation exists.",
+          "receipt": "execution-log.dd.json#entries/lg-0010"
         },
         {
           "id": "bp-0003",
@@ -42,8 +44,9 @@
           "mode": "BUILD",
           "tier": "computational",
           "proof": "BUILD→RUN: SDK precedence tests plus unisphere-proof sdk-consumer executed under sealed hostile HOME/XDG_*/UNISPHERE_* in separate child processes; assert identical explicit configuration. No process-global environment mutation. Exact argv: guide vd-0002 and vd-000a.",
-          "state": "unchecked",
-          "probe": "Flowspace3 pure layering and sealed subprocess helpers inspected; this plan intentionally does not inherit its full FS3_* environment namespace."
+          "state": "checked",
+          "probe": "Flowspace3 pure layering and sealed subprocess helpers inspected; this plan intentionally does not inherit its full FS3_* environment namespace.",
+          "receipt": "execution-log.dd.json#entries/lg-0010"
         },
         {
           "id": "bp-0004",
@@ -52,8 +55,9 @@
           "mode": "BUILD",
           "tier": "computational",
           "proof": "BUILD→RUN: real CLI subprocess smoke against temporary valid/malformed/missing/unreadable configuration plus direct SDK comparison; wired into the future harness boot/checks lane.",
-          "state": "unchecked",
-          "probe": "Existing boot/checks extensions are unconfigured and provide no product smoke; Flowspace3 CLI contract tests are reference material only."
+          "state": "checked",
+          "probe": "Existing boot/checks extensions are unconfigured and provide no product smoke; Flowspace3 CLI contract tests are reference material only.",
+          "receipt": "execution-log.dd.json#entries/lg-0010"
         },
         {
           "id": "bp-0005",
@@ -62,8 +66,9 @@
           "mode": "BUILD",
           "tier": "computational",
           "proof": "BUILD→RUN: pipe/PTY-or-injected-terminal/output-selection/error-routing subprocess cases and SDK/CLI result parity under cargo test --workspace; exact flags/envelope keys belong to the guide.",
-          "state": "unchecked",
-          "probe": "Flowspace3 core/output.rs and core/envelope.rs inspected; reusing patterns does not adopt their command vocabulary or telemetry payload schema."
+          "state": "checked",
+          "probe": "Flowspace3 core/output.rs and core/envelope.rs inspected; reusing patterns does not adopt their command vocabulary or telemetry payload schema.",
+          "receipt": "execution-log.dd.json#entries/lg-0010"
         },
         {
           "id": "bp-0006",
@@ -72,8 +77,9 @@
           "mode": "BUILD",
           "tier": "computational",
           "proof": "BUILD→RUN: typed failure matching, hostile-value redaction and CLI error-envelope checks with deterministic injected failures; future cargo test --workspace.",
-          "state": "unchecked",
-          "probe": "Flowspace3 catalog/envelope source inspected; no Unisphere taxonomy or implementation exists yet."
+          "state": "checked",
+          "probe": "Flowspace3 catalog/envelope source inspected; no Unisphere taxonomy or implementation exists yet.",
+          "receipt": "execution-log.dd.json#entries/lg-0010"
         },
         {
           "id": "bp-0007",
@@ -82,8 +88,9 @@
           "mode": "BUILD",
           "tier": "computational",
           "proof": "BUILD→RUN: independent service contract suite plus a dependency-rule negative fixture checked through the future architecture check and harness checks. Exact crate layout/rules are authored in the guide.",
-          "state": "unchecked",
-          "probe": "Flowspace3 testkit architecture allowlist and fake-source contract patterns inspected; user explicitly requires parallel service construction without CLI completion."
+          "state": "checked",
+          "probe": "Flowspace3 testkit architecture allowlist and fake-source contract patterns inspected; user explicitly requires parallel service construction without CLI completion.",
+          "receipt": "execution-log.dd.json#entries/lg-0010"
         },
         {
           "id": "bp-0008",
@@ -92,8 +99,9 @@
           "mode": "BUILD",
           "tier": "human-judgement",
           "proof": "BUILD→RUN: isolated service tests and sealed CLI/external-consumer smoke (guide vd-0002/0003/0004/000a), plus vd-0006 dependency-surface checks. REVIEW: independent source inspection for ambient reads, networking/client calls, process launch, FFI and unsafe escapes in core/SDK. The no-network promise requires this named judgement; no syscall-trace or runtime network-denial result is claimed.",
-          "state": "unchecked",
-          "probe": "Flowspace3 sealed process test helper inspected; no product side-effect surface is implemented."
+          "state": "checked",
+          "probe": "Flowspace3 sealed process test helper inspected; no product side-effect surface is implemented.",
+          "receipt": "execution-log.dd.json#entries/lg-0010"
         },
         {
           "id": "bp-0009",
@@ -102,8 +110,9 @@
           "mode": "BUILD",
           "tier": "computational",
           "proof": "BUILD→RUN: external Cargo consumer and installed CLI proof (guide vd-000a/000b), with actual compiler/cargo/clippy/rustfmt version/provenance recorded and checked for a coherent approved toolchain before product gates. rust-toolchain.toml is a request, not evidence that Homebrew binaries obey it.",
-          "state": "unchecked",
-          "probe": "Current setup uses repo-local DD only for planning; no Rust manifest/lockfile/package exists yet."
+          "state": "checked",
+          "probe": "Current setup uses repo-local DD only for planning; no Rust manifest/lockfile/package exists yet.",
+          "receipt": "execution-log.dd.json#entries/lg-0010"
         },
         {
           "id": "bp-000a",
@@ -112,8 +121,9 @@
           "mode": "EXTEND",
           "tier": "computational",
           "proof": "EXTEND→RUN: replace current unconfigured checks/boot implementation with the future Rust validation and assembled SDK/CLI smoke, then run harness checks --json and harness boot --json with success/failure cases.",
-          "state": "unchecked",
-          "probe": "Read .harness/engineering-harness.md: existing checks/boot are explicitly unconfigured; prior harness composition tests prove only envelope behavior."
+          "state": "checked",
+          "probe": "Read .harness/engineering-harness.md: existing checks/boot are explicitly unconfigured; prior harness composition tests prove only envelope behavior.",
+          "receipt": "execution-log.dd.json#entries/lg-0010"
         },
         {
           "id": "bp-000b",
@@ -122,8 +132,9 @@
           "mode": "BUILD",
           "tier": "computational",
           "proof": "BUILD→RUN: executable SDK rustdoc/example and documented CLI smoke; review current capability/notice documentation against shipped behavior. This is not registry publication or broad platform support.",
-          "state": "unchecked",
-          "probe": "Flowspace3 LICENSE and concrete reuse candidates inspected; no Unisphere product usage docs exist yet."
+          "state": "checked",
+          "probe": "Flowspace3 LICENSE and concrete reuse candidates inspected; no Unisphere product usage docs exist yet.",
+          "receipt": "execution-log.dd.json#entries/lg-0010"
         }
       ]
     },

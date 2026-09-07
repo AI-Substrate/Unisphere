@@ -1,0 +1,45 @@
+{
+  "record_type": "operator-authorized-manual-closeout",
+  "recorded_at": "2026-09-07T21:59:48.426899+00:00",
+  "actor": "pij-right-kotallo",
+  "authorization_verbatim": "Just get on with it, please. We don't need to worry about this. We're just dog fooding builder. If it's not working and blocking us, then we work around it. Thanks",
+  "prior_merge_confirmation": "PROCEED",
+  "candidate_sha": "126423b7eaf9912158a67676cddaa0d3ed306de1",
+  "tested_and_reviewed_source": "560dbd2bf89b3ba030c2c8259c91e5b5f9417ecc",
+  "unchanged_product_source": {
+    "argv": [
+      "git",
+      "diff",
+      "--name-only",
+      "560dbd2bf89b3ba030c2c8259c91e5b5f9417ecc",
+      "126423b7eaf9912158a67676cddaa0d3ed306de1",
+      "--",
+      "crates",
+      "Cargo.toml",
+      "Cargo.lock",
+      "rust-toolchain.toml",
+      ".harness/extensions",
+      "docs/sdk.md",
+      "docs/cli.md",
+      "docs/development.md",
+      "README.md",
+      "THIRD_PARTY_NOTICES.md"
+    ],
+    "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "accepted_limitation": "Builder formal compose verification/preservation receipts absent due documented dogfood tool blocker; real product checks and independent source approval retained. Not a passed Builder command.",
+  "operation_scope": [
+    "factual DD acceptance",
+    "manual post-flight/archive",
+    "local main integration"
+  ],
+  "excluded": [
+    "remote publication",
+    "workspace retirement",
+    "global tool/config changes",
+    "private telemetry access"
+  ]
+}

@@ -8,7 +8,8 @@
     "intent": "Collect requirements and research for Unisphere base Rust SDK, thin CLI, architecture and tests; requirements-spine.md is not an approved plan; dogfood Builder and report to pij-varied-alpaca",
     "bag": {
       "status": "archived",
-      "requirements_spine": "docs/plans/001-sdk-cli-foundation/requirements-spine.md"
+      "requirements_spine": "docs/plans/001-sdk-cli-foundation/requirements-spine.md",
+      "local_main_landing": "6fb86b8649dd25e1ca507a4d6ec59d0bb698e4c5"
     }
   },
   "created_at": "2026-09-07T02:23:35.491Z",
@@ -527,6 +528,18 @@
           "comments"
         ]
       }
+    },
+    {
+      "id": "UPD-022",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-07T22:05:35.603Z",
+      "details": {
+        "node": "ship",
+        "fields": [
+          "comments"
+        ]
+      }
     }
   ],
   "nodes": [
@@ -790,9 +803,15 @@
           "text": "Operator requested getthemin tomain, then supplied PROCEED, then authorized manualworkaround. Landing is localmain only; remote push/PR not claimed.",
           "source": "user",
           "kind": "decision"
+        },
+        {
+          "at": "2026-09-07T22:05:35.603Z",
+          "text": "Operator-authorized LOCAL main landing completed at6fb86b8649dd25e1ca507a4d6ec59d0bb698e4c5; actualmainbootpassed. See assets/local-main-landing.json. Remote push/PR not performed and optional ship stage remains unexecuted.",
+          "source": "agent",
+          "kind": "validation"
         }
       ],
-      "modified_at": "2026-09-07T22:02:22.348Z"
+      "modified_at": "2026-09-07T22:05:35.603Z"
     },
     {
       "id": "backpressure",

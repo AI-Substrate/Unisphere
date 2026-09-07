@@ -183,6 +183,14 @@
             "execution-log.dd.json#entries/lg-000f",
             "backpressure.dd.json#rows/bp-0008"
           ]
+        },
+        {
+          "id": "lg-0011",
+          "at": "2026-09-07T22:05:35.301841+00:00",
+          "text": "Manual archive landed on localmain via merge6fb86b8649dd25e1ca507a4d6ec59d0bb698e4c5. Archivecommit8623dd9b1b07eaf2c6834741544141fcbb5734eb; fullplan at docs/plans/archive/001-sdk-cli-foundation. Actualpostmerge harnessboot exited0/statusok/readytrue foundation scope at2026-09-07T22:04:25.916Z; top-level observed receipt assets/local-main-landing.json notes tooldisplay truncation rather than fabricating nestedlogs. Archived completevalidation0errors/0warnings/0open. Existingmainhistory and untracked.serena preserved; no remotepush or workspace retirement. Surviving snapshots /Users/jordanknight/substrate/unisphere/unisphere-plan001-preserved-mkhv2li6, originalscratch/native-readers remains in originalplanworkspace. Missing formalBuilderreceipt is operatoraccepted, never called successful.",
+          "links": [
+            "execution-log.dd.json#entries/lg-0010"
+          ]
         }
       ]
     }

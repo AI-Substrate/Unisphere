@@ -1,13 +1,13 @@
 # Unisphere — SDK/CLI requirements spine
 
-**Status:** Requirements captured; Jordan authorized Plan 001 product planning for foundation-only delivery. This spine is input to the plan, not an implementation guide, assignment or authorization to implement.
+**Status:** Foundation product plan and implementation guide authored; guide v3 has independently approved decomposition. Tasks, baseline implementation/sealing and coder release remain separate gates; this spine is not implementation authorization.
 **Owner of intent:** Jordan (operator).
 **Capture:** `pij-female-varl`, 2026-09-07.
 **Workspace:** `/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation`.
 **Branch:** `builder/001-sdk-cli-foundation`.
 **Builder allocation:** `al-001-4437fdce-9332-4eed-9398-7651d0ab20e2`, from main commit `aa5e75cad1d8397a7ec392e2cb7773c00f673a93`.
 
-The first-class `harness builder new` command generated plan/guide/task/flow scaffolding in this folder. Those files were not approved by allocation. Jordan subsequently authorized authoring the initial product plan and selected foundation-only scope (RQ-014–017); the example implementation guide remains unapproved. This spine preserves the conversation as planning input and does not itself advance flow state or release implementation.
+The first-class `harness builder new` command generated scaffolding, not approval. Jordan later authorized the product plan and implementation guide; the teaching guide has now been replaced by the real v3 guide with accepted independent Opus re-review. This spine preserves intent and does not itself advance flow state, seal a baseline or release implementation.
 
 ## Confirmed requirements and instructions
 
@@ -87,6 +87,7 @@ These are findings and design pressures, not silently adopted requirements:
 - First-consumer interview: [assets/requirements/flowspace3-interview.md](assets/requirements/flowspace3-interview.md); Flowspace3 needs must be separated from consumer-local policy.
 - Prime-authored foundation product plan: [plan.dd.json](plan.dd.json), generated [plan.dd.md](plan.dd.md), and [product-plan validation](assets/reviews/product-plan-validation.md); product intent is ready, implementation is not released.
 - Output-format workshop: [assets/workshops/001-output-format.md](assets/workshops/001-output-format.md); operator-selected standard-first direction, proposed pij metadata and evidence-driven extensions; detailed profile remains Review.
+- Reviewed implementation guide: [assets/impl-guide.dd.json](assets/impl-guide.dd.json), generated [guide](assets/impl-guide.dd.md), and [independent re-review](assets/reviews/decomposition-opus-review-r2.md); PM `pij-right-kotallo`, OMP GitHub Astra/high coders and OMP Claude Opus 5/high reviewer(s).
 
 ## Dogfood log
 

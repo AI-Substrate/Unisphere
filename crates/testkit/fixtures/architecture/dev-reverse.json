@@ -1,0 +1,59 @@
+{
+  "packages": [
+    {
+      "name": "unisphere-core",
+      "id": "core",
+      "dependencies": [
+        {
+          "name": "serde",
+          "kind": null
+        },
+        {
+          "name": "unisphere-cli",
+          "kind": "dev",
+          "path": "../cli"
+        }
+      ]
+    },
+    {
+      "name": "unisphere-testkit",
+      "id": "testkit",
+      "dependencies": [
+        {
+          "name": "unisphere-core",
+          "kind": null,
+          "path": "../core"
+        },
+        {
+          "name": "serde_json",
+          "kind": null
+        },
+        {
+          "name": "tempfile",
+          "kind": null
+        }
+      ]
+    },
+    {
+      "name": "unisphere-sdk",
+      "id": "sdk",
+      "dependencies": [
+        {
+          "name": "unisphere-core",
+          "kind": null,
+          "path": "../core"
+        },
+        {
+          "name": "unisphere-testkit",
+          "kind": "dev",
+          "path": "../testkit"
+        }
+      ]
+    }
+  ],
+  "workspace_members": [
+    "core",
+    "testkit",
+    "sdk"
+  ]
+}

@@ -1,16 +1,13 @@
 import { defineExtension } from '@ai-substrate/engineering-harness/contract';
+import { runChecks } from './checks.mjs';
 
 export default defineExtension({
   name: 'checks',
-  summary: 'Unisphere product quality gate (not configured).',
+  summary: 'Run the coherent Rust toolchain and foundation quality gates.',
   verbs: {
     'checks': {
-      summary: 'Report the missing canonical product validation command.',
-      run(ctx) {
-        return ctx.unconfigured(
-          'Unisphere has no canonical product validation command. Establish the product build/test lane, then wire that command into .harness/extensions/checks/extension.ts and rerun `harness checks --json`. Harness setup alone is not product proof.',
-        );
-      },
+      summary: 'Observe Rust tool identity, then run formatting, clippy, tests and architecture checks.',
+      run: runChecks,
     },
   },
 });

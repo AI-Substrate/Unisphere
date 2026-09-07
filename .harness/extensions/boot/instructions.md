@@ -1,20 +1,19 @@
 # `harness boot` — agent briefing
 
-## What this verb runs
+## What this verb computes
 
-Run `harness boot --json` at session start. It invokes `harness checks --json` with a 120-second deadline. It starts no services and changes no product state.
+Run `harness boot --json` for foundation readiness. It invokes `harness checks --json` once, accepts only its valid `command: checks`, `status: ok` envelope, then runs the real `unisphere-proof composition`, `sdk-consumer` and `installed-cli` commands. It starts no services. Each child is bounded; failure retains captured evidence and stops the chain.
 
-- Missing checks extension: `degraded`, exit 0, `ready: false`, with instructions to create the quality gate.
-- Checks unconfigured: `unconfigured`, exit 2, with the missing product build/test and readiness lane named.
-- Checks process failure: `error`, exit 1, with captured stdout/stderr and the child exit code.
-- Checks completes: still `degraded`, exit 0, `ready: false`, with the child envelope in `data.checks`; no product readiness command exists yet.
+- Missing checks: degraded, exit 0, ready false.
+- Unconfigured checks: unconfigured, exit 2.
+- Failed/timed-out checks or smoke: error, exit 1, with diagnostics/remediation.
+- Invalid checks JSON: error; a non-ok or wrong-command envelope is not readiness.
+- All real checks and smoke succeed: ok, exit 0, ready true, scope `configuration-sdk-cli-foundation`.
 
 ## Your role
 
-Do not report that Unisphere runs merely because this command executed. The repository has not implemented the telemetry collector or a supported startup/smoke lane. `unconfigured` is the honest result during system setup.
-
-When product work supplies the canonical readiness command, wrap it here and retain composition through `harness checks`; do not repeat quality commands. Prove a real telemetry input-to-observable-output scenario before changing readiness to success. Update `.harness/engineering-harness.md` and this briefing together.
+Use an approved coherent Rust toolchain; the checks stage records actual versions/commit identities before running gates. Read status and ready, not exit code alone. A green foundation boot means explicit configuration, SDK use and installed CLI behavior were exercised; it never means native telemetry collection runs. Retain the actual evidence and exact subject commit in PM-owned delivery records.
 
 ## Watch out for
 
-Exit 0 also represents `degraded`. Read `status`, `data.ready`, and `next_action`, not just the process exit code. Missing global harness CLI or a timed-out child is an execution error, not proof that the product failed. `harness doctor` reports extension wiring and machine attribution health separately from product readiness.
+Full smoke requires real SDK/CLI/app crates. An absent target fails instead of substituting a placeholder. External Cargo builds can fetch declared registry dependencies; installed products run with isolated HOME/config and empty PATH. Permission-denied smoke requires an unprivileged POSIX user. Automated sealed behavior does not replace independent core/SDK no-network and ambient-read source review. Real TTY detection is outside the captured/explicit-mode proof. `harness doctor` checks extension/machine wiring separately.

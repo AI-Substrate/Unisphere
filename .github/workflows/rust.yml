@@ -1,0 +1,32 @@
+name: Rust foundation
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  foundation:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    env:
+      RUSTUP_TOOLCHAIN: 1.95.0
+      HARNESS_NO_TELEMETRY: '1'
+      HARNESS_NO_TELEMETRY_AUTOSYNC: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install explicit Rust components
+        run: rustup toolchain install 1.95.0 --profile minimal --component clippy --component rustfmt
+      - name: Install development harness
+        run: npm install --global @ai-substrate/engineering-harness@0.14.0
+      - name: Quality and real foundation smoke
+        run: harness boot --json

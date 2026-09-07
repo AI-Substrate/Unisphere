@@ -1,0 +1,28 @@
+.gitignore
+  h_9e71e8b09f7cf2 1-5
+.harness/government/baton-book.md
+  h_9e71e8b09f7cf2 1-15
+.harness/government/briefs/sdk-cli-foundation.md
+  h_9e71e8b09f7cf2 1-20
+.harness/government/orient-local.md
+  h_9e71e8b09f7cf2 1-47
+.harness/government/prime-flow.json
+  h_9e71e8b09f7cf2 1-50
+.harness/government/prime-flow.md
+  h_9e71e8b09f7cf2 1-15
+.harness/government/spine.md
+  h_9e71e8b09f7cf2 1-37
+AGENTS.md
+  h_9e71e8b09f7cf2 1-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "2cd257166b786b3308447459ff3be3cce06e2849",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

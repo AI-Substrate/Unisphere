@@ -1,0 +1,440 @@
+.github/workflows/rust.yml
+  h_9e71e8b09f7cf2 1-32
+.gitignore
+  h_9e71e8b09f7cf2 25-27
+.harness/engineering-harness.md
+  h_9e71e8b09f7cf2 3,6-7,11,13,15,18,21-51
+.harness/extensions/boot/boot.mjs
+  h_9e71e8b09f7cf2 1-41
+.harness/extensions/boot/extension.test.mjs
+  h_9e71e8b09f7cf2 7,9-16,18-88
+.harness/extensions/boot/extension.ts
+  h_9e71e8b09f7cf2 2,9-10
+.harness/extensions/boot/instructions.md
+  h_9e71e8b09f7cf2 3,5,7-11,15,19
+.harness/extensions/checks/checks.mjs
+  h_9e71e8b09f7cf2 1-105
+.harness/extensions/checks/checks.test.mjs
+  h_9e71e8b09f7cf2 1-88
+.harness/extensions/checks/extension.ts
+  h_9e71e8b09f7cf2 2,6,9-10
+.harness/extensions/checks/instructions.md
+  h_9e71e8b09f7cf2 3,5,7,9,11,15
+.harness/records/retro/2026-09-07/003-foundation-plan-reader-experiments.md
+  h_9e71e8b09f7cf2 1-49
+.harness/records/retro/2026-09-07/004-foundation-guide-decomposition.md
+  h_9e71e8b09f7cf2 1-50
+.harness/records/retro/2026-09-07/005-plan001-composition-friction.md
+  h_9e71e8b09f7cf2 1-173
+AGENTS.md
+  h_9e71e8b09f7cf2 3,36
+Cargo.lock
+  h_9e71e8b09f7cf2 1-373
+Cargo.toml
+  h_9e71e8b09f7cf2 1-20
+README.md
+  h_9e71e8b09f7cf2 2-93
+THIRD_PARTY_NOTICES.md
+  h_9e71e8b09f7cf2 1-30
+crates/app/Cargo.toml
+  h_9e71e8b09f7cf2 1-15
+crates/app/src/main.rs
+  h_9e71e8b09f7cf2 1-38
+crates/cli/Cargo.toml
+  h_9e71e8b09f7cf2 1-16
+crates/cli/src/args.rs
+  h_9e71e8b09f7cf2 1-120
+crates/cli/src/lib.rs
+  h_9e71e8b09f7cf2 1-82
+crates/cli/src/output.rs
+  h_9e71e8b09f7cf2 1-126
+crates/cli/tests/frontend.rs
+  h_9e71e8b09f7cf2 1-764
+crates/core/Cargo.toml
+  h_9e71e8b09f7cf2 1-10
+crates/core/src/config.rs
+  h_9e71e8b09f7cf2 1-55
+crates/core/src/errors.rs
+  h_9e71e8b09f7cf2 1-177
+crates/core/src/lib.rs
+  h_9e71e8b09f7cf2 1-15
+crates/core/src/ports.rs
+  h_9e71e8b09f7cf2 1-14
+crates/sdk/Cargo.toml
+  h_9e71e8b09f7cf2 1-15
+crates/sdk/src/fs.rs
+  h_9e71e8b09f7cf2 1-88
+crates/sdk/src/lib.rs
+  h_9e71e8b09f7cf2 1-61
+crates/sdk/src/service.rs
+  h_9e71e8b09f7cf2 1-207
+crates/sdk/tests/public_api.rs
+  h_9e71e8b09f7cf2 1-192
+crates/sdk/tests/service_in_isolation.rs
+  h_9e71e8b09f7cf2 1-411
+crates/testkit/Cargo.toml
+  h_9e71e8b09f7cf2 1-13
+crates/testkit/fixtures/architecture/allowed.json
+  h_9e71e8b09f7cf2 1-58
+crates/testkit/fixtures/architecture/build-to-sdk.json
+  h_9e71e8b09f7cf2 1-59
+crates/testkit/fixtures/architecture/core-to-cli.json
+  h_9e71e8b09f7cf2 1-62
+crates/testkit/fixtures/architecture/dev-reverse.json
+  h_9e71e8b09f7cf2 1-59
+crates/testkit/fixtures/architecture/shipped-testkit.json
+  h_9e71e8b09f7cf2 1-59
+crates/testkit/fixtures/config/blank-root.json
+  h_9e71e8b09f7cf2 1
+crates/testkit/fixtures/config/empty.json
+  h_9e71e8b09f7cf2 1
+crates/testkit/fixtures/config/malformed.json
+  h_9e71e8b09f7cf2 1
+crates/testkit/fixtures/config/roots.json
+  h_9e71e8b09f7cf2 1
+crates/testkit/fixtures/config/wrong-type.json
+  h_9e71e8b09f7cf2 1
+crates/testkit/fixtures/consumer/Cargo.toml.template
+  h_9e71e8b09f7cf2 1-11
+crates/testkit/fixtures/consumer/main.rs
+  h_9e71e8b09f7cf2 1-77
+crates/testkit/src/bin/unisphere-arch-check.rs
+  h_9e71e8b09f7cf2 1-215
+crates/testkit/src/bin/unisphere-proof.rs
+  h_9e71e8b09f7cf2 1-654
+crates/testkit/src/fakes.rs
+  h_9e71e8b09f7cf2 1-160
+crates/testkit/src/fixtures.rs
+  h_9e71e8b09f7cf2 1-142
+crates/testkit/src/lib.rs
+  h_9e71e8b09f7cf2 1-9
+crates/testkit/src/sealed.rs
+  h_9e71e8b09f7cf2 1-99
+docs/cli.md
+  h_9e71e8b09f7cf2 1-177
+docs/development.md
+  h_9e71e8b09f7cf2 1-86
+docs/plans/archive/001-sdk-cli-foundation/assets/app-smoke-json.json
+  h_9e71e8b09f7cf2 1-27
+docs/plans/archive/001-sdk-cli-foundation/assets/app-smoke-pty.json
+  h_9e71e8b09f7cf2 1-13
+docs/plans/archive/001-sdk-cli-foundation/assets/architecture-lane-check.json
+  h_9e71e8b09f7cf2 1-34
+docs/plans/archive/001-sdk-cli-foundation/assets/assembled-composition-smoke.json
+  h_9e71e8b09f7cf2 1-18
+docs/plans/archive/001-sdk-cli-foundation/assets/assembled-installed-cli-smoke.json
+  h_9e71e8b09f7cf2 1-17
+docs/plans/archive/001-sdk-cli-foundation/assets/assembled-sdk-consumer-smoke.json
+  h_9e71e8b09f7cf2 1-17
+docs/plans/archive/001-sdk-cli-foundation/assets/backpressure.dd.json
+  h_9e71e8b09f7cf2 1-146
+docs/plans/archive/001-sdk-cli-foundation/assets/backpressure.dd.md
+  h_9e71e8b09f7cf2 1-39
+docs/plans/archive/001-sdk-cli-foundation/assets/baseline-check-initial.json
+  h_9e71e8b09f7cf2 1-15
+docs/plans/archive/001-sdk-cli-foundation/assets/baseline-checks.json
+  h_9e71e8b09f7cf2 1-39
+docs/plans/archive/001-sdk-cli-foundation/assets/baseline-history-8eafef5.json
+  h_9e71e8b09f7cf2 1-118
+docs/plans/archive/001-sdk-cli-foundation/assets/baseline-path-diagnosis.json
+  h_9e71e8b09f7cf2 1-174
+docs/plans/archive/001-sdk-cli-foundation/assets/baseline-proof-link-repair.json
+  h_9e71e8b09f7cf2 1-40
+docs/plans/archive/001-sdk-cli-foundation/assets/baseline-r2-checks.json
+  h_9e71e8b09f7cf2 1-879
+docs/plans/archive/001-sdk-cli-foundation/assets/baseline-r2-final-checks.json
+  h_9e71e8b09f7cf2 1-54
+docs/plans/archive/001-sdk-cli-foundation/assets/baseline-ready-refusal.json
+  h_9e71e8b09f7cf2 1-118
+docs/plans/archive/001-sdk-cli-foundation/assets/baseline-reseal-refusal.json
+  h_9e71e8b09f7cf2 1-26
+docs/plans/archive/001-sdk-cli-foundation/assets/baseline-review-dispositions.json
+  h_9e71e8b09f7cf2 1-36
+docs/plans/archive/001-sdk-cli-foundation/assets/baseline-review-r1-dd-refusal.json
+  h_9e71e8b09f7cf2 1-24
+docs/plans/archive/001-sdk-cli-foundation/assets/baseline-review-r1-ingestion.json
+  h_9e71e8b09f7cf2 1-154
+docs/plans/archive/001-sdk-cli-foundation/assets/baseline-seal-command.json
+  h_9e71e8b09f7cf2 1-135
+docs/plans/archive/001-sdk-cli-foundation/assets/baseline-v6-ready.json
+  h_9e71e8b09f7cf2 1-2654
+docs/plans/archive/001-sdk-cli-foundation/assets/baseline-v6-seal-command.json
+  h_9e71e8b09f7cf2 1-139
+docs/plans/archive/001-sdk-cli-foundation/assets/baseline-v7-ready.json
+  h_9e71e8b09f7cf2 1-2654
+docs/plans/archive/001-sdk-cli-foundation/assets/baseline-v7-seal-command.json
+  h_9e71e8b09f7cf2 1-139
+docs/plans/archive/001-sdk-cli-foundation/assets/cli-lane-check-corrected.json
+  h_9e71e8b09f7cf2 1-14
+docs/plans/archive/001-sdk-cli-foundation/assets/cli-lane-check-initial.json
+  h_9e71e8b09f7cf2 1-14
+docs/plans/archive/001-sdk-cli-foundation/assets/coder-tooling-bootstrap.json
+  h_9e71e8b09f7cf2 1-47
+docs/plans/archive/001-sdk-cli-foundation/assets/composed-boot-full.json
+  h_9e71e8b09f7cf2 1-283
+docs/plans/archive/001-sdk-cli-foundation/assets/composed-quality-corrected.json
+  h_9e71e8b09f7cf2 1-209
+docs/plans/archive/001-sdk-cli-foundation/assets/composed-quality-initial.json
+  h_9e71e8b09f7cf2 1-155
+docs/plans/archive/001-sdk-cli-foundation/assets/composition-ownership-refusal.json
+  h_9e71e8b09f7cf2 1-35
+docs/plans/archive/001-sdk-cli-foundation/assets/dispatch-allocation-refusal.json
+  h_9e71e8b09f7cf2 1-2775
+docs/plans/archive/001-sdk-cli-foundation/assets/dispatch-fixed-tk-0002.json
+  h_9e71e8b09f7cf2 1-240
+docs/plans/archive/001-sdk-cli-foundation/assets/dispatch-fixed-tk-0003.json
+  h_9e71e8b09f7cf2 1-238
+docs/plans/archive/001-sdk-cli-foundation/assets/dispatch-fixed-tk-0005.json
+  h_9e71e8b09f7cf2 1-244
+docs/plans/archive/001-sdk-cli-foundation/assets/dispatch-native-refusal.json
+  h_9e71e8b09f7cf2 1-2793
+docs/plans/archive/001-sdk-cli-foundation/assets/execution-log.dd.json
+  h_9e71e8b09f7cf2 1-190
+docs/plans/archive/001-sdk-cli-foundation/assets/execution-log.dd.md
+  h_9e71e8b09f7cf2 1-37
+docs/plans/archive/001-sdk-cli-foundation/assets/harness-friction-custody.json
+  h_9e71e8b09f7cf2 1-265
+docs/plans/archive/001-sdk-cli-foundation/assets/impl-guide.dd.json
+  h_9e71e8b09f7cf2 1-777
+docs/plans/archive/001-sdk-cli-foundation/assets/impl-guide.dd.md
+  h_9e71e8b09f7cf2 1-149
+docs/plans/archive/001-sdk-cli-foundation/assets/implementation-authorization.json
+  h_9e71e8b09f7cf2 1-26
+docs/plans/archive/001-sdk-cli-foundation/assets/implementation-prerequisites.json
+  h_9e71e8b09f7cf2 1-168
+docs/plans/archive/001-sdk-cli-foundation/assets/integration-amendment-inputs.json
+  h_9e71e8b09f7cf2 1-34
+docs/plans/archive/001-sdk-cli-foundation/assets/manual-archive-manifest.json
+  h_9e71e8b09f7cf2 1-69
+docs/plans/archive/001-sdk-cli-foundation/assets/manual-closeout-authorization.json
+  h_9e71e8b09f7cf2 1-45
+docs/plans/archive/001-sdk-cli-foundation/assets/manual-postflight-harvest.json
+  h_9e71e8b09f7cf2 1-364
+docs/plans/archive/001-sdk-cli-foundation/assets/native-bootstrap-metadata.json
+  h_9e71e8b09f7cf2 1-50
+docs/plans/archive/001-sdk-cli-foundation/assets/pm-handoff.md
+  h_9e71e8b09f7cf2 1-38
+docs/plans/archive/001-sdk-cli-foundation/assets/post-flight.md
+  h_9e71e8b09f7cf2 1-46
+docs/plans/archive/001-sdk-cli-foundation/assets/postrelease-ack-tk-0002.json
+  h_9e71e8b09f7cf2 1-262
+docs/plans/archive/001-sdk-cli-foundation/assets/postrelease-ack-tk-0003.json
+  h_9e71e8b09f7cf2 1-263
+docs/plans/archive/001-sdk-cli-foundation/assets/postrelease-ack-tk-0005.json
+  h_9e71e8b09f7cf2 1-265
+docs/plans/archive/001-sdk-cli-foundation/assets/prework-ack-dirty-diagnosis.json
+  h_9e71e8b09f7cf2 1-47
+docs/plans/archive/001-sdk-cli-foundation/assets/prework-ack-tk-0002-refresh.json
+  h_9e71e8b09f7cf2 1-253
+docs/plans/archive/001-sdk-cli-foundation/assets/prework-ack-tk-0002.json
+  h_9e71e8b09f7cf2 1-24
+docs/plans/archive/001-sdk-cli-foundation/assets/prework-ack-tk-0003-corrected.json
+  h_9e71e8b09f7cf2 1-252
+docs/plans/archive/001-sdk-cli-foundation/assets/prework-ack-tk-0003-refresh.json
+  h_9e71e8b09f7cf2 1-24
+docs/plans/archive/001-sdk-cli-foundation/assets/prework-ack-tk-0003.json
+  h_9e71e8b09f7cf2 1-24
+docs/plans/archive/001-sdk-cli-foundation/assets/prework-ack-tk-0005-refresh.json
+  h_9e71e8b09f7cf2 1-256
+docs/plans/archive/001-sdk-cli-foundation/assets/prework-ack-tk-0005.json
+  h_9e71e8b09f7cf2 1-24
+docs/plans/archive/001-sdk-cli-foundation/assets/proof-lane-check-initial.json
+  h_9e71e8b09f7cf2 1-27
+docs/plans/archive/001-sdk-cli-foundation/assets/requirements/flowspace3-interview.md
+  h_9e71e8b09f7cf2 1-31
+docs/plans/archive/001-sdk-cli-foundation/assets/research/otel-common-format.md
+  h_9e71e8b09f7cf2 1-56
+docs/plans/archive/001-sdk-cli-foundation/assets/research/perplexity-deep-research.json
+  h_9e71e8b09f7cf2 1-153
+docs/plans/archive/001-sdk-cli-foundation/assets/research/perplexity-fallback.md
+  h_9e71e8b09f7cf2 1-40
+docs/plans/archive/001-sdk-cli-foundation/assets/research/scratch-reader-proof.md
+  h_9e71e8b09f7cf2 1-51
+docs/plans/archive/001-sdk-cli-foundation/assets/retro-parser-check.json
+  h_9e71e8b09f7cf2 1-338
+docs/plans/archive/001-sdk-cli-foundation/assets/reviews/baseline-opus-r1.md
+  h_9e71e8b09f7cf2 1-148
+docs/plans/archive/001-sdk-cli-foundation/assets/reviews/baseline-opus-r2.md
+  h_9e71e8b09f7cf2 1-182
+docs/plans/archive/001-sdk-cli-foundation/assets/reviews/baseline-opus-r3.md
+  h_9e71e8b09f7cf2 1-67
+docs/plans/archive/001-sdk-cli-foundation/assets/reviews/baseline-opus-r4.md
+  h_9e71e8b09f7cf2 1-118
+docs/plans/archive/001-sdk-cli-foundation/assets/reviews/baseline-opus-r5.md
+  h_9e71e8b09f7cf2 1-124
+docs/plans/archive/001-sdk-cli-foundation/assets/reviews/baseline-opus-r6.md
+  h_9e71e8b09f7cf2 1-112
+docs/plans/archive/001-sdk-cli-foundation/assets/reviews/composition-opus-r1-receipt.json
+  h_9e71e8b09f7cf2 1-78
+docs/plans/archive/001-sdk-cli-foundation/assets/reviews/composition-opus-r1.md
+  h_9e71e8b09f7cf2 1-197
+docs/plans/archive/001-sdk-cli-foundation/assets/reviews/decomposition-opus-review-r2.md
+  h_9e71e8b09f7cf2 1-100
+docs/plans/archive/001-sdk-cli-foundation/assets/reviews/decomposition-opus-review.md
+  h_9e71e8b09f7cf2 1-109
+docs/plans/archive/001-sdk-cli-foundation/assets/reviews/product-plan-validation.md
+  h_9e71e8b09f7cf2 1-33
+docs/plans/archive/001-sdk-cli-foundation/assets/reviews/reviewer-launch-evidence.json
+  h_9e71e8b09f7cf2 1-36
+docs/plans/archive/001-sdk-cli-foundation/assets/reviews/workshop-verification.md
+  h_9e71e8b09f7cf2 1-11
+docs/plans/archive/001-sdk-cli-foundation/assets/runtime-fixed-readiness.json
+  h_9e71e8b09f7cf2 1-2657
+docs/plans/archive/001-sdk-cli-foundation/assets/sdk-lane-check-initial.json
+  h_9e71e8b09f7cf2 1-14
+docs/plans/archive/001-sdk-cli-foundation/assets/sdk-rustdoc-check.json
+  h_9e71e8b09f7cf2 1-13
+docs/plans/archive/001-sdk-cli-foundation/assets/tasks/phase-1/context-brief.md
+  h_9e71e8b09f7cf2 1-21
+docs/plans/archive/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json
+  h_9e71e8b09f7cf2 1-376
+docs/plans/archive/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.md
+  h_9e71e8b09f7cf2 1-208
+docs/plans/archive/001-sdk-cli-foundation/assets/team/ack-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86-release.dd.json
+  h_9e71e8b09f7cf2 1-55
+docs/plans/archive/001-sdk-cli-foundation/assets/team/ack-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86-release.dd.md
+  h_9e71e8b09f7cf2 1-23
+docs/plans/archive/001-sdk-cli-foundation/assets/team/ack-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86.dd.json
+  h_9e71e8b09f7cf2 1-55
+docs/plans/archive/001-sdk-cli-foundation/assets/team/ack-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86.dd.md
+  h_9e71e8b09f7cf2 1-23
+docs/plans/archive/001-sdk-cli-foundation/assets/team/ack-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86-release.dd.json
+  h_9e71e8b09f7cf2 1-57
+docs/plans/archive/001-sdk-cli-foundation/assets/team/ack-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86-release.dd.md
+  h_9e71e8b09f7cf2 1-23
+docs/plans/archive/001-sdk-cli-foundation/assets/team/ack-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.json
+  h_9e71e8b09f7cf2 1-56
+docs/plans/archive/001-sdk-cli-foundation/assets/team/ack-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.md
+  h_9e71e8b09f7cf2 1-23
+docs/plans/archive/001-sdk-cli-foundation/assets/team/ack-tk-0005-1ec7213488044ba083da3db7f45a958024a86c86-release.dd.json
+  h_9e71e8b09f7cf2 1-55
+docs/plans/archive/001-sdk-cli-foundation/assets/team/ack-tk-0005-1ec7213488044ba083da3db7f45a958024a86c86-release.dd.md
+  h_9e71e8b09f7cf2 1-23
+docs/plans/archive/001-sdk-cli-foundation/assets/team/ack-tk-0005-1ec7213488044ba083da3db7f45a958024a86c86.dd.json
+  h_9e71e8b09f7cf2 1-54
+docs/plans/archive/001-sdk-cli-foundation/assets/team/ack-tk-0005-1ec7213488044ba083da3db7f45a958024a86c86.dd.md
+  h_9e71e8b09f7cf2 1-23
+docs/plans/archive/001-sdk-cli-foundation/assets/team/baseline-v6.dd.json
+  h_9e71e8b09f7cf2 1-122
+docs/plans/archive/001-sdk-cli-foundation/assets/team/baseline-v6.dd.md
+  h_9e71e8b09f7cf2 1-20
+docs/plans/archive/001-sdk-cli-foundation/assets/team/baseline-v7.dd.json
+  h_9e71e8b09f7cf2 1-122
+docs/plans/archive/001-sdk-cli-foundation/assets/team/baseline-v7.dd.md
+  h_9e71e8b09f7cf2 1-20
+docs/plans/archive/001-sdk-cli-foundation/assets/team/baseline.dd.json
+  h_9e71e8b09f7cf2 1-118
+docs/plans/archive/001-sdk-cli-foundation/assets/team/baseline.dd.md
+  h_9e71e8b09f7cf2 1-20
+docs/plans/archive/001-sdk-cli-foundation/assets/team/basis-096ef3c06daff0c337a80768e2aa83c3bef2ca45803a2c0e152b91ff662b4191.json
+  h_9e71e8b09f7cf2 1-777
+docs/plans/archive/001-sdk-cli-foundation/assets/team/basis-2bd056c99c8d6bfb9ba8ddc4fac3daf65e679f9d4663bea20d08fdde042060fe.json
+  h_9e71e8b09f7cf2 1-777
+docs/plans/archive/001-sdk-cli-foundation/assets/team/basis-370eaee98d6122eb2581b158ca606236b3318db66d7b694ac16273746c4a3d9e.json
+  h_9e71e8b09f7cf2 1-776
+docs/plans/archive/001-sdk-cli-foundation/assets/team/basis-95da8bf6c3d65077ae18085a379c9c4f780571a7f2ef62d5ac1a65644ae6cdb0.json
+  h_9e71e8b09f7cf2 1-776
+docs/plans/archive/001-sdk-cli-foundation/assets/team/basis-9a2977c85b3c025eafb434ef1306fc71bf3c35fcaa3bc39fd7784a97a868899d.json
+  h_9e71e8b09f7cf2 1-777
+docs/plans/archive/001-sdk-cli-foundation/assets/team/basis-b182ef04db573efa1be574e0f5b7e4dc51b087bd90a6663e653751e3e468552a.json
+  h_9e71e8b09f7cf2 1-771
+docs/plans/archive/001-sdk-cli-foundation/assets/team/basis-bc208a54522fe9d5d26c87d25270806ad72b6b0a53d9155ae4cff1b2871fe3cc.json
+  h_9e71e8b09f7cf2 1-325
+docs/plans/archive/001-sdk-cli-foundation/assets/team/coder-packet.template.md
+  h_9e71e8b09f7cf2 1-42
+docs/plans/archive/001-sdk-cli-foundation/assets/team/composition.dd.json
+  h_9e71e8b09f7cf2 1-49
+docs/plans/archive/001-sdk-cli-foundation/assets/team/composition.dd.md
+  h_9e71e8b09f7cf2 1-20
+docs/plans/archive/001-sdk-cli-foundation/assets/team/dispatch-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86.dd.json
+  h_9e71e8b09f7cf2 1-139
+docs/plans/archive/001-sdk-cli-foundation/assets/team/dispatch-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86.dd.md
+  h_9e71e8b09f7cf2 1-23
+docs/plans/archive/001-sdk-cli-foundation/assets/team/dispatch-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.json
+  h_9e71e8b09f7cf2 1-142
+docs/plans/archive/001-sdk-cli-foundation/assets/team/dispatch-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.md
+  h_9e71e8b09f7cf2 1-23
+docs/plans/archive/001-sdk-cli-foundation/assets/team/dispatch-tk-0005-1ec7213488044ba083da3db7f45a958024a86c86.dd.json
+  h_9e71e8b09f7cf2 1-138
+docs/plans/archive/001-sdk-cli-foundation/assets/team/dispatch-tk-0005-1ec7213488044ba083da3db7f45a958024a86c86.dd.md
+  h_9e71e8b09f7cf2 1-23
+docs/plans/archive/001-sdk-cli-foundation/assets/team/model-settings.template.json
+  h_9e71e8b09f7cf2 1-10
+docs/plans/archive/001-sdk-cli-foundation/assets/team/packet-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86.dd.json
+  h_9e71e8b09f7cf2 1-112
+docs/plans/archive/001-sdk-cli-foundation/assets/team/packet-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86.dd.md
+  h_9e71e8b09f7cf2 1-26
+docs/plans/archive/001-sdk-cli-foundation/assets/team/packet-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.json
+  h_9e71e8b09f7cf2 1-110
+docs/plans/archive/001-sdk-cli-foundation/assets/team/packet-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.md
+  h_9e71e8b09f7cf2 1-26
+docs/plans/archive/001-sdk-cli-foundation/assets/team/packet-tk-0005-1ec7213488044ba083da3db7f45a958024a86c86.dd.json
+  h_9e71e8b09f7cf2 1-116
+docs/plans/archive/001-sdk-cli-foundation/assets/team/packet-tk-0005-1ec7213488044ba083da3db7f45a958024a86c86.dd.md
+  h_9e71e8b09f7cf2 1-26
+docs/plans/archive/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-1902f26-pij-angry-hekarro-v2.dd.json
+  h_9e71e8b09f7cf2 1-151
+docs/plans/archive/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-1902f26-pij-angry-hekarro-v2.dd.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/archive/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-1ec7213-pij-xenacious-yarpen-r6.dd.json
+  h_9e71e8b09f7cf2 1-148
+docs/plans/archive/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-1ec7213-pij-xenacious-yarpen-r6.dd.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/archive/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-412842e-pij-xenacious-yarpen-r5.dd.json
+  h_9e71e8b09f7cf2 1-146
+docs/plans/archive/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-412842e-pij-xenacious-yarpen-r5.dd.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/archive/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-633b9bf-pij-xenacious-yarpen-r2.dd.json
+  h_9e71e8b09f7cf2 1-149
+docs/plans/archive/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-633b9bf-pij-xenacious-yarpen-r2.dd.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/archive/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-8b43aa9-pij-xenacious-yarpen-r4.dd.json
+  h_9e71e8b09f7cf2 1-145
+docs/plans/archive/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-8b43aa9-pij-xenacious-yarpen-r4.dd.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/archive/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-8eafef5-pij-xenacious-yarpen-r3.dd.json
+  h_9e71e8b09f7cf2 1-145
+docs/plans/archive/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-8eafef5-pij-xenacious-yarpen-r3.dd.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/archive/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-d325a8f-pij-angry-hekarro-r2.dd.json
+  h_9e71e8b09f7cf2 1-164
+docs/plans/archive/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-d325a8f-pij-angry-hekarro-r2.dd.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/archive/001-sdk-cli-foundation/assets/team/reviewer-packet.template.md
+  h_9e71e8b09f7cf2 1-34
+docs/plans/archive/001-sdk-cli-foundation/assets/toolchain-observation.json
+  h_9e71e8b09f7cf2 1-49
+docs/plans/archive/001-sdk-cli-foundation/assets/unit-import-command.json
+  h_9e71e8b09f7cf2 1-65
+docs/plans/archive/001-sdk-cli-foundation/assets/verified-unit-deliveries.json
+  h_9e71e8b09f7cf2 1-123
+docs/plans/archive/001-sdk-cli-foundation/assets/workshops/001-output-format.md
+  h_9e71e8b09f7cf2 1-261
+docs/plans/archive/001-sdk-cli-foundation/original-ask.md
+  h_9e71e8b09f7cf2 1-19
+docs/plans/archive/001-sdk-cli-foundation/plan.dd.json
+  h_9e71e8b09f7cf2 1-337
+docs/plans/archive/001-sdk-cli-foundation/plan.dd.md
+  h_9e71e8b09f7cf2 1-211
+docs/plans/archive/001-sdk-cli-foundation/requirements-spine.md
+  h_9e71e8b09f7cf2 1-106
+docs/plans/archive/001-sdk-cli-foundation/the-flow.json
+  h_9e71e8b09f7cf2 1-969
+docs/plans/archive/001-sdk-cli-foundation/the-flow.md
+  h_9e71e8b09f7cf2 1-85
+docs/sdk.md
+  h_9e71e8b09f7cf2 1-173
+rust-toolchain.toml
+  h_9e71e8b09f7cf2 1-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "6fb86b8649dd25e1ca507a4d6ec59d0bb698e4c5",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

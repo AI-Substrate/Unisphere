@@ -1,13 +1,13 @@
 # Unisphere — SDK/CLI requirements spine
 
-**Status:** Requirements collection and research only; not a product plan, implementation guide, task assignment or authorization to implement.
+**Status:** Requirements captured; Jordan authorized Plan 001 product planning for foundation-only delivery. This spine is input to the plan, not an implementation guide, assignment or authorization to implement.
 **Owner of intent:** Jordan (operator).
 **Capture:** `pij-female-varl`, 2026-09-07.
 **Workspace:** `/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation`.
 **Branch:** `builder/001-sdk-cli-foundation`.
 **Builder allocation:** `al-001-4437fdce-9332-4eed-9398-7651d0ab20e2`, from main commit `aa5e75cad1d8397a7ec392e2cb7773c00f673a93`.
 
-The first-class `harness builder new` command generated draft plan/guide/task/flow scaffolding in this folder. Those files are tool output, not agreed requirements, approved architecture or executed work. Keep the canonical flow at research until the operator accepts the next stage; do not populate or approve the generated plan merely because the workspace exists. This spine records the current conversation so future planning does not depend on chat memory.
+The first-class `harness builder new` command generated plan/guide/task/flow scaffolding in this folder. Those files were not approved by allocation. Jordan subsequently authorized authoring the initial product plan and selected foundation-only scope (RQ-014–017); the example implementation guide remains unapproved. This spine preserves the conversation as planning input and does not itself advance flow state or release implementation.
 
 ## Confirmed requirements and instructions
 
@@ -26,6 +26,13 @@ The first-class `harness builder new` command generated draft plan/guide/task/fl
 | RQ-011 | Research best practice and industry conventions for the common format, beginning with Perplexity research on whether OpenTelemetry has a common file format for agent telemetry. | Latest research request. |
 | RQ-012 | Report Builder dogfood progress and problems to harness prime `pij-varied-alpaca`. | Explicit current peer designation; supersedes older registry names. |
 | RQ-013 | Flowspace3 is the first consumer of the Rust SDK; interview `pij-binding-magpie` for requirements without allowing one consumer to dictate the general-purpose model. | Explicit first-consumer instruction. |
+| RQ-014 | Author the initial Builder product plan now; this explicitly supersedes RQ-010's earlier collection-only stop without authorizing implementation. | "lets get a /builder plan on it." |
+| RQ-015 | Plan 001 is foundation only: SDK, CLI, real shared configuration/diagnostic behavior, dependency boundaries, packaging and tests; no first native-session reader in this plan. | Operator selected "Foundation only" in scope clarification. |
+| RQ-016 | Primes author the initial product plan; PMs subsequently orchestrate implementation with their peers. | Explicit operator ownership instruction. |
+| RQ-017 | Services and other independent components can be built by separate agents against agreed contracts and composed later; a finished CLI must not be a prerequisite for service development. | Explicit operator fan-out instruction during planning. |
+| RQ-018 | Native-session reader experiments may proceed independently as Rust services/adapters under gitignored `scratch/`, for later integration when ready; they do not expand Plan001 shipping scope. | Explicit operator experiment authorization. |
+| RQ-019 | Run a Builder workshop on common output format and standard fields; no format has yet been selected. | Explicit output-format workshop request. |
+| RQ-020 | The common output must carry available pij peer names/identifiers, roles and related lineage/context, with honest provenance and unknowns rather than conflating them with model/provider identity. | "need pij names and roles etc in there too." |
 
 ## Working architectural direction — not a frozen design
 

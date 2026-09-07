@@ -1,0 +1,65 @@
+.dd/schemas/builder/allocation/schema.json
+  s_61dfe47e9838df::t_176085c22cdc5b 1-118
+.dd/schemas/builder/backpressure/schema.json
+  s_61dfe47e9838df::t_eeee98c3476e53 1-133
+.dd/schemas/builder/execution-log/schema.json
+  s_61dfe47e9838df::t_1db22c22d37e8f 1-59
+.dd/schemas/builder/fence/schema.json
+  s_61dfe47e9838df::t_f30ff34eff7824 1-47
+.dd/schemas/builder/impl-guide/schema.json
+  s_61dfe47e9838df::t_493e4d963ccc6b 1-93
+.dd/schemas/builder/packet/schema.json
+  s_61dfe47e9838df::t_24f55eea3e1740 1-391
+.dd/schemas/builder/plan/schema.json
+  s_61dfe47e9838df::t_a5b107e9c178c6 1-615
+.dd/schemas/builder/review/schema.json
+  s_61dfe47e9838df::t_357ff608f1e92d 1-169
+.dd/schemas/builder/team/schema.json
+  s_61dfe47e9838df::t_2e143228d6ccab 1-911
+docs/plans/001-sdk-cli-foundation/assets/backpressure.dd.json
+  s_61dfe47e9838df::t_d6401d224d04ae 1-24
+docs/plans/001-sdk-cli-foundation/assets/backpressure.dd.md
+  s_61dfe47e9838df::t_36204612cfa9df 1-27
+docs/plans/001-sdk-cli-foundation/assets/impl-guide.dd.json
+  s_61dfe47e9838df::t_92b1814103adf1 1-329
+docs/plans/001-sdk-cli-foundation/assets/impl-guide.dd.md
+  s_61dfe47e9838df::t_a2e246a7c8eb55 1-125
+docs/plans/001-sdk-cli-foundation/assets/research/perplexity-fallback.md
+  s_61dfe47e9838df::t_acc70cb688634a 1-40
+docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json
+  s_61dfe47e9838df::t_0540ec2567b40e 1-101
+docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.md
+  s_61dfe47e9838df::t_41134220f5a383 1-159
+docs/plans/001-sdk-cli-foundation/assets/team/coder-packet.template.md
+  s_61dfe47e9838df::t_51aa5137609b62 1-42
+docs/plans/001-sdk-cli-foundation/assets/team/model-settings.template.json
+  s_61dfe47e9838df::t_0e87eb7767dd60 1-10
+docs/plans/001-sdk-cli-foundation/assets/team/reviewer-packet.template.md
+  s_61dfe47e9838df::t_fa59d0e719f28e 1-34
+docs/plans/001-sdk-cli-foundation/plan.dd.json
+  s_61dfe47e9838df::t_37d5947b8d28c6 1-111
+docs/plans/001-sdk-cli-foundation/plan.dd.md
+  s_61dfe47e9838df::t_a1482ee1cb8aed 1-161
+docs/plans/001-sdk-cli-foundation/requirements-spine.md
+  s_61dfe47e9838df::t_2e899f0334e6c4 1-92
+docs/plans/001-sdk-cli-foundation/the-flow.json
+  s_61dfe47e9838df::t_c8c4facdc06f73 1-278
+docs/plans/001-sdk-cli-foundation/the-flow.md
+  s_61dfe47e9838df::t_9471c21c5c2416 1-40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "72a6bb10bed01d005c0686caa6f08c41e5d8582c",
+  "prompts": {},
+  "sessions": {
+    "s_61dfe47e9838df": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cbe08128-4097-4473-9f99-71e9415824f6",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

@@ -1,0 +1,32 @@
+docs/plans/001-sdk-cli-foundation/assets/backpressure.dd.json
+  h_9e71e8b09f7cf2 44,93-94,104
+docs/plans/001-sdk-cli-foundation/assets/backpressure.dd.md
+  h_9e71e8b09f7cf2 25,30-31
+docs/plans/001-sdk-cli-foundation/assets/impl-guide.dd.json
+  h_9e71e8b09f7cf2 11-12,23,25-26,31,34-35,74-75,96-97,128,133-134,193,226,294-295,339,403,418,609,625,653,697,735-736
+docs/plans/001-sdk-cli-foundation/assets/impl-guide.dd.md
+  h_9e71e8b09f7cf2 14-15,25,44,46,49,60-61,63-64,110-111,113,125,136
+docs/plans/001-sdk-cli-foundation/assets/reviews/decomposition-opus-review.md
+  h_9e71e8b09f7cf2 1-109
+docs/plans/001-sdk-cli-foundation/assets/reviews/reviewer-launch-evidence.json
+  h_9e71e8b09f7cf2 1-36
+docs/plans/001-sdk-cli-foundation/assets/team/basis-b182ef04db573efa1be574e0f5b7e4dc51b087bd90a6663e653751e3e468552a.json
+  h_9e71e8b09f7cf2 1-771
+docs/plans/001-sdk-cli-foundation/assets/team/basis-bc208a54522fe9d5d26c87d25270806ad72b6b0a53d9155ae4cff1b2871fe3cc.json
+  h_9e71e8b09f7cf2 1-325
+docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-1902f26-pij-angry-hekarro-v2.dd.json
+  h_9e71e8b09f7cf2 1-151
+docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-1902f26-pij-angry-hekarro-v2.dd.md
+  h_9e71e8b09f7cf2 1-24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "d325a8f60a3c97739b7c3b16e612110b5db84530",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

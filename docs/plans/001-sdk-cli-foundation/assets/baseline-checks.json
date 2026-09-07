@@ -1,0 +1,39 @@
+{
+  "scope": "Real core/testkit baseline only; no SDK/CLI/app acceptance claim",
+  "toolchain_observation": "toolchain-observation.json",
+  "checks": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "-p",
+        "unisphere-core",
+        "-p",
+        "unisphere-testkit",
+        "--lib"
+      ],
+      "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+      "exit_code": 0,
+      "stdout": "\nrunning 3 tests\ntest config::tests::omitted_and_explicit_empty_overrides_remain_distinct ... ok\ntest errors::tests::public_constructors_preserve_typed_categories_and_location ... ok\ntest errors::tests::display_does_not_include_caller_supplied_location_text ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 8 tests\ntest fixtures::tests::valid_documents_express_empty_and_uninterpreted_roots ... ok\ntest fixtures::tests::invalid_documents_and_read_failures_have_explicit_expected_categories ... ok\ntest fakes::tests::reader_records_limits_and_returns_isolated_values_or_typed_failures ... ok\ntest fakes::tests::inspector_records_requests_for_both_success_and_error ... ok\ntest fakes::tests::fakes_are_parallel_safe_without_shared_environment ... ok\ntest fakes::tests::relative_fixture_paths_are_rejected - should panic ... ok\ntest sealed::tests::rejects_relative_paths_before_creating_directories ... ok\ntest sealed::tests::constructs_without_executing_and_replaces_ambient_configuration ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n",
+      "stderr": "    Blocking waiting for file lock on package cache\n   Compiling unisphere-core v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/crates/core)\n   Compiling unisphere-testkit v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/crates/testkit)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.73s\n     Running unittests src/lib.rs (target/debug/deps/unisphere_core-272d23499bb5d6dd)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_testkit-3415a2399ecf93c1)\n"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "-p",
+        "unisphere-core",
+        "-p",
+        "unisphere-testkit",
+        "--lib",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "    Blocking waiting for file lock on package cache\n    Blocking waiting for file lock on build directory\n    Checking bitflags v2.13.1\n    Checking cfg-if v1.0.4\n    Checking once_cell v1.21.4\n    Checking memchr v2.8.3\n    Checking fastrand v2.5.0\n    Checking itoa v1.0.18\n    Checking libc v0.2.189\n    Checking serde_core v1.0.229\n    Checking zmij v1.0.23\n    Checking errno v0.3.14\n    Checking getrandom v0.4.3\n    Checking rustix v1.1.4\n    Checking tempfile v3.27.0\n    Checking serde v1.0.229\n    Checking serde_json v1.0.151\n    Checking unisphere-core v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/crates/core)\n    Checking unisphere-testkit v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/crates/testkit)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.75s\n"
+    }
+  ]
+}

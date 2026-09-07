@@ -1,0 +1,19 @@
+docs/plans/001-sdk-cli-foundation/assets/reviews/baseline-opus-r3.md
+  s_61dfe47e9838df::t_6b71417c91717e 1-67
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "6c3d29209cdeb8052513a2f2d1ab00eb06c6837b",
+  "prompts": {},
+  "sessions": {
+    "s_61dfe47e9838df": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cbe08128-4097-4473-9f99-71e9415824f6",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

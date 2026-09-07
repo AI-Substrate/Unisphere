@@ -124,6 +124,16 @@
             "execution-log.dd.json#entries/lg-0009",
             "backpressure.dd.json#rows/bp-0007"
           ]
+        },
+        {
+          "id": "lg-000c",
+          "at": "2026-09-07T07:41:10.430633+00:00",
+          "text": "Isolated committed lane proof before import: SDK cdcb1d69aae65f1f8a593e728cd8a1587ceca0bb passed24 library/public/service-isolation tests plus2 rustdoc; corrected CLI49654b0a0e32dc3fcf3b736c7a8ed29de9f57f61 passed18 frontend tests after initial compiler failure preserved; proof toolingd5d9a25188693ad563a1b5962ff3889d5bdfd18a passed6 bin tests and11 Node wrapper regressions. Actual partial-workspace architecture command passed4edges; deliberately forbidden normal core->CLI edge (conditional/optional/renamed) exited1 as expected. Commands/outputs in verified-unit-deliveries.json references; raw UnitDelivery bytes/hashes retained. These prove isolated behavior and checker rejection, not installed/app/external-consumer composition. All3 release confirmations already accepted.",
+          "links": [
+            "backpressure.dd.json#rows/bp-0002",
+            "backpressure.dd.json#rows/bp-0005",
+            "backpressure.dd.json#rows/bp-0007"
+          ]
         }
       ]
     }

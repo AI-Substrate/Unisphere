@@ -1,0 +1,123 @@
+{
+  "original_receipts": {
+    "tk-0002": {
+      "path": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-sdk/.harness/temp/delivery-tk-0002.json",
+      "sha256": "916a5234d78579af40c126756afdf9e27e0bfdf1264e8cea6a7ef842527e41e4",
+      "value": {
+        "unit_id": "tk-0002",
+        "peer_id": "pij-partial-koi",
+        "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-sdk",
+        "commit_sha": "cdcb1d69aae65f1f8a593e728cd8a1587ceca0bb",
+        "packet_sha256": "bfdec9cb0c85a41ded97158f3b74871332adef3c058fa40d716e8f7832b52190",
+        "baseline_sha": "1ec7213488044ba083da3db7f45a958024a86c86"
+      }
+    },
+    "tk-0003": {
+      "path": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli/.harness/temp/unit-delivery-tk-0003-corrected.json",
+      "sha256": "495ee40c685f470155fd08ac70fb493e49149df56014ab4e882bc6425405d09f",
+      "value": {
+        "unit_id": "tk-0003",
+        "peer_id": "pij-standard-impala",
+        "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli",
+        "commit_sha": "49654b0a0e32dc3fcf3b736c7a8ed29de9f57f61",
+        "packet_sha256": "e99c81186cb4a1c7a58135199a418beb88c28ecd934ba6faaf01a98c75b2445f",
+        "baseline_sha": "1ec7213488044ba083da3db7f45a958024a86c86"
+      }
+    },
+    "tk-0005": {
+      "path": "/tmp/unit-delivery-tk-0005-d5d9a25188693ad563a1b5962ff3889d5bdfd18a.json",
+      "sha256": "96522af8e719e71291368a9768f03f71b2e0219c92dd992489d25930d14e0051",
+      "value": {
+        "record_type": "unit-delivery",
+        "unit_id": "tk-0005",
+        "peer_id": "pij-brave-cahir",
+        "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-proof",
+        "commit_sha": "d5d9a25188693ad563a1b5962ff3889d5bdfd18a",
+        "packet_sha256": "be2787f8dbc5ee82738de1c4555a78dd991cd36c9b956ef6f0e414261721e7cf",
+        "baseline_sha": "1ec7213488044ba083da3db7f45a958024a86c86",
+        "recorded_at": "2026-09-07T07:33:43.927Z",
+        "behavior": [
+          "Declared Cargo normal/dev/build allowlist checks all optional/target/renamed declarations, rejects reversed/shipped-testkit edges and malformed graph input. SDK direct serde edge explicitly approved by PM.",
+          "Standalone composition/sdk-consumer/installed-cli modes materialize external Cargo template, use dynamic SDK path and observed compiler sysroot, separate isolated build and empty-PATH runtime environments, fail absent targets and preserve child exit/stdout/stderr.",
+          "Real SDK/CLI complete envelope parity across shared success/invalid/missing/unreadable/oversized fixtures and overrides; explicit error categories/file locations and no marker leakage.",
+          "External SDK facade/injected-reader self-check under independent baseline/HOME/XDG/UNISPHERE hostile subprocesses; installed CLI machine/human help/version/config success/failure routing.",
+          "Toolchain-first quality and complete foundation-only boot; F8 missing formatter hash remains null/commit_matches=null and passes release match with provenance warning. Failed probes/executables/releases/emitted hashes fail.",
+          "Development documentation, canonical harness docs/briefings and Linux/macOS Rust CI authored."
+        ],
+        "authored_tests": [
+          "cargo test --locked -p unisphere-testkit --bins",
+          "cargo run --locked -p unisphere-testkit --bin unisphere-arch-check",
+          "cargo run --locked -p unisphere-testkit --bin unisphere-arch-check -- --metadata crates/testkit/fixtures/architecture/core-to-cli.json (expected exit 1)",
+          "node --test .harness/extensions/checks/checks.test.mjs .harness/extensions/boot/extension.test.mjs",
+          "cargo run --locked -p unisphere-testkit --bin unisphere-proof -- composition",
+          "cargo run --locked -p unisphere-testkit --bin unisphere-proof -- sdk-consumer",
+          "cargo run --locked -p unisphere-testkit --bin unisphere-proof -- installed-cli"
+        ],
+        "verification": {
+          "state": "pending-pm",
+          "skipped": [
+            "All formatters, linters, builds and tests per immutable guide/supplement; PM owns validation.",
+            "Assembled proof requires SDK/CLI/app composition not present in this coder baseline."
+          ],
+          "observed": [
+            "Initial harness boot --json returned unconfigured exit 2 before source changes.",
+            "Initial harness doctor loaded 2 extensions; reported separate machine/harness degradation.",
+            "harness commit returned status ok, mode direct-verified, commit d5d9a25188693ad563a1b5962ff3889d5bdfd18a; explicitly staged only owned source/docs paths."
+          ],
+          "no_claims": [
+            "No authored test is claimed passed.",
+            "No native reader/collection, real TTY, network-denial execution or provider-served model attestation claim."
+          ]
+        },
+        "friction": [
+          "pij state --json rejected schema projection; whoami plus observed process argv used with explicit provider attestation gap.",
+          "Release injection lacked transport id/time; PM supplied retained release metadata for distinct fresh -release receipt.",
+          "Missing formatter commit identity needs explicit nonblocking provenance gap, not fabricated match or distribution path pinning.",
+          "Raw UnitDelivery is the bounded friction/retro handoff; canonical .harness/records and Builder/governance files remain PM-owned."
+        ],
+        "improvement": "Encode release.message_id and recorded_at in release delivery body so fresh AckReceipt binding needs no metadata round trip; product toolchain missing-metadata warning already encoded."
+      }
+    }
+  },
+  "import_request": [
+    {
+      "unit_id": "tk-0002",
+      "peer_id": "pij-partial-koi",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-sdk",
+      "commit_sha": "cdcb1d69aae65f1f8a593e728cd8a1587ceca0bb",
+      "packet_sha256": "bfdec9cb0c85a41ded97158f3b74871332adef3c058fa40d716e8f7832b52190",
+      "baseline_sha": "1ec7213488044ba083da3db7f45a958024a86c86"
+    },
+    {
+      "unit_id": "tk-0003",
+      "peer_id": "pij-standard-impala",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli",
+      "commit_sha": "49654b0a0e32dc3fcf3b736c7a8ed29de9f57f61",
+      "packet_sha256": "e99c81186cb4a1c7a58135199a418beb88c28ecd934ba6faaf01a98c75b2445f",
+      "baseline_sha": "1ec7213488044ba083da3db7f45a958024a86c86"
+    },
+    {
+      "unit_id": "tk-0005",
+      "peer_id": "pij-brave-cahir",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-proof",
+      "commit_sha": "d5d9a25188693ad563a1b5962ff3889d5bdfd18a",
+      "packet_sha256": "be2787f8dbc5ee82738de1c4555a78dd991cd36c9b956ef6f0e414261721e7cf",
+      "baseline_sha": "1ec7213488044ba083da3db7f45a958024a86c86"
+    }
+  ],
+  "isolated_proof": {
+    "tk-0002": [
+      "sdk-lane-check-initial.json",
+      "sdk-rustdoc-check.json"
+    ],
+    "tk-0003": [
+      "cli-lane-check-initial.json",
+      "cli-lane-check-corrected.json"
+    ],
+    "tk-0005": [
+      "proof-lane-check-initial.json",
+      "architecture-lane-check.json"
+    ]
+  },
+  "composition_proven": false
+}

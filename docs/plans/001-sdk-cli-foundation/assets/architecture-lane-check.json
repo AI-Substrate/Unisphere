@@ -1,0 +1,34 @@
+{
+  "actual": {
+    "argv": [
+      "cargo",
+      "run",
+      "-p",
+      "unisphere-testkit",
+      "--bin",
+      "unisphere-arch-check"
+    ],
+    "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-proof",
+    "exit_code": 0,
+    "stdout": "architecture: 4 declared normal/dev/build edges accepted\n",
+    "stderr": "   Compiling unisphere-testkit v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-plan001-proof/crates/testkit)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.25s\n     Running `target/debug/unisphere-arch-check`\n"
+  },
+  "negative_expected_exit": 1,
+  "negative": {
+    "argv": [
+      "cargo",
+      "run",
+      "-p",
+      "unisphere-testkit",
+      "--bin",
+      "unisphere-arch-check",
+      "--",
+      "--metadata",
+      "crates/testkit/fixtures/architecture/core-to-cli.json"
+    ],
+    "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-proof",
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.04s\n     Running `target/debug/unisphere-arch-check --metadata crates/testkit/fixtures/architecture/core-to-cli.json`\narchitecture: forbidden normal dependency: unisphere-core -> unisphere-cli (target=\"cfg(windows)\", optional=true, rename=\"innocent\")\n"
+  }
+}

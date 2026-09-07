@@ -46,6 +46,16 @@
           "links": [
             "backpressure.dd.json#rows/bp-0007"
           ]
+        },
+        {
+          "id": "lg-0004",
+          "at": "2026-09-07T05:35:01.062543+00:00",
+          "text": "Guide v5 expands baseline.files by the existing unchanged .gitignore to cover tk-0001 ownership; no architecture contract, check argv or product source changed. Current guide SHA256 2bd056c99c8d6bfb9ba8ddc4fac3daf65e679f9d4663bea20d08fdde042060fe. Recomputed all17 prior frozen source file digests and they still equal the actual approved seal at8eafef5, including fixtures aa915f1065888bf7e5061b37607430722e6c4a58e14d006f4943f2b420887e6c. Therefore lg-0002 and committed baseline-r2-final-checks.json continue proving dw-0001/2/3 for the unchanged source:3+10 tests, clippy --lib --tests, fmt exit0. No rerun claimed. Expanded18-file seal/review readiness is not yet proven: dw-0004 and tk-0001 are reset unchecked pending fresh independent current-guide review and actual reseal. Historical seal and lg-0003 remain immutable evidence of the earlier17-file seal.",
+          "links": [
+            "execution-log.dd.json#entries/lg-0002",
+            "execution-log.dd.json#entries/lg-0003",
+            "backpressure.dd.json#rows/bp-0007"
+          ]
         }
       ]
     }

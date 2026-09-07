@@ -11,8 +11,8 @@
 | --- | --- |
 | title | Unisphere foundation: independent SDK, CLI and proof lanes |
 | plan | [meta](../plan.dd.md#meta) |
-| version | 4 |
-| updated | 2026-09-07T05:14:59.494984+00:00 |
+| version | 5 |
+| updated | 2026-09-07T05:35:00.455207+00:00 |
 
 <a id="architecture"></a>
 
@@ -69,7 +69,7 @@
 
 | Field | Value |
 | --- | --- |
-| files | Cargo.toml, rust-toolchain.toml, crates/core/Cargo.toml, crates/core/src/lib.rs, crates/core/src/config.rs, crates/core/src/errors.rs, crates/core/src/ports.rs, crates/testkit/Cargo.toml, crates/testkit/src/lib.rs, crates/testkit/src/fakes.rs, crates/testkit/src/sealed.rs, crates/testkit/src/fixtures.rs, crates/testkit/fixtures/config/empty.json, crates/testkit/fixtures/config/roots.json, crates/testkit/fixtures/config/wrong-type.json, crates/testkit/fixtures/config/blank-root.json, crates/testkit/fixtures/config/malformed.json |
+| files | Cargo.toml, .gitignore, rust-toolchain.toml, crates/core/Cargo.toml, crates/core/src/lib.rs, crates/core/src/config.rs, crates/core/src/errors.rs, crates/core/src/ports.rs, crates/testkit/Cargo.toml, crates/testkit/src/lib.rs, crates/testkit/src/fakes.rs, crates/testkit/src/sealed.rs, crates/testkit/src/fixtures.rs, crates/testkit/fixtures/config/empty.json, crates/testkit/fixtures/config/roots.json, crates/testkit/fixtures/config/wrong-type.json, crates/testkit/fixtures/config/blank-root.json, crates/testkit/fixtures/config/malformed.json |
 | proof | [vd-0001](impl-guide.dd.md#checks) |
 | receipt | team/baseline.dd.json |
 

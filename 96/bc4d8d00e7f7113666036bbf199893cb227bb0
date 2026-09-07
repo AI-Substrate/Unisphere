@@ -1,0 +1,14 @@
+.harness/records/retro/2026-09-07/005-plan001-dispatch-blocked.md
+  h_9e71e8b09f7cf2 1-94
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "96bc4d8d00e7f7113666036bbf199893cb227bb0",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

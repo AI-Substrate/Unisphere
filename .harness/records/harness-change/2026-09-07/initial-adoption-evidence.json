@@ -1,0 +1,249 @@
+[
+  {
+    "argv": [
+      "doctor",
+      "--json"
+    ],
+    "exit_code": 0,
+    "output": {
+      "command": "doctor",
+      "status": "degraded",
+      "timestamp": "2026-09-07T00:33:42.406Z",
+      "data": {
+        "layers": [
+          {
+            "name": "toolchain",
+            "ok": true,
+            "detail": "consumer install \u2014 core needs only node (present); repo toolchain is owned by the boot extension"
+          },
+          {
+            "name": "node-runtime",
+            "ok": true,
+            "detail": "Node 24.7.0 (>=22)"
+          },
+          {
+            "name": "cli-build",
+            "ok": true,
+            "detail": "consumer install \u2014 dev build check n/a (no harness/cli/tsconfig.json)"
+          },
+          {
+            "name": "version-skew",
+            "ok": true,
+            "detail": "consumer install \u2014 skew check n/a (no dev tree to compare against)"
+          },
+          {
+            "name": "extensions",
+            "ok": true,
+            "detail": "2 loaded, 0 failed, 0 conflict(s) (from ./.harness/extensions)"
+          },
+          {
+            "name": "quality-gate",
+            "ok": true,
+            "detail": "`boot` + `checks` verbs present"
+          },
+          {
+            "name": "sensor-watcher",
+            "ok": true,
+            "detail": "no sensors registered \u2014 watcher not needed (scaffold one with `harness new <name> --sensor`)"
+          },
+          {
+            "name": "capture-liveness",
+            "ok": false,
+            "detail": "could-not-determine \u2014 harness telemetry capture is OFF by default since the git-ai collector handover, so there is no capture lane and liveness cannot be established either way (this is NOT a healthy reading; it is an absent one)",
+            "next_action": "Nothing to fix if that is intended \u2014 AI attribution is git-ai's job now, so read the `gitai-collector` row for collection health. Set HARNESS_TELEMETRY_CAPTURE=1 to re-enable harness-side capture and make this layer measurable again."
+          },
+          {
+            "name": "gitai-collector",
+            "ok": false,
+            "detail": "cli-only-trace2 \u2014 git-ai CLI installed and hash-matching (v1.6.21), hooks NOT installed because a global trace2 config was observed present when last checked (2026-09-06T23:55:45.241Z) \u2014 no AI attribution is being collected",
+            "next_action": "Back up your global trace2 keys and remove the section (`git-ai install-hooks` deletes it machine-wide, so harness will not do it for you) \u2014 then a plain `harness doctor` re-reads the live config and installs the hooks. `harness doctor --install-collector` forces it immediately. If you would rather keep your trace2 config, run `git-ai install-hooks` yourself knowing the section goes."
+          },
+          {
+            "name": "attribution-at-risk",
+            "ok": true,
+            "detail": "clean \u2014 every commit in this window carries a refs/notes/ai entry. Window: commits ahead of merge-base(HEAD, origin/main), capped at 200"
+          },
+          {
+            "name": "dd-documents",
+            "ok": true,
+            "detail": "no .dd.json documents here \u2014 dd not in use"
+          },
+          {
+            "name": "dd-cli",
+            "ok": true,
+            "detail": "no dd documents here \u2014 the standalone dd CLI is not needed"
+          },
+          {
+            "name": "instructions",
+            "ok": true,
+            "detail": "core agent briefing baked into the CLI \u2014 run `harness instructions`"
+          },
+          {
+            "name": "commit-guidance",
+            "ok": true,
+            "detail": "AGENTS.md carries the managed harness:commit-guidance block"
+          },
+          {
+            "name": "record-types",
+            "ok": true,
+            "detail": "4 available (4 core, 0 extension)"
+          }
+        ],
+        "branch": "main",
+        "json_env": false,
+        "extensions": [
+          {
+            "entryPath": "/Users/jordanknight/substrate/unisphere/unishpere-main/.harness/extensions/boot/extension.ts",
+            "status": "loaded",
+            "verbs": [
+              {
+                "name": "boot",
+                "summary": "Run checks without treating absent product proof as success.",
+                "hasOwnRun": true,
+                "subverbs": []
+              }
+            ],
+            "format": "v2 (api 2)"
+          },
+          {
+            "entryPath": "/Users/jordanknight/substrate/unisphere/unishpere-main/.harness/extensions/checks/extension.ts",
+            "status": "loaded",
+            "verbs": [
+              {
+                "name": "checks",
+                "summary": "Report the missing canonical product validation command.",
+                "hasOwnRun": true,
+                "subverbs": []
+              }
+            ],
+            "format": "v2 (api 2)"
+          }
+        ],
+        "conventions": [],
+        "recordTypes": [
+          {
+            "type": "retro",
+            "description": "Harness loop retrospective \u2014 session friction, gifts, magic-wand wishes.",
+            "template": "---\nschema_version: \"1.2\"\nretro_id: \"<ISO8601Z>-<agent>-<hash>\"     # e.g. 2026-06-09T09:55:00Z-github-copilot-a8f3\nagent: \"<your-agent-slug>\"                 # lowercase kebab, e.g. github-copilot\nplan_id: \"<NNN-slug or null>\"\nstarted_at: \"<ISO8601Z>\"\nended_at: \"<ISO8601Z>\"\nsummary: \"<one paragraph: what happened this session>\"\nentries:\n  # One block per observation. id = <PREFIX>-<3+ digits>. Any uppercase prefix is valid;\n  # DL/MW/GFT/INS/COORD/SUGG/CONF/WIN are the recommended per-kind defaults, and run-scoped\n  # prefixes (e.g. VF- for a flow worker's own numbering) are equally fine.\n  # kind in difficulty | magic-wand | gift | insight | coordination | improvement-suggestion | confusion | win\n  - id: DL-001\n    kind: difficulty\n    description: \"<>=10 chars - the friction, concretely>\"\n    target: tooling                         # project | tooling | plan | skill | doc | infra | minih | ...\n    severity: degrading                     # blocking | degrading | annoying  (for kind: difficulty)\n    workaround: \"<what you did to get past it>\"\n    suggested_encoding: \"<e.g. justfile recipe wrapping ripgrep>\"\n    fp: \"<12-hex fingerprint>\"               # 1.2 (optional) set by 'harness observe' \u2014 recurrence key\n    disposition: kept                        # 1.2 (optional) drain outcome: fixed-now|task|plan|diffs|command|kept|declined|deferred\n                                             #   drain-time decision; distinct from system.compound.status (long-horizon lifecycle)\n    system:\n      compound:                             # CONVENTION (open 'system' object), not a schema field\n        status: open                        # open | suggested | encoded | wontfix | stale | dismissed\n        source: agent-self                  # user | agent-self\n        first_seen_at: \"<ISO8601Z>\"\n---\n\n# Retro \u2014 <plan or session label>\n\n<!-- Optional human narrative. The structured `entries` above are the durable signal. -->\n",
+            "source": "core"
+          },
+          {
+            "type": "harness-bypass",
+            "description": "Signal that the paved harness path was not used (bypass) \u2014 cause + severity.",
+            "template": "---\nschema_version: \"1.0\"\ncause: \"<missing-command|command-failed|too-slow|unclear-output|no-coverage|policy|agent-could-not>\"\nattempted: false                  # did you try the harness path before bypassing?  (true | false)\ncommand: \"<the harness command you would have / did run, or empty>\"\nseverity: \"<blocking|degrading|annoying>\"\n---\n\n# Harness bypass \u2014 <what you did instead of the paved path>\n\n<!-- One record per time the harness path was abandoned. The structured frontmatter\n     above is the durable, scannable signal; this body is optional human narrative. -->\n",
+            "source": "core"
+          },
+          {
+            "type": "harness-change",
+            "description": "Encoded harness-improvement ledger entry (replaces history.md) \u2014 what changed + why.",
+            "template": "---\nschema_version: \"1.0\"\nresolves: \"<free-form ref <=200 chars: a record path, issues/123, org/repo#45, or <retro_id>:<entry_id>>\"\nchange_type: \"<new-command|sensor|fixture|template|doc|skill-edit|routing>\"\ntarget: \"<what the change touches \u2014 e.g. a justfile recipe, a skill slug, a CI step>\"\n---\n\n# Harness change \u2014 <one line: what improved>\n\n<!-- One record per encoded harness improvement (this ledger replaces history.md).\n     The structured frontmatter above is the durable, scannable signal. -->\n",
+            "source": "core"
+          },
+          {
+            "type": "segment",
+            "description": "Counts-only per-session telemetry segment \u2014 tokens/skills/tools/subagents/files/plan-links.",
+            "template": "---\nschema_version: \"1.0\"\n---\n\n# Telemetry segment \u2014 <command> @ <timecode>\n\n<!-- A counts-only per-session telemetry segment (plan 034). The machine-written\n     payload below conforms to services/telemetry/segment.schema.json \u2014 only\n     allowlisted counts/identifiers, never prompt/message text, file contents, or\n     free-form tool args; paths are repo-relative. The CLI splices the 7-key\n     provenance header above at write time. -->\n\n```json\n{}\n```\n",
+            "source": "core"
+          }
+        ],
+        "agentHooks": {
+          "action": "installed",
+          "detail": "agent hooks already present for claude-code, cursor, gemini, droid, github-copilot, windsurf \u2014 nothing was written this run",
+          "warnings": []
+        }
+      },
+      "evidence": [
+        {
+          "label": "doctor report",
+          "none": true
+        }
+      ],
+      "next_action": "Resolve the unconfigured/failing layers below; run `harness help` for the verb map."
+    },
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "checks",
+      "--json"
+    ],
+    "exit_code": 2,
+    "output": {
+      "command": "checks",
+      "status": "unconfigured",
+      "timestamp": "2026-09-07T00:33:42.312Z",
+      "next_action": "Unisphere has no canonical product validation command. Establish the product build/test lane, then wire that command into .harness/extensions/checks/extension.ts and rerun `harness checks --json`. Harness setup alone is not product proof."
+    },
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "boot",
+      "--json"
+    ],
+    "exit_code": 2,
+    "output": {
+      "command": "boot",
+      "status": "unconfigured",
+      "timestamp": "2026-09-07T00:33:42.439Z",
+      "next_action": "Product readiness is unproven because `harness checks --json` is unconfigured. Establish the product build/test lane and wire it into .harness/extensions/checks/extension.ts; then configure the real product readiness/smoke command here and rerun `harness boot --json`."
+    },
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "help",
+      "--json"
+    ],
+    "exit_code": 0,
+    "output": {
+      "command": "help",
+      "status": "ok",
+      "timestamp": "2026-09-07T00:33:42.311Z",
+      "data": {
+        "purpose": "The agent-friendly front door to this repo's engineering harness. Verbs are owned by extensions: each is a little package at `./.harness/extensions/<name>/` (entry `extension.ts`, briefing `instructions.md`) and becomes a `harness <verb>` command. `help`, `doctor`, `new`, `docs`, `skills`, `record`, `sensors`, and `instructions` are always available.",
+        "agents_start_here": "npx harness instructions \u2014 the agent briefing (then `harness instructions <verb>` per verb)",
+        "output_modes": [
+          "--json forces JSON output",
+          "--no-json forces human output",
+          "HARNESS_JSON=1 forces JSON (useful in CI)",
+          "otherwise: piped output \u2192 JSON, an interactive TTY \u2192 human"
+        ],
+        "exit_codes": {
+          "0": "ok or degraded (the command reported successfully)",
+          "1": "error (something failed; see error.code + next_action)",
+          "2": "unconfigured (no behaviour mapped to this verb yet)"
+        },
+        "safe_first_actions": [
+          "harness instructions \u2014 the agent briefing (AGENTS START HERE)",
+          "harness doctor \u2014 see which extensions loaded (and any that failed)",
+          "harness docs \u2014 list the bundled docs (then `harness docs <id>` to read one)",
+          "harness new <name> \u2014 scaffold a new extension (add --wrap \"<cmd>\" to wrap a real command)",
+          "harness skills install --target <cli> \u2014 install this harness's skills into your CLI",
+          "harness help --json \u2014 the machine-readable verb list",
+          "harness boot --help \u2014 usage for a contributed verb"
+        ],
+        "verbs": [
+          {
+            "name": "boot",
+            "summary": "Run checks without treating absent product proof as success.",
+            "status": "loaded",
+            "has_instructions": true
+          },
+          {
+            "name": "checks",
+            "summary": "Report the missing canonical product validation command.",
+            "status": "loaded",
+            "has_instructions": true
+          }
+        ],
+        "extensions": {
+          "installed": 2,
+          "failed": 0,
+          "conflicts": 0
+        }
+      }
+    },
+    "stderr": ""
+  }
+]

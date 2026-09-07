@@ -1,0 +1,21 @@
+{
+  "id": "CBA001",
+  "title": "Add local/test auth bootstrap path",
+  "category": "auth",
+  "status": "proposed",
+  "risk_tier": "high",
+  "target_layer": "product_code",
+  "environment_scope": ["local", "test", "ci-preview"],
+  "environments_where_it_must_not_apply": ["production"],
+  "safety_requirements": [
+    "Disabled unless an explicit local/test profile is active",
+    "Fails startup if enabled in production",
+    "Does not weaken the production auth path",
+    "Uses fixture identities only",
+    "Covered by a test proving the production profile rejects the bypass"
+  ],
+  "human_or_security_review_required": true,
+  "which_gap_it_addresses": "Authenticated smoke flows require a manual browser login, so the harness cannot run non-interactive proof.",
+  "which_harness_command_or_proof_level_it_unblocks": "L3 authenticated runtime interaction, possibly L4 with a side-effect check",
+  "why_it_is_better_than_more_documentation": "It makes authenticated behavior runnable and assertable by an agent instead of described in prose."
+}

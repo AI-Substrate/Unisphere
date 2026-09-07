@@ -1,0 +1,263 @@
+{
+  "schema_version": 1,
+  "kind": "harness-adopt",
+  "slug": "onboarding",
+  "nav": {
+    "now": "build-boot",
+    "next": "bridge",
+    "intent": "Harness installed; real checks and boot return unconfigured because no product lane exists"
+  },
+  "created_at": "2026-09-07T00:31:44.459Z",
+  "provenance": {
+    "record_kind": "flow",
+    "harness_version": "0.14.0",
+    "branch": "main",
+    "repo": "https://github.com/AI-Substrate/Unisphere.git",
+    "created_at": "2026-09-07T00:31:44.459Z",
+    "agent": null,
+    "plan_id": null
+  },
+  "events": [
+    {
+      "id": "CRT-001",
+      "kind": "created",
+      "origin": "engine",
+      "fired_at": "2026-09-07T00:31:44.486Z",
+      "details": {
+        "kind": "harness-adopt",
+        "slug": "onboarding"
+      }
+    },
+    {
+      "id": "CUR-001",
+      "kind": "cursor-moved",
+      "origin": "engine",
+      "fired_at": "2026-09-07T00:31:44.683Z",
+      "details": {
+        "from": "install",
+        "to": "install"
+      }
+    },
+    {
+      "id": "STA-001",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-07T00:34:49.420Z",
+      "details": {
+        "node": "install",
+        "from": "assumed",
+        "to": "done"
+      }
+    },
+    {
+      "id": "CUR-002",
+      "kind": "cursor-moved",
+      "origin": "engine",
+      "fired_at": "2026-09-07T00:34:49.594Z",
+      "details": {
+        "from": "install",
+        "to": "governance"
+      }
+    },
+    {
+      "id": "STA-002",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-07T00:34:49.762Z",
+      "details": {
+        "node": "governance",
+        "from": "assumed",
+        "to": "done"
+      }
+    },
+    {
+      "id": "STA-003",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-07T00:34:49.928Z",
+      "details": {
+        "node": "inject",
+        "from": "assumed",
+        "to": "done"
+      }
+    },
+    {
+      "id": "CUR-003",
+      "kind": "cursor-moved",
+      "origin": "engine",
+      "fired_at": "2026-09-07T00:38:28.539Z",
+      "details": {
+        "from": "governance",
+        "to": "build-boot"
+      }
+    },
+    {
+      "id": "UPD-001",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-07T00:38:28.703Z",
+      "details": {
+        "node": "build-boot",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-004",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-07T00:38:28.868Z",
+      "details": {
+        "node": "build-boot",
+        "from": "assumed",
+        "to": "blocked"
+      }
+    },
+    {
+      "id": "UPD-002",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-07T00:38:29.023Z",
+      "details": {
+        "node": "bridge",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-005",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-07T00:38:29.190Z",
+      "details": {
+        "node": "bridge",
+        "from": "assumed",
+        "to": "blocked"
+      }
+    },
+    {
+      "id": "UPD-003",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-07T00:38:52.251Z",
+      "details": {
+        "node": "scout",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-006",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-07T00:38:52.411Z",
+      "details": {
+        "node": "scout",
+        "from": "assumed",
+        "to": "done"
+      }
+    }
+  ],
+  "nodes": [
+    {
+      "id": "install",
+      "type": "install",
+      "label": "Install harness",
+      "status": "done",
+      "next": [
+        "governance"
+      ],
+      "zone": "preflight",
+      "modified_at": "2026-09-07T00:34:49.420Z",
+      "ran_at": "2026-09-07T00:34:49.420Z"
+    },
+    {
+      "id": "governance",
+      "type": "governance",
+      "label": "Governance + boot contract",
+      "status": "done",
+      "next": [
+        "build-boot"
+      ],
+      "zone": "flight",
+      "modified_at": "2026-09-07T00:34:49.762Z",
+      "ran_at": "2026-09-07T00:34:49.762Z"
+    },
+    {
+      "id": "build-boot",
+      "type": "build-boot",
+      "label": "Build + run boot (last)",
+      "status": "blocked",
+      "next": [
+        "bridge"
+      ],
+      "zone": "postflight",
+      "comments": [
+        {
+          "at": "2026-09-07T00:38:28.702Z",
+          "text": "Real harness checks and boot returned unconfigured, exit 2. Two extensions loaded, zero conventions; five harness-only composition tests pass. Canonical product lane absent; no product readiness claimed.",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "modified_at": "2026-09-07T00:38:28.868Z",
+      "ran_at": "2026-09-07T00:38:28.868Z"
+    },
+    {
+      "id": "bridge",
+      "type": "decision",
+      "label": "Bridge → harness loop?",
+      "status": "blocked",
+      "next": [],
+      "zone": "postflight",
+      "comments": [
+        {
+          "at": "2026-09-07T00:38:29.022Z",
+          "text": "Onboarding artifacts are installed. Do not enter the operational product loop until a canonical product build/test/startup or smoke lane is implemented and actually verified.",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "modified_at": "2026-09-07T00:38:29.190Z",
+      "ran_at": "2026-09-07T00:38:29.190Z"
+    },
+    {
+      "id": "scout",
+      "type": "scout",
+      "label": "Scout (harnessability)",
+      "status": "done",
+      "next": [
+        "governance"
+      ],
+      "zone": "preflight",
+      "branch_of": "install",
+      "comments": [
+        {
+          "at": "2026-09-07T00:38:52.251Z",
+          "text": "Independent pre-product baseline assessment generated at .harness/reports/harnessability/latest.json; authoritative v0.2 schema validates and latest mirrors equal run artifacts. No product execution claimed.",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "modified_at": "2026-09-07T00:38:52.410Z",
+      "ran_at": "2026-09-07T00:38:52.410Z"
+    },
+    {
+      "id": "inject",
+      "type": "inject",
+      "label": "Inject (wire seams)",
+      "status": "done",
+      "next": [
+        "build-boot"
+      ],
+      "zone": "flight",
+      "branch_of": "governance",
+      "modified_at": "2026-09-07T00:34:49.928Z",
+      "ran_at": "2026-09-07T00:34:49.928Z"
+    }
+  ],
+  "title": "adopt"
+}

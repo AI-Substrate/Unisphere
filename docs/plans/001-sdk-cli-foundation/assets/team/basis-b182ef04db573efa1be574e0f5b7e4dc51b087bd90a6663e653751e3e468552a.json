@@ -8,8 +8,8 @@
       "value": {
         "title": "Unisphere foundation: independent SDK, CLI and proof lanes",
         "plan": "../plan.dd.json#meta",
-        "version": 3,
-        "updated": "2026-09-07T04:21:11.357Z"
+        "version": 2,
+        "updated": "2026-09-07T03:53:38.799Z"
       }
     },
     {
@@ -20,19 +20,18 @@
         "contracts": [
           "Scope: Plan001 foundation only. The standard-first OTLP/GenAI decision governs later telemetry work; no native reader, normalized telemetry schema, pij enrichment implementation or scratch-code import ships in this plan. Configuration-command responses are not telemetry records.",
           "Crate graph: unisphere-core has pure DTOs, enums and ports (serde only; no filesystem, process, environment, Tokio, network or database). unisphere-sdk -> core + serde_json; unisphere-cli (frontend library) -> core + clap + serde_json; unisphere-testkit -> core + serde_json + tempfile (dev/proof only). A final unisphere-app binary crate -> sdk + cli; bin name unisphere. Production sdk/cli/app must never depend on testkit. Services never import CLI/app or concrete adapters; the SDK composition facade may select its local filesystem adapter.",
-          "Cargo independence: root Cargo.toml uses resolver=3, members=[\"crates/*\"], shared edition=2024/version=0.1.0 and workspace dependency declarations. Baseline creates only real core/testkit crates; each coder adds its complete crate with core/testkit dependencies and is tested without sibling implementations. Root Cargo.toml belongs to tk-0001. Cargo.lock is single-owner PM-generated state in tk-0004, not a frozen baseline file: the same PM is explicitly authorized to materialize/commit it during baseline prep and refresh it during lane verification/composition. Coders never deliver lockfile changes. No live nested Cargo.toml is stored under testkit fixtures; manifests are Cargo.toml.template/data materialized into isolated temporary roots.",
+          "Cargo independence: root Cargo.toml uses resolver=3, members=[\"crates/*\"], shared edition=2024/version=0.1.0 and workspace dependency declarations. Baseline creates only real core/testkit crates; no empty SDK/CLI/app crates or placeholder behavior. Each coder adds its complete crate with explicit core/testkit path dependencies and can be tested by package name without sibling implementations. PM owns Cargo.toml/Cargo.lock and reviews any new dependency request; coders do not deliver lockfile changes. Cargo.lock is not a frozen public contract and PM refreshes it as complete lane manifests arrive.",
           "Core types: Configuration { source_roots: Vec<String> } defaults to []; ConfigOverrides { source_roots: Option<Vec<String>> } defaults to None; ConfigSource = Defaults | Inline(Vec<u8>) | File(PathBuf); InspectionRequest { source: ConfigSource, overrides: ConfigOverrides }; InspectionReport { configuration: Configuration }. Derive Debug/Clone/PartialEq as appropriate and Serialize for report/configuration. Do not serialize ConfigSource/InspectionRequest into diagnostics because they contain input bytes.",
-          "Core failures: ReadFailure = NotFound | PermissionDenied | TooLarge | Other; FailureKind = InvalidConfiguration | ConfigurationRead | InvalidArguments; Location { path: Option<String>, field: Option<String>, line: Option<u32>, column: Option<u32> }. Failure has private fields and public constructors invalid_configuration(location:Option<Location>)->Self, configuration_read(kind:ReadFailure, location:Option<Location>)->Self and invalid_arguments(location:Option<Location>)->Self. Accessors: kind()->FailureKind, location()->Option<&Location>, read_failure()->Option<ReadFailure>, code()/message()/fix()->&str and retryable()->bool. It implements Error/Display. Code/message/fix copy is core-owned and fixed, never caller-controlled: UNI-CONFIG-INVALID, UNI-CONFIG-READ, UNI-ARGS-INVALID; retryable=false in this scope. Never forward raw parser/UTF8/clap Debug errors or input values into diagnostics; known field locations and supplied file paths may identify a failure without full config text.",
-          "Core ports: pub trait ConfigReader: Send + Sync { fn read(&self, path: &Path, max_bytes: usize) -> Result<Vec<u8>, ReadFailure>; } and pub trait InspectionApi: Send + Sync { fn inspect(&self, request: &InspectionRequest) -> Result<InspectionReport, Failure>; }. These are synchronous explicit calls, with no hidden tasks or global registry. MAX_CONFIG_BYTES = 1_048_576 applies to inline bytes and file reads; readers reject oversize before copying unbounded input. Oversized Inline bytes return Failure::invalid_configuration(None), UNI-CONFIG-INVALID, without invoking ConfigReader. Oversized File input is ReadFailure::TooLarge mapped to Failure::configuration_read(...), UNI-CONFIG-READ with file location. Neither path attempts an unbounded copy.",
+          "Core failures: ReadFailure = NotFound | PermissionDenied | TooLarge | Other; FailureKind = InvalidConfiguration | ConfigurationRead | InvalidArguments; Location { path: Option<String>, field: Option<String>, line: Option<u32>, column: Option<u32> }; Failure contains kind, optional location and optional ReadFailure, implements Error/Display and exposes fixed code/message/fix/retryable accessors. Codes: UNI-CONFIG-INVALID, UNI-CONFIG-READ and UNI-ARGS-INVALID; retryable=false for this scope. Never forward raw parser errors, Debug byte buffers or input values into public messages. Field paths for known settings and supplied file paths may identify the failure; full config text and unrelated content must not appear.",
+          "Core ports: pub trait ConfigReader: Send + Sync { fn read(&self, path: &Path, max_bytes: usize) -> Result<Vec<u8>, ReadFailure>; } and pub trait InspectionApi: Send + Sync { fn inspect(&self, request: &InspectionRequest) -> Result<InspectionReport, Failure>; }. These are synchronous explicit calls, with no hidden tasks or global registry. MAX_CONFIG_BYTES = 1_048_576 applies to inline bytes and file reads; readers reject oversize before copying unbounded input.",
           "Configuration semantics: JSON object with optional source_roots array of strings; {} and {\"source_roots\":[]} are valid. Reject malformed/non-UTF8 JSON, non-object documents, unknown keys, duplicate known keys, non-array roots, non-string roots and strings whose trim() is empty. Preserve valid root strings, order and duplicates exactly: no trimming, tilde/env expansion, canonicalization, directory existence probing or session reads. Defaults < present document source_roots < Some(overrides.source_roots); Some([]) explicitly clears. Validate each supplied layer, including overridden invalid values, so bad configuration is not silently hidden. File source must be an explicit absolute path; a relative File path is InvalidConfiguration. Roots themselves may remain relative and uninterpreted.",
           "SDK contract: pub struct Inspector<R: ConfigReader>; Inspector::new(reader:R) uses Configuration::default(); Inspector::with_defaults(reader:R, defaults:Configuration) retains caller defaults and validates them on inspect; impl InspectionApi for Inspector<R>. Public StdConfigReader implements ConfigReader with bounded explicit-file reads. pub fn inspect(request:&InspectionRequest)->Result<InspectionReport,Failure> composes Inspector::new(StdConfigReader), never reads ambient config. Re-export the core request/report/config/error types at the SDK facade, not a second DTO model. Parser/resolution functions take bytes or typed values and do not perform IO; the service owns precedence/error mapping, the concrete reader owns disk access.",
           "CLI contract: unisphere config check [--config PATH] [--source-root ROOT ... | --clear-source-roots] [--json | --human], plus --help and --version. No config flag means Defaults; repeated --source-root replaces the document list, --clear-source-roots means Some([]), and the two forms conflict. Capture working directory and terminal status only in main, then pass CliContext { cwd: PathBuf, stdout_is_terminal: bool, version: String } explicitly. pub fn run(args: impl IntoIterator<Item=OsString>, context:&CliContext, inspector:&dyn InspectionApi, stdout:&mut dyn Write, stderr:&mut dyn Write)->u8. Args include argv[0]. Resolve only the explicitly supplied config path against context.cwd before calling the port. CLI frontend must not import unisphere-sdk.",
           "CLI response contract: machine output is exactly one JSON object plus LF on stdout: {\"ok\":true,\"command\":\"config.check\",\"v\":1,\"data\":{\"configuration\":{\"source_roots\":[...]}}} or {\"ok\":false,\"command\":\"config.check\",\"v\":1,\"error\":{\"kind\":\"invalid_configuration|configuration_read|invalid_arguments\",\"code\":\"...\",\"message\":\"...\",\"fix\":\"...\",\"retryable\":false,\"location\":null|{...}}}; success omits error, failure omits data. --json wins error rendering if conflicting flags are supplied, otherwise explicit mode precedes terminal detection; captured/piped output defaults JSON. No environment-mode override is added in this scope. Human success goes stdout, human failure stderr; diagnostic logs never contaminate machine stdout. Help/version honor the selected mode with command help/version and data.text/data.version, exit0; they do not invoke InspectionApi. Operational/config failures exit1; argument errors exit2. Failed output writes exit1 with a safe terse stderr message when possible.",
-          "Baseline fake/fixture contract: FakeReader accepts a caller-supplied absolute-path map of byte/error results and records read calls; FakeInspector accepts a configured Result and records requests; neither accesses disk/env/network. Shared fixtures cover empty/default/document/override settings, malformed JSON, wrong type, blank roots, missing/permission errors and expected categories. Baseline tests prove these real fake/fixture contracts, not a future SDK/CLI. sealed_command(binary:&Path, temp_root:&Path)->std::io::Result<std::process::Command> requires an absolute executable, creates only caller-authorized temporary HOME/config roots and builds (does not run) a child with cleared environment and PATH=\"\". It retains only explicitly required platform variables, never HOME/XDG_*/UNISPHERE_*/tokens from the parent. The proof tool uses a separate explicit build environment for cargo/rustc, then runs the built product through sealed_command with Node/OMP/Builder inaccessible. Hostile environment values are set on the child Command before spawn, never by mutating the proof process environment.",
+          "Baseline fake/fixture contract: testkit FakeReader accepts a caller-supplied map of absolute paths to byte/error results and records read calls; FakeInspector accepts a configured Result and records InspectionRequest values; neither accesses disk, environment or network. Shared fixtures cover {}, empty roots, defaults/document/override precedence, malformed JSON, wrong type, blank root, missing-file and permission errors plus expected report/error categories. Baseline tests prove fixture/fake behavior and DTO/error serialization, not an unfinished real SDK or CLI. Testkit sealed_command(binary, temp_root) builds subprocess environment with temporary HOME/config roots and scrubbed relevant variables; it does not run the command.",
           "PM composition root: crates/app/src/main.rs captures explicit process context and passes a real unisphere_sdk::Inspector<StdConfigReader> into unisphere_cli::run, using explicit ExitCode handling rather than Result-main Debug dumps. App/Cargo.toml names bin unisphere and links sdk/cli; neither lane needs app to exist. External-consumer proof creates an isolated Cargo package with a path dependency on sdk and calls its public facade from outside the repository; installed-CLI proof uses cargo install --path crates/app --root <temporary-root> and executes the installed binary. No Node, Builder or daemon is required by the built SDK/CLI at runtime.",
           "Proof boundary: planned commands below become executable when their owning unit is implemented; guide validation/review does not execute or claim them. Native reader scratch tests are separate and cannot satisfy Plan001 acceptance. Main/PM owns validation and formatting across unit deliveries; coders author code/tests but do not race global gates or formatters. Future changes to a frozen shared signature require explicit guide/baseline reconciliation before dependent release, not hand-edited packets.",
-          "Toolchain contract: Rust1.95.0/edition2024 is the selected compiler target, and rust-toolchain.toml is only a rustup request, not proof of enforcement. This host was observed with Homebrew rustc/cargo1.95.0, no rustup, and newer clippy/rustfmt provenance. Before claiming any product gate, tk-0005 checks records actual rustc/cargo/clippy/rustfmt version/provenance and enforces the documented approved coherent toolchain; a mixed/missing toolchain yields a named failed prerequisite, never a green pin claim. Document the actual supported tuple and how to select equivalent binaries; no automatic global install/change. Baseline contract tests may use the observed matching compiler/cargo, but full quality/boot proof waits for the coherent suite. Product crates exclude Node/native-ML/database dependencies. Additional platform support requires observed CI evidence.",
-          "Proof-grade boundary: source/dependency review must explicitly confirm that core and SDK contain no ambient configuration reads, network/client calls, process launches, FFI or unsafe-code escape, beyond the permitted ConfigReader call. Core/SDK forbid unsafe code and the dependency allowlist excludes networking/runtime crates, but dependency absence alone is not a syscall trace. The sealed external consumer provides automated evidence of no observed ambient influence; the no-network promise additionally requires named independent source-surface review. Do not describe that judgement as an executed network-denial test or weaken ac-0008."
+          "Toolchain/build contract: target the observed Rust 1.95.0 toolchain (edition2024); baseline rust-toolchain.toml records channel1.95.0 with rustfmt/clippy, and documentation also supports an equivalent installed compiler. Root workspace declares the minimal shared serde/serde_json/clap/tempfile dependencies. No native ML/database libraries or Node runtime dependency is permitted in product crates. Five small crates separate contracts, SDK, CLI frontend, testkit and PM-owned app wiring; this extra app boundary prevents the CLI lane Cargo manifest from requiring the unfinished SDK. Initial host proof is macOS/Unix; additional platform support requires observed CI rather than a claim in this guide."
         ]
       }
     },
@@ -71,8 +70,7 @@
           "owner": "tk-0002",
           "path": "Caller defaults -> present document roots -> explicit override roots; no ambient lookup",
           "proof": [
-            "impl-guide.dd.json#checks/vd-0002",
-            "impl-guide.dd.json#checks/vd-000a"
+            "impl-guide.dd.json#checks/vd-0002"
           ]
         },
         {
@@ -93,8 +91,7 @@
           "path": "Explicit mode / terminal context -> CLI run -> one machine envelope or human projection -> documented exit/stdout/stderr",
           "proof": [
             "impl-guide.dd.json#checks/vd-0003",
-            "impl-guide.dd.json#checks/vd-0004",
-            "impl-guide.dd.json#checks/vd-000b"
+            "impl-guide.dd.json#checks/vd-0004"
           ]
         },
         {
@@ -125,13 +122,12 @@
           "id": "ac-0008",
           "criterion": "../plan.dd.json#acceptance_criteria/ac-0008",
           "owner": "tk-0004",
-          "path": "Injected readers/context and sealed temporary environments -> concurrent service/CLI checks without private stores or hidden workers; no-network is a restricted dependency/source-surface review claim, not an executed syscall-trace claim, alongside the automated isolated behavior evidence",
+          "path": "Injected readers/context and sealed temporary environments -> concurrent service/CLI checks without private stores or hidden workers",
           "proof": [
             "impl-guide.dd.json#checks/vd-0002",
             "impl-guide.dd.json#checks/vd-0003",
             "impl-guide.dd.json#checks/vd-0004",
-            "impl-guide.dd.json#checks/vd-000a",
-            "impl-guide.dd.json#checks/vd-0006"
+            "impl-guide.dd.json#checks/vd-000a"
           ]
         },
         {
@@ -179,6 +175,7 @@
           "responsibility": "PM pij-right-kotallo implements the smallest real shared core types/ports/errors and testkit fakes/fixtures, root workspace/dependency policy and isolated test helpers, then commits and seals the baseline. No SDK/CLI stub behavior.",
           "paths": [
             "Cargo.toml",
+            "Cargo.lock",
             ".gitignore",
             "rust-toolchain.toml",
             "crates/core/**",
@@ -190,7 +187,7 @@
             "crates/testkit/fixtures/config/**"
           ],
           "reads": [],
-          "interface": "Architecture contracts above are the shared API. Baseline tests operate only on core/testkit and prove fixture/fake behavior. Root members=[\"crates/*\"] admits each complete lane package when it arrives; future missing crates are not declared as explicit members. Cargo.lock remains PM/base-owner generated state, excluded from frozen baseline.files; PM refreshes it mechanically during package verification/composition, never accepts a coder lockfile edit. Lockfile materialization during baseline prep is explicitly authorized PM-generated state outside this unit frozen contract fence, under tk-0004 single ownership; it is not delegated to a coder and is not a completed composition claim.",
+          "interface": "Architecture contracts above are the shared API. Baseline tests operate only on core/testkit and prove fixture/fake behavior. Root members=[\"crates/*\"] admits each complete lane package when it arrives; future missing crates are not declared as explicit members. Cargo.lock remains PM/base-owner generated state, excluded from frozen baseline.files; PM refreshes it mechanically during package verification/composition, never accepts a coder lockfile edit.",
           "depends_on": [],
           "wave": 0,
           "acceptance": [],
@@ -223,7 +220,7 @@
               ]
             }
           ],
-          "interface": "Inspector<R> implements InspectionApi; public inspect delegates through StdConfigReader; re-export core types. service.rs imports core contracts and serde_json only, not fs adapter/facade/CLI; tests/service_in_isolation.rs compiles the actual service module without fs/wiring modules and exercises it with FakeReader. The fs adapter and default facade are distinct modules; no hidden global reads. For the #[path]-based independent service compilation, service.rs must be self-contained: use absolute unisphere_core::/serde_json:: dependency paths and no crate::/super:: references to facade or sibling modules.",
+          "interface": "Inspector<R> implements InspectionApi; public inspect delegates through StdConfigReader; re-export core types. service.rs imports core contracts and serde_json only, not fs adapter/facade/CLI; tests/service_in_isolation.rs compiles the actual service module without fs/wiring modules and exercises it with FakeReader. The fs adapter and default facade are distinct modules; no hidden global reads.",
           "depends_on": [
             "tk-0001"
           ],
@@ -291,8 +288,7 @@
           "paths": [
             "crates/app/**",
             "README.md",
-            "THIRD_PARTY_NOTICES.md",
-            "Cargo.lock"
+            "THIRD_PARTY_NOTICES.md"
           ],
           "reads": [
             {
@@ -336,7 +332,7 @@
               ]
             }
           ],
-          "interface": "crates/app/src/main.rs is the real SDK-to-CLI composition root. SDK and CLI behavior stays in their owning lanes; incompatible deliveries are returned for correction. The same PM retains composition ownership of Cargo.lock for mechanical dependency resolution; changing public baseline files requires explicit contract handling, not silent resealing. This is the sole Cargo.lock fence across the lifecycle, including initial generated lockfile prep before baseline sealing; root Cargo.toml remains tk-0001-owned.",
+          "interface": "crates/app/src/main.rs is the real SDK-to-CLI composition root. SDK and CLI behavior stays in their owning lanes; incompatible deliveries are returned for correction. The same PM retains baseline ownership of Cargo.lock for mechanical dependency resolution; changing public baseline files requires explicit contract handling, not silent resealing.",
           "depends_on": [
             "tk-0001",
             "tk-0002",
@@ -400,7 +396,7 @@
               ]
             }
           ],
-          "interface": "unisphere-arch-check reads cargo metadata and checks declared normal/dev/build edges against an explicit allowlist; negative graph fixtures must fail. unisphere-proof commands composition|sdk-consumer|installed-cli are self-contained dev tools using std process/fs and existing testkit helpers; they take source/binary paths from explicit repo/temporary context, preserve child status/stdout/stderr, isolate HOME/config/target/install roots and fail when a required target is absent. Unit tests for the tools use controlled fixtures, not a hidden SDK/CLI dependency. Full assembled commands run only after PM composition. Commit fixture manifests as Cargo.toml.template or graph data, never live nested Cargo packages. Materialize manifests only in an isolated temporary root and calculate SDK path dependencies at runtime from explicit repository context; no machine-private absolute path is baked into committed fixtures. sdk-consumer runs its compiled consumer binary under separate sealed hostile HOME/XDG_*/UNISPHERE_* cases and asserts identical explicit configuration/error results. installed-cli runs default machine output and explicit --human success/failure with stream assertions under reduced runtime PATH.",
+          "interface": "unisphere-arch-check reads cargo metadata and checks declared normal/dev/build edges against an explicit allowlist; negative graph fixtures must fail. unisphere-proof commands composition|sdk-consumer|installed-cli are self-contained dev tools using std process/fs and existing testkit helpers; they take source/binary paths from explicit repo/temporary context, preserve child status/stdout/stderr, isolate HOME/config/target/install roots and fail when a required target is absent. Unit tests for the tools use controlled fixtures, not a hidden SDK/CLI dependency. Full assembled commands run only after PM composition.",
           "depends_on": [
             "tk-0001"
           ],
@@ -415,7 +411,7 @@
           "proof": [
             "impl-guide.dd.json#checks/vd-0005"
           ],
-          "notes": "Do not change baseline testkit lib/Cargo.toml; use auto-discovered src/bin targets and current dependencies. Do not pretend placeholder app output satisfies smoke. checks runs fmt/clippy/tests/architecture; boot composes checks then real foundation smoke and reports readiness only for this foundation. Avoid checks/boot recursion. New dependencies or shared helper changes go through PM. checks must inspect and record actual rustc/cargo/clippy/rustfmt versions/provenance before quality gates and fail with remediation if they do not form the approved coherent toolchain; rust-toolchain.toml alone is not enforcement. Keep Cargo build environment separate from reduced product runtime environment."
+          "notes": "Do not change baseline testkit lib/Cargo.toml; use auto-discovered src/bin targets and current dependencies. Do not pretend placeholder app output satisfies smoke. checks runs fmt/clippy/tests/architecture; boot composes checks then real foundation smoke and reports readiness only for this foundation. Avoid checks/boot recursion. New dependencies or shared helper changes go through PM."
         }
       ]
     },
@@ -606,7 +602,7 @@
         },
         {
           "id": "vd-000a",
-          "description": "Real external Cargo consumer in a temporary directory calls SDK default and injected-reader APIs with isolated configuration and no CLI/server. Run the built consumer under sealed hostile HOME/XDG_*/UNISPHERE_* values in separate subprocesses and assert unchanged explicit configuration; never mutate process-global env in parallel tests.",
+          "description": "Real external Cargo consumer in a temporary directory calls SDK default and injected-reader APIs with isolated configuration and no CLI/server.",
           "command": "cargo",
           "args": [
             "run",
@@ -622,7 +618,7 @@
         },
         {
           "id": "vd-000b",
-          "description": "Install app from source into a temporary root and run installed unisphere help/version/config checks outside the checkout with Node/OMP/Builder unavailable at product runtime. Runtime PATH is reduced by the baseline helper; exercise explicit --human success and failure as well as captured/default JSON, asserting stdout/stderr routing. Real TTY detection beyond injected/explicit modes is not claimed.",
+          "description": "Install app from source into a temporary root and run installed unisphere help/version/config checks outside the checkout with Node/OMP/Builder unavailable at product runtime.",
           "command": "cargo",
           "args": [
             "run",
@@ -650,7 +646,7 @@
         },
         {
           "id": "vd-000d",
-          "description": "Real repository product quality gate after tool lane is integrated; not the current unconfigured placeholder. First record actual compiler/cargo/clippy/rustfmt version/provenance and require the documented coherent suite; fail with a named prerequisite on mismatch rather than relying on an inert rustup file.",
+          "description": "Real repository product quality gate after tool lane is integrated; not the current unconfigured placeholder.",
           "command": "harness",
           "args": [
             "checks",
@@ -694,7 +690,7 @@
         ],
         "steps": [
           "PM pij-right-kotallo operates the canonical Builder flow, not a second lifecycle. Before implementation, reconcile current guided position/chore receipts with the written plan/guide; do not use raw nav setters to bypass departure gates. Guide authoring does not release code.",
-          "After guide/decomposition approval and task authoring, PM implements/commits tk-0001 and runs its actual baseline check. Obtain a fresh independent decomposition receipt for that committed source and seal with harness builder contracts <plan> --seal --review <receipt>. Do not invent a future baseline SHA during guide authoring. Initial Cargo.lock materialization/commit is explicitly authorized PM-generated state owned by tk-0004 throughout the lifecycle; it is not part of the frozen baseline.files or a coder delivery.",
+          "After guide/decomposition approval and task authoring, PM implements/commits tk-0001 and runs its actual baseline check. Obtain a fresh independent decomposition receipt for that committed source and seal with harness builder contracts <plan> --seal --review <receipt>. Do not invent a future baseline SHA during guide authoring.",
           "Resolve exact role settings, provision fresh clone tooling explicitly, then call harness builder ready <plan> --unit <id> for each lane. Release all independently ready tk-0002/tk-0003/tk-0005 lanes through harness builder dispatch using clone isolation and --parent pij-right-kotallo; native /pij launch/communication is the runtime underneath Builder, not a substitute for its records.",
           "Require native packet/canary/root/runtime acknowledgement through harness builder ack before the exact implementation release. Observe and ingest the fresh post-release confirmation when delivery was queued; sent/queued is not received. Respect committed baseline/packet hashes and exact scopes. Coders write code/tests only; PM owns gates/formatting and does not share a mutable worktree with them.",
           "Take committed UnitDelivery receipts as lanes finish, verify their packet/baseline/ownership and confirmed release, and import through harness builder compose <plan> --import <deliveries.json> in the declared order. Pipeline ready work by real dependencies, not by CLI completion. Do not manually cherry-pick around a refusal; preserve/report the error and resolve it with the harness owner.",
@@ -732,8 +728,7 @@
           "harness builder guide <plan> --check is structural proof only; independent architectural judgement is a separate actual peer review.",
           "ReviewReceipt uses builder/team section review with scope decomposition|composition, exact current subject_sha, plan/guide/report FileDigest values, requested role and independently observed native peer/model/high-effort/session/PID/root evidence.",
           "Reviewer report names material findings and dispositions; approved cannot contain unresolved material findings. Record through harness builder review <plan> --receipt <path>, preserving immutable history.",
-          "No model/runtime support means blocked/not-executed, never relabelled success; requested settings and launch argv are not provider-served model attestation.",
-          "For ac-0008 no-network/ambient absence, independently inspect restricted dependency and source surfaces for std::net/client/process/FFI/unsafe/global-env access; report this judgement separately from executed subprocess tests. A dependency list alone is not proof of no system calls."
+          "No model/runtime support means blocked/not-executed, never relabelled success; requested settings and launch argv are not provider-served model attestation."
         ]
       }
     },

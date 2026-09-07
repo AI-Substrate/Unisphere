@@ -1,0 +1,26 @@
+.harness/records/retro/2026-09-07/004-foundation-guide-decomposition.md
+  h_9e71e8b09f7cf2 1-50
+docs/plans/001-sdk-cli-foundation/assets/pm-handoff.md
+  h_9e71e8b09f7cf2 1-38
+docs/plans/001-sdk-cli-foundation/assets/reviews/decomposition-opus-review-r2.md
+  h_9e71e8b09f7cf2 1-100
+docs/plans/001-sdk-cli-foundation/assets/team/basis-95da8bf6c3d65077ae18085a379c9c4f780571a7f2ef62d5ac1a65644ae6cdb0.json
+  h_9e71e8b09f7cf2 1-776
+docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-d325a8f-pij-angry-hekarro-r2.dd.json
+  h_9e71e8b09f7cf2 1-164
+docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-d325a8f-pij-angry-hekarro-r2.dd.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/001-sdk-cli-foundation/requirements-spine.md
+  h_9e71e8b09f7cf2 3,10,90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "5865a38566904989c384726761f2a4e503e47b7f",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

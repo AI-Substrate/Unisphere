@@ -25,14 +25,10 @@ pub(crate) fn emit(
     };
     let result = match mode {
         Mode::Json => json(response, stdout).and_then(|()| stdout.flush()),
-        Mode::Human => {
-            let writer = if matches!(response, Response::Failure(_)) {
-                &mut *stderr
-            } else {
-                stdout
-            };
-            human(response, writer).and_then(|()| writer.flush())
+        Mode::Human if matches!(response, Response::Failure(_)) => {
+            human(response, stderr).and_then(|()| stderr.flush())
         }
+        Mode::Human => human(response, stdout).and_then(|()| stdout.flush()),
     };
     if result.is_err() {
         // The failed writer may already contain a prefix. Do not append a second

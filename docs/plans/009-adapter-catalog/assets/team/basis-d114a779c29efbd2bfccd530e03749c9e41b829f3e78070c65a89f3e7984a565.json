@@ -17,13 +17,11 @@
         "principles": "Pure immutable metadata in core; CLI parses and renders injected descriptor references; the existing app registry owns each descriptor and its executable runner. No new dependency, discovery service, plugin loader or environment expansion.",
         "composition_root": "crates/app/src/adapters.rs",
         "contracts": [
-          "core exports serializable AdapterDescriptor {id, application, description, locations, capabilities}; all string/slice data is static and I/O-free. No duplicate generic limitations field; explicit capability values carry unsupported behaviors.",
+          "core exports serializable AdapterDescriptor {id, application, description, locations, capabilities, limitations}; all string/slice data is static and I/O-free.",
           "LocationHint {platforms, base, path, session_glob, storage_format}; base=home is symbolic and never expanded. Claude usual hint is .claude/projects with */*.jsonl; paths remain caller-overridable.",
-          "AdapterCapabilities {export_platforms, output_formats, sdk_caller_owned_cursor, cursor_source_assumption, cli_persisted_resume, delayed_revision_reconciliation, lossless_archive}; current platforms=[unix], format=[otlp-jsonl], caller-owned cursor=true, source assumption=append_only, and remaining three booleans=false. A cursor is a mechanism, not safety under rewrite/regrowth/truncation-above-checkpoint.",
+          "AdapterCapabilities {export_platforms, output_formats, sdk_cursor_resume, cli_persisted_resume, delayed_revision_reconciliation, lossless_archive}; current platforms=[unix], format=[otlp-jsonl], SDK resume=true and remaining three booleans=false.",
           "CLI run_adapters(Vec<OsString>, &CliContext, &[&AdapterDescriptor], &mut dyn Write, &mut dyn Write) -> u8; reuse JSON/human/help/failure output conventions. Successful JSON is {ok:true,command:adapters.list,v:1,data:{adapters:[...]}}.",
-          "Existing AdapterRegistration stores descriptor+run; const array and stack descriptor-reference projection serve catalog and session selection from descriptor.id. No duplicate ID/name registry.",
-          "Production descriptor.id must equal emitted unisphere.source.adapter. production_catalog_ids_match_exported_provenance iterates the actual production registry and exports its fixture through each runner, not a parallel catalog or handwritten identity-pair assertion.",
-          "CLI JSON failures use {ok:false,command:adapters.list,v:1,error:...} with existing safe core failure fields; JSON goes to stdout, human failures to stderr, output-write failures exit1 without appending a second envelope. Human success lists id/application/description, symbolic location hints and capability values, explicitly stating hints are not detected installations. Piped output defaults JSON; terminal output defaults human; --json/--human override after adapters."
+          "Existing AdapterRegistration stores descriptor+run; const array and stack descriptor-reference projection serve catalog and session selection from descriptor.id. No duplicate ID/name registry."
         ]
       }
     },
@@ -44,8 +42,7 @@
           "path": "App registration -> injected CLI descriptor view -> stdout; explicit session dispatch remains separate.",
           "proof": [
             "impl-guide.dd.json#checks/vd-0002",
-            "impl-guide.dd.json#checks/vd-0003",
-            "impl-guide.dd.json#checks/vd-0004"
+            "impl-guide.dd.json#checks/vd-0003"
           ]
         },
         {
@@ -55,8 +52,7 @@
           "path": "App registration -> injected CLI descriptor view -> stdout; explicit session dispatch remains separate.",
           "proof": [
             "impl-guide.dd.json#checks/vd-0002",
-            "impl-guide.dd.json#checks/vd-0003",
-            "impl-guide.dd.json#checks/vd-0004"
+            "impl-guide.dd.json#checks/vd-0003"
           ]
         },
         {
@@ -66,8 +62,7 @@
           "path": "App registration -> injected CLI descriptor view -> stdout; explicit session dispatch remains separate.",
           "proof": [
             "impl-guide.dd.json#checks/vd-0002",
-            "impl-guide.dd.json#checks/vd-0003",
-            "impl-guide.dd.json#checks/vd-0004"
+            "impl-guide.dd.json#checks/vd-0003"
           ]
         },
         {
@@ -77,8 +72,7 @@
           "path": "App registration -> injected CLI descriptor view -> stdout; explicit session dispatch remains separate.",
           "proof": [
             "impl-guide.dd.json#checks/vd-0002",
-            "impl-guide.dd.json#checks/vd-0003",
-            "impl-guide.dd.json#checks/vd-0004"
+            "impl-guide.dd.json#checks/vd-0003"
           ]
         },
         {
@@ -88,8 +82,7 @@
           "path": "App registration -> injected CLI descriptor view -> stdout; explicit session dispatch remains separate.",
           "proof": [
             "impl-guide.dd.json#checks/vd-0002",
-            "impl-guide.dd.json#checks/vd-0003",
-            "impl-guide.dd.json#checks/vd-0004"
+            "impl-guide.dd.json#checks/vd-0003"
           ]
         },
         {
@@ -99,8 +92,7 @@
           "path": "App registration -> injected CLI descriptor view -> stdout; explicit session dispatch remains separate.",
           "proof": [
             "impl-guide.dd.json#checks/vd-0002",
-            "impl-guide.dd.json#checks/vd-0003",
-            "impl-guide.dd.json#checks/vd-0004"
+            "impl-guide.dd.json#checks/vd-0003"
           ]
         }
       ]
@@ -124,8 +116,7 @@
             "crates/app/src/adapters.rs",
             "crates/app/src/main.rs",
             "docs/cli.md",
-            "docs/adapters.md",
-            "crates/app/tests/adapter_catalog.rs"
+            "docs/adapters.md"
           ],
           "reads": [],
           "interface": "Architecture contracts above; existing collection APIs stay unchanged.",
@@ -141,8 +132,7 @@
           ],
           "proof": [
             "impl-guide.dd.json#checks/vd-0002",
-            "impl-guide.dd.json#checks/vd-0003",
-            "impl-guide.dd.json#checks/vd-0004"
+            "impl-guide.dd.json#checks/vd-0003"
           ]
         }
       ]
@@ -230,18 +220,6 @@
           ],
           "cwd": ".",
           "timeout_ms": 360000
-        },
-        {
-          "id": "vd-0004",
-          "description": "Real binary JSON, human, help/error and hostile-environment/inaccessible-store catalog scenarios",
-          "command": "cargo",
-          "args": [
-            "test",
-            "--test",
-            "adapter_catalog"
-          ],
-          "cwd": ".",
-          "timeout_ms": 180000
         }
       ]
     },
@@ -257,8 +235,7 @@
         ],
         "proof": [
           "impl-guide.dd.json#checks/vd-0002",
-          "impl-guide.dd.json#checks/vd-0003",
-          "impl-guide.dd.json#checks/vd-0004"
+          "impl-guide.dd.json#checks/vd-0003"
         ]
       }
     },

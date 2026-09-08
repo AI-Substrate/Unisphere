@@ -9,7 +9,7 @@
         "title": "Backpressure survey",
         "plan": "../plan.dd.json#meta",
         "certainty": "Confident",
-        "basis_sha": "31e3ccf47289285ba10f64bce57d74952cce8dd740f5f162939975bbaf18fb5c"
+        "basis_sha": "b5cfc5fb5d3d590589607010f963b522acd34b2c77154a08aabbebc0d24d68d8"
       }
     },
     {
@@ -37,7 +37,7 @@
         },
         {
           "id": "bp-0003",
-          "criterion": "Capabilities describe explicit export platforms/formats and caller-owned SDK cursor support separately from unsupported persisted CLI resume, delayed revision reconciliation and lossless archival.",
+          "criterion": "Capabilities describe explicit export platforms/formats and a caller-owned SDK cursor with an append-only source assumption, separately from unsupported persisted CLI resume, delayed revision reconciliation and lossless archival.",
           "phase": "ph-14a2",
           "mode": "EXTEND",
           "tier": "human-judgement",
@@ -57,7 +57,7 @@
         },
         {
           "id": "bp-0005",
-          "criterion": "Metadata and executable dispatch derive from one registration; adding a fixture registration exposes its descriptor and runs its adapter, while the production catalog excludes that fixture and existing config/session behavior remains compatible.",
+          "criterion": "Metadata and executable dispatch derive from one registration, and every production descriptor id equals emitted unisphere.source.adapter provenance. A fixture registration exposes its descriptor and runs its adapter, while the production catalog excludes fixtures and existing config/session behavior remains compatible.",
           "phase": "ph-14a2",
           "mode": "EXTEND",
           "tier": "computational",

@@ -47,9 +47,9 @@ _Empty._
 | --- | --- | --- | --- |
 | dw-0001 | A successful adapters list --json emits one v1 machine-readable envelope containing only registered production adapters, with stable id, application name and concise description. | [ ] unchecked | [bp-0001](../../backpressure.dd.md#rows) |
 | dw-0002 | Each descriptor gives structured usual-location hints with platform, home base, relative path, session glob and storage format; hints never assert a local installation or existing store. | [ ] unchecked | [bp-0002](../../backpressure.dd.md#rows) |
-| dw-0003 | Capabilities describe explicit export platforms/formats and caller-owned SDK cursor support separately from unsupported persisted CLI resume, delayed revision reconciliation and lossless archival. | [ ] unchecked | [bp-0003](../../backpressure.dd.md#rows) |
+| dw-0003 | Capabilities describe explicit export platforms/formats and a caller-owned SDK cursor with an append-only source assumption, separately from unsupported persisted CLI resume, delayed revision reconciliation and lossless archival. | [ ] unchecked | [bp-0003](../../backpressure.dd.md#rows) |
 | dw-0004 | Catalog listing performs no source loading, private-store scan, home/config environment expansion or command execution; actual discovery remains explicit and caller-overridable. | [ ] unchecked | [bp-0004](../../backpressure.dd.md#rows) |
-| dw-0005 | Metadata and executable dispatch derive from one registration; adding a fixture registration exposes its descriptor and runs its adapter, while the production catalog excludes that fixture and existing config/session behavior remains compatible. | [ ] unchecked | [bp-0005](../../backpressure.dd.md#rows) |
+| dw-0005 | Metadata and executable dispatch derive from one registration, and every production descriptor id equals emitted unisphere.source.adapter provenance. A fixture registration exposes its descriptor and runs its adapter, while the production catalog excludes fixtures and existing config/session behavior remains compatible. | [ ] unchecked | [bp-0005](../../backpressure.dd.md#rows) |
 | dw-0006 | Help, invalid arguments and output failures keep existing CLI exit/output safety conventions; no hostile argument content leaks into public errors. | [ ] unchecked | [bp-0006](../../backpressure.dd.md#rows) |
 
 <a id="goals"></a>

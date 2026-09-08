@@ -56,7 +56,7 @@
           },
           {
             "id": "dw-0003",
-            "assertion": "Capabilities describe explicit export platforms/formats and caller-owned SDK cursor support separately from unsupported persisted CLI resume, delayed revision reconciliation and lossless archival.",
+            "assertion": "Capabilities describe explicit export platforms/formats and a caller-owned SDK cursor with an append-only source assumption, separately from unsupported persisted CLI resume, delayed revision reconciliation and lossless archival.",
             "state": "unchecked",
             "pressure": "../../backpressure.dd.json#rows/bp-0003"
           },
@@ -68,7 +68,7 @@
           },
           {
             "id": "dw-0005",
-            "assertion": "Metadata and executable dispatch derive from one registration; adding a fixture registration exposes its descriptor and runs its adapter, while the production catalog excludes that fixture and existing config/session behavior remains compatible.",
+            "assertion": "Metadata and executable dispatch derive from one registration, and every production descriptor id equals emitted unisphere.source.adapter provenance. A fixture registration exposes its descriptor and runs its adapter, while the production catalog excludes fixtures and existing config/session behavior remains compatible.",
             "state": "unchecked",
             "pressure": "../../backpressure.dd.json#rows/bp-0005"
           },

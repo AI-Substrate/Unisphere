@@ -1,0 +1,19 @@
+docs/plans/009-adapter-catalog/assets/execution-log.dd.json
+  s_61dfe47e9838df::t_7fe1ee7b9ebf54 1-8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "2e3109c1273c38df76c9db5fb2f082c28a48eb5b",
+  "prompts": {},
+  "sessions": {
+    "s_61dfe47e9838df": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cbe08128-4097-4473-9f99-71e9415824f6",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

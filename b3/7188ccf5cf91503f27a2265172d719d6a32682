@@ -1,0 +1,18 @@
+docs/plans/archive/010-native-adapters/assets/formal-archive-completion.json
+  h_9e71e8b09f7cf2 1-15
+docs/plans/archive/010-native-adapters/the-flow.json
+  h_9e71e8b09f7cf2 352-374,537,554,561-566,568-569
+docs/plans/archive/010-native-adapters/the-flow.md
+  h_9e71e8b09f7cf2 4,6,15,60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "b37188ccf5cf91503f27a2265172d719d6a32682",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

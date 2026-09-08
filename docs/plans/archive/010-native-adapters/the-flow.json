@@ -337,6 +337,18 @@
         "from": "assumed",
         "to": "in_progress"
       }
+    },
+    {
+      "id": "UPD-011",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-08T22:38:25.739Z",
+      "details": {
+        "node": "post-flight",
+        "fields": [
+          "comments"
+        ]
+      }
     }
   ],
   "nodes": [
@@ -431,7 +443,7 @@
         "review-1"
       ],
       "dd_link": {
-        "address": "docs/plans/010-native-adapters/assets/tasks/phase-1/tasks.dd.json#tasks",
+        "address": "docs/plans/archive/010-native-adapters/assets/tasks/phase-1/tasks.dd.json#tasks",
         "basis_sha": "601d5a94cc60fbbd96b605d6890a56e1c6f3a8f738ac6e5cd5caed82fecc6b2a",
         "reading": {
           "status": "complete",
@@ -506,7 +518,7 @@
       ],
       "zone": "postflight",
       "dd_link": {
-        "address": "docs/plans/010-native-adapters/plan.dd.json",
+        "address": "docs/plans/archive/010-native-adapters/plan.dd.json",
         "check": "plan-validate"
       },
       "instructions": [
@@ -516,7 +528,15 @@
         "If the gate refuses and departing anyway is the HUMAN's decision, they pass --force — it records a defended override. An agent may not force a dd gate on its own judgment.",
         "Tidy is separate: harness builder tidy <allocation> --preservation <receipt> re-verifies ownership, runtime release and surviving bytes/refs; external ownership or idle-only evidence cannot authorize removal."
       ],
-      "modified_at": "2026-09-08T22:38:15.702Z"
+      "modified_at": "2026-09-08T22:38:25.739Z",
+      "comments": [
+        {
+          "at": "2026-09-08T22:38:25.739Z",
+          "text": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-formal-preserved/f098aad7-0985-4645-a1f5-9c6d425ce129/receipt/preservation.dd.json",
+          "source": "agent",
+          "kind": "builder-preservation"
+        }
+      ]
     },
     {
       "id": "ship",
@@ -691,5 +711,5 @@
       "ran_at": "2026-09-08T22:38:15.572Z"
     }
   ],
-  "plan_dir": "docs/plans/010-native-adapters"
+  "plan_dir": "docs/plans/archive/010-native-adapters"
 }

@@ -1,0 +1,9 @@
+{
+  "source_commit": "c3b2fb969e68c7b0abbb1c938407738e9ddfbf34",
+  "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-pi",
+  "observed": {
+    "exit_code": 0,
+    "data": "crates/adapter-pi/Cargo.toml\n  h_9e71e8b09f7cf2 1-15\ncrates/adapter-pi/src/lib.rs\n  h_9e71e8b09f7cf2 1-505\ncrates/adapter-pi/tests/fixtures/v3-tree.jsonl\n  h_9e71e8b09f7cf2 1-18\ncrates/adapter-pi/tests/mapping.rs\n  h_9e71e8b09f7cf2 1-259\ndocs/pi-adapter.md\n  h_9e71e8b09f7cf2 1-145\n---\n{\n  \"schema_version\": \"authorship/3.0.0\",\n  \"git_ai_version\": \"1.6.21\",\n  \"base_commit_sha\": \"c3b2fb969e68c7b0abbb1c938407738e9ddfbf34\",\n  \"prompts\": {},\n  \"humans\": {\n    \"h_9e71e8b09f7cf2\": {\n      \"author\": \"Jordan Knight <jakkaj@gmail.com>\"\n    }\n  }\n}",
+    "stderr": ""
+  }
+}

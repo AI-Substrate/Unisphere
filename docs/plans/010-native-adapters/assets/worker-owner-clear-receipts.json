@@ -1,0 +1,27 @@
+{
+  "at": "2026-09-08T08:08:08.429Z",
+  "source": "Live native owner acknowledgments after durable PM retention",
+  "clears": [
+    {
+      "peer": "pij-adorable-bat",
+      "cleared": 1
+    },
+    {
+      "peer": "pij-kind-turkey",
+      "cleared": 2
+    },
+    {
+      "peer": "pij-homeless-dudley",
+      "cleared": 2
+    },
+    {
+      "peer": "pij-mechanical-tsarina",
+      "cleared": 1
+    },
+    {
+      "peer": "pij-ideological-koala",
+      "cleared": 1
+    }
+  ],
+  "pm_cleared_worker_buckets": false
+}

@@ -1,0 +1,115 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "review",
+      "value": {
+        "record_type": "review",
+        "id": "rv-plan010-composition-opus-r1",
+        "recorded_at": "2026-09-08T08:02:36.711966Z",
+        "scope": "composition",
+        "subject_sha": "c6f3636b394f0e17445eb2e143f6ac2c6d1ec998",
+        "plan": {
+          "path": "docs/plans/010-native-adapters/plan.dd.json",
+          "sha256": "fdd88eb6925cc55243d76f6e5d4f682cf91ac8daa3e5eddc6cdc78915ccd6511"
+        },
+        "guide": {
+          "path": "docs/plans/010-native-adapters/assets/impl-guide.dd.json",
+          "sha256": "38d5a0d69c2b56da77e5f2f4648d0592586e4df4a76f0523a1c2a67c3a45c475"
+        },
+        "reviewer_id": "pij-huge-nigel",
+        "requested": {
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5",
+          "effort": "high",
+          "source": {
+            "harness": "guide",
+            "model": "guide",
+            "effort": "guide"
+          }
+        },
+        "observed": {
+          "peer_id": "pij-huge-nigel",
+          "root": "/Users/jordanknight/substrate/unisphere/unishpere-main",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5",
+          "effort": "high",
+          "native_session": "01a07e75-cb05-70b6-a10d-db61a6ed87d8",
+          "pid": 71450,
+          "argv": [
+            "omp",
+            "--auto-approve",
+            "--model",
+            "github-copilot/claude-opus-5",
+            "--thinking",
+            "high"
+          ],
+          "evidence": [
+            "Pinned the candidate independently: c6f3636b 'feat(native): compose six harness adapters and revision-safe snapshot exports', parent 114e1535, and recomputed both packet digests - plan fdd88eb6925cc55243d76f6e5d4f682cf91ac8daa3e5eddc6cdc78915ccd6511 and guide 38d5a0d69c2b56da77e5f2f4648d0592586e4df4a76f0523a1c2a67c3a45c475 - as matches.",
+            "Folded the evidence successor 32a4544e after proving it evidence-only rather than accepting the claim: git diff --name-only c6f3636b..32a4544e over crates, all Cargo.toml, Cargo.lock, plan.dd.json, impl-guide.dd.json and docs/fidelity.md is empty; the commit is 11 files, +503/-0, all retained boot/verification/probe/retro assets. Plan and guide digests unchanged after folding.",
+            "Diffed the frozen contract instead of accepting the no-byte-identity caveat: crates/core/src/snapshot.rs is d0ff4789e612cf6a7eafd8b5bbc1a5ffaf9d5f8ed9ba0a1f24d80392bad37444 here versus f455b99b at R2, and the entire delta is the Clippy collapsed-if rewrite of SnapshotRef::validate from 'if let .. { if a || b { .. } }' to 'if let .. && (a || b) { .. }'. Same guard, same PipelineErrorKind::InvalidInput, same reachable states; workspace is edition 2024 with rust-version 1.95, so the let-chain is in-language.",
+            "R1 and R2 review artifacts remain byte-identical at this subject: contracts-opus-r1.md 1cd645df, contracts-opus-r2.md ad4fc061, receipts 4d1eed8b and bf0dddc8.",
+            "C1 is now executable, not textual: proof/collection.rs selects required provenance by representation - snapshots must carry unisphere.source.key/.revision/.format, JSONL must carry .offset - and actively rejects any snapshot record carrying an offset with 'snapshot invents a byte offset'. It also asserts unisphere.profile.version has intValue == \"1\", which retires my R2 residual D1; every production emission I read is json!(1).",
+            "C3 is enforced by a real registry test, not a metadata assertion: app/src/adapters.rs holds one private nine-entry AdapterRegistration array carrying SourceRepresentation, and production_catalog_ids_match_exported_provenance iterates every registration, materialises a representation-appropriate fixture including building an actual SQLite database for cursorDiskKV, runs a real export, and asserts descriptor.id provenance plus offset presence/absence on every emitted record.",
+            "Registration coverage cannot silently regress: proof/native.rs compares the installed CLI's 'adapters list --json' ID set against its own case list and fails on any difference, and the purity sensor now enumerates every unisphere-adapter-* package from cargo metadata and errors if a package's src yields no files.",
+            "C4 holds at both seams: FileSnapshotLoader validates source and limits before touching the filesystem and calls snapshot.validate before returning, and SnapshotCollector::collect_snapshot independently re-validates and rejects a loader that returns a different SnapshotRef than requested, so an injected third-party SnapshotLoader cannot smuggle an unbounded or substituted snapshot into a pure mapper.",
+            "Three-way parity is genuine: proof/native.rs builds the in-tree CLI, cargo install --debug's a second copy to a temporary root, and compiles a separate Cargo project using only unisphere_sdk public API, requiring byte-identical stdout across all three for ten cases in both content policies with the SDK's stderr empty. The JSONL side runs --max-records 1 so multi-batch cursor iteration must reproduce single-shot bytes.",
+            "Revision semantics proven by real mutation: changed document (revision changes, stale SENSITIVE-USER-TEXT absent), emptied requests (revision changes again, deleted request gone), truncated journal operation (exit 1 with EMPTY stdout - no prefix publication), completed late append (new revision, late record present), and seeded SQLite late/update/delete where delete leaves exactly one record, the closing manifest alone - the contract's observable-empty-projection clause end to end.",
+            "Checkpoint-after-output proven with a real failing writer: the consumer's PartialThenFail accepts 11 bytes then returns BrokenPipe; the probe asserts PipelineErrorKind::Write, exactly 11 bytes landed and no checkpoint, then retries successfully, publishing checkpoint_on_failure false and partial_bytes 11 - an honest statement that bytes can land while no checkpoint issues. A deleted source likewise yields exit 1 and empty stdout.",
+            "Filesystem storage safety read line by line: O_NOFOLLOW|O_NONBLOCK with a non-regular-file rejection closes the leaf-symlink race and FIFO stall; verify re-checks symlink_metadata and the live descriptor against dev/ino plus a (len, mtime, mtime_nsec, ctime, ctime_nsec) stamp for JSON; the in-file test walks append, truncate, rewrite-with-restored-mtime, rename-replace, unlink and symlink-swap, deliberately restoring mtime to prove ctime carries detection. SQLite skips the stamp with a stated WAL reason while keeping dev/ino.",
+            "SQLite path is the strongest component: canonicalises only the trusted parent and rejoins the filename so SQLITE_OPEN_NOFOLLOW still guards the leaf; read-only, no URI, explicit rejection of immutable=1 because it would discard live WAL updates; trusted schema and views disabled; SQLITE_LIMIT_LENGTH bounded; non-UTF-8 database encodings refused rather than under-budgeted; pragma_table_list and table_xinfo verify an ordinary table with real non-hidden key/value columns, excluding views, virtual and generated columns; octet_length preflight on stored columns with ORDER BY deliberately omitted to avoid an unbounded sorter, sorting in Rust so the revision stays deterministic; duplicate keys rejected. Table name is constrained to [A-Za-z0-9_] by validate and quoted.",
+            "Revision digest is collision-resistant by construction: domain-separated with 'unisphere.snapshot.v1\\0', includes format and table, and length-prefixes every key and value, so two different key/value partitions cannot collide into one revision.",
+            "Mapper purity is structural, not promised: every adapter crate is #![forbid(unsafe_code)] and the architecture sensor restricts adapter dependencies to unisphere-core, serde_json and time, admitting rusqlite only for loader-snapshot and as an app dev-dependency, so a mapper cannot acquire a database handle.",
+            "Keys are native or documented-structural throughout: 'document', loader 'journal:<ordinal>', exact cursorDiskKV strings, and JSON-Pointer-style suffixes such as 'document#/requests/0/message'. The reduced VS Code journal is keyed 'journal:reduced' rather than attributed to any single physical line, and the manifest's '$snapshot' sentinel is clearly synthetic rather than a pretend native key.",
+            "Cursor IDE mapper reviewed for honesty: composer-declared bubble order, _v >= 2 gate, bubble type cross-checked against its header entry, orphan and duplicate bubble references diagnosed as UnsupportedRecord/InvalidField rather than dropped, token counts tagged with an explicit native_bubble_snapshot scope so they cannot read as operation totals, and images/attachedCodeChunks/contextPieces/allThinkingBlocks never dereferenced - they raise UnsupportedPart and set unisphere.content.omitted.",
+            "docs/fidelity.md classifies rather than flatters, naming the unavailable composerHeaders cross-table join, the opaque Cursor CLI BLOB codec, Pi v1/v2 migration and active-branch reconstruction, Copilot legacy coverage bounded by two-file structural evidence with model/usage/timestamps not inferred, historical unversioned journal envelopes, producer-omitted LM tool parameters as a source limitation, and source-redacted content as a source limitation. Its counts reconcile with tested-native-deliveries.json: Copilot 10+8=18, Cursor 10+13=23.",
+            "Formal gaps are named, not dressed: composition-verification-summary.json records formal_builder_receipt null and retains the actual harness builder compose --verify refusal (E475, 'Stale evidence: crates/core/src/snapshot.rs') with its cause; the retained boot is exit_code 0, ready true, six gates green, five proof modes at exit 0, and its own limitations array ends with 'independent core/adapter source review is additionally required', which is this review.",
+            "Native binding observed live at authoring time: PI_SESSION_FILE resolves to native session 01a07e75-cb05-70b6-a10d-db61a6ed87d8 and the parent omp process is pid 71450 with argv 'omp --auto-approve --model github-copilot/claude-opus-5 --thinking high'. An observed process invocation, not an attestation of the serving provider identity."
+          ],
+          "gaps": [
+            "I ran nothing. No build, test, clippy, rustdoc, formatter or linter, and no product/plan/guide/flow/team edit. Every runtime outcome cited is PM's retained evidence, read and reconciled against source, never reproduced - so my confidence in those outcomes is exactly my confidence in the retained artifacts.",
+            "Every fixture is synthetic and bounded by retained structural evidence, so nothing here establishes that any dialect's interpretation matches what the vendor application actually means. Semantic fidelity against a live installation is unproven by design and by policy.",
+            "Evidence is single-host Unix on this machine. No Windows, no Linux, no live installation, no network-denial and no all-platform claim; loader-snapshot's non-unix arm returns Unsupported and was not exercised.",
+            "The loader trusts ancestor directories by documented design, matching the shared JSONL loader. A hostile ancestor directory is out of the threat model, and I did not evaluate that surface.",
+            "The formal Builder chain is NOT satisfied. harness builder compose --verify refuses with E475 and formal_builder_receipt is null; five lanes used operator-authorized native/adopted launch with no original dispatch receipts (row 54) and the Clippy correction moved frozen bytes (row 55). PM's tooling owner calls both harness defects; I record the refusal as it stands and take no position on the tooling diagnosis.",
+            "K1's memory multiplier is my arithmetic over size_of::<serde_json::Value>(), not a measurement. PM should measure before choosing a remedy.",
+            "I read the six mapper crates for provenance, purity, content policy and honest classification, and read the Cursor IDE and VS Code Copilot mappers plus the journal reducer closely. I did not line-audit every branch of all six dialect mappers; per-dialect semantic correctness rests on their scoped regressions, which I did not run.",
+            "observed.root is this seat's working folder while the reviewed workspace is /Users/jordanknight/substrate/unisphere/unisphere-native-adapters. Divergence is by design; the subject is pinned by subject_sha and the two digests."
+          ]
+        },
+        "verdict": "approved",
+        "report": {
+          "path": "docs/plans/010-native-adapters/assets/reviews/composition-opus-r1.md",
+          "sha256": "f72935cfa47137c9d32ca61533c0d0ae1ffc34e83dae250e8cb4cd759b12c213"
+        },
+        "findings": [
+          {
+            "id": "K1",
+            "severity": "low",
+            "disposition": "accepted",
+            "description": "The VS Code journal reducer bounds synthesized sparse-array nulls at total_raw_bytes/4, which correctly stops a tiny hostile 'i' from requesting gigabytes, but the budget counts serde_json::Value slots while the comment reasons in JSON bytes. Each slot costs size_of::<Value>() resident bytes, not four, so a single crafted operation inside a 32 MiB record can claim roughly 8M null slots and peak memory becomes a multiple of max_snapshot_bytes rather than comparable to it. Bounded and non-fatal, and the direction is right, but an operator sizing a collector from max_snapshot_bytes will under-predict RSS. Accepted rather than held because the failure mode is memory pressure under a hostile local file, not incorrect output or an unbounded allocation. My multiplier is arithmetic, not measurement: PM should measure before choosing between bounding holes against max_records and documenting the ratio in docs/snapshot-loader.md.",
+            "evidence": "crates/adapter-vscode-copilot/src/journal.rs reduce() computes holes as the checked sum of record byte lengths divided by 4, and extend() decrements that budget by the number of added elements before array.resize(length, Value::Null), erroring with BatchLimit on exhaustion; crates/core/src/snapshot.rs SnapshotLimits::default() is max_record_bytes 32 MiB and max_snapshot_bytes 64 MiB."
+          },
+          {
+            "id": "K2",
+            "severity": "low",
+            "disposition": "accepted",
+            "description": "vscode-copilot's descriptor advertises four location hints, two with storage_format json_document and two with json_journal, while its registry entry pins SourceRepresentation::JsonDocument. Exporting a real *.jsonl journal therefore requires the operator to add --source-format json-journal; without it the journal is parsed as a single document and fails InvalidData. It fails closed and never mismaps, and proof/native.rs covers the journal path explicitly, so this is a discoverability cliff rather than a correctness hole. It is also nearly free to close because the machine-readable answer is already published in the catalog: the CLI could derive the format from the matched hint's storage_format instead of requiring the operator to restate it.",
+            "evidence": "crates/adapter-vscode-copilot/src/lib.rs DESCRIPTOR locations declare */chatSessions/*.json as json_document and */chatSessions/*.jsonl as json_journal for macos and linux; crates/app/src/adapters.rs registers that descriptor with source: SourceRepresentation::JsonDocument; crates/cli/src/snapshots.rs resolves format from (source_format, default_format, table) with the (None, format, None) arm returning the registration default."
+          },
+          {
+            "id": "K3",
+            "severity": "low",
+            "disposition": "accepted",
+            "description": "In the retained exact-candidate boot, data.scope is configuration-and-native-session-projections while the nested data.checks.data.scope is still configuration-and-claude-jsonl. The quality lane under-claims what it now gates: six adapters, the snapshot loader and the extended architecture and purity sensors all run inside it. Under-claiming is the safe direction and nothing depends on the string, but a reader citing harness checks alone would understate delivered coverage. Harness-owned and adjacent to the rows 54/55 defects, not product source, so accepted rather than held.",
+            "evidence": "docs/plans/010-native-adapters/assets/committed-candidate-boot.json stdout: data.scope 'configuration-and-native-session-projections', data.ready true, data.checks.data.scope 'configuration-and-claude-jsonl', six gates format/clippy/tests/rustdoc/architecture/harness-regression all ok, five proofs composition/sdk-consumer/installed-cli/collection/native at exit code 0."
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -24,93 +24,101 @@
           "id": "tk-0001",
           "title": "PM shared contracts",
           "phase": "ph-cce1",
-          "state": "unchecked",
+          "state": "checked",
           "success": "Own immutable existing JSONL/catalog contracts plus new raw revision snapshot types; no storage or mapping implementation.",
           "satisfies": [],
-          "done": "tasks.dd.json#done_when/tk-0001"
+          "done": "tasks.dd.json#done_when/tk-0001",
+          "receipt": "../../execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "tk-0002",
           "title": "Codex pure mapper",
           "phase": "ph-cce1",
-          "state": "unchecked",
+          "state": "checked",
           "success": "Complete Codex native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/codex-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation.",
           "satisfies": [
             "../../../plan.dd.json#acceptance_criteria/ac-0001"
           ],
-          "done": "tasks.dd.json#done_when/tk-0002"
+          "done": "tasks.dd.json#done_when/tk-0002",
+          "receipt": "../../execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "tk-0003",
           "title": "Oh My Pi pure mapper",
           "phase": "ph-cce1",
-          "state": "unchecked",
+          "state": "checked",
           "success": "Complete Oh My Pi native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/oh-my-pi-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation.",
           "satisfies": [
             "../../../plan.dd.json#acceptance_criteria/ac-0002"
           ],
-          "done": "tasks.dd.json#done_when/tk-0003"
+          "done": "tasks.dd.json#done_when/tk-0003",
+          "receipt": "../../execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "tk-0004",
           "title": "Pi pure mapper",
           "phase": "ph-cce1",
-          "state": "unchecked",
+          "state": "checked",
           "success": "Complete Pi native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/pi-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation.",
           "satisfies": [
             "../../../plan.dd.json#acceptance_criteria/ac-0003"
           ],
-          "done": "tasks.dd.json#done_when/tk-0004"
+          "done": "tasks.dd.json#done_when/tk-0004",
+          "receipt": "../../execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "tk-0005",
           "title": "Copilot CLI pure mapper",
           "phase": "ph-cce1",
-          "state": "unchecked",
+          "state": "checked",
           "success": "Complete Copilot CLI native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/copilot-cli-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation.",
           "satisfies": [
             "../../../plan.dd.json#acceptance_criteria/ac-0004"
           ],
-          "done": "tasks.dd.json#done_when/tk-0005"
+          "done": "tasks.dd.json#done_when/tk-0005",
+          "receipt": "../../execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "tk-0006",
           "title": "VS Code Copilot pure mapper",
           "phase": "ph-cce1",
-          "state": "unchecked",
+          "state": "checked",
           "success": "Complete VS Code Copilot native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/vscode-copilot-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation.",
           "satisfies": [
             "../../../plan.dd.json#acceptance_criteria/ac-0005"
           ],
-          "done": "tasks.dd.json#done_when/tk-0006"
+          "done": "tasks.dd.json#done_when/tk-0006",
+          "receipt": "../../execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "tk-0007",
           "title": "Cursor pure mapper",
           "phase": "ph-cce1",
-          "state": "unchecked",
+          "state": "checked",
           "success": "Complete Cursor native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/cursor-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation.",
           "satisfies": [
             "../../../plan.dd.json#acceptance_criteria/ac-0006"
           ],
-          "done": "tasks.dd.json#done_when/tk-0007"
+          "done": "tasks.dd.json#done_when/tk-0007",
+          "receipt": "../../execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "tk-0008",
           "title": "Shared native snapshot storage",
           "phase": "ph-cce1",
-          "state": "unchecked",
+          "state": "checked",
           "success": "Implement real loader-snapshot crate for bounded JSON document, complete LF journal and read-only transactionally consistent SQLite key/value snapshots. No native semantic mapping. Author synthetic file/database boundary regressions and docs/snapshot-loader.md.",
           "satisfies": [
             "../../../plan.dd.json#acceptance_criteria/ac-0007"
           ],
-          "done": "tasks.dd.json#done_when/tk-0008"
+          "done": "tasks.dd.json#done_when/tk-0008",
+          "receipt": "../../execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "tk-0009",
           "title": "PM full composition",
           "phase": "ph-cce1",
-          "state": "unchecked",
+          "state": "checked",
           "success": "Integrate new packages, static descriptor/runner registration, snapshot SDK/application/CLI seam, output manifests, architecture policy and actual whole-pipeline proof. Own all shared lockfile/app/core mutations.",
           "satisfies": [
             "../../../plan.dd.json#acceptance_criteria/ac-0001",
@@ -124,7 +132,8 @@
             "../../../plan.dd.json#acceptance_criteria/ac-0009",
             "../../../plan.dd.json#acceptance_criteria/ac-000a"
           ],
-          "done": "tasks.dd.json#done_when/tk-0009"
+          "done": "tasks.dd.json#done_when/tk-0009",
+          "receipt": "../../execution-log.dd.json#entries/lg-0005"
         }
       ]
     },
@@ -135,72 +144,81 @@
           {
             "id": "dw-0001",
             "assertion": "Own immutable existing JSONL/catalog contracts plus new raw revision snapshot types; no storage or mapping implementation.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0009"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0009",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0005"
           }
         ],
         "tk-0002": [
           {
             "id": "dw-0002",
             "assertion": "Complete Codex native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/codex-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0001"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0001",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0005"
           }
         ],
         "tk-0003": [
           {
             "id": "dw-0003",
             "assertion": "Complete Oh My Pi native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/oh-my-pi-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0002"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0002",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0005"
           }
         ],
         "tk-0004": [
           {
             "id": "dw-0004",
             "assertion": "Complete Pi native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/pi-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0003"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0003",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0005"
           }
         ],
         "tk-0005": [
           {
             "id": "dw-0005",
             "assertion": "Complete Copilot CLI native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/copilot-cli-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0004"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0004",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0005"
           }
         ],
         "tk-0006": [
           {
             "id": "dw-0006",
             "assertion": "Complete VS Code Copilot native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/vscode-copilot-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0005"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0005",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0005"
           }
         ],
         "tk-0007": [
           {
             "id": "dw-0007",
             "assertion": "Complete Cursor native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/cursor-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0006"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0006",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0005"
           }
         ],
         "tk-0008": [
           {
             "id": "dw-0008",
             "assertion": "Implement real loader-snapshot crate for bounded JSON document, complete LF journal and read-only transactionally consistent SQLite key/value snapshots. No native semantic mapping. Author synthetic file/database boundary regressions and docs/snapshot-loader.md.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0007"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0007",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0005"
           }
         ],
         "tk-0009": [
           {
             "id": "dw-0009",
             "assertion": "Integrate new packages, static descriptor/runner registration, snapshot SDK/application/CLI seam, output manifests, architecture policy and actual whole-pipeline proof. Own all shared lockfile/app/core mutations.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-000a"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-000a",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0005"
           }
         ]
       }

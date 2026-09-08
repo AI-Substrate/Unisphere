@@ -8,7 +8,7 @@
       "value": {
         "title": "Backpressure survey",
         "plan": "../plan.dd.json#meta",
-        "certainty": "Partial",
+        "certainty": "Proven",
         "basis_sha": "fdd88eb6925cc55243d76f6e5d4f682cf91ac8daa3e5eddc6cdc78915ccd6511"
       }
     },
@@ -21,9 +21,10 @@
           "phase": "ph-cce1",
           "mode": "EXTEND",
           "tier": "computational",
-          "state": "unchecked",
+          "state": "checked",
           "proof": "EXTEND→RUN: native synthetic fixtures and actual SDK/CLI export for the assigned dialect, existing conformance/output/architecture gates and independent semantic review.",
-          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers."
+          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers.",
+          "receipt": "execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "bp-0002",
@@ -31,9 +32,10 @@
           "phase": "ph-cce1",
           "mode": "EXTEND",
           "tier": "computational",
-          "state": "unchecked",
+          "state": "checked",
           "proof": "EXTEND→RUN: native synthetic fixtures and actual SDK/CLI export for the assigned dialect, existing conformance/output/architecture gates and independent semantic review.",
-          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers."
+          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers.",
+          "receipt": "execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "bp-0003",
@@ -41,9 +43,10 @@
           "phase": "ph-cce1",
           "mode": "EXTEND",
           "tier": "computational",
-          "state": "unchecked",
+          "state": "checked",
           "proof": "EXTEND→RUN: native synthetic fixtures and actual SDK/CLI export for the assigned dialect, existing conformance/output/architecture gates and independent semantic review.",
-          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers."
+          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers.",
+          "receipt": "execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "bp-0004",
@@ -51,9 +54,10 @@
           "phase": "ph-cce1",
           "mode": "EXTEND",
           "tier": "computational",
-          "state": "unchecked",
+          "state": "checked",
           "proof": "EXTEND→RUN: native synthetic fixtures and actual SDK/CLI export for the assigned dialect, existing conformance/output/architecture gates and independent semantic review.",
-          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers."
+          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers.",
+          "receipt": "execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "bp-0005",
@@ -61,9 +65,10 @@
           "phase": "ph-cce1",
           "mode": "EXTEND",
           "tier": "computational",
-          "state": "unchecked",
+          "state": "checked",
           "proof": "EXTEND→RUN: native synthetic fixtures and actual SDK/CLI export for the assigned dialect, existing conformance/output/architecture gates and independent semantic review.",
-          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers."
+          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers.",
+          "receipt": "execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "bp-0006",
@@ -71,9 +76,10 @@
           "phase": "ph-cce1",
           "mode": "EXTEND",
           "tier": "computational",
-          "state": "unchecked",
+          "state": "checked",
           "proof": "EXTEND→RUN: native synthetic fixtures and actual SDK/CLI export for the assigned dialect, existing conformance/output/architecture gates and independent semantic review.",
-          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers."
+          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers.",
+          "receipt": "execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "bp-0007",
@@ -81,9 +87,10 @@
           "phase": "ph-cce1",
           "mode": "EXTEND",
           "tier": "computational",
-          "state": "unchecked",
+          "state": "checked",
           "proof": "EXTEND→RUN: native synthetic fixtures and actual SDK/CLI export for the assigned dialect, existing conformance/output/architecture gates and independent semantic review.",
-          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers."
+          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers.",
+          "receipt": "execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "bp-0008",
@@ -91,9 +98,10 @@
           "phase": "ph-cce1",
           "mode": "EXTEND",
           "tier": "computational",
-          "state": "unchecked",
+          "state": "checked",
           "proof": "EXTEND→RUN: native synthetic fixtures and actual SDK/CLI export for the assigned dialect, existing conformance/output/architecture gates and independent semantic review.",
-          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers."
+          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers.",
+          "receipt": "execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "bp-0009",
@@ -101,9 +109,10 @@
           "phase": "ph-cce1",
           "mode": "EXTEND",
           "tier": "computational",
-          "state": "unchecked",
+          "state": "checked",
           "proof": "EXTEND→RUN: native synthetic fixtures and actual SDK/CLI export for the assigned dialect, existing conformance/output/architecture gates and independent semantic review.",
-          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers."
+          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers.",
+          "receipt": "execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "bp-000a",
@@ -111,9 +120,10 @@
           "phase": "ph-cce1",
           "mode": "EXTEND",
           "tier": "computational",
-          "state": "unchecked",
+          "state": "checked",
           "proof": "EXTEND→RUN: native synthetic fixtures and actual SDK/CLI export for the assigned dialect, existing conformance/output/architecture gates and independent semantic review.",
-          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers."
+          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers.",
+          "receipt": "execution-log.dd.json#entries/lg-0005"
         }
       ]
     },

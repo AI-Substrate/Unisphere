@@ -1,0 +1,9 @@
+{
+  "source_commit": "3f86982c34f9d6a26a7b9bd1e90c414d4820546c",
+  "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-copilot-cli",
+  "observed": {
+    "exit_code": 0,
+    "data": "crates/adapter-copilot-cli/src/snapshot.rs\n  s_a003bfa141bd2a::t_2f8a00117b45da 1-312\ncrates/adapter-copilot-cli/tests/fixtures/legacy.json\n  s_a003bfa141bd2a::t_9015487744069e 1-18\ncrates/adapter-copilot-cli/tests/snapshot.rs\n  s_a003bfa141bd2a::t_6f102e8d384001 1-205\n---\n{\n  \"schema_version\": \"authorship/3.0.0\",\n  \"git_ai_version\": \"1.6.21\",\n  \"base_commit_sha\": \"3f86982c34f9d6a26a7b9bd1e90c414d4820546c\",\n  \"prompts\": {},\n  \"sessions\": {\n    \"s_a003bfa141bd2a\": {\n      \"agent_id\": {\n        \"tool\": \"claude\",\n        \"id\": \"1155ef96-b6e6-4a2b-8e33-02cc8480db23\",\n        \"model\": \"claude-fable-5-1\"\n      },\n      \"human_author\": \"Jordan Knight <jakkaj@gmail.com>\"\n    }\n  }\n}",
+    "stderr": ""
+  }
+}

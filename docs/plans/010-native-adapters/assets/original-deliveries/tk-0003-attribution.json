@@ -1,0 +1,9 @@
+{
+  "source_commit": "ec22339a50191fd782b5fb5559c1e71ac3b22294",
+  "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-oh-my-pi",
+  "observed": {
+    "exit_code": 0,
+    "data": "crates/adapter-omp/Cargo.toml\n  h_9e71e8b09f7cf2 1-15\ncrates/adapter-omp/src/lib.rs\n  h_9e71e8b09f7cf2 1-640\ncrates/adapter-omp/tests/fixtures/native.jsonl\n  h_9e71e8b09f7cf2 1-9\ncrates/adapter-omp/tests/mapping.rs\n  h_9e71e8b09f7cf2 1-237\ndocs/oh-my-pi-adapter.md\n  h_9e71e8b09f7cf2 1-156\n---\n{\n  \"schema_version\": \"authorship/3.0.0\",\n  \"git_ai_version\": \"1.6.21\",\n  \"base_commit_sha\": \"ec22339a50191fd782b5fb5559c1e71ac3b22294\",\n  \"prompts\": {},\n  \"humans\": {\n    \"h_9e71e8b09f7cf2\": {\n      \"author\": \"Jordan Knight <jakkaj@gmail.com>\"\n    }\n  }\n}",
+    "stderr": ""
+  }
+}

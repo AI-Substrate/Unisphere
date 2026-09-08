@@ -1,0 +1,9 @@
+{
+  "source_commit": "891ff3a8860ac5f1ab2e033c8464adbe6c87c8f3",
+  "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-codex",
+  "observed": {
+    "exit_code": 0,
+    "data": "crates/adapter-codex/Cargo.toml\n  s_49787a2f10b8a2::t_aa300b302711f2 1-15\n---\n{\n  \"schema_version\": \"authorship/3.0.0\",\n  \"git_ai_version\": \"1.6.21\",\n  \"base_commit_sha\": \"891ff3a8860ac5f1ab2e033c8464adbe6c87c8f3\",\n  \"prompts\": {},\n  \"sessions\": {\n    \"s_49787a2f10b8a2\": {\n      \"agent_id\": {\n        \"tool\": \"claude\",\n        \"id\": \"2d4aa71a-cd90-45f7-be20-4f1f786c74fb\",\n        \"model\": \"unknown\"\n      },\n      \"human_author\": \"Jordan Knight <jakkaj@gmail.com>\"\n    }\n  }\n}",
+    "stderr": ""
+  }
+}

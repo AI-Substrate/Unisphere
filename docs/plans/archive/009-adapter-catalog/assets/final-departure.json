@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "harness",
+    "builder",
+    "advance",
+    "docs/plans/archive/009-adapter-catalog/plan.dd.json",
+    "--now",
+    "ship"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog",
+  "started": "2026-09-08T06:26:23.566Z",
+  "completed": "2026-09-08T06:26:26.505Z",
+  "exit_code": 0,
+  "stdout": "{\"command\":\"builder advance\",\"status\":\"ok\",\"timestamp\":\"2026-09-08T06:26:26.493Z\",\"data\":{\"flow\":\"/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog/docs/plans/archive/009-adapter-catalog/the-flow.json\",\"now\":\"ship\",\"warnings\":[{\"file\":\"crates/core/src/collection.rs\",\"owning_unit\":\"unmapped\",\"stage\":\"guide\",\"code\":\"baseline-owner\",\"message\":\"No unit maps shared contract file crates/core/src/collection.rs.\",\"next_action\":\"Review baseline/files with the named unit and update the ownership guidance if useful; this warning does not block work.\"},{\"file\":\"crates/core/src/ports.rs\",\"owning_unit\":\"unmapped\",\"stage\":\"guide\",\"code\":\"baseline-owner\",\"message\":\"No unit maps shared contract file crates/core/src/ports.rs.\",\"next_action\":\"Review baseline/files with the named unit and update the ownership guidance if useful; this warning does not block work.\"},{\"file\":\"crates/core/src/collection.rs\",\"owning_unit\":\"unmapped\",\"stage\":\"guide\",\"code\":\"baseline-owner\",\"message\":\"No unit maps shared contract file crates/core/src/collection.rs.\",\"next_action\":\"Review baseline/files with the named unit and update the ownership guidance if useful; this warning does not block work.\"},{\"file\":\"crates/core/src/ports.rs\",\"owning_unit\":\"unmapped\",\"stage\":\"guide\",\"code\":\"baseline-owner\",\"message\":\"No unit maps shared contract file crates/core/src/ports.rs.\",\"next_action\":\"Review baseline/files with the named unit and update the ownership guidance if useful; this warning does not block work.\"}]}}\n",
+  "stderr": ""
+}

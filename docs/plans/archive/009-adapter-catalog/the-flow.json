@@ -3,7 +3,7 @@
   "kind": "flight-plan",
   "slug": "adapter-catalog",
   "nav": {
-    "now": "post-flight",
+    "now": "ship",
     "next": null
   },
   "created_at": "2026-09-08T03:07:46.440Z",
@@ -360,6 +360,28 @@
         "from": "assumed",
         "to": "done"
       }
+    },
+    {
+      "id": "UPD-012",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-08T06:25:48.335Z",
+      "details": {
+        "node": "post-flight",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "CUR-006",
+      "kind": "cursor-moved",
+      "origin": "engine",
+      "fired_at": "2026-09-08T06:26:26.361Z",
+      "details": {
+        "from": "post-flight",
+        "to": "ship"
+      }
     }
   ],
   "nodes": [
@@ -522,7 +544,15 @@
       "zone": "postflight",
       "dd_link": {
         "address": "docs/plans/archive/009-adapter-catalog/plan.dd.json",
-        "check": "plan-validate"
+        "check": "plan-validate",
+        "basis_sha": "175ed49f30b639d0f5f39c8701795d02e13621b457e3f5ee15a0b2a45d580012",
+        "reading": {
+          "status": "complete",
+          "terminal": 1,
+          "total": 1,
+          "incomplete": [],
+          "at": "2026-09-08T06:26:26.361Z"
+        }
       },
       "instructions": [
         "Close out the flight BEFORE any ship: every phase and review is done; the terminal harness harvest fires at this edge, then the plan folder is archived — this stage runs whether or not the work ever ships.",
@@ -543,9 +573,15 @@
           "text": "Actual close archived and preserved this complete plan; archived plan validate --complete exit0 with0errors0warnings0open. Source17829db8 remains tested/reviewed; no main merge/push/retirement.",
           "source": "agent",
           "kind": "validation"
+        },
+        {
+          "at": "2026-09-08T06:25:48.335Z",
+          "text": "/Users/jordanknight/substrate/unisphere/unisphere-plan009-preserved/7098ed30-1ed1-4476-977d-d2516186416a/receipt/preservation.dd.json",
+          "source": "agent",
+          "kind": "builder-preservation"
         }
       ],
-      "modified_at": "2026-09-08T06:25:22.097Z",
+      "modified_at": "2026-09-08T06:25:48.335Z",
       "ran_at": "2026-09-08T06:25:22.097Z"
     },
     {

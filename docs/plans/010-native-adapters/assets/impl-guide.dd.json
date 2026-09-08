@@ -1,0 +1,636 @@
+{
+  "dd": {
+    "schema": "builder/impl-guide"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Independent native mappers and explicit snapshot storage",
+        "plan": "../plan.dd.json#meta",
+        "version": 1
+      }
+    },
+    {
+      "name": "architecture",
+      "value": {
+        "principles": "Functional core/imperative shell. Six mapper owners and one storage owner use frozen raw input/output types, all wave1 independent. PM is sole shared core/catalog/app/lockfile writer. Existing JSONL mappers do not wait for snapshot/SQLite storage.",
+        "composition_root": "crates/app/src/adapters.rs",
+        "contracts": [
+          "Existing SessionAdapter::map receives supplied NativeRecord slices; uses actual LF offsets only for JSONL. Existing TelemetryRecord, MappedBatch, MappingOptions and OTLP writer remain the common output.",
+          "New core/snapshot.rs is the actual input contract: SnapshotRef with explicit path/format/session_id, NativeSnapshot{source,revision,records}, raw SnapshotRecord{key,bytes}, MappedSnapshot records+key-based diagnostics. SQLite keys and structural journal ordinals are not byte offsets.",
+          "SnapshotLoader reads bounded whole documents/journals/SQLite transaction snapshots. It hashes native raw records into revision; source.session_id is selection for pure mapping, not partial DB query masquerading as complete history. Journal partial tails fail rather than emitting half reconstruction.",
+          "VSCode SnapshotAdapter reduces journal operations purely before projecting request/response events; source operations are never exported as chat events. Cursor IDE selection binds composer/bubble keys explicitly and is distinct from transcript mapper and opaque blob support disposition.",
+          "Each mapper exports static native DESCRIPTOR; PM registers without worker edits to app/core/catalog. Snapshot descriptors declare no append-only cursor guarantee. Metadata-only omits actual message/tool content; safe diagnostics carry only structural IDs/keys.",
+          "Snapshot SDK output includes full-replacement scope/revision manifest, including empty snapshots; consumers can observe deletions by replacement. Cursor checkpoint returned only after writer acceptance. No hidden sink/dedup transaction or final-session claim."
+        ]
+      }
+    },
+    {
+      "name": "fan_out",
+      "value": {
+        "decision": "coders",
+        "rationale": "Six source dialects and one storage implementation are independently runnable against existing JSONL fakes and actual new snapshot DTOs; no sibling implementation needed. Only shared composition waits."
+      }
+    },
+    {
+      "name": "capabilities",
+      "value": [
+        {
+          "id": "cp-0001",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0001",
+          "owner": "tk-0002",
+          "path": "Explicit native source -> shared loader -> pure mapper -> shared writer/catalog/CLI",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002",
+            "impl-guide.dd.json#checks/vd-0003"
+          ]
+        },
+        {
+          "id": "cp-0002",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0002",
+          "owner": "tk-0003",
+          "path": "Explicit native source -> shared loader -> pure mapper -> shared writer/catalog/CLI",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002",
+            "impl-guide.dd.json#checks/vd-0003"
+          ]
+        },
+        {
+          "id": "cp-0003",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0003",
+          "owner": "tk-0004",
+          "path": "Explicit native source -> shared loader -> pure mapper -> shared writer/catalog/CLI",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002",
+            "impl-guide.dd.json#checks/vd-0003"
+          ]
+        },
+        {
+          "id": "cp-0004",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0004",
+          "owner": "tk-0005",
+          "path": "Explicit native source -> shared loader -> pure mapper -> shared writer/catalog/CLI",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002",
+            "impl-guide.dd.json#checks/vd-0003"
+          ]
+        },
+        {
+          "id": "cp-0005",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0005",
+          "owner": "tk-0006",
+          "path": "Explicit native source -> shared loader -> pure mapper -> shared writer/catalog/CLI",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002",
+            "impl-guide.dd.json#checks/vd-0003"
+          ]
+        },
+        {
+          "id": "cp-0006",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0006",
+          "owner": "tk-0007",
+          "path": "Explicit native source -> shared loader -> pure mapper -> shared writer/catalog/CLI",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002",
+            "impl-guide.dd.json#checks/vd-0003"
+          ]
+        },
+        {
+          "id": "cp-0007",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0007",
+          "owner": "tk-0008",
+          "path": "Explicit native source -> shared loader -> pure mapper -> shared writer/catalog/CLI",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002",
+            "impl-guide.dd.json#checks/vd-0003"
+          ]
+        },
+        {
+          "id": "cp-0008",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0008",
+          "owner": "tk-0009",
+          "path": "Explicit native source -> shared loader -> pure mapper -> shared writer/catalog/CLI",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002",
+            "impl-guide.dd.json#checks/vd-0003"
+          ]
+        },
+        {
+          "id": "cp-0009",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0009",
+          "owner": "tk-0009",
+          "path": "Explicit native source -> shared loader -> pure mapper -> shared writer/catalog/CLI",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002",
+            "impl-guide.dd.json#checks/vd-0003"
+          ]
+        },
+        {
+          "id": "cp-0010",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-000a",
+          "owner": "tk-0009",
+          "path": "Explicit native source -> shared loader -> pure mapper -> shared writer/catalog/CLI",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002",
+            "impl-guide.dd.json#checks/vd-0003"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "units",
+      "value": [
+        {
+          "id": "tk-0001",
+          "name": "PM shared contracts",
+          "role": "pm",
+          "responsibility": "Own immutable existing JSONL/catalog contracts plus new raw revision snapshot types; no storage or mapping implementation.",
+          "paths": [
+            "crates/core/src/**",
+            "Cargo.toml"
+          ],
+          "reads": [],
+          "interface": "Existing SessionAdapter/TelemetryRecord/AdapterDescriptor unchanged; core snapshot module supplies the sole snapshot envelope and ports.",
+          "depends_on": [],
+          "wave": 0,
+          "acceptance": [],
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0001"
+          ]
+        },
+        {
+          "id": "tk-0002",
+          "name": "Codex pure mapper",
+          "role": "coder",
+          "responsibility": "Complete Codex native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/codex-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation.",
+          "paths": [
+            "crates/adapter-codex/**",
+            "docs/codex-adapter.md"
+          ],
+          "reads": [
+            {
+              "owner": "tk-0001",
+              "paths": [
+                "crates/core/src/collection.rs",
+                "crates/core/src/catalog.rs",
+                "crates/core/src/snapshot.rs",
+                "crates/testkit/src/collection.rs"
+              ]
+            }
+          ],
+          "interface": "Public unit CodexAdapter implements SessionAdapter; pub const DESCRIPTOR: AdapterDescriptor with id codex. For Cursor use CursorAdapter for transcripts and CursorIdeAdapter for SQLite snapshots, separate DESCRIPTOR and IDE_DESCRIPTOR with explicit dialect identities. Register no global services; PM composes. Read assets/lane-contracts.json.",
+          "depends_on": [
+            "tk-0001"
+          ],
+          "wave": 1,
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0001"
+          ],
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002"
+          ]
+        },
+        {
+          "id": "tk-0003",
+          "name": "Oh My Pi pure mapper",
+          "role": "coder",
+          "responsibility": "Complete Oh My Pi native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/oh-my-pi-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation.",
+          "paths": [
+            "crates/adapter-omp/**",
+            "docs/oh-my-pi-adapter.md"
+          ],
+          "reads": [
+            {
+              "owner": "tk-0001",
+              "paths": [
+                "crates/core/src/collection.rs",
+                "crates/core/src/catalog.rs",
+                "crates/core/src/snapshot.rs",
+                "crates/testkit/src/collection.rs"
+              ]
+            }
+          ],
+          "interface": "Public unit OmpAdapter implements SessionAdapter; pub const DESCRIPTOR: AdapterDescriptor with id oh-my-pi. For Cursor use CursorAdapter for transcripts and CursorIdeAdapter for SQLite snapshots, separate DESCRIPTOR and IDE_DESCRIPTOR with explicit dialect identities. Register no global services; PM composes. Read assets/lane-contracts.json.",
+          "depends_on": [
+            "tk-0001"
+          ],
+          "wave": 1,
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0002"
+          ],
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002"
+          ]
+        },
+        {
+          "id": "tk-0004",
+          "name": "Pi pure mapper",
+          "role": "coder",
+          "responsibility": "Complete Pi native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/pi-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation.",
+          "paths": [
+            "crates/adapter-pi/**",
+            "docs/pi-adapter.md"
+          ],
+          "reads": [
+            {
+              "owner": "tk-0001",
+              "paths": [
+                "crates/core/src/collection.rs",
+                "crates/core/src/catalog.rs",
+                "crates/core/src/snapshot.rs",
+                "crates/testkit/src/collection.rs"
+              ]
+            }
+          ],
+          "interface": "Public unit PiAdapter implements SessionAdapter; pub const DESCRIPTOR: AdapterDescriptor with id pi. For Cursor use CursorAdapter for transcripts and CursorIdeAdapter for SQLite snapshots, separate DESCRIPTOR and IDE_DESCRIPTOR with explicit dialect identities. Register no global services; PM composes. Read assets/lane-contracts.json.",
+          "depends_on": [
+            "tk-0001"
+          ],
+          "wave": 1,
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0003"
+          ],
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002"
+          ]
+        },
+        {
+          "id": "tk-0005",
+          "name": "Copilot CLI pure mapper",
+          "role": "coder",
+          "responsibility": "Complete Copilot CLI native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/copilot-cli-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation.",
+          "paths": [
+            "crates/adapter-copilot-cli/**",
+            "docs/copilot-cli-adapter.md"
+          ],
+          "reads": [
+            {
+              "owner": "tk-0001",
+              "paths": [
+                "crates/core/src/collection.rs",
+                "crates/core/src/catalog.rs",
+                "crates/core/src/snapshot.rs",
+                "crates/testkit/src/collection.rs"
+              ]
+            }
+          ],
+          "interface": "Public unit CopilotCliAdapter implements SessionAdapter and a separate CopilotCliAdapterSnapshot implementing SnapshotAdapter; pub const DESCRIPTOR: AdapterDescriptor with id copilot-cli. For Cursor use CursorAdapter for transcripts and CursorIdeAdapter for SQLite snapshots, separate DESCRIPTOR and IDE_DESCRIPTOR with explicit dialect identities. Register no global services; PM composes. Read assets/lane-contracts.json.",
+          "depends_on": [
+            "tk-0001"
+          ],
+          "wave": 1,
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0004"
+          ],
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002"
+          ]
+        },
+        {
+          "id": "tk-0006",
+          "name": "VS Code Copilot pure mapper",
+          "role": "coder",
+          "responsibility": "Complete VS Code Copilot native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/vscode-copilot-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation.",
+          "paths": [
+            "crates/adapter-vscode-copilot/**",
+            "docs/vscode-copilot-adapter.md"
+          ],
+          "reads": [
+            {
+              "owner": "tk-0001",
+              "paths": [
+                "crates/core/src/collection.rs",
+                "crates/core/src/catalog.rs",
+                "crates/core/src/snapshot.rs",
+                "crates/testkit/src/collection.rs"
+              ]
+            }
+          ],
+          "interface": "Public unit VsCodeCopilotAdapter implements SnapshotAdapter; pub const DESCRIPTOR: AdapterDescriptor with id vscode-copilot. For Cursor use CursorAdapter for transcripts and CursorIdeAdapter for SQLite snapshots, separate DESCRIPTOR and IDE_DESCRIPTOR with explicit dialect identities. Register no global services; PM composes. Read assets/lane-contracts.json.",
+          "depends_on": [
+            "tk-0001"
+          ],
+          "wave": 1,
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0005"
+          ],
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002"
+          ]
+        },
+        {
+          "id": "tk-0007",
+          "name": "Cursor pure mapper",
+          "role": "coder",
+          "responsibility": "Complete Cursor native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/cursor-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation.",
+          "paths": [
+            "crates/adapter-cursor/**",
+            "docs/cursor-adapter.md"
+          ],
+          "reads": [
+            {
+              "owner": "tk-0001",
+              "paths": [
+                "crates/core/src/collection.rs",
+                "crates/core/src/catalog.rs",
+                "crates/core/src/snapshot.rs",
+                "crates/testkit/src/collection.rs"
+              ]
+            }
+          ],
+          "interface": "Public unit CursorAdapter implements SessionAdapter and a separate CursorAdapterSnapshot implementing SnapshotAdapter; pub const DESCRIPTOR: AdapterDescriptor with id cursor. For Cursor use CursorAdapter for transcripts and CursorIdeAdapter for SQLite snapshots, separate DESCRIPTOR and IDE_DESCRIPTOR with explicit dialect identities. Register no global services; PM composes. Read assets/lane-contracts.json. Explicit dialect IDs: DESCRIPTOR.id=cursor-transcript; IDE_DESCRIPTOR.id=cursor-ide. These supersede generic cursor slug.",
+          "depends_on": [
+            "tk-0001"
+          ],
+          "wave": 1,
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0006"
+          ],
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002"
+          ]
+        },
+        {
+          "id": "tk-0008",
+          "name": "Shared native snapshot storage",
+          "role": "coder",
+          "responsibility": "Implement real loader-snapshot crate for bounded JSON document, complete LF journal and read-only transactionally consistent SQLite key/value snapshots. No native semantic mapping. Author synthetic file/database boundary regressions and docs/snapshot-loader.md.",
+          "paths": [
+            "crates/loader-snapshot/**",
+            "docs/snapshot-loader.md"
+          ],
+          "reads": [
+            {
+              "owner": "tk-0001",
+              "paths": [
+                "crates/core/src/collection.rs",
+                "crates/core/src/catalog.rs",
+                "crates/core/src/snapshot.rs",
+                "crates/testkit/src/collection.rs"
+              ]
+            }
+          ],
+          "interface": "pub struct FileSnapshotLoader; implements core SnapshotLoader::read_snapshot. Core SnapshotFormat and SnapshotLimits own inputs. Stable SHA256 revision includes all ordered raw keys/bytes; partial records, changed source or oversized snapshot fail safely. SQLite backend read-only/no query mutations; max data limits enforced before unbounded materialization.",
+          "depends_on": [
+            "tk-0001"
+          ],
+          "wave": 1,
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0007"
+          ],
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002"
+          ]
+        },
+        {
+          "id": "tk-0009",
+          "name": "PM full composition",
+          "role": "pm",
+          "responsibility": "Integrate new packages, static descriptor/runner registration, snapshot SDK/application/CLI seam, output manifests, architecture policy and actual whole-pipeline proof. Own all shared lockfile/app/core mutations.",
+          "paths": [
+            "crates/app/**",
+            "crates/cli/**",
+            "crates/sdk/**",
+            "crates/testkit/**",
+            "Cargo.lock",
+            "docs/cli.md",
+            "docs/adapters.md",
+            "docs/sdk.md",
+            "docs/fidelity.md",
+            "README.md",
+            ".harness/**"
+          ],
+          "reads": [
+            {
+              "owner": "tk-0002",
+              "paths": [
+                "crates/adapter-codex/**"
+              ]
+            },
+            {
+              "owner": "tk-0003",
+              "paths": [
+                "crates/adapter-omp/**"
+              ]
+            },
+            {
+              "owner": "tk-0004",
+              "paths": [
+                "crates/adapter-pi/**"
+              ]
+            },
+            {
+              "owner": "tk-0005",
+              "paths": [
+                "crates/adapter-copilot-cli/**"
+              ]
+            },
+            {
+              "owner": "tk-0006",
+              "paths": [
+                "crates/adapter-vscode-copilot/**"
+              ]
+            },
+            {
+              "owner": "tk-0007",
+              "paths": [
+                "crates/adapter-cursor/**"
+              ]
+            },
+            {
+              "owner": "tk-0008",
+              "paths": [
+                "crates/loader-snapshot/**"
+              ]
+            }
+          ],
+          "interface": "App composes each mapper/loader/writer and catalog once. Existing JSONL/export behavior retained. Snapshot export emits scoped full-replacement revision manifest and typed records; no persistent sink/exactly-once guarantee. Snapshot source revisions are not append cursors.",
+          "depends_on": [
+            "tk-0002",
+            "tk-0003",
+            "tk-0004",
+            "tk-0005",
+            "tk-0006",
+            "tk-0007",
+            "tk-0008"
+          ],
+          "wave": 2,
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0001",
+            "../plan.dd.json#acceptance_criteria/ac-0002",
+            "../plan.dd.json#acceptance_criteria/ac-0003",
+            "../plan.dd.json#acceptance_criteria/ac-0004",
+            "../plan.dd.json#acceptance_criteria/ac-0005",
+            "../plan.dd.json#acceptance_criteria/ac-0006",
+            "../plan.dd.json#acceptance_criteria/ac-0007",
+            "../plan.dd.json#acceptance_criteria/ac-0008",
+            "../plan.dd.json#acceptance_criteria/ac-0009",
+            "../plan.dd.json#acceptance_criteria/ac-000a"
+          ],
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0003",
+            "impl-guide.dd.json#checks/vd-0004"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "baseline",
+      "value": {
+        "files": [
+          "crates/core/src/collection.rs",
+          "crates/core/src/catalog.rs",
+          "crates/core/src/snapshot.rs",
+          "crates/testkit/src/collection.rs"
+        ],
+        "proof": [
+          "impl-guide.dd.json#checks/vd-0001"
+        ],
+        "receipt": "team/baseline.dd.json"
+      }
+    },
+    {
+      "name": "isolation",
+      "value": {
+        "mode": "clone-per-coder",
+        "allocation_owner": "harness",
+        "note": "All seven independent native OMP coders use explicit new full clones; no linked-worktree dispatcher fallback or global settings."
+      }
+    },
+    {
+      "name": "roles",
+      "value": [
+        {
+          "id": "rl-0001",
+          "role": "coder",
+          "harness": "omp",
+          "model": "github-copilot/gpt-6-astra",
+          "effort": "high"
+        },
+        {
+          "id": "rl-0002",
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5",
+          "effort": "high"
+        }
+      ]
+    },
+    {
+      "name": "checks",
+      "value": [
+        {
+          "id": "vd-0001",
+          "description": "Actual frozen core/snapshot contract build and inherited fake conformance",
+          "command": "cargo",
+          "args": [
+            "test",
+            "-p",
+            "unisphere-core",
+            "-p",
+            "unisphere-testkit",
+            "--lib"
+          ],
+          "cwd": ".",
+          "timeout_ms": 120000
+        },
+        {
+          "id": "vd-0002",
+          "description": "Native mapper and storage behavioral regressions",
+          "command": "cargo",
+          "args": [
+            "test",
+            "--workspace",
+            "--all-targets",
+            "--locked"
+          ],
+          "cwd": ".",
+          "timeout_ms": 240000
+        },
+        {
+          "id": "vd-0003",
+          "description": "Real native SDK/CLI collection and full pipeline smoke",
+          "command": "harness",
+          "args": [
+            "boot",
+            "--json"
+          ],
+          "cwd": ".",
+          "timeout_ms": 360000
+        },
+        {
+          "id": "vd-0004",
+          "description": "Architecture/purity, quality and harness regression checks",
+          "command": "harness",
+          "args": [
+            "checks",
+            "--json"
+          ],
+          "cwd": ".",
+          "timeout_ms": 360000
+        }
+      ]
+    },
+    {
+      "name": "composition",
+      "value": {
+        "owner": "tk-0009",
+        "order": [
+          "tk-0002",
+          "tk-0003",
+          "tk-0004",
+          "tk-0005",
+          "tk-0006",
+          "tk-0007",
+          "tk-0008"
+        ],
+        "steps": [
+          "Import tested isolated deliveries without changing their native semantic scope.",
+          "Compose JSONL lanes immediately; snapshot storage and pure IDE mappers integrate through their independent frozen ports.",
+          "Extend actual multiadapter SDK/CLI installed proof and document each dialect fidelity; verify committed candidate and independent Opus review."
+        ],
+        "proof": [
+          "impl-guide.dd.json#checks/vd-0002",
+          "impl-guide.dd.json#checks/vd-0003",
+          "impl-guide.dd.json#checks/vd-0004"
+        ]
+      }
+    },
+    {
+      "name": "review",
+      "value": {
+        "when": "Bounded review of new raw snapshot contract; existing JSONL/catalog baseline already approved by Plan005/009. Final independent review of actual new composed behavior.",
+        "inputs": [
+          "Standing six-adapter grant",
+          "Native semantic fixture expectations",
+          "Explicit snapshot revision schema",
+          "Actual composed proof receipts"
+        ],
+        "proof": [
+          "Requested/observed native Opus high identity; exact subject/plan/guide/report hashes and real dispositions."
+        ]
+      }
+    },
+    {
+      "name": "risks",
+      "value": [
+        {
+          "id": "rk-0001",
+          "text": "Native usage fields have differing scopes; no guessed sums or standard totals.",
+          "check": "Per-dialect repeated cumulative/native snapshot regression fixtures."
+        },
+        {
+          "id": "rk-0002",
+          "text": "VSCode journal and Cursor opaque formats are not generic line messages.",
+          "check": "Authoritative reducer/schema facts; explicit unsupported dialect disposition if codec cannot be established."
+        },
+        {
+          "id": "rk-0003",
+          "text": "Snapshot output can exceed writer cap; a revision is not a sink transaction.",
+          "check": "Bounded loader rejection and manifest+output checkpoint failure tests; no partial success claim."
+        }
+      ]
+    }
+  ]
+}

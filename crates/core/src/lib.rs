@@ -8,8 +8,10 @@ pub mod collection;
 mod config;
 mod errors;
 mod ports;
+pub mod snapshot;
 pub use catalog::{AdapterCapabilities, AdapterDescriptor, LocationHint};
 pub use collection::*;
+pub use snapshot::*;
 
 pub use config::{
     ConfigOverrides, ConfigSource, Configuration, InspectionReport, InspectionRequest,

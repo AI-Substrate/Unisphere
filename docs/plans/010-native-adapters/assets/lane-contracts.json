@@ -1,0 +1,26 @@
+{
+  "integration_owner": "pij-right-kotallo",
+  "read_first": ["crates/core/src/collection.rs", "crates/core/src/catalog.rs", "crates/core/src/snapshot.rs", "crates/testkit/src/collection.rs", "docs/plans/010-native-adapters/assets/native-structural-research.json"],
+  "worker_rules": [
+    "Implement complete owned mapper/storage code, synthetic fixtures, regressions and per-dialect fidelity documentation. No private payload reads or copying.",
+    "No builds, tests, formatters, lint, rustdoc, Cargo.lock changes or root Cargo/app/core edits. PM validates and integrates. No sibling implementation waits.",
+    "Follow adapter-claude Cargo.toml with existing core/serde_json/time workspace dependencies. Storage owner may declare rusqlite with bundled feature and sha2 in its own manifest; PM owns lockfile/architecture admission.",
+    "Export static DESCRIPTOR alongside the actual mapper. Descriptor ID equals adapter.name() and emitted provenance. PM alone registers all runners/descriptors.",
+    "Use unisphere.session.record and common TelemetryRecord. Native usage remains measured components with explicit scope, never guessed standard totals, trace IDs or timestamps. Metadata-only has no content body; opt-in structured content only. Unsupported native data has safe typed diagnostics."
+  ],
+  "snapshot_contract": [
+    "Core NativeSnapshot is complete bounded raw representation with revision digest. JsonDocument has key=document. JsonJournal records are ordered operations with key=journal:<ordinal>; ordinals are not byte offsets. SQLite records have exact native key strings.",
+    "Pure SnapshotAdapter reduces journal operations before projecting logical messages. Key-based SnapshotDiagnostic never invents file offsets. Include source key/session/revision provenance, not fake unisphere.source.offset.",
+    "PM provides scoped full-replacement revision manifest and checkpoint-after-output. Empty snapshots remain observable so consumers can replace a view and observe deletions. No persistent history, idempotent sink transaction or final-session claim."
+  ],
+  "lanes": {
+    "tk-0002": "crates/adapter-codex + docs/codex-adapter.md: CodexAdapter implements SessionAdapter; DESCRIPTOR id codex. timestamp/type/payload records; distinguish last_token_usage from cumulative total_token_usage.",
+    "tk-0003": "crates/adapter-omp + docs/oh-my-pi-adapter.md: OmpAdapter implements SessionAdapter; DESCRIPTOR id oh-my-pi. Handle 256-byte mutable title slot explicitly; not the Pi dialect. Name retitle-after-cursor and sidecar limitations.",
+    "tk-0004": "crates/adapter-pi + docs/pi-adapter.md: PiAdapter implements SessionAdapter; DESCRIPTOR id pi. v3 header/tree JSONL; compaction/custom extension state is not a normal model turn.",
+    "tk-0005": "crates/adapter-copilot-cli + docs/copilot-cli-adapter.md: CopilotCliAdapter implements SessionAdapter, DESCRIPTOR id copilot-cli. Also CopilotCliAdapterSnapshot implements SnapshotAdapter for legacy JSON, SNAPSHOT_DESCRIPTOR id copilot-cli-snapshot. Legacy work must not delay current JSONL implementation.",
+    "tk-0006": "crates/adapter-vscode-copilot + docs/vscode-copilot-adapter.md: VsCodeCopilotAdapter implements SnapshotAdapter; DESCRIPTOR id vscode-copilot. Whole v1/v2/v3 snapshots and pure native kind0/1/2/3 mutation-log reducer. Read assets/vscode-journal-schema.json when available; never guess operations or usage.",
+    "tk-0007": "crates/adapter-cursor + docs/cursor-adapter.md: CursorAdapter implements SessionAdapter for transcripts, DESCRIPTOR id cursor-transcript. CursorIdeAdapter implements SnapshotAdapter, IDE_DESCRIPTOR id cursor-ide. Read cursorDiskKV composerData:<id>, bubbleId:<composer>:<bubble> in fullConversationHeadersOnly order. Opaque CLI blobs need explicit unsupported semantic-mapping disposition absent authoritative codec, never an assumption of JSON.",
+    "tk-0008": "crates/loader-snapshot + docs/snapshot-loader.md: FileSnapshotLoader implements SnapshotLoader. Bounded explicit nofollow JSON/journal source reads, stable source checks; SQLite read-only transaction with validated/quoted table identifier and fixed key/value columns. Return ordered native keys/raw text-or-BLOB values; no semantic decoding. SHA256 revision uses versioned length-prefixed keys and bytes. Enforce record and aggregate limits before unbounded allocation. Partial/malformed journal, source mutation or oversize never succeeds as partial reconstruction. Test real synthetic files/databases, mutation/replacement/truncation/bounds."
+  },
+  "scope_boundary": "All six harnesses are authorized. No main landing, remote push/PR, global settings, private content export or workspace retirement. Worker packet receipt grants owned work; no legacy acknowledgement/release dance."
+}

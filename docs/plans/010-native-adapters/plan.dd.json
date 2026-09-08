@@ -1,0 +1,182 @@
+{
+  "dd": {
+    "schema": "builder/plan"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Collect six native harness formats through pure adapters",
+        "slug": "native-adapters",
+        "ordinal": 10,
+        "status": "ready",
+        "summary": "Six pure native harness mappers, shared revision-snapshot storage and explicit SDK/CLI/catalog composition; preserve native evidence and honest fidelity boundaries.",
+        "backpressure": "assets/backpressure.dd.json#rows",
+        "mode": "Full",
+        "complexity": "CS-5"
+      }
+    },
+    {
+      "name": "summary",
+      "value": "Six pure native harness mappers, shared revision-snapshot storage and explicit SDK/CLI/catalog composition; preserve native evidence and honest fidelity boundaries."
+    },
+    {
+      "name": "goals",
+      "value": [
+        "Export Codex, Oh My Pi, Pi, Copilot CLI, VS Code Copilot and Cursor using explicit sources and shared ports.",
+        "Run independent mappers concurrently; isolate shared snapshot/SQLite storage from ready JSONL lanes."
+      ]
+    },
+    {
+      "name": "non_goals",
+      "value": [
+        "No private content capture in fixtures, implicit scans, plugin runtime, daemon or network dependency.",
+        "No automatic main landing, remote publication or workspace retirement; no lossless/final-session claim."
+      ]
+    },
+    {
+      "name": "acceptance_criteria",
+      "value": [
+        {
+          "id": "ac-0001",
+          "claim": "The Codex adapter maps supported observed native messages/tools/model/usage/identity deterministically through pure shared contracts, exports via SDK/CLI and has accurate catalog hints plus a classified per-dialect fidelity report; unsupported variants are explicit, never silent lossless claims.",
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0001"
+        },
+        {
+          "id": "ac-0002",
+          "claim": "The Oh My Pi adapter maps supported observed native messages/tools/model/usage/identity deterministically through pure shared contracts, exports via SDK/CLI and has accurate catalog hints plus a classified per-dialect fidelity report; unsupported variants are explicit, never silent lossless claims.",
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0002"
+        },
+        {
+          "id": "ac-0003",
+          "claim": "The Pi adapter maps supported observed native messages/tools/model/usage/identity deterministically through pure shared contracts, exports via SDK/CLI and has accurate catalog hints plus a classified per-dialect fidelity report; unsupported variants are explicit, never silent lossless claims.",
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0003"
+        },
+        {
+          "id": "ac-0004",
+          "claim": "The Copilot CLI adapter maps supported observed native messages/tools/model/usage/identity deterministically through pure shared contracts, exports via SDK/CLI and has accurate catalog hints plus a classified per-dialect fidelity report; unsupported variants are explicit, never silent lossless claims.",
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0004"
+        },
+        {
+          "id": "ac-0005",
+          "claim": "The VS Code Copilot adapter maps supported observed native messages/tools/model/usage/identity deterministically through pure shared contracts, exports via SDK/CLI and has accurate catalog hints plus a classified per-dialect fidelity report; unsupported variants are explicit, never silent lossless claims.",
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0005"
+        },
+        {
+          "id": "ac-0006",
+          "claim": "The Cursor adapter maps supported observed native messages/tools/model/usage/identity deterministically through pure shared contracts, exports via SDK/CLI and has accurate catalog hints plus a classified per-dialect fidelity report; unsupported variants are explicit, never silent lossless claims.",
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0006"
+        },
+        {
+          "id": "ac-0007",
+          "claim": "Native JSON snapshots, mutation journals and SQLite key/value stores are read through a shared bounded explicit-source loader with consistent revision identity, not fake LF offsets. VSCode patches are reduced under an evidenced pure state contract before message projection.",
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0007"
+        },
+        {
+          "id": "ac-0008",
+          "claim": "Changed snapshots, deleted native entries, delayed appends and source incompleteness remain observable with provenance; checkpoint publication follows successful output only and repeated cumulative usage is never silently summed.",
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0008"
+        },
+        {
+          "id": "ac-0009",
+          "claim": "All six isolated mapper owners can implement against frozen core types/fakes without sibling implementation dependencies; app registration, core changes, lockfile and final composition have one PM owner.",
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0009"
+        },
+        {
+          "id": "ac-000a",
+          "claim": "Actual synthetic end-to-end SDK/CLI exports and catalog output preserve privacy policy and prior Claude/configuration behavior; all shipping adapters satisfy source-purity/architecture checks and independent Opus review.",
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000a"
+        }
+      ]
+    },
+    {
+      "name": "phases",
+      "value": [
+        {
+          "id": "ph-cce1",
+          "title": "Implement native mappers and shared snapshot storage",
+          "brief": "",
+          "state": "unchecked",
+          "tasks": "assets/tasks/phase-1/tasks.dd.json#tasks"
+        }
+      ]
+    },
+    {
+      "name": "tasks",
+      "value": []
+    },
+    {
+      "name": "done_when",
+      "value": {}
+    },
+    {
+      "name": "research_context",
+      "value": "Standing operator grant: yes, fan out the work effectiely. Existing six-format research is evidence input, not work to repeat. Cursor transcripts/IDE/opaque CLI stores and VSCode snapshots/journals remain distinctly documented dialects. Harness-engineering is inspiration, not authority."
+    },
+    {
+      "name": "testing_strategy",
+      "value": {
+        "approach": "Lightweight",
+        "notes": "Workers author complete mappers, deterministic synthetic fixtures and boundary regressions without running validation. PM runs scoped tests, single coordinated quality/build lane and actual external SDK/installed CLI exports; independent Opus/high review."
+      }
+    },
+    {
+      "name": "documentation_strategy",
+      "value": {}
+    },
+    {
+      "name": "risks_assumptions",
+      "value": ""
+    },
+    {
+      "name": "open_questions",
+      "value": []
+    },
+    {
+      "name": "workshop_opportunities",
+      "value": []
+    },
+    {
+      "name": "clarifications",
+      "value": []
+    },
+    {
+      "name": "planning_seam",
+      "value": []
+    },
+    {
+      "name": "gate_matrix",
+      "value": []
+    },
+    {
+      "name": "implementation_summary",
+      "value": ""
+    },
+    {
+      "name": "key_findings",
+      "value": []
+    },
+    {
+      "name": "acceptance_coverage",
+      "value": []
+    },
+    {
+      "name": "risks",
+      "value": []
+    },
+    {
+      "name": "execution_guardrails",
+      "value": []
+    }
+  ]
+}

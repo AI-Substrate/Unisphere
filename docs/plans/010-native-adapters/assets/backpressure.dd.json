@@ -1,0 +1,125 @@
+{
+  "dd": {
+    "schema": "builder/backpressure"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Backpressure survey",
+        "plan": "../plan.dd.json#meta",
+        "certainty": "Partial",
+        "basis_sha": "fdd88eb6925cc55243d76f6e5d4f682cf91ac8daa3e5eddc6cdc78915ccd6511"
+      }
+    },
+    {
+      "name": "rows",
+      "value": [
+        {
+          "id": "bp-0001",
+          "criterion": "The Codex adapter maps supported observed native messages/tools/model/usage/identity deterministically through pure shared contracts, exports via SDK/CLI and has accurate catalog hints plus a classified per-dialect fidelity report; unsupported variants are explicit, never silent lossless claims.",
+          "phase": "ph-cce1",
+          "mode": "EXTEND",
+          "tier": "computational",
+          "state": "unchecked",
+          "proof": "EXTEND→RUN: native synthetic fixtures and actual SDK/CLI export for the assigned dialect, existing conformance/output/architecture gates and independent semantic review.",
+          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers."
+        },
+        {
+          "id": "bp-0002",
+          "criterion": "The Oh My Pi adapter maps supported observed native messages/tools/model/usage/identity deterministically through pure shared contracts, exports via SDK/CLI and has accurate catalog hints plus a classified per-dialect fidelity report; unsupported variants are explicit, never silent lossless claims.",
+          "phase": "ph-cce1",
+          "mode": "EXTEND",
+          "tier": "computational",
+          "state": "unchecked",
+          "proof": "EXTEND→RUN: native synthetic fixtures and actual SDK/CLI export for the assigned dialect, existing conformance/output/architecture gates and independent semantic review.",
+          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers."
+        },
+        {
+          "id": "bp-0003",
+          "criterion": "The Pi adapter maps supported observed native messages/tools/model/usage/identity deterministically through pure shared contracts, exports via SDK/CLI and has accurate catalog hints plus a classified per-dialect fidelity report; unsupported variants are explicit, never silent lossless claims.",
+          "phase": "ph-cce1",
+          "mode": "EXTEND",
+          "tier": "computational",
+          "state": "unchecked",
+          "proof": "EXTEND→RUN: native synthetic fixtures and actual SDK/CLI export for the assigned dialect, existing conformance/output/architecture gates and independent semantic review.",
+          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers."
+        },
+        {
+          "id": "bp-0004",
+          "criterion": "The Copilot CLI adapter maps supported observed native messages/tools/model/usage/identity deterministically through pure shared contracts, exports via SDK/CLI and has accurate catalog hints plus a classified per-dialect fidelity report; unsupported variants are explicit, never silent lossless claims.",
+          "phase": "ph-cce1",
+          "mode": "EXTEND",
+          "tier": "computational",
+          "state": "unchecked",
+          "proof": "EXTEND→RUN: native synthetic fixtures and actual SDK/CLI export for the assigned dialect, existing conformance/output/architecture gates and independent semantic review.",
+          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers."
+        },
+        {
+          "id": "bp-0005",
+          "criterion": "The VS Code Copilot adapter maps supported observed native messages/tools/model/usage/identity deterministically through pure shared contracts, exports via SDK/CLI and has accurate catalog hints plus a classified per-dialect fidelity report; unsupported variants are explicit, never silent lossless claims.",
+          "phase": "ph-cce1",
+          "mode": "EXTEND",
+          "tier": "computational",
+          "state": "unchecked",
+          "proof": "EXTEND→RUN: native synthetic fixtures and actual SDK/CLI export for the assigned dialect, existing conformance/output/architecture gates and independent semantic review.",
+          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers."
+        },
+        {
+          "id": "bp-0006",
+          "criterion": "The Cursor adapter maps supported observed native messages/tools/model/usage/identity deterministically through pure shared contracts, exports via SDK/CLI and has accurate catalog hints plus a classified per-dialect fidelity report; unsupported variants are explicit, never silent lossless claims.",
+          "phase": "ph-cce1",
+          "mode": "EXTEND",
+          "tier": "computational",
+          "state": "unchecked",
+          "proof": "EXTEND→RUN: native synthetic fixtures and actual SDK/CLI export for the assigned dialect, existing conformance/output/architecture gates and independent semantic review.",
+          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers."
+        },
+        {
+          "id": "bp-0007",
+          "criterion": "Native JSON snapshots, mutation journals and SQLite key/value stores are read through a shared bounded explicit-source loader with consistent revision identity, not fake LF offsets. VSCode patches are reduced under an evidenced pure state contract before message projection.",
+          "phase": "ph-cce1",
+          "mode": "EXTEND",
+          "tier": "computational",
+          "state": "unchecked",
+          "proof": "EXTEND→RUN: native synthetic fixtures and actual SDK/CLI export for the assigned dialect, existing conformance/output/architecture gates and independent semantic review.",
+          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers."
+        },
+        {
+          "id": "bp-0008",
+          "criterion": "Changed snapshots, deleted native entries, delayed appends and source incompleteness remain observable with provenance; checkpoint publication follows successful output only and repeated cumulative usage is never silently summed.",
+          "phase": "ph-cce1",
+          "mode": "EXTEND",
+          "tier": "computational",
+          "state": "unchecked",
+          "proof": "EXTEND→RUN: native synthetic fixtures and actual SDK/CLI export for the assigned dialect, existing conformance/output/architecture gates and independent semantic review.",
+          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers."
+        },
+        {
+          "id": "bp-0009",
+          "criterion": "All six isolated mapper owners can implement against frozen core types/fakes without sibling implementation dependencies; app registration, core changes, lockfile and final composition have one PM owner.",
+          "phase": "ph-cce1",
+          "mode": "EXTEND",
+          "tier": "computational",
+          "state": "unchecked",
+          "proof": "EXTEND→RUN: native synthetic fixtures and actual SDK/CLI export for the assigned dialect, existing conformance/output/architecture gates and independent semantic review.",
+          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers."
+        },
+        {
+          "id": "bp-000a",
+          "criterion": "Actual synthetic end-to-end SDK/CLI exports and catalog output preserve privacy policy and prior Claude/configuration behavior; all shipping adapters satisfy source-purity/architecture checks and independent Opus review.",
+          "phase": "ph-cce1",
+          "mode": "EXTEND",
+          "tier": "computational",
+          "state": "unchecked",
+          "proof": "EXTEND→RUN: native synthetic fixtures and actual SDK/CLI export for the assigned dialect, existing conformance/output/architecture gates and independent semantic review.",
+          "probe": "Plan005/009 production and tests read; structural six-client dossier retained. Snapshot/journal ambiguities investigated concurrently without delaying ready mappers."
+        }
+      ]
+    },
+    {
+      "name": "sensors",
+      "value": []
+    }
+  ]
+}

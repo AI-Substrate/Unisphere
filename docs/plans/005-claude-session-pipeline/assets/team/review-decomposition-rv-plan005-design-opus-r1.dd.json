@@ -1,0 +1,170 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "review",
+      "value": {
+        "record_type": "review",
+        "id": "rv-plan005-design-opus-r1",
+        "recorded_at": "2026-09-08T00:55:54.980226Z",
+        "scope": "decomposition",
+        "subject_sha": "21a9f98787ad8f3de4b00e0f8b715c8600db643e",
+        "plan": {
+          "path": "docs/plans/005-claude-session-pipeline/plan.dd.json",
+          "sha256": "ff6bcc7faa386dc47145da1f678afeef48b4c4b2e9af5bcf0783d91988a3218b"
+        },
+        "guide": {
+          "path": "docs/plans/005-claude-session-pipeline/assets/impl-guide.dd.json",
+          "sha256": "f2155e8adbe9e2ce3ba440c6dc790cbff25ad2c918a6547f05b4bf7ae2b81a4d"
+        },
+        "reviewer_id": "pij-huge-nigel",
+        "requested": {
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5",
+          "effort": "high",
+          "source": {
+            "harness": "guide",
+            "model": "guide",
+            "effort": "guide"
+          }
+        },
+        "observed": {
+          "peer_id": "pij-huge-nigel",
+          "root": "/Users/jordanknight/substrate/unisphere/unishpere-main",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5",
+          "effort": "high",
+          "native_session": "01a07e75-cb05-70b6-a10d-db61a6ed87d8",
+          "pid": 71450,
+          "argv": [
+            "omp",
+            "--auto-approve",
+            "--model",
+            "github-copilot/claude-opus-5",
+            "--thinking",
+            "high"
+          ],
+          "evidence": [
+            "Native process argv and pid observed directly; parent 71406 is pij-rs __spawn-child with PIJ_SESSION_ID=pij-huge-nigel, PIJ_SPAWN_ID=s-0bc6ea4b29f9fdde306a00c26dda1ee2.",
+            "pij registry entry for pij-huge-nigel reports harness omp, model github-copilot/claude-opus-5, effort high, generation rs, parent pij-right-kotallo.",
+            "Reviewer native root is the main clone; the reviewed subject was read by absolute path under /Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline.",
+            "git rev-parse HEAD == 21a9f98787ad8f3de4b00e0f8b715c8600db643e with a clean working tree for all reviewed paths (only untracked .dd/schemas/builder/work-packet/).",
+            "Independently recomputed plan and guide sha256 equal the values recorded in assets/design-validation.json#basis.",
+            "Read: plan.dd.json/.md, impl-guide.dd.json (all 15 architecture contracts in full), backpressure.dd.md, design-inputs.md, design-validation.json, original-ask.md, tasks/phase-1/tasks.dd.md, crates/core/src/ports.rs, crates/sdk/src/lib.rs, crates/cli/src/lib.rs, crates/cli/src/args.rs, crates/app/src/main.rs, Cargo.toml, crates/testkit/src/bin/unisphere-arch-check.rs."
+          ],
+          "gaps": [
+            "No build, test, lint or format executed; the packet scoped this review to read-only inspection, so no finding rests on executed product proof.",
+            "F13 (baseline root-manifest ordering) is explicitly unverified because confirming it would require a cargo invocation.",
+            "No private Claude store was read; the 1 MiB oversize-record concern in F2 rests on known native content shapes, not on measurement in this session.",
+            "The exact opentelemetry-proto release that introduced LogRecord.event_name was not verified upstream in this session; F6 asks the PM to pin it.",
+            "Reviewer model/effort are the observed launch configuration and the pij registry record, not a provider attestation.",
+            "assets/design-validation.json carries structural builder guide --check receipts and a boot capture only; it was treated as no semantic approval."
+          ]
+        },
+        "verdict": "changes-requested",
+        "report": {
+          "path": "docs/plans/005-claude-session-pipeline/assets/reviews/design-opus-r1.md",
+          "sha256": "7249e959de6609c6e3a4d268d2fddaa93e09ff91f450a0c1b5856d2fab346ff1"
+        },
+        "findings": [
+          {
+            "id": "F1",
+            "severity": "high",
+            "disposition": "open",
+            "description": "No core-owned collection port: the CLI cannot legally reach collect_batch. arch-check forbids unisphere-cli -> unisphere-sdk, the guide declares collect_batch only as an SDK free function, and CollectionBatch is never assigned a home crate. Fix: add CollectionApi + CollectionBatch to core in tk-0001's frozen baseline, mirroring InspectionApi, and add a testkit FakeCollector.",
+            "evidence": "crates/testkit/src/bin/unisphere-arch-check.rs:19-21; crates/cli/src/lib.rs:35-41; crates/core/src/ports.rs:12-14; guide contracts C10, C11"
+          },
+          {
+            "id": "F2",
+            "severity": "high",
+            "disposition": "open",
+            "description": "A physical record larger than max_record_bytes has no defined behaviour. LoadedBatch has no diagnostics channel, so the loader must either skip silently (violating ac-0003) or error permanently, making the rest of the session unreachable. Fix: typed Limit error at the record start offset, cursor not advanced, retry at the same cursor with a larger limit must succeed; add the case to vd-0002 and have the CLI name the remedy.",
+            "evidence": "guide contracts C1 (default 1048576), C3, C5; plan ac-0003"
+          },
+          {
+            "id": "F3",
+            "severity": "high",
+            "disposition": "open",
+            "description": "SourceIdentity::Unavailable plus 'unsupported resume identity is a typed error' makes every multi-batch session unexportable on non-Unix, while the plan never scopes the slice to Unix and ac-0009/ac-000c claim installed-CLI export proof. Fix: either declare the loader Unix-only and fail fast with Unsupported, or permit Unavailable->Unavailable resume on path plus boundary offset as a documented weaker guarantee; prove the choice in vd-0002.",
+            "evidence": "guide contracts C1, C3, C12; plan non-goals; plan ac-0009, ac-000c"
+          },
+          {
+            "id": "F4",
+            "severity": "medium",
+            "disposition": "open",
+            "description": "vd-0006's source-surface purity check is specified in four words and the existing arch-check is a cargo metadata graph checker with no source inspection. A dependency graph cannot see std::fs/std::env/SystemTime::now, so the user's headline requirement would be proven by an unfalsifiable scan. Fix: enumerate the denied tokens in the guide, require a negative fixture under crates/testkit/fixtures/architecture/ that must fail, and document the known false-negative bound.",
+            "evidence": "crates/testkit/src/bin/unisphere-arch-check.rs:33-109; guide checks/vd-0006; backpressure bp-0001"
+          },
+          {
+            "id": "F5",
+            "severity": "medium",
+            "disposition": "open",
+            "description": "unisphere.source.kind is required on every record but its value domain is never given, and unisphere.usage.* component names are never listed. tk-0001 freezes the conformance helper asserting source-provenance in wave 0 while tk-0003 emits the keys in wave 1, so a mismatch surfaces only at integration; one namespace also has two documentation owners. Fix: closed attribute list in C6/C8 with key, type, emitting lane and optionality; docs/telemetry-profile.md as the single normative registry.",
+            "evidence": "guide contracts C6, C7, C8, C13; units tk-0001, tk-0003, tk-0004"
+          },
+          {
+            "id": "F6",
+            "severity": "medium",
+            "disposition": "open",
+            "description": "The OTLP proto revision is unpinned while the writer emits LogRecord eventName and omits resource, severityNumber/severityText and observedTimeUnixNano; records without a native timestamp emit no timeUnixNano. Fix: pin the opentelemetry-proto version in C9 and docs/telemetry-profile.md, document the intentionally absent fields and consumer expectations, and assert the exact top-level key set in one vd-0004 case.",
+            "evidence": "guide contract C9; plan ac-0006"
+          },
+          {
+            "id": "F7",
+            "severity": "medium",
+            "disposition": "open",
+            "description": "PipelineErrorKind::Limit with a fixed per-kind message serves record-too-large, batch-budget-exhausted and listing-oversize; for listing the offset is meaningless, so the caller cannot tell which limit to raise. PipelineError is frozen at baseline. Fix: a closed reason discriminator yielding UNI-LIMIT-RECORD / UNI-LIMIT-BATCH / UNI-LIMIT-LISTING with distinct fixed fix strings.",
+            "evidence": "guide contracts C1, C2, C5; plan ac-0007"
+          },
+          {
+            "id": "F8",
+            "severity": "low",
+            "disposition": "open",
+            "description": "ReadLimits states its invariant but not its enforcement point (public fields vs checked constructor), and SourceScope.max_sessions == 0 is undefined, so tk-0002 and tk-0005 will validate independently and disagree on the error kind. Fix: specify ReadLimits::new -> Result with private fields and accessors, or public fields plus a loader UNI-INPUT rejection, and define max_sessions == 0. Baseline decision.",
+            "evidence": "guide contract C1"
+          },
+          {
+            "id": "F9",
+            "severity": "low",
+            "disposition": "open",
+            "description": "unisphere.source.path is specified as a UTF-8 path while SessionRef.path is a PathBuf, and no owner is named for the mismatch; if the pure adapter rejects it, one badly-named file fails an entire export from inside the mapper. Fix: one sentence in C2 making the loader reject non-UTF-8 session paths with UNI-INPUT.",
+            "evidence": "guide contracts C1, C6"
+          },
+          {
+            "id": "F10",
+            "severity": "low",
+            "disposition": "open",
+            "description": "C9's 'bounded batch buffer' is bounded by nothing: write_batch takes no limit and AnyValue wrapping plus JSON escaping expands the input several-fold, so the wording implies a guarantee the signature cannot give while ac-000c claims bounded batches. Fix: reword to proportional-and-transitively-bounded, or give the writer an explicit maximum.",
+            "evidence": "guide contract C9; plan ac-000c"
+          },
+          {
+            "id": "F11",
+            "severity": "low",
+            "disposition": "open",
+            "description": "Non-recursive listing is sound for a first slice, but pointing --root at the natural Claude projects parent yields an empty list and exit 0, indistinguishable from 'nothing found'. Fix: an explicit recursive:false field in the already-versioned list response plus a leaf-directory note in --help and docs/session-loader.md.",
+            "evidence": "guide contracts C2, C11"
+          },
+          {
+            "id": "F12",
+            "severity": "low",
+            "disposition": "open",
+            "description": "ac-0001's proof list names only vd-0003 and vd-0005, both test runs, which cannot prove the adapter has no filesystem dependency; the check that does is vd-0006, as bp-0001 itself states. Fix: add vd-0006 to ac-0001's proof list.",
+            "evidence": "guide capabilities/ac-0001; backpressure bp-0001"
+          },
+          {
+            "id": "F13",
+            "severity": "low",
+            "disposition": "open",
+            "description": "If [workspace.dependencies] gains path entries for the three new crates at baseline, those directories do not exist until wave 1; members = crates/* also admits each new crate to the workspace before the arch-check allow-list is updated. Unverified by this reviewer because confirming it needs a cargo run. Fix: declare only external deps (time, libc) at baseline and add internal path entries with the allow-list update in wave 2.",
+            "evidence": "guide contract C12; Cargo.toml:2; crates/testkit/src/bin/unisphere-arch-check.rs:54-63"
+          }
+        ]
+      }
+    }
+  ],
+  "references": []
+}

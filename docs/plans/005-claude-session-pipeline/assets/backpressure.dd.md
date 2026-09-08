@@ -11,7 +11,7 @@
 | --- | --- |
 | title | Claude pipeline selected proof — not execution evidence |
 | plan | [meta](../plan.dd.md#meta) |
-| basis_sha | ff6bcc7faa386dc47145da1f678afeef48b4c4b2e9af5bcf0783d91988a3218b |
+| basis_sha | 0c28b557a2def3dc075c70403e6768959057c007c428dcb9a4ac23683ac7f830 |
 | certainty | Confident |
 
 <a id="rows"></a>
@@ -20,7 +20,7 @@
 
 | id | criterion | phase | mode | tier | proof | state | note | receipt | probe |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| bp-0001 | An application can inject a SessionLoader and choose a pure adapter without a filesystem or CLI dependency in the adapter; the same provided native data/state/options produces the same contracted result. | ph-a437 | BUILD | computational | Pure adapter conformance and SDK fake-loader tests; no I/O available to mapper by dependency/source check. | [ ] unchecked | — | — | Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof. |
+| bp-0001 | An application can inject a SessionLoader and choose a pure adapter without a filesystem or CLI dependency in the adapter; the same provided native data/state/options produces the same contracted result. | ph-a437 | BUILD | computational | BUILD→RUN: pure adapter conformance plus source scanner with explicit denied constructs/negative fixtures (guide vd0006); scanner false-negative limits named, independent source judgement complements it. | [ ] unchecked | — | — | Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof. |
 | bp-0002 | The shared file loader lists candidate sessions deterministically within an explicit source scope and reads bounded native batches; it neither interprets Claude content nor implicitly scans HOME or follows out-of-scope sidecars/symlinks. | ph-a437 | BUILD | computational | Real temporary file-loader tests: explicit root listing, deterministic order, capacity and symlink/non-file boundaries. | [ ] unchecked | — | — | Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof. |
 | bp-0003 | Batch reads support explicit caller-owned resume positions, make progress across blank lines, retain incomplete final JSONL records without advancing beyond them, and report changed/truncated/replaced sources instead of silently losing data; unsupported source identity is named. | ph-a437 | BUILD | computational | Loader cursor/partial-tail/blank/bounds/stale identity regressions with temporary files; no automatic unsafe reset. | [ ] unchecked | — | — | Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof. |
 | bp-0004 | The Claude adapter maps user/assistant messages and supported text/reasoning/tool-call/tool-result parts, native identity/parent/session links, model and usage facts where present; repeated logical message IDs do not silently erase physical source records or fabricate a full inference operation. | ph-a437 | BUILD | human-judgement | Claude sanitized fixture mappings plus repeated message-ID, mixed parts, model/usage cases. | [ ] unchecked | — | — | Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof. |

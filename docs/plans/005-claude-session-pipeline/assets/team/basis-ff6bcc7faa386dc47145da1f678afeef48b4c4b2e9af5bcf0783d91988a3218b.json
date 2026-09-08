@@ -38,8 +38,7 @@
         "No universal conversation reconstruction, full-history branch/rewind materialization, automatic sidecar/attachment reads, or exactly-once delivery promise.",
         "No SDK implicit HOME/environment source discovery; CLI requires explicit source scope.",
         "No new independent canonical persisted telemetry encoding beside the standard-first OTLP JSONL profile.",
-        "No remote publication/main landing/global installation or workspace retirement without separate authorization.",
-        "The initial filesystem SessionLoader is Unix-only (macOS/Linux); non-Unix calls fail fast before I/O. Pure adapters and OTLP writer remain portable over supplied data. Broader loader platform support is separate scope, not implicit partial support."
+        "No remote publication/main landing/global installation or workspace retirement without separate authorization."
       ]
     },
     {
@@ -59,7 +58,7 @@
         },
         {
           "id": "ac-0003",
-          "claim": "Batch reads support explicit caller-owned resume positions, make progress across blank lines, retain incomplete final JSONL records without advancing beyond them, and report changed/truncated/replaced sources instead of silently losing data; unsupported source identity is named. Oversize records return a typed limit with original progress intact and can be retried using larger explicit limits; the documented initial filesystem loader is Unix-only and fails fast elsewhere.",
+          "claim": "Batch reads support explicit caller-owned resume positions, make progress across blank lines, retain incomplete final JSONL records without advancing beyond them, and report changed/truncated/replaced sources instead of silently losing data; unsupported source identity is named.",
           "state": "unchecked",
           "pressure": "assets/backpressure.dd.json#rows/bp-0003"
         },

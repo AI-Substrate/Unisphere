@@ -9,7 +9,7 @@
         "title": "Claude pipeline selected proof — not execution evidence",
         "plan": "../plan.dd.json#meta",
         "certainty": "Confident",
-        "basis_sha": "ff6bcc7faa386dc47145da1f678afeef48b4c4b2e9af5bcf0783d91988a3218b"
+        "basis_sha": "0c28b557a2def3dc075c70403e6768959057c007c428dcb9a4ac23683ac7f830"
       }
     },
     {
@@ -21,7 +21,7 @@
           "phase": "ph-a437",
           "mode": "BUILD",
           "tier": "computational",
-          "proof": "Pure adapter conformance and SDK fake-loader tests; no I/O available to mapper by dependency/source check.",
+          "proof": "BUILD→RUN: pure adapter conformance plus source scanner with explicit denied constructs/negative fixtures (guide vd0006); scanner false-negative limits named, independent source judgement complements it.",
           "state": "unchecked",
           "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof."
         },

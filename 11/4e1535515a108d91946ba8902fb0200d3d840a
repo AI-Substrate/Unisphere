@@ -1,0 +1,26 @@
+crates/loader-snapshot/Cargo.toml
+  h_9e71e8b09f7cf2 1-20
+crates/loader-snapshot/src/lib.rs
+  h_9e71e8b09f7cf2 1-41
+crates/loader-snapshot/src/unix.rs
+  h_9e71e8b09f7cf2 1-270
+crates/loader-snapshot/src/unix/sqlite.rs
+  h_9e71e8b09f7cf2 1-226
+crates/loader-snapshot/tests/filesystem.rs
+  h_9e71e8b09f7cf2 1-165
+crates/loader-snapshot/tests/sqlite.rs
+  h_9e71e8b09f7cf2 1-160
+docs/snapshot-loader.md
+  h_9e71e8b09f7cf2 1-125
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "114e1535515a108d91946ba8902fb0200d3d840a",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

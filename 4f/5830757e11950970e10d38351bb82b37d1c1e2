@@ -1,0 +1,92 @@
+docs/plans/archive/005-claude-session-pipeline/assets/archive-completion.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/archive/005-claude-session-pipeline/assets/backpressure.dd.json
+  h_9e71e8b09f7cf2 11,25-27,36-38,47-49,58-60,69-71,80-82,91-93,102-104,113-115,124-126,135-137,146-148
+docs/plans/archive/005-claude-session-pipeline/assets/backpressure.dd.md
+  h_9e71e8b09f7cf2 15,23-34
+docs/plans/archive/005-claude-session-pipeline/assets/closeout-telemetry-main.json
+  h_9e71e8b09f7cf2 1-17
+docs/plans/archive/005-claude-session-pipeline/assets/closeout-telemetry.json
+  h_9e71e8b09f7cf2 1-15
+docs/plans/archive/005-claude-session-pipeline/assets/composition-review-intake-activated.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/archive/005-claude-session-pipeline/assets/composition-review-intake-progress-order.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/archive/005-claude-session-pipeline/assets/composition-review-intake-uncommitted-retro.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/archive/005-claude-session-pipeline/assets/composition-review-intake.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/archive/005-claude-session-pipeline/assets/composition-verification-summary.json
+  h_9e71e8b09f7cf2 1-147
+docs/plans/archive/005-claude-session-pipeline/assets/departure-validation.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/archive/005-claude-session-pipeline/assets/execution-log.dd.json
+  h_9e71e8b09f7cf2 56-113
+docs/plans/archive/005-claude-session-pipeline/assets/execution-log.dd.md
+  h_9e71e8b09f7cf2 26-29
+docs/plans/archive/005-claude-session-pipeline/assets/main-landing-intent.json
+  h_9e71e8b09f7cf2 1-24
+docs/plans/archive/005-claude-session-pipeline/assets/main-landing-preview.json
+  h_9e71e8b09f7cf2 1-15
+docs/plans/archive/005-claude-session-pipeline/assets/observation-custody.json
+  h_9e71e8b09f7cf2 1-201
+docs/plans/archive/005-claude-session-pipeline/assets/observations-pij-right-kotallo-plan005.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/archive/005-claude-session-pipeline/assets/observations-pij-right-kotallo.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/archive/005-claude-session-pipeline/assets/oversight-cli-rerun-observation.json
+  h_9e71e8b09f7cf2 1-21
+docs/plans/archive/005-claude-session-pipeline/assets/post-flight.json
+  h_9e71e8b09f7cf2 1-112
+docs/plans/archive/005-claude-session-pipeline/assets/post-flight.md
+  h_9e71e8b09f7cf2 1-40
+docs/plans/archive/005-claude-session-pipeline/assets/retro-block-style-commit.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/archive/005-claude-session-pipeline/assets/retro-format-commit.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/archive/005-claude-session-pipeline/assets/retro-harvest-flow-yaml.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/archive/005-claude-session-pipeline/assets/retro-harvest-json-frontmatter.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/archive/005-claude-session-pipeline/assets/retro-harvest.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/archive/005-claude-session-pipeline/assets/retro-preservation-commit.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/archive/005-claude-session-pipeline/assets/reviews/composition-opus-r1-rejected.json
+  h_9e71e8b09f7cf2 7,9-16,18-78,80-84,87-91,94-99,101-105,110
+docs/plans/archive/005-claude-session-pipeline/assets/reviews/composition-opus-r1.md
+  h_9e71e8b09f7cf2 1-93
+docs/plans/archive/005-claude-session-pipeline/assets/self-handover.md
+  h_9e71e8b09f7cf2 1-55
+docs/plans/archive/005-claude-session-pipeline/assets/tasks/phase-1/tasks.dd.json
+  h_9e71e8b09f7cf2 41,49-50,56,67-68,74,81-82,88,107-108,135-137,142-144,151-153,158-160,167-169,174-176,183-185,190-192,197-199,204-206,210-213
+docs/plans/archive/005-claude-session-pipeline/assets/tasks/phase-1/tasks.dd.md
+  h_9e71e8b09f7cf2 39-42,57-60,64-67,71-74,78-84
+docs/plans/archive/005-claude-session-pipeline/assets/team/composition.dd.json
+  h_9e71e8b09f7cf2 1-1407
+docs/plans/archive/005-claude-session-pipeline/assets/team/composition.dd.md
+  h_9e71e8b09f7cf2 14,18-21
+docs/plans/archive/005-claude-session-pipeline/assets/team/review-composition-rv-plan005-composition-opus-r2.dd.json
+  h_9e71e8b09f7cf2 1-116
+docs/plans/archive/005-claude-session-pipeline/assets/team/review-composition-rv-plan005-composition-opus-r2.dd.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/archive/005-claude-session-pipeline/plan.dd.json
+  h_9e71e8b09f7cf2 51-53,58-60,65-67,72-74,79-81,86-88,93-95,100-102,107-109,114-116,121-123,128-130,141
+docs/plans/archive/005-claude-session-pipeline/plan.dd.md
+  h_9e71e8b09f7cf2 59-70,78
+docs/plans/archive/005-claude-session-pipeline/the-flow.json
+  h_9e71e8b09f7cf2 6,229-431,526,532-540,555-556,562,574-584,590,597-606,614-636,721,738-748,754,768-778,784,798-808,811
+docs/plans/archive/005-claude-session-pipeline/the-flow.md
+  h_9e71e8b09f7cf2 4,6,13-15,21-22,36,53-60,66-74
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "4f5830757e11950970e10d38351bb82b37d1c1e2",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

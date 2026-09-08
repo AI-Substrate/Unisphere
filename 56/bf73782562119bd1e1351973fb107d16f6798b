@@ -1,0 +1,16 @@
+docs/plans/010-native-adapters/assets/post-flight.md
+  h_9e71e8b09f7cf2 9
+docs/plans/010-native-adapters/assets/product-completion-validation.json
+  h_9e71e8b09f7cf2 1-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "56bf73782562119bd1e1351973fb107d16f6798b",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

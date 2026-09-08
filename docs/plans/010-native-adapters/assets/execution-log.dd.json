@@ -70,6 +70,14 @@
             "../plan.dd.json#acceptance_criteria/ac-0009",
             "../plan.dd.json#acceptance_criteria/ac-000a"
           ]
+        },
+        {
+          "id": "lg-0006",
+          "at": "2026-09-08T10:16:52.495Z",
+          "text": "PR206 activation observed: dispatch --adopt-peer bound all five original native lanes without respawn, exact returned packet digests/root matched advisory self-checks; source mismatch warnings describe genuine completed delivery HEADs, not invalid baselines. Already-integrated import at current PM HEAD refused E475 because original delivery bytes differ from reviewed PM formatting/Clippy/catalog corrections. All7full owned-path projections were verified equal at true integration114e1535515a108d91946ba8902fb0200d3d840a, retained historical-integration-projections.json. Isolated full clone at114e1535 then refused E471 baseline-proof because baseline receipt.cwd names original PM root. No real PM branch/source/index changes, no receipt rewrites, no repeat product validation. Supported explicit historical integration-SHA observation is requested from harness owner; product c6f3636b remains accepted and preserved.",
+          "links": [
+            "../plan.dd.json#phases/ph-cce1"
+          ]
         }
       ]
     }

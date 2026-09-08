@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "harness",
+    "builder",
+    "self-check",
+    "docs/plans/010-native-adapters/assets/team/packet-tk-0005-3a635c17110521a3ed93d03daf5eface57dc0bfd.dd.json",
+    "--sha256",
+    "41b69d8303d135c0b8212c159834b3d68c3a7791b22ef3aa08e25bbf7fb7ae0b"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-copilot-cli",
+  "started": "2026-09-08T10:07:30.291Z",
+  "completed": "2026-09-08T10:07:30.504Z",
+  "exit_code": 0,
+  "stdout": "{\"command\":\"builder self-check\",\"status\":\"ok\",\"timestamp\":\"2026-09-08T10:07:30.498Z\",\"data\":{\"self_check\":{\"packet\":\"docs/plans/010-native-adapters/assets/team/packet-tk-0005-3a635c17110521a3ed93d03daf5eface57dc0bfd.dd.json\",\"expected\":{\"packet_sha256\":\"41b69d8303d135c0b8212c159834b3d68c3a7791b22ef3aa08e25bbf7fb7ae0b\",\"root\":\"/Users/jordanknight/substrate/unisphere/unisphere-plan010-copilot-cli\",\"source_sha\":\"3a635c17110521a3ed93d03daf5eface57dc0bfd\"},\"observed\":{\"packet_sha256\":\"41b69d8303d135c0b8212c159834b3d68c3a7791b22ef3aa08e25bbf7fb7ae0b\",\"root\":\"/Users/jordanknight/substrate/unisphere/unisphere-plan010-copilot-cli\",\"source_sha\":\"3f86982c34f9d6a26a7b9bd1e90c414d4820546c\"},\"warnings\":[{\"code\":\"source-mismatch\",\"message\":\"Observed HEAD 3f86982c34f9d6a26a7b9bd1e90c414d4820546c differs from packet source 3a635c17110521a3ed93d03daf5eface57dc0bfd.\",\"next_action\":\"Inspect the checkout history and packet baseline with the PM; preserve existing work rather than resetting it.\",\"path\":\"docs/plans/010-native-adapters/assets/team/packet-tk-0005-3a635c17110521a3ed93d03daf5eface57dc0bfd.dd.json\"}]}}}\n",
+  "stderr": ""
+}

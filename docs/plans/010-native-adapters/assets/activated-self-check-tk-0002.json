@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "harness",
+    "builder",
+    "self-check",
+    "docs/plans/010-native-adapters/assets/team/packet-tk-0002-3a635c17110521a3ed93d03daf5eface57dc0bfd.dd.json",
+    "--sha256",
+    "adb9b8737d2beedd0b3b8b66f6dfdd3f6d0cf202d9616b46033d2408a22c3cbb"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-codex",
+  "started": "2026-09-08T10:07:30.290Z",
+  "completed": "2026-09-08T10:07:30.503Z",
+  "exit_code": 0,
+  "stdout": "{\"command\":\"builder self-check\",\"status\":\"ok\",\"timestamp\":\"2026-09-08T10:07:30.498Z\",\"data\":{\"self_check\":{\"packet\":\"docs/plans/010-native-adapters/assets/team/packet-tk-0002-3a635c17110521a3ed93d03daf5eface57dc0bfd.dd.json\",\"expected\":{\"packet_sha256\":\"adb9b8737d2beedd0b3b8b66f6dfdd3f6d0cf202d9616b46033d2408a22c3cbb\",\"root\":\"/Users/jordanknight/substrate/unisphere/unisphere-plan010-codex\",\"source_sha\":\"3a635c17110521a3ed93d03daf5eface57dc0bfd\"},\"observed\":{\"packet_sha256\":\"adb9b8737d2beedd0b3b8b66f6dfdd3f6d0cf202d9616b46033d2408a22c3cbb\",\"root\":\"/Users/jordanknight/substrate/unisphere/unisphere-plan010-codex\",\"source_sha\":\"891ff3a8860ac5f1ab2e033c8464adbe6c87c8f3\"},\"warnings\":[{\"code\":\"source-mismatch\",\"message\":\"Observed HEAD 891ff3a8860ac5f1ab2e033c8464adbe6c87c8f3 differs from packet source 3a635c17110521a3ed93d03daf5eface57dc0bfd.\",\"next_action\":\"Inspect the checkout history and packet baseline with the PM; preserve existing work rather than resetting it.\",\"path\":\"docs/plans/010-native-adapters/assets/team/packet-tk-0002-3a635c17110521a3ed93d03daf5eface57dc0bfd.dd.json\"}]}}}\n",
+  "stderr": ""
+}

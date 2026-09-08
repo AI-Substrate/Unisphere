@@ -1,0 +1,17 @@
+{
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "args": [
+    "git",
+    "clone",
+    "--no-hardlinks",
+    "--branch",
+    "builder/010-native-adapters",
+    "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+    "/Users/jordanknight/substrate/unisphere/unisphere-plan010-formal-pAD1Ra"
+  ],
+  "started": "2026-09-08T10:15:10.450Z",
+  "completed": "2026-09-08T10:15:11.589Z",
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "Cloning into '/Users/jordanknight/substrate/unisphere/unisphere-plan010-formal-pAD1Ra'...\ndone.\n"
+}

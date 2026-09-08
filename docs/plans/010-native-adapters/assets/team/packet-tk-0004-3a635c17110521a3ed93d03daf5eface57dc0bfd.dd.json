@@ -1,0 +1,101 @@
+{
+  "dd": {
+    "schema": "builder/work-packet"
+  },
+  "sections": [
+    {
+      "name": "packet",
+      "value": {
+        "record_type": "packet",
+        "id": "packet-tk-0004-3a635c17110521a3ed93d03daf5eface57dc0bfd",
+        "recorded_at": "2026-09-08T10:05:35.173Z",
+        "nonce": "47fad610-f6c7-4604-af1f-2f5ce18a40c9",
+        "unit": {
+          "id": "tk-0004",
+          "name": "Pi pure mapper",
+          "role": "coder",
+          "responsibility": "Complete Pi native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/pi-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation.",
+          "paths": [
+            "crates/adapter-pi/**",
+            "docs/pi-adapter.md"
+          ],
+          "reads": [
+            {
+              "owner": "tk-0001",
+              "paths": [
+                "crates/core/src/collection.rs",
+                "crates/core/src/catalog.rs",
+                "crates/core/src/snapshot.rs",
+                "crates/testkit/src/collection.rs"
+              ]
+            }
+          ],
+          "interface": "PiAdapter implements SessionAdapter; pub const DESCRIPTOR: AdapterDescriptor has id pi. Exact provenance/profile rules are in assets/lane-contracts.json.",
+          "depends_on": [
+            "tk-0001"
+          ],
+          "wave": 1,
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0003"
+          ],
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002"
+          ]
+        },
+        "plan": {
+          "path": "docs/plans/010-native-adapters/plan.dd.json",
+          "sha256": "fdd88eb6925cc55243d76f6e5d4f682cf91ac8daa3e5eddc6cdc78915ccd6511"
+        },
+        "guide": {
+          "path": "docs/plans/010-native-adapters/assets/impl-guide.dd.json",
+          "sha256": "38d5a0d69c2b56da77e5f2f4648d0592586e4df4a76f0523a1c2a67c3a45c475"
+        },
+        "baseline": {
+          "path": "docs/plans/010-native-adapters/assets/team/baseline.dd.json",
+          "sha256": "15efa0f6e5b1bcbeb0910fe6a22caece0f3aec92aebaed4d0bc86972c79d0dd8"
+        },
+        "source_sha": "3a635c17110521a3ed93d03daf5eface57dc0bfd",
+        "allocation": {
+          "path": "/Users/jordanknight/substrate/unisphere/unishpere-main/.git/builder/allocations/allocation-al-unit-bind-b00b07c7-4f77-4fbd-887c-bf6b41485a11.dd.json",
+          "sha256": "196085b27823f10529fa3f5eaa4f4f1cfe1ae45bed95e3a70ea9753463a8be82"
+        },
+        "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-pi",
+        "parent": "pij-right-kotallo",
+        "requested": {
+          "role": "coder",
+          "harness": "omp",
+          "model": "github-copilot/gpt-6-astra",
+          "effort": "high",
+          "source": {
+            "harness": "guide",
+            "model": "guide",
+            "effort": "guide"
+          }
+        },
+        "forbidden": [
+          ".the-flow-state.json",
+          "the-flow.json",
+          "the-flow.md",
+          "docs/plans/010-native-adapters/plan.dd.json",
+          "docs/plans/010-native-adapters/assets/impl-guide.dd.json",
+          "docs/plans/010-native-adapters/assets/team",
+          ".harness/government/",
+          "Global settings, deployed skills, unrelated workspaces and changes on main without user authorization.",
+          "Pushes, PRs, merges and destructive operations without user authorization; canonical lifecycle mutations and nested peers without PM approval."
+        ],
+        "instructions": [
+          "You own crates/adapter-pi/**, docs/pi-adapter.md.",
+          "You may read crates/core/src/collection.rs, crates/core/src/catalog.rs, crates/core/src/snapshot.rs, crates/testkit/src/collection.rs (owner tk-0001); immutable plan docs/plans/010-native-adapters/plan.dd.json and guide docs/plans/010-native-adapters/assets/impl-guide.dd.json.",
+          "Your job: Complete Pi native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/pi-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation.",
+          "Done means The Pi adapter maps supported observed native messages/tools/model/usage/identity deterministically through pure shared contracts, exports via SDK/CLI and has accurate catalog hints plus a classified per-dialect fidelity report; unsupported variants are explicit, never silent lossless claims. (../plan.dd.json#acceptance_criteria/ac-0003). Interface: PiAdapter implements SessionAdapter; pub const DESCRIPTOR: AdapterDescriptor has id pi. Exact provenance/profile rules are in assets/lane-contracts.json.. Proof: impl-guide.dd.json#checks/vd-0002.",
+          "Work packet: docs/plans/010-native-adapters/assets/team/packet-tk-0004-3a635c17110521a3ed93d03daf5eface57dc0bfd.dd.json. Use the measured SHA-256 in the dispatch message for the optional advisory builder self-check.",
+          "Existing checkout /Users/jordanknight/substrate/unisphere/unisphere-plan010-pi was observed at c3b2fb969e68c7b0abbb1c938407738e9ddfbf34; its sealed source is 3a635c17110521a3ed93d03daf5eface57dc0bfd. A progressed-HEAD self-check warning is orientation, not a demand to undo work.",
+          "This packet binds existing work; it is not a new work release. Preserve completed commits and current work, continue only remaining unit work, and return the intended committed delivery with this packet digest to pij-right-kotallo. Maps remain guidance; no replay or out-of-map approval is required.",
+          "Optional read-only comparison: harness builder on-track docs/plans/010-native-adapters/plan.dd.json --unit tk-0004 [--from <ref>] [--to <ref>] [--untracked]. No readiness, seal, review or receipt prerequisite; no writes; exit 0. Show compared, basis, measured from/to SHAs, includes_worktree/includes_untracked, warnings and issues. Unavailable comparison returns compared:false plus actionable issues.",
+          "On-track defaults to the sealed source, otherwise HEAD; malformed basis is an issue, not fallback. It includes committed touched paths (even reverted writes) plus tracked staged/unstaged work; --untracked explicitly adds new paths. Explicit --to is committed-only. Omitting --unit compares PM maps using imported integration_sha, otherwise the sealed source or HEAD."
+        ]
+      }
+    }
+  ],
+  "references": []
+}

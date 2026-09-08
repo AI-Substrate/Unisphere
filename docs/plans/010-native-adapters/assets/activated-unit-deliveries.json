@@ -1,0 +1,58 @@
+[
+  {
+    "unit_id": "tk-0002",
+    "peer_id": "pij-ideological-koala",
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-codex",
+    "commit_sha": "891ff3a8860ac5f1ab2e033c8464adbe6c87c8f3",
+    "packet_sha256": "adb9b8737d2beedd0b3b8b66f6dfdd3f6d0cf202d9616b46033d2408a22c3cbb",
+    "baseline_sha": "3a635c17110521a3ed93d03daf5eface57dc0bfd"
+  },
+  {
+    "unit_id": "tk-0003",
+    "peer_id": "pij-financial-elle",
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-oh-my-pi",
+    "commit_sha": "ec22339a50191fd782b5fb5559c1e71ac3b22294",
+    "packet_sha256": "9861714c32f3e50188438c9aaa157dafdd1f2315d12598c2a5b5372bf754fa51",
+    "baseline_sha": "3a635c17110521a3ed93d03daf5eface57dc0bfd"
+  },
+  {
+    "unit_id": "tk-0004",
+    "peer_id": "pij-remarkable-woodpecker",
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-pi",
+    "commit_sha": "c3b2fb969e68c7b0abbb1c938407738e9ddfbf34",
+    "packet_sha256": "32a9dd6253f2e2547e8397ff66d7821aadc5606def99ff1b2b3bd519e14c59c4",
+    "baseline_sha": "3a635c17110521a3ed93d03daf5eface57dc0bfd"
+  },
+  {
+    "unit_id": "tk-0005",
+    "peer_id": "pij-homeless-dudley",
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-copilot-cli",
+    "commit_sha": "3f86982c34f9d6a26a7b9bd1e90c414d4820546c",
+    "packet_sha256": "41b69d8303d135c0b8212c159834b3d68c3a7791b22ef3aa08e25bbf7fb7ae0b",
+    "baseline_sha": "3a635c17110521a3ed93d03daf5eface57dc0bfd"
+  },
+  {
+    "unit_id": "tk-0006",
+    "peer_id": "pij-adorable-bat",
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-vscode-copilot",
+    "commit_sha": "58159df4729eb229fdcf5fd3ec8037e3314d7eb9",
+    "packet_sha256": "5777dd2220646224fdb6571dd8efe6bf6c82d672553a7da87b70d775978b2a3f",
+    "baseline_sha": "3a635c17110521a3ed93d03daf5eface57dc0bfd"
+  },
+  {
+    "unit_id": "tk-0007",
+    "peer_id": "pij-mechanical-tsarina",
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-cursor",
+    "commit_sha": "0a72b5d461a9221047ce4243f3d1662762b42c77",
+    "packet_sha256": "a8354877dfef4a082e8031d8e2487279882aa80e0999e0d4adcf5944e40b9f98",
+    "baseline_sha": "3a635c17110521a3ed93d03daf5eface57dc0bfd"
+  },
+  {
+    "unit_id": "tk-0008",
+    "peer_id": "pij-kind-turkey",
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-snapshot-loader",
+    "commit_sha": "3a33c79a268eedc2f44ed827418dde88d3625be7",
+    "packet_sha256": "fc90f8aacdc468c80ac4e1ae92f943a767aa7a6f2a4a3eecdb10031c20335b96",
+    "baseline_sha": "3a635c17110521a3ed93d03daf5eface57dc0bfd"
+  }
+]

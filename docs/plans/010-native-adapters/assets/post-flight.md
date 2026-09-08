@@ -6,6 +6,7 @@
 - Six newly authorized applications are implemented through seven independent native coder lanes: Codex, Oh My Pi, Pi, Copilot CLI, VS Code Copilot, Cursor, and shared snapshot/SQLite storage. Existing Claude/configuration behavior is retained.
 - Nine production catalog entries cover ten representation paths because VS Code supports both documents and journals. One source-typed registry owns metadata and real runners.
 - Actual exact-candidate `harness boot --json` succeeded: 236 workspace tests, all six quality gates, and all five real proof modes. `native` builds a genuinely external SDK consumer and temporary installed CLI, checks both content policies, changed/deleted JSON and SQLite, partial/late journals, deleted source files and a real partial destination failure without checkpoint publication.
+- Factual product completion validation (`harness plan validate --complete`) succeeded with zero errors, warnings, open items, contradictions or orphans; see `product-completion-validation.json`. This validates product evidence links, not the separately incomplete formal Builder receipt chain.
 - Independent Opus composition review **approved**, no open/material findings. Report: `reviews/composition-opus-r1.md`; original receipt: `reviews/composition-opus-r1-receipt.json`. The reviewer inspected current source and folded committed evidence `32a4544eaf107f6899992af2cef02ce2ac98af2d`, without claiming to execute PM proof.
 
 ## Proof and remaining limits

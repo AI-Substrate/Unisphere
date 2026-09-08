@@ -1,0 +1,124 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "baseline",
+      "value": {
+        "record_type": "baseline",
+        "id": "baseline-3a635c17110521a3ed93d03daf5eface57dc0bfd",
+        "recorded_at": "2026-09-08T06:36:21.149Z",
+        "source_sha": "3a635c17110521a3ed93d03daf5eface57dc0bfd",
+        "plan": {
+          "path": "docs/plans/010-native-adapters/plan.dd.json",
+          "sha256": "fdd88eb6925cc55243d76f6e5d4f682cf91ac8daa3e5eddc6cdc78915ccd6511"
+        },
+        "guide": {
+          "path": "docs/plans/010-native-adapters/assets/impl-guide.dd.json",
+          "sha256": "38d5a0d69c2b56da77e5f2f4648d0592586e4df4a76f0523a1c2a67c3a45c475"
+        },
+        "files": [
+          {
+            "path": "crates/core/src/collection.rs",
+            "sha256": "7d8062a3ae40a0257422427d5a2bd99b20a93b2ee5e97a25867373a175fd5f53"
+          },
+          {
+            "path": "crates/core/src/catalog.rs",
+            "sha256": "b4d7bc009266c3366beca69b305661b6edcc357a1476b6a89100749812c17b12"
+          },
+          {
+            "path": "crates/core/src/snapshot.rs",
+            "sha256": "f455b99bd430d1f14ca512fa3516f00a02b42f3dccb2fbdaf1c295de330a57d0"
+          },
+          {
+            "path": "crates/testkit/src/collection.rs",
+            "sha256": "6b63d50f6f287cc8c93d9b369eabfe3cc8313a25f2294c57be2d60467993dca4"
+          }
+        ],
+        "checks": [
+          {
+            "id": "vd-0001",
+            "command": "cargo",
+            "args": [
+              "test",
+              "-p",
+              "unisphere-core",
+              "-p",
+              "unisphere-testkit",
+              "--lib"
+            ],
+            "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+            "exit_code": 0,
+            "stdout": "\nrunning 6 tests\ntest config::tests::omitted_and_explicit_empty_overrides_remain_distinct ... ok\ntest collection::tests::invalid_limits_are_rejected_before_use ... ok\ntest errors::tests::public_constructors_preserve_typed_categories_and_location ... ok\ntest collection::tests::loader_results_cannot_exceed_limits_or_claim_impossible_offsets ... ok\ntest errors::tests::display_does_not_include_caller_supplied_location_text ... ok\ntest collection::tests::limit_failures_identify_the_remedy_without_content ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 14 tests\ntest collection::tests::fixture_framing_preserves_physical_offsets_across_blanks_and_crlf ... ok\ntest collection::tests::configured_loader_error_does_not_touch_any_real_source ... ok\ntest fixtures::tests::invalid_documents_and_read_failures_have_explicit_expected_categories ... ok\ntest fixtures::tests::valid_documents_express_empty_and_uninterpreted_roots ... ok\ntest fakes::tests::inspector_records_requests_for_both_success_and_error ... ok\ntest fakes::tests::fakes_are_parallel_safe_without_shared_environment ... ok\ntest fakes::tests::reader_records_limits_and_returns_isolated_values_or_typed_failures ... ok\ntest collection::tests::fake_collector_returns_checkpoint_only_when_output_is_accepted ... ok\ntest fixtures::tests::duplicate_fixture_retains_both_keys_in_the_input_stream ... ok\ntest collection::tests::another_pure_adapter_conforms_without_storage_or_claude ... ok\ntest fakes::tests::relative_fixture_paths_are_rejected - should panic ... ok\ntest sealed::tests::rejects_relative_paths_before_creating_directories ... ok\ntest sealed::tests::constructs_without_executing_and_replaces_ambient_configuration ... ok\ntest fixtures::tests::oversized_fixture_is_valid_json_but_exceeds_the_limit ... ok\n\ntest result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n",
+            "stderr": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.14s\n     Running unittests src/lib.rs (target/debug/deps/unisphere_core-e37d7083083cb88e)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_testkit-ad454a928a88590d)\n",
+            "recorded_at": "2026-09-08T06:36:21.135Z"
+          }
+        ],
+        "review": {
+          "path": "docs/plans/010-native-adapters/assets/team/review-decomposition-rv-plan010-contracts-opus-r2.dd.json",
+          "sha256": "c07ee2002e3c47e91cec18f4956e589150984f1cf81787accfe64fe355302c13"
+        },
+        "warnings": [
+          {
+            "file": "crates/testkit/src/collection.rs",
+            "owning_unit": "tk-0001",
+            "stage": "guide",
+            "code": "read-coverage",
+            "message": "tk-0001 has no matching map for crates/testkit/src/collection.rs.",
+            "next_action": "Review units/tk-0002/reads/0/paths with the named unit and update the ownership guidance if useful; this warning does not block work."
+          },
+          {
+            "file": "crates/testkit/src/collection.rs",
+            "owning_unit": "tk-0001",
+            "stage": "guide",
+            "code": "read-coverage",
+            "message": "tk-0001 has no matching map for crates/testkit/src/collection.rs.",
+            "next_action": "Review units/tk-0003/reads/0/paths with the named unit and update the ownership guidance if useful; this warning does not block work."
+          },
+          {
+            "file": "crates/testkit/src/collection.rs",
+            "owning_unit": "tk-0001",
+            "stage": "guide",
+            "code": "read-coverage",
+            "message": "tk-0001 has no matching map for crates/testkit/src/collection.rs.",
+            "next_action": "Review units/tk-0004/reads/0/paths with the named unit and update the ownership guidance if useful; this warning does not block work."
+          },
+          {
+            "file": "crates/testkit/src/collection.rs",
+            "owning_unit": "tk-0001",
+            "stage": "guide",
+            "code": "read-coverage",
+            "message": "tk-0001 has no matching map for crates/testkit/src/collection.rs.",
+            "next_action": "Review units/tk-0005/reads/0/paths with the named unit and update the ownership guidance if useful; this warning does not block work."
+          },
+          {
+            "file": "crates/testkit/src/collection.rs",
+            "owning_unit": "tk-0001",
+            "stage": "guide",
+            "code": "read-coverage",
+            "message": "tk-0001 has no matching map for crates/testkit/src/collection.rs.",
+            "next_action": "Review units/tk-0006/reads/0/paths with the named unit and update the ownership guidance if useful; this warning does not block work."
+          },
+          {
+            "file": "crates/testkit/src/collection.rs",
+            "owning_unit": "tk-0001",
+            "stage": "guide",
+            "code": "read-coverage",
+            "message": "tk-0001 has no matching map for crates/testkit/src/collection.rs.",
+            "next_action": "Review units/tk-0007/reads/0/paths with the named unit and update the ownership guidance if useful; this warning does not block work."
+          },
+          {
+            "file": "crates/testkit/src/collection.rs",
+            "owning_unit": "tk-0001",
+            "stage": "guide",
+            "code": "read-coverage",
+            "message": "tk-0001 has no matching map for crates/testkit/src/collection.rs.",
+            "next_action": "Review units/tk-0008/reads/0/paths with the named unit and update the ownership guidance if useful; this warning does not block work."
+          }
+        ]
+      }
+    }
+  ],
+  "references": []
+}

@@ -1,0 +1,15 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "-p",
+    "unisphere-adapter-copilot-cli",
+    "--all-targets"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/.harness/temp/proof-copilot-cli-jsonl",
+  "started": "2026-09-08T06:52:24.813Z",
+  "completed": "2026-09-08T06:52:32.017Z",
+  "exit_code": 0,
+  "stdout": "\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 10 tests\ntest source_validation_is_explicit_and_does_not_require_a_real_path ... ok\ntest invalid_usage_values_are_not_coerced_summed_or_replaced_with_zero ... ok\ntest malformed_bytes_fail_the_batch_at_the_physical_offset_without_parser_text ... ok\ntest scoped_agent_metrics_exclude_prompt_labels_and_keep_independent_model_counters ... ok\ntest timestamps_use_only_the_event_clock_and_preserve_nanoseconds ... ok\ntest malformed_parts_preserve_valid_siblings_and_diagnostics_never_echo_payloads ... ok\ntest context_model_and_subagent_state_do_not_become_response_facts_or_turns ... ok\ntest native_lifecycle_content_is_structured_not_a_reconstructed_conversation ... ok\ntest physical_records_and_all_usage_scopes_survive_replay_and_batch_splitting ... ok\ntest full_synthetic_dialect_obeys_shared_metadata_and_provenance_contract ... ok\n\ntest result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+  "stderr": "    Blocking waiting for file lock on package cache\n    Blocking waiting for file lock on package cache\n   Compiling proc-macro2 v1.0.107\n   Compiling quote v1.0.47\n   Compiling unicode-ident v1.0.24\n   Compiling libc v0.2.189\n   Compiling serde_core v1.0.229\n   Compiling zmij v1.0.23\n   Compiling serde v1.0.229\n   Compiling serde_json v1.0.151\n   Compiling memchr v2.8.3\n   Compiling itoa v1.0.18\n   Compiling rustix v1.1.4\n   Compiling getrandom v0.4.3\n   Compiling cfg-if v1.0.4\n   Compiling bitflags v2.13.1\n   Compiling fastrand v2.5.0\n   Compiling time-core v0.1.9\n   Compiling powerfmt v0.2.0\n   Compiling once_cell v1.21.4\n   Compiling deranged v0.5.8\n   Compiling num-conv v0.2.2\n   Compiling time v0.3.55\n   Compiling errno v0.3.14\n   Compiling tempfile v3.27.0\n   Compiling syn v3.0.5\n   Compiling serde_derive v1.0.229\n   Compiling unisphere-core v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/.harness/temp/proof-copilot-cli-jsonl/crates/core)\n   Compiling unisphere-testkit v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/.harness/temp/proof-copilot-cli-jsonl/crates/testkit)\n   Compiling unisphere-adapter-copilot-cli v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/.harness/temp/proof-copilot-cli-jsonl/crates/adapter-copilot-cli)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.29s\n     Running unittests src/lib.rs (target/debug/deps/unisphere_adapter_copilot_cli-58d7bfd32d6f0f24)\n     Running tests/mapping.rs (target/debug/deps/mapping-2644524619493d24)\n"
+}

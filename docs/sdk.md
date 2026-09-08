@@ -167,10 +167,10 @@ external-consumer, CLI parity, and dependency checks are separate PM-owned proof
 SDK unit tests alone do not establish installation or no-network syscall proof.
 
 The configuration operation itself does not read sessions. Collection supports
-the documented source-derived Claude profile, not lossless telemetry or complete
-session reconstruction; see [fidelity.md](fidelity.md). The initial file loader is
-Unix-only, while mapping and encoding operate on supplied data. Support claims
-remain limited to actually exercised platforms and fixtures.
+the documented native JSONL and revision-snapshot projections, not lossless
+telemetry or complete session reconstruction; see [fidelity.md](fidelity.md).
+Concrete filesystem/SQLite loading is Unix-only; mapping and encoding operate on
+supplied data. Runtime proof is limited to the exercised platforms and fixtures.
 
 ## Collect a batch through injected ports
 
@@ -203,3 +203,56 @@ failure returns no accepted checkpoint, but may leave partial output; retries ar
 not exactly-once. `more` and `incomplete_tail` describe the current read boundary,
 not producer finality. `MappedBatch` contains typed diagnostics and physical source
 provenance, not a claim that unsupported payloads or references were captured.
+
+## Export a complete native snapshot revision
+
+`SnapshotCollector` composes the separate `SnapshotLoader`, `SnapshotAdapter` and
+existing `RecordWriter`. Its core-owned `SnapshotCollectionApi` takes a
+`SnapshotRequest`; it never invents a `ReadCursor` or LF offset for a database or
+whole-document revision.
+
+```rust
+use unisphere_sdk::{
+    MappingOptions, SnapshotCollectionApi, SnapshotCollector, SnapshotFormat,
+    SnapshotLimits, SnapshotRef, SnapshotRequest,
+};
+use unisphere_loader_snapshot::FileSnapshotLoader;
+use unisphere_adapter_vscode_copilot::VsCodeCopilotAdapter;
+use unisphere_output_otlp::OtlpJsonlWriter;
+
+let collector = SnapshotCollector::new(
+    FileSnapshotLoader, VsCodeCopilotAdapter, OtlpJsonlWriter,
+);
+let request = SnapshotRequest {
+    source: SnapshotRef {
+        path: "/explicit/session.jsonl".into(),
+        format: SnapshotFormat::JsonJournal,
+        session_id: None,
+    },
+    limits: SnapshotLimits::default(),
+    options: MappingOptions::default(),
+};
+let mut output = Vec::new();
+let result = collector.collect_snapshot(&request, &mut output)?;
+// result.checkpoint is returned only after the writer accepts the full batch.
+# Ok::<(), unisphere_sdk::PipelineError>(())
+```
+
+Formats are `JsonDocument`, `JsonJournal`, and `SqliteKeyValue { table }`. The
+loader returns bounded raw documents/operations/key-value rows plus a content
+revision; journal reconstruction stays in the pure VS Code mapper. The service
+validates the requested source/limits and revalidates injected loader results.
+An unrelated returned source fails before mapping/output.
+
+Each invocation emits the complete current projection followed by one
+`unisphere.session.snapshot` replacement manifest, even if the projection is
+empty. It returns a `SnapshotCheckpoint` binding source, revision, adapter and
+content policy after successful output. It does **not** implicitly skip matching
+revisions, persist checkpoints, retain historical versions, bind a destination or
+provide exactly-once ingestion. Consumers apply replacement only after accepting
+the complete output; partial write/flush failure returns no checkpoint.
+
+The manifest identifies `replace_projection`, record count, source selection,
+content policy and unknown finality. A revision is an observation of that bounded
+source representation, not producer finality or a global clock. Caller-side
+history, destination transactions and cross-source deduplication remain separate.

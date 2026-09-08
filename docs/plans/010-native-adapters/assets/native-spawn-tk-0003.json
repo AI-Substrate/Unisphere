@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pij-rs",
+    "spawn",
+    "--harness",
+    "omp",
+    "--model",
+    "github-copilot/gpt-6-astra",
+    "--effort",
+    "high",
+    "--cwd",
+    "/Users/jordanknight/substrate/unisphere/unisphere-plan010-oh-my-pi",
+    "--parent",
+    "pij-right-kotallo",
+    "--name",
+    "p010-tk-0003",
+    "--json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "started": "2026-09-08T06:33:16.637Z",
+  "completed": "2026-09-08T06:33:18.423Z",
+  "exit_code": 0,
+  "stdout": "{\"ok\":true,\"command\":\"pij spawn\",\"v\":2,\"data\":{\"id\":\"pij-financial-elle\",\"harness\":\"omp\",\"session\":\"01a07fb8-932e-7260-9caa-4aaf218397d8\",\"pane\":\"%4412\",\"proc\":{\"pid\":87478,\"proc_start\":20260908163316},\"folder\":\"/Users/jordanknight/substrate/unisphere/unisphere-plan010-oh-my-pi\",\"state\":\"idle\",\"semantic_state\":null,\"role\":null,\"parent\":\"pij-right-kotallo\",\"relay\":false,\"cross_session_inbound_accept\":false,\"native_extension_delivery\":false,\"spawn_id\":\"s-0bb4f651c638691142d05052d9b02019\",\"model\":\"github-copilot/gpt-6-astra\",\"effort\":\"high\",\"dispatched\":true,\"bound\":true,\"pid\":87478}}\n",
+  "stderr": ""
+}

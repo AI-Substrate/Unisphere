@@ -120,7 +120,8 @@ impl Mapping<'_> {
     fn strings(&mut self, object: &mut Map<String, Value>, fields: &[(&str, &str)]) {
         for (native, profile) in fields {
             if let Some(value) = self.string(object, native) {
-                self.attributes.insert((*profile).into(), Value::String(value));
+                self.attributes
+                    .insert((*profile).into(), Value::String(value));
             }
         }
     }
@@ -148,81 +149,92 @@ impl Mapping<'_> {
             }
             parsed
         });
-        let body = self.object(object.remove("payload")).and_then(|mut payload| {
-            self.strings(
-                &mut payload,
-                &[
-                    ("session_id", "unisphere.source.session.id"),
-                    ("turn_id", "unisphere.source.turn.id"),
-                    ("root_turn_id", "unisphere.source.root_turn.id"),
-                ],
-            );
-            match kind.as_str() {
-                "session_meta" => {
-                    self.strings(
-                        &mut payload,
-                        &[
-                            ("id", "gen_ai.conversation.id"),
-                            ("forked_from_id", "unisphere.source.parent.id"),
-                            ("parent_thread_id", "unisphere.codex.parent_thread.id"),
-                            ("originator", "unisphere.codex.originator"),
-                            ("cli_version", "unisphere.codex.cli_version"),
-                            ("model_provider", "gen_ai.provider.name"),
-                        ],
-                    );
-                    // Instructions/configuration are not conversation messages.
-                    if ["base_instructions", "instructions"].iter().any(|key| {
-                        payload.get(*key).is_some_and(|value| !value.is_null())
-                    }) {
-                        self.content_present = true;
-                        self.diagnostic(MappingDiagnosticCode::UnsupportedPart);
+        let body = self
+            .object(object.remove("payload"))
+            .and_then(|mut payload| {
+                self.strings(
+                    &mut payload,
+                    &[
+                        ("session_id", "unisphere.source.session.id"),
+                        ("turn_id", "unisphere.source.turn.id"),
+                        ("root_turn_id", "unisphere.source.root_turn.id"),
+                    ],
+                );
+                match kind.as_str() {
+                    "session_meta" => {
+                        self.strings(
+                            &mut payload,
+                            &[
+                                ("id", "gen_ai.conversation.id"),
+                                ("forked_from_id", "unisphere.source.parent.id"),
+                                ("parent_thread_id", "unisphere.codex.parent_thread.id"),
+                                ("originator", "unisphere.codex.originator"),
+                                ("cli_version", "unisphere.codex.cli_version"),
+                                ("model_provider", "gen_ai.provider.name"),
+                            ],
+                        );
+                        // Instructions/configuration are not conversation messages.
+                        if ["base_instructions", "instructions"]
+                            .iter()
+                            .any(|key| payload.get(*key).is_some_and(|value| !value.is_null()))
+                        {
+                            self.content_present = true;
+                            self.diagnostic(MappingDiagnosticCode::UnsupportedPart);
+                        }
+                        None
                     }
-                    None
-                }
-                "turn_context" => {
-                    self.strings(
-                        &mut payload,
-                        &[
-                            ("model", "gen_ai.request.model"),
-                            ("effort", "unisphere.codex.reasoning_effort"),
-                        ],
-                    );
-                    if ["user_instructions", "developer_instructions"].iter().any(|key| {
-                        payload.get(*key).is_some_and(|value| !value.is_null())
-                    }) {
-                        self.content_present = true;
-                        self.diagnostic(MappingDiagnosticCode::UnsupportedPart);
+                    "turn_context" => {
+                        self.strings(
+                            &mut payload,
+                            &[
+                                ("model", "gen_ai.request.model"),
+                                ("effort", "unisphere.codex.reasoning_effort"),
+                            ],
+                        );
+                        if ["user_instructions", "developer_instructions"]
+                            .iter()
+                            .any(|key| payload.get(*key).is_some_and(|value| !value.is_null()))
+                        {
+                            self.content_present = true;
+                            self.diagnostic(MappingDiagnosticCode::UnsupportedPart);
+                        }
+                        None
                     }
-                    None
-                }
-                "response_item" | "event_msg" => {
-                    let subtype = self.kind(&mut payload);
-                    let body = if kind == "response_item" {
-                        self.response(&subtype, payload)
-                    } else {
-                        self.event(&subtype, payload)
-                    };
-                    self.attributes.insert("unisphere.codex.payload.type".into(), json!(subtype));
-                    body
-                }
-                "compacted" => {
-                    self.attributes.insert("unisphere.codex.representation".into(), json!("compaction"));
-                    if payload.get("replacement_history").is_some_and(|value| !value.is_null()) {
-                        self.content_present = true;
-                        self.diagnostic(MappingDiagnosticCode::UnsupportedPart);
+                    "response_item" | "event_msg" => {
+                        let subtype = self.kind(&mut payload);
+                        let body = if kind == "response_item" {
+                            self.response(&subtype, payload)
+                        } else {
+                            self.event(&subtype, payload)
+                        };
+                        self.attributes
+                            .insert("unisphere.codex.payload.type".into(), json!(subtype));
+                        body
                     }
-                    let part = self.text(payload.remove("message"), "unisphere.compaction");
-                    self.body(None, part.into_iter().collect())
+                    "compacted" => {
+                        self.attributes
+                            .insert("unisphere.codex.representation".into(), json!("compaction"));
+                        if payload
+                            .get("replacement_history")
+                            .is_some_and(|value| !value.is_null())
+                        {
+                            self.content_present = true;
+                            self.diagnostic(MappingDiagnosticCode::UnsupportedPart);
+                        }
+                        let part = self.text(payload.remove("message"), "unisphere.compaction");
+                        self.body(None, part.into_iter().collect())
+                    }
+                    _ => {
+                        self.diagnostic(MappingDiagnosticCode::UnsupportedRecord);
+                        None
+                    }
                 }
-                _ => {
-                    self.diagnostic(MappingDiagnosticCode::UnsupportedRecord);
-                    None
-                }
-            }
-        });
-        self.attributes.insert("unisphere.source.kind".into(), json!(kind));
+            });
+        self.attributes
+            .insert("unisphere.source.kind".into(), json!(kind));
         if self.content_present && !self.include_content {
-            self.attributes.insert("unisphere.content.omitted".into(), json!(true));
+            self.attributes
+                .insert("unisphere.content.omitted".into(), json!(true));
             self.diagnostic(MappingDiagnosticCode::ContentOmitted);
         }
         TelemetryRecord {
@@ -245,7 +257,8 @@ impl Mapping<'_> {
                 ("phase", "unisphere.codex.phase"),
             ],
         );
-        if let Some(value) = payload.remove("internal_chat_message_metadata_passthrough")
+        if let Some(value) = payload
+            .remove("internal_chat_message_metadata_passthrough")
             .filter(|value| !value.is_null())
             && let Some(mut metadata) = self.object(Some(value))
         {
@@ -255,8 +268,14 @@ impl Mapping<'_> {
             "message" => {
                 let role = self.string(&mut payload, "role");
                 let role = match role {
-                    Some(role) if matches!(role.as_str(), "user" | "assistant" | "system" | "developer") => {
-                        self.attributes.insert("unisphere.message.role".into(), json!(role));
+                    Some(role)
+                        if matches!(
+                            role.as_str(),
+                            "user" | "assistant" | "system" | "developer"
+                        ) =>
+                    {
+                        self.attributes
+                            .insert("unisphere.message.role".into(), json!(role));
                         Some(role)
                     }
                     _ => {
@@ -272,7 +291,10 @@ impl Mapping<'_> {
                 if let Some(content) = payload.remove("content").filter(|value| !value.is_null()) {
                     parts.extend(self.parts(Some(content), true));
                 }
-                if payload.get("encrypted_content").is_some_and(|value| !value.is_null()) {
+                if payload
+                    .get("encrypted_content")
+                    .is_some_and(|value| !value.is_null())
+                {
                     self.content_present = true;
                     self.diagnostic(MappingDiagnosticCode::UnsupportedPart);
                     if self.include_content {
@@ -282,14 +304,21 @@ impl Mapping<'_> {
                 self.body(None, parts)
             }
             "function_call" | "custom_tool_call" => {
-                let key = if kind == "function_call" { "arguments" } else { "input" };
+                let key = if kind == "function_call" {
+                    "arguments"
+                } else {
+                    "input"
+                };
                 self.content_present |= payload.contains_key(key);
                 let arguments = self.string(&mut payload, key);
                 if arguments.is_none() || !self.attributes.contains_key("unisphere.tool.name") {
                     self.diagnostic(MappingDiagnosticCode::InvalidField);
                     return None;
                 }
-                if payload.get("encrypted_function_args").is_some_and(|value| !value.is_null()) {
+                if payload
+                    .get("encrypted_function_args")
+                    .is_some_and(|value| !value.is_null())
+                {
                     self.diagnostic(MappingDiagnosticCode::UnsupportedPart);
                 }
                 if !self.include_content {
@@ -302,7 +331,9 @@ impl Mapping<'_> {
             "function_call_output" | "custom_tool_call_output" => {
                 self.content_present |= payload.contains_key("output");
                 let response = match payload.remove("output") {
-                    Some(Value::String(text)) => self.include_content.then_some(Value::String(text)),
+                    Some(Value::String(text)) => {
+                        self.include_content.then_some(Value::String(text))
+                    }
                     Some(value @ Value::Array(_)) => {
                         let parts = self.parts(Some(value), false);
                         self.include_content.then_some(Value::Array(parts))
@@ -325,8 +356,11 @@ impl Mapping<'_> {
                 self.body(None, vec![part])
             }
             "compaction" | "compaction_summary" | "context_compaction" => {
-                self.attributes.insert("unisphere.codex.representation".into(), json!("compaction"));
-                self.content_present = payload.get("encrypted_content").is_some_and(|value| !value.is_null());
+                self.attributes
+                    .insert("unisphere.codex.representation".into(), json!("compaction"));
+                self.content_present = payload
+                    .get("encrypted_content")
+                    .is_some_and(|value| !value.is_null());
                 self.diagnostic(MappingDiagnosticCode::UnsupportedPart);
                 None
             }
@@ -338,7 +372,10 @@ impl Mapping<'_> {
     }
 
     fn event(&mut self, kind: &str, mut payload: Map<String, Value>) -> Option<Value> {
-        self.attributes.insert("unisphere.codex.representation".into(), json!("native_event_summary"));
+        self.attributes.insert(
+            "unisphere.codex.representation".into(),
+            json!("native_event_summary"),
+        );
         self.strings(
             &mut payload,
             &[
@@ -354,7 +391,9 @@ impl Mapping<'_> {
             }
             "user_message" | "agent_message" => {
                 for key in ["images", "local_images", "audio", "local_audio"] {
-                    if payload.get(key).is_some_and(|value| !value.is_null() && value.as_array().is_none_or(|items| !items.is_empty())) {
+                    if payload.get(key).is_some_and(|value| {
+                        !value.is_null() && value.as_array().is_none_or(|items| !items.is_empty())
+                    }) {
                         self.content_present = true;
                         self.diagnostic(MappingDiagnosticCode::UnsupportedPart);
                     }
@@ -373,7 +412,8 @@ impl Mapping<'_> {
             "exec_command_begin" | "exec_command_end" => {
                 if let Some(value) = payload.remove("exit_code") {
                     if value.as_i64().is_some() {
-                        self.attributes.insert("unisphere.codex.exit_code".into(), value);
+                        self.attributes
+                            .insert("unisphere.codex.exit_code".into(), value);
                     } else {
                         self.diagnostic(MappingDiagnosticCode::InvalidField);
                     }
@@ -388,22 +428,35 @@ impl Mapping<'_> {
     }
 
     fn usage(&mut self, value: Option<Value>) {
-        let Some(value) = value.filter(|value| !value.is_null()) else { return };
-        let Some(mut info) = self.object(Some(value)) else { return };
+        let Some(value) = value.filter(|value| !value.is_null()) else {
+            return;
+        };
+        let Some(mut info) = self.object(Some(value)) else {
+            return;
+        };
         for (native, scope) in [
             ("last_token_usage", "native_last_token_usage"),
             ("total_token_usage", "native_cumulative_token_usage"),
         ] {
-            let Some(value) = info.remove(native).filter(|value| !value.is_null()) else { continue };
-            let Some(mut usage) = self.object(Some(value)) else { continue };
+            let Some(value) = info.remove(native).filter(|value| !value.is_null()) else {
+                continue;
+            };
+            let Some(mut usage) = self.object(Some(value)) else {
+                continue;
+            };
             let mut retained = false;
             for field in [
-                "input_tokens", "cached_input_tokens", "cache_write_input_tokens",
-                "output_tokens", "reasoning_output_tokens", "total_tokens",
+                "input_tokens",
+                "cached_input_tokens",
+                "cache_write_input_tokens",
+                "output_tokens",
+                "reasoning_output_tokens",
+                "total_tokens",
             ] {
                 if let Some(value) = usage.remove(field) {
                     if value.as_i64().is_some_and(|value| value >= 0) {
-                        self.attributes.insert(format!("unisphere.usage.{native}.{field}"), value);
+                        self.attributes
+                            .insert(format!("unisphere.usage.{native}.{field}"), value);
                         retained = true;
                     } else {
                         self.diagnostic(MappingDiagnosticCode::InvalidField);
@@ -411,12 +464,17 @@ impl Mapping<'_> {
                 }
             }
             if retained {
-                self.attributes.insert(format!("unisphere.usage.{native}.scope"), json!(scope));
+                self.attributes
+                    .insert(format!("unisphere.usage.{native}.scope"), json!(scope));
             }
         }
-        if let Some(value) = info.remove("model_context_window").filter(|value| !value.is_null()) {
+        if let Some(value) = info
+            .remove("model_context_window")
+            .filter(|value| !value.is_null())
+        {
             if value.as_i64().is_some_and(|value| value >= 0) {
-                self.attributes.insert("unisphere.codex.model_context_window".into(), value);
+                self.attributes
+                    .insert("unisphere.codex.model_context_window".into(), value);
             } else {
                 self.diagnostic(MappingDiagnosticCode::InvalidField);
             }
@@ -444,23 +502,30 @@ impl Mapping<'_> {
             self.diagnostic(MappingDiagnosticCode::InvalidField);
             return Vec::new();
         };
-        parts.into_iter().filter_map(|part| {
-            let mut part = self.object(Some(part))?;
-            let kind = self.kind(&mut part);
-            let supported = if reasoning {
-                matches!(kind.as_str(), "summary_text" | "reasoning_text" | "text")
-            } else {
-                matches!(kind.as_str(), "input_text" | "output_text")
-            };
-            if supported {
-                let mut text = self.text(part.remove("text"), if reasoning { "reasoning" } else { "text" })?;
-                text["unisphere.codex.native_type"] = json!(kind);
-                Some(text)
-            } else {
-                self.diagnostic(MappingDiagnosticCode::UnsupportedPart);
-                self.include_content.then(|| json!({"type": "unisphere.unknown", "native_type": kind}))
-            }
-        }).collect()
+        parts
+            .into_iter()
+            .filter_map(|part| {
+                let mut part = self.object(Some(part))?;
+                let kind = self.kind(&mut part);
+                let supported = if reasoning {
+                    matches!(kind.as_str(), "summary_text" | "reasoning_text" | "text")
+                } else {
+                    matches!(kind.as_str(), "input_text" | "output_text")
+                };
+                if supported {
+                    let mut text = self.text(
+                        part.remove("text"),
+                        if reasoning { "reasoning" } else { "text" },
+                    )?;
+                    text["unisphere.codex.native_type"] = json!(kind);
+                    Some(text)
+                } else {
+                    self.diagnostic(MappingDiagnosticCode::UnsupportedPart);
+                    self.include_content
+                        .then(|| json!({"type": "unisphere.unknown", "native_type": kind}))
+                }
+            })
+            .collect()
     }
 
     fn tool_part(&self, kind: &str) -> Value {
@@ -477,12 +542,16 @@ impl Mapping<'_> {
     }
 
     fn action(&mut self, value: Option<Value>, tool_kind: &str) -> Option<Value> {
-        let Some(value) = value.filter(|value| !value.is_null()) else { return None };
+        let value = value.filter(|value| !value.is_null())?;
         self.content_present = true;
         let mut action = self.object(Some(value))?;
         let kind = self.kind(&mut action);
         let fields: &[(&str, bool)] = match (tool_kind, kind.as_str()) {
-            ("local_shell_call", "exec") => &[("command", true), ("working_directory", false), ("user", false)],
+            ("local_shell_call", "exec") => &[
+                ("command", true),
+                ("working_directory", false),
+                ("user", false),
+            ],
             ("web_search_call", "search") => &[("query", false), ("queries", true)],
             ("web_search_call", "open_page") => &[("url", false)],
             ("web_search_call", "find_in_page") => &[("url", false), ("pattern", false)],
@@ -495,7 +564,9 @@ impl Mapping<'_> {
         for (field, array) in fields {
             if let Some(value) = action.remove(*field).filter(|value| !value.is_null()) {
                 let valid = if *array {
-                    value.as_array().is_some_and(|values| values.iter().all(Value::is_string))
+                    value
+                        .as_array()
+                        .is_some_and(|values| values.iter().all(Value::is_string))
                 } else {
                     value.is_string()
                 };

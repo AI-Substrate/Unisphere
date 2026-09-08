@@ -1,0 +1,74 @@
+{
+  "at": "2026-09-08T07:07:58.191Z",
+  "owner": "pij-right-kotallo",
+  "deliveries": [
+    {
+      "unit": "tk-0002",
+      "peer": "pij-ideological-koala",
+      "slug": "codex",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-codex",
+      "commit": "891ff3a8860ac5f1ab2e033c8464adbe6c87c8f3",
+      "package": "unisphere-adapter-codex"
+    },
+    {
+      "unit": "tk-0003",
+      "peer": "pij-financial-elle",
+      "slug": "omp",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-oh-my-pi",
+      "commit": "ec22339a50191fd782b5fb5559c1e71ac3b22294",
+      "package": "unisphere-adapter-omp"
+    },
+    {
+      "unit": "tk-0004",
+      "peer": "pij-remarkable-woodpecker",
+      "slug": "pi",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-pi",
+      "commit": "c3b2fb969e68c7b0abbb1c938407738e9ddfbf34",
+      "package": "unisphere-adapter-pi"
+    },
+    {
+      "unit": "tk-0005",
+      "peer": "pij-homeless-dudley",
+      "slug": "copilot-cli-complete",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-copilot-cli",
+      "commit": "3f86982c34f9d6a26a7b9bd1e90c414d4820546c",
+      "package": "unisphere-adapter-copilot-cli"
+    },
+    {
+      "unit": "tk-0006",
+      "peer": "pij-adorable-bat",
+      "slug": "vscode-copilot",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-vscode-copilot",
+      "commit": "58159df4729eb229fdcf5fd3ec8037e3314d7eb9",
+      "package": "unisphere-adapter-vscode-copilot"
+    },
+    {
+      "unit": "tk-0007",
+      "part": "complete",
+      "peer": "pij-mechanical-tsarina",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-cursor",
+      "commit": "0a72b5d461a9221047ce4243f3d1662762b42c77",
+      "package": "unisphere-adapter-cursor",
+      "slug": "cursor-complete"
+    },
+    {
+      "unit": "tk-0008",
+      "peer": "pij-kind-turkey",
+      "slug": "snapshot-loader-corrected",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-snapshot-loader",
+      "commit": "3a33c79a268eedc2f44ed827418dde88d3625be7",
+      "package": "unisphere-loader-snapshot"
+    }
+  ],
+  "proofs": {
+    "codex": 10,
+    "omp": 11,
+    "pi": 10,
+    "copilot_cli": 18,
+    "vscode_copilot": 14,
+    "cursor": 23,
+    "snapshot_loader": 23
+  },
+  "failed_storage_delivery_preserved": "1c1799c71decefdc2ced6b56b9c865509a79af11",
+  "scope": "Every scoped delivered crate passed actual PM tests; complete composed SDK/CLI/catalog/changed-source proof and review remain owed."
+}

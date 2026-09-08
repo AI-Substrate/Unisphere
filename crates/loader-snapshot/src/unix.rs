@@ -58,7 +58,9 @@ impl SourceFile {
             .custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK)
             .open(&source.path)
             .map_err(|_| error(PipelineErrorKind::Read))?;
-        let metadata = file.metadata().map_err(|_| error(PipelineErrorKind::Read))?;
+        let metadata = file
+            .metadata()
+            .map_err(|_| error(PipelineErrorKind::Read))?;
         if !metadata.is_file() {
             return Err(error(PipelineErrorKind::Read));
         }
@@ -101,7 +103,11 @@ struct Budget {
 
 impl Budget {
     fn new(limits: SnapshotLimits) -> Self {
-        Self { limits, records: 0, bytes: 0 }
+        Self {
+            limits,
+            records: 0,
+            bytes: 0,
+        }
     }
 
     fn value_capacity(&self, key_bytes: usize) -> Result<usize, PipelineError> {
@@ -111,7 +117,8 @@ impl Budget {
         if key_bytes == 0 {
             return Err(error(PipelineErrorKind::InvalidData));
         }
-        self.limits.max_snapshot_bytes
+        self.limits
+            .max_snapshot_bytes
             .checked_sub(self.bytes)
             .and_then(|remaining| remaining.checked_sub(key_bytes))
             .ok_or_else(|| error(PipelineErrorKind::BatchLimit))
@@ -142,10 +149,19 @@ fn read_json(
     let mut records = Vec::new();
     let journal = matches!(format, SnapshotFormat::JsonJournal);
     loop {
-        if journal && reader.fill_buf().map_err(|_| error(PipelineErrorKind::Read))?.is_empty() {
+        if journal
+            && reader
+                .fill_buf()
+                .map_err(|_| error(PipelineErrorKind::Read))?
+                .is_empty()
+        {
             break;
         }
-        let key = if journal { format!("journal:{}", records.len()) } else { "document".into() };
+        let key = if journal {
+            format!("journal:{}", records.len())
+        } else {
+            "document".into()
+        };
         let available = budget.value_capacity(key.len())?;
         let capacity = limits.max_record_bytes.min(available);
         let limit_error = if limits.max_record_bytes <= available {
@@ -172,7 +188,9 @@ fn read_value(
 ) -> Result<Vec<u8>, PipelineError> {
     let mut bytes = Vec::new();
     loop {
-        let available = reader.fill_buf().map_err(|_| error(PipelineErrorKind::Read))?;
+        let available = reader
+            .fill_buf()
+            .map_err(|_| error(PipelineErrorKind::Read))?;
         if available.is_empty() {
             return if journal {
                 Err(error(PipelineErrorKind::InvalidData))
@@ -180,7 +198,11 @@ fn read_value(
                 Ok(bytes)
             };
         }
-        let newline = if journal { available.iter().position(|byte| *byte == b'\n') } else { None };
+        let newline = if journal {
+            available.iter().position(|byte| *byte == b'\n')
+        } else {
+            None
+        };
         let count = newline.unwrap_or(available.len());
         if count > capacity - bytes.len() {
             return Err(error(limit_error));
@@ -198,8 +220,11 @@ fn validate_json(bytes: &[u8]) -> Result<(), PipelineError> {
     // whitespace, CR, field order and native bytes for the pure adapter/revision.
     std::str::from_utf8(bytes).map_err(|_| error(PipelineErrorKind::InvalidData))?;
     let mut deserializer = serde_json::Deserializer::from_slice(bytes);
-    IgnoredAny::deserialize(&mut deserializer).map_err(|_| error(PipelineErrorKind::InvalidData))?;
-    deserializer.end().map_err(|_| error(PipelineErrorKind::InvalidData))
+    IgnoredAny::deserialize(&mut deserializer)
+        .map_err(|_| error(PipelineErrorKind::InvalidData))?;
+    deserializer
+        .end()
+        .map_err(|_| error(PipelineErrorKind::InvalidData))
 }
 
 fn revision(format: &SnapshotFormat, records: &[SnapshotRecord]) -> String {
@@ -227,28 +252,45 @@ fn revision(format: &SnapshotFormat, records: &[SnapshotRecord]) -> String {
 
 #[cfg(test)]
 mod tests {
+    use super::*;
     use std::{io::Write, os::unix::fs::symlink};
     use tempfile::TempDir;
-    use super::*;
 
     #[test]
     fn file_snapshot_rejects_changes_between_read_and_publication() {
-        for mutation in ["append", "truncate", "rewrite", "replace", "unlink", "symlink"] {
+        for mutation in [
+            "append", "truncate", "rewrite", "replace", "unlink", "symlink",
+        ] {
             let directory = TempDir::new().unwrap();
             let path = directory.path().join("source.json");
             fs::write(&path, b"{}").unwrap();
-            let source = SnapshotRef { path: path.clone(), format: SnapshotFormat::JsonDocument, session_id: None };
+            let source = SnapshotRef {
+                path: path.clone(),
+                format: SnapshotFormat::JsonDocument,
+                session_id: None,
+            };
             let mut opened = SourceFile::open(&source).unwrap();
             let original_time = opened.metadata.modified().unwrap();
-            let records = read_json(&mut opened.file, &source.format, SnapshotLimits::default()).unwrap();
+            let records =
+                read_json(&mut opened.file, &source.format, SnapshotLimits::default()).unwrap();
             assert_eq!(records[0].bytes, b"{}");
             match mutation {
-                "append" => OpenOptions::new().append(true).open(&path).unwrap().write_all(b" ").unwrap(),
+                "append" => OpenOptions::new()
+                    .append(true)
+                    .open(&path)
+                    .unwrap()
+                    .write_all(b" ")
+                    .unwrap(),
                 "truncate" => File::create(&path).unwrap().set_len(0).unwrap(),
                 "rewrite" => {
                     fs::write(&path, b"[]").unwrap();
                     // Restoring mtime must not defeat ctime-based mutation detection.
-                    File::options().write(true).open(&path).unwrap().set_modified(original_time).unwrap();
+                    File::options()
+                        .write(true)
+                        .open(&path)
+                        .unwrap()
+                        .set_modified(original_time)
+                        .unwrap();
                 }
                 "replace" => {
                     let replacement = directory.path().join("replacement");
@@ -264,7 +306,11 @@ mod tests {
                 }
                 _ => unreachable!(),
             }
-            assert_eq!(opened.verify(&source, true).unwrap_err().kind(), PipelineErrorKind::SourceChanged, "{mutation}");
+            assert_eq!(
+                opened.verify(&source, true).unwrap_err().kind(),
+                PipelineErrorKind::SourceChanged,
+                "{mutation}"
+            );
         }
     }
 }

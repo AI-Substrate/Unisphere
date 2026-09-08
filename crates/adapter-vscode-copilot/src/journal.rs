@@ -15,11 +15,15 @@ pub(crate) fn reduce(snapshot: &NativeSnapshot) -> Result<Value, PipelineError> 
     })? / 4;
     let mut state = None;
     for record in &snapshot.records {
-        let Value::Object(mut entry) = serde_json::from_slice(&record.bytes)
-            .map_err(|_| malformed())? else {
+        let Value::Object(mut entry) =
+            serde_json::from_slice(&record.bytes).map_err(|_| malformed())?
+        else {
             return Err(malformed());
         };
-        let kind = entry.get("kind").and_then(Value::as_u64).ok_or_else(malformed)?;
+        let kind = entry
+            .get("kind")
+            .and_then(Value::as_u64)
+            .ok_or_else(malformed)?;
         if kind == 0 {
             state = Some(entry.remove("v").ok_or_else(malformed)?);
             continue;
@@ -31,7 +35,10 @@ pub(crate) fn reduce(snapshot: &NativeSnapshot) -> Result<Value, PipelineError> 
         let Value::Array(path) = entry.remove("k").ok_or_else(malformed)? else {
             return Err(malformed());
         };
-        if !path.iter().all(|part| part.is_string() || part.as_u64().is_some()) {
+        if !path
+            .iter()
+            .all(|part| part.is_string() || part.as_u64().is_some())
+        {
             return Err(malformed());
         }
         if path.is_empty() {
@@ -48,7 +55,12 @@ pub(crate) fn reduce(snapshot: &NativeSnapshot) -> Result<Value, PipelineError> 
             parent = child_mut(parent, segment).ok_or_else(malformed)?;
         }
         match kind {
-            1 => set(parent, leaf, Some(entry.remove("v").ok_or_else(malformed)?), &mut holes)?,
+            1 => set(
+                parent,
+                leaf,
+                Some(entry.remove("v").ok_or_else(malformed)?),
+                &mut holes,
+            )?,
             2 => push(parent, leaf, &mut entry, &mut holes)?,
             3 => set(parent, leaf, None, &mut holes)?,
             _ => unreachable!(),
@@ -88,7 +100,8 @@ fn extend(array: &mut Vec<Value>, length: usize, holes: &mut usize) -> Result<()
         return Err(malformed());
     }
     let added = length.saturating_sub(array.len());
-    *holes = holes.checked_sub(added)
+    *holes = holes
+        .checked_sub(added)
         .ok_or_else(|| PipelineError::new(PipelineErrorKind::BatchLimit, None))?;
     array.resize(length, Value::Null);
     Ok(())
@@ -113,7 +126,8 @@ fn set(
             }
         }
         Value::Array(array) => {
-            let index = array_index(segment).filter(|index| *index < u32::MAX as usize)
+            let index = array_index(segment)
+                .filter(|index| *index < u32::MAX as usize)
                 .ok_or_else(malformed)?;
             if index >= array.len() {
                 extend(array, index.checked_add(1).ok_or_else(malformed)?, holes)?;
@@ -135,7 +149,8 @@ fn push(
     let slot = match parent {
         Value::Object(object) => object.entry(object_key(segment)).or_insert(Value::Null),
         Value::Array(array) => {
-            let index = array_index(segment).filter(|index| *index < u32::MAX as usize)
+            let index = array_index(segment)
+                .filter(|index| *index < u32::MAX as usize)
                 .ok_or_else(malformed)?;
             if index >= array.len() {
                 extend(array, index.checked_add(1).ok_or_else(malformed)?, holes)?;
@@ -144,20 +159,30 @@ fn push(
         }
         _ => return Err(malformed()),
     };
-    if slot.is_null() || slot == &Value::Bool(false)
-        || slot.as_f64() == Some(0.0) || slot.as_str() == Some("") {
+    if slot.is_null()
+        || slot == &Value::Bool(false)
+        || slot.as_f64() == Some(0.0)
+        || slot.as_str() == Some("")
+    {
         *slot = Value::Array(Vec::new());
     }
     let array = slot.as_array_mut().ok_or_else(malformed)?;
     if let Some(index) = entry.remove("i") {
-        let length = index.as_u64().and_then(|i| usize::try_from(i).ok()).ok_or_else(malformed)?;
+        let length = index
+            .as_u64()
+            .and_then(|i| usize::try_from(i).ok())
+            .ok_or_else(malformed)?;
         extend(array, length, holes)?;
     }
     if let Some(value) = entry.remove("v") {
         let Value::Array(mut values) = value else {
             return Err(malformed());
         };
-        if array.len().checked_add(values.len()).is_none_or(|len| len > u32::MAX as usize) {
+        if array
+            .len()
+            .checked_add(values.len())
+            .is_none_or(|len| len > u32::MAX as usize)
+        {
             return Err(malformed());
         }
         array.append(&mut values);

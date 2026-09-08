@@ -55,9 +55,12 @@ impl SnapshotAdapter for CopilotCliAdapterSnapshot {
         }
         let value: Value = serde_json::from_slice(&record.bytes)
             .map_err(|_| PipelineError::new(PipelineErrorKind::InvalidData, None))?;
-        let document = value.as_object()
+        let document = value
+            .as_object()
             .ok_or_else(|| PipelineError::new(PipelineErrorKind::InvalidData, None))?;
-        let session_id = document.get("sessionId").and_then(Value::as_str)
+        let session_id = document
+            .get("sessionId")
+            .and_then(Value::as_str)
             .filter(|id| !id.is_empty());
         if let Some(selected) = snapshot.source.session_id.as_deref()
             && session_id != Some(selected)
@@ -65,14 +68,23 @@ impl SnapshotAdapter for CopilotCliAdapterSnapshot {
             return Err(PipelineError::new(PipelineErrorKind::InvalidInput, None));
         }
         let mut output = MappedSnapshot::default();
-        let projection = Projection { snapshot, options, session_id };
+        let projection = Projection {
+            snapshot,
+            options,
+            session_id,
+        };
         projection.emit("document", "session", &mut output, |mapping| {
             // The document has no native discriminator; do not invent an event type.
-            mapping.attributes.insert("unisphere.source.kind".into(), json!("unknown"));
+            mapping
+                .attributes
+                .insert("unisphere.source.kind".into(), json!("unknown"));
             if session_id.is_none() {
                 mapping.diagnostic(MappingDiagnosticCode::InvalidField);
             }
-            mapping.strings(document, &[("startTime", "unisphere.copilot.session.start_time")]);
+            mapping.strings(
+                document,
+                &[("startTime", "unisphere.copilot.session.start_time")],
+            );
             let timestamp = timestamp(document.get("startTime"), mapping);
             if !document.contains_key("chatMessages") && !document.contains_key("timeline") {
                 mapping.diagnostic(MappingDiagnosticCode::UnsupportedRecord);
@@ -80,7 +92,9 @@ impl SnapshotAdapter for CopilotCliAdapterSnapshot {
             (timestamp, None)
         });
         for view in ["chatMessages", "timeline"] {
-            let Some(value) = document.get(view) else { continue };
+            let Some(value) = document.get(view) else {
+                continue;
+            };
             let Some(items) = value.as_array() else {
                 output.diagnostics.push(SnapshotDiagnostic {
                     key: format!("document#/{view}"),
@@ -92,7 +106,9 @@ impl SnapshotAdapter for CopilotCliAdapterSnapshot {
                 let key = format!("document#/{view}/{index}");
                 projection.emit(&key, view, &mut output, |mapping| {
                     let Some(data) = mapping.object(value) else {
-                        mapping.attributes.insert("unisphere.source.kind".into(), json!("unknown"));
+                        mapping
+                            .attributes
+                            .insert("unisphere.source.kind".into(), json!("unknown"));
                         return (None, None);
                     };
                     if view == "chatMessages" {
@@ -122,27 +138,42 @@ impl Projection<'_> {
         output: &mut MappedSnapshot,
         project: impl FnOnce(&mut Mapping<'_>) -> (Option<u64>, Option<Value>),
     ) {
-        let mut diagnostic = |code| output.diagnostics.push(SnapshotDiagnostic {
-            key: key.into(),
-            code,
-        });
+        let mut diagnostic = |code| {
+            output.diagnostics.push(SnapshotDiagnostic {
+                key: key.into(),
+                code,
+            })
+        };
         let mut mapping = Mapping {
             include_content: self.options.include_content,
             omitted: false,
             diagnostics: &mut diagnostic,
             attributes: BTreeMap::from([
                 ("unisphere.profile.version".into(), json!(1)),
-                ("unisphere.source.adapter".into(), json!(SNAPSHOT_DESCRIPTOR.id)),
-                ("unisphere.source.path".into(), json!(self.snapshot.source.path.to_str())),
+                (
+                    "unisphere.source.adapter".into(),
+                    json!(SNAPSHOT_DESCRIPTOR.id),
+                ),
+                (
+                    "unisphere.source.path".into(),
+                    json!(self.snapshot.source.path.to_str()),
+                ),
                 ("unisphere.source.key".into(), json!(key)),
-                ("unisphere.source.revision".into(), json!(self.snapshot.revision)),
+                (
+                    "unisphere.source.revision".into(),
+                    json!(self.snapshot.revision),
+                ),
                 ("unisphere.source.format".into(), json!("json_document")),
                 ("unisphere.copilot.view".into(), json!(view)),
             ]),
         };
         if let Some(id) = self.session_id {
-            mapping.attributes.insert("unisphere.source.session.id".into(), json!(id));
-            mapping.attributes.insert("gen_ai.conversation.id".into(), json!(id));
+            mapping
+                .attributes
+                .insert("unisphere.source.session.id".into(), json!(id));
+            mapping
+                .attributes
+                .insert("gen_ai.conversation.id".into(), json!(id));
         }
         let (timestamp_unix_nano, body) = project(&mut mapping);
         output.records.push(TelemetryRecord {
@@ -156,7 +187,8 @@ impl Projection<'_> {
 
 fn timestamp(value: Option<&Value>, mapping: &mut Mapping<'_>) -> Option<u64> {
     let value = value?;
-    let parsed = value.as_str()
+    let parsed = value
+        .as_str()
         .and_then(|text| OffsetDateTime::parse(text, &Rfc3339).ok())
         .and_then(|time| u64::try_from(time.unix_timestamp_nanos()).ok());
     if parsed.is_none() {
@@ -167,7 +199,9 @@ fn timestamp(value: Option<&Value>, mapping: &mut Mapping<'_>) -> Option<u64> {
 
 fn chat(data: &Map<String, Value>, mapping: &mut Mapping<'_>) -> Option<Value> {
     let role = mapping.string(data, "role").unwrap_or("unknown");
-    mapping.attributes.insert("unisphere.source.kind".into(), json!(role));
+    mapping
+        .attributes
+        .insert("unisphere.source.kind".into(), json!(role));
     if !matches!(role, "user" | "assistant" | "tool") {
         mapping.diagnostic(MappingDiagnosticCode::UnsupportedRecord);
         if !data.is_empty() {
@@ -241,17 +275,27 @@ fn function_call(data: &Map<String, Value>, mapping: &mut Mapping<'_>) -> Option
 
 fn timeline(data: &Map<String, Value>, mapping: &mut Mapping<'_>) -> Option<Value> {
     let kind = mapping.string(data, "type").unwrap_or("unknown");
-    mapping.attributes.insert("unisphere.source.kind".into(), json!(kind));
-    mapping.strings(data, &[
-        ("id", "unisphere.source.record.id"),
-        ("callId", "unisphere.copilot.tool_call.id"),
-    ]);
+    mapping
+        .attributes
+        .insert("unisphere.source.kind".into(), json!(kind));
+    mapping.strings(
+        data,
+        &[
+            ("id", "unisphere.source.record.id"),
+            ("callId", "unisphere.copilot.tool_call.id"),
+        ],
+    );
     mapping.unsupported_fields(data, &["mentions", "usage", "model"]);
     match kind {
         "user" | "copilot" => {
             let mut parts = Vec::new();
             mapping.text_part(data, "text", "text", &mut parts);
-            mapping.text_part(data, "expandedText", "unisphere.transformed_text", &mut parts);
+            mapping.text_part(
+                data,
+                "expandedText",
+                "unisphere.transformed_text",
+                &mut parts,
+            );
             mapping.message_body(if kind == "user" { "user" } else { "assistant" }, parts)
         }
         "tool_call_requested" | "tool_call_completed" => {
@@ -298,7 +342,14 @@ fn timeline(data: &Map<String, Value>, mapping: &mut Mapping<'_>) -> Option<Valu
             ] {
                 mapping.text_part(data, field, part_type, &mut parts);
             }
-            mapping.message_body(if kind == "tool_call_requested" { "assistant" } else { "tool" }, parts)
+            mapping.message_body(
+                if kind == "tool_call_requested" {
+                    "assistant"
+                } else {
+                    "tool"
+                },
+                parts,
+            )
         }
         "info" => mapping.native_text(data, kind, &["text", "expandedText"]),
         _ => {

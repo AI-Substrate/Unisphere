@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "cargo",
+    "build",
+    "--target-dir",
+    "target",
+    "--manifest-path",
+    ".harness/temp/native-consumer/Cargo.toml"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "started": "2026-09-08T07:17:46.813Z",
+  "completed": "2026-09-08T07:17:49.304Z",
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "    Updating crates.io index\n     Locking 53 packages to latest Rust 1.95.0 compatible versions\n      Adding generic-array v0.14.7 (available: v0.14.9)\n      Adding rusqlite v0.37.0 (available: v0.40.2)\n   Compiling bitflags v2.13.1\n   Compiling unisphere-adapter-copilot-cli v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/adapter-copilot-cli)\n   Compiling unisphere-adapter-codex v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/adapter-codex)\n   Compiling unisphere-adapter-pi v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/adapter-pi)\n   Compiling unisphere-adapter-vscode-copilot v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/adapter-vscode-copilot)\n   Compiling unisphere-adapter-claude v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/adapter-claude)\n   Compiling unisphere-adapter-omp v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/adapter-omp)\n   Compiling unisphere-adapter-cursor v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/adapter-cursor)\n   Compiling unisphere-loader-jsonl v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/loader-jsonl)\n   Compiling rusqlite v0.37.0\n   Compiling unisphere-loader-snapshot v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/loader-snapshot)\n   Compiling unisphere-native-consumer v0.0.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/.harness/temp/native-consumer)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.46s\n"
+}

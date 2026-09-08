@@ -1,0 +1,20 @@
+{
+  "argv": [
+    "target/debug/unisphere",
+    "sessions",
+    "export",
+    "--adapter",
+    "cursor-ide",
+    "--input",
+    "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/.harness/temp/native-revisions/cursor.db",
+    "--source-format",
+    "sqlite-key-value",
+    "--include-content"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "started": "2026-09-08T07:20:08.209Z",
+  "completed": "2026-09-08T07:20:08.215Z",
+  "exit_code": 0,
+  "stdout": "{\"resourceLogs\":[{\"scopeLogs\":[{\"scope\":{\"name\":\"unisphere\",\"version\":\"0.1.0\"},\"logRecords\":[{\"eventName\":\"unisphere.session.snapshot\",\"attributes\":[{\"key\":\"unisphere.profile.version\",\"value\":{\"intValue\":\"1\"}},{\"key\":\"unisphere.snapshot.finality\",\"value\":{\"stringValue\":\"unknown\"}},{\"key\":\"unisphere.snapshot.include_content\",\"value\":{\"boolValue\":true}},{\"key\":\"unisphere.snapshot.records\",\"value\":{\"intValue\":\"0\"}},{\"key\":\"unisphere.snapshot.selection\",\"value\":{\"kvlistValue\":{\"values\":[{\"key\":\"format\",\"value\":{\"kvlistValue\":{\"values\":[{\"key\":\"kind\",\"value\":{\"stringValue\":\"sqlite_key_value\"}},{\"key\":\"table\",\"value\":{\"stringValue\":\"cursorDiskKV\"}}]}}},{\"key\":\"path\",\"value\":{\"stringValue\":\"/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/.harness/temp/native-revisions/cursor.db\"}},{\"key\":\"session_id\",\"value\":{}}]}}},{\"key\":\"unisphere.snapshot.semantics\",\"value\":{\"stringValue\":\"replace_projection\"}},{\"key\":\"unisphere.source.adapter\",\"value\":{\"stringValue\":\"cursor-ide\"}},{\"key\":\"unisphere.source.format\",\"value\":{\"stringValue\":\"sqlite_key_value\"}},{\"key\":\"unisphere.source.key\",\"value\":{\"stringValue\":\"$snapshot\"}},{\"key\":\"unisphere.source.kind\",\"value\":{\"stringValue\":\"snapshot_manifest\"}},{\"key\":\"unisphere.source.path\",\"value\":{\"stringValue\":\"/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/.harness/temp/native-revisions/cursor.db\"}},{\"key\":\"unisphere.source.revision\",\"value\":{\"stringValue\":\"sha256:92a5ab231121802e6e0b5fcf1f99101dbe21cd3fbb3b5b81034366f3f711e7ed\"}}]}]}]}]}\n",
+  "stderr": "{\"command\":\"sessions.export\",\"data\":{\"adapter\":\"cursor-ide\",\"diagnostics\":0,\"finality\":\"unknown\",\"persisted_resume\":false,\"records\":1,\"revision\":\"sha256:92a5ab231121802e6e0b5fcf1f99101dbe21cd3fbb3b5b81034366f3f711e7ed\",\"semantics\":\"replace_projection\"},\"ok\":true,\"v\":1}\n"
+}

@@ -10,7 +10,7 @@ use unisphere_testkit::{
     sealed_command,
 };
 
-fn decode_records(bytes: &[u8]) -> ProofResult<Vec<Value>> {
+pub(super) fn decode_records(bytes: &[u8], snapshot: bool) -> ProofResult<Vec<Value>> {
     if !bytes.is_empty() && bytes.last() != Some(&b'\n') {
         return Err("OTLP output lacks final LF".into());
     }
@@ -32,7 +32,9 @@ fn decode_records(bytes: &[u8]) -> ProofResult<Vec<Value>> {
                 .ok_or("missing scopeLogs")?
             {
                 for record in scope["logRecords"].as_array().ok_or("missing logRecords")? {
-                    if record["eventName"] != "unisphere.session.record" {
+                    if record["eventName"] != "unisphere.session.record"
+                        && !(snapshot && record["eventName"] == "unisphere.session.snapshot")
+                    {
                         return Err("wrong source-derived event category".into());
                     }
                     if record
@@ -50,13 +52,39 @@ fn decode_records(bytes: &[u8]) -> ProofResult<Vec<Value>> {
                     for key in [
                         "unisphere.source.adapter",
                         "unisphere.source.path",
-                        "unisphere.source.offset",
                         "unisphere.source.kind",
                         "unisphere.profile.version",
                     ] {
                         if !attrs.iter().any(|attr| attr["key"] == key) {
                             return Err(format!("missing {key}"));
                         }
+                    }
+                    let source_keys: &[&str] = if snapshot {
+                        &[
+                            "unisphere.source.key",
+                            "unisphere.source.revision",
+                            "unisphere.source.format",
+                        ]
+                    } else {
+                        &["unisphere.source.offset"]
+                    };
+                    for key in source_keys {
+                        if !attrs.iter().any(|attr| attr["key"] == *key) {
+                            return Err(format!("missing {key}"));
+                        }
+                    }
+                    if snapshot
+                        && attrs
+                            .iter()
+                            .any(|attr| attr["key"] == "unisphere.source.offset")
+                    {
+                        return Err("snapshot invents a byte offset".into());
+                    }
+                    if !attrs.iter().any(|attr| {
+                        attr["key"] == "unisphere.profile.version"
+                            && attr["value"]["intValue"] == "1"
+                    }) {
+                        return Err("profile version is not numeric one".into());
                     }
                     if attrs.iter().any(|attr| {
                         attr["key"]
@@ -166,8 +194,8 @@ pub fn run(repo: &Path, scratch: &Path) -> ProofResult<()> {
             &[input.as_os_str().to_owned(), mode.into(), "1".into()],
         )?;
         expect_status(&sdk_output, 0, "external collection SDK")?;
-        let cli_records = decode_records(&cli_output.stdout)?;
-        let sdk_records = decode_records(&sdk_output.stdout)?;
+        let cli_records = decode_records(&cli_output.stdout, false)?;
+        let sdk_records = decode_records(&sdk_output.stdout, false)?;
         if cli_records != sdk_records || cli_records.len() != 6 {
             return Err("SDK/CLI collection parity or physical-record retention failed".into());
         }
@@ -219,7 +247,7 @@ pub fn run(repo: &Path, scratch: &Path) -> ProofResult<()> {
         &cli_args(&partial, false),
     )?;
     expect_status(&result, 0, "partial tail")?;
-    if decode_records(&result.stdout)?.len() != 3
+    if decode_records(&result.stdout, false)?.len() != 3
         || serde_json::from_slice::<Value>(&result.stderr).map_err(|e| e.to_string())?["data"]["incomplete_tail"]
             != true
     {
@@ -271,7 +299,7 @@ pub fn run(repo: &Path, scratch: &Path) -> ProofResult<()> {
         &cli_args(&input, true),
     )?;
     expect_status(&installed_output, 0, "installed collection CLI")?;
-    if decode_records(&installed_output.stdout)?.len() != 6 {
+    if decode_records(&installed_output.stdout, false)?.len() != 6 {
         return Err("installed CLI lost collection records".into());
     }
     let list = run_product(

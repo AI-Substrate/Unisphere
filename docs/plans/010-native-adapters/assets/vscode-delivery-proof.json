@@ -1,0 +1,15 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "-p",
+    "unisphere-adapter-vscode-copilot",
+    "--all-targets"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/.harness/temp/proof-vscode-copilot",
+  "started": "2026-09-08T06:58:14.612Z",
+  "completed": "2026-09-08T06:58:20.186Z",
+  "exit_code": 0,
+  "stdout": "\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 14 tests\ntest wrong_representation_and_invalid_document_fail_with_fixed_errors ... ok\ntest tiny_journal_cannot_allocate_a_giant_sparse_array ... ok\ntest empty_replacement_and_future_schema_are_observable_without_guessing ... ok\ntest sparse_array_extension_and_delete_do_not_shift_following_parts ... ok\ntest invalid_optional_timestamps_and_unknown_fields_do_not_become_guessed_data ... ok\ntest suffix_replacement_and_later_initial_follow_native_replay_order ... ok\ntest native_journal_emits_only_final_logical_revision ... ok\ntest malformed_journal_never_salvages_an_earlier_session_or_leaks_payloads ... ok\ntest push_creates_missing_or_falsy_leaf_but_not_missing_intermediate ... ok\ntest usage_scopes_do_not_confuse_latest_call_turn_and_session_counters ... ok\ntest session_selection_is_verified_against_native_identity ... ok\ntest native_versions_preserve_requests_and_responses_without_synthetic_ids_or_times ... ok\ntest tool_identity_survives_privacy_filter_but_native_details_require_opt_in ... ok\ntest metadata_only_never_exposes_content_and_mapping_is_repeatable ... ok\n\ntest result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+  "stderr": "   Compiling proc-macro2 v1.0.107\n   Compiling quote v1.0.47\n   Compiling unicode-ident v1.0.24\n   Compiling serde_core v1.0.229\n   Compiling zmij v1.0.23\n   Compiling serde_json v1.0.151\n   Compiling serde v1.0.229\n   Compiling memchr v2.8.3\n   Compiling itoa v1.0.18\n   Compiling syn v3.0.5\n   Compiling serde_derive v1.0.229\n   Compiling unisphere-core v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/.harness/temp/proof-vscode-copilot/crates/core)\n   Compiling unisphere-adapter-vscode-copilot v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/.harness/temp/proof-vscode-copilot/crates/adapter-vscode-copilot)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.86s\n     Running unittests src/lib.rs (target/debug/deps/unisphere_adapter_vscode_copilot-0245f29b220b437e)\n     Running tests/mapping.rs (target/debug/deps/mapping-5ff81b57982fb554)\n"
+}

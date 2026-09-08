@@ -65,7 +65,9 @@ impl SessionAdapter for OmpAdapter {
                 include_content: options.include_content,
                 diagnostics: &mut batch.diagnostics,
             };
-            batch.records.push(mapping.record(value, path, native.bytes.len()));
+            batch
+                .records
+                .push(mapping.record(value, path, native.bytes.len()));
         }
         Ok(batch)
     }
@@ -98,7 +100,12 @@ impl Mapping<'_> {
         }
     }
 
-    fn strings(&mut self, object: &Map<String, Value>, attributes: &mut Attributes, fields: &[(&str, &str)]) {
+    fn strings(
+        &mut self,
+        object: &Map<String, Value>,
+        attributes: &mut Attributes,
+        fields: &[(&str, &str)],
+    ) {
         for &(native, profile) in fields {
             if let Some(value) = self.string(object, native) {
                 attributes.insert(profile.into(), json!(value));
@@ -106,7 +113,14 @@ impl Mapping<'_> {
         }
     }
 
-    fn scalar(&mut self, object: &Map<String, Value>, native: &str, profile: &str, attributes: &mut Attributes, valid: fn(&Value) -> bool) {
+    fn scalar(
+        &mut self,
+        object: &Map<String, Value>,
+        native: &str,
+        profile: &str,
+        attributes: &mut Attributes,
+        valid: fn(&Value) -> bool,
+    ) {
         if let Some(value) = object.get(native) {
             if valid(value) {
                 attributes.insert(profile.into(), value.clone());
@@ -118,7 +132,8 @@ impl Mapping<'_> {
 
     fn timestamp(&mut self, value: Option<&Value>) -> Option<u64> {
         let value = value?;
-        let parsed = value.as_str()
+        let parsed = value
+            .as_str()
             .and_then(|value| OffsetDateTime::parse(value, &Rfc3339).ok())
             .and_then(|value| u64::try_from(value.unix_timestamp_nanos()).ok());
         if parsed.is_none() {
@@ -129,7 +144,10 @@ impl Mapping<'_> {
 
     fn message_timestamp(&mut self, object: &Map<String, Value>, attributes: &mut Attributes) {
         if let Some(value) = object.get("timestamp") {
-            match value.as_u64().and_then(|value| value.checked_mul(1_000_000)) {
+            match value
+                .as_u64()
+                .and_then(|value| value.checked_mul(1_000_000))
+            {
                 Some(value) => {
                     attributes.insert("unisphere.message.timestamp_unix_nano".into(), json!(value));
                 }
@@ -175,41 +193,75 @@ impl Mapping<'_> {
             }
         };
         attributes.insert("unisphere.source.kind".into(), json!(kind));
-        self.strings(&object, &mut attributes, &[
-            ("id", "unisphere.source.record.id"),
-            ("parentId", "unisphere.source.parent.id"),
-        ]);
-        let timestamp_unix_nano = self.timestamp(object.get(if kind == "title" { "updatedAt" } else { "timestamp" }));
+        self.strings(
+            &object,
+            &mut attributes,
+            &[
+                ("id", "unisphere.source.record.id"),
+                ("parentId", "unisphere.source.parent.id"),
+            ],
+        );
+        let timestamp_unix_nano = self.timestamp(object.get(if kind == "title" {
+            "updatedAt"
+        } else {
+            "timestamp"
+        }));
         let body = match kind.as_str() {
             "message" => self.message(object.remove("message"), &mut attributes),
             "title" => {
                 attributes.insert("unisphere.source.mutable".into(), json!(true));
-                if self.offset != 0 || byte_len != 255 || !object.get("pad").is_some_and(Value::is_string) {
+                if self.offset != 0
+                    || byte_len != 255
+                    || !object.get("pad").is_some_and(Value::is_string)
+                {
                     self.diagnostic(MappingDiagnosticCode::InvalidField);
                 }
                 if object.get("v") != Some(&json!(1)) {
                     self.diagnostic(MappingDiagnosticCode::UnsupportedRecord);
                     None
                 } else {
-                    self.strings(&object, &mut attributes, &[("source", "unisphere.title.source")]);
+                    self.strings(
+                        &object,
+                        &mut attributes,
+                        &[("source", "unisphere.title.source")],
+                    );
                     self.source_event(&kind, &mut object, &mut attributes, &["title"])
                 }
             }
             "session" => {
-                self.strings(&object, &mut attributes, &[("id", "gen_ai.conversation.id")]);
-                self.scalar(&object, "version", "unisphere.source.version", &mut attributes, count);
+                self.strings(
+                    &object,
+                    &mut attributes,
+                    &[("id", "gen_ai.conversation.id")],
+                );
+                self.scalar(
+                    &object,
+                    "version",
+                    "unisphere.source.version",
+                    &mut attributes,
+                    count,
+                );
                 if object.get("version") != Some(&json!(3)) {
                     self.diagnostic(MappingDiagnosticCode::UnsupportedRecord);
                     None
                 } else {
-                    self.source_event(&kind, &mut object, &mut attributes, &["title", "cwd", "parentSession"])
+                    self.source_event(
+                        &kind,
+                        &mut object,
+                        &mut attributes,
+                        &["title", "cwd", "parentSession"],
+                    )
                 }
             }
             "model_change" => {
-                self.strings(&object, &mut attributes, &[
-                    ("model", "unisphere.model.selection"),
-                    ("role", "unisphere.model.role"),
-                ]);
+                self.strings(
+                    &object,
+                    &mut attributes,
+                    &[
+                        ("model", "unisphere.model.selection"),
+                        ("role", "unisphere.model.role"),
+                    ],
+                );
                 None
             }
             "thinking_level_change" => {
@@ -217,7 +269,9 @@ impl Mapping<'_> {
                     ("thinkingLevel", "unisphere.thinking.level"),
                     ("configured", "unisphere.thinking.configured"),
                 ] {
-                    self.scalar(&object, native, profile, &mut attributes, |value| value.is_null() || value.is_string());
+                    self.scalar(&object, native, profile, &mut attributes, |value| {
+                        value.is_null() || value.is_string()
+                    });
                 }
                 None
             }
@@ -228,9 +282,18 @@ impl Mapping<'_> {
                     }
                     Some(Value::Object(tiers)) => {
                         for family in ["openai", "anthropic", "google"] {
-                            self.scalar(tiers, family, &format!("unisphere.service_tier.{family}"), &mut attributes, |value| {
-                                matches!(value.as_str(), Some("auto" | "default" | "flex" | "scale" | "priority"))
-                            });
+                            self.scalar(
+                                tiers,
+                                family,
+                                &format!("unisphere.service_tier.{family}"),
+                                &mut attributes,
+                                |value| {
+                                    matches!(
+                                        value.as_str(),
+                                        Some("auto" | "default" | "flex" | "scale" | "priority")
+                                    )
+                                },
+                            );
                         }
                     }
                     Some(Value::String(tier)) => {
@@ -241,44 +304,110 @@ impl Mapping<'_> {
                 None
             }
             "compaction" | "branch_summary" => {
-                self.strings(&object, &mut attributes, &[
-                    ("firstKeptEntryId", "unisphere.compaction.first_kept_entry.id"),
-                    ("fromId", "unisphere.branch.from.id"),
-                ]);
-                self.scalar(&object, "tokensBefore", "unisphere.compaction.tokens_before", &mut attributes, count);
-                self.scalar(&object, "fromExtension", "unisphere.source.from_extension", &mut attributes, Value::is_boolean);
+                self.strings(
+                    &object,
+                    &mut attributes,
+                    &[
+                        (
+                            "firstKeptEntryId",
+                            "unisphere.compaction.first_kept_entry.id",
+                        ),
+                        ("fromId", "unisphere.branch.from.id"),
+                    ],
+                );
+                self.scalar(
+                    &object,
+                    "tokensBefore",
+                    "unisphere.compaction.tokens_before",
+                    &mut attributes,
+                    count,
+                );
+                self.scalar(
+                    &object,
+                    "fromExtension",
+                    "unisphere.source.from_extension",
+                    &mut attributes,
+                    Value::is_boolean,
+                );
                 self.opaque(&object, &["details", "preserveData"]);
-                self.source_event(&kind, &mut object, &mut attributes, &["summary", "shortSummary", "warning"])
+                self.source_event(
+                    &kind,
+                    &mut object,
+                    &mut attributes,
+                    &["summary", "shortSummary", "warning"],
+                )
             }
             "custom" | "mode_change" => {
-                self.strings(&object, &mut attributes, &[
-                    ("customType", "unisphere.custom.type"),
-                    ("mode", "unisphere.mode"),
-                ]);
+                self.strings(
+                    &object,
+                    &mut attributes,
+                    &[
+                        ("customType", "unisphere.custom.type"),
+                        ("mode", "unisphere.mode"),
+                    ],
+                );
                 self.opaque(&object, &["data"]);
                 None
             }
             "custom_message" => {
-                self.strings(&object, &mut attributes, &[("customType", "unisphere.custom.type")]);
-                self.scalar(&object, "display", "unisphere.message.display", &mut attributes, Value::is_boolean);
+                self.strings(
+                    &object,
+                    &mut attributes,
+                    &[("customType", "unisphere.custom.type")],
+                );
+                self.scalar(
+                    &object,
+                    "display",
+                    "unisphere.message.display",
+                    &mut attributes,
+                    Value::is_boolean,
+                );
                 self.opaque(&object, &["details", "attribution"]);
                 self.content_event(&kind, object.remove("content"), &mut attributes)
             }
             "label" => {
-                self.strings(&object, &mut attributes, &[("targetId", "unisphere.label.target.id")]);
+                self.strings(
+                    &object,
+                    &mut attributes,
+                    &[("targetId", "unisphere.label.target.id")],
+                );
                 self.source_event(&kind, &mut object, &mut attributes, &["label"])
             }
             "title_change" => {
-                self.strings(&object, &mut attributes, &[("source", "unisphere.title.source")]);
-                self.source_event(&kind, &mut object, &mut attributes, &["title", "previousTitle", "trigger"])
+                self.strings(
+                    &object,
+                    &mut attributes,
+                    &[("source", "unisphere.title.source")],
+                );
+                self.source_event(
+                    &kind,
+                    &mut object,
+                    &mut attributes,
+                    &["title", "previousTitle", "trigger"],
+                )
             }
             "session_init" => {
                 self.opaque(&object, &["outputSchema"]);
-                self.strings(&object, &mut attributes, &[("outputSchemaMode", "unisphere.session_init.schema_mode")]);
+                self.strings(
+                    &object,
+                    &mut attributes,
+                    &[("outputSchemaMode", "unisphere.session_init.schema_mode")],
+                );
                 for key in ["restrictToolNames", "readSummarize"] {
-                    self.scalar(&object, key, &format!("unisphere.session_init.{key}"), &mut attributes, Value::is_boolean);
+                    self.scalar(
+                        &object,
+                        key,
+                        &format!("unisphere.session_init.{key}"),
+                        &mut attributes,
+                        Value::is_boolean,
+                    );
                 }
-                let mut body = self.source_event(&kind, &mut object, &mut attributes, &["systemPrompt", "task", "spawns"]);
+                let mut body = self.source_event(
+                    &kind,
+                    &mut object,
+                    &mut attributes,
+                    &["systemPrompt", "task", "spawns"],
+                );
                 self.body_field(&mut object, "tools", &mut body, string_array);
                 body
             }
@@ -300,16 +429,30 @@ impl Mapping<'_> {
         }
     }
 
-    fn source_event(&mut self, kind: &str, object: &mut Map<String, Value>, attributes: &mut Attributes, fields: &[&str]) -> Option<Value> {
+    fn source_event(
+        &mut self,
+        kind: &str,
+        object: &mut Map<String, Value>,
+        attributes: &mut Attributes,
+        fields: &[&str],
+    ) -> Option<Value> {
         self.omitted(attributes);
-        let mut body = self.include_content.then(|| json!({"type": "unisphere.source_event", "native_type": kind}));
+        let mut body = self
+            .include_content
+            .then(|| json!({"type": "unisphere.source_event", "native_type": kind}));
         for key in fields {
             self.body_field(object, key, &mut body, Value::is_string);
         }
         body
     }
 
-    fn body_field(&mut self, object: &mut Map<String, Value>, key: &str, body: &mut Option<Value>, valid: fn(&Value) -> bool) {
+    fn body_field(
+        &mut self,
+        object: &mut Map<String, Value>,
+        key: &str,
+        body: &mut Option<Value>,
+        valid: fn(&Value) -> bool,
+    ) {
         if let Some(value) = object.remove(key) {
             if value.is_null() {
                 return;
@@ -322,10 +465,16 @@ impl Mapping<'_> {
         }
     }
 
-    fn content_event(&mut self, kind: &str, content: Option<Value>, attributes: &mut Attributes) -> Option<Value> {
+    fn content_event(
+        &mut self,
+        kind: &str,
+        content: Option<Value>,
+        attributes: &mut Attributes,
+    ) -> Option<Value> {
         self.omitted(attributes);
         let parts = self.parts(content);
-        self.include_content.then(|| json!({"type": "unisphere.source_event", "native_type": kind, "parts": parts}))
+        self.include_content
+            .then(|| json!({"type": "unisphere.source_event", "native_type": kind, "parts": parts}))
     }
 
     fn message(&mut self, value: Option<Value>, attributes: &mut Attributes) -> Option<Value> {
@@ -339,18 +488,32 @@ impl Mapping<'_> {
         };
         attributes.insert("unisphere.message.role".into(), json!(role));
         self.message_timestamp(&message, attributes);
-        self.opaque(&message, &["providerPayload", "attribution", "retryRecovery", "contextSnapshot", "stopDetails", "toolCallAbortMessages"]);
+        self.opaque(
+            &message,
+            &[
+                "providerPayload",
+                "attribution",
+                "retryRecovery",
+                "contextSnapshot",
+                "stopDetails",
+                "toolCallAbortMessages",
+            ],
+        );
         match role.as_str() {
             "assistant" | "user" | "developer" | "toolResult" => {
                 if role == "assistant" {
-                    self.strings(&message, attributes, &[
-                        ("model", "gen_ai.response.model"),
-                        ("provider", "gen_ai.provider.name"),
-                        ("api", "unisphere.model.api"),
-                        ("upstreamProvider", "unisphere.model.upstream_provider"),
-                        ("responseId", "gen_ai.response.id"),
-                        ("stopReason", "unisphere.message.stop_reason"),
-                    ]);
+                    self.strings(
+                        &message,
+                        attributes,
+                        &[
+                            ("model", "gen_ai.response.model"),
+                            ("provider", "gen_ai.provider.name"),
+                            ("api", "unisphere.model.api"),
+                            ("upstreamProvider", "unisphere.model.upstream_provider"),
+                            ("responseId", "gen_ai.response.id"),
+                            ("stopReason", "unisphere.message.stop_reason"),
+                        ],
+                    );
                     self.usage(message.remove("usage"), attributes);
                     for (native, profile) in [
                         ("duration", "unisphere.message.duration_ms"),
@@ -368,21 +531,48 @@ impl Mapping<'_> {
                 ] {
                     self.scalar(&message, native, profile, attributes, Value::is_boolean);
                 }
-                self.scalar(&message, "prunedAt", "unisphere.message.pruned_at_ms", attributes, count);
+                self.scalar(
+                    &message,
+                    "prunedAt",
+                    "unisphere.message.pruned_at_ms",
+                    attributes,
+                    count,
+                );
                 self.omitted(attributes);
                 let parts = self.parts(message.remove("content"));
                 let mut body = self.include_content.then(|| json!({"role": if role == "toolResult" { "tool" } else { &role }, "parts": parts}));
                 if role == "toolResult" {
-                    self.strings(&message, attributes, &[
-                        ("toolCallId", "gen_ai.tool.call.id"),
-                        ("toolName", "gen_ai.tool.name"),
-                    ]);
-                    self.scalar(&message, "isError", "unisphere.tool.is_error", attributes, Value::is_boolean);
+                    self.strings(
+                        &message,
+                        attributes,
+                        &[
+                            ("toolCallId", "gen_ai.tool.call.id"),
+                            ("toolName", "gen_ai.tool.name"),
+                        ],
+                    );
+                    self.scalar(
+                        &message,
+                        "isError",
+                        "unisphere.tool.is_error",
+                        attributes,
+                        Value::is_boolean,
+                    );
                     if let Some(body) = &mut body {
                         let response = body["parts"].take();
-                        body["parts"] = json!([{"type": "tool_call_response", "response": response}]);
-                        for (native, key) in [("toolCallId", "id"), ("toolName", "name"), ("isError", "unisphere.is_error")] {
-                            if let Some(value) = message.remove(native).filter(|value| if native == "isError" { value.is_boolean() } else { value.is_string() }) {
+                        body["parts"] =
+                            json!([{"type": "tool_call_response", "response": response}]);
+                        for (native, key) in [
+                            ("toolCallId", "id"),
+                            ("toolName", "name"),
+                            ("isError", "unisphere.is_error"),
+                        ] {
+                            if let Some(value) = message.remove(native).filter(|value| {
+                                if native == "isError" {
+                                    value.is_boolean()
+                                } else {
+                                    value.is_string()
+                                }
+                            }) {
                                 body["parts"][0][key] = value;
                             }
                         }
@@ -394,24 +584,69 @@ impl Mapping<'_> {
             }
             "bashExecution" | "pythonExecution" => {
                 for key in ["cancelled", "truncated", "excludeFromContext"] {
-                    self.scalar(&message, key, &format!("unisphere.execution.{key}"), attributes, Value::is_boolean);
+                    self.scalar(
+                        &message,
+                        key,
+                        &format!("unisphere.execution.{key}"),
+                        attributes,
+                        Value::is_boolean,
+                    );
                 }
-                self.scalar(&message, "exitCode", "unisphere.execution.exit_code", attributes, |value| value.is_null() || value.as_i64().is_some());
-                let mut body = self.source_event(&role, &mut message, attributes, &["command", "code", "output"]);
-                self.references(message.remove("meta").map(|meta| json!({"meta": meta})), &mut body);
+                self.scalar(
+                    &message,
+                    "exitCode",
+                    "unisphere.execution.exit_code",
+                    attributes,
+                    |value| value.is_null() || value.as_i64().is_some(),
+                );
+                let mut body = self.source_event(
+                    &role,
+                    &mut message,
+                    attributes,
+                    &["command", "code", "output"],
+                );
+                self.references(
+                    message.remove("meta").map(|meta| json!({"meta": meta})),
+                    &mut body,
+                );
                 body
             }
             "custom" | "hookMessage" => {
-                self.strings(&message, attributes, &[("customType", "unisphere.custom.type")]);
-                self.scalar(&message, "display", "unisphere.message.display", attributes, Value::is_boolean);
+                self.strings(
+                    &message,
+                    attributes,
+                    &[("customType", "unisphere.custom.type")],
+                );
+                self.scalar(
+                    &message,
+                    "display",
+                    "unisphere.message.display",
+                    attributes,
+                    Value::is_boolean,
+                );
                 self.opaque(&message, &["details"]);
                 self.content_event(&role, message.remove("content"), attributes)
             }
             "compactionSummary" | "branchSummary" => {
-                self.strings(&message, attributes, &[("fromId", "unisphere.branch.from.id")]);
-                self.scalar(&message, "tokensBefore", "unisphere.compaction.tokens_before", attributes, count);
+                self.strings(
+                    &message,
+                    attributes,
+                    &[("fromId", "unisphere.branch.from.id")],
+                );
+                self.scalar(
+                    &message,
+                    "tokensBefore",
+                    "unisphere.compaction.tokens_before",
+                    attributes,
+                    count,
+                );
                 self.opaque(&message, &["blocks", "images"]);
-                self.source_event(&role, &mut message, attributes, &["summary", "shortSummary", "warning"])
+                self.source_event(
+                    &role,
+                    &mut message,
+                    attributes,
+                    &["summary", "shortSummary", "warning"],
+                )
             }
             "fileMention" => {
                 let mut body = self.source_event(&role, &mut message, attributes, &[]);
@@ -432,10 +667,10 @@ impl Mapping<'_> {
                     for key in ["lineCount", "byteSize"] {
                         self.body_field(&mut file, key, &mut item, count);
                     }
-                    if let Some(image) = file.remove("image").and_then(|image| self.part(image)) {
-                        if let Some(item) = &mut item {
-                            item["image"] = image;
-                        }
+                    if let Some(image) = file.remove("image").and_then(|image| self.part(image))
+                        && let Some(item) = &mut item
+                    {
+                        item["image"] = image;
                     }
                     if let Some(item) = item {
                         retained.push(item);
@@ -461,13 +696,20 @@ impl Mapping<'_> {
         };
         let mut retained = false;
         for (native, profile) in [
-            ("input", "input_tokens"), ("output", "output_tokens"),
-            ("cacheRead", "cache_read_input_tokens"), ("cacheWrite", "cache_creation_input_tokens"),
-            ("totalTokens", "total_tokens"), ("reasoningTokens", "reasoning_tokens"),
+            ("input", "input_tokens"),
+            ("output", "output_tokens"),
+            ("cacheRead", "cache_read_input_tokens"),
+            ("cacheWrite", "cache_creation_input_tokens"),
+            ("totalTokens", "total_tokens"),
+            ("reasoningTokens", "reasoning_tokens"),
             ("premiumRequests", "premium_requests"),
         ] {
             if let Some(value) = usage.remove(native) {
-                let valid = if native == "premiumRequests" { measured(&value) } else { count(&value) };
+                let valid = if native == "premiumRequests" {
+                    measured(&value)
+                } else {
+                    count(&value)
+                };
                 if valid {
                     attributes.insert(format!("unisphere.usage.{profile}"), value);
                     retained = true;
@@ -477,10 +719,22 @@ impl Mapping<'_> {
             }
         }
         for (native, prefix, fields) in [
-            ("orchestration", "orchestration", &["input", "output", "cacheRead"][..]),
-            ("cttl", "cache_write_ttl", &["ephemeral5m", "ephemeral1h"][..]),
+            (
+                "orchestration",
+                "orchestration",
+                &["input", "output", "cacheRead"][..],
+            ),
+            (
+                "cttl",
+                "cache_write_ttl",
+                &["ephemeral5m", "ephemeral1h"][..],
+            ),
             ("server", "server_requests", &["webSearch", "webFetch"][..]),
-            ("cost", "cost", &["input", "output", "cacheRead", "cacheWrite", "total"][..]),
+            (
+                "cost",
+                "cost",
+                &["input", "output", "cacheRead", "cacheWrite", "total"][..],
+            ),
         ] {
             if let Some(value) = usage.remove(native) {
                 let Value::Object(mut components) = value else {
@@ -489,7 +743,11 @@ impl Mapping<'_> {
                 };
                 for key in fields {
                     if let Some(value) = components.remove(*key) {
-                        let valid = if native == "cost" { measured(&value) } else { count(&value) };
+                        let valid = if native == "cost" {
+                            measured(&value)
+                        } else {
+                            count(&value)
+                        };
                         if valid {
                             attributes.insert(format!("unisphere.usage.{prefix}.{key}"), value);
                             retained = true;
@@ -501,16 +759,26 @@ impl Mapping<'_> {
             }
         }
         if retained {
-            attributes.insert("unisphere.usage.scope".into(), json!("native_record_snapshot"));
+            attributes.insert(
+                "unisphere.usage.scope".into(),
+                json!("native_record_snapshot"),
+            );
         }
     }
 
     fn parts(&mut self, content: Option<Value>) -> Vec<Value> {
         match content {
             Some(Value::String(text)) => {
-                if self.include_content { vec![json!({"type": "text", "content": text})] } else { Vec::new() }
+                if self.include_content {
+                    vec![json!({"type": "text", "content": text})]
+                } else {
+                    Vec::new()
+                }
             }
-            Some(Value::Array(parts)) => parts.into_iter().filter_map(|part| self.part(part)).collect(),
+            Some(Value::Array(parts)) => parts
+                .into_iter()
+                .filter_map(|part| self.part(part))
+                .collect(),
             _ => {
                 self.diagnostic(MappingDiagnosticCode::InvalidField);
                 Vec::new()
@@ -527,10 +795,15 @@ impl Mapping<'_> {
             self.diagnostic(MappingDiagnosticCode::InvalidField);
             return None;
         };
-        self.opaque(&part, &["textSignature", "thinkingSignature", "thoughtSignature"]);
+        self.opaque(
+            &part,
+            &["textSignature", "thinkingSignature", "thoughtSignature"],
+        );
         match kind.as_str() {
             "text" | "thinking" => {
-                let Some(Value::String(text)) = part.remove(if kind == "text" { "text" } else { "thinking" }) else {
+                let Some(Value::String(text)) =
+                    part.remove(if kind == "text" { "text" } else { "thinking" })
+                else {
                     self.diagnostic(MappingDiagnosticCode::InvalidField);
                     return None;
                 };
@@ -549,7 +822,9 @@ impl Mapping<'_> {
                     self.diagnostic(MappingDiagnosticCode::InvalidField);
                     return None;
                 };
-                let mut body = self.include_content.then(|| json!({"type": "tool_call", "id": id, "name": name, "arguments": arguments}));
+                let mut body = self.include_content.then(
+                    || json!({"type": "tool_call", "id": id, "name": name, "arguments": arguments}),
+                );
                 for key in ["intent", "rawBlock", "customWireName"] {
                     self.body_field(&mut part, key, &mut body, Value::is_string);
                 }
@@ -577,10 +852,20 @@ impl Mapping<'_> {
                 body
             }
             "fallback" => {
-                let from = part.get("from").and_then(Value::as_object).and_then(|value| value.get("model")).and_then(Value::as_str);
-                let to = part.get("to").and_then(Value::as_object).and_then(|value| value.get("model")).and_then(Value::as_str);
+                let from = part
+                    .get("from")
+                    .and_then(Value::as_object)
+                    .and_then(|value| value.get("model"))
+                    .and_then(Value::as_str);
+                let to = part
+                    .get("to")
+                    .and_then(Value::as_object)
+                    .and_then(|value| value.get("model"))
+                    .and_then(Value::as_str);
                 match (from, to) {
-                    (Some(from), Some(to)) => self.include_content.then(|| json!({"type": "unisphere.model_fallback", "from": from, "to": to})),
+                    (Some(from), Some(to)) => self.include_content.then(
+                        || json!({"type": "unisphere.model_fallback", "from": from, "to": to}),
+                    ),
                     _ => {
                         self.diagnostic(MappingDiagnosticCode::InvalidField);
                         None
@@ -589,7 +874,8 @@ impl Mapping<'_> {
             }
             _ => {
                 self.diagnostic(MappingDiagnosticCode::UnsupportedPart);
-                self.include_content.then(|| json!({"type": "unisphere.unknown", "native_type": kind}))
+                self.include_content
+                    .then(|| json!({"type": "unisphere.unknown", "native_type": kind}))
             }
         }
     }
@@ -598,9 +884,14 @@ impl Mapping<'_> {
     fn references(&mut self, value: Option<Value>, body: &mut Option<Value>) {
         let Some(value) = value else { return };
         self.diagnostic(MappingDiagnosticCode::UnsupportedPart);
-        let Some(meta) = value.get("meta").and_then(Value::as_object) else { return };
+        let Some(meta) = value.get("meta").and_then(Value::as_object) else {
+            return;
+        };
         let mut references = Vec::new();
-        if let Some(value) = meta.get("truncation").and_then(|value| value.get("artifactId")) {
+        if let Some(value) = meta
+            .get("truncation")
+            .and_then(|value| value.get("artifactId"))
+        {
             if let Some(id) = value.as_str() {
                 if self.include_content {
                     references.push(json!({"type": "unisphere.reference", "artifact_id": id, "resolved": false}));
@@ -610,7 +901,10 @@ impl Mapping<'_> {
             }
         }
         if let Some(source) = meta.get("source") {
-            match (source.get("type").and_then(Value::as_str), source.get("value").and_then(Value::as_str)) {
+            match (
+                source.get("type").and_then(Value::as_str),
+                source.get("value").and_then(Value::as_str),
+            ) {
                 (Some(kind @ ("path" | "url" | "internal")), Some(value)) => {
                     if self.include_content {
                         references.push(json!({"type": "unisphere.reference", "native_type": kind, "value": value, "resolved": false}));
@@ -619,10 +913,10 @@ impl Mapping<'_> {
                 _ => self.diagnostic(MappingDiagnosticCode::InvalidField),
             }
         }
-        if !references.is_empty() {
-            if let Some(body) = body {
-                body["unisphere.references"] = Value::Array(references);
-            }
+        if !references.is_empty()
+            && let Some(body) = body
+        {
+            body["unisphere.references"] = Value::Array(references);
         }
     }
 }
@@ -632,9 +926,13 @@ fn count(value: &Value) -> bool {
 }
 
 fn measured(value: &Value) -> bool {
-    value.as_f64().is_some_and(|value| value.is_finite() && value >= 0.0)
+    value
+        .as_f64()
+        .is_some_and(|value| value.is_finite() && value >= 0.0)
 }
 
 fn string_array(value: &Value) -> bool {
-    value.as_array().is_some_and(|values| values.iter().all(Value::is_string))
+    value
+        .as_array()
+        .is_some_and(|values| values.iter().all(Value::is_string))
 }

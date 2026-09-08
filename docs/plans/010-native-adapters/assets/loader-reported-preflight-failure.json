@@ -1,0 +1,16 @@
+{
+  "command": "harness boot --json",
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-snapshot-loader",
+  "source_sha": "3a635c17110521a3ed93d03daf5eface57dc0bfd",
+  "timestamp": "2026-09-08T06:37:18.692Z",
+  "exit_code": 1,
+  "observed_error": {
+    "code": "E_CHECKS_FAILED",
+    "message": "harness checks failed (exit 1)",
+    "nested_code": "E_PRODUCT_CHECK_FAILED",
+    "nested_message": "clippy failed (exit 101)"
+  },
+  "first_compiler_diagnostic": null,
+  "evidence_limit": "The tool background auto-delivery truncated the nested JSON before compiler stdout/stderr. No full-output artifact pointer was provided. The expired background job is not recoverable via hub jobs or eval output(bg_9). No boot/check/test was rerun to reconstruct the lost diagnostic.",
+  "timing": "This run completed before any loader source edits and before PM reiterated the no-worker-boot rule; no subsequent validation was run."
+}

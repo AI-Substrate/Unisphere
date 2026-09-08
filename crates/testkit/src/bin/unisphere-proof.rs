@@ -12,6 +12,8 @@ use unisphere_testkit::{fixtures, sealed_command};
 
 #[path = "proof/collection.rs"]
 mod collection;
+#[path = "proof/native.rs"]
+mod native;
 
 type ProofResult<T> = Result<T, String>;
 
@@ -555,7 +557,7 @@ fn installed_cli(repo: &Path, scratch: &Path) -> ProofResult<()> {
 fn run() -> ProofResult<()> {
     let mut args = env::args_os().skip(1);
     let mode = args.next().ok_or(
-        "usage: unisphere-proof composition|sdk-consumer|installed-cli|collection [--repo ROOT]",
+        "usage: unisphere-proof composition|sdk-consumer|installed-cli|collection|native [--repo ROOT]",
     )?;
     let repo = match args.next().as_deref() {
         None => env::current_dir().map_err(|e| e.to_string())?,
@@ -579,13 +581,18 @@ fn run() -> ProofResult<()> {
             .and_then(|binary| hostile_consumer(&binary, &scratch.path().join("runtime"))),
         Some("installed-cli") => installed_cli(&repo, scratch.path()),
         Some("collection") => collection::run(&repo, scratch.path()),
+        Some("native") => native::run(&repo, scratch.path()),
         _ => Err("unknown proof command".into()),
     };
     result?;
-    let scope = if mode == "collection" {
-        "explicit Claude JSONL projection; not lossless or final completeness"
-    } else {
-        "configuration foundation"
+    let scope = match mode.to_str() {
+        Some("native") => {
+            "explicit native JSONL and revision snapshots; not lossless or final completeness"
+        }
+        Some("collection") => {
+            "explicit Claude JSONL projection; not lossless or final completeness"
+        }
+        _ => "configuration foundation",
     };
     println!(
         "product proof {}: passed (temporary isolated build and product runtime; {scope})",
@@ -598,7 +605,7 @@ fn main() -> ExitCode {
     match run() {
         Ok(()) => ExitCode::SUCCESS,
         Err(error) => {
-            eprintln!("foundation proof failed: {error}");
+            eprintln!("product proof failed: {error}");
             ExitCode::FAILURE
         }
     }

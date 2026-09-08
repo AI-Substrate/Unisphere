@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "target/debug/unisphere-native-consumer",
+    "failure-probe",
+    "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/.harness/temp/native-revisions/session.json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "started": "2026-09-08T07:20:08.215Z",
+  "completed": "2026-09-08T07:20:08.219Z",
+  "exit_code": 0,
+  "stdout": "{\"checkpoint_on_failure\":false,\"partial_bytes\":11,\"retry_records\":2,\"retry_revision\":\"sha256:631a4968dd3612d01e9963300312cbd3767867d4dc00c1c142530a1446dec6c3\"}\n",
+  "stderr": ""
+}

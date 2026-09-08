@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pij-rs",
+    "spawn",
+    "--harness",
+    "omp",
+    "--model",
+    "github-copilot/gpt-6-astra",
+    "--effort",
+    "high",
+    "--cwd",
+    "/Users/jordanknight/substrate/unisphere/unisphere-plan010-codex",
+    "--parent",
+    "pij-right-kotallo",
+    "--name",
+    "p010-tk-0002",
+    "--json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "started": "2026-09-08T06:33:16.636Z",
+  "completed": "2026-09-08T06:33:18.310Z",
+  "exit_code": 0,
+  "stdout": "{\"ok\":true,\"command\":\"pij spawn\",\"v\":2,\"data\":{\"id\":\"pij-ideological-koala\",\"harness\":\"omp\",\"session\":\"01a07fb8-9306-75ce-b529-8ca9f6ca7983\",\"pane\":\"%4411\",\"proc\":{\"pid\":87435,\"proc_start\":20260908163316},\"folder\":\"/Users/jordanknight/substrate/unisphere/unisphere-plan010-codex\",\"state\":\"idle\",\"semantic_state\":null,\"role\":null,\"parent\":\"pij-right-kotallo\",\"relay\":false,\"cross_session_inbound_accept\":false,\"native_extension_delivery\":false,\"spawn_id\":\"s-1d27cc535fec19550745bd691ed95a17\",\"model\":\"github-copilot/gpt-6-astra\",\"effort\":\"high\",\"dispatched\":true,\"bound\":true,\"pid\":87435}}\n",
+  "stderr": ""
+}

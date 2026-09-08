@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "cargo",
+    "clippy",
+    "--fix",
+    "--allow-dirty",
+    "--allow-staged",
+    "--workspace",
+    "--all-targets",
+    "--locked",
+    "--",
+    "-D",
+    "warnings"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "started": "2026-09-08T07:42:05.225Z",
+  "completed": "2026-09-08T07:42:11.466Z",
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "    Checking tempfile v3.27.0\n    Checking crypto-common v0.1.7\n    Checking block-buffer v0.10.4\n    Checking unisphere-core v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/core)\n    Checking rusqlite v0.37.0\n    Checking digest v0.10.7\n    Checking sha2 v0.10.9\n    Checking unisphere-testkit v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/testkit)\n    Checking unisphere-adapter-cursor v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/adapter-cursor)\n    Checking unisphere-cli v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/cli)\n    Checking unisphere-adapter-copilot-cli v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/adapter-copilot-cli)\n    Checking unisphere-sdk v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/sdk)\n    Checking unisphere-loader-snapshot v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/loader-snapshot)\n    Checking unisphere-output-otlp v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/output-otlp)\n    Checking unisphere-loader-jsonl v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/loader-jsonl)\n    Checking unisphere-adapter-pi v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/adapter-pi)\n    Checking unisphere-adapter-omp v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/adapter-omp)\n    Checking unisphere-adapter-vscode-copilot v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/adapter-vscode-copilot)\n    Checking unisphere-adapter-codex v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/adapter-codex)\n    Checking unisphere-adapter-claude v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/adapter-claude)\n       Fixed crates/adapter-cursor/src/ide.rs (4 fixes)\n       Fixed crates/adapter-omp/src/lib.rs (2 fixes)\nwarning: this `let...else` may be rewritten with the `?` operator\n   --> crates/adapter-codex/src/lib.rs:545:9\n    |\n545 | /         let Some(value) = value.filter(|value| !value.is_null()) else {\n546 | |             return None;\n547 | |         };\n    | |__________^ help: replace it with: `let value = value.filter(|value| !value.is_null())?;`\n    |\n    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#question_mark\n    = note: `-D clippy::question-mark` implied by `-D warnings`\n    = help: to override `-D warnings` add `#[allow(clippy::question_mark)]`\n\nwarning: `unisphere-adapter-codex` (lib) generated 1 warning\nwarning: this `let...else` may be rewritten with the `?` operator\n   --> crates/adapter-vscode-copilot/src/lib.rs:495:17\n    |\n495 | /                 let Some(value) = part.get(\"value\") else {\n496 | |                     return None;\n497 | |                 };\n    | |__________________^ help: replace it with: `let value = part.get(\"value\")?;`\n    |\n    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#question_mark\n    = note: `-D clippy::question-mark` implied by `-D warnings`\n    = help: to override `-D warnings` add `#[allow(clippy::question_mark)]`\n\nwarning: `unisphere-adapter-vscode-copilot` (lib test) generated 1 warning\nwarning: `unisphere-adapter-vscode-copilot` (lib) generated 1 warning (1 duplicate)\n    Checking unisphere-app v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/app)\nwarning: `unisphere-adapter-codex` (lib test) generated 1 warning (1 duplicate)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.09s\n"
+}

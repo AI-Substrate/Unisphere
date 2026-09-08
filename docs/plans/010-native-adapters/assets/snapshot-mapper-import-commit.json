@@ -1,0 +1,20 @@
+{
+  "argv": [
+    "harness",
+    "commit",
+    "feat(adapters): integrate tested IDE and legacy snapshot projections\n\nOriginal-Deliveries: 58159df4729eb229fdcf5fd3ec8037e3314d7eb9, 0a72b5d461a9221047ce4243f3d1662762b42c77, 3f86982c34f9d6a26a7b9bd1e90c414d4820546c\n\nPij-Prime: pij-right-kotallo\nPij-Plan: 010-native-adapters",
+    "--",
+    "crates/adapter-vscode-copilot",
+    "crates/adapter-cursor",
+    "crates/adapter-copilot-cli",
+    "docs/vscode-copilot-adapter.md",
+    "docs/cursor-adapter.md",
+    "docs/copilot-cli-adapter.md"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "started": "2026-09-08T07:04:52.557Z",
+  "completed": "2026-09-08T07:04:55.268Z",
+  "exit_code": 0,
+  "stdout": "{\"command\":\"commit\",\"status\":\"ok\",\"timestamp\":\"2026-09-08T07:04:55.264Z\",\"data\":{\"mode\":\"direct-verified\",\"probe\":\"connected\",\"sha\":\"3428ce2aa4e5fca7fe254922755bffa6ead58b79\",\"sha_unknown\":false,\"staged\":[\"crates/adapter-copilot-cli/src/lib.rs\",\"crates/adapter-copilot-cli/src/snapshot.rs\",\"crates/adapter-copilot-cli/tests/fixtures/legacy.json\",\"crates/adapter-copilot-cli/tests/snapshot.rs\",\"crates/adapter-cursor/Cargo.toml\",\"crates/adapter-cursor/fixtures/ide.json\",\"crates/adapter-cursor/src/ide.rs\",\"crates/adapter-cursor/src/lib.rs\",\"crates/adapter-cursor/tests/ide.rs\",\"crates/adapter-vscode-copilot/Cargo.toml\",\"crates/adapter-vscode-copilot/src/journal.rs\",\"crates/adapter-vscode-copilot/src/lib.rs\",\"crates/adapter-vscode-copilot/tests/fixtures/session-journal.jsonl\",\"crates/adapter-vscode-copilot/tests/fixtures/session-v1.json\",\"crates/adapter-vscode-copilot/tests/fixtures/session-v2.json\",\"crates/adapter-vscode-copilot/tests/fixtures/session-v3.json\",\"crates/adapter-vscode-copilot/tests/mapping.rs\",\"docs/copilot-cli-adapter.md\",\"docs/cursor-adapter.md\",\"docs/vscode-copilot-adapter.md\"],\"verify\":\"landed\",\"buffer\":null,\"detail\":\"committed 3428ce2aa4e5 and VERIFIED: a refs/notes/ai entry landed, so the collector recorded this commit's authorship.\"},\"evidence\":[{\"label\":\"commit 3428ce2aa4e5\"}]}\n",
+  "stderr": ""
+}

@@ -1,0 +1,32 @@
+{
+  "at": "2026-09-08T06:32:31.484Z",
+  "authority": "Main relayed Jordan-authorized non-destructive native/map-first workaround; standing six-adapter grant; do not serialize R1-cleared JSONL lanes behind global receipt.",
+  "reviewed_basis": "418a62452af3e766c8a939e6c2a4d9822d559afa",
+  "working_source": "3a635c17110521a3ed93d03daf5eface57dc0bfd",
+  "review": "assets/reviews/contracts-opus-r1.md",
+  "scope": "Only unchanged approved JSONL contracts. R1 explicitly clears these five paths. Copilot legacy and CursorIDE snapshot halves wait for R2. Corrected exact type/descriptor naming applies.",
+  "missing_formal_receipt": "Plan-global Builder approved-baseline/dispatch receipt not yet available; this record is an authorized native work release, not an invented Builder approval.",
+  "lanes": [
+    {
+      "unit": "tk-0002",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-codex"
+    },
+    {
+      "unit": "tk-0003",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-oh-my-pi"
+    },
+    {
+      "unit": "tk-0004",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-pi"
+    },
+    {
+      "unit": "tk-0005",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-copilot-cli"
+    },
+    {
+      "unit": "tk-0007",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-cursor"
+    }
+  ],
+  "contract_diff_exit": 0
+}

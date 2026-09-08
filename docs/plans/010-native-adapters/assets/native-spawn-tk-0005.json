@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pij-rs",
+    "spawn",
+    "--harness",
+    "omp",
+    "--model",
+    "github-copilot/gpt-6-astra",
+    "--effort",
+    "high",
+    "--cwd",
+    "/Users/jordanknight/substrate/unisphere/unisphere-plan010-copilot-cli",
+    "--parent",
+    "pij-right-kotallo",
+    "--name",
+    "p010-tk-0005",
+    "--json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "started": "2026-09-08T06:33:16.639Z",
+  "completed": "2026-09-08T06:33:18.443Z",
+  "exit_code": 0,
+  "stdout": "{\"ok\":true,\"command\":\"pij spawn\",\"v\":2,\"data\":{\"id\":\"pij-homeless-dudley\",\"harness\":\"omp\",\"session\":\"01a07fb8-9350-7612-a208-e03f31eb252e\",\"pane\":\"%4415\",\"proc\":{\"pid\":87625,\"proc_start\":20260908163316},\"folder\":\"/Users/jordanknight/substrate/unisphere/unisphere-plan010-copilot-cli\",\"state\":\"idle\",\"semantic_state\":null,\"role\":null,\"parent\":\"pij-right-kotallo\",\"relay\":false,\"cross_session_inbound_accept\":false,\"native_extension_delivery\":false,\"spawn_id\":\"s-98639f2c4f27cbc00f55ff6d25d9891f\",\"model\":\"github-copilot/gpt-6-astra\",\"effort\":\"high\",\"dispatched\":true,\"bound\":true,\"pid\":87625}}\n",
+  "stderr": ""
+}

@@ -1,0 +1,131 @@
+{
+  "at": "2026-09-08T07:18:43.693Z",
+  "proof": [
+    {
+      "adapter": "codex",
+      "case": "codex",
+      "content": false,
+      "byte_identical": true,
+      "exit_code": 0
+    },
+    {
+      "adapter": "codex",
+      "case": "codex",
+      "content": true,
+      "byte_identical": true,
+      "exit_code": 0
+    },
+    {
+      "adapter": "oh-my-pi",
+      "case": "oh-my-pi",
+      "content": false,
+      "byte_identical": true,
+      "exit_code": 0
+    },
+    {
+      "adapter": "oh-my-pi",
+      "case": "oh-my-pi",
+      "content": true,
+      "byte_identical": true,
+      "exit_code": 0
+    },
+    {
+      "adapter": "pi",
+      "case": "pi",
+      "content": false,
+      "byte_identical": true,
+      "exit_code": 0
+    },
+    {
+      "adapter": "pi",
+      "case": "pi",
+      "content": true,
+      "byte_identical": true,
+      "exit_code": 0
+    },
+    {
+      "adapter": "copilot-cli",
+      "case": "copilot-cli",
+      "content": false,
+      "byte_identical": true,
+      "exit_code": 0
+    },
+    {
+      "adapter": "copilot-cli",
+      "case": "copilot-cli",
+      "content": true,
+      "byte_identical": true,
+      "exit_code": 0
+    },
+    {
+      "adapter": "cursor-transcript",
+      "case": "cursor-transcript",
+      "content": false,
+      "byte_identical": true,
+      "exit_code": 0
+    },
+    {
+      "adapter": "cursor-transcript",
+      "case": "cursor-transcript",
+      "content": true,
+      "byte_identical": true,
+      "exit_code": 0
+    },
+    {
+      "adapter": "vscode-copilot",
+      "case": "vscode-document",
+      "content": false,
+      "byte_identical": true,
+      "exit_code": 0
+    },
+    {
+      "adapter": "vscode-copilot",
+      "case": "vscode-document",
+      "content": true,
+      "byte_identical": true,
+      "exit_code": 0
+    },
+    {
+      "adapter": "vscode-copilot",
+      "case": "vscode-journal",
+      "content": false,
+      "byte_identical": true,
+      "exit_code": 0
+    },
+    {
+      "adapter": "vscode-copilot",
+      "case": "vscode-journal",
+      "content": true,
+      "byte_identical": true,
+      "exit_code": 0
+    },
+    {
+      "adapter": "copilot-cli-snapshot",
+      "case": "copilot-legacy",
+      "content": false,
+      "byte_identical": true,
+      "exit_code": 0
+    },
+    {
+      "adapter": "copilot-cli-snapshot",
+      "case": "copilot-legacy",
+      "content": true,
+      "byte_identical": true,
+      "exit_code": 0
+    },
+    {
+      "adapter": "cursor-ide",
+      "case": "cursor-ide",
+      "content": false,
+      "byte_identical": true,
+      "exit_code": 0
+    },
+    {
+      "adapter": "cursor-ide",
+      "case": "cursor-ide",
+      "content": true,
+      "byte_identical": true,
+      "exit_code": 0
+    }
+  ]
+}

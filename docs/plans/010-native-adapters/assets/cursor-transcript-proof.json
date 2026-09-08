@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "-p",
+    "unisphere-adapter-cursor"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/.harness/temp/proof-cursor-transcript",
+  "started": "2026-09-08T06:48:27.304Z",
+  "completed": "2026-09-08T06:48:34.688Z",
+  "exit_code": 0,
+  "stdout": "\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 10 tests\ntest nested_role_and_unverified_metadata_do_not_override_native_envelope ... ok\ntest malformed_bytes_fail_the_entire_batch_at_safe_physical_offset ... ok\ntest unsupported_envelopes_and_bad_known_fields_stay_observable_without_payloads ... ok\ntest malformed_parts_preserve_valid_siblings_and_hide_unsupported_payloads ... ok\ntest overview_and_turn_end_are_not_message_turns_or_session_finality ... ok\ntest actual_outer_role_and_idless_structured_tools_are_preserved ... ok\ntest native_type_prevents_custom_or_compaction_payload_promotion ... ok\ntest facts_discarded_by_native_writer_are_never_reconstructed ... ok\ntest shared_conformance_and_content_privacy_include_control_records ... ok\ntest split_batches_replay_and_crlf_preserve_physical_identity ... ok\n\ntest result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+  "stderr": "   Compiling proc-macro2 v1.0.107\n   Compiling unicode-ident v1.0.24\n   Compiling quote v1.0.47\n   Compiling serde_core v1.0.229\n   Compiling libc v0.2.189\n   Compiling zmij v1.0.23\n   Compiling serde v1.0.229\n   Compiling serde_json v1.0.151\n   Compiling itoa v1.0.18\n   Compiling getrandom v0.4.3\n   Compiling rustix v1.1.4\n   Compiling memchr v2.8.3\n   Compiling bitflags v2.13.1\n   Compiling cfg-if v1.0.4\n   Compiling once_cell v1.21.4\n   Compiling fastrand v2.5.0\n   Compiling syn v3.0.5\n   Compiling errno v0.3.14\n   Compiling serde_derive v1.0.229\n   Compiling tempfile v3.27.0\n   Compiling unisphere-core v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/.harness/temp/proof-cursor-transcript/crates/core)\n   Compiling unisphere-testkit v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/.harness/temp/proof-cursor-transcript/crates/testkit)\n   Compiling unisphere-adapter-cursor v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/.harness/temp/proof-cursor-transcript/crates/adapter-cursor)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.54s\n     Running unittests src/lib.rs (target/debug/deps/unisphere_adapter_cursor-df46a9fbcafd9da2)\n     Running tests/transcript.rs (target/debug/deps/transcript-27a92206bbf5e255)\n   Doc-tests unisphere_adapter_cursor\n"
+}

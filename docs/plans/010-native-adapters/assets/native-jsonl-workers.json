@@ -1,0 +1,127 @@
+{
+  "at": "2026-09-08T06:33:39.866Z",
+  "source": "3a635c17110521a3ed93d03daf5eface57dc0bfd",
+  "status": "Native workers bound and packets sent; actual start acknowledgments pending",
+  "workers": [
+    {
+      "unit": "tk-0002",
+      "peer": "pij-ideological-koala",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-codex",
+      "branch": "builder/010-codex-mapper",
+      "session": "01a07fb8-9306-75ce-b529-8ca9f6ca7983",
+      "pid": 87435,
+      "packet": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-codex/.harness/temp/native-mapper-packet.json",
+      "transport": {
+        "text": "queued d4ecfa48-9fb9-4a49-89c9-51a87b42b5f5 -> pij-ideological-koala",
+        "details": {
+          "xdev": {
+            "tool": "pij_send",
+            "mode": "execute",
+            "args": {
+              "to": "pij-ideological-koala",
+              "message": "Implement your approved JSONL mapper now from /Users/jordanknight/substrate/unisphere/unisphere-plan010-codex/.harness/temp/native-mapper-packet.json. This is the operator-authorized native/map-first release on unchanged R1-cleared contracts; do not wait for snapshot/R2 or a second grant. No builds/tests/formatters/lint/boot/shared lockfile writes; PM validates. First acknowledge actual native root/source/model/session/PID and work start, then implement. Read lane-contracts and structural research through native tools; no private-store scans."
+            },
+            "tier": "exec",
+            "inner": {}
+          }
+        }
+      }
+    },
+    {
+      "unit": "tk-0003",
+      "peer": "pij-financial-elle",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-oh-my-pi",
+      "branch": "builder/010-oh-my-pi-mapper",
+      "session": "01a07fb8-932e-7260-9caa-4aaf218397d8",
+      "pid": 87478,
+      "packet": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-oh-my-pi/.harness/temp/native-mapper-packet.json",
+      "transport": {
+        "text": "queued 4559f7c6-6366-4d6c-a266-19ae41ac913f -> pij-financial-elle",
+        "details": {
+          "xdev": {
+            "tool": "pij_send",
+            "mode": "execute",
+            "args": {
+              "to": "pij-financial-elle",
+              "message": "Implement your approved JSONL mapper now from /Users/jordanknight/substrate/unisphere/unisphere-plan010-oh-my-pi/.harness/temp/native-mapper-packet.json. This is the operator-authorized native/map-first release on unchanged R1-cleared contracts; do not wait for snapshot/R2 or a second grant. No builds/tests/formatters/lint/boot/shared lockfile writes; PM validates. First acknowledge actual native root/source/model/session/PID and work start, then implement. Read lane-contracts and structural research through native tools; no private-store scans."
+            },
+            "tier": "exec",
+            "inner": {}
+          }
+        }
+      }
+    },
+    {
+      "unit": "tk-0004",
+      "peer": "pij-remarkable-woodpecker",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-pi",
+      "branch": "builder/010-pi-mapper",
+      "session": "01a07fb8-932f-7788-b3d4-1cde81af477f",
+      "pid": 87521,
+      "packet": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-pi/.harness/temp/native-mapper-packet.json",
+      "transport": {
+        "text": "queued 3d543f20-3cf9-4ff6-a558-a47e534f2a3f -> pij-remarkable-woodpecker",
+        "details": {
+          "xdev": {
+            "tool": "pij_send",
+            "mode": "execute",
+            "args": {
+              "to": "pij-remarkable-woodpecker",
+              "message": "Implement your approved JSONL mapper now from /Users/jordanknight/substrate/unisphere/unisphere-plan010-pi/.harness/temp/native-mapper-packet.json. This is the operator-authorized native/map-first release on unchanged R1-cleared contracts; do not wait for snapshot/R2 or a second grant. No builds/tests/formatters/lint/boot/shared lockfile writes; PM validates. First acknowledge actual native root/source/model/session/PID and work start, then implement. Read lane-contracts and structural research through native tools; no private-store scans."
+            },
+            "tier": "exec",
+            "inner": {}
+          }
+        }
+      }
+    },
+    {
+      "unit": "tk-0005",
+      "peer": "pij-homeless-dudley",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-copilot-cli",
+      "branch": "builder/010-copilot-cli-mapper",
+      "session": "01a07fb8-9350-7612-a208-e03f31eb252e",
+      "pid": 87625,
+      "packet": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-copilot-cli/.harness/temp/native-mapper-packet.json",
+      "transport": {
+        "text": "queued 2b53b0a8-deb3-473a-ad05-a443413a5d06 -> pij-homeless-dudley",
+        "details": {
+          "xdev": {
+            "tool": "pij_send",
+            "mode": "execute",
+            "args": {
+              "to": "pij-homeless-dudley",
+              "message": "Implement your approved JSONL mapper now from /Users/jordanknight/substrate/unisphere/unisphere-plan010-copilot-cli/.harness/temp/native-mapper-packet.json. This is the operator-authorized native/map-first release on unchanged R1-cleared contracts; do not wait for snapshot/R2 or a second grant. No builds/tests/formatters/lint/boot/shared lockfile writes; PM validates. First acknowledge actual native root/source/model/session/PID and work start, then implement. Read lane-contracts and structural research through native tools; no private-store scans."
+            },
+            "tier": "exec",
+            "inner": {}
+          }
+        }
+      }
+    },
+    {
+      "unit": "tk-0007",
+      "peer": "pij-mechanical-tsarina",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-cursor",
+      "branch": "builder/010-cursor-mapper",
+      "session": "01a07fb8-9304-7154-be26-39ff3c525b5b",
+      "pid": 87573,
+      "packet": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-cursor/.harness/temp/native-mapper-packet.json",
+      "transport": {
+        "text": "queued 979cb8fc-f740-4fac-ae5c-981dba93482f -> pij-mechanical-tsarina",
+        "details": {
+          "xdev": {
+            "tool": "pij_send",
+            "mode": "execute",
+            "args": {
+              "to": "pij-mechanical-tsarina",
+              "message": "Implement your approved JSONL mapper now from /Users/jordanknight/substrate/unisphere/unisphere-plan010-cursor/.harness/temp/native-mapper-packet.json. This is the operator-authorized native/map-first release on unchanged R1-cleared contracts; do not wait for snapshot/R2 or a second grant. No builds/tests/formatters/lint/boot/shared lockfile writes; PM validates. First acknowledge actual native root/source/model/session/PID and work start, then implement. Read lane-contracts and structural research through native tools; no private-store scans."
+            },
+            "tier": "exec",
+            "inner": {}
+          }
+        }
+      }
+    }
+  ]
+}

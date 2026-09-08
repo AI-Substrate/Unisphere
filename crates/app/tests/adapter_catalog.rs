@@ -1,4 +1,5 @@
 use std::{
+    collections::BTreeSet,
     fs,
     path::Path,
     process::{Command, Output},
@@ -25,12 +26,53 @@ fn descriptor(output: &Output) -> serde_json::Value {
     assert_eq!(document["command"], "adapters.list");
     assert_eq!(document["v"], 1);
     let adapters = document["data"]["adapters"].as_array().unwrap();
-    let ids: Vec<_> = adapters
+    let ids: BTreeSet<_> = adapters
         .iter()
         .map(|entry| entry["id"].as_str().unwrap())
         .collect();
-    assert_eq!(ids, ["claude-code"]);
-    adapters[0].clone()
+    assert_eq!(
+        ids,
+        BTreeSet::from([
+            "claude-code",
+            "codex",
+            "oh-my-pi",
+            "pi",
+            "copilot-cli",
+            "copilot-cli-snapshot",
+            "cursor-transcript",
+            "cursor-ide",
+            "vscode-copilot",
+        ])
+    );
+    for adapter in adapters {
+        assert_eq!(
+            adapter["capabilities"]["delayed_revision_reconciliation"],
+            false
+        );
+        for location in adapter["locations"].as_array().unwrap() {
+            assert!(matches!(
+                location["base"].as_str(),
+                Some("home" | "appdata")
+            ));
+            assert!(matches!(
+                location["storage_format"].as_str(),
+                Some("jsonl" | "json_document" | "json_journal" | "sqlite_key_value")
+            ));
+            if adapter["id"] == "vscode-copilot" {
+                let suffix = if location["storage_format"] == "json_document" {
+                    "*.json"
+                } else {
+                    "*.jsonl"
+                };
+                assert!(location["session_glob"].as_str().unwrap().ends_with(suffix));
+            }
+        }
+    }
+    adapters
+        .iter()
+        .find(|entry| entry["id"] == "claude-code")
+        .unwrap()
+        .clone()
 }
 
 #[test]

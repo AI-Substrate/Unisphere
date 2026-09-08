@@ -9,9 +9,13 @@ mod config;
 mod errors;
 mod ports;
 pub mod snapshot;
+mod snapshot_collection;
 pub use catalog::{AdapterCapabilities, AdapterDescriptor, LocationHint};
 pub use collection::*;
 pub use snapshot::*;
+pub use snapshot_collection::{
+    SnapshotCheckpoint, SnapshotCollection, SnapshotCollectionApi, SnapshotRequest,
+};
 
 pub use config::{
     ConfigOverrides, ConfigSource, Configuration, InspectionReport, InspectionRequest,

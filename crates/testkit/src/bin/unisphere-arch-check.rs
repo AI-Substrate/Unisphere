@@ -25,10 +25,30 @@ fn allowed(package: &str, dependency: &str, kind: &str) -> bool {
                 | "unisphere-cli"
                 | "unisphere-loader-jsonl"
                 | "unisphere-adapter-claude"
+                | "unisphere-adapter-codex"
+                | "unisphere-adapter-omp"
+                | "unisphere-adapter-pi"
+                | "unisphere-adapter-copilot-cli"
+                | "unisphere-adapter-vscode-copilot"
+                | "unisphere-adapter-cursor"
+                | "unisphere-loader-snapshot"
                 | "unisphere-output-otlp"
         ),
         ("unisphere-loader-jsonl", "normal") => matches!(dependency, "unisphere-core" | "libc"),
-        ("unisphere-adapter-claude", "normal") => {
+        ("unisphere-loader-snapshot", "normal") => matches!(
+            dependency,
+            "unisphere-core" | "libc" | "serde" | "serde_json" | "sha2" | "rusqlite"
+        ),
+        (
+            "unisphere-adapter-claude"
+            | "unisphere-adapter-codex"
+            | "unisphere-adapter-omp"
+            | "unisphere-adapter-pi"
+            | "unisphere-adapter-copilot-cli"
+            | "unisphere-adapter-vscode-copilot"
+            | "unisphere-adapter-cursor",
+            "normal",
+        ) => {
             matches!(dependency, "unisphere-core" | "serde_json" | "time")
         }
         ("unisphere-output-otlp", "normal") => {
@@ -37,12 +57,24 @@ fn allowed(package: &str, dependency: &str, kind: &str) -> bool {
         ("unisphere-testkit", "normal") => {
             matches!(dependency, "unisphere-core" | "serde_json" | "tempfile")
         }
+        ("unisphere-app", "dev") => {
+            matches!(
+                dependency,
+                "unisphere-testkit" | "tempfile" | "serde_json" | "rusqlite"
+            )
+        }
         (
             "unisphere-sdk"
             | "unisphere-cli"
-            | "unisphere-app"
             | "unisphere-loader-jsonl"
             | "unisphere-adapter-claude"
+            | "unisphere-adapter-codex"
+            | "unisphere-adapter-omp"
+            | "unisphere-adapter-pi"
+            | "unisphere-adapter-copilot-cli"
+            | "unisphere-adapter-vscode-copilot"
+            | "unisphere-adapter-cursor"
+            | "unisphere-loader-snapshot"
             | "unisphere-output-otlp",
             "dev",
         ) => matches!(dependency, "unisphere-testkit" | "tempfile" | "serde_json"),
@@ -80,6 +112,13 @@ fn check(graph: &Value) -> Result<usize, String> {
                 | "unisphere-testkit"
                 | "unisphere-loader-jsonl"
                 | "unisphere-adapter-claude"
+                | "unisphere-adapter-codex"
+                | "unisphere-adapter-omp"
+                | "unisphere-adapter-pi"
+                | "unisphere-adapter-copilot-cli"
+                | "unisphere-adapter-vscode-copilot"
+                | "unisphere-adapter-cursor"
+                | "unisphere-loader-snapshot"
                 | "unisphere-output-otlp"
         ) {
             return Err(format!("unapproved workspace package {name}"));
@@ -246,7 +285,27 @@ fn run() -> Result<(), String> {
                 "core source scan found no Rust files; run from the repository root".into(),
             );
         }
-        let count = core_count + check_sources(std::path::Path::new("crates/adapter-claude/src"))?;
+        let mut count = core_count;
+        for package in value["packages"]
+            .as_array()
+            .ok_or("metadata lacks packages")?
+        {
+            let name = package["name"].as_str().ok_or("package lacks name")?;
+            if name.starts_with("unisphere-adapter-") {
+                let manifest = package["manifest_path"]
+                    .as_str()
+                    .ok_or("package lacks manifest")?;
+                let source = std::path::Path::new(manifest)
+                    .parent()
+                    .ok_or("manifest lacks parent")?
+                    .join("src");
+                let checked = check_sources(&source)?;
+                if checked == 0 {
+                    return Err(format!("adapter source scan found no Rust files: {name}"));
+                }
+                count += checked;
+            }
+        }
         println!(
             "purity: {count} core/adapter production source files checked (lexical sensor; independent review still required)"
         );

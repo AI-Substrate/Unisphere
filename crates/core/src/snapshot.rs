@@ -32,14 +32,13 @@ impl SnapshotRef {
         {
             return Err(PipelineError::new(PipelineErrorKind::InvalidInput, None));
         }
-        if let SnapshotFormat::SqliteKeyValue { table } = &self.format {
-            if table.is_empty()
+        if let SnapshotFormat::SqliteKeyValue { table } = &self.format
+            && (table.is_empty()
                 || !table
                     .bytes()
-                    .all(|b| b.is_ascii_alphanumeric() || b == b'_')
-            {
-                return Err(PipelineError::new(PipelineErrorKind::InvalidInput, None));
-            }
+                    .all(|b| b.is_ascii_alphanumeric() || b == b'_'))
+        {
+            return Err(PipelineError::new(PipelineErrorKind::InvalidInput, None));
         }
         Ok(())
     }

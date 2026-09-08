@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "cargo",
+    "build",
+    "-p",
+    "unisphere-app"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "started": "2026-09-08T07:00:19.031Z",
+  "completed": "2026-09-08T07:00:20.996Z",
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "   Compiling powerfmt v0.2.0\n   Compiling num-conv v0.2.2\n   Compiling time-core v0.1.9\n   Compiling deranged v0.5.8\n   Compiling libc v0.2.189\n   Compiling unisphere-core v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/core)\n   Compiling unisphere-output-otlp v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/output-otlp)\n   Compiling unisphere-sdk v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/sdk)\n   Compiling unisphere-adapter-cursor v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/adapter-cursor)\n   Compiling unisphere-cli v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/cli)\n   Compiling time v0.3.55\n   Compiling unisphere-loader-jsonl v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/loader-jsonl)\n   Compiling unisphere-adapter-pi v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/adapter-pi)\n   Compiling unisphere-adapter-codex v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/adapter-codex)\n   Compiling unisphere-adapter-copilot-cli v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/adapter-copilot-cli)\n   Compiling unisphere-adapter-claude v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/adapter-claude)\n   Compiling unisphere-adapter-omp v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/adapter-omp)\n   Compiling unisphere-app v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/app)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.94s\n"
+}

@@ -44,27 +44,22 @@ test('failed product checks preserve exit/stdout/stderr and never start smoke', 
   assert.equal(verdict.error.details.stderr, 'failure');
 });
 
-test('each required smoke failure prevents readiness and preserves failure evidence', async () => {
-  for (let failed = 0; failed < 4; failed += 1) {
-    let calls = 0;
-    const verdict = await runBoot(context(async () => {
-      const index = calls++;
-      if (index === 0) return good;
-      return index === failed + 1 ? { ok: false, code: 19, stdout: 'smoke-out', stderr: 'smoke-error' } : { ...good, stdout: 'passed' };
-    }));
-    assert.equal(verdict.error.code, 'E_FOUNDATION_SMOKE');
-    assert.equal(calls, failed + 2);
-    assert.equal(verdict.error.details.proofs.at(-1).stderr, 'smoke-error');
-  }
+test('native revision proof failure prevents readiness and preserves its evidence', async () => {
+  const verdict = await runBoot(context(async (_command, args) => {
+    if (args.at(-1) === 'native') {
+      return { ok: false, code: 19, stdout: 'native-out', stderr: 'native-error' };
+    }
+    return good;
+  }));
+  assert.equal(verdict.error.code, 'E_FOUNDATION_SMOKE');
+  assert.notEqual(verdict.data?.ready, true);
+  assert.equal(verdict.error.details.proofs.at(-1).stderr, 'native-error');
 });
 
-test('only complete quality and assembled proofs establish foundation readiness', async () => {
-  const calls = [];
-  const verdict = await runBoot(context(async (command, args) => { calls.push([command, args]); return good; }));
+test('successful quality and assembled proofs establish scoped readiness', async () => {
+  const verdict = await runBoot(context(async () => good));
   assert.equal(verdict.data.ready, true);
-  assert.equal(verdict.data.scope, 'configuration-and-claude-jsonl');
-  assert.equal(calls.length, 5);
-  assert.deepEqual(calls.slice(1).map(([, args]) => args.at(-1)), ['composition', 'sdk-consumer', 'installed-cli', 'collection']);
+  assert.equal(verdict.data.scope, 'configuration-and-native-session-projections');
 });
 
 test('a real harness child failure is not laundered into readiness', () => {

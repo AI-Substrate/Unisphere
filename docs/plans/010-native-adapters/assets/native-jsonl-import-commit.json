@@ -1,0 +1,24 @@
+{
+  "argv": [
+    "harness",
+    "commit",
+    "feat(adapters): integrate five tested native JSONL mapper deliveries\n\nOriginal-Deliveries: 891ff3a8860ac5f1ab2e033c8464adbe6c87c8f3, ec22339a50191fd782b5fb5559c1e71ac3b22294, c3b2fb969e68c7b0abbb1c938407738e9ddfbf34, e3771b2319c84afc300ef8ee729c85dd2db921f8, 2bcdd8dfe2ffae2934e82343e28dc39d27146dac\n\nPij-Prime: pij-right-kotallo\nPij-Plan: 010-native-adapters",
+    "--",
+    "crates/adapter-codex",
+    "crates/adapter-omp",
+    "crates/adapter-pi",
+    "crates/adapter-copilot-cli",
+    "crates/adapter-cursor",
+    "docs/codex-adapter.md",
+    "docs/oh-my-pi-adapter.md",
+    "docs/pi-adapter.md",
+    "docs/copilot-cli-adapter.md",
+    "docs/cursor-adapter.md"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "started": "2026-09-08T06:54:49.164Z",
+  "completed": "2026-09-08T06:54:51.764Z",
+  "exit_code": 0,
+  "stdout": "{\"command\":\"commit\",\"status\":\"ok\",\"timestamp\":\"2026-09-08T06:54:51.760Z\",\"data\":{\"mode\":\"direct-verified\",\"probe\":\"connected\",\"sha\":\"91913cf6a50bb17ead300446adfed93e1712639f\",\"sha_unknown\":false,\"staged\":[\"crates/adapter-codex/Cargo.toml\",\"crates/adapter-codex/fixtures/rollout.jsonl\",\"crates/adapter-codex/src/lib.rs\",\"crates/adapter-codex/tests/mapping.rs\",\"crates/adapter-copilot-cli/Cargo.toml\",\"crates/adapter-copilot-cli/src/lib.rs\",\"crates/adapter-copilot-cli/tests/fixtures/events.jsonl\",\"crates/adapter-copilot-cli/tests/mapping.rs\",\"crates/adapter-cursor/Cargo.toml\",\"crates/adapter-cursor/fixtures/transcript.jsonl\",\"crates/adapter-cursor/src/lib.rs\",\"crates/adapter-cursor/tests/transcript.rs\",\"crates/adapter-omp/Cargo.toml\",\"crates/adapter-omp/src/lib.rs\",\"crates/adapter-omp/tests/fixtures/native.jsonl\",\"crates/adapter-omp/tests/mapping.rs\",\"crates/adapter-pi/Cargo.toml\",\"crates/adapter-pi/src/lib.rs\",\"crates/adapter-pi/tests/fixtures/v3-tree.jsonl\",\"crates/adapter-pi/tests/mapping.rs\",\"docs/codex-adapter.md\",\"docs/copilot-cli-adapter.md\",\"docs/cursor-adapter.md\",\"docs/oh-my-pi-adapter.md\",\"docs/pi-adapter.md\"],\"verify\":\"landed\",\"buffer\":null,\"detail\":\"committed 91913cf6a50b and VERIFIED: a refs/notes/ai entry landed, so the collector recorded this commit's authorship.\"},\"evidence\":[{\"label\":\"commit 91913cf6a50b\"}]}\n",
+  "stderr": ""
+}

@@ -1,0 +1,57 @@
+{
+  "at": "2026-09-08T06:53:42.410Z",
+  "validation_owner": "pij-right-kotallo",
+  "deliveries": [
+    {
+      "unit": "tk-0003",
+      "peer": "pij-financial-elle",
+      "slug": "omp",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-oh-my-pi",
+      "commit": "ec22339a50191fd782b5fb5559c1e71ac3b22294",
+      "package": "unisphere-adapter-omp",
+      "exit_code": 0,
+      "evidence": "omp-delivery-proof.json"
+    },
+    {
+      "unit": "tk-0004",
+      "peer": "pij-remarkable-woodpecker",
+      "slug": "pi",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-pi",
+      "commit": "c3b2fb969e68c7b0abbb1c938407738e9ddfbf34",
+      "package": "unisphere-adapter-pi",
+      "exit_code": 0,
+      "evidence": "pi-delivery-proof.json"
+    },
+    {
+      "unit": "tk-0002",
+      "peer": "pij-ideological-koala",
+      "slug": "codex",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-codex",
+      "commit": "891ff3a8860ac5f1ab2e033c8464adbe6c87c8f3",
+      "package": "unisphere-adapter-codex",
+      "exit_code": 0,
+      "evidence": "codex-delivery-proof.json"
+    },
+    {
+      "unit": "tk-0005",
+      "peer": "pij-homeless-dudley",
+      "slug": "copilot-cli-jsonl",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-copilot-cli",
+      "commit": "e3771b2319c84afc300ef8ee729c85dd2db921f8",
+      "package": "unisphere-adapter-copilot-cli",
+      "exit_code": 0,
+      "evidence": "copilot-cli-jsonl-delivery-proof.json"
+    },
+    {
+      "unit": "tk-0007",
+      "part": "transcript",
+      "peer": "pij-mechanical-tsarina",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-cursor",
+      "commit": "2bcdd8dfe2ffae2934e82343e28dc39d27146dac",
+      "package": "unisphere-adapter-cursor",
+      "exit_code": 0,
+      "evidence": "cursor-transcript-proof.json"
+    }
+  ],
+  "scope": "Scoped immutable source proof only; whole SDK/CLI/architecture integration still owed."
+}

@@ -1,0 +1,15 @@
+{
+  "argv": [
+    "git",
+    "cherry-pick",
+    "--no-commit",
+    "1c1799c71decefdc2ced6b56b9c865509a79af11",
+    "3a33c79a268eedc2f44ed827418dde88d3625be7"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "started": "2026-09-08T07:07:55.793Z",
+  "completed": "2026-09-08T07:07:55.847Z",
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": ""
+}

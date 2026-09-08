@@ -197,8 +197,10 @@ unisphere adapters list --json
 unisphere adapters list --human
 ```
 
-The catalog contains registered production adapters only: currently `claude-code`
-for **Claude Code**, not the test fixture or the six researched follow-on adapters.
+The catalog contains registered production adapters only, never the test fixture.
+The current IDs are `claude-code`, `codex`, `oh-my-pi`, `pi`, `copilot-cli`,
+`cursor-transcript`, `vscode-copilot`, `cursor-ide` and `copilot-cli-snapshot`.
+Cursor transcript/IDE and Copilot event/legacy-snapshot dialects remain distinct.
 The v1 envelope is `{"ok":true,"command":"adapters.list","v":1,"data":{"adapters":[...]}}`.
 Each descriptor supplies:
 
@@ -208,11 +210,11 @@ Each descriptor supplies:
 | `locations` | Usual-location hints, not detected installations or an inventory of existing sessions. |
 | `locations[].platforms`, `base`, `path` | Applicable platform names and a relative path beneath a symbolic base such as `home`. |
 | `locations[].session_glob`, `storage_format` | Pattern relative to the hinted path and native format; the catalog evaluates neither. |
-| `capabilities.export_platforms`, `output_formats` | Current registered pipeline support: `["unix"]` and `["otlp-jsonl"]`; `unix` denotes the Unix platform family. |
-| `capabilities.sdk_caller_owned_cursor` | The SDK returns a cursor for the caller to retain; not a guarantee of safe resume after arbitrary source mutation. |
-| `capabilities.cursor_source_assumption` | Currently `append_only`; in-place rewrite/regrowth and truncation above a checkpoint are not fully detected. |
-| `capabilities.cli_persisted_resume` | Currently false: the CLI starts a fresh export at byte zero. |
-| `capabilities.delayed_revision_reconciliation`, `lossless_archive` | Both false; see [fidelity.md](fidelity.md) for the delivered boundaries. |
+| `capabilities.export_platforms`, `output_formats` | Registered pipeline support, distinct from location applicability. `unix` denotes the Unix family; other values name explicit platforms. Current writers emit `otlp-jsonl`. |
+| `capabilities.sdk_caller_owned_cursor` | Whether the pipeline returns an append cursor; not a guarantee of safe resume after arbitrary rewrites. Snapshot revisions are a separate mechanism. |
+| `capabilities.cursor_source_assumption` | The adapter's declared source assumption; append-only JSONL does not detect every rewrite/regrowth/truncation above a checkpoint. |
+| `capabilities.cli_persisted_resume` | False: JSONL starts at byte zero and snapshots read a fresh complete revision each invocation. |
+| `capabilities.delayed_revision_reconciliation`, `lossless_archive` | Stronger history/archive guarantees, distinct from exporting the current replacement projection; see [fidelity.md](fidelity.md). |
 
 The usual Claude hint on macOS/Linux is symbolic `home` + `.claude/projects`,
 pattern `*/*.jsonl`, native format `jsonl`. No HOME/config lookup, glob expansion,
@@ -220,6 +222,20 @@ source scan or arbitrary command execution occurs when listing the catalog.
 Custom storage locations remain valid: callers choose the location, and pass an
 explicit leaf directory to `sessions list --root` or file to `sessions export --input`.
 The existing session listing is nonrecursive; the hint does not add automatic discovery.
+
+Location bases use one lowercase vocabulary: `home` means the caller-chosen user
+home; `appdata` means Windows roaming application data (usually the location named
+by `APPDATA`). These are symbolic labels, never environment lookups performed by
+the catalog. Each hint has one atomic `storage_format`: `jsonl`, `json_document`,
+`json_journal` or `sqlite_key_value`. Snapshot formats correspond respectively to
+CLI `--source-format json-document`, `json-journal` and `sqlite-key-value`;
+`jsonl` uses the ordinary append-record runner. VS Code supplies separate `.json`
+and `.jsonl` hints so a program need not infer a format from a combined pattern.
+
+`delayed_revision_reconciliation` means retained cross-revision ingestion/state,
+not pure journal replay or reading another current snapshot. It is false for the
+current snapshot pipelines. VS Code's description names journal replay separately;
+no descriptor promises a background tracker, persistent/idempotent sink or history.
 
 Piped catalog output defaults to JSON; terminal output defaults to readable
 descriptions, hints and capabilities. **Catalog JSON failures go to stdout;
@@ -255,3 +271,42 @@ diagnostics, `incomplete_tail` and final byte `offset`.
 ingestion store. SDK callers can retain a source-bound `ReadCursor`; the CLI does
 not persist it. EOF is only an observed boundary and delayed data can arrive later.
 See [fidelity.md](fidelity.md) for implemented guarantees and follow-on work.
+
+## Native revision snapshots
+
+```sh
+unisphere sessions export --adapter vscode-copilot --input /explicit/session.json
+unisphere sessions export --adapter vscode-copilot --input /explicit/session.jsonl --source-format json-journal
+unisphere sessions export --adapter copilot-cli-snapshot --input /explicit/legacy.json --include-content
+unisphere sessions export --adapter cursor-ide --input /explicit/state.vscdb --session-id alpha
+```
+
+Snapshot adapters use `--max-records` (100,000), `--max-record-bytes` (32 MiB)
+and `--max-snapshot-bytes` (64 MiB), not `--max-batch-bytes`. The aggregate bound
+includes UTF-8 native keys plus raw value bytes; the record bound covers each raw
+value. The unchanged OTLP writer additionally limits the complete encoded output
+batch to 32 MiB. These are independent limits; a larger input budget does not
+disable the output cap.
+
+`--source-format` accepts `json-document`, `json-journal` or `sqlite-key-value`.
+Defaults come from the registration: JSON document for VS Code/legacy Copilot;
+SQLite `cursorDiskKV` for Cursor IDE. Select VS Code journals explicitly; file
+extension alone does not choose a decoder. `--table` overrides a SQLite table
+only, and must name real stored `key`/`value` columns. No caller SQL is executed.
+The source must be an explicit absolute path or resolve under the captured cwd;
+final symlinks, nonregular files and unsafe/inconsistent reads fail.
+
+`--session-id` selects a native logical session within a supplied snapshot; it is
+not global session discovery. The pure mapper verifies native identity. SQLite
+reads one bounded read-only transaction; VS Code journal operations are reduced
+before message projection. A partial/malformed journal never publishes a prefix
+snapshot as success.
+
+Every successful invocation emits a full projection followed by one closing
+`unisphere.session.snapshot` manifest, including for an empty projection.
+Snapshot records use native keys/content revisions and **no byte offset**.
+The stderr summary names `revision`, `replace_projection`, unknown finality and
+no persisted resume. `records` includes the manifest. Consumers accept the entire
+output before replacing their prior projection; failed writes may leave bytes but
+return no accepted SDK checkpoint. Repeated invocations are not deduplicated, and
+no persistent history, destination transaction or exactly-once guarantee is added.

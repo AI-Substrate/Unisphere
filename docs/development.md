@@ -1,6 +1,6 @@
 # Development and collection proof
 
-Unisphere 0.1.0 implements explicit configuration inspection and a Unix JSONL loader, pure Claude adapter and OTLP writer, composed through the SDK and CLI. It does not discover private stores implicitly, start a daemon, or claim lossless/full-session telemetry.
+Unisphere 0.1.0 implements explicit configuration inspection, bounded Unix JSONL/native snapshot loading, pure native adapters and OTLP output through SDK/CLI. It does not discover private stores implicitly, start a daemon, or claim lossless/full-session telemetry.
 
 ## Toolchain and checkout
 
@@ -55,7 +55,7 @@ harness boot --json
 
 With rustup, a command-local `RUSTUP_TOOLCHAIN=1.95.0` selects that toolchain only when the executable resolves through rustup. Ensure PATH selects the intended distribution; inspect the emitted provenance instead of assuming the override worked.
 
-`checks` records actual tool versions/provenance, then runs formatting, clippy, workspace tests, rustdoc, dependency/source-purity checks and wrapper regressions. `boot` calls checks once and runs four real proof modes, using the observed Cargo path; only all-success returns `ready:true`, scoped to `configuration-and-claude-jsonl`. No service starts and no full-fidelity or network-denial claim is made.
+`checks` records actual tool versions/provenance, then runs formatting, clippy, workspace tests, rustdoc, dependency/source-purity checks and wrapper regressions. `boot` calls checks once and runs the five real proof modes below using the observed Cargo path; only all-success returns `ready:true`, scoped to `configuration-and-native-session-projections`. No service starts and no full-fidelity or network-denial claim is made.
 
 ## Standalone proof commands
 
@@ -68,6 +68,7 @@ cargo run --locked -p unisphere-testkit --bin unisphere-proof -- composition
 cargo run --locked -p unisphere-testkit --bin unisphere-proof -- sdk-consumer
 cargo run --locked -p unisphere-testkit --bin unisphere-proof -- installed-cli
 cargo run --locked -p unisphere-testkit --bin unisphere-proof -- collection
+cargo run --locked -p unisphere-testkit --bin unisphere-proof -- native
 node --test .harness/extensions/checks/checks.test.mjs .harness/extensions/boot/extension.test.mjs
 ```
 
@@ -78,8 +79,9 @@ node --test .harness/extensions/checks/checks.test.mjs .harness/extensions/boot/
 - `installed-cli`: performs a real `cargo install --path crates/app --root <temporary-root>`, then invokes the installed binary outside the checkout. Exercises help/version, default machine-mode success/failures, explicit human success/failures, stream routing, and conflicting arguments.
 - `unisphere-arch-check`: inspects Cargo metadata declarations, including optional, renamed, target-specific and normal/dev/build edges. Only present approved crates are required, so core/testkit can run independently. SDK may directly use existing `serde` for visitors; production dependencies on testkit and reversed dependencies remain forbidden. Negative fixture graph data must fail; `--metadata FILE` checks an explicitly supplied metadata fixture.
 - `collection`: builds an external consumer using the real loader/adapter/writer, compares SDK/CLI OTLP records across bounded batches and metadata/content policy, checks hostile environment isolation, partial tails, malformed input and output-file collision protection, then installs and runs the real CLI outside the checkout.
+- `native`: builds a real external SDK consumer and temporary installed CLI, compares every registered native JSONL/document/journal/SQLite dialect in both content policies, checks the catalog, exercises changed/deleted document and SQLite projections plus delayed/partial journals, and proves a real partial destination write returns no checkpoint. It reuses the existing collection decoder with source-representation-specific provenance requirements.
 
-The source-purity sensor scans production core/Claude sources and rejects explicit effectful constructs using negative fixtures; it excludes testkit and conventional trailing test modules and never treats a zero-core scan as success. Aliases/macros/indirect effects still require independent source review; see [adapter guidance](adapters.md).
+The source-purity sensor scans production core and every approved adapter source tree, rejecting explicit effectful constructs using negative fixtures. It excludes testkit and conventional trailing test modules; zero core or adapter source scans fail. Aliases/macros/indirect effects still require independent source review; see [adapter guidance](adapters.md).
 
 Proof builds retain explicit compiler access but isolate HOME, config, Cargo cache, target and install roots under a fresh temporary directory. The compiler's observed sysroot binds child compilation to the selected compiler; no private path is committed. Built products run through the shared `sealed_command` helper with cleared environment and empty PATH. Hostile variables are set on individual child commands, never in global test-process state. Temporary manifests are not live nested workspace packages. Scratch directories are automatically removed on completion/failure, while child diagnostics are reported before exit.
 

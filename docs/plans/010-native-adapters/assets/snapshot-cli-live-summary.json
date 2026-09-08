@@ -1,0 +1,173 @@
+{
+  "at": "2026-09-08T07:16:49.629Z",
+  "proof": [
+    {
+      "adapter": "vscode-copilot",
+      "case": "vscode-document",
+      "content": false,
+      "records": 4,
+      "summary": {
+        "command": "sessions.export",
+        "data": {
+          "adapter": "vscode-copilot",
+          "diagnostics": 7,
+          "finality": "unknown",
+          "persisted_resume": false,
+          "records": 4,
+          "revision": "sha256:650f9ae27e9bb8a2b5bab9d3c29801dace4b7626c0059920eb718261060bf9d7",
+          "semantics": "replace_projection"
+        },
+        "ok": true,
+        "v": 1
+      },
+      "exit_code": 0
+    },
+    {
+      "adapter": "vscode-copilot",
+      "case": "vscode-document",
+      "content": true,
+      "records": 4,
+      "summary": {
+        "command": "sessions.export",
+        "data": {
+          "adapter": "vscode-copilot",
+          "diagnostics": 4,
+          "finality": "unknown",
+          "persisted_resume": false,
+          "records": 4,
+          "revision": "sha256:650f9ae27e9bb8a2b5bab9d3c29801dace4b7626c0059920eb718261060bf9d7",
+          "semantics": "replace_projection"
+        },
+        "ok": true,
+        "v": 1
+      },
+      "exit_code": 0
+    },
+    {
+      "adapter": "vscode-copilot",
+      "case": "vscode-journal",
+      "content": false,
+      "records": 4,
+      "summary": {
+        "command": "sessions.export",
+        "data": {
+          "adapter": "vscode-copilot",
+          "diagnostics": 2,
+          "finality": "unknown",
+          "persisted_resume": false,
+          "records": 4,
+          "revision": "sha256:29cf4dcc11cea3ee1ac13cbd0a459f3496b56b0fd015062f078fa8129f2465db",
+          "semantics": "replace_projection"
+        },
+        "ok": true,
+        "v": 1
+      },
+      "exit_code": 0
+    },
+    {
+      "adapter": "vscode-copilot",
+      "case": "vscode-journal",
+      "content": true,
+      "records": 4,
+      "summary": {
+        "command": "sessions.export",
+        "data": {
+          "adapter": "vscode-copilot",
+          "diagnostics": 0,
+          "finality": "unknown",
+          "persisted_resume": false,
+          "records": 4,
+          "revision": "sha256:29cf4dcc11cea3ee1ac13cbd0a459f3496b56b0fd015062f078fa8129f2465db",
+          "semantics": "replace_projection"
+        },
+        "ok": true,
+        "v": 1
+      },
+      "exit_code": 0
+    },
+    {
+      "adapter": "copilot-cli-snapshot",
+      "case": "copilot-legacy",
+      "content": false,
+      "records": 10,
+      "summary": {
+        "command": "sessions.export",
+        "data": {
+          "adapter": "copilot-cli-snapshot",
+          "diagnostics": 9,
+          "finality": "unknown",
+          "persisted_resume": false,
+          "records": 10,
+          "revision": "sha256:7233649933a427d57d3789fe43f40f8dd5cf05d1dd8940af5e7638dfd97b9207",
+          "semantics": "replace_projection"
+        },
+        "ok": true,
+        "v": 1
+      },
+      "exit_code": 0
+    },
+    {
+      "adapter": "copilot-cli-snapshot",
+      "case": "copilot-legacy",
+      "content": true,
+      "records": 10,
+      "summary": {
+        "command": "sessions.export",
+        "data": {
+          "adapter": "copilot-cli-snapshot",
+          "diagnostics": 1,
+          "finality": "unknown",
+          "persisted_resume": false,
+          "records": 10,
+          "revision": "sha256:7233649933a427d57d3789fe43f40f8dd5cf05d1dd8940af5e7638dfd97b9207",
+          "semantics": "replace_projection"
+        },
+        "ok": true,
+        "v": 1
+      },
+      "exit_code": 0
+    },
+    {
+      "adapter": "cursor-ide",
+      "case": "cursor-ide",
+      "content": false,
+      "records": 7,
+      "summary": {
+        "command": "sessions.export",
+        "data": {
+          "adapter": "cursor-ide",
+          "diagnostics": 6,
+          "finality": "unknown",
+          "persisted_resume": false,
+          "records": 7,
+          "revision": "sha256:d59382392da2a05b47e12f2c7ef395be1734da605480ba8863ae614426b8d0b9",
+          "semantics": "replace_projection"
+        },
+        "ok": true,
+        "v": 1
+      },
+      "exit_code": 0
+    },
+    {
+      "adapter": "cursor-ide",
+      "case": "cursor-ide",
+      "content": true,
+      "records": 7,
+      "summary": {
+        "command": "sessions.export",
+        "data": {
+          "adapter": "cursor-ide",
+          "diagnostics": 1,
+          "finality": "unknown",
+          "persisted_resume": false,
+          "records": 7,
+          "revision": "sha256:d59382392da2a05b47e12f2c7ef395be1734da605480ba8863ae614426b8d0b9",
+          "semantics": "replace_projection"
+        },
+        "ok": true,
+        "v": 1
+      },
+      "exit_code": 0
+    }
+  ]
+}

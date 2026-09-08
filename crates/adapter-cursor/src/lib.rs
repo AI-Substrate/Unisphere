@@ -160,8 +160,12 @@ impl Mapping<'_> {
             self.diagnostic(MappingDiagnosticCode::InvalidField);
             return None;
         };
-        let parts: Vec<_> = content.into_iter().filter_map(|part| self.part(part)).collect();
-        self.include_content.then(|| json!({"role": role, "parts": parts}))
+        let parts: Vec<_> = content
+            .into_iter()
+            .filter_map(|part| self.part(part))
+            .collect();
+        self.include_content
+            .then(|| json!({"role": role, "parts": parts}))
     }
 
     fn part(&mut self, value: Value) -> Option<Value> {
@@ -179,7 +183,8 @@ impl Mapping<'_> {
                     self.diagnostic(MappingDiagnosticCode::InvalidField);
                     return None;
                 };
-                self.include_content.then(|| json!({"type": "text", "content": content}))
+                self.include_content
+                    .then(|| json!({"type": "text", "content": content}))
             }
             "tool_use" => {
                 let Some(Value::String(name)) = part.remove("name") else {
@@ -190,15 +195,13 @@ impl Mapping<'_> {
                     self.diagnostic(MappingDiagnosticCode::InvalidField);
                     return None;
                 };
-                self.include_content.then(|| {
-                    json!({"type": "tool_call", "name": name, "arguments": arguments})
-                })
+                self.include_content
+                    .then(|| json!({"type": "tool_call", "name": name, "arguments": arguments}))
             }
             _ => {
                 self.diagnostic(MappingDiagnosticCode::UnsupportedPart);
-                self.include_content.then(|| {
-                    json!({"type": "unisphere.unknown", "native_type": kind})
-                })
+                self.include_content
+                    .then(|| json!({"type": "unisphere.unknown", "native_type": kind}))
             }
         }
     }
@@ -220,9 +223,8 @@ impl Mapping<'_> {
             self.diagnostic(MappingDiagnosticCode::InvalidField);
             return None;
         };
-        self.include_content.then(|| {
-            json!({"type": "unisphere.cursor.metadata", "overview": overview})
-        })
+        self.include_content
+            .then(|| json!({"type": "unisphere.cursor.metadata", "overview": overview}))
     }
 
     fn turn_ended(
@@ -244,8 +246,7 @@ impl Mapping<'_> {
             self.diagnostic(MappingDiagnosticCode::InvalidField);
             return None;
         };
-        self.include_content.then(|| {
-            json!({"type": "unisphere.cursor.turn_ended", "error": error})
-        })
+        self.include_content
+            .then(|| json!({"type": "unisphere.cursor.turn_ended", "error": error}))
     }
 }

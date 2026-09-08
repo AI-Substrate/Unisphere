@@ -1,10 +1,10 @@
 # Telemetry profile v1
 
-This is the normative key registry for Unisphere's Claude source-record profile.
-Adapters assign semantics; `unisphere-output-otlp::OtlpJsonlWriter` preserves the
+This is the common wire/provenance registry plus the Claude-specific source-record
+profile. Other adapters own their documented native extension fields.
+Adapters assign semantics; `unisphere-output-otlp::OtlpJsonlWriter` preserves
 supplied records and owns only OTLP encoding. It neither validates an adapter's
-profile nor reads sources, opens destinations, observes a clock, or sends data to
-an endpoint.
+profile nor reads sources, opens destinations, observes a clock, or sends data.
 
 ## Standards and interpretation
 
@@ -30,9 +30,10 @@ is a Unisphere extension event representing a source-derived record fragment,
 **not** `gen_ai.client.inference.operation.details`, a completed inference, a
 span, a reconstructed conversation, or an output choice. Repeated message IDs
 remain separate physical records. The event name identifies a category, not an
-instance. Source path and byte offset preserve physical provenance; they are not
-a durable global identity across file replacement or replay. Native UUIDs and
-parent UUIDs are retained without inventing trace or span IDs.
+instance. JSONL source path and byte offset preserve physical provenance; native
+snapshot keys and content revisions identify whole-source observations. Neither
+is a durable global history or deduplication guarantee. Native IDs and parent
+links are retained without inventing trace/span IDs.
 
 ## LogsData JSONL envelope
 
@@ -93,11 +94,55 @@ with `InvalidData` (`UNI-DATA`), including in a nested body or attribute; it is
 never rounded to double or relabeled as a string. The timestamp is separately
 `u64` and can reach `"18446744073709551615"`.
 
+## Native snapshot provenance and replacement manifests
+
+All formats retain `unisphere.profile.version` as the **integer** `1`,
+`unisphere.source.adapter`, `unisphere.source.path` and `unisphere.source.kind`.
+Snapshot-derived records additionally require:
+
+| Key | Value and meaning |
+| --- | --- |
+| `unisphere.source.key` | Native SQLite key or mapper's structural document/journal location. |
+| `unisphere.source.revision` | Loader-owned SHA256 revision of the bounded raw representation. |
+| `unisphere.source.format` | `json_document`, `json_journal` or `sqlite_key_value`. |
+| `unisphere.source.session.id` | Optional verified native selected session identity. |
+
+`unisphere.source.offset` is **absent** for snapshots, never a synthesized ordinal.
+The composed proof selects the required provenance set by the registered source
+representation; JSONL continues to require actual physical byte offsets.
+
+The SDK appends one **`unisphere.session.snapshot`** event after a full snapshot
+projection. Its source kind is `snapshot_manifest`, structural key `$snapshot`,
+and body/timestamp are absent. It adds these explicit extensions:
+
+| Key | Meaning |
+| --- | --- |
+| `unisphere.snapshot.semantics` | `replace_projection`; not an append-only stream transaction. |
+| `unisphere.snapshot.records` | Number of preceding projected records in this batch. |
+| `unisphere.snapshot.selection` | Structured explicit source path/format/table/session selector. |
+| `unisphere.snapshot.requested_session.id` | Optional caller selection, not an invented native observation. |
+| `unisphere.snapshot.include_content` | Applied content policy. |
+| `unisphere.snapshot.finality` | `unknown`; no claim that a producer is finished. |
+
+Empty snapshots still produce a closing manifest so consumers can remove a
+previous projection. A caller must accept the entire output before replacing its
+view. Encoding is one bounded writer batch; failed writes may leave a prefix and
+return no checkpoint. No history store, destination binding or exactly-once
+guarantee is implied by the manifest.
+
+Native field/usage registries and their scope distinctions live in
+[Codex](codex-adapter.md), [Oh My Pi](oh-my-pi-adapter.md), [Pi](pi-adapter.md),
+[Copilot CLI](copilot-cli-adapter.md), [VS Code Copilot](vscode-copilot-adapter.md)
+and [Cursor](cursor-adapter.md). Their `unisphere.*` fields are explicit native
+extensions, not additional OpenTelemetry standard totals. In particular,
+latest-call, whole-turn, checkpoint and cumulative-session counters are not
+interchangeable or automatically summed.
+
 ## Claude attribute registry
 
 These are log attributes, not resource attributes or new OTLP message fields.
-All `unisphere.*` names below are **explicit Unisphere extensions**. This table is
-the single registry; adapter documentation describes extraction and links here.
+All `unisphere.*` names below are **explicit Unisphere extensions**. This table
+owns Claude's keys; other native field registries are linked above.
 Required means present on every mapped physical record, including unsupported
 native kinds. Optional values are retained only when their native types are valid.
 
@@ -122,7 +167,7 @@ native kinds. Optional values are retained only when their native types are vali
 | `unisphere.usage.cache_creation_input_tokens` | Integer `0..i64::MAX` | Optional exact native `message.usage.cache_creation_input_tokens` snapshot. |
 | `unisphere.usage.scope` | String `native_record_snapshot` | Present if any of the four usage components is retained. |
 
-The usage namespace is closed to those five keys in v1. Missing usage remains
+The Claude usage namespace is closed to those five keys in v1. Missing usage remains
 absent, never zero. Negative, noninteger and out-of-range components are omitted
 with `InvalidField`; unknown components are not guessed. Components are not
 summed, deduplicated or aggregated across repeated physical records. No

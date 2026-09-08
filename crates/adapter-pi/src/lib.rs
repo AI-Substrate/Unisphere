@@ -101,7 +101,11 @@ impl Mapping<'_> {
         }
     }
 
-    fn required_string<'a>(&mut self, object: &'a Map<String, Value>, key: &str) -> Option<&'a str> {
+    fn required_string<'a>(
+        &mut self,
+        object: &'a Map<String, Value>,
+        key: &str,
+    ) -> Option<&'a str> {
         if !object.contains_key(key) {
             self.diagnostic(Code::InvalidField);
         }
@@ -201,35 +205,59 @@ impl Mapping<'_> {
                 self.text_fields(object, "session", &["cwd", "parentSession"], attributes)
             }
             "model_change" => {
-                self.strings(object, attributes, &[
-                    ("provider", "gen_ai.provider.name"),
-                    ("modelId", "gen_ai.request.model"),
-                ]);
+                self.strings(
+                    object,
+                    attributes,
+                    &[
+                        ("provider", "gen_ai.provider.name"),
+                        ("modelId", "gen_ai.request.model"),
+                    ],
+                );
                 None
             }
             "thinking_level_change" => {
-                self.strings(object, attributes, &[("thinkingLevel", "unisphere.pi.thinking_level")]);
+                self.strings(
+                    object,
+                    attributes,
+                    &[("thinkingLevel", "unisphere.pi.thinking_level")],
+                );
                 None
             }
             "compaction" | "branch_summary" => {
-                self.strings(object, attributes, &[
-                    ("firstKeptEntryId", "unisphere.pi.first_kept_entry.id"),
-                    ("fromId", "unisphere.pi.branch.from.id"),
-                ]);
-                self.flags(object, attributes, &[("fromHook", "unisphere.pi.from_hook")]);
+                self.strings(
+                    object,
+                    attributes,
+                    &[
+                        ("firstKeptEntryId", "unisphere.pi.first_kept_entry.id"),
+                        ("fromId", "unisphere.pi.branch.from.id"),
+                    ],
+                );
+                self.flags(
+                    object,
+                    attributes,
+                    &[("fromHook", "unisphere.pi.from_hook")],
+                );
                 self.tokens_before(object, attributes);
                 self.usage(object.get("usage"), kind, attributes);
                 self.opaque(object, &["details"], attributes);
                 self.text_fields(object, kind, &["summary"], attributes)
             }
             "custom" => {
-                self.strings(object, attributes, &[("customType", "unisphere.pi.custom_type")]);
+                self.strings(
+                    object,
+                    attributes,
+                    &[("customType", "unisphere.pi.custom_type")],
+                );
                 self.opaque(object, &["data"], attributes);
                 None
             }
             "custom_message" => self.custom_message(object, attributes),
             "label" => {
-                self.strings(object, attributes, &[("targetId", "unisphere.pi.label.target.id")]);
+                self.strings(
+                    object,
+                    attributes,
+                    &[("targetId", "unisphere.pi.label.target.id")],
+                );
                 self.text_fields(object, "label", &["label"], attributes)
             }
             "session_info" => self.text_fields(object, "session_info", &["name"], attributes),
@@ -244,9 +272,12 @@ impl Mapping<'_> {
     fn timestamp(&mut self, value: Option<&Value>, milliseconds: bool) -> Option<u64> {
         let value = value?;
         let parsed = if milliseconds {
-            value.as_u64().and_then(|value| value.checked_mul(1_000_000))
+            value
+                .as_u64()
+                .and_then(|value| value.checked_mul(1_000_000))
         } else {
-            value.as_str()
+            value
+                .as_str()
                 .and_then(|value| OffsetDateTime::parse(value, &Rfc3339).ok())
                 .and_then(|value| u64::try_from(value.unix_timestamp_nanos()).ok())
         };
@@ -256,13 +287,25 @@ impl Mapping<'_> {
         parsed
     }
 
-    fn tokens_before(&mut self, object: &Map<String, Value>, attributes: &mut BTreeMap<String, Value>) {
+    fn tokens_before(
+        &mut self,
+        object: &Map<String, Value>,
+        attributes: &mut BTreeMap<String, Value>,
+    ) {
         if let Some(value) = self.field(object, "tokensBefore", nonnegative_integer) {
-            attributes.insert("unisphere.pi.compaction.tokens_before".into(), value.clone());
+            attributes.insert(
+                "unisphere.pi.compaction.tokens_before".into(),
+                value.clone(),
+            );
         }
     }
 
-    fn usage(&mut self, value: Option<&Value>, scope: &str, attributes: &mut BTreeMap<String, Value>) {
+    fn usage(
+        &mut self,
+        value: Option<&Value>,
+        scope: &str,
+        attributes: &mut BTreeMap<String, Value>,
+    ) {
         let Some(value) = value else { return };
         let Some(usage) = value.as_object() else {
             self.diagnostic(Code::InvalidField);
@@ -283,7 +326,10 @@ impl Mapping<'_> {
                 retained = true;
             }
         }
-        if let Some(cost) = self.field(usage, "cost", Value::is_object).and_then(Value::as_object) {
+        if let Some(cost) = self
+            .field(usage, "cost", Value::is_object)
+            .and_then(Value::as_object)
+        {
             for native in ["input", "output", "cacheRead", "cacheWrite", "total"] {
                 if let Some(value) = self.field(cost, native, nonnegative_number) {
                     attributes.insert(format!("unisphere.pi.usage.cost.{native}"), value.clone());
@@ -321,15 +367,31 @@ impl Mapping<'_> {
         }
     }
 
-    fn custom_message(&mut self, object: &Map<String, Value>, attributes: &mut BTreeMap<String, Value>) -> Option<Value> {
-        self.strings(object, attributes, &[("customType", "unisphere.pi.custom_type")]);
-        self.flags(object, attributes, &[("display", "unisphere.pi.custom.display")]);
+    fn custom_message(
+        &mut self,
+        object: &Map<String, Value>,
+        attributes: &mut BTreeMap<String, Value>,
+    ) -> Option<Value> {
+        self.strings(
+            object,
+            attributes,
+            &[("customType", "unisphere.pi.custom_type")],
+        );
+        self.flags(
+            object,
+            attributes,
+            &[("display", "unisphere.pi.custom.display")],
+        );
         self.opaque(object, &["details"], attributes);
         let parts = self.content(object.get("content"), "custom", attributes)?;
         Some(json!({"kind": "custom_message", "parts": parts}))
     }
 
-    fn message(&mut self, value: Option<&Value>, attributes: &mut BTreeMap<String, Value>) -> Option<Value> {
+    fn message(
+        &mut self,
+        value: Option<&Value>,
+        attributes: &mut BTreeMap<String, Value>,
+    ) -> Option<Value> {
         let Some(object) = value.and_then(Value::as_object) else {
             self.diagnostic(Code::InvalidField);
             return None;
@@ -337,23 +399,42 @@ impl Mapping<'_> {
         let role = self.required_string(object, "role")?;
         attributes.insert("unisphere.pi.message.role".into(), json!(role));
         if let Some(timestamp) = self.timestamp(object.get("timestamp"), true) {
-            attributes.insert("unisphere.pi.message.timestamp_unix_nano".into(), json!(timestamp));
+            attributes.insert(
+                "unisphere.pi.message.timestamp_unix_nano".into(),
+                json!(timestamp),
+            );
         }
         match role {
             "custom" => return self.custom_message(object, attributes),
             "bashExecution" => {
-                self.flags(object, attributes, &[
-                    ("cancelled", "unisphere.pi.bash.cancelled"),
-                    ("truncated", "unisphere.pi.bash.truncated"),
-                    ("excludeFromContext", "unisphere.pi.bash.exclude_from_context"),
-                ]);
+                self.flags(
+                    object,
+                    attributes,
+                    &[
+                        ("cancelled", "unisphere.pi.bash.cancelled"),
+                        ("truncated", "unisphere.pi.bash.truncated"),
+                        (
+                            "excludeFromContext",
+                            "unisphere.pi.bash.exclude_from_context",
+                        ),
+                    ],
+                );
                 if let Some(value) = self.field(object, "exitCode", Value::is_i64) {
                     attributes.insert("unisphere.pi.bash.exit_code".into(), value.clone());
                 }
-                return self.text_fields(object, "bash_execution", &["command", "output", "fullOutputPath"], attributes);
+                return self.text_fields(
+                    object,
+                    "bash_execution",
+                    &["command", "output", "fullOutputPath"],
+                    attributes,
+                );
             }
             "branchSummary" | "compactionSummary" => {
-                self.strings(object, attributes, &[("fromId", "unisphere.pi.branch.from.id")]);
+                self.strings(
+                    object,
+                    attributes,
+                    &[("fromId", "unisphere.pi.branch.from.id")],
+                );
                 self.tokens_before(object, attributes);
                 return self.text_fields(object, role, &["summary"], attributes);
             }
@@ -363,29 +444,46 @@ impl Mapping<'_> {
                 return None;
             }
         }
-        attributes.insert("unisphere.message.role".into(), json!(if role == "toolResult" { "tool" } else { role }));
+        attributes.insert(
+            "unisphere.message.role".into(),
+            json!(if role == "toolResult" { "tool" } else { role }),
+        );
         if role == "assistant" {
-            self.strings(object, attributes, &[
-                ("api", "unisphere.pi.api"),
-                ("provider", "gen_ai.provider.name"),
-                ("model", "gen_ai.request.model"),
-                ("responseModel", "gen_ai.response.model"),
-                ("responseId", "gen_ai.response.id"),
-                ("stopReason", "unisphere.pi.stop_reason"),
-                ("rawStopReason", "unisphere.pi.raw_stop_reason"),
-            ]);
+            self.strings(
+                object,
+                attributes,
+                &[
+                    ("api", "unisphere.pi.api"),
+                    ("provider", "gen_ai.provider.name"),
+                    ("model", "gen_ai.request.model"),
+                    ("responseModel", "gen_ai.response.model"),
+                    ("responseId", "gen_ai.response.id"),
+                    ("stopReason", "unisphere.pi.stop_reason"),
+                    ("rawStopReason", "unisphere.pi.raw_stop_reason"),
+                ],
+            );
             self.usage(object.get("usage"), "assistant_message", attributes);
             self.opaque(object, &["diagnostics"], attributes);
         } else if role == "toolResult" {
-            self.strings(object, attributes, &[
-                ("toolCallId", "gen_ai.tool.call.id"),
-                ("toolName", "gen_ai.tool.name"),
-            ]);
-            self.flags(object, attributes, &[("isError", "unisphere.tool.is_error")]);
+            self.strings(
+                object,
+                attributes,
+                &[
+                    ("toolCallId", "gen_ai.tool.call.id"),
+                    ("toolName", "gen_ai.tool.name"),
+                ],
+            );
+            self.flags(
+                object,
+                attributes,
+                &[("isError", "unisphere.tool.is_error")],
+            );
             self.usage(object.get("usage"), "tool_execution", attributes);
             self.opaque(object, &["details"], attributes);
             if let Some(names) = self.field(object, "addedToolNames", |value| {
-                value.as_array().is_some_and(|names| names.iter().all(Value::is_string))
+                value
+                    .as_array()
+                    .is_some_and(|names| names.iter().all(Value::is_string))
             }) {
                 attributes.insert("unisphere.pi.added_tool_names".into(), names.clone());
             }
@@ -416,7 +514,12 @@ impl Mapping<'_> {
         Some(body)
     }
 
-    fn content(&mut self, value: Option<&Value>, role: &str, attributes: &mut BTreeMap<String, Value>) -> Option<Value> {
+    fn content(
+        &mut self,
+        value: Option<&Value>,
+        role: &str,
+        attributes: &mut BTreeMap<String, Value>,
+    ) -> Option<Value> {
         let mut parts = Vec::new();
         match value {
             Some(Value::String(text)) if matches!(role, "user" | "custom") => {
@@ -444,38 +547,55 @@ impl Mapping<'_> {
         }
     }
 
-    fn part(&mut self, value: &Value, role: &str, attributes: &mut BTreeMap<String, Value>) -> Option<Value> {
+    fn part(
+        &mut self,
+        value: &Value,
+        role: &str,
+        attributes: &mut BTreeMap<String, Value>,
+    ) -> Option<Value> {
         let Some(object) = value.as_object() else {
             self.diagnostic(Code::InvalidField);
             return None;
         };
         let kind = self.required_string(object, "type")?;
-        self.opaque(object, &["textSignature", "thinkingSignature", "thoughtSignature"], attributes);
+        self.opaque(
+            object,
+            &["textSignature", "thinkingSignature", "thoughtSignature"],
+            attributes,
+        );
         match kind {
             "text" => {
                 let text = self.required_string(object, "text")?;
-                self.include_content.then(|| json!({"type": "text", "content": text}))
+                self.include_content
+                    .then(|| json!({"type": "text", "content": text}))
             }
             "thinking" if role == "assistant" => {
-                let redacted = self.field(object, "redacted", Value::is_boolean).and_then(Value::as_bool);
+                let redacted = self
+                    .field(object, "redacted", Value::is_boolean)
+                    .and_then(Value::as_bool);
                 if redacted == Some(true) {
                     self.omitted(attributes);
-                    return self.include_content.then(|| json!({"type": "unisphere.redacted_reasoning"}));
+                    return self
+                        .include_content
+                        .then(|| json!({"type": "unisphere.redacted_reasoning"}));
                 }
                 let thinking = self.required_string(object, "thinking")?;
-                self.include_content.then(|| json!({"type": "reasoning", "content": thinking}))
+                self.include_content
+                    .then(|| json!({"type": "reasoning", "content": thinking}))
             }
             "image" if role != "assistant" => {
                 let data = self.required_string(object, "data")?;
                 let mime_type = self.required_string(object, "mimeType")?;
-                self.include_content.then(|| json!({"type": "image", "mime_type": mime_type, "data": data}))
+                self.include_content
+                    .then(|| json!({"type": "image", "mime_type": mime_type, "data": data}))
             }
             "toolCall" if role == "assistant" => {
                 let id = self.required_string(object, "id");
                 let name = self.required_string(object, "name");
                 if let (Some(id), Some(name)) = (id, name) {
                     // Call identity remains available without exporting arguments.
-                    let calls = attributes.entry("unisphere.pi.tool.calls".into())
+                    let calls = attributes
+                        .entry("unisphere.pi.tool.calls".into())
                         .or_insert_with(|| Value::Array(Vec::new()));
                     if let Value::Array(calls) = calls {
                         calls.push(json!({"id": id, "name": name}));
@@ -486,11 +606,14 @@ impl Mapping<'_> {
                 }
                 let arguments = self.field(object, "arguments", Value::is_object)?;
                 let (id, name) = (id?, name?);
-                self.include_content.then(|| json!({"type": "tool_call", "id": id, "name": name, "arguments": arguments}))
+                self.include_content.then(
+                    || json!({"type": "tool_call", "id": id, "name": name, "arguments": arguments}),
+                )
             }
             _ => {
                 self.diagnostic(Code::UnsupportedPart);
-                self.include_content.then(|| json!({"type": "unisphere.unknown", "native_type": kind}))
+                self.include_content
+                    .then(|| json!({"type": "unisphere.unknown", "native_type": kind}))
             }
         }
     }
@@ -501,5 +624,7 @@ fn nonnegative_integer(value: &Value) -> bool {
 }
 
 fn nonnegative_number(value: &Value) -> bool {
-    value.as_f64().is_some_and(|value| value.is_finite() && value >= 0.0)
+    value
+        .as_f64()
+        .is_some_and(|value| value.is_finite() && value >= 0.0)
 }

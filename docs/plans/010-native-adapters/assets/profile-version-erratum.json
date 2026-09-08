@@ -1,0 +1,15 @@
+{
+  "basis": "rv-plan010-contracts-opus-r2",
+  "rule": "unisphere.profile.version is JSON number1, not string",
+  "authority": "Existing frozen production emitter/conformance; R2 accepted D1 identifies the prose typo",
+  "sent_to": [
+    "pij-ideological-koala",
+    "pij-financial-elle",
+    "pij-remarkable-woodpecker",
+    "pij-homeless-dudley",
+    "pij-mechanical-tsarina",
+    "pij-adorable-bat",
+    "pij-kind-turkey"
+  ],
+  "registration_decision": "Source representation is private app registration metadata; no new AdapterDescriptor field or public catalog wire change is needed."
+}

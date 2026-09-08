@@ -63,9 +63,9 @@ the declared source assumption, not persisted CLI resume or arbitrary-rewrite sa
 Use the explicit capability values instead of a duplicate generic limitations list.
 
 `production_catalog_ids_match_exported_provenance` walks the production registry
-and checks real fixture exports against descriptor IDs. Extend its native fixture
-coverage when registering another dialect. The existing fixture-registration test
-also exercises both catalog visibility and export through one entry.
+and uses representation-appropriate real native fixtures to compare every exported
+record/manifest with its descriptor ID. New registrations extend that coverage;
+the fixture-registration test also exercises catalog visibility and export.
 
 The wire fields and CLI stream conventions are documented in
 [cli.md](cli.md#registered-adapter-catalog).
@@ -88,10 +88,10 @@ retry with explicitly larger compatible limits rather than silently dropping dat
 ## Purity checks and their ceiling
 
 The architecture command checks normal/dev/build dependency declarations and scans
-core and Claude-adapter production sources for filesystem, environment, process,
-network, thread, clock, unsafe/FFI and file-include access. Negative fixtures cover
-fully qualified and grouped imports and clock/include calls; positive fixtures
-permit `#![forbid(unsafe_code)]` and core-owned `std::io::Write` port declarations.
+core plus every approved adapter's production source tree for filesystem,
+environment, process, network, thread, clock, unsafe/FFI and file-include access.
+Negative fixtures cover fully qualified/grouped imports and forbidden effects;
+positive fixtures permit `#![forbid(unsafe_code)]` and core `std::io::Write` ports.
 Testkit is not a production mapper and is excluded; conventional trailing
 `#[cfg(test)]` modules are excluded from the source scan.
 

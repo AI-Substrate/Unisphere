@@ -1,6 +1,6 @@
 # Unisphere
 
-Common-format telemetry project delivered as a Rust SDK and thin CLI. Current capabilities are explicit configuration inspection and a Unix JSONL loader → pure Claude Code adapter → OTLP JSONL output pipeline. Adapters receive provided data, never filesystem access. This is a documented projection, not lossless or complete-session capture; see `docs/fidelity.md` for content, reference, delayed-update and completeness gaps. `harness checks --json` and `harness boot --json` expose actual quality and product smoke. Product work belongs in isolated Builder plan workspaces; coordinate shared-file ownership with active peers.
+Common-format telemetry project delivered as a Rust SDK and thin CLI. Current capabilities are explicit configuration inspection, a static machine-readable adapter catalog, bounded Unix JSONL/native snapshot loaders, pure Claude/Codex/Oh My Pi/Pi/Copilot/VS Code/Cursor adapters, and shared OTLP JSONL output. Adapters receive provided data, never filesystem access. Snapshot exports are current replacement projections with native key/revision provenance, not persistent history, lossless capture or session finality; see `docs/fidelity.md`. `harness checks --json` and `harness boot --json` expose actual quality and product smoke, including external SDK/installed CLI parity and revision scenarios. Product work belongs in isolated Builder plan workspaces; coordinate shared-file ownership with active peers.
 
 ## Governance — new primes start here
 

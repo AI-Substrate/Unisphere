@@ -1,8 +1,9 @@
 # Unisphere
 
-Rust SDK and CLI for explicit configuration inspection and source-derived Claude
-Code telemetry. A shared bounded loader supplies native JSONL data to a pure
-adapter, and a separate writer emits OTLP LogsData JSONL.
+Rust SDK and CLI for explicit configuration inspection and native agent-session
+projection. Shared bounded JSONL and revision-snapshot loaders supply data to pure
+Claude, Codex, Oh My Pi, Pi, Copilot, VS Code and Cursor adapters; a separate writer
+emits OTLP LogsData JSONL.
 
 **This is not lossless or complete-session capture:** metadata-only is the default,
 content is opt-in, and unsupported fields/references/revisions have documented
@@ -20,15 +21,19 @@ cargo install --locked --path crates/app --root target/install
 ./target/install/bin/unisphere config check --source-root ./sessions --json
 ```
 
-## Read and export an explicit Claude session
+## Discover adapters and export explicit sources
 
-The initial file loader supports Unix hosts and lists one leaf project directory,
-not the entire Claude projects tree recursively:
+The catalog describes usual locations without scanning them. Unix JSONL listing
+is nonrecursive; callers choose an explicit leaf directory or file:
 
 ```sh
+unisphere adapters list --json
 unisphere sessions list --root /absolute/path/to/leaf-project
 unisphere sessions export --adapter claude-code --input /absolute/path/session.jsonl
 unisphere sessions export --input /absolute/path/session.jsonl --include-content --output ./new-export.jsonl
+unisphere sessions export --adapter codex --input /absolute/path/rollout.jsonl
+unisphere sessions export --adapter vscode-copilot --input /absolute/path/session.jsonl --source-format json-journal
+unisphere sessions export --adapter cursor-ide --input /absolute/path/state.vscdb
 ```
 
 Exports write OTLP JSONL to stdout or create a **new** output file; diagnostics and
@@ -39,6 +44,12 @@ Reads are bounded by `--max-records`, `--max-record-bytes` and `--max-batch-byte
 An oversized record fails without skipping it; retry with larger compatible
 limits. An incomplete tail is reported and deferred. EOF is an observed boundary,
 not final source completeness.
+
+Snapshots use separate key/content-revision identities, not invented byte offsets.
+They export a complete current projection and closing replacement manifest,
+including an empty result after deletion. This is not retained history or a
+destination transaction. See [snapshot loading](docs/snapshot-loader.md) and
+[CLI source-format selection](docs/cli.md#native-revision-snapshots).
 
 Each CLI export starts at the beginning; there is no persisted resume or
 `--harness`/session-ID lookup yet. The SDK exposes caller-owned cursors and returns
@@ -104,11 +115,10 @@ For injected I/O and caller defaults, use `Inspector<R>` through `InspectionApi`
 The SDK reexports the core ports and types. Library calls have no implicit HOME,
 environment or global configuration lookup; an SDK file source must be absolute.
 
-For collection, inject `SessionLoader`, `SessionAdapter` and `RecordWriter` into
-`Collector::new(loader, adapter, writer)` and call its core-owned `CollectionApi`
-methods. The SDK reexports the collection contracts; concrete loading, Claude
-mapping and OTLP encoding live in separate `unisphere-loader-jsonl`,
-`unisphere-adapter-claude` and `unisphere-output-otlp` crates. Adapters receive only
+For JSONL, inject `SessionLoader`, `SessionAdapter` and `RecordWriter` into
+`Collector`. For native snapshots, inject `SnapshotLoader`, `SnapshotAdapter` and
+the same writer into `SnapshotCollector`. Both expose core-owned application
+ports; the SDK depends inward, not on concrete adapters. Mappers receive only
 provided data and return contracted records—never file handles or loader objects.
 
 ## Development and proof
@@ -125,10 +135,11 @@ provided data and return contracted records—never file handles or loader objec
 
 `harness checks --json` is the quality lane. `harness boot --json` additionally
 exercises configuration parity, external SDK consumption, temporary installation,
-and the real Claude collection pipeline under sealed runtime environments.
-Passing boot is scoped to `configuration-and-claude-jsonl`, not all-client or
-full-fidelity collection. Source/purity review complements the lexical sensor;
-neither is a runtime network-denial trace.
+every registered native dialect and changed/deleted/late snapshot behavior under
+sealed runtime environments. Passing boot is scoped to
+`configuration-and-native-session-projections`, not full-fidelity collection.
+Source/purity review complements the lexical sensor; neither is a runtime
+network-denial trace.
 
 Local verification targets macOS ARM64 with the documented toolchain. Linux/macOS
 CI configuration is provided; its presence alone is not an observed CI result.

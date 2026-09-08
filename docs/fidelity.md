@@ -1,18 +1,62 @@
 # Telemetry fidelity: implemented boundaries and remaining gaps
 
-**This release is a source-derived Claude JSONL projection, not a lossless session
-archive or a complete telemetry history.** A successful read/export means the
-selected bytes were handled under the chosen policy; EOF is only an observed read
-boundary, never evidence that the producer has finished emitting or revising data.
+**These are source-derived JSONL and native snapshot projections, not a lossless
+archive or complete telemetry history.** A successful export means the selected
+representation was handled under the chosen policy. EOF or a snapshot revision
+never establishes that the producer has finished emitting or revising data.
 
 Full fidelity means preserving the telemetry the source actually makes available,
 including native facts not yet understood by our mapping, and identifying what was
 missing, deliberately excluded, unsupported or not verified. It cannot reconstruct
 content the source never stored or has already irreversibly redacted.
 
-Jordan requested this assessment at delivery, not an expansion of this release
-into raw archival, revision tracking or additional native adapters. The existing
-explicit-content policy is unchanged.
+The original Claude assessment was a delivery report, not an implicit expansion
+gate. Plan010 separately authorizes six more applications and native snapshot
+storage. The explicit-content policy is unchanged; supported projection is not
+full-fidelity retention.
+
+## Current native coverage and classified gaps
+
+| Application / dialect | Preserved projection | Actual exercised proof | Remaining gap / classification |
+| --- | --- | --- | --- |
+| [Claude JSONL](claude-adapter.md) | Physical message/tool/usage fragments and native provenance. | Existing external SDK/installed CLI parity and loader/conformance cases. | Unknown/raw fields, sidecars and full conversation reconstruction are unsupported; detailed original matrix below. |
+| [Codex rollouts](codex-adapter.md) | Record-local messages/reasoning/tools, native IDs/model context and distinct last/cumulative usage observations. | Ten scoped regressions plus real SDK/CLI/installed parity in both policies. | Encrypted/media payloads, streaming/world/custom state and unknown newer variants unsupported; repeated counters are not aggregate operation totals. |
+| [Oh My Pi JSONL](oh-my-pi-adapter.md) | Title slot, physical v3 entries, messages/tools, control records and scoped native usage. | Eleven scoped regressions, title/partition cases and real export parity. | Retitles before a saved byte cursor, branch/header enrichment, old-header migration, opaque blobs/signatures/custom state and sidecars are unsupported. |
+| [Pi v3 JSONL](pi-adapter.md) | Physical tree IDs, built-in roles, structured content/tools and separate assistant/tool/summary usage. | Ten scoped regressions and real export parity. | v1/v2 migration, hook/extension roles, opaque data, active-branch reconstruction and rewritten-history reconciliation unsupported. |
+| [Copilot CLI events](copilot-cli-adapter.md) | Native event/lineage/tool/model facts; message, API-call, checkpoint and shutdown counters keep separate scopes. | Ten event regressions and real export parity. | Binary/provider-private internals and unknown variants unsupported; no replay/dedup/finality guarantee. |
+| [Copilot legacy JSON](copilot-cli-adapter.md) | Separate session/chat/timeline views with key/revision provenance and native argument types. | Eight snapshot regressions and real document export parity. | Coverage is bounded by retained two-file structural evidence; model/usage or message timestamps absent in that evidence are not inferred. Opaque mentions/unknown variants unsupported. |
+| [VS Code Copilot](vscode-copilot-adapter.md) | v1/v2/v3 snapshots and pure kind0/1/2/3 journal reduction into final request/response state; scoped usage/tool observations. | Fourteen regressions; real JSON/journal SDK/CLI/installed parity, changed/deleted requests and partial/late journal scenarios. | Historical versions of the unversioned journal envelope, unsupported parts/sidecars and full edit history are unsupported. Sparse expansion is bounded; producer-omitted LM tool parameters are a source limitation. |
+| [Cursor transcripts](cursor-adapter.md) | Native role/text/idless tools, overview/control and turn-ended records. | Ten transcript regressions and real export parity. | The native serializer discards model/usage/timing/IDs/tool results: source limitations, not facts to reconstruct. Full-write fallback exceeds append-only cursor guarantees. |
+| [Cursor IDE SQLite](cursor-adapter.md) | Composer-declared bubble order/identity, explicit native dates/model configuration, measured counters and opt-in native tools. | Thirteen IDE regressions; real read-only SQLite export parity, late rows, changed values and empty deletion replacement. | Alternate branches/blob state, unavailable composerHeaders cross-table joins and opaque CLI BLOB codec are explicitly unsupported; no complete Cursor CLI blob-store claim. |
+
+All rows use synthetic fixtures and bounded structural/source evidence, not copied
+private transcripts. Referenced attachments/context/spills remain unresolved by
+policy. Metadata-only is not anonymity; IDs, paths and permitted native metadata
+can be sensitive.
+
+## Revision behavior, not retained history
+
+The shared snapshot loader returns a complete bounded raw representation and a
+SHA256 revision. SQLite uses a read-only transaction and native keys; JSON journals
+are reduced by the pure mapper before projection. Limits are enforced during
+loading, with no partial snapshot success. The SQLite loader's initial ancestor-
+symlink failure was retained and corrected without weakening final-leaf nofollow,
+read-only or WAL-consistency checks; 23 scoped storage tests then passed.
+
+Each snapshot export closes with a `replace_projection` manifest and unknown
+finality. A changed/deleted source revision replaces the *current projection*; it
+does not create a history database, reconcile arbitrary past revisions or make a
+sink idempotent. The SDK returns checkpoint evidence only after output acceptance;
+it never silently skips a repeated revision or persists a destination binding.
+An output failure may leave bytes and returns no accepted checkpoint.
+
+`unisphere-proof native` exercises external SDK, in-tree CLI and a temporary
+installed CLI across every registered dialect and both content policies, then
+real changed/deleted JSON and SQLite sources, incomplete/late journals and a
+partial destination write without checkpoint publication. This is bounded runtime
+evidence, not all-platform, all-dialect, network-denial or full-fidelity proof.
+
+## Original Claude JSONL baseline
 
 | Dimension | Full-fidelity meaning | Implemented behavior | Actual proof | Remaining gap and classification |
 | --- | --- | --- | --- | --- |
@@ -51,9 +95,9 @@ all-client or Linux/Windows live-runtime claim is inferred from these results.
 
 ## Current CLI experience versus resumed ingestion
 
-Current selection is `--adapter claude-code --input <path>`, not `--harness` plus
-session ID. Each invocation starts at byte zero; `--output` creates a new file and
-does not reopen an existing destination as a resume operation. The SDK returns a
+JSONL selection uses `--adapter <registered-id> --input <path>`, not `--harness`
+plus global session lookup. Each invocation starts at byte zero; `--output`
+creates a new file, never reopens a destination for resume. The SDK returns a
 caller-owned cursor, but the CLI persists no checkpoint.
 
 The summary reports mapped record count, batches, aggregate diagnostic count,
@@ -62,19 +106,24 @@ cursor, native physical-line count, per-code diagnostic breakdown or a source
 record-ordinal from/to range. SDK callers retain the individual diagnostic codes
 and offsets. These are **unsupported CLI behaviors**, not idempotence guarantees.
 
+Native snapshots instead report a content revision and closing replacement
+manifest with unknown finality; no byte offset or record-ordinal range is invented.
+Their `--session-id` is a selector within the explicitly supplied snapshot, not
+automatic application/session discovery.
+
 Future checkpointed ingestion needs an unambiguous source/harness namespace and
 backend-native revision token, plus bindings to destination, projection version
 and content policy. It must label byte ranges separately from logical record IDs
 and ordinals, and publish progress only after destination acceptance; crash/replay
 deduplication needs an explicit contract rather than an assumed atomic two-file
-write. None of that work is silently included in this first export command.
+write. Durable ingestion remains separate from the current explicit export paths.
 
 ## Follow-on changes needed for full fidelity
 
 1. Separate raw evidence retention from the current semantic/export projection,
    with explicit consent, unknown-field/opaque-payload handling and source digests.
-2. Introduce backend-native source and revision tokens rather than inventing LF
-   offsets for SQLite databases, snapshot files or patch journals.
+2. Build durable consumer policy around the current native snapshot tokens and
+   append cursors, with explicit destination/projection/content-policy bindings.
 3. Reconcile stable native item identity plus revision/content identity, retain
    update/delete history, and make derived usage views idempotent rather than
    summing repeated snapshots.
@@ -86,5 +135,5 @@ write. None of that work is silently included in this first export command.
    delayed referenced-data fixtures across each actual backend before claiming
    that backend's full-fidelity support.
 
-These are named product follow-ons, not implemented behavior or new completion
-barriers for the agreed first Claude pipeline.
+These are named fidelity follow-ons, not claims that the supported projections
+are lossless or new completion barriers for the agreed delivery scopes.

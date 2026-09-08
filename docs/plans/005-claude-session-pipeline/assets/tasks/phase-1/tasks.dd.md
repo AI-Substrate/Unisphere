@@ -36,10 +36,10 @@ _Empty._
 | id | title | domain | phase | state | note | receipt | done | success | notes | satisfies | satisfies_toward |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | tk-0001 | PM shared collection contracts | — | ph-a437 | [x] checked | — | ../../execution-log.dd.json#entries/lg-0001 | [tk-0001](tasks.dd.md#done-when) | Implement and validate actual sharedcollection types/ports/errors plus testkit fakes/syntheticfixtures and rootdependency declarations; no loader/mapper/writer stubs. Include explicit shared limit validation/error kinds and object-safe CollectionApi/FakeCollector. | Guide tk-0001; dependencies none; exact fences/contracts in ../../impl-guide.dd.json. PM validation; allfuture assertions unproven. |  | [ac-0001](../../../plan.dd.md#acceptance-criteria) |
-| tk-0002 | Shared bounded JSONL session loader | — | ph-a437 | [ ] unchecked | — | — | [tk-0002](tasks.dd.md#done-when) | Implement FileSessionLoader listing+read_batch entirelywithin explicitinputscope; real temporaryfile boundarytests and loaderdocs. | Guide tk-0002; dependencies tk-0001; exact fences/contracts in ../../impl-guide.dd.json. PM validation; allfuture assertions unproven. | [ac-0002](../../../plan.dd.md#acceptance-criteria), [ac-0003](../../../plan.dd.md#acceptance-criteria) |  |
-| tk-0003 | Pure Claude Code adapter | — | ph-a437 | [ ] unchecked | — | — | [tk-0003](tasks.dd.md#done-when) | Implement ClaudeCodeAdapter mapping onlyprovided NativeRecord slices into standard-first TelemetryRecord/profilediagnostics; no I/O; fixture andcommonconformance tests; exactmapping docs. | Guide tk-0003; dependencies tk-0001; exact fences/contracts in ../../impl-guide.dd.json. PM validation; allfuture assertions unproven. | [ac-0004](../../../plan.dd.md#acceptance-criteria), [ac-0005](../../../plan.dd.md#acceptance-criteria), [ac-0008](../../../plan.dd.md#acceptance-criteria) | [ac-0001](../../../plan.dd.md#acceptance-criteria) |
-| tk-0004 | OTLP JSONL output writer | — | ph-a437 | [ ] unchecked | — | — | [tk-0004](tasks.dd.md#done-when) | Implement OtlpJsonlWriter over supplied dynWrite; correctLogsData/AnyValue serialization, safeerror+shortwrite/flush tests andprofiledocs. | Guide tk-0004; dependencies tk-0001; exact fences/contracts in ../../impl-guide.dd.json. PM validation; allfuture assertions unproven. | [ac-0006](../../../plan.dd.md#acceptance-criteria) |  |
-| tk-0005 | PM SDK CLI integration and extension proof | — | ph-a437 | [ ] unchecked | — | — | [tk-0005](tasks.dd.md#done-when) | Compose actualloader/pureClaude/writer viaSDK, CLIcommands/appregistry, dependency andexternalsmokeproof, authoringrecipe, docs/CI/harness updates and finalindependentreview. | Guide tk-0005; dependencies tk-0001,tk-0002,tk-0003,tk-0004; exact fences/contracts in ../../impl-guide.dd.json. PM validation; allfuture assertions unproven. | [ac-0001](../../../plan.dd.md#acceptance-criteria), [ac-0007](../../../plan.dd.md#acceptance-criteria), [ac-0009](../../../plan.dd.md#acceptance-criteria), [ac-000a](../../../plan.dd.md#acceptance-criteria), [ac-000b](../../../plan.dd.md#acceptance-criteria), [ac-000c](../../../plan.dd.md#acceptance-criteria) | [ac-0002](../../../plan.dd.md#acceptance-criteria), [ac-0003](../../../plan.dd.md#acceptance-criteria), [ac-0004](../../../plan.dd.md#acceptance-criteria), [ac-0005](../../../plan.dd.md#acceptance-criteria), [ac-0006](../../../plan.dd.md#acceptance-criteria), [ac-0008](../../../plan.dd.md#acceptance-criteria) |
+| tk-0002 | Shared bounded JSONL session loader | — | ph-a437 | [x] checked | — | ../../execution-log.dd.json#entries/lg-0005 | [tk-0002](tasks.dd.md#done-when) | Implement FileSessionLoader listing+read_batch entirelywithin explicitinputscope; real temporaryfile boundarytests and loaderdocs. | Guide tk-0002; dependencies tk-0001; exact fences/contracts in ../../impl-guide.dd.json. PM validation; allfuture assertions unproven. | [ac-0002](../../../plan.dd.md#acceptance-criteria), [ac-0003](../../../plan.dd.md#acceptance-criteria) |  |
+| tk-0003 | Pure Claude Code adapter | — | ph-a437 | [x] checked | — | ../../execution-log.dd.json#entries/lg-0005 | [tk-0003](tasks.dd.md#done-when) | Implement ClaudeCodeAdapter mapping onlyprovided NativeRecord slices into standard-first TelemetryRecord/profilediagnostics; no I/O; fixture andcommonconformance tests; exactmapping docs. | Guide tk-0003; dependencies tk-0001; exact fences/contracts in ../../impl-guide.dd.json. PM validation; allfuture assertions unproven. | [ac-0004](../../../plan.dd.md#acceptance-criteria), [ac-0005](../../../plan.dd.md#acceptance-criteria), [ac-0008](../../../plan.dd.md#acceptance-criteria) | [ac-0001](../../../plan.dd.md#acceptance-criteria) |
+| tk-0004 | OTLP JSONL output writer | — | ph-a437 | [x] checked | — | ../../execution-log.dd.json#entries/lg-0005 | [tk-0004](tasks.dd.md#done-when) | Implement OtlpJsonlWriter over supplied dynWrite; correctLogsData/AnyValue serialization, safeerror+shortwrite/flush tests andprofiledocs. | Guide tk-0004; dependencies tk-0001; exact fences/contracts in ../../impl-guide.dd.json. PM validation; allfuture assertions unproven. | [ac-0006](../../../plan.dd.md#acceptance-criteria) |  |
+| tk-0005 | PM SDK CLI integration and extension proof | — | ph-a437 | [x] checked | — | ../../execution-log.dd.json#entries/lg-0007 | [tk-0005](tasks.dd.md#done-when) | Compose actualloader/pureClaude/writer viaSDK, CLIcommands/appregistry, dependency andexternalsmokeproof, authoringrecipe, docs/CI/harness updates and finalindependentreview. | Guide tk-0005; dependencies tk-0001,tk-0002,tk-0003,tk-0004; exact fences/contracts in ../../impl-guide.dd.json. PM validation; allfuture assertions unproven. | [ac-0001](../../../plan.dd.md#acceptance-criteria), [ac-0007](../../../plan.dd.md#acceptance-criteria), [ac-0009](../../../plan.dd.md#acceptance-criteria), [ac-000a](../../../plan.dd.md#acceptance-criteria), [ac-000b](../../../plan.dd.md#acceptance-criteria), [ac-000c](../../../plan.dd.md#acceptance-criteria) | [ac-0002](../../../plan.dd.md#acceptance-criteria), [ac-0003](../../../plan.dd.md#acceptance-criteria), [ac-0004](../../../plan.dd.md#acceptance-criteria), [ac-0005](../../../plan.dd.md#acceptance-criteria), [ac-0006](../../../plan.dd.md#acceptance-criteria), [ac-0008](../../../plan.dd.md#acceptance-criteria) |
 
 <a id="done-when"></a>
 
@@ -54,34 +54,34 @@ _Empty._
 
 ### tk-0002
 
-| id | assertion | state | pressure |
-| --- | --- | --- | --- |
-| dw-0003 | Explicit nonrecursive listing and bounded LF batches produce stable provenance, partial-tail/blank progress and safe source-bound cursor behavior. | [ ] unchecked | [bp-0002](../../backpressure.dd.md#rows) |
-| dw-0004 | Oversize retry with raised limits succeeds without skipped data; bad limits/nonUTF8/sourcechanges fail safely, and nonUnix methods fail before I/O. | [ ] unchecked | [bp-0003](../../backpressure.dd.md#rows) |
+| id | assertion | state | pressure | proven_by |
+| --- | --- | --- | --- | --- |
+| dw-0003 | Explicit nonrecursive listing and bounded LF batches produce stable provenance, partial-tail/blank progress and safe source-bound cursor behavior. | [x] checked | [bp-0002](../../backpressure.dd.md#rows) | [lg-0005](../../execution-log.dd.md#entries) |
+| dw-0004 | Oversize retry with raised limits succeeds without skipped data; bad limits/nonUTF8/sourcechanges fail safely, and nonUnix methods fail before I/O. | [x] checked | [bp-0003](../../backpressure.dd.md#rows) | [lg-0005](../../execution-log.dd.md#entries) |
 
 ### tk-0003
 
-| id | assertion | state | pressure |
-| --- | --- | --- | --- |
-| dw-0005 | Pure mapping is deterministic and maps actual Claude record/message/part/model/native-usage facts without synthetic inference, dedupe or aggregate totals. | [ ] unchecked | [bp-0004](../../backpressure.dd.md#rows) |
-| dw-0006 | Metadata-only output omits content and unknown payloads, opt-in content preserves structured parts, invalid/unsupported data remains observable without raw diagnostic leaks. | [ ] unchecked | [bp-0005](../../backpressure.dd.md#rows) |
+| id | assertion | state | pressure | proven_by |
+| --- | --- | --- | --- | --- |
+| dw-0005 | Pure mapping is deterministic and maps actual Claude record/message/part/model/native-usage facts without synthetic inference, dedupe or aggregate totals. | [x] checked | [bp-0004](../../backpressure.dd.md#rows) | [lg-0005](../../execution-log.dd.md#entries) |
+| dw-0006 | Metadata-only output omits content and unknown payloads, opt-in content preserves structured parts, invalid/unsupported data remains observable without raw diagnostic leaks. | [x] checked | [bp-0005](../../backpressure.dd.md#rows) | [lg-0005](../../execution-log.dd.md#entries) |
 
 ### tk-0004
 
-| id | assertion | state | pressure |
-| --- | --- | --- | --- |
-| dw-0007 | OTLPLogsData JSONL recursively encodes AnyValue and64bit fields against the pinned schema; illegal values fail and empty batches emit nothing. | [ ] unchecked | [bp-0006](../../backpressure.dd.md#rows) |
-| dw-0008 | A32MiB cap fails before destination writes; short writes/flush failures return typed errors and do not imply checkpoint success. | [ ] unchecked | [bp-0007](../../backpressure.dd.md#rows) |
+| id | assertion | state | pressure | proven_by |
+| --- | --- | --- | --- | --- |
+| dw-0007 | OTLPLogsData JSONL recursively encodes AnyValue and64bit fields against the pinned schema; illegal values fail and empty batches emit nothing. | [x] checked | [bp-0006](../../backpressure.dd.md#rows) | [lg-0005](../../execution-log.dd.md#entries) |
+| dw-0008 | A32MiB cap fails before destination writes; short writes/flush failures return typed errors and do not imply checkpoint success. | [x] checked | [bp-0007](../../backpressure.dd.md#rows) | [lg-0005](../../execution-log.dd.md#entries) |
 
 ### tk-0005
 
-| id | assertion | state | pressure |
-| --- | --- | --- | --- |
-| dw-0009 | SDKCollector implements core CollectionApi; fake boundary tests verify checkpoint only after actual output acceptance and preserve all existing configuration behavior. | [ ] unchecked | [bp-0007](../../backpressure.dd.md#rows) |
-| dw-000a | Real installedCLI listing/export and externalSDK agree on sanitized multibatch inputs and contentpolicy, report incomplete data and errors without corrupting stdout or overwriting files. | [ ] unchecked | [bp-0009](../../backpressure.dd.md#rows) |
-| dw-000b | Second functional adapter example composes through shared contracts/conformance and registration without core or Claude modifications. | [ ] unchecked | [bp-000a](../../backpressure.dd.md#rows) |
-| dw-000c | Kind-aware dependency and source-purity sensors reject their negative fixtures; full quality, inheritedfoundation and newcollection smoke pass. | [ ] unchecked | [bp-000b](../../backpressure.dd.md#rows) |
-| dw-000d | Independent Opus review approves the actual composed behavior/profile and source-purity evidence; factual closeout and archive preserve original experiments and receipts. | [ ] unchecked | [bp-000c](../../backpressure.dd.md#rows) |
+| id | assertion | state | pressure | proven_by |
+| --- | --- | --- | --- | --- |
+| dw-0009 | SDKCollector implements core CollectionApi; fake boundary tests verify checkpoint only after actual output acceptance and preserve all existing configuration behavior. | [x] checked | [bp-0007](../../backpressure.dd.md#rows) | [lg-0005](../../execution-log.dd.md#entries) |
+| dw-000a | Real installedCLI listing/export and externalSDK agree on sanitized multibatch inputs and contentpolicy, report incomplete data and errors without corrupting stdout or overwriting files. | [x] checked | [bp-0009](../../backpressure.dd.md#rows) | [lg-0005](../../execution-log.dd.md#entries) |
+| dw-000b | Second functional adapter example composes through shared contracts/conformance and registration without core or Claude modifications. | [x] checked | [bp-000a](../../backpressure.dd.md#rows) | [lg-0005](../../execution-log.dd.md#entries) |
+| dw-000c | Kind-aware dependency and source-purity sensors reject their negative fixtures; full quality, inheritedfoundation and newcollection smoke pass. | [x] checked | [bp-000b](../../backpressure.dd.md#rows) | [lg-0005](../../execution-log.dd.md#entries) |
+| dw-000d | Independent Opus review approves the actual composed behavior/profile and source-purity evidence. Factual closeout and archive preservation remain required at the existing post-flight gate. | [x] checked | [bp-000c](../../backpressure.dd.md#rows) | [lg-0007](../../execution-log.dd.md#entries) |
 
 <a id="goals"></a>
 

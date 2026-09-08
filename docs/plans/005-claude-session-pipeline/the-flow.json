@@ -3,7 +3,7 @@
   "kind": "flight-plan",
   "slug": "claude-session-pipeline",
   "nav": {
-    "now": "phase-1",
+    "now": "post-flight",
     "next": null,
     "intent": "Jordan approved pure Claude adapter with noI/O, sharedfakeable SessionLoader list_sessions/read_batch and standardOTLPJSONLoutput; freshworktree/newagents, PMplan/guide then independentreview andimplementation, archivebeforeauthorizedlanding."
   },
@@ -226,6 +226,152 @@
         "from": "known",
         "to": "in_progress"
       }
+    },
+    {
+      "id": "UPD-008",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-08T03:25:39.870Z",
+      "details": {
+        "node": "observe-1",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-008",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-08T03:25:40.010Z",
+      "details": {
+        "node": "observe-1",
+        "from": "known",
+        "to": "done",
+        "chore": {
+          "kind": "command",
+          "importance": "recommended"
+        }
+      }
+    },
+    {
+      "id": "UPD-009",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-08T03:25:40.160Z",
+      "details": {
+        "node": "retro-1",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-009",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-08T03:25:40.296Z",
+      "details": {
+        "node": "retro-1",
+        "from": "known",
+        "to": "done",
+        "chore": {
+          "kind": "command",
+          "importance": "recommended"
+        }
+      }
+    },
+    {
+      "id": "CUR-004",
+      "kind": "cursor-moved",
+      "origin": "engine",
+      "fired_at": "2026-09-08T03:31:20.823Z",
+      "details": {
+        "from": "phase-1",
+        "to": "review-1"
+      }
+    },
+    {
+      "id": "UPD-010",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-08T03:39:03.869Z",
+      "details": {
+        "node": "review-1",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "CUR-005",
+      "kind": "cursor-moved",
+      "origin": "engine",
+      "fired_at": "2026-09-08T03:39:04.548Z",
+      "details": {
+        "from": "review-1",
+        "to": "post-flight"
+      }
+    },
+    {
+      "id": "UPD-011",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-08T03:39:04.834Z",
+      "details": {
+        "node": "retro-harvest",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-010",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-08T03:39:04.976Z",
+      "details": {
+        "node": "retro-harvest",
+        "from": "known",
+        "to": "done",
+        "chore": {
+          "kind": "command",
+          "importance": "recommended"
+        }
+      }
+    },
+    {
+      "id": "STA-011",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-08T03:41:50.732Z",
+      "details": {
+        "node": "phase-1",
+        "from": "in_progress",
+        "to": "done"
+      }
+    },
+    {
+      "id": "STA-012",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-08T03:41:50.871Z",
+      "details": {
+        "node": "review-1",
+        "from": "assumed",
+        "to": "done"
+      }
+    },
+    {
+      "id": "STA-013",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-08T03:41:51.007Z",
+      "details": {
+        "node": "post-flight",
+        "from": "assumed",
+        "to": "in_progress"
+      }
     }
   ],
   "nodes": [
@@ -320,13 +466,21 @@
       "type": "phase",
       "phase": 1,
       "label": "P1: Explicit Claude loading, mapping and OTLP export",
-      "status": "in_progress",
+      "status": "done",
       "command": "/builder 6 implement",
       "next": [
         "review-1"
       ],
       "dd_link": {
-        "address": "docs/plans/005-claude-session-pipeline/assets/tasks/phase-1/tasks.dd.json#tasks"
+        "address": "docs/plans/005-claude-session-pipeline/assets/tasks/phase-1/tasks.dd.json#tasks",
+        "basis_sha": "a4fe298cd40e303809375b130210ddd65df4c75feb4cdd7888899e4b922d9c12",
+        "reading": {
+          "status": "complete",
+          "terminal": 5,
+          "total": 5,
+          "incomplete": [],
+          "at": "2026-09-08T03:31:20.823Z"
+        }
       },
       "instructions": [
         "You own the PM composition and canonical task/receipt paths named in the reviewed guide; each worker owns its assigned source/test paths. Read the product ACs, unit read paths/owners, shared contracts and selected proof before implementation.",
@@ -341,13 +495,14 @@
         "Match model tier to work: chores -> cheap subagent, analysis -> Opus-class, judgement -> lead; context may override (§ Shared conventions).",
         "Environment friction is work, not an apology: fix small things, otherwise `harness observe` it — is this environment working for us? (builder SKILL.md invariant #14)"
       ],
-      "modified_at": "2026-09-08T01:43:00.487Z"
+      "modified_at": "2026-09-08T03:41:50.732Z",
+      "ran_at": "2026-09-08T03:41:50.732Z"
     },
     {
       "id": "review-1",
       "type": "review",
       "label": "Review: P1",
-      "status": "assumed",
+      "status": "done",
       "command": "/builder 7 review",
       "next": [
         "post-flight"
@@ -359,13 +514,23 @@
         "Done when the verdict is recorded (one finding line) and either accepted or routed to a fix-loop.",
         "Review the exact composed artifact and current plan/guide basis. Record an independent composition ReviewReceipt with harness builder review <plan> --receipt <path>; unavailable review stays unfulfilled.",
         "Close only criteria proven by observed receipts through node_modules/.bin/ddocs. Whole-plan --complete is not a review-exit gate: closeout work is still future work."
-      ]
+      ],
+      "comments": [
+        {
+          "at": "2026-09-08T03:39:03.869Z",
+          "text": "Independent composition approval rv-plan005-composition-opus-r2 accepted at03:29:52Z for actual artifact093a89811296efb681386047b1da912348c63f10. Zero open findings, four accepted advisories with rationale. Canonical receipt and report retained; no repeated product proof.",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "modified_at": "2026-09-08T03:41:50.871Z",
+      "ran_at": "2026-09-08T03:41:50.871Z"
     },
     {
       "id": "post-flight",
       "type": "post-flight",
       "label": "Post-flight",
-      "status": "assumed",
+      "status": "in_progress",
       "command": "/builder 7b post-flight",
       "next": [
         "ship"
@@ -381,7 +546,8 @@
         "Whole-plan completion gates this node's EXIT after closeout evidence: harness plan validate <archived plan> --complete must be green. Never pre-check closeout to leave an earlier review.",
         "If the gate refuses and departing anyway is the HUMAN's decision, they pass --force — it records a defended override. An agent may not force a dd gate on its own judgment.",
         "Tidy is separate: harness builder tidy <allocation> --preservation <receipt> re-verifies ownership, runtime release and surviving bytes/refs; external ownership or idle-only evidence cannot authorize removal."
-      ]
+      ],
+      "modified_at": "2026-09-08T03:41:51.006Z"
     },
     {
       "id": "ship",
@@ -466,7 +632,7 @@
       "id": "observe-1",
       "type": "observe",
       "label": "Observe: P1",
-      "status": "known",
+      "status": "done",
       "branch_of": "phase-1",
       "next": [
         "phase-1"
@@ -483,13 +649,23 @@
         "Match model tier to work: chores -> cheap subagent, analysis -> Opus-class, judgement -> lead; context may override (§ Shared conventions).",
         "Terminalize at phase end BEFORE the retro drain, receipt first, status second: harness flow comment --path <flow-path> --node observe-1 --kind validation --source agent --text \"captures:<count> pointer:<real capture record> time:<…>\" THEN harness flow status --path <flow-path> --node observe-1 --to done — done only after at least one real capture. Human decline instead: harness flow comment --path <flow-path> --node observe-1 --kind decision --source user --text \"<their verbatim words>\" THEN harness flow status --path <flow-path> --node observe-1 --to skipped.",
         "Environment friction is work, not an apology: fix small things, otherwise `harness observe` it — is this environment working for us? (builder SKILL.md invariant #14)"
-      ]
+      ],
+      "comments": [
+        {
+          "at": "2026-09-08T03:25:39.870Z",
+          "text": "Actual captures retained in assets/observations-pij-right-kotallo-plan005.json and assets/observations-pij-right-kotallo.json; committed PM retro records at98bb1cdd34e7b65233c7db5cf755f7ec420c832d. Worker custody is preserved in assets/observation-custody.json; no worker bucket was cleared. time:2026-09-08T03:25:39.632Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "modified_at": "2026-09-08T03:25:40.010Z",
+      "ran_at": "2026-09-08T03:25:40.010Z"
     },
     {
       "id": "retro-1",
       "type": "harness-retro",
       "label": "Retro: P1 (drain)",
-      "status": "known",
+      "status": "done",
       "branch_of": "phase-1",
       "next": [
         "phase-1"
@@ -503,13 +679,23 @@
         "Post-coding seam: drain this phase's observe buffer into durable retro notes before moving on.",
         "Run /eng-harness-flow --hook post-coding --json — a REAL invocation; narrate its envelope verbatim.",
         "Runs after this phase's observe chore is terminalized (real capture receipt, or human decline). On done, receipt first, status second: harness flow comment --path <flow-path> --node retro-1 --kind validation --source agent --text \"verdict:<…> time:<…>\" (router missing / envelope noop/UNAVAILABLE → text \"decision:unavailable reason:<…> time:<…>\" — a completed attempt, not a skip) THEN harness flow status --path <flow-path> --node retro-1 --to done. Mandatory unless the human declines — a decline is: harness flow comment --path <flow-path> --node retro-1 --kind decision --source user --text \"<their verbatim words>\" THEN harness flow status --path <flow-path> --node retro-1 --to skipped."
-      ]
+      ],
+      "comments": [
+        {
+          "at": "2026-09-08T03:25:40.160Z",
+          "text": "eng-harness-flow --hook post-coding followed inline per repo AGENTS: installed CLI/loaded extensions and existing governance plus actual candidate boot support the loop; two PM buckets were read, saved via harness record retro, committed with verified attribution at98bb1cdd, then only those own buckets cleared. Records .harness/records/retro/2026-09-08/001-plan005-delivery.md and002-plan005-review-intake.md. No new product proof or successful telemetry flush implied. time:2026-09-08T03:25:40.015Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "modified_at": "2026-09-08T03:25:40.296Z",
+      "ran_at": "2026-09-08T03:25:40.296Z"
     },
     {
       "id": "retro-harvest",
       "type": "harness-retro",
       "label": "Retro: post-flight (harvest)",
-      "status": "known",
+      "status": "done",
       "branch_of": "post-flight",
       "next": [
         "post-flight"
@@ -523,7 +709,17 @@
         "Post-flight seam: the terminal long-horizon harvest — fold this flight's learnings into durable memory at the pre-ship close-out, BEFORE the plan folder archives (so it runs even on work that never ships).",
         "Run /eng-harness-flow --hook post-flight --json — a REAL invocation; narrate its envelope verbatim.",
         "On done, receipt first, status second: harness flow comment --path <flow-path> --node retro-harvest --kind validation --source agent --text \"verdict:<…> time:<…>\" (router missing / envelope noop/UNAVAILABLE → text \"decision:unavailable reason:<…> time:<…>\" — a completed attempt, not a skip) THEN harness flow status --path <flow-path> --node retro-harvest --to done. Mandatory unless the human declines — a decline is: harness flow comment --path <flow-path> --node retro-harvest --kind decision --source user --text \"<their verbatim words>\" THEN harness flow status --path <flow-path> --node retro-harvest --to skipped."
-      ]
+      ],
+      "comments": [
+        {
+          "at": "2026-09-08T03:39:04.834Z",
+          "text": "eng-harness-flow --hook post-flight followed inline per repo AGENTS after actual phase drain: harness retro insights --plan005-claude-session-pipeline returned2records/2entries/malformed0 (assets/retro-harvest.json). Highest leverage classification defect fixed upstreamPR204 and original review intake now passed; receipt-schema validation before handoff is the named next encoding offer in assets/post-flight.md. Explicit local telemetry lookups returnedE100/ref_unavailable; no global-absence or flush claim and no remote sync under HARNESS_NO_TELEMETRY_AUTOSYNC=1. time:2026-09-08T03:39:04.699Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "modified_at": "2026-09-08T03:39:04.976Z",
+      "ran_at": "2026-09-08T03:39:04.976Z"
     }
   ],
   "plan_dir": "docs/plans/005-claude-session-pipeline"

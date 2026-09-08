@@ -53,6 +53,55 @@
             "backpressure.dd.json#rows/bp-000b",
             "backpressure.dd.json#rows/bp-000c"
           ]
+        },
+        {
+          "id": "lg-0005",
+          "at": "2026-09-08T02:34:24.334254+00:00",
+          "text": "Actual first-class Builder compose --verify succeeded on committed093a89811296efb681386047b1da912348c63f10. Fullreceipt assets/team/composition.dd.json SHA256 fef0a9a5d8be8a2e66f8e749279156dc5a7726ba3dc319bb13d181da0553b6ed records all8guidechecks vd0005/vd0006/vd0007/vd0008/vd0009/vd000a/vd000b/vd000c exit0, including fullquality, actualexternalSDK/installedCLI collection and four-modeboot. Warning-first ownershipadvisories retained, not suppressed or upgraded to runtimeerrors; no fake ack or manual verification waiver. Productscope is explicitUnixClaudeJSONL projection under unchanged contentpolicy, not fullfidelity/persistedresume/finalcompleteness. Independentcompositionreview is currently active and its judgement remains pending.",
+          "links": [
+            "backpressure.dd.json#rows/bp-0001",
+            "backpressure.dd.json#rows/bp-0002",
+            "backpressure.dd.json#rows/bp-0003",
+            "backpressure.dd.json#rows/bp-0004",
+            "backpressure.dd.json#rows/bp-0005",
+            "backpressure.dd.json#rows/bp-0006",
+            "backpressure.dd.json#rows/bp-0007",
+            "backpressure.dd.json#rows/bp-0008",
+            "backpressure.dd.json#rows/bp-0009",
+            "backpressure.dd.json#rows/bp-000a",
+            "backpressure.dd.json#rows/bp-000b",
+            "backpressure.dd.json#rows/bp-000c"
+          ]
+        },
+        {
+          "id": "lg-0006",
+          "at": "2026-09-08T02:59:35.075Z",
+          "text": "Scheduling correction, no requirement removed: dw-000d combined independent phase review with future archival, while the phase departure gate precedes post-flight. Keep independent composition approval in dw-000d; preserve factual closeout/archive/original-experiment retention as the existing Builder post-flight gate obligation and assets/post-flight.md checklist. Product ACs, guide, frozen contracts, candidate and actual proof are unchanged. Archive completion remains unchecked until close returns and strict archived validation passes.",
+          "links": [
+            "../plan.dd.json#phases/ph-a437",
+            "tasks/phase-1/tasks.dd.json#done_when/tk-0005/dw-000d"
+          ]
+        },
+        {
+          "id": "lg-0007",
+          "at": "2026-09-08T03:31:18.381Z",
+          "text": "Original independently approved R2 composition receipt now accepted by actual Builder intake after upstream PR204 closeout-record classification activation. Subject remains093a89811296efb681386047b1da912348c63f10; actual eight-check compose receipt remains fef0a9a5d8be8a2e66f8e749279156dc5a7726ba3dc319bb13d181da0553b6ed. Canonical accepted review is team/review-composition-rv-plan005-composition-opus-r2.dd.json (d3db8ed01868e6c514b114e607d29bfbd34db756931c52db2ec77d8dc2a0f31c). Zero open findings; four accepted advisories retain rationale. No product check/review was repeated. All12 ACs are supported by actual original proof plus this independent judgement. Mandatory retros preserved; actual harvest reads2records/2entries/malformed0. Archival itself remains a post-flight obligation, not an early phase claim.",
+          "links": [
+            "team/composition.dd.json#composition",
+            "team/review-composition-rv-plan005-composition-opus-r2.dd.json#review",
+            "backpressure.dd.json#rows/bp-0001",
+            "backpressure.dd.json#rows/bp-0002",
+            "backpressure.dd.json#rows/bp-0003",
+            "backpressure.dd.json#rows/bp-0004",
+            "backpressure.dd.json#rows/bp-0005",
+            "backpressure.dd.json#rows/bp-0006",
+            "backpressure.dd.json#rows/bp-0007",
+            "backpressure.dd.json#rows/bp-0008",
+            "backpressure.dd.json#rows/bp-0009",
+            "backpressure.dd.json#rows/bp-000a",
+            "backpressure.dd.json#rows/bp-000b",
+            "backpressure.dd.json#rows/bp-000c"
+          ]
         }
       ]
     }

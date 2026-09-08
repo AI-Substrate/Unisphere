@@ -1,0 +1,15 @@
+{
+  "argv": [
+    "git",
+    "merge-tree",
+    "--write-tree",
+    "main",
+    "builder/005-claude-session-pipeline"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline",
+  "started": "2026-09-08T03:15:24.985Z",
+  "completed": "2026-09-08T03:15:25.033Z",
+  "exit_code": 0,
+  "stdout": "137d23903234d9e305852f5e6cb383895d00aa8b\n",
+  "stderr": ""
+}

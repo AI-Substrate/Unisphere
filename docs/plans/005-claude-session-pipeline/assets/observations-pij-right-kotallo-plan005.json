@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "harness",
+    "observe",
+    "--list",
+    "--agent",
+    "pij-right-kotallo-plan005",
+    "--json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline",
+  "started": "2026-09-08T02:57:50.920Z",
+  "completed": "2026-09-08T02:57:51.073Z",
+  "exit_code": 0,
+  "stdout": "{\"command\":\"observe\",\"status\":\"ok\",\"timestamp\":\"2026-09-08T02:57:51.069Z\",\"data\":{\"observations\":[{\"id\":\"DL-001\",\"kind\":\"difficulty\",\"description\":\"Two exploratory task scouts failed immediately: No model selected; delegated task runner did not inherit an available model. No research result was produced. Continue bounded research inline and use explicit requested model selectors for native peers; do not change global credentials/config.\",\"severity\":\"degrading\",\"fp\":\"db25c945f784\",\"first_seen_at\":\"2026-09-08T00:40:25.771Z\",\"bucket\":\"pij-right-kotallo-plan005\"}],\"buckets_scanned\":[\"pij-right-kotallo-plan005\"],\"malformed_skipped\":0},\"next_action\":\"Drain: save what matters via `harness record retro`, then `harness observe --clear`.\"}\n",
+  "stderr": ""
+}

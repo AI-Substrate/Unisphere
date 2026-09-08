@@ -1,0 +1,19 @@
+crates/loader-jsonl/src/lib.rs
+  s_61dfe47e9838df::t_a499185ceade8b 4,29-32,49-52,77-80,103-106,149,184-186,190-191,199-202,221-227,231-235,247,274-277
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "093a89811296efb681386047b1da912348c63f10",
+  "prompts": {},
+  "sessions": {
+    "s_61dfe47e9838df": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cbe08128-4097-4473-9f99-71e9415824f6",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

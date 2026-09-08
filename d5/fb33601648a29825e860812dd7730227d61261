@@ -1,0 +1,14 @@
+.dd/schemas/builder/work-packet/schema.json
+  h_9e71e8b09f7cf2 1-274
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "d5fb33601648a29825e860812dd7730227d61261",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

@@ -1,0 +1,32 @@
+docs/plans/010-native-adapters/assets/contract-review-corrections.json
+  h_9e71e8b09f7cf2 1-8
+docs/plans/010-native-adapters/assets/dispatch-intent.json
+  h_9e71e8b09f7cf2 1-39
+docs/plans/010-native-adapters/assets/execution-log.dd.json
+  h_9e71e8b09f7cf2 1-27
+docs/plans/010-native-adapters/assets/execution-log.dd.md
+  h_9e71e8b09f7cf2 1-22
+docs/plans/010-native-adapters/assets/impl-guide.dd.json
+  h_9e71e8b09f7cf2 25-28,185,217,249,281,313,345,451,543
+docs/plans/010-native-adapters/assets/impl-guide.dd.md
+  h_9e71e8b09f7cf2 25,60-65,67,105
+docs/plans/010-native-adapters/assets/lane-contracts.json
+  h_9e71e8b09f7cf2 3-9,15-16,21-23,34-35
+docs/plans/010-native-adapters/assets/reviews/contracts-opus-r1.md
+  h_9e71e8b09f7cf2 1-87
+docs/plans/010-native-adapters/assets/tasks/phase-1/tasks.dd.json
+  h_9e71e8b09f7cf2 12-13
+docs/plans/010-native-adapters/assets/tasks/phase-1/tasks.dd.md
+  h_9e71e8b09f7cf2 19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "3a635c17110521a3ed93d03daf5eface57dc0bfd",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

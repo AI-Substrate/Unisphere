@@ -25,6 +25,15 @@
             "backpressure.dd.json#rows/bp-0005",
             "backpressure.dd.json#rows/bp-0006"
           ]
+        },
+        {
+          "id": "lg-0002",
+          "at": "2026-09-08T06:22:19.927Z",
+          "text": "Catalog candidate17829db8a427d1a6e69681044d58d7cb7c837263 composition approved by independent Opus R1; canonical intake succeeded after resumption, review-composition-rv-plan009-composition-opus-r1.dd.json SHA5838798498613f8103d83532b0d58c7a546a7aabbfff288c0464b731895d94c1. All six ACs met; zero open findings, two accepted proof-durability advisories. Actual composition receipt f2b7f95f7c3acdbd02e89363c6a2e4ccc9488fb78b040774065aaa42b842245f records vd0002/0003/0004; vd0001 is subsumed by the workspace test gate, not a separately recorded fourth composition check. Actual terminal human proof is retained; not an automated wording/layout pin. External consumer write/flush proof metadata committed at1f15eea4, unchanged source/results. No settled check or review repeated.",
+          "links": [
+            "team/composition.dd.json#composition",
+            "team/review-composition-rv-plan009-composition-opus-r1.dd.json#review"
+          ]
         }
       ]
     }

@@ -35,7 +35,7 @@ _Empty._
 
 | id | title | domain | phase | state | note | receipt | done | success | notes | satisfies | satisfies_toward |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| tk-0001 | Expose the registered-adapter catalog | — | ph-14a2 | [ ] unchecked | — | — | [tk-0001](tasks.dd.md#done-when) | Real CLI presents versioned descriptors and truthful hints from the executable registry without source discovery; existing configuration/export behavior remains compatible. | — | [ac-0001](../../../plan.dd.md#acceptance-criteria), [ac-0002](../../../plan.dd.md#acceptance-criteria), [ac-0003](../../../plan.dd.md#acceptance-criteria), [ac-0004](../../../plan.dd.md#acceptance-criteria), [ac-0005](../../../plan.dd.md#acceptance-criteria), [ac-0006](../../../plan.dd.md#acceptance-criteria) | — |
+| tk-0001 | Expose the registered-adapter catalog | — | ph-14a2 | [x] checked | — | ../../execution-log.dd.json#entries/lg-0002 | [tk-0001](tasks.dd.md#done-when) | Real CLI presents versioned descriptors and truthful hints from the executable registry without source discovery; existing configuration/export behavior remains compatible. | — | [ac-0001](../../../plan.dd.md#acceptance-criteria), [ac-0002](../../../plan.dd.md#acceptance-criteria), [ac-0003](../../../plan.dd.md#acceptance-criteria), [ac-0004](../../../plan.dd.md#acceptance-criteria), [ac-0005](../../../plan.dd.md#acceptance-criteria), [ac-0006](../../../plan.dd.md#acceptance-criteria) | — |
 
 <a id="done-when"></a>
 
@@ -43,14 +43,14 @@ _Empty._
 
 ### tk-0001
 
-| id | assertion | state | pressure |
-| --- | --- | --- | --- |
-| dw-0001 | A successful adapters list --json emits one v1 machine-readable envelope containing only registered production adapters, with stable id, application name and concise description. | [ ] unchecked | [bp-0001](../../backpressure.dd.md#rows) |
-| dw-0002 | Each descriptor gives structured usual-location hints with platform, home base, relative path, session glob and storage format; hints never assert a local installation or existing store. | [ ] unchecked | [bp-0002](../../backpressure.dd.md#rows) |
-| dw-0003 | Capabilities describe explicit export platforms/formats and a caller-owned SDK cursor with an append-only source assumption, separately from unsupported persisted CLI resume, delayed revision reconciliation and lossless archival. | [ ] unchecked | [bp-0003](../../backpressure.dd.md#rows) |
-| dw-0004 | Catalog listing performs no source loading, private-store scan, home/config environment expansion or command execution; actual discovery remains explicit and caller-overridable. | [ ] unchecked | [bp-0004](../../backpressure.dd.md#rows) |
-| dw-0005 | Metadata and executable dispatch derive from one registration, and every production descriptor id equals emitted unisphere.source.adapter provenance. A fixture registration exposes its descriptor and runs its adapter, while the production catalog excludes fixtures and existing config/session behavior remains compatible. | [ ] unchecked | [bp-0005](../../backpressure.dd.md#rows) |
-| dw-0006 | Help, invalid arguments and output failures keep existing CLI exit/output safety conventions; no hostile argument content leaks into public errors. | [ ] unchecked | [bp-0006](../../backpressure.dd.md#rows) |
+| id | assertion | state | pressure | proven_by |
+| --- | --- | --- | --- | --- |
+| dw-0001 | A successful adapters list --json emits one v1 machine-readable envelope containing only registered production adapters, with stable id, application name and concise description. | [x] checked | [bp-0001](../../backpressure.dd.md#rows) | [lg-0002](../../execution-log.dd.md#entries) |
+| dw-0002 | Each descriptor gives structured usual-location hints with platform, home base, relative path, session glob and storage format; hints never assert a local installation or existing store. | [x] checked | [bp-0002](../../backpressure.dd.md#rows) | [lg-0002](../../execution-log.dd.md#entries) |
+| dw-0003 | Capabilities describe explicit export platforms/formats and a caller-owned SDK cursor with an append-only source assumption, separately from unsupported persisted CLI resume, delayed revision reconciliation and lossless archival. | [x] checked | [bp-0003](../../backpressure.dd.md#rows) | [lg-0002](../../execution-log.dd.md#entries) |
+| dw-0004 | Catalog listing performs no source loading, private-store scan, home/config environment expansion or command execution; actual discovery remains explicit and caller-overridable. | [x] checked | [bp-0004](../../backpressure.dd.md#rows) | [lg-0002](../../execution-log.dd.md#entries) |
+| dw-0005 | Metadata and executable dispatch derive from one registration, and every production descriptor id equals emitted unisphere.source.adapter provenance. A fixture registration exposes its descriptor and runs its adapter, while the production catalog excludes fixtures and existing config/session behavior remains compatible. | [x] checked | [bp-0005](../../backpressure.dd.md#rows) | [lg-0002](../../execution-log.dd.md#entries) |
+| dw-0006 | Help, invalid arguments and output failures keep existing CLI exit/output safety conventions; no hostile argument content leaks into public errors. | [x] checked | [bp-0006](../../backpressure.dd.md#rows) | [lg-0002](../../execution-log.dd.md#entries) |
 
 <a id="goals"></a>
 

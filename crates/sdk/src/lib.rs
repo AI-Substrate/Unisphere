@@ -1,9 +1,9 @@
-//! In-process inspection of explicitly supplied source-root configuration.
+//! In-process explicit configuration inspection and injected session collection.
 //!
-//! This foundation validates configuration; it does not read sessions or collect
-//! telemetry. There is no daemon, async runtime, ambient configuration lookup,
-//! environment expansion, or network client. Only an explicit [`ConfigSource::File`]
-//! invokes the selected reader.
+//! Configuration inspection never reads session roots. [`Collector`] separately
+//! composes caller-selected loading, pure mapping and output ports. There is no
+//! daemon, async runtime or implicit environment/global configuration lookup.
+//! Source-derived collection is not a lossless or complete-session claim.
 //!
 //! ```
 //! use unisphere_sdk::{ConfigSource, InspectionRequest, inspect};

@@ -20,6 +20,8 @@ in `Cargo.lock`; this table is not a replacement for their licence obligations.
 | serde | 1.0.229 | MIT OR Apache-2.0 | <https://github.com/serde-rs/serde> |
 | serde_json | 1.0.151 | MIT OR Apache-2.0 | <https://github.com/serde-rs/json> |
 | tempfile | 3.27.0 | MIT OR Apache-2.0 | <https://github.com/Stebalien/tempfile> |
+| time | 0.3.55 | MIT OR Apache-2.0 | <https://github.com/time-rs/time> |
+| libc | 0.2.189 | MIT OR Apache-2.0 | <https://github.com/rust-lang/libc> |
 
 `tempfile` and `unisphere-testkit` support development proof; the installed
 application does not depend on testkit. Node, DD, Builder and native agent

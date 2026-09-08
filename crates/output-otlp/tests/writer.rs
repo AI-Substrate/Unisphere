@@ -1,7 +1,9 @@
 use std::io::{self, Write};
 
 use serde_json::{Value, json};
-use unisphere_core::{MAX_OUTPUT_BATCH_BYTES, PipelineError, PipelineErrorKind, RecordWriter, TelemetryRecord};
+use unisphere_core::{
+    MAX_OUTPUT_BATCH_BYTES, PipelineError, PipelineErrorKind, RecordWriter, TelemetryRecord,
+};
 use unisphere_output_otlp::OtlpJsonlWriter;
 
 fn record(body: Option<Value>) -> TelemetryRecord {
@@ -36,7 +38,8 @@ fn encodes_recursive_any_values_and_only_legal_otlp_fields() {
         ("null".into(), Value::Null),
         ("object".into(), json!({})),
         ("quote\"\n".into(), json!("λ\n\t\u{0000}\\\"")),
-    ].into();
+    ]
+    .into();
 
     let encoded = encode(&[input]);
     let text = std::str::from_utf8(&encoded).unwrap();
@@ -83,19 +86,32 @@ fn preserves_record_order_batch_framing_and_absent_vs_empty_values() {
     let mut explicit = record(Some(Value::Null));
     explicit.timestamp_unix_nano = Some(0);
     let mut bytes = Vec::new();
-    OtlpJsonlWriter.write_batch(&[absent, explicit], &mut bytes).unwrap();
+    OtlpJsonlWriter
+        .write_batch(&[absent, explicit], &mut bytes)
+        .unwrap();
     OtlpJsonlWriter.write_batch(&[], &mut bytes).unwrap();
-    OtlpJsonlWriter.write_batch(&[record(Some(json!(false)))], &mut bytes).unwrap();
-    let lines: Vec<Value> = std::str::from_utf8(&bytes).unwrap().lines()
-        .map(|line| serde_json::from_str(line).unwrap()).collect();
+    OtlpJsonlWriter
+        .write_batch(&[record(Some(json!(false)))], &mut bytes)
+        .unwrap();
+    let lines: Vec<Value> = std::str::from_utf8(&bytes)
+        .unwrap()
+        .lines()
+        .map(|line| serde_json::from_str(line).unwrap())
+        .collect();
     assert_eq!(lines.len(), 2);
-    assert_eq!(lines[0]["resourceLogs"][0]["scopeLogs"][0]["logRecords"], json!([
-        {"eventName": "unisphere.session.record", "attributes": []},
-        {"eventName": "unisphere.session.record", "attributes": [], "timeUnixNano": "0", "body": {}}
-    ]));
-    assert_eq!(lines[1]["resourceLogs"][0]["scopeLogs"][0]["logRecords"], json!([
-        {"eventName": "unisphere.session.record", "attributes": [], "body": {"boolValue": false}}
-    ]));
+    assert_eq!(
+        lines[0]["resourceLogs"][0]["scopeLogs"][0]["logRecords"],
+        json!([
+            {"eventName": "unisphere.session.record", "attributes": []},
+            {"eventName": "unisphere.session.record", "attributes": [], "timeUnixNano": "0", "body": {}}
+        ])
+    );
+    assert_eq!(
+        lines[1]["resourceLogs"][0]["scopeLogs"][0]["logRecords"],
+        json!([
+            {"eventName": "unisphere.session.record", "attributes": [], "body": {"boolValue": false}}
+        ])
+    );
 }
 
 #[derive(Clone, Copy)]
@@ -117,7 +133,13 @@ struct Sink {
 
 impl Sink {
     fn new(fault: Fault) -> Self {
-        Self { bytes: Vec::new(), fault, chunk: usize::MAX, writes: 0, flushes: 0 }
+        Self {
+            bytes: Vec::new(),
+            fault,
+            chunk: usize::MAX,
+            writes: 0,
+            flushes: 0,
+        }
     }
 }
 
@@ -154,7 +176,12 @@ impl Write for Sink {
 fn assert_safe(error: &PipelineError, kind: PipelineErrorKind) {
     assert_eq!(error.kind(), kind);
     assert_eq!(error.offset(), None);
-    let diagnostics = format!("{error:?} {error} {} {} {}", error.code(), error.message(), error.fix());
+    let diagnostics = format!(
+        "{error:?} {error} {} {} {}",
+        error.code(),
+        error.message(),
+        error.fix()
+    );
     assert!(!diagnostics.contains("SENSITIVE"));
     assert!(std::error::Error::source(error).is_none());
 }
@@ -170,11 +197,15 @@ fn empty_batches_never_write_or_flush() {
 fn invalid_late_values_reject_entire_batch_before_destination_access() {
     let too_large = json!(i64::MAX as u64 + 1);
     let mut invalid_attribute = record(None);
-    invalid_attribute.attributes.insert("SENSITIVE-key".into(), json!({"nested": [too_large]}));
+    invalid_attribute
+        .attributes
+        .insert("SENSITIVE-key".into(), json!({"nested": [too_large]}));
     let invalid_body = record(Some(json!(["SENSITIVE-body", u64::MAX])));
     for invalid in [invalid_attribute, invalid_body] {
         let mut sink = Sink::new(Fault::None);
-        let error = OtlpJsonlWriter.write_batch(&[record(None), invalid], &mut sink).unwrap_err();
+        let error = OtlpJsonlWriter
+            .write_batch(&[record(None), invalid], &mut sink)
+            .unwrap_err();
         assert_safe(&error, PipelineErrorKind::InvalidData);
         assert_eq!((sink.writes, sink.flushes), (0, 0));
     }
@@ -195,9 +226,15 @@ fn write_all_retries_interruptions_and_short_writes_before_flushing() {
 fn failed_or_zero_writes_report_safe_errors_without_flushing() {
     let records = [record(Some(json!("SENSITIVE-body")))];
     let expected = encode(&records);
-    for (fault, accepted) in [(Fault::WriteAfter(0), 0), (Fault::WriteAfter(17), 17), (Fault::WriteZero, 0)] {
+    for (fault, accepted) in [
+        (Fault::WriteAfter(0), 0),
+        (Fault::WriteAfter(17), 17),
+        (Fault::WriteZero, 0),
+    ] {
         let mut sink = Sink::new(fault);
-        let error = OtlpJsonlWriter.write_batch(&records, &mut sink).unwrap_err();
+        let error = OtlpJsonlWriter
+            .write_batch(&records, &mut sink)
+            .unwrap_err();
         assert_safe(&error, PipelineErrorKind::Write);
         assert_eq!(sink.bytes, expected[..accepted]);
         assert_eq!(sink.flushes, 0);
@@ -208,7 +245,9 @@ fn failed_or_zero_writes_report_safe_errors_without_flushing() {
 fn flush_failure_reports_failure_despite_complete_written_bytes() {
     let records = [record(None)];
     let mut sink = Sink::new(Fault::Flush);
-    let error = OtlpJsonlWriter.write_batch(&records, &mut sink).unwrap_err();
+    let error = OtlpJsonlWriter
+        .write_batch(&records, &mut sink)
+        .unwrap_err();
     assert_safe(&error, PipelineErrorKind::Write);
     assert_eq!(sink.bytes, encode(&records));
     assert_eq!(sink.flushes, 1);
@@ -220,7 +259,9 @@ fn encoded_limit_includes_newline_and_rejects_before_destination_access() {
     let content = "x".repeat(MAX_OUTPUT_BATCH_BYTES - overhead);
     let mut input = record(Some(Value::String(content)));
     let mut exact = Sink::new(Fault::None);
-    OtlpJsonlWriter.write_batch(std::slice::from_ref(&input), &mut exact).unwrap();
+    OtlpJsonlWriter
+        .write_batch(std::slice::from_ref(&input), &mut exact)
+        .unwrap();
     assert_eq!(exact.bytes.len(), MAX_OUTPUT_BATCH_BYTES);
     assert_eq!(exact.bytes.last(), Some(&b'\n'));
     assert_eq!(exact.flushes, 1);
@@ -229,7 +270,9 @@ fn encoded_limit_includes_newline_and_rejects_before_destination_access() {
         content.push('x');
     }
     let mut rejected = Sink::new(Fault::None);
-    let error = OtlpJsonlWriter.write_batch(&[input], &mut rejected).unwrap_err();
+    let error = OtlpJsonlWriter
+        .write_batch(&[input], &mut rejected)
+        .unwrap_err();
     assert_safe(&error, PipelineErrorKind::OutputLimit);
     assert_eq!((rejected.writes, rejected.flushes), (0, 0));
 }
@@ -238,7 +281,9 @@ fn encoded_limit_includes_newline_and_rejects_before_destination_access() {
 fn output_budget_counts_json_escape_expansion_not_input_length() {
     let input = record(Some(Value::String("\0".repeat(MAX_OUTPUT_BATCH_BYTES / 6))));
     let mut sink = Sink::new(Fault::None);
-    let error = OtlpJsonlWriter.write_batch(&[input], &mut sink).unwrap_err();
+    let error = OtlpJsonlWriter
+        .write_batch(&[input], &mut sink)
+        .unwrap_err();
     assert_safe(&error, PipelineErrorKind::OutputLimit);
     assert_eq!((sink.writes, sink.flushes), (0, 0));
 }

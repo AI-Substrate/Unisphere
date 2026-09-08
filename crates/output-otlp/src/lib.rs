@@ -7,7 +7,9 @@
 use std::io::{self, Write};
 
 use serde_json::Value;
-use unisphere_core::{MAX_OUTPUT_BATCH_BYTES, PipelineError, PipelineErrorKind, RecordWriter, TelemetryRecord};
+use unisphere_core::{
+    MAX_OUTPUT_BATCH_BYTES, PipelineError, PipelineErrorKind, RecordWriter, TelemetryRecord,
+};
 
 /// Stateless encoder for one LF-terminated OTLP LogsData object per nonempty batch.
 ///

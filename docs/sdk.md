@@ -1,10 +1,10 @@
 # Rust SDK
 
-`unisphere-sdk` 0.1.0 is an in-process configuration inspection library targeting
-Rust 1.95.0, edition 2024. This foundation does not collect telemetry, discover
-harnesses, read session content, normalize records, or persist data. No daemon,
-CLI process, async runtime, Node, Builder, database, or model service is required
-at runtime. Registry publication is outside this release; use the checkout.
+`unisphere-sdk` 0.1.0 provides in-process configuration inspection and an injected
+session collection service on Rust 1.95.0, edition 2024. No daemon, CLI subprocess,
+async runtime, Node, Builder, database or model service is required. Concrete
+loaders, pure source adapters and output writers are composed explicitly rather
+than selected through ambient configuration.
 
 ## Consume from another Cargo package
 
@@ -166,8 +166,40 @@ no real user configuration or session stores are inputs. The assembled plan's
 external-consumer, CLI parity, and dependency checks are separate PM-owned proof;
 SDK unit tests alone do not establish installation or no-network syscall proof.
 
-No native-session format or telemetry compatibility is promised here. The SDK
-uses portable Rust APIs, but OS-specific permissions and path forms remain OS
-contracts; support claims are limited to the platforms exercised by the project
-proof lane. This implementation introduces no copied Flowspace3 or git-ai source;
-architectural inspiration does not add their runtime dependencies.
+The configuration operation itself does not read sessions. Collection supports
+the documented source-derived Claude profile, not lossless telemetry or complete
+session reconstruction; see [fidelity.md](fidelity.md). The initial file loader is
+Unix-only, while mapping and encoding operate on supplied data. Support claims
+remain limited to actually exercised platforms and fixtures.
+
+## Collect a batch through injected ports
+
+Add path dependencies on `crates/loader-jsonl`, `crates/adapter-claude` and
+`crates/output-otlp` when selecting those concrete implementations; the SDK itself
+depends inward on core contracts, not those adapters.
+
+```rust
+use unisphere_sdk::{CollectionApi, Collector, MappingOptions, ReadLimits, SessionRef};
+use unisphere_loader_jsonl::FileSessionLoader;
+use unisphere_adapter_claude::ClaudeCodeAdapter;
+use unisphere_output_otlp::OtlpJsonlWriter;
+
+let collector = Collector::new(FileSessionLoader, ClaudeCodeAdapter, OtlpJsonlWriter);
+let source = SessionRef { path: "/explicit/session.jsonl".into() };
+let mut output = Vec::new();
+let batch = collector.collect_batch(
+    &source, None, ReadLimits::default(), MappingOptions::default(), &mut output,
+)?;
+// Retain batch.next_cursor only after your destination policy accepts output.
+# Ok::<(), unisphere_sdk::PipelineError>(())
+```
+
+The same `CollectionApi` can be backed by a fake collector for a frontend test.
+For lower-level tests inject `FakeSessionLoader`, a pure adapter and
+`FakeRecordWriter`; adapters themselves take bytes directly and need no mock I/O.
+
+The returned cursor is caller-owned, not automatically persisted. A write/flush
+failure returns no accepted checkpoint, but may leave partial output; retries are
+not exactly-once. `more` and `incomplete_tail` describe the current read boundary,
+not producer finality. `MappedBatch` contains typed diagnostics and physical source
+provenance, not a claim that unsupported payloads or references were captured.

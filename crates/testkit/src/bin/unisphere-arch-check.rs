@@ -242,7 +242,9 @@ fn run() -> Result<(), String> {
     if real_workspace {
         let core_count = check_sources(std::path::Path::new("crates/core/src"))?;
         if core_count == 0 {
-            return Err("core source scan found no Rust files; run from the repository root".into());
+            return Err(
+                "core source scan found no Rust files; run from the repository root".into(),
+            );
         }
         let count = core_count + check_sources(std::path::Path::new("crates/adapter-claude/src"))?;
         println!(

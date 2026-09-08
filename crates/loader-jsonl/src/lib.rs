@@ -1,6 +1,7 @@
 //! Explicit, nonrecursive session discovery and bounded native LF framing.
 //! Filesystem support is Unix-only. Ancestor directories are caller-trusted;
 //! final symlinks are never followed. No content interpretation or cursor storage.
+#![forbid(unsafe_code)]
 
 use unisphere_core::{
     LoadedBatch, PipelineError, ReadCursor, ReadLimits, SessionLoader, SessionRef, SourceScope,
@@ -25,7 +26,10 @@ impl SessionLoader for FileSessionLoader {
         #[cfg(not(unix))]
         {
             let _ = scope;
-            Err(PipelineError::new(unisphere_core::PipelineErrorKind::Unsupported, None))
+            Err(PipelineError::new(
+                unisphere_core::PipelineErrorKind::Unsupported,
+                None,
+            ))
         }
     }
 
@@ -42,7 +46,10 @@ impl SessionLoader for FileSessionLoader {
         #[cfg(not(unix))]
         {
             let _ = (session, cursor, limits);
-            Err(PipelineError::new(unisphere_core::PipelineErrorKind::Unsupported, None))
+            Err(PipelineError::new(
+                unisphere_core::PipelineErrorKind::Unsupported,
+                None,
+            ))
         }
     }
 }
@@ -67,7 +74,10 @@ mod unix {
         scope.validate()?;
         let read_error = |_| error(PipelineErrorKind::Read, None);
         // Ancestors are trusted, but the selected leaf must itself be a directory.
-        if !fs::symlink_metadata(&scope.root).map_err(read_error)?.is_dir() {
+        if !fs::symlink_metadata(&scope.root)
+            .map_err(read_error)?
+            .is_dir()
+        {
             return Err(error(PipelineErrorKind::Read, None));
         }
         let mut sessions = Vec::new();
@@ -90,7 +100,10 @@ mod unix {
     }
 
     fn identity(metadata: &Metadata) -> SourceIdentity {
-        SourceIdentity::Unix { device: metadata.dev(), inode: metadata.ino() }
+        SourceIdentity::Unix {
+            device: metadata.dev(),
+            inode: metadata.ino(),
+        }
     }
 
     pub(super) fn read_batch(
@@ -133,8 +146,7 @@ mod unix {
         }
         let source_identity = identity(&metadata);
         let observed_end = metadata.len();
-        if offset > observed_end
-            || cursor.is_some_and(|cursor| cursor.identity != source_identity)
+        if offset > observed_end || cursor.is_some_and(|cursor| cursor.identity != source_identity)
         {
             return Err(changed());
         }
@@ -169,11 +181,14 @@ mod unix {
                 more = true;
                 break;
             }
-            let capacity = limits.max_record_bytes.min(limits.max_batch_bytes - consumed);
+            let capacity = limits
+                .max_record_bytes
+                .min(limits.max_batch_bytes - consumed);
             let mut bytes = Vec::new();
             match frame(&mut reader, &mut bytes, capacity).map_err(read_error)? {
                 Frame::Complete => {
-                    consumed = consumed.checked_add(bytes.len())
+                    consumed = consumed
+                        .checked_add(bytes.len())
                         .ok_or_else(|| error(PipelineErrorKind::BatchLimit, Some(next)))?;
                     let length = u64::try_from(bytes.len())
                         .map_err(|_| error(PipelineErrorKind::RecordLimit, Some(next)))?;
@@ -181,7 +196,10 @@ mod unix {
                     physical_records += 1;
                     if !bytes.iter().all(u8::is_ascii_whitespace) {
                         bytes.pop(); // Only LF is removed; native CR remains.
-                        records.push(NativeRecord { offset: next, bytes });
+                        records.push(NativeRecord {
+                            offset: next,
+                            bytes,
+                        });
                     }
                     next = end;
                 }
@@ -200,12 +218,21 @@ mod unix {
         }
         // Rotation/removal and observable truncation invalidate the entire call,
         // not merely its checkpoint. Same-inode rewriting/regrowth is unsupported.
-        verify_source(reader.get_ref().get_ref(), session, &source_identity, observed_end)
-            .map_err(|_| changed())?;
+        verify_source(
+            reader.get_ref().get_ref(),
+            session,
+            &source_identity,
+            observed_end,
+        )
+        .map_err(|_| changed())?;
         Ok(LoadedBatch {
             source: session.clone(),
             records,
-            next_cursor: ReadCursor { source: session.path.clone(), identity: source_identity, offset: next },
+            next_cursor: ReadCursor {
+                source: session.path.clone(),
+                identity: source_identity,
+                offset: next,
+            },
             more,
             incomplete_tail,
         })
@@ -217,11 +244,7 @@ mod unix {
         Capacity,
     }
 
-    fn frame(
-        reader: &mut impl BufRead,
-        bytes: &mut Vec<u8>,
-        capacity: usize,
-    ) -> io::Result<Frame> {
+    fn frame(reader: &mut impl BufRead, bytes: &mut Vec<u8>, capacity: usize) -> io::Result<Frame> {
         loop {
             let available = reader.fill_buf()?;
             if available.is_empty() {
@@ -248,8 +271,10 @@ mod unix {
         observed_end: u64,
     ) -> io::Result<()> {
         let current = fs::symlink_metadata(&session.path)?;
-        if !current.is_file() || identity(&current) != *expected
-            || current.len() < observed_end || file.metadata()?.len() < observed_end
+        if !current.is_file()
+            || identity(&current) != *expected
+            || current.len() < observed_end
+            || file.metadata()?.len() < observed_end
         {
             return Err(io::Error::other("source changed"));
         }

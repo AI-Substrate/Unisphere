@@ -35,9 +35,10 @@ impl SessionAdapter for ClaudeCodeAdapter {
         options: MappingOptions,
     ) -> Result<MappedBatch, PipelineError> {
         source.validate()?;
-        let path = source.path.to_str().ok_or_else(|| {
-            PipelineError::new(PipelineErrorKind::InvalidInput, None)
-        })?;
+        let path = source
+            .path
+            .to_str()
+            .ok_or_else(|| PipelineError::new(PipelineErrorKind::InvalidInput, None))?;
         let mut batch = MappedBatch::default();
         for native in records {
             let value: Value = serde_json::from_slice(&native.bytes).map_err(|_| {
@@ -62,7 +63,10 @@ struct Mapping<'a> {
 
 impl Mapping<'_> {
     fn diagnostic(&mut self, code: MappingDiagnosticCode) {
-        self.diagnostics.push(MappingDiagnostic { offset: self.offset, code });
+        self.diagnostics.push(MappingDiagnostic {
+            offset: self.offset,
+            code,
+        });
     }
 
     fn string<'a>(&mut self, object: &'a Map<String, Value>, key: &str) -> Option<&'a str> {
@@ -132,7 +136,8 @@ impl Mapping<'_> {
 
     fn timestamp(&mut self, value: Option<&Value>) -> Option<u64> {
         let value = value?;
-        let parsed = value.as_str()
+        let parsed = value
+            .as_str()
             .and_then(|value| OffsetDateTime::parse(value, &Rfc3339).ok())
             .and_then(|value| u64::try_from(value.unix_timestamp_nanos()).ok());
         if parsed.is_none() {
@@ -187,17 +192,22 @@ impl Mapping<'_> {
                     Vec::new()
                 }
             }
-            Value::Array(parts) => parts.into_iter().filter_map(|part| self.part(part)).collect(),
+            Value::Array(parts) => parts
+                .into_iter()
+                .filter_map(|part| self.part(part))
+                .collect(),
             _ => {
                 self.diagnostic(MappingDiagnosticCode::InvalidField);
                 return None;
             }
         };
         if self.include_content {
-            role.map(|role| Value::Object(Map::from_iter([
-                ("role".into(), Value::String(role)),
-                ("parts".into(), Value::Array(parts)),
-            ])))
+            role.map(|role| {
+                Value::Object(Map::from_iter([
+                    ("role".into(), Value::String(role)),
+                    ("parts".into(), Value::Array(parts)),
+                ]))
+            })
         } else {
             None
         }
@@ -213,8 +223,14 @@ impl Mapping<'_> {
         for (native, profile) in [
             ("input_tokens", "unisphere.usage.input_tokens"),
             ("output_tokens", "unisphere.usage.output_tokens"),
-            ("cache_read_input_tokens", "unisphere.usage.cache_read_input_tokens"),
-            ("cache_creation_input_tokens", "unisphere.usage.cache_creation_input_tokens"),
+            (
+                "cache_read_input_tokens",
+                "unisphere.usage.cache_read_input_tokens",
+            ),
+            (
+                "cache_creation_input_tokens",
+                "unisphere.usage.cache_creation_input_tokens",
+            ),
         ] {
             if let Some(value) = usage.get(native) {
                 if let Some(value) = value.as_i64().filter(|value| *value >= 0) {
@@ -226,7 +242,10 @@ impl Mapping<'_> {
             }
         }
         if retained {
-            attributes.insert("unisphere.usage.scope".into(), json!("native_record_snapshot"));
+            attributes.insert(
+                "unisphere.usage.scope".into(),
+                json!("native_record_snapshot"),
+            );
         }
     }
 
@@ -258,8 +277,10 @@ impl Mapping<'_> {
                 })
             }
             "tool_use" => {
-                let id = self.string(&part, "id")
-                    .filter(|_| self.include_content).map(str::to_owned);
+                let id = self
+                    .string(&part, "id")
+                    .filter(|_| self.include_content)
+                    .map(str::to_owned);
                 let Some(Value::String(name)) = part.remove("name") else {
                     self.diagnostic(MappingDiagnosticCode::InvalidField);
                     return None;
@@ -272,13 +293,17 @@ impl Mapping<'_> {
                     let mut value = json!({"type": "tool_call"});
                     value["name"] = Value::String(name);
                     value["arguments"] = arguments;
-                    if let Some(id) = id { value["id"] = Value::String(id); }
+                    if let Some(id) = id {
+                        value["id"] = Value::String(id);
+                    }
                     value
                 })
             }
             "tool_result" => {
-                let id = self.string(&part, "tool_use_id")
-                    .filter(|_| self.include_content).map(str::to_owned);
+                let id = self
+                    .string(&part, "tool_use_id")
+                    .filter(|_| self.include_content)
+                    .map(str::to_owned);
                 let error = match part.remove("is_error") {
                     None => None,
                     Some(Value::Bool(value)) => Some(value),
@@ -294,16 +319,22 @@ impl Mapping<'_> {
                 self.include_content.then(|| {
                     let mut value = json!({"type": "tool_call_response"});
                     value["response"] = response;
-                    if let Some(id) = id { value["id"] = Value::String(id); }
-                    if let Some(error) = error { value["unisphere.is_error"] = Value::Bool(error); }
+                    if let Some(id) = id {
+                        value["id"] = Value::String(id);
+                    }
+                    if let Some(error) = error {
+                        value["unisphere.is_error"] = Value::Bool(error);
+                    }
                     value
                 })
             }
             _ => {
                 self.diagnostic(MappingDiagnosticCode::UnsupportedPart);
-                self.include_content.then(|| json!({
-                    "type": "unisphere.unknown", "native_type": kind,
-                }))
+                self.include_content.then(|| {
+                    json!({
+                        "type": "unisphere.unknown", "native_type": kind,
+                    })
+                })
             }
         }
     }

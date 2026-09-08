@@ -1,8 +1,9 @@
-//! Command-line parsing and rendering over the injected configuration port.
+//! Configuration and session commands over injected core application ports.
 //!
 //! This is a frontend library, not an executable or an SDK composition root.
 //! The caller supplies argv (including argv[0]), working directory, terminal
-//! status, version, inspector and output writers. No ambient state is read.
+//! status, version and application ports. Session export opens only an explicit
+//! new output file; source loading stays behind the injected collection port.
 #![forbid(unsafe_code)]
 
 use std::{ffi::OsString, io::Write, path::PathBuf};

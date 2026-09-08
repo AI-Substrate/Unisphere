@@ -554,9 +554,9 @@ fn installed_cli(repo: &Path, scratch: &Path) -> ProofResult<()> {
 
 fn run() -> ProofResult<()> {
     let mut args = env::args_os().skip(1);
-    let mode = args
-        .next()
-        .ok_or("usage: unisphere-proof composition|sdk-consumer|installed-cli|collection [--repo ROOT]")?;
+    let mode = args.next().ok_or(
+        "usage: unisphere-proof composition|sdk-consumer|installed-cli|collection [--repo ROOT]",
+    )?;
     let repo = match args.next().as_deref() {
         None => env::current_dir().map_err(|e| e.to_string())?,
         Some(flag) if flag == "--repo" => {
@@ -582,8 +582,13 @@ fn run() -> ProofResult<()> {
         _ => Err("unknown proof command".into()),
     };
     result?;
+    let scope = if mode == "collection" {
+        "explicit Claude JSONL projection; not lossless or final completeness"
+    } else {
+        "configuration foundation"
+    };
     println!(
-        "foundation proof {}: passed (temporary isolated build and product runtime; no telemetry-reader claim)",
+        "product proof {}: passed (temporary isolated build and product runtime; {scope})",
         mode.to_string_lossy()
     );
     Ok(())

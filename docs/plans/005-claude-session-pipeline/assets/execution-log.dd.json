@@ -41,6 +41,18 @@
             "backpressure.dd.json#rows/bp-0004",
             "backpressure.dd.json#rows/bp-0006"
           ]
+        },
+        {
+          "id": "lg-0004",
+          "at": "2026-09-08T02:26:00.165122+00:00",
+          "text": "Actualfirst-class import succeeded after retaining Buildergenerated work-packet schema; all3tested deliveries integrated. PMcomposed realapp staticregistry with genericSDKCollector and injectedCLIrun_sessions; an app test registers functional TextFixtureAdapter in oneentry without core/Claude changes. Allworkspace tests passed (see composed-tests-initial.json); actualquality6gates allpass; realcollection proof passed externalSDK/installedCLI parity, metadataoptin, hostileenv, partialtail, malformederror and existingoutput protection. Localoperator CLI built and exported3metadata records in3batches endingbyte897 (operator-cli-smoke.json); no lossless/final-session/resumeclaim. Userfidelity request is delivered as docs/fidelity.md matrix and followoncontract discussion; explicitcontentpolicy remainsunchanged. Frozen8files recomputed unchanged. Finalcommittedcandidate verification and independentcompositionreview remain owed.",
+          "links": [
+            "backpressure.dd.json#rows/bp-0007",
+            "backpressure.dd.json#rows/bp-0009",
+            "backpressure.dd.json#rows/bp-000a",
+            "backpressure.dd.json#rows/bp-000b",
+            "backpressure.dd.json#rows/bp-000c"
+          ]
         }
       ]
     }

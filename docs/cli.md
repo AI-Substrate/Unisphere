@@ -1,10 +1,9 @@
 # Unisphere CLI
 
-Unisphere 0.1 is a configuration-inspection foundation, not a telemetry collector.
-It validates explicitly supplied settings and returns the effective configuration.
-It does not scan source roots, read native sessions, normalize telemetry, start a
-daemon, contact a service, or create a store. Command-result JSON is not the
-future telemetry format.
+Unisphere provides configuration inspection plus an explicit Claude JSONL session
+pipeline. Configuration-command JSON and OTLP telemetry JSONL are distinct output
+contracts. No implicit HOME scan, daemon, remote service or persistent ingest store
+is started. Session projection is not lossless or complete-session capture.
 
 ## Install and run
 
@@ -175,3 +174,33 @@ dev-only testkit. They prove requests, rendering, safe diagnostics and output
 failure behavior without an SDK/app implementation. Real-file validation,
 SDK/CLI parity, installation, and platform/runtime isolation require the separate
 composed proof lane. No Flowspace3 or git-ai source was copied into this frontend.
+
+## Session commands
+
+```sh
+unisphere sessions list --root /explicit/leaf-project --max-sessions 4096
+unisphere sessions export --adapter claude-code --input /explicit/session.jsonl
+unisphere sessions export --input /explicit/session.jsonl --include-content --output ./new.jsonl
+```
+
+Listing is nonrecursive, returns `recursive:false`, and reports an explanatory
+diagnostic for an empty leaf directory. The initial file loader is Unix-only.
+Export emits OTLP LogsData JSONL on stdout or creates a new file, never silently
+overwriting one; summary and typed errors go to stderr. Help prints usage instead
+of telemetry. Invalid arguments/limits exit 2, operational failures exit 1, success
+exits 0. Output failures can leave a partial new file for the caller to inspect.
+
+Metadata-only is the default, not anonymity: paths, native IDs, model and kind
+metadata remain. `--include-content` enables supported message parts and tool I/O,
+not opaque unknown payloads, sidecars or a full source archive.
+
+Batch flags are `--max-records`, `--max-record-bytes` and `--max-batch-bytes`.
+An oversize record errors at its starting byte and is not skipped; retry with
+larger compatible limits. The summary reports mapped records, batches, total
+diagnostics, `incomplete_tail` and final byte `offset`.
+
+**Rerunning an export starts from the beginning.** There is no persisted resume,
+`--harness`/session-ID resolution, source-record ordinal from/to range or idempotent
+ingestion store. SDK callers can retain a source-bound `ReadCursor`; the CLI does
+not persist it. EOF is only an observed boundary and delayed data can arrive later.
+See [fidelity.md](fidelity.md) for implemented guarantees and follow-on work.

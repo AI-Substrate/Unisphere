@@ -2,17 +2,17 @@
 
 ## What this verb computes
 
-Run `harness boot --json` for foundation readiness. It invokes `harness checks --json` once, accepts only its valid `command: checks`, `status: ok` envelope, then runs the real `unisphere-proof composition`, `sdk-consumer` and `installed-cli` commands. It starts no services. Each child is bounded; failure retains captured evidence and stops the chain.
+Run `harness boot --json` for product readiness: checks once, then real `unisphere-proof composition`, `sdk-consumer`, `installed-cli` and `collection` modes using the Cargo executable observed by checks. It starts no services; failures preserve child evidence and stop the chain.
 
 - Missing checks: degraded, exit 0, ready false.
 - Unconfigured checks: unconfigured, exit 2.
 - Failed/timed-out checks or smoke: error, exit 1, with diagnostics/remediation.
 - Invalid checks JSON: error; a non-ok or wrong-command envelope is not readiness.
-- All real checks and smoke succeed: ok, exit 0, ready true, scope `configuration-sdk-cli-foundation`.
+- All real checks and smoke succeed: ok, exit 0, ready true, scope `configuration-and-claude-jsonl`.
 
 ## Your role
 
-Use an approved coherent Rust toolchain; the checks stage records actual versions/commit identities before running gates. Read status and ready, not exit code alone. A green foundation boot means explicit configuration, SDK use and installed CLI behavior were exercised; it never means native telemetry collection runs. Retain the actual evidence and exact subject commit in PM-owned delivery records.
+Read the actual toolchain and each proof result. Passing boot proves the documented configuration and explicit Claude JSONL paths, not lossless telemetry, complete sessions, delayed revisions or other clients. Preserve evidence and exact source identities; no fabricated missing fields or extra approval ceremony.
 
 ## Watch out for
 

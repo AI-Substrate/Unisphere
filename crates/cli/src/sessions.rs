@@ -238,7 +238,11 @@ pub fn run_sessions(
     match result {
         Ok(()) => 0,
         Err(error) => {
-            let exit = if error.kind() == PipelineErrorKind::InvalidInput { 2 } else { 1 };
+            let exit = if error.kind() == PipelineErrorKind::InvalidInput {
+                2
+            } else {
+                1
+            };
             session_error(stderr, &error, exit)
         }
     }

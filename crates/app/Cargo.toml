@@ -13,3 +13,11 @@ path = "src/main.rs"
 [dependencies]
 unisphere-sdk.workspace = true
 unisphere-cli.workspace = true
+unisphere-loader-jsonl.workspace = true
+unisphere-adapter-claude.workspace = true
+unisphere-output-otlp.workspace = true
+
+[dev-dependencies]
+unisphere-testkit.workspace = true
+tempfile.workspace = true
+serde_json.workspace = true

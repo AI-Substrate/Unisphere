@@ -1,0 +1,56 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "composition",
+      "value": {
+        "record_type": "composition",
+        "id": "d725700b-17cd-4274-9c91-159506e77bfe",
+        "recorded_at": "2026-09-08T02:08:05.760Z",
+        "baseline": {
+          "path": "docs/plans/005-claude-session-pipeline/assets/team/baseline-v1.dd.json",
+          "sha256": "0f19f48ee816c0c53c88b356672c545be9fc5b7129c9de4d90ac7bbc085287f0"
+        },
+        "units": [
+          {
+            "unit_id": "tk-0002",
+            "peer_id": "pij-young-tran",
+            "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-loader",
+            "commit_sha": "7b6b2417b2714c9365441de7302d4f2e24691fb4",
+            "packet_sha256": "2dfb1c46f2ade2f6358192e1f58abd1bac53225fc48d7ca66cc3869d205f90d0",
+            "baseline_sha": "ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86"
+          },
+          {
+            "unit_id": "tk-0003",
+            "peer_id": "pij-living-anteater",
+            "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-claude",
+            "commit_sha": "58cb09add80c91d077e901c55391be3691aa9c23",
+            "packet_sha256": "1cc6ed264ae3313dd9097af3e0b8ed942895f65431e005d473dfb4bef3d34697",
+            "baseline_sha": "ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86"
+          },
+          {
+            "unit_id": "tk-0004",
+            "peer_id": "pij-bad-butterfly",
+            "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-output",
+            "commit_sha": "323877bcc240d7515a9a1866f4a54a97e2c9bed8",
+            "packet_sha256": "35118101b4fb3b727524f062752b70560964b4228218ac1c1eda89fc3e846637",
+            "baseline_sha": "ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86"
+          }
+        ],
+        "integration_sha": "1d8e541e3f3d3f1b239c15baf16e29b1279615fb",
+        "files": [],
+        "checks": [],
+        "warnings": [
+          {
+            "file": ".dd/schemas/builder/work-packet/schema.json",
+            "owning_unit": "unmapped",
+            "stage": "import"
+          }
+        ]
+      }
+    }
+  ],
+  "references": []
+}

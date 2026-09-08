@@ -1,0 +1,15 @@
+{
+  "argv": [
+    "harness",
+    "builder",
+    "compose",
+    "docs/plans/009-adapter-catalog/plan.dd.json",
+    "--import",
+    ".harness/temp/plan009-no-coder-deliveries.json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog",
+  "at": "2026-09-08T04:41:20.254Z",
+  "exit_code": 0,
+  "stdout": "{\"command\":\"builder compose\",\"status\":\"ok\",\"timestamp\":\"2026-09-08T04:41:20.250Z\",\"data\":{\"composition\":{\"ref\":{\"path\":\"docs/plans/009-adapter-catalog/assets/team/composition.dd.json\",\"sha256\":\"6c8c061e67cfa45234635a649f9cf1bf3523b4f203ed58dad24ce163ff0f9dbc\"},\"value\":{\"record_type\":\"composition\",\"id\":\"221440aa-7779-4f5a-9fe8-fb53d0d33eab\",\"recorded_at\":\"2026-09-08T04:41:20.248Z\",\"baseline\":{\"path\":\"docs/plans/009-adapter-catalog/assets/team/baseline.dd.json\",\"sha256\":\"707bbf0786e1debf044ba2ec537660ef8fab3c15b2aafa0dd8c8b861b6b31076\"},\"units\":[],\"integration_sha\":\"17829db8a427d1a6e69681044d58d7cb7c837263\",\"files\":[],\"checks\":[],\"warnings\":[{\"file\":\"crates/core/src/collection.rs\",\"owning_unit\":\"unmapped\",\"stage\":\"guide\",\"code\":\"baseline-owner\",\"message\":\"No unit maps shared contract file crates/core/src/collection.rs.\",\"next_action\":\"Review baseline/files with the named unit and update the ownership guidance if useful; this warning does not block work.\"},{\"file\":\"crates/core/src/ports.rs\",\"owning_unit\":\"unmapped\",\"stage\":\"guide\",\"code\":\"baseline-owner\",\"message\":\"No unit maps shared contract file crates/core/src/ports.rs.\",\"next_action\":\"Review baseline/files with the named unit and update the ownership guidance if useful; this warning does not block work.\"},{\"file\":\"crates/core/src/collection.rs\",\"owning_unit\":\"unmapped\",\"stage\":\"guide\",\"code\":\"baseline-owner\",\"message\":\"No unit maps shared contract file crates/core/src/collection.rs.\",\"next_action\":\"Review baseline/files with the named unit and update the ownership guidance if useful; this warning does not block work.\"},{\"file\":\"crates/core/src/ports.rs\",\"owning_unit\":\"unmapped\",\"stage\":\"guide\",\"code\":\"baseline-owner\",\"message\":\"No unit maps shared contract file crates/core/src/ports.rs.\",\"next_action\":\"Review baseline/files with the named unit and update the ownership guidance if useful; this warning does not block work.\"}]}}}}\n",
+  "stderr": ""
+}

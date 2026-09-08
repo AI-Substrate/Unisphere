@@ -1,0 +1,15 @@
+{
+  "argv": [
+    "harness",
+    "builder",
+    "compose",
+    "docs/plans/009-adapter-catalog/plan.dd.json",
+    "--verify",
+    "17829db8a427d1a6e69681044d58d7cb7c837263"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog",
+  "at": "2026-09-08T04:39:11.748Z",
+  "exit_code": 1,
+  "stdout": "{\"command\":\"builder compose\",\"status\":\"error\",\"timestamp\":\"2026-09-08T04:39:11.744Z\",\"error\":{\"code\":\"E470\",\"message\":\"Cannot read /Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog/docs/plans/009-adapter-catalog/assets/team/composition.dd.json: missing\",\"details\":{\"max_bytes\":4194304}},\"next_action\":\"Supply a readable regular DD JSON document of at most 4194304 bytes.\"}\n",
+  "stderr": ""
+}

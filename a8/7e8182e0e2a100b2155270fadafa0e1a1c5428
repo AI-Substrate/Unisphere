@@ -1,0 +1,20 @@
+docs/plans/archive/009-adapter-catalog/assets/final-departure.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/archive/009-adapter-catalog/assets/post-flight.json
+  h_9e71e8b09f7cf2 2,5,9,14,80,84,88,98-101
+docs/plans/archive/009-adapter-catalog/the-flow.json
+  h_9e71e8b09f7cf2 6,363-384,547-555,576-581,584
+docs/plans/archive/009-adapter-catalog/the-flow.md
+  h_9e71e8b09f7cf2 4,15,36,58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "a87e8182e0e2a100b2155270fadafa0e1a1c5428",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

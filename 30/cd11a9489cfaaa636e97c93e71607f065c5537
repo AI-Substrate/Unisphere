@@ -1,0 +1,56 @@
+docs/plans/010-native-adapters/assets/activated-historical-import.json
+  h_9e71e8b09f7cf2 1-19
+docs/plans/010-native-adapters/assets/execution-log.dd.json
+  h_9e71e8b09f7cf2 81-89
+docs/plans/010-native-adapters/assets/execution-log.dd.md
+  h_9e71e8b09f7cf2 28
+docs/plans/010-native-adapters/assets/formal-closeout-harvest.json
+  h_9e71e8b09f7cf2 1-15
+docs/plans/010-native-adapters/assets/formal-closeout-telemetry.json
+  h_9e71e8b09f7cf2 1-14
+docs/plans/010-native-adapters/assets/formal-review-binding-intake.json
+  h_9e71e8b09f7cf2 1-15
+docs/plans/010-native-adapters/assets/formal-verification-summary.json
+  h_9e71e8b09f7cf2 1-25
+docs/plans/010-native-adapters/assets/landing-authorization.json
+  h_9e71e8b09f7cf2 1-22
+docs/plans/010-native-adapters/assets/post-flight.md
+  h_9e71e8b09f7cf2 28,30-36,38-42,44-51,53-58,62-65
+docs/plans/010-native-adapters/assets/reviews/composition-opus-r2-binding-receipt.json
+  h_9e71e8b09f7cf2 1-100
+docs/plans/010-native-adapters/assets/reviews/composition-opus-r2-binding.md
+  h_9e71e8b09f7cf2 1-89
+docs/plans/010-native-adapters/assets/self-handover.md
+  h_9e71e8b09f7cf2 1-79
+docs/plans/010-native-adapters/assets/ship/landing-plan.json
+  h_9e71e8b09f7cf2 1-37
+docs/plans/010-native-adapters/assets/team/basis-2160c94a738ec3cb49c482d8099c4a86ee5dfe36b545ffdaaedd106693eab3ac.json
+  h_9e71e8b09f7cf2 1-192
+docs/plans/010-native-adapters/assets/team/composition.dd.json
+  h_9e71e8b09f7cf2 1-2538
+docs/plans/010-native-adapters/assets/team/composition.dd.md
+  h_9e71e8b09f7cf2 1-23
+docs/plans/010-native-adapters/assets/team/review-composition-rv-plan010-composition-opus-r2-binding.dd.json
+  h_9e71e8b09f7cf2 1-101
+docs/plans/010-native-adapters/assets/team/review-composition-rv-plan010-composition-opus-r2-binding.dd.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/010-native-adapters/plan.dd.json
+  h_9e71e8b09f7cf2 173
+docs/plans/010-native-adapters/plan.dd.md
+  h_9e71e8b09f7cf2 151
+docs/plans/010-native-adapters/the-flow.json
+  h_9e71e8b09f7cf2 6,29-339,347,356-366,372,383-393,399,411-421,428,434-442,458-468,474,486-496,502,518-519,539,556-566,572,588-598,604,621-631,637,651-661,667,681-691
+docs/plans/010-native-adapters/the-flow.md
+  h_9e71e8b09f7cf2 4,6,10-15,20-22,32,37,41-72
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "30cd11a9489cfaaa636e97c93e71607f065c5537",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

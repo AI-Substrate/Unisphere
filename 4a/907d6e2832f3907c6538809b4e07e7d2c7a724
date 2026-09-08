@@ -1,0 +1,56 @@
+.harness/records/retro/2026-09-08/003-plan009-catalog.md
+  h_9e71e8b09f7cf2 1-20
+docs/plans/archive/009-adapter-catalog/assets/archive-completion.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/archive/009-adapter-catalog/assets/backpressure.dd.json
+  h_9e71e8b09f7cf2 11,25-27,36-38,47-49,58-60,69-71,80-82
+docs/plans/archive/009-adapter-catalog/assets/backpressure.dd.md
+  h_9e71e8b09f7cf2 15,23-28
+docs/plans/archive/009-adapter-catalog/assets/closeout-telemetry.json
+  h_9e71e8b09f7cf2 1-15
+docs/plans/archive/009-adapter-catalog/assets/composition-review-intake.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/archive/009-adapter-catalog/assets/execution-log.dd.json
+  h_9e71e8b09f7cf2 28-36
+docs/plans/archive/009-adapter-catalog/assets/execution-log.dd.md
+  h_9e71e8b09f7cf2 23
+docs/plans/archive/009-adapter-catalog/assets/final-departure.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/archive/009-adapter-catalog/assets/observation-custody.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/archive/009-adapter-catalog/assets/post-flight.json
+  h_9e71e8b09f7cf2 1-104
+docs/plans/archive/009-adapter-catalog/assets/post-flight.md
+  h_9e71e8b09f7cf2 1-13
+docs/plans/archive/009-adapter-catalog/assets/retro-harvest.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/archive/009-adapter-catalog/assets/reviews/composition-opus-r1-evidence-addendum.md
+  h_9e71e8b09f7cf2 1-27
+docs/plans/archive/009-adapter-catalog/assets/tasks/phase-1/tasks.dd.json
+  h_9e71e8b09f7cf2 27,37-38,49-51,56-58,63-65,70-72,77-79,84-86
+docs/plans/archive/009-adapter-catalog/assets/tasks/phase-1/tasks.dd.md
+  h_9e71e8b09f7cf2 38,46-53
+docs/plans/archive/009-adapter-catalog/assets/team/review-composition-rv-plan009-composition-opus-r1.dd.json
+  h_9e71e8b09f7cf2 1-149
+docs/plans/archive/009-adapter-catalog/assets/team/review-composition-rv-plan009-composition-opus-r1.dd.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/archive/009-adapter-catalog/plan.dd.json
+  h_9e71e8b09f7cf2 42-44,49-51,56-58,63-65,70-72,77-79,90
+docs/plans/archive/009-adapter-catalog/plan.dd.md
+  h_9e71e8b09f7cf2 51-56,64
+docs/plans/archive/009-adapter-catalog/the-flow.json
+  h_9e71e8b09f7cf2 6,193-384,473,479-487,504-505,511,523-533,539,546-555,563-585,670,687-697,703,717-727,733,747-757,760
+docs/plans/archive/009-adapter-catalog/the-flow.md
+  h_9e71e8b09f7cf2 4,6,13-15,21-22,36,52-59,65-73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "4a907d6e2832f3907c6538809b4e07e7d2c7a724",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

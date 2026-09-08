@@ -3,7 +3,7 @@
   "kind": "flight-plan",
   "slug": "native-adapters",
   "nav": {
-    "now": "post-flight",
+    "now": "ship",
     "next": null
   },
   "created_at": "2026-09-08T06:14:18.729Z",
@@ -372,6 +372,28 @@
         "from": "in_progress",
         "to": "done"
       }
+    },
+    {
+      "id": "UPD-013",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-08T22:39:28.480Z",
+      "details": {
+        "node": "post-flight",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "CUR-006",
+      "kind": "cursor-moved",
+      "origin": "engine",
+      "fired_at": "2026-09-08T22:39:54.595Z",
+      "details": {
+        "from": "post-flight",
+        "to": "ship"
+      }
     }
   ],
   "nodes": [
@@ -542,7 +564,15 @@
       "zone": "postflight",
       "dd_link": {
         "address": "docs/plans/archive/010-native-adapters/plan.dd.json",
-        "check": "plan-validate"
+        "check": "plan-validate",
+        "basis_sha": "23c3a840588b9b0d6b7d3005d085c743ba3da8cccdb0df77a61cb3cf917a7d0c",
+        "reading": {
+          "status": "complete",
+          "terminal": 1,
+          "total": 1,
+          "incomplete": [],
+          "at": "2026-09-08T22:39:54.595Z"
+        }
       },
       "instructions": [
         "Close out the flight BEFORE any ship: every phase and review is done; the terminal harness harvest fires at this edge, then the plan folder is archived — this stage runs whether or not the work ever ships.",
@@ -551,7 +581,7 @@
         "If the gate refuses and departing anyway is the HUMAN's decision, they pass --force — it records a defended override. An agent may not force a dd gate on its own judgment.",
         "Tidy is separate: harness builder tidy <allocation> --preservation <receipt> re-verifies ownership, runtime release and surviving bytes/refs; external ownership or idle-only evidence cannot authorize removal."
       ],
-      "modified_at": "2026-09-08T22:39:18.158Z",
+      "modified_at": "2026-09-08T22:39:28.480Z",
       "comments": [
         {
           "at": "2026-09-08T22:38:25.739Z",
@@ -564,6 +594,12 @@
           "text": "Actual Builder close archived Plan010 with genuine external PreservationReceipt f098aad7 (3261e103). Archived strict plan completion returned0errors0warnings0open. Productc6/formalartifact6a unchanged; all8workspaces retained, no retirement. Final archive evidence committed before preservation refresh.",
           "source": "agent",
           "kind": "validation"
+        },
+        {
+          "at": "2026-09-08T22:39:28.480Z",
+          "text": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-formal-preserved/8835aeda-6b69-407d-bc62-df3413a0153a/receipt/preservation.dd.json",
+          "source": "agent",
+          "kind": "builder-preservation"
         }
       ],
       "ran_at": "2026-09-08T22:39:18.158Z"

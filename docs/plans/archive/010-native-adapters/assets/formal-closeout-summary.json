@@ -1,0 +1,30 @@
+{
+  "recorded_at": "2026-09-08T22:40:06.734Z",
+  "archive": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/docs/plans/archive/010-native-adapters",
+  "product": "c6f3636b394f0e17445eb2e143f6ac2c6d1ec998",
+  "formal_artifact": "6a38efaf4db192a6e35fafa903db7c06cdbe371e",
+  "formal_composition_sha256": "70fee1b212963f7a26bcf0c52850637e5431dcb7fa2d447dba2b186d78a0a5ef",
+  "formal_review": {
+    "path": "docs/plans/010-native-adapters/assets/team/review-composition-rv-plan010-composition-opus-r2-binding.dd.json",
+    "sha256": "373d7d54fcba89e4fa565836b849b86cae765881188b76560b451687b0cdb893"
+  },
+  "preservation": {
+    "path": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-formal-preserved/8835aeda-6b69-407d-bc62-df3413a0153a/receipt/preservation.dd.json",
+    "sha256": "b664fbd82c06250e7cfc42dc60fd950078fc6f1c3fc74f88673788dbdfa2f31f"
+  },
+  "strict_completion": {
+    "error": 0,
+    "warn": 0,
+    "semantic": {
+      "items": 418,
+      "completable": 39,
+      "open": 0,
+      "contradictions": 0,
+      "orphans": 0,
+      "in_scope": 418
+    }
+  },
+  "departure": "actual Builder advance to ship exit0",
+  "retired": [],
+  "landing": "Not performed; isolated local convergence awaiting typed PROCEED"
+}

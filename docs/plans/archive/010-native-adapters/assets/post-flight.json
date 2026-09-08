@@ -1,17 +1,17 @@
 {
-  "recorded_at": "2026-09-08T22:38:25.615Z",
+  "recorded_at": "2026-09-08T22:39:28.357Z",
   "composed_sha": "6a38efaf4db192a6e35fafa903db7c06cdbe371e",
   "composition": {
-    "path": "docs/plans/010-native-adapters/assets/team/composition.dd.json",
+    "path": "docs/plans/archive/010-native-adapters/assets/team/composition.dd.json",
     "sha256": "70fee1b212963f7a26bcf0c52850637e5431dcb7fa2d447dba2b186d78a0a5ef"
   },
   "review": {
-    "path": "docs/plans/010-native-adapters/assets/team/review-composition-rv-plan010-composition-opus-r2-binding.dd.json",
+    "path": "docs/plans/archive/010-native-adapters/assets/team/review-composition-rv-plan010-composition-opus-r2-binding.dd.json",
     "sha256": "373d7d54fcba89e4fa565836b849b86cae765881188b76560b451687b0cdb893"
   },
   "flow": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/docs/plans/archive/010-native-adapters/the-flow.json",
   "archive": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/docs/plans/archive/010-native-adapters",
-  "survivor": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-formal-preserved/f098aad7-0985-4645-a1f5-9c6d425ce129",
+  "survivor": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-formal-preserved/8835aeda-6b69-407d-bc62-df3413a0153a",
   "shipping_authorized": false,
   "chores": [
     {
@@ -77,15 +77,15 @@
   ],
   "evidence": [
     {
-      "path": "docs/plans/010-native-adapters/assets/worker-observation-custody.json",
+      "path": "docs/plans/archive/010-native-adapters/assets/worker-observation-custody.json",
       "category": "observation"
     },
     {
-      "path": "docs/plans/010-native-adapters/assets/formal-closeout-harvest.json",
+      "path": "docs/plans/archive/010-native-adapters/assets/formal-closeout-harvest.json",
       "category": "observation"
     },
     {
-      "path": "docs/plans/010-native-adapters/assets/formal-closeout-telemetry.json",
+      "path": "docs/plans/archive/010-native-adapters/assets/formal-closeout-telemetry.json",
       "category": "telemetry"
     },
     {
@@ -114,6 +114,10 @@
     },
     {
       "path": ".harness/temp/plan010-composition-review-r2-binding.dd.json",
+      "category": "report"
+    },
+    {
+      "path": "docs/plans/archive/010-native-adapters/assets/formal-archive-completion.json",
       "category": "report"
     }
   ]

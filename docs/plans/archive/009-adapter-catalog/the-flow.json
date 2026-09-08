@@ -337,6 +337,29 @@
           "comments"
         ]
       }
+    },
+    {
+      "id": "UPD-011",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-08T06:25:21.960Z",
+      "details": {
+        "node": "post-flight",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-012",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-08T06:25:22.097Z",
+      "details": {
+        "node": "post-flight",
+        "from": "assumed",
+        "to": "done"
+      }
     }
   ],
   "nodes": [
@@ -491,7 +514,7 @@
       "id": "post-flight",
       "type": "post-flight",
       "label": "Post-flight",
-      "status": "assumed",
+      "status": "done",
       "command": "/builder 7b post-flight",
       "next": [
         "ship"
@@ -514,9 +537,16 @@
           "text": "/Users/jordanknight/substrate/unisphere/unisphere-plan009-preserved/cc7339c5-4bf1-4d56-96fe-b22f948d6242/receipt/preservation.dd.json",
           "source": "agent",
           "kind": "builder-preservation"
+        },
+        {
+          "at": "2026-09-08T06:25:21.960Z",
+          "text": "Actual close archived and preserved this complete plan; archived plan validate --complete exit0 with0errors0warnings0open. Source17829db8 remains tested/reviewed; no main merge/push/retirement.",
+          "source": "agent",
+          "kind": "validation"
         }
       ],
-      "modified_at": "2026-09-08T06:24:25.221Z"
+      "modified_at": "2026-09-08T06:25:22.097Z",
+      "ran_at": "2026-09-08T06:25:22.097Z"
     },
     {
       "id": "ship",

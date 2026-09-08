@@ -3,7 +3,7 @@
   "kind": "flight-plan",
   "slug": "claude-session-pipeline",
   "nav": {
-    "now": "post-flight",
+    "now": "ship",
     "next": null,
     "intent": "Jordan approved pure Claude adapter with noI/O, sharedfakeable SessionLoader list_sessions/read_batch and standardOTLPJSONLoutput; freshworktree/newagents, PMplan/guide then independentreview andimplementation, archivebeforeauthorizedlanding."
   },
@@ -407,6 +407,28 @@
         "from": "in_progress",
         "to": "done"
       }
+    },
+    {
+      "id": "UPD-014",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-08T03:50:17.201Z",
+      "details": {
+        "node": "post-flight",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "CUR-006",
+      "kind": "cursor-moved",
+      "origin": "engine",
+      "fired_at": "2026-09-08T04:22:39.993Z",
+      "details": {
+        "from": "post-flight",
+        "to": "ship"
+      }
     }
   ],
   "nodes": [
@@ -573,7 +595,15 @@
       "zone": "postflight",
       "dd_link": {
         "address": "docs/plans/archive/005-claude-session-pipeline/plan.dd.json",
-        "check": "plan-validate"
+        "check": "plan-validate",
+        "basis_sha": "83954f3aa187b61aeaf8259a739fbcdaba784e540383f9247b367d1fcc572927",
+        "reading": {
+          "status": "complete",
+          "terminal": 1,
+          "total": 1,
+          "incomplete": [],
+          "at": "2026-09-08T04:22:39.993Z"
+        }
       },
       "instructions": [
         "Close out the flight BEFORE any ship: every phase and review is done; the terminal harness harvest fires at this edge, then the plan folder is archived — this stage runs whether or not the work ever ships.",
@@ -582,7 +612,7 @@
         "If the gate refuses and departing anyway is the HUMAN's decision, they pass --force — it records a defended override. An agent may not force a dd gate on its own judgment.",
         "Tidy is separate: harness builder tidy <allocation> --preservation <receipt> re-verifies ownership, runtime release and surviving bytes/refs; external ownership or idle-only evidence cannot authorize removal."
       ],
-      "modified_at": "2026-09-08T03:50:10.483Z",
+      "modified_at": "2026-09-08T03:50:17.201Z",
       "comments": [
         {
           "at": "2026-09-08T03:41:57.099Z",
@@ -595,6 +625,12 @@
           "text": "Actual archive/preservation returned; archived strict completion exit0 with zero errors/warnings/open items. See assets/archive-completion.json and assets/post-flight.md. No retirement or shipping performed.",
           "source": "agent",
           "kind": "validation"
+        },
+        {
+          "at": "2026-09-08T03:50:17.201Z",
+          "text": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-preserved/4a7ff460-7bb1-4f8f-8c1c-f574c3292957/receipt/preservation.dd.json",
+          "source": "agent",
+          "kind": "builder-preservation"
         }
       ],
       "ran_at": "2026-09-08T03:50:10.483Z"

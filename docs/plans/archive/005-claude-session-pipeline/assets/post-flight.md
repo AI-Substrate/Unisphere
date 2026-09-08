@@ -27,6 +27,8 @@ The archive conjunct formerly attached to phase assertion `dw-000d` belongs here
 
 Initial preservation receipt: `/Users/jordanknight/substrate/unisphere/unisphere-plan005-preserved/fa75faee-d644-4835-bd40-3fbf963dd1c9/receipt/preservation.dd.json`, SHA256 `d93ed4f94bc05a9074569704bffcd7d2ead6a2474b2cc19df21dbe7ef6609a8f`. The canonical post-flight flow comments carry any subsequent refresh locator. Archive commit: `5c64d21b33cd6516f639346ceed6a5e1de6b10f0`; strict completion evidence is retained in `archive-completion.json`.
 
+The generated 16.4 MB preservation receipt initially exceeded the harness reader's 4 MiB limit. Upstream PR205 raised the preservation-reader bound to 64 MiB without changing the format or freshness/confinement rules. Actual archive departure then succeeded using the flow's recorded latest locator, `/Users/jordanknight/substrate/unisphere/unisphere-plan005-preserved/4a7ff460-7bb1-4f8f-8c1c-f574c3292957/receipt/preservation.dd.json` (SHA256 `948f500c770809028bb06b32604b16b28ab059aabe6331096166ae55f251469d`). No preserved root was modified, inventory reduced or close replayed for the fix; see `departure-validation.json`.
+
 ## Main landing and separate follow-on
 
 `main-landing-preview.json` records a conflict-free merge-tree calculation at current refs; no merge occurred. `main-landing-intent.json` names approval and closeout prerequisites and preservation of Main's research commit `452e0f3cbf4c045a9d5bb10f16f5dc96134a8e98`. No push, PR or retirement is authorized by this note.

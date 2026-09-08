@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "harness",
+    "builder",
+    "advance",
+    "docs/plans/archive/005-claude-session-pipeline/plan.dd.json",
+    "--now",
+    "ship"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline",
+  "started": "2026-09-08T04:22:27.594Z",
+  "completed": "2026-09-08T04:22:40.154Z",
+  "exit_code": 0,
+  "stdout": "{\"command\":\"builder advance\",\"status\":\"ok\",\"timestamp\":\"2026-09-08T04:22:40.135Z\",\"data\":{\"flow\":\"/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline/docs/plans/archive/005-claude-session-pipeline/the-flow.json\",\"now\":\"ship\",\"warnings\":[{\"file\":\".dd/schemas/builder/work-packet/schema.json\",\"owning_unit\":\"unmapped\",\"stage\":\"import\"},{\"file\":\"crates/adapter-claude/src/lib.rs\",\"owning_unit\":\"tk-0003\",\"stage\":\"verify\"},{\"file\":\"crates/adapter-claude/tests/mapping.rs\",\"owning_unit\":\"tk-0003\",\"stage\":\"verify\"},{\"file\":\"crates/loader-jsonl/src/lib.rs\",\"owning_unit\":\"tk-0002\",\"stage\":\"verify\"},{\"file\":\"crates/loader-jsonl/tests/filesystem.rs\",\"owning_unit\":\"tk-0002\",\"stage\":\"verify\"},{\"file\":\"crates/output-otlp/src/lib.rs\",\"owning_unit\":\"tk-0004\",\"stage\":\"verify\"},{\"file\":\"crates/output-otlp/tests/writer.rs\",\"owning_unit\":\"tk-0004\",\"stage\":\"verify\"},{\"file\":\"docs/cli.md\",\"owning_unit\":\"unmapped\",\"stage\":\"verify\"},{\"file\":\"docs/fidelity.md\",\"owning_unit\":\"unmapped\",\"stage\":\"verify\"},{\"file\":\"docs/sdk.md\",\"owning_unit\":\"unmapped\",\"stage\":\"verify\"}]}}\n",
+  "stderr": ""
+}

@@ -1,17 +1,17 @@
 {
-  "recorded_at": "2026-09-08T03:41:56.966Z",
+  "recorded_at": "2026-09-08T03:50:17.069Z",
   "composed_sha": "093a89811296efb681386047b1da912348c63f10",
   "composition": {
-    "path": "docs/plans/005-claude-session-pipeline/assets/team/composition.dd.json",
+    "path": "docs/plans/archive/005-claude-session-pipeline/assets/team/composition.dd.json",
     "sha256": "fef0a9a5d8be8a2e66f8e749279156dc5a7726ba3dc319bb13d181da0553b6ed"
   },
   "review": {
-    "path": "docs/plans/005-claude-session-pipeline/assets/team/review-composition-rv-plan005-composition-opus-r2.dd.json",
+    "path": "docs/plans/archive/005-claude-session-pipeline/assets/team/review-composition-rv-plan005-composition-opus-r2.dd.json",
     "sha256": "d3db8ed01868e6c514b114e607d29bfbd34db756931c52db2ec77d8dc2a0f31c"
   },
   "flow": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline/docs/plans/archive/005-claude-session-pipeline/the-flow.json",
   "archive": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline/docs/plans/archive/005-claude-session-pipeline",
-  "survivor": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-preserved/fa75faee-d644-4835-bd40-3fbf963dd1c9",
+  "survivor": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-preserved/4a7ff460-7bb1-4f8f-8c1c-f574c3292957",
   "shipping_authorized": false,
   "chores": [
     {
@@ -77,19 +77,19 @@
   ],
   "evidence": [
     {
-      "path": "docs/plans/005-claude-session-pipeline/assets/observation-custody.json",
+      "path": "docs/plans/archive/005-claude-session-pipeline/assets/observation-custody.json",
       "category": "observation"
     },
     {
-      "path": "docs/plans/005-claude-session-pipeline/assets/retro-harvest.json",
+      "path": "docs/plans/archive/005-claude-session-pipeline/assets/retro-harvest.json",
       "category": "observation"
     },
     {
-      "path": "docs/plans/005-claude-session-pipeline/assets/closeout-telemetry.json",
+      "path": "docs/plans/archive/005-claude-session-pipeline/assets/closeout-telemetry.json",
       "category": "telemetry"
     },
     {
-      "path": "docs/plans/005-claude-session-pipeline/assets/closeout-telemetry-main.json",
+      "path": "docs/plans/archive/005-claude-session-pipeline/assets/closeout-telemetry-main.json",
       "category": "telemetry"
     },
     {
@@ -102,6 +102,10 @@
     },
     {
       "path": ".harness/temp/plan005-composition-review-r2.dd.json",
+      "category": "report"
+    },
+    {
+      "path": "docs/plans/archive/005-claude-session-pipeline/assets/archive-completion.json",
       "category": "report"
     }
   ]

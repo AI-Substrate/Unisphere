@@ -23,6 +23,7 @@ Accepted review advisories remain in `review-dispositions.json`: raw-input limit
 - Original worker clones and their branches remain present; none was retired or rewritten. Disposable PM proof checkouts were removed only after complete outputs were retained.
 - `worker-observation-custody.json` and six durable `.harness/records/retro/2026-09-08/*plan010*` records retain nine observations. The PM cleared only its own bucket; five native owners separately acknowledged clearing their preserved buckets. `worker-owner-clear-receipts.json` records those real outcomes.
 - `retro-harvest.json` reports six records/nine entries and zero malformed skips. No global telemetry-empty or remote-sync success is inferred from absent local evidence.
+- External documentary preservation: `/Users/jordanknight/substrate/unisphere/unisphere-plan010-preserved-vTxLJR/preservation.json`. Its verified `product.bundle` preserves source/evidence commit `56bf73782562119bd1e1351973fb107d16f6798b`, including the accepted product, original unit bundles, review and retrospectives. SHA256 `721b29da6b68428f23d7cbcf35474eb9692d1141d1123774c064467506df70cd`; 2,230,963 bytes. This is explicitly not a fabricated Builder PreservationReceipt; the later locator-only commit is separate from the captured source state.
 
 ## Formal Builder disposition — not concealed
 

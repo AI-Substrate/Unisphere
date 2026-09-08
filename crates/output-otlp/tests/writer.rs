@@ -43,7 +43,7 @@ fn encodes_recursive_any_values_and_only_legal_otlp_fields() {
     assert!(text.ends_with('\n'));
     assert_eq!(text.bytes().filter(|byte| *byte == b'\n').count(), 1);
     let document: Value = serde_json::from_str(text).unwrap();
-    assert_eq!(document, json!({
+    let expected: Value = serde_json::from_str(r#"{
         "resourceLogs": [{"scopeLogs": [{
             "scope": {"name": "unisphere", "version": "0.1.0"},
             "logRecords": [{
@@ -57,7 +57,7 @@ fn encodes_recursive_any_values_and_only_legal_otlp_fields() {
                     {"key": "minimum", "value": {"intValue": "-9223372036854775808"}},
                     {"key": "null", "value": {}},
                     {"key": "object", "value": {"kvlistValue": {"values": []}}},
-                    {"key": "quote\"\n", "value": {"stringValue": "λ\n\t\u{0000}\\\""}}
+                    {"key": "quote\"\n", "value": {"stringValue": "λ\n\t\u0000\\\""}}
                 ],
                 "body": {"kvlistValue": {"values": [
                     {"key": "parts", "value": {"arrayValue": {"values": [
@@ -73,7 +73,8 @@ fn encodes_recursive_any_values_and_only_legal_otlp_fields() {
                 ]}}
             }]
         }]}]
-    }));
+    }"#).unwrap();
+    assert_eq!(document, expected);
 }
 
 #[test]

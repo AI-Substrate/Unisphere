@@ -1,0 +1,57 @@
+{
+  "recorded_at": "2026-09-08T07:53:25.777Z",
+  "subject_sha": "c6f3636b394f0e17445eb2e143f6ac2c6d1ec998",
+  "quality": "composed-quality-corrected.json",
+  "workspace_tests": 236,
+  "boot": "committed-candidate-boot.json",
+  "boot_status": "ok",
+  "ready": true,
+  "proofs": [
+    {
+      "name": "composition",
+      "exit_code": 0,
+      "ok": true
+    },
+    {
+      "name": "sdk-consumer",
+      "exit_code": 0,
+      "ok": true
+    },
+    {
+      "name": "installed-cli",
+      "exit_code": 0,
+      "ok": true
+    },
+    {
+      "name": "collection",
+      "exit_code": 0,
+      "ok": true
+    },
+    {
+      "name": "native",
+      "exit_code": 0,
+      "ok": true
+    }
+  ],
+  "native_dialects": [
+    "claude-code",
+    "codex",
+    "oh-my-pi",
+    "pi",
+    "copilot-cli",
+    "cursor-transcript",
+    "vscode-copilot",
+    "cursor-ide",
+    "copilot-cli-snapshot"
+  ],
+  "mutation_and_failure_proof": "native-paved-proof.json",
+  "formal_builder_receipt": null,
+  "formal_disposition": {
+    "probe": "formal-composition-probe.json",
+    "error": {
+      "code": "E475",
+      "message": "Stale evidence: crates/core/src/snapshot.rs"
+    },
+    "explanation": "Five authorized native/adopted lanes have no original Builder dispatch receipts (row54). Additionally the final quality pass required a semantics-preserving collapsed-if syntax correction in frozen core/snapshot.rs, so current raw bytes differ from the historical baseline. Neither binding is fabricated or silently relabelled."
+  }
+}

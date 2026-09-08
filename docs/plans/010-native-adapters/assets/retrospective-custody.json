@@ -1,0 +1,36 @@
+{
+  "at": "2026-09-08T07:56:56.228Z",
+  "records": [
+    {
+      "agent": "pij-ideological-koala",
+      "path": ".harness/records/retro/2026-09-08/003-plan010-pij-ideological-koala.md",
+      "entries": 1
+    },
+    {
+      "agent": "pij-homeless-dudley",
+      "path": ".harness/records/retro/2026-09-08/004-plan010-pij-homeless-dudley.md",
+      "entries": 2
+    },
+    {
+      "agent": "pij-mechanical-tsarina",
+      "path": ".harness/records/retro/2026-09-08/005-plan010-pij-mechanical-tsarina.md",
+      "entries": 1
+    },
+    {
+      "agent": "pij-adorable-bat",
+      "path": ".harness/records/retro/2026-09-08/006-plan010-pij-adorable-bat.md",
+      "entries": 1
+    },
+    {
+      "agent": "pij-kind-turkey",
+      "path": ".harness/records/retro/2026-09-08/007-plan010-pij-kind-turkey.md",
+      "entries": 2
+    },
+    {
+      "agent": "pij-right-kotallo-plan010",
+      "path": ".harness/records/retro/2026-09-08/008-plan010-pij-right-kotallo-plan010.md",
+      "entries": 2
+    }
+  ],
+  "worker_buckets_cleared": false
+}

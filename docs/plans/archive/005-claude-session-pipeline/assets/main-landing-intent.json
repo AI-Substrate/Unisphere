@@ -1,0 +1,24 @@
+{
+  "source_branch": "builder/005-claude-session-pipeline",
+  "tested_reviewed_artifact": "093a89811296efb681386047b1da912348c63f10",
+  "retros_only_successor": "98bb1cdd34e7b65233c7db5cf755f7ec420c832d",
+  "target": "main",
+  "must_preserve_main_research": "452e0f3cbf4c045a9d5bb10f16f5dc96134a8e98",
+  "approval": "not-granted",
+  "preconditions": [
+    "Resolve Builder classification of closeout retro output",
+    "Complete archive and preservation",
+    "Commit retained canonical evidence",
+    "Obtain explicit main-landing authority"
+  ],
+  "preview": "main-landing-preview.json",
+  "actions_performed": [
+    "read-only merge-tree calculation"
+  ],
+  "not_performed": [
+    "merge",
+    "push",
+    "PR",
+    "retirement"
+  ]
+}

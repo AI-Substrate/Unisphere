@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "harness",
+    "commit",
+    "fix(harness): render retained retros in reader-compatible YAML\n\nPij-Prime: pij-right-kotallo\nPij-Plan: 005-claude-session-pipeline",
+    "--",
+    ".harness/records/retro/2026-09-08/001-plan005-delivery.md",
+    ".harness/records/retro/2026-09-08/002-plan005-review-intake.md"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline",
+  "started": "2026-09-08T03:27:53.090Z",
+  "completed": "2026-09-08T03:27:55.704Z",
+  "exit_code": 0,
+  "stdout": "{\"command\":\"commit\",\"status\":\"ok\",\"timestamp\":\"2026-09-08T03:27:55.700Z\",\"data\":{\"mode\":\"direct-verified\",\"probe\":\"connected\",\"sha\":\"36b2c41987f69b05a1d6cf3a0a495bbcc405354e\",\"sha_unknown\":false,\"staged\":[\".harness/records/retro/2026-09-08/001-plan005-delivery.md\",\".harness/records/retro/2026-09-08/002-plan005-review-intake.md\"],\"verify\":\"landed\",\"buffer\":null,\"detail\":\"committed 36b2c41987f6 and VERIFIED: a refs/notes/ai entry landed, so the collector recorded this commit's authorship.\"},\"evidence\":[{\"label\":\"commit 36b2c41987f6\"}]}\n",
+  "stderr": ""
+}

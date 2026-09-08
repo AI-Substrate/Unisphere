@@ -38,7 +38,7 @@
           "id": "tk-0002",
           "title": "Shared bounded JSONL session loader",
           "phase": "ph-a437",
-          "state": "unchecked",
+          "state": "checked",
           "success": "Implement FileSessionLoader listing+read_batch entirelywithin explicitinputscope; real temporaryfile boundarytests and loaderdocs.",
           "notes": "Guide tk-0002; dependencies tk-0001; exact fences/contracts in ../../impl-guide.dd.json. PM validation; allfuture assertions unproven.",
           "satisfies": [
@@ -46,13 +46,14 @@
             "../../../plan.dd.json#acceptance_criteria/ac-0003"
           ],
           "satisfies_toward": [],
-          "done": "tasks.dd.json#done_when/tk-0002"
+          "done": "tasks.dd.json#done_when/tk-0002",
+          "receipt": "../../execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "tk-0003",
           "title": "Pure Claude Code adapter",
           "phase": "ph-a437",
-          "state": "unchecked",
+          "state": "checked",
           "success": "Implement ClaudeCodeAdapter mapping onlyprovided NativeRecord slices into standard-first TelemetryRecord/profilediagnostics; no I/O; fixture andcommonconformance tests; exactmapping docs.",
           "notes": "Guide tk-0003; dependencies tk-0001; exact fences/contracts in ../../impl-guide.dd.json. PM validation; allfuture assertions unproven.",
           "satisfies": [
@@ -63,26 +64,28 @@
           "satisfies_toward": [
             "../../../plan.dd.json#acceptance_criteria/ac-0001"
           ],
-          "done": "tasks.dd.json#done_when/tk-0003"
+          "done": "tasks.dd.json#done_when/tk-0003",
+          "receipt": "../../execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "tk-0004",
           "title": "OTLP JSONL output writer",
           "phase": "ph-a437",
-          "state": "unchecked",
+          "state": "checked",
           "success": "Implement OtlpJsonlWriter over supplied dynWrite; correctLogsData/AnyValue serialization, safeerror+shortwrite/flush tests andprofiledocs.",
           "notes": "Guide tk-0004; dependencies tk-0001; exact fences/contracts in ../../impl-guide.dd.json. PM validation; allfuture assertions unproven.",
           "satisfies": [
             "../../../plan.dd.json#acceptance_criteria/ac-0006"
           ],
           "satisfies_toward": [],
-          "done": "tasks.dd.json#done_when/tk-0004"
+          "done": "tasks.dd.json#done_when/tk-0004",
+          "receipt": "../../execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "tk-0005",
           "title": "PM SDK CLI integration and extension proof",
           "phase": "ph-a437",
-          "state": "unchecked",
+          "state": "checked",
           "success": "Compose actualloader/pureClaude/writer viaSDK, CLIcommands/appregistry, dependency andexternalsmokeproof, authoringrecipe, docs/CI/harness updates and finalindependentreview.",
           "notes": "Guide tk-0005; dependencies tk-0001,tk-0002,tk-0003,tk-0004; exact fences/contracts in ../../impl-guide.dd.json. PM validation; allfuture assertions unproven.",
           "satisfies": [
@@ -101,7 +104,8 @@
             "../../../plan.dd.json#acceptance_criteria/ac-0006",
             "../../../plan.dd.json#acceptance_criteria/ac-0008"
           ],
-          "done": "tasks.dd.json#done_when/tk-0005"
+          "done": "tasks.dd.json#done_when/tk-0005",
+          "receipt": "../../execution-log.dd.json#entries/lg-0007"
         }
       ]
     },
@@ -128,74 +132,85 @@
           {
             "id": "dw-0003",
             "assertion": "Explicit nonrecursive listing and bounded LF batches produce stable provenance, partial-tail/blank progress and safe source-bound cursor behavior.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0002"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0002",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0005"
           },
           {
             "id": "dw-0004",
             "assertion": "Oversize retry with raised limits succeeds without skipped data; bad limits/nonUTF8/sourcechanges fail safely, and nonUnix methods fail before I/O.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0003"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0003",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0005"
           }
         ],
         "tk-0003": [
           {
             "id": "dw-0005",
             "assertion": "Pure mapping is deterministic and maps actual Claude record/message/part/model/native-usage facts without synthetic inference, dedupe or aggregate totals.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0004"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0004",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0005"
           },
           {
             "id": "dw-0006",
             "assertion": "Metadata-only output omits content and unknown payloads, opt-in content preserves structured parts, invalid/unsupported data remains observable without raw diagnostic leaks.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0005"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0005",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0005"
           }
         ],
         "tk-0004": [
           {
             "id": "dw-0007",
             "assertion": "OTLPLogsData JSONL recursively encodes AnyValue and64bit fields against the pinned schema; illegal values fail and empty batches emit nothing.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0006"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0006",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0005"
           },
           {
             "id": "dw-0008",
             "assertion": "A32MiB cap fails before destination writes; short writes/flush failures return typed errors and do not imply checkpoint success.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0007"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0007",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0005"
           }
         ],
         "tk-0005": [
           {
             "id": "dw-0009",
             "assertion": "SDKCollector implements core CollectionApi; fake boundary tests verify checkpoint only after actual output acceptance and preserve all existing configuration behavior.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0007"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0007",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0005"
           },
           {
             "id": "dw-000a",
             "assertion": "Real installedCLI listing/export and externalSDK agree on sanitized multibatch inputs and contentpolicy, report incomplete data and errors without corrupting stdout or overwriting files.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0009"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0009",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0005"
           },
           {
             "id": "dw-000b",
             "assertion": "Second functional adapter example composes through shared contracts/conformance and registration without core or Claude modifications.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-000a"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-000a",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0005"
           },
           {
             "id": "dw-000c",
             "assertion": "Kind-aware dependency and source-purity sensors reject their negative fixtures; full quality, inheritedfoundation and newcollection smoke pass.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-000b"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-000b",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0005"
           },
           {
             "id": "dw-000d",
-            "assertion": "Independent Opus review approves the actual composed behavior/profile and source-purity evidence; factual closeout and archive preserve original experiments and receipts.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-000c"
+            "assertion": "Independent Opus review approves the actual composed behavior/profile and source-purity evidence. Factual closeout and archive preservation remain required at the existing post-flight gate.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-000c",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0007"
           }
         ]
       }

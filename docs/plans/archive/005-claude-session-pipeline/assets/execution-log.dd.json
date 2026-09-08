@@ -1,0 +1,118 @@
+{
+  "dd": {
+    "schema": "builder/execution-log"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Claude pipeline observed evidence",
+        "plan": "../plan.dd.json#meta"
+      }
+    },
+    {
+      "name": "entries",
+      "value": [
+        {
+          "id": "lg-0001",
+          "at": "2026-09-08T01:20:12.854863+00:00",
+          "text": "Approved design r2 at006600d8 (report design-opus-r2.md, canonical review recorded) precedes actual sharedcontract implementation. Actualvd1 cargo test -p unisphere-core -p unisphere-testkit --lib exited0:6core+14testkit, with all3futurepackage directories absent. Scopedclippy --lib --tests -Dwarnings exited0. Evidence baseline-proof.json and exactsharedfiledigestmanifest baseline-source-manifest.json. Thus F13 currentbaseline independence is observed, not a plannedclaim. Functional TextFixtureAdapter and FakeCollector exercise pureadapterconformance and output-error checkpoint behavior. No actualClaude/loader/OTLPimplementation or productAC proof claimed yet.",
+          "links": [
+            "backpressure.dd.json#rows/bp-0001",
+            "backpressure.dd.json#rows/bp-0003"
+          ]
+        },
+        {
+          "id": "lg-0002",
+          "at": "2026-09-08T01:36:42.344200+00:00",
+          "text": "Baseline r1 findings retained; its receipt intake refused missing native_session/PID despite actualnativecanary, no recorded approval invented. CorrectedB1 actualdependencychecker/allowedfixture for core->serde_json/futureapprovedcrates; actualarchitecture exit0 with16edges+5core sourcechecks. Fourchecker tests including negativepurityfixtures pass; vd1 still6+14=20tests; currentfullworkspaceclippy passes. B2 bound split correctly kept at writer(encodedbytes) versus adapter(recordcount); sharedsensitive-marker anddynCollectionApi tests pass. Exactbytes baseline-corrected-manifest.json, actualoutputs baseline-corrected-proof.json. SDK/CLIport preparation exercised28SDK/25CLItests independently; no newloader/Claude/writer package present.",
+          "links": [
+            "backpressure.dd.json#rows/bp-0001",
+            "backpressure.dd.json#rows/bp-0003",
+            "backpressure.dd.json#rows/bp-000b"
+          ]
+        },
+        {
+          "id": "lg-0003",
+          "at": "2026-09-08T02:07:14.008545+00:00",
+          "text": "Allthree fresh nativeAstra/high direct-work packets delivered and accepted by peers under currentruntime (no legacyack/release ceremony). Baseline8files sealed at ac4d28f6 after independently approved resolvedreceipt, all3ready passed. Tested unitdeliveries retained in tested-unit-deliveries.json: loader7b6b2417 reports18passed with filesystem candidate EILSEQ branch explicitly NOTEXERCISED; adapter58cb09ad15passed; writer323877bc9passed and actualencodeexample0. Originaltests failures and repairs preserved. SDK/CLI/proof integration WIP is separatelyprepared, no wholepipelineacceptance yet. Userfidelityclarification requires finalgapmatrix, not extra immediateimplementation or changedcontentpolicy; full-fidelity-requirement.json preserves exactscope.",
+          "links": [
+            "backpressure.dd.json#rows/bp-0002",
+            "backpressure.dd.json#rows/bp-0004",
+            "backpressure.dd.json#rows/bp-0006"
+          ]
+        },
+        {
+          "id": "lg-0004",
+          "at": "2026-09-08T02:26:00.165122+00:00",
+          "text": "Actualfirst-class import succeeded after retaining Buildergenerated work-packet schema; all3tested deliveries integrated. PMcomposed realapp staticregistry with genericSDKCollector and injectedCLIrun_sessions; an app test registers functional TextFixtureAdapter in oneentry without core/Claude changes. Allworkspace tests passed (see composed-tests-initial.json); actualquality6gates allpass; realcollection proof passed externalSDK/installedCLI parity, metadataoptin, hostileenv, partialtail, malformederror and existingoutput protection. Localoperator CLI built and exported3metadata records in3batches endingbyte897 (operator-cli-smoke.json); no lossless/final-session/resumeclaim. Userfidelity request is delivered as docs/fidelity.md matrix and followoncontract discussion; explicitcontentpolicy remainsunchanged. Frozen8files recomputed unchanged. Finalcommittedcandidate verification and independentcompositionreview remain owed.",
+          "links": [
+            "backpressure.dd.json#rows/bp-0007",
+            "backpressure.dd.json#rows/bp-0009",
+            "backpressure.dd.json#rows/bp-000a",
+            "backpressure.dd.json#rows/bp-000b",
+            "backpressure.dd.json#rows/bp-000c"
+          ]
+        },
+        {
+          "id": "lg-0005",
+          "at": "2026-09-08T02:34:24.334254+00:00",
+          "text": "Actual first-class Builder compose --verify succeeded on committed093a89811296efb681386047b1da912348c63f10. Fullreceipt assets/team/composition.dd.json SHA256 fef0a9a5d8be8a2e66f8e749279156dc5a7726ba3dc319bb13d181da0553b6ed records all8guidechecks vd0005/vd0006/vd0007/vd0008/vd0009/vd000a/vd000b/vd000c exit0, including fullquality, actualexternalSDK/installedCLI collection and four-modeboot. Warning-first ownershipadvisories retained, not suppressed or upgraded to runtimeerrors; no fake ack or manual verification waiver. Productscope is explicitUnixClaudeJSONL projection under unchanged contentpolicy, not fullfidelity/persistedresume/finalcompleteness. Independentcompositionreview is currently active and its judgement remains pending.",
+          "links": [
+            "backpressure.dd.json#rows/bp-0001",
+            "backpressure.dd.json#rows/bp-0002",
+            "backpressure.dd.json#rows/bp-0003",
+            "backpressure.dd.json#rows/bp-0004",
+            "backpressure.dd.json#rows/bp-0005",
+            "backpressure.dd.json#rows/bp-0006",
+            "backpressure.dd.json#rows/bp-0007",
+            "backpressure.dd.json#rows/bp-0008",
+            "backpressure.dd.json#rows/bp-0009",
+            "backpressure.dd.json#rows/bp-000a",
+            "backpressure.dd.json#rows/bp-000b",
+            "backpressure.dd.json#rows/bp-000c"
+          ]
+        },
+        {
+          "id": "lg-0006",
+          "at": "2026-09-08T02:59:35.075Z",
+          "text": "Scheduling correction, no requirement removed: dw-000d combined independent phase review with future archival, while the phase departure gate precedes post-flight. Keep independent composition approval in dw-000d; preserve factual closeout/archive/original-experiment retention as the existing Builder post-flight gate obligation and assets/post-flight.md checklist. Product ACs, guide, frozen contracts, candidate and actual proof are unchanged. Archive completion remains unchecked until close returns and strict archived validation passes.",
+          "links": [
+            "../plan.dd.json#phases/ph-a437",
+            "tasks/phase-1/tasks.dd.json#done_when/tk-0005/dw-000d"
+          ]
+        },
+        {
+          "id": "lg-0007",
+          "at": "2026-09-08T03:31:18.381Z",
+          "text": "Original independently approved R2 composition receipt now accepted by actual Builder intake after upstream PR204 closeout-record classification activation. Subject remains093a89811296efb681386047b1da912348c63f10; actual eight-check compose receipt remains fef0a9a5d8be8a2e66f8e749279156dc5a7726ba3dc319bb13d181da0553b6ed. Canonical accepted review is team/review-composition-rv-plan005-composition-opus-r2.dd.json (d3db8ed01868e6c514b114e607d29bfbd34db756931c52db2ec77d8dc2a0f31c). Zero open findings; four accepted advisories retain rationale. No product check/review was repeated. All12 ACs are supported by actual original proof plus this independent judgement. Mandatory retros preserved; actual harvest reads2records/2entries/malformed0. Archival itself remains a post-flight obligation, not an early phase claim.",
+          "links": [
+            "team/composition.dd.json#composition",
+            "team/review-composition-rv-plan005-composition-opus-r2.dd.json#review",
+            "backpressure.dd.json#rows/bp-0001",
+            "backpressure.dd.json#rows/bp-0002",
+            "backpressure.dd.json#rows/bp-0003",
+            "backpressure.dd.json#rows/bp-0004",
+            "backpressure.dd.json#rows/bp-0005",
+            "backpressure.dd.json#rows/bp-0006",
+            "backpressure.dd.json#rows/bp-0007",
+            "backpressure.dd.json#rows/bp-0008",
+            "backpressure.dd.json#rows/bp-0009",
+            "backpressure.dd.json#rows/bp-000a",
+            "backpressure.dd.json#rows/bp-000b",
+            "backpressure.dd.json#rows/bp-000c"
+          ]
+        },
+        {
+          "id": "lg-0008",
+          "at": "2026-09-08T03:50:10.109Z",
+          "text": "Actual Builder close archived the complete Plan005 folder and externally preserved four allocations at /Users/jordanknight/substrate/unisphere/unisphere-plan005-preserved/fa75faee-d644-4835-bd40-3fbf963dd1c9/receipt/preservation.dd.json (d93ed4f94bc05a9074569704bffcd7d2ead6a2474b2cc19df21dbe7ef6609a8f). Archive commit5c64d21b33cd6516f639346ceed6a5e1de6b10f0. Actual archived plan validate --complete exited0 with0errors0warnings0open0contradictions0orphans; assets/archive-completion.json. Original experiments untouched; no retirement, push, PR or main merge. This completes the rescheduled archive conjunct.",
+          "links": [
+            "../plan.dd.json#phases/ph-a437",
+            "tasks/phase-1/tasks.dd.json#done_when/tk-0005/dw-000d"
+          ]
+        }
+      ]
+    }
+  ]
+}

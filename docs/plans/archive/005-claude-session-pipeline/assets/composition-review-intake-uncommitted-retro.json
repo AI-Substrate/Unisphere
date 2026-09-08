@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "harness",
+    "builder",
+    "review",
+    "docs/plans/005-claude-session-pipeline/plan.dd.json",
+    "--receipt",
+    ".harness/temp/plan005-composition-review-r2.dd.json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline",
+  "started": "2026-09-08T03:04:11.235Z",
+  "completed": "2026-09-08T03:04:11.669Z",
+  "exit_code": 1,
+  "stdout": "{\"command\":\"builder review\",\"status\":\"error\",\"timestamp\":\"2026-09-08T03:04:11.665Z\",\"error\":{\"code\":\"E475\",\"message\":\"Uncommitted source would contaminate the artifact proof.\",\"details\":[\".harness/records/retro/2026-09-08/001-plan005-delivery.md\",\".harness/records/retro/2026-09-08/002-plan005-review-intake.md\"]},\"next_action\":\"Commit the declared source changes before verification. Plan receipts may remain uncommitted.\"}\n",
+  "stderr": ""
+}

@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "harness",
+    "commit",
+    "fix(harness): use block-style retro frontmatter\n\nPij-Prime: pij-right-kotallo\nPij-Plan: 005-claude-session-pipeline",
+    "--",
+    ".harness/records/retro/2026-09-08/001-plan005-delivery.md",
+    ".harness/records/retro/2026-09-08/002-plan005-review-intake.md"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline",
+  "started": "2026-09-08T03:29:30.158Z",
+  "completed": "2026-09-08T03:29:32.722Z",
+  "exit_code": 0,
+  "stdout": "{\"command\":\"commit\",\"status\":\"ok\",\"timestamp\":\"2026-09-08T03:29:32.718Z\",\"data\":{\"mode\":\"direct-verified\",\"probe\":\"connected\",\"sha\":\"fe6838fd78dbb38c577fe34e784df476b78ec4f5\",\"sha_unknown\":false,\"staged\":[\".harness/records/retro/2026-09-08/001-plan005-delivery.md\",\".harness/records/retro/2026-09-08/002-plan005-review-intake.md\"],\"verify\":\"landed\",\"buffer\":null,\"detail\":\"committed fe6838fd78db and VERIFIED: a refs/notes/ai entry landed, so the collector recorded this commit's authorship.\"},\"evidence\":[{\"label\":\"commit fe6838fd78db\"}]}\n",
+  "stderr": ""
+}

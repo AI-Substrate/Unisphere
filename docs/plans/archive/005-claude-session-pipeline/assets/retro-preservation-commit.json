@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "harness",
+    "commit",
+    "chore(harness): retain Plan005 observed delivery friction\n\nPij-Prime: pij-right-kotallo\nPij-Plan: 005-claude-session-pipeline",
+    "--",
+    ".harness/records/retro/2026-09-08/001-plan005-delivery.md",
+    ".harness/records/retro/2026-09-08/002-plan005-review-intake.md"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline",
+  "started": "2026-09-08T03:04:52.181Z",
+  "completed": "2026-09-08T03:04:54.749Z",
+  "exit_code": 0,
+  "stdout": "{\"command\":\"commit\",\"status\":\"ok\",\"timestamp\":\"2026-09-08T03:04:54.746Z\",\"data\":{\"mode\":\"direct-verified\",\"probe\":\"connected\",\"sha\":\"98bb1cdd34e7b65233c7db5cf755f7ec420c832d\",\"sha_unknown\":false,\"staged\":[\".harness/records/retro/2026-09-08/001-plan005-delivery.md\",\".harness/records/retro/2026-09-08/002-plan005-review-intake.md\"],\"verify\":\"landed\",\"buffer\":null,\"detail\":\"committed 98bb1cdd34e7 and VERIFIED: a refs/notes/ai entry landed, so the collector recorded this commit's authorship.\"},\"evidence\":[{\"label\":\"commit 98bb1cdd34e7\"}]}\n",
+  "stderr": ""
+}

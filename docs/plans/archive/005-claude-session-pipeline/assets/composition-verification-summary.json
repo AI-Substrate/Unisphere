@@ -1,0 +1,147 @@
+{
+  "subject_sha": "093a89811296efb681386047b1da912348c63f10",
+  "receipt": "team/composition.dd.json",
+  "receipt_sha256": "fef0a9a5d8be8a2e66f8e749279156dc5a7726ba3dc319bb13d181da0553b6ed",
+  "checks": [
+    {
+      "id": "vd-0005",
+      "command": "cargo",
+      "args": [
+        "test",
+        "--workspace",
+        "--all-targets"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "vd-0006",
+      "command": "cargo",
+      "args": [
+        "run",
+        "-p",
+        "unisphere-testkit",
+        "--bin",
+        "unisphere-arch-check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "vd-0007",
+      "command": "cargo",
+      "args": [
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "vd-0008",
+      "command": "cargo",
+      "args": [
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "vd-0009",
+      "command": "cargo",
+      "args": [
+        "test",
+        "--workspace",
+        "--doc"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "vd-000a",
+      "command": "cargo",
+      "args": [
+        "run",
+        "-p",
+        "unisphere-testkit",
+        "--bin",
+        "unisphere-proof",
+        "--",
+        "collection"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "vd-000b",
+      "command": "harness",
+      "args": [
+        "checks",
+        "--json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "id": "vd-000c",
+      "command": "harness",
+      "args": [
+        "boot",
+        "--json"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "warnings": [
+    {
+      "file": ".dd/schemas/builder/work-packet/schema.json",
+      "owning_unit": "unmapped",
+      "stage": "import"
+    },
+    {
+      "file": "crates/adapter-claude/src/lib.rs",
+      "owning_unit": "tk-0003",
+      "stage": "verify"
+    },
+    {
+      "file": "crates/adapter-claude/tests/mapping.rs",
+      "owning_unit": "tk-0003",
+      "stage": "verify"
+    },
+    {
+      "file": "crates/loader-jsonl/src/lib.rs",
+      "owning_unit": "tk-0002",
+      "stage": "verify"
+    },
+    {
+      "file": "crates/loader-jsonl/tests/filesystem.rs",
+      "owning_unit": "tk-0002",
+      "stage": "verify"
+    },
+    {
+      "file": "crates/output-otlp/src/lib.rs",
+      "owning_unit": "tk-0004",
+      "stage": "verify"
+    },
+    {
+      "file": "crates/output-otlp/tests/writer.rs",
+      "owning_unit": "tk-0004",
+      "stage": "verify"
+    },
+    {
+      "file": "docs/cli.md",
+      "owning_unit": "unmapped",
+      "stage": "verify"
+    },
+    {
+      "file": "docs/fidelity.md",
+      "owning_unit": "unmapped",
+      "stage": "verify"
+    },
+    {
+      "file": "docs/sdk.md",
+      "owning_unit": "unmapped",
+      "stage": "verify"
+    }
+  ],
+  "fidelity": "Agreed explicit Claudeprojection verified; no lossless/completeness/resume promise."
+}

@@ -8,7 +8,7 @@
       "value": {
         "title": "Claude pipeline selected proof — not execution evidence",
         "plan": "../plan.dd.json#meta",
-        "certainty": "Confident",
+        "certainty": "Proven",
         "basis_sha": "0c28b557a2def3dc075c70403e6768959057c007c428dcb9a4ac23683ac7f830"
       }
     },
@@ -22,8 +22,9 @@
           "mode": "BUILD",
           "tier": "computational",
           "proof": "BUILD→RUN: pure adapter conformance plus source scanner with explicit denied constructs/negative fixtures (guide vd0006); scanner false-negative limits named, independent source judgement complements it.",
-          "state": "unchecked",
-          "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof."
+          "state": "checked",
+          "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof.",
+          "receipt": "execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "bp-0002",
@@ -32,8 +33,9 @@
           "mode": "BUILD",
           "tier": "computational",
           "proof": "Real temporary file-loader tests: explicit root listing, deterministic order, capacity and symlink/non-file boundaries.",
-          "state": "unchecked",
-          "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof."
+          "state": "checked",
+          "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof.",
+          "receipt": "execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "bp-0003",
@@ -42,8 +44,9 @@
           "mode": "BUILD",
           "tier": "computational",
           "proof": "Loader cursor/partial-tail/blank/bounds/stale identity regressions with temporary files; no automatic unsafe reset.",
-          "state": "unchecked",
-          "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof."
+          "state": "checked",
+          "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof.",
+          "receipt": "execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "bp-0004",
@@ -52,8 +55,9 @@
           "mode": "BUILD",
           "tier": "human-judgement",
           "proof": "Claude sanitized fixture mappings plus repeated message-ID, mixed parts, model/usage cases.",
-          "state": "unchecked",
-          "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof."
+          "state": "checked",
+          "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof.",
+          "receipt": "execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "bp-0005",
@@ -62,8 +66,9 @@
           "mode": "BUILD",
           "tier": "computational",
           "proof": "Malformed/unknown native data and safe diagnostics contract cases; explicit fidelity counters and no raw error leakage.",
-          "state": "unchecked",
-          "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof."
+          "state": "checked",
+          "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof.",
+          "receipt": "execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "bp-0006",
@@ -72,8 +77,9 @@
           "mode": "BUILD",
           "tier": "computational",
           "proof": "OTLPJSONL writer conformance cases against documented LogsData/AnyValue encoding, signed64/u64timestamp/structured values and injected writer failures.",
-          "state": "unchecked",
-          "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof."
+          "state": "checked",
+          "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof.",
+          "receipt": "execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "bp-0007",
@@ -82,8 +88,9 @@
           "mode": "BUILD",
           "tier": "computational",
           "proof": "SDK collect_batch fake loader/adapter/output tests verify checkpoint return only after output accepted; no false exactly-once claim.",
-          "state": "unchecked",
-          "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof."
+          "state": "checked",
+          "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof.",
+          "receipt": "execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "bp-0008",
@@ -92,8 +99,9 @@
           "mode": "BUILD",
           "tier": "computational",
           "proof": "Metadata-only and opt-in content fixture tests, include unknownparts/rawvalues only by documented policy; no attachment reads.",
-          "state": "unchecked",
-          "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof."
+          "state": "checked",
+          "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof.",
+          "receipt": "execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "bp-0009",
@@ -102,8 +110,9 @@
           "mode": "BUILD",
           "tier": "computational",
           "proof": "Actual installedCLI list/export stdout/file/error scenarios in sealedtemporary environments, existing configcommands unchanged.",
-          "state": "unchecked",
-          "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof."
+          "state": "checked",
+          "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof.",
+          "receipt": "execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "bp-000a",
@@ -112,8 +121,9 @@
           "mode": "BUILD",
           "tier": "computational",
           "proof": "Functional second synthetic adapter example and common conformance suite proving registration/injection without core changes.",
-          "state": "unchecked",
-          "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof."
+          "state": "checked",
+          "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof.",
+          "receipt": "execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "bp-000b",
@@ -122,8 +132,9 @@
           "mode": "EXTEND",
           "tier": "human-judgement",
           "proof": "Existing architecture checker and harnesschecks/boot extend to newcrates/pureadapterI/O boundaries; existing configurationproof continues.",
-          "state": "unchecked",
-          "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof."
+          "state": "checked",
+          "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof.",
+          "receipt": "execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "bp-000c",
@@ -132,8 +143,9 @@
           "mode": "BUILD",
           "tier": "computational",
           "proof": "ExternalSDK plus installedCLI fixture parity and bounded multiline batch/export smoke; independent source/profile judgement.",
-          "state": "unchecked",
-          "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof."
+          "state": "checked",
+          "probe": "Current main provides configfoundation only; archived workshop and scratch experiments are research, not newproductionproof.",
+          "receipt": "execution-log.dd.json#entries/lg-0005"
         }
       ]
     },

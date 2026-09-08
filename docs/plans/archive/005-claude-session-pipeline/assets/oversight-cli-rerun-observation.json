@@ -1,0 +1,21 @@
+{
+  "reported_by": "pij-female-varl",
+  "reported_at": "2026-09-08T02:38:07.266082+00:00",
+  "input": "one synthetic 2-record/419-byte file",
+  "invocations": 2,
+  "max_records": 1,
+  "reported_exit_codes": [
+    0,
+    0
+  ],
+  "reported_each_result": {
+    "records": 2,
+    "batches": 2,
+    "offset": 419,
+    "diagnostics": 2,
+    "incomplete_tail": false
+  },
+  "reported_telemetry_bytes_identical": true,
+  "meaning": "Current CLI re-exports from start; not persisted resume or idempotence.",
+  "scope": "Main-observed optional behavior; PM did not rerun it; no exact-source attestation or private data claimed."
+}

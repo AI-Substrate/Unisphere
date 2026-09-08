@@ -1,0 +1,62 @@
+crates/adapter-codex/Cargo.toml
+  h_9e71e8b09f7cf2 1-15
+crates/adapter-codex/fixtures/rollout.jsonl
+  h_9e71e8b09f7cf2 1-15
+crates/adapter-codex/src/lib.rs
+  h_9e71e8b09f7cf2 1-524
+crates/adapter-codex/tests/mapping.rs
+  h_9e71e8b09f7cf2 1-240
+crates/adapter-copilot-cli/Cargo.toml
+  h_9e71e8b09f7cf2 1-15
+crates/adapter-copilot-cli/src/lib.rs
+  h_9e71e8b09f7cf2 1-645
+crates/adapter-copilot-cli/tests/fixtures/events.jsonl
+  h_9e71e8b09f7cf2 1-15
+crates/adapter-copilot-cli/tests/mapping.rs
+  h_9e71e8b09f7cf2 1-208
+crates/adapter-cursor/Cargo.toml
+  h_9e71e8b09f7cf2 1-14
+crates/adapter-cursor/fixtures/transcript.jsonl
+  h_9e71e8b09f7cf2 1-7
+crates/adapter-cursor/src/lib.rs
+  h_9e71e8b09f7cf2 1-248
+crates/adapter-cursor/tests/transcript.rs
+  h_9e71e8b09f7cf2 1-193
+crates/adapter-omp/Cargo.toml
+  h_9e71e8b09f7cf2 1-15
+crates/adapter-omp/src/lib.rs
+  h_9e71e8b09f7cf2 1-640
+crates/adapter-omp/tests/fixtures/native.jsonl
+  h_9e71e8b09f7cf2 1-9
+crates/adapter-omp/tests/mapping.rs
+  h_9e71e8b09f7cf2 1-237
+crates/adapter-pi/Cargo.toml
+  h_9e71e8b09f7cf2 1-15
+crates/adapter-pi/src/lib.rs
+  h_9e71e8b09f7cf2 1-505
+crates/adapter-pi/tests/fixtures/v3-tree.jsonl
+  h_9e71e8b09f7cf2 1-18
+crates/adapter-pi/tests/mapping.rs
+  h_9e71e8b09f7cf2 1-259
+docs/codex-adapter.md
+  h_9e71e8b09f7cf2 1-150
+docs/copilot-cli-adapter.md
+  h_9e71e8b09f7cf2 1-154
+docs/cursor-adapter.md
+  h_9e71e8b09f7cf2 1-122
+docs/oh-my-pi-adapter.md
+  h_9e71e8b09f7cf2 1-156
+docs/pi-adapter.md
+  h_9e71e8b09f7cf2 1-145
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "91913cf6a50bb17ead300446adfed93e1712639f",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

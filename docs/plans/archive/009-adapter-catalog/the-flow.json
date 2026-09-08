@@ -325,6 +325,18 @@
         "from": "review-1",
         "to": "post-flight"
       }
+    },
+    {
+      "id": "UPD-010",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-08T06:24:25.221Z",
+      "details": {
+        "node": "post-flight",
+        "fields": [
+          "comments"
+        ]
+      }
     }
   ],
   "nodes": [
@@ -419,7 +431,7 @@
         "review-1"
       ],
       "dd_link": {
-        "address": "docs/plans/009-adapter-catalog/assets/tasks/phase-1/tasks.dd.json#tasks",
+        "address": "docs/plans/archive/009-adapter-catalog/assets/tasks/phase-1/tasks.dd.json#tasks",
         "basis_sha": "f1e283a76e7492c1c468391d517840218a9dfc7e107d34a7da0ddbd02757801f",
         "reading": {
           "status": "complete",
@@ -486,7 +498,7 @@
       ],
       "zone": "postflight",
       "dd_link": {
-        "address": "docs/plans/009-adapter-catalog/plan.dd.json",
+        "address": "docs/plans/archive/009-adapter-catalog/plan.dd.json",
         "check": "plan-validate"
       },
       "instructions": [
@@ -495,7 +507,16 @@
         "Whole-plan completion gates this node's EXIT after closeout evidence: harness plan validate <archived plan> --complete must be green. Never pre-check closeout to leave an earlier review.",
         "If the gate refuses and departing anyway is the HUMAN's decision, they pass --force — it records a defended override. An agent may not force a dd gate on its own judgment.",
         "Tidy is separate: harness builder tidy <allocation> --preservation <receipt> re-verifies ownership, runtime release and surviving bytes/refs; external ownership or idle-only evidence cannot authorize removal."
-      ]
+      ],
+      "comments": [
+        {
+          "at": "2026-09-08T06:24:25.221Z",
+          "text": "/Users/jordanknight/substrate/unisphere/unisphere-plan009-preserved/cc7339c5-4bf1-4d56-96fe-b22f948d6242/receipt/preservation.dd.json",
+          "source": "agent",
+          "kind": "builder-preservation"
+        }
+      ],
+      "modified_at": "2026-09-08T06:24:25.221Z"
     },
     {
       "id": "ship",
@@ -670,5 +691,5 @@
       "ran_at": "2026-09-08T06:23:37.725Z"
     }
   ],
-  "plan_dir": "docs/plans/009-adapter-catalog"
+  "plan_dir": "docs/plans/archive/009-adapter-catalog"
 }

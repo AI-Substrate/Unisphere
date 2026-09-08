@@ -1,0 +1,100 @@
+{
+  "recorded_at": "2026-09-08T06:24:25.097Z",
+  "composed_sha": "17829db8a427d1a6e69681044d58d7cb7c837263",
+  "composition": {
+    "path": "docs/plans/009-adapter-catalog/assets/team/composition.dd.json",
+    "sha256": "f2b7f95f7c3acdbd02e89363c6a2e4ccc9488fb78b040774065aaa42b842245f"
+  },
+  "review": {
+    "path": "docs/plans/009-adapter-catalog/assets/team/review-composition-rv-plan009-composition-opus-r1.dd.json",
+    "sha256": "5838798498613f8103d83532b0d58c7a546a7aabbfff288c0464b731895d94c1"
+  },
+  "flow": "/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog/docs/plans/archive/009-adapter-catalog/the-flow.json",
+  "archive": "/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog/docs/plans/archive/009-adapter-catalog",
+  "survivor": "/Users/jordanknight/substrate/unisphere/unisphere-plan009-preserved/cc7339c5-4bf1-4d56-96fe-b22f948d6242",
+  "shipping_authorized": false,
+  "chores": [
+    {
+      "id": "backpressure",
+      "status": "done",
+      "comments": [
+        {
+          "at": "2026-09-08T04:35:36.568Z",
+          "text": "eng-harness-flow pre-coding followed inline per repo guidance: six selected proof rows, named real-binary adapter_catalog target and production provenance gate. Current basis_sha256:b5cfc5fb5d3d590589607010f963b522acd34b2c77154a08aabbebc0d24d68d8 time:2026-09-08T04:35:36.439Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ]
+    },
+    {
+      "id": "boot-1",
+      "status": "done",
+      "comments": [
+        {
+          "at": "2026-09-08T04:35:36.841Z",
+          "text": "eng-harness-flow pre-flight followed inline: inherited product boot proof remains Plan005 candidate093a8981; local sealed core baseline executed in this worktree, and the new catalog actual CLI smoke is recorded separately. No full pre-change boot rerun in this worktree is claimed. time:2026-09-08T04:35:36.709Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ]
+    },
+    {
+      "id": "observe-1",
+      "status": "done",
+      "comments": [
+        {
+          "at": "2026-09-08T06:23:37.056Z",
+          "text": "Actual observation captured and retained in assets/observation-custody.json, committed .harness/records/retro/2026-09-08/003-plan009-catalog.md; only own bucket cleared. time:2026-09-08T06:23:36.928Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ]
+    },
+    {
+      "id": "retro-1",
+      "status": "done",
+      "comments": [
+        {
+          "at": "2026-09-08T06:23:37.321Z",
+          "text": "eng-harness-flow --hook post-coding followed inline: actual own-bucket drain retained/committed at2c128db5 then cleared; malformed-free block YAML. Product proof not rerun. time:2026-09-08T06:23:37.196Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ]
+    },
+    {
+      "id": "retro-harvest",
+      "status": "done",
+      "comments": [
+        {
+          "at": "2026-09-08T06:23:37.586Z",
+          "text": "eng-harness-flow --hook post-flight followed inline: actual harness retro insights result retained in assets/retro-harvest.json. Naming zero-coder receipt initialization as upstream encoding opportunity; no remote sync under command-local HARNESS_NO_TELEMETRY_AUTOSYNC=1. Local telemetry E100/ref_unavailable retained, not global absence. time:2026-09-08T06:23:37.461Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "path": "docs/plans/009-adapter-catalog/assets/observation-custody.json",
+      "category": "observation"
+    },
+    {
+      "path": "docs/plans/009-adapter-catalog/assets/retro-harvest.json",
+      "category": "observation"
+    },
+    {
+      "path": "docs/plans/009-adapter-catalog/assets/closeout-telemetry.json",
+      "category": "telemetry"
+    },
+    {
+      "path": ".harness/records/retro/2026-09-08/003-plan009-catalog.md",
+      "category": "observation"
+    },
+    {
+      "path": ".harness/temp/plan009-composition-review-r1.dd.json",
+      "category": "report"
+    }
+  ]
+}

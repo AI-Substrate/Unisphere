@@ -240,8 +240,11 @@ fn run() -> Result<(), String> {
     let edges = check(&value)?;
     println!("architecture: {edges} declared normal/dev/build edges accepted");
     if real_workspace {
-        let count = check_sources(std::path::Path::new("crates/core/src"))?
-            + check_sources(std::path::Path::new("crates/adapter-claude/src"))?;
+        let core_count = check_sources(std::path::Path::new("crates/core/src"))?;
+        if core_count == 0 {
+            return Err("core source scan found no Rust files; run from the repository root".into());
+        }
+        let count = core_count + check_sources(std::path::Path::new("crates/adapter-claude/src"))?;
         println!(
             "purity: {count} core/adapter production source files checked (lexical sensor; independent review still required)"
         );

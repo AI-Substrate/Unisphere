@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "-p",
+    "unisphere-loader-jsonl",
+    "--",
+    "--nocapture"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-loader",
+  "exit_code": 0,
+  "stdout": "\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 18 tests\ntest unix::fifo_is_rejected_without_waiting_for_a_writer ... ok\ntest unix::relative_inputs_and_invalid_limits_fail_before_opening ... ok\ntest unix::non_utf8_roots_and_inputs_are_rejected_before_io ... ok\ntest unix::non_utf8_candidates_are_rejected_when_filesystem_permits_them ... ok\ntest unix::physical_blank_lines_consume_record_budget_and_resume_progress ... ok\ntest unix::oversize_after_prior_records_returns_no_partial_batch_and_retries_all_records ... ok\ntest unix::lf_and_cr_count_toward_record_limit_and_oversize_retry_loses_nothing ... ok\ntest unix::batch_capacity_retains_the_next_record_including_blank_byte_cost ... ok\ntest unix::empty_leaf_is_valid_but_zero_listing_budget_is_not ... ok\ntest unix::cursor_requires_exact_path_identity_and_lf_boundary ... ok\ntest unix::listing_requires_an_explicit_directory_not_a_file_or_symlink ... ok\ntest unix::split_utf8_tail_waits_for_lf_and_then_emits_from_its_original_offset ... ok\ntest unix::oversize_blank_and_unterminated_lines_are_not_silently_skipped ... ok\ntest unix::replacement_and_truncation_reject_old_cursor_instead_of_restarting ... ok\ntest unix::rejects_final_symlinks_without_opening_target_or_sidecars ... ok\ntest unix::empty_eof_and_exact_capacity_eof_do_not_request_a_busy_loop ... ok\ntest unix::preserves_native_bytes_and_shared_fixture_offsets_without_parsing ... ok\ntest unix::lists_only_immediate_regular_jsonl_files_in_sorted_order ... ok\n\ntest result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+  "stderr": "   Compiling unisphere-loader-jsonl v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-plan005-loader/crates/loader-jsonl)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.60s\n     Running unittests src/lib.rs (target/debug/deps/unisphere_loader_jsonl-fbb363bc5ab4d820)\n     Running tests/filesystem.rs (target/debug/deps/filesystem-2753fa7c83de9c0a)\nNOT EXERCISED: non-UTF-8 candidate rejection; filesystem refused fixture pathname: Illegal byte sequence (os error 92)\n   Doc-tests unisphere_loader_jsonl\n"
+}

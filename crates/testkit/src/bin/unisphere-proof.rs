@@ -10,6 +10,9 @@ use std::{
 };
 use unisphere_testkit::{fixtures, sealed_command};
 
+#[path = "proof/collection.rs"]
+mod collection;
+
 type ProofResult<T> = Result<T, String>;
 
 fn capture(command: &mut Command) -> ProofResult<Output> {
@@ -553,7 +556,7 @@ fn run() -> ProofResult<()> {
     let mut args = env::args_os().skip(1);
     let mode = args
         .next()
-        .ok_or("usage: unisphere-proof composition|sdk-consumer|installed-cli [--repo ROOT]")?;
+        .ok_or("usage: unisphere-proof composition|sdk-consumer|installed-cli|collection [--repo ROOT]")?;
     let repo = match args.next().as_deref() {
         None => env::current_dir().map_err(|e| e.to_string())?,
         Some(flag) if flag == "--repo" => {
@@ -575,6 +578,7 @@ fn run() -> ProofResult<()> {
         Some("sdk-consumer") => consumer(&repo, scratch.path())
             .and_then(|binary| hostile_consumer(&binary, &scratch.path().join("runtime"))),
         Some("installed-cli") => installed_cli(&repo, scratch.path()),
+        Some("collection") => collection::run(&repo, scratch.path()),
         _ => Err("unknown proof command".into()),
     };
     result?;

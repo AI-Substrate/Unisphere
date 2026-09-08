@@ -1,0 +1,233 @@
+{
+  "argv": [
+    "harness",
+    "builder",
+    "dispatch",
+    "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline/docs/plans/005-claude-session-pipeline/plan.dd.json",
+    "--unit",
+    "tk-0004",
+    "--workspace",
+    "/Users/jordanknight/substrate/unisphere/unisphere-plan005-output",
+    "--parent",
+    "pij-right-kotallo",
+    "--kind",
+    "clone",
+    "--harness",
+    "omp",
+    "--model",
+    "github-copilot/gpt-6-astra",
+    "--effort",
+    "high"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline",
+  "exit_code": 0,
+  "stdout": "{\"command\":\"builder dispatch\",\"status\":\"ok\",\"timestamp\":\"2026-09-08T01:48:55.210Z\",\"data\":{\"dispatch\":{\"ref\":{\"path\":\"docs/plans/005-claude-session-pipeline/assets/team/dispatch-tk-0004-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86.dd.json\",\"sha256\":\"6ffce219a61ee0967edf6b98f68a02064b2eb0c886a38d1a70f2f1cac9c96af7\"},\"value\":{\"record_type\":\"dispatch\",\"id\":\"dispatch-tk-0004-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86\",\"recorded_at\":\"2026-09-08T01:48:55.179Z\",\"unit_id\":\"tk-0004\",\"packet\":{\"path\":\"docs/plans/005-claude-session-pipeline/assets/team/packet-tk-0004-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86.dd.json\",\"sha256\":\"35118101b4fb3b727524f062752b70560964b4228218ac1c1eda89fc3e846637\"},\"baseline\":{\"path\":\"docs/plans/005-claude-session-pipeline/assets/team/baseline-v1.dd.json\",\"sha256\":\"0f19f48ee816c0c53c88b356672c545be9fc5b7129c9de4d90ac7bbc085287f0\"},\"allocation\":{\"path\":\"/Users/jordanknight/substrate/unisphere/unishpere-main/.git/builder/allocations/allocation-al-006-04067aa2-cf43-4883-b5e4-729d5e6dd0a6.dd.json\",\"sha256\":\"6942ed4d8fd157b2dca0cb06c917ea9ce8d720ee65dc2ec601f58b28cea97bf6\"},\"requested\":{\"role\":\"coder\",\"harness\":\"omp\",\"model\":\"github-copilot/gpt-6-astra\",\"effort\":\"high\",\"source\":{\"harness\":\"override\",\"model\":\"override\",\"effort\":\"override\"}},\"observed\":{\"peer_id\":\"pij-bad-butterfly\",\"root\":\"/Users/jordanknight/substrate/unisphere/unisphere-plan005-output\",\"ready\":true,\"harness\":\"omp\",\"model\":\"github-copilot/gpt-6-astra\",\"effort\":\"high\",\"native_session\":\"01a07eb4-355e-73ec-8d8e-cf61620c9bbd\",\"pid\":69959,\"evidence\":[\"pij-rs state: {\\\"id\\\":\\\"pij-bad-butterfly\\\",\\\"liveness\\\":\\\"active\\\",\\\"cwd\\\":\\\"/Users/jordanknight/substrate/unisphere/unisphere-plan005-output\\\",\\\"harness\\\":\\\"omp\\\",\\\"boundModel\\\":\\\"github-copilot/gpt-6-astra\\\",\\\"effort\\\":\\\"high\\\",\\\"pid\\\":69959,\\\"procStart\\\":20260908114852,\\\"parent\\\":\\\"pij-right-kotallo\\\"}\",\"pij-rs list: {\\\"id\\\":\\\"pij-bad-butterfly\\\",\\\"session\\\":\\\"01a07eb4-355e-73ec-8d8e-cf61620c9bbd\\\",\\\"folder\\\":\\\"/Users/jordanknight/substrate/unisphere/unisphere-plan005-output\\\",\\\"proc\\\":{\\\"pid\\\":69959,\\\"proc_start\\\":20260908114852},\\\"harness\\\":\\\"omp\\\",\\\"model\\\":\\\"github-copilot/gpt-6-astra\\\",\\\"effort\\\":\\\"high\\\"}\",\"plan root HEAD at dispatch: ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86 (sealed source ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86)\"],\"gaps\":[\"Provider-served inference identity is unverified; these observations bind launch/session configuration only.\",\"Native public state does not expose process argv or environment.\"]},\"seed_files\":[{\"path\":\"docs/plans/005-claude-session-pipeline/plan.dd.json\",\"sha256\":\"0c28b557a2def3dc075c70403e6768959057c007c428dcb9a4ac23683ac7f830\"},{\"path\":\"docs/plans/005-claude-session-pipeline/plan.dd.md\",\"sha256\":\"619e0865869dd23b6ba4e4ac1c47f5500c4dd8c680fd9790c9a66c1b66a18895\"},{\"path\":\"docs/plans/005-claude-session-pipeline/assets/impl-guide.dd.json\",\"sha256\":\"5520d59344dc2f664af3121df3184c344f659a4c1acceca9432ce06abe242777\"},{\"path\":\"docs/plans/005-claude-session-pipeline/assets/impl-guide.dd.md\",\"sha256\":\"272629f486ddf84eb54b0ed8aac2a6b5b3a2c6c1bebf513ff0ef6d68a31f31b0\"},{\"path\":\"docs/plans/005-claude-session-pipeline/assets/team/baseline-v1.dd.json\",\"sha256\":\"0f19f48ee816c0c53c88b356672c545be9fc5b7129c9de4d90ac7bbc085287f0\"},{\"path\":\"docs/plans/005-claude-session-pipeline/assets/team/baseline-v1.dd.md\",\"sha256\":\"d0bebe679d03a9be8a103f2f4d7cd1e7299467e00b9ad19413291a9cddd497c5\"},{\"path\":\"docs/plans/005-claude-session-pipeline/assets/team/review-decomposition-rv-plan005-baseline-opus-r2-accepted.dd.json\",\"sha256\":\"bc076b5cc26c87cf3b893032be2403b310d53e6d03b79a15c9736da56f20e11b\"},{\"path\":\"docs/plans/005-claude-session-pipeline/assets/team/review-decomposition-rv-plan005-baseline-opus-r2-accepted.dd.md\",\"sha256\":\"73206c77e0fbeb9b9d4a3a221873943eca4193135eeb6cc59c5ec6a28bd149d6\"},{\"path\":\"docs/plans/005-claude-session-pipeline/assets/team/packet-tk-0004-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86.dd.json\",\"sha256\":\"35118101b4fb3b727524f062752b70560964b4228218ac1c1eda89fc3e846637\"},{\"path\":\"docs/plans/005-claude-session-pipeline/assets/team/packet-tk-0004-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86.dd.md\",\"sha256\":\"199f4bade9624fc36f71141936ac717fae2fd98ff63514e40de8fdf06d3c9e8d\"}],\"delivery\":{\"message_id\":\"f93809e8-975e-4eb2-ab8c-59ddff0668e4\",\"outcome\":\"queued\",\"recorded_at\":\"2026-09-08T01:48:55.208Z\"}}},\"packet\":{\"ref\":{\"path\":\"docs/plans/005-claude-session-pipeline/assets/team/packet-tk-0004-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86.dd.json\",\"sha256\":\"35118101b4fb3b727524f062752b70560964b4228218ac1c1eda89fc3e846637\"},\"value\":{\"record_type\":\"packet\",\"id\":\"packet-tk-0004-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86\",\"recorded_at\":\"2026-09-08T01:48:55.079Z\",\"nonce\":\"904c90f8-45f1-4654-aef2-c3c568f39c48\",\"unit\":{\"id\":\"tk-0004\",\"name\":\"OTLP JSONL output writer\",\"role\":\"coder\",\"responsibility\":\"Implement OtlpJsonlWriter over supplied dynWrite; correctLogsData/AnyValue serialization, safeerror+shortwrite/flush tests andprofiledocs.\",\"paths\":[\"crates/output-otlp/**\",\"docs/telemetry-profile.md\"],\"reads\":[{\"owner\":\"tk-0001\",\"paths\":[\"Cargo.toml\",\"crates/core/Cargo.toml\",\"crates/core/src/lib.rs\",\"crates/core/src/collection.rs\",\"crates/testkit/src/lib.rs\",\"crates/testkit/src/collection.rs\",\"crates/testkit/fixtures/collection/claude-basic.jsonl\",\"crates/testkit/fixtures/collection/claude-parts.jsonl\"]}],\"interface\":\"RecordWriter implements onecanonical LogsDataJSONL encoding; doesnotreadsource/openfiles/fetchnetwork.\",\"depends_on\":[\"tk-0001\"],\"wave\":1,\"acceptance\":[\"../plan.dd.json#acceptance_criteria/ac-0006\"],\"proof\":[\"impl-guide.dd.json#checks/vd-0004\"],\"notes\":\"Not plaintextJSON-in-string, no nonstandardtop-levelOTLPkeys; rejectunsupported64bitJSONints instead of weakeningencoding.\"},\"plan\":{\"path\":\"docs/plans/005-claude-session-pipeline/plan.dd.json\",\"sha256\":\"0c28b557a2def3dc075c70403e6768959057c007c428dcb9a4ac23683ac7f830\"},\"guide\":{\"path\":\"docs/plans/005-claude-session-pipeline/assets/impl-guide.dd.json\",\"sha256\":\"5520d59344dc2f664af3121df3184c344f659a4c1acceca9432ce06abe242777\"},\"baseline\":{\"path\":\"docs/plans/005-claude-session-pipeline/assets/team/baseline-v1.dd.json\",\"sha256\":\"0f19f48ee816c0c53c88b356672c545be9fc5b7129c9de4d90ac7bbc085287f0\"},\"source_sha\":\"ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86\",\"allocation\":{\"path\":\"/Users/jordanknight/substrate/unisphere/unishpere-main/.git/builder/allocations/allocation-al-006-04067aa2-cf43-4883-b5e4-729d5e6dd0a6.dd.json\",\"sha256\":\"6942ed4d8fd157b2dca0cb06c917ea9ce8d720ee65dc2ec601f58b28cea97bf6\"},\"workspace\":\"/Users/jordanknight/substrate/unisphere/unisphere-plan005-output\",\"parent\":\"pij-right-kotallo\",\"requested\":{\"role\":\"coder\",\"harness\":\"omp\",\"model\":\"github-copilot/gpt-6-astra\",\"effort\":\"high\",\"source\":{\"harness\":\"override\",\"model\":\"override\",\"effort\":\"override\"}},\"forbidden\":[\".the-flow-state.json\",\"the-flow.json\",\"the-flow.md\",\"docs/plans/005-claude-session-pipeline/plan.dd.json\",\"docs/plans/005-claude-session-pipeline/assets/impl-guide.dd.json\",\"docs/plans/005-claude-session-pipeline/assets/team\",\".harness/government/\",\"All source paths outside unit.paths; sibling implementations; global settings and deployed skills.\",\"Pushes, merges, canonical lifecycle mutations and nested peers without PM approval.\"],\"instructions\":[\"You own crates/output-otlp/**, docs/telemetry-profile.md.\",\"You may read Cargo.toml, crates/core/Cargo.toml, crates/core/src/lib.rs, crates/core/src/collection.rs, crates/testkit/src/lib.rs, crates/testkit/src/collection.rs, crates/testkit/fixtures/collection/claude-basic.jsonl, crates/testkit/fixtures/collection/claude-parts.jsonl (owner tk-0001); immutable plan docs/plans/005-claude-session-pipeline/plan.dd.json and guide docs/plans/005-claude-session-pipeline/assets/impl-guide.dd.json.\",\"Your job: Implement OtlpJsonlWriter over supplied dynWrite; correctLogsData/AnyValue serialization, safeerror+shortwrite/flush tests andprofiledocs.\",\"Done means The output writer emits valid UTF-8 OTLP LogsData JSONL with correct structured AnyValue/64-bit timestamp encoding and a documented standard-first semantic profile; native-only semantics use clearly named extensions, not invented standard attributes. (../plan.dd.json#acceptance_criteria/ac-0006). Interface: RecordWriter implements onecanonical LogsDataJSONL encoding; doesnotreadsource/openfiles/fetchnetwork.. Proof: impl-guide.dd.json#checks/vd-0004.\",\"Work packet: docs/plans/005-claude-session-pipeline/assets/team/packet-tk-0004-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86.dd.json. Use the measured SHA-256 in the dispatch message for the optional advisory builder self-check.\",\"Expected checkout /Users/jordanknight/substrate/unisphere/unisphere-plan005-output; source commit ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86. A self-check warning names a mismatch to inspect; it is not permission or a second work grant.\",\"Receiving this packet means do the unit within its map. Consume frozen reads rather than sibling implementation code. Return scoped commits and proof to pij-right-kotallo.\"]}}}}\n",
+  "stderr": "",
+  "data": {
+    "command": "builder dispatch",
+    "status": "ok",
+    "timestamp": "2026-09-08T01:48:55.210Z",
+    "data": {
+      "dispatch": {
+        "ref": {
+          "path": "docs/plans/005-claude-session-pipeline/assets/team/dispatch-tk-0004-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86.dd.json",
+          "sha256": "6ffce219a61ee0967edf6b98f68a02064b2eb0c886a38d1a70f2f1cac9c96af7"
+        },
+        "value": {
+          "record_type": "dispatch",
+          "id": "dispatch-tk-0004-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86",
+          "recorded_at": "2026-09-08T01:48:55.179Z",
+          "unit_id": "tk-0004",
+          "packet": {
+            "path": "docs/plans/005-claude-session-pipeline/assets/team/packet-tk-0004-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86.dd.json",
+            "sha256": "35118101b4fb3b727524f062752b70560964b4228218ac1c1eda89fc3e846637"
+          },
+          "baseline": {
+            "path": "docs/plans/005-claude-session-pipeline/assets/team/baseline-v1.dd.json",
+            "sha256": "0f19f48ee816c0c53c88b356672c545be9fc5b7129c9de4d90ac7bbc085287f0"
+          },
+          "allocation": {
+            "path": "/Users/jordanknight/substrate/unisphere/unishpere-main/.git/builder/allocations/allocation-al-006-04067aa2-cf43-4883-b5e4-729d5e6dd0a6.dd.json",
+            "sha256": "6942ed4d8fd157b2dca0cb06c917ea9ce8d720ee65dc2ec601f58b28cea97bf6"
+          },
+          "requested": {
+            "role": "coder",
+            "harness": "omp",
+            "model": "github-copilot/gpt-6-astra",
+            "effort": "high",
+            "source": {
+              "harness": "override",
+              "model": "override",
+              "effort": "override"
+            }
+          },
+          "observed": {
+            "peer_id": "pij-bad-butterfly",
+            "root": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-output",
+            "ready": true,
+            "harness": "omp",
+            "model": "github-copilot/gpt-6-astra",
+            "effort": "high",
+            "native_session": "01a07eb4-355e-73ec-8d8e-cf61620c9bbd",
+            "pid": 69959,
+            "evidence": [
+              "pij-rs state: {\"id\":\"pij-bad-butterfly\",\"liveness\":\"active\",\"cwd\":\"/Users/jordanknight/substrate/unisphere/unisphere-plan005-output\",\"harness\":\"omp\",\"boundModel\":\"github-copilot/gpt-6-astra\",\"effort\":\"high\",\"pid\":69959,\"procStart\":20260908114852,\"parent\":\"pij-right-kotallo\"}",
+              "pij-rs list: {\"id\":\"pij-bad-butterfly\",\"session\":\"01a07eb4-355e-73ec-8d8e-cf61620c9bbd\",\"folder\":\"/Users/jordanknight/substrate/unisphere/unisphere-plan005-output\",\"proc\":{\"pid\":69959,\"proc_start\":20260908114852},\"harness\":\"omp\",\"model\":\"github-copilot/gpt-6-astra\",\"effort\":\"high\"}",
+              "plan root HEAD at dispatch: ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86 (sealed source ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86)"
+            ],
+            "gaps": [
+              "Provider-served inference identity is unverified; these observations bind launch/session configuration only.",
+              "Native public state does not expose process argv or environment."
+            ]
+          },
+          "seed_files": [
+            {
+              "path": "docs/plans/005-claude-session-pipeline/plan.dd.json",
+              "sha256": "0c28b557a2def3dc075c70403e6768959057c007c428dcb9a4ac23683ac7f830"
+            },
+            {
+              "path": "docs/plans/005-claude-session-pipeline/plan.dd.md",
+              "sha256": "619e0865869dd23b6ba4e4ac1c47f5500c4dd8c680fd9790c9a66c1b66a18895"
+            },
+            {
+              "path": "docs/plans/005-claude-session-pipeline/assets/impl-guide.dd.json",
+              "sha256": "5520d59344dc2f664af3121df3184c344f659a4c1acceca9432ce06abe242777"
+            },
+            {
+              "path": "docs/plans/005-claude-session-pipeline/assets/impl-guide.dd.md",
+              "sha256": "272629f486ddf84eb54b0ed8aac2a6b5b3a2c6c1bebf513ff0ef6d68a31f31b0"
+            },
+            {
+              "path": "docs/plans/005-claude-session-pipeline/assets/team/baseline-v1.dd.json",
+              "sha256": "0f19f48ee816c0c53c88b356672c545be9fc5b7129c9de4d90ac7bbc085287f0"
+            },
+            {
+              "path": "docs/plans/005-claude-session-pipeline/assets/team/baseline-v1.dd.md",
+              "sha256": "d0bebe679d03a9be8a103f2f4d7cd1e7299467e00b9ad19413291a9cddd497c5"
+            },
+            {
+              "path": "docs/plans/005-claude-session-pipeline/assets/team/review-decomposition-rv-plan005-baseline-opus-r2-accepted.dd.json",
+              "sha256": "bc076b5cc26c87cf3b893032be2403b310d53e6d03b79a15c9736da56f20e11b"
+            },
+            {
+              "path": "docs/plans/005-claude-session-pipeline/assets/team/review-decomposition-rv-plan005-baseline-opus-r2-accepted.dd.md",
+              "sha256": "73206c77e0fbeb9b9d4a3a221873943eca4193135eeb6cc59c5ec6a28bd149d6"
+            },
+            {
+              "path": "docs/plans/005-claude-session-pipeline/assets/team/packet-tk-0004-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86.dd.json",
+              "sha256": "35118101b4fb3b727524f062752b70560964b4228218ac1c1eda89fc3e846637"
+            },
+            {
+              "path": "docs/plans/005-claude-session-pipeline/assets/team/packet-tk-0004-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86.dd.md",
+              "sha256": "199f4bade9624fc36f71141936ac717fae2fd98ff63514e40de8fdf06d3c9e8d"
+            }
+          ],
+          "delivery": {
+            "message_id": "f93809e8-975e-4eb2-ab8c-59ddff0668e4",
+            "outcome": "queued",
+            "recorded_at": "2026-09-08T01:48:55.208Z"
+          }
+        }
+      },
+      "packet": {
+        "ref": {
+          "path": "docs/plans/005-claude-session-pipeline/assets/team/packet-tk-0004-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86.dd.json",
+          "sha256": "35118101b4fb3b727524f062752b70560964b4228218ac1c1eda89fc3e846637"
+        },
+        "value": {
+          "record_type": "packet",
+          "id": "packet-tk-0004-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86",
+          "recorded_at": "2026-09-08T01:48:55.079Z",
+          "nonce": "904c90f8-45f1-4654-aef2-c3c568f39c48",
+          "unit": {
+            "id": "tk-0004",
+            "name": "OTLP JSONL output writer",
+            "role": "coder",
+            "responsibility": "Implement OtlpJsonlWriter over supplied dynWrite; correctLogsData/AnyValue serialization, safeerror+shortwrite/flush tests andprofiledocs.",
+            "paths": [
+              "crates/output-otlp/**",
+              "docs/telemetry-profile.md"
+            ],
+            "reads": [
+              {
+                "owner": "tk-0001",
+                "paths": [
+                  "Cargo.toml",
+                  "crates/core/Cargo.toml",
+                  "crates/core/src/lib.rs",
+                  "crates/core/src/collection.rs",
+                  "crates/testkit/src/lib.rs",
+                  "crates/testkit/src/collection.rs",
+                  "crates/testkit/fixtures/collection/claude-basic.jsonl",
+                  "crates/testkit/fixtures/collection/claude-parts.jsonl"
+                ]
+              }
+            ],
+            "interface": "RecordWriter implements onecanonical LogsDataJSONL encoding; doesnotreadsource/openfiles/fetchnetwork.",
+            "depends_on": [
+              "tk-0001"
+            ],
+            "wave": 1,
+            "acceptance": [
+              "../plan.dd.json#acceptance_criteria/ac-0006"
+            ],
+            "proof": [
+              "impl-guide.dd.json#checks/vd-0004"
+            ],
+            "notes": "Not plaintextJSON-in-string, no nonstandardtop-levelOTLPkeys; rejectunsupported64bitJSONints instead of weakeningencoding."
+          },
+          "plan": {
+            "path": "docs/plans/005-claude-session-pipeline/plan.dd.json",
+            "sha256": "0c28b557a2def3dc075c70403e6768959057c007c428dcb9a4ac23683ac7f830"
+          },
+          "guide": {
+            "path": "docs/plans/005-claude-session-pipeline/assets/impl-guide.dd.json",
+            "sha256": "5520d59344dc2f664af3121df3184c344f659a4c1acceca9432ce06abe242777"
+          },
+          "baseline": {
+            "path": "docs/plans/005-claude-session-pipeline/assets/team/baseline-v1.dd.json",
+            "sha256": "0f19f48ee816c0c53c88b356672c545be9fc5b7129c9de4d90ac7bbc085287f0"
+          },
+          "source_sha": "ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86",
+          "allocation": {
+            "path": "/Users/jordanknight/substrate/unisphere/unishpere-main/.git/builder/allocations/allocation-al-006-04067aa2-cf43-4883-b5e4-729d5e6dd0a6.dd.json",
+            "sha256": "6942ed4d8fd157b2dca0cb06c917ea9ce8d720ee65dc2ec601f58b28cea97bf6"
+          },
+          "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-output",
+          "parent": "pij-right-kotallo",
+          "requested": {
+            "role": "coder",
+            "harness": "omp",
+            "model": "github-copilot/gpt-6-astra",
+            "effort": "high",
+            "source": {
+              "harness": "override",
+              "model": "override",
+              "effort": "override"
+            }
+          },
+          "forbidden": [
+            ".the-flow-state.json",
+            "the-flow.json",
+            "the-flow.md",
+            "docs/plans/005-claude-session-pipeline/plan.dd.json",
+            "docs/plans/005-claude-session-pipeline/assets/impl-guide.dd.json",
+            "docs/plans/005-claude-session-pipeline/assets/team",
+            ".harness/government/",
+            "All source paths outside unit.paths; sibling implementations; global settings and deployed skills.",
+            "Pushes, merges, canonical lifecycle mutations and nested peers without PM approval."
+          ],
+          "instructions": [
+            "You own crates/output-otlp/**, docs/telemetry-profile.md.",
+            "You may read Cargo.toml, crates/core/Cargo.toml, crates/core/src/lib.rs, crates/core/src/collection.rs, crates/testkit/src/lib.rs, crates/testkit/src/collection.rs, crates/testkit/fixtures/collection/claude-basic.jsonl, crates/testkit/fixtures/collection/claude-parts.jsonl (owner tk-0001); immutable plan docs/plans/005-claude-session-pipeline/plan.dd.json and guide docs/plans/005-claude-session-pipeline/assets/impl-guide.dd.json.",
+            "Your job: Implement OtlpJsonlWriter over supplied dynWrite; correctLogsData/AnyValue serialization, safeerror+shortwrite/flush tests andprofiledocs.",
+            "Done means The output writer emits valid UTF-8 OTLP LogsData JSONL with correct structured AnyValue/64-bit timestamp encoding and a documented standard-first semantic profile; native-only semantics use clearly named extensions, not invented standard attributes. (../plan.dd.json#acceptance_criteria/ac-0006). Interface: RecordWriter implements onecanonical LogsDataJSONL encoding; doesnotreadsource/openfiles/fetchnetwork.. Proof: impl-guide.dd.json#checks/vd-0004.",
+            "Work packet: docs/plans/005-claude-session-pipeline/assets/team/packet-tk-0004-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86.dd.json. Use the measured SHA-256 in the dispatch message for the optional advisory builder self-check.",
+            "Expected checkout /Users/jordanknight/substrate/unisphere/unisphere-plan005-output; source commit ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86. A self-check warning names a mismatch to inspect; it is not permission or a second work grant.",
+            "Receiving this packet means do the unit within its map. Consume frozen reads rather than sibling implementation code. Return scoped commits and proof to pij-right-kotallo."
+          ]
+        }
+      }
+    }
+  }
+}

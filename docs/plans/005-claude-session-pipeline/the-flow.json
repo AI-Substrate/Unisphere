@@ -3,7 +3,7 @@
   "kind": "flight-plan",
   "slug": "claude-session-pipeline",
   "nav": {
-    "now": "impl-guide",
+    "now": "phase-1",
     "next": null,
     "intent": "Jordan approved pure Claude adapter with noI/O, sharedfakeable SessionLoader list_sessions/read_batch and standardOTLPJSONLoutput; freshworktree/newagents, PMplan/guide then independentreview andimplementation, archivebeforeauthorizedlanding."
   },
@@ -155,6 +155,77 @@
           "comments"
         ]
       }
+    },
+    {
+      "id": "UPD-006",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-08T01:42:59.119Z",
+      "details": {
+        "node": "impl-guide",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-005",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-08T01:42:59.255Z",
+      "details": {
+        "node": "impl-guide",
+        "from": "in_progress",
+        "to": "done"
+      }
+    },
+    {
+      "id": "CUR-003",
+      "kind": "cursor-moved",
+      "origin": "engine",
+      "fired_at": "2026-09-08T01:42:59.874Z",
+      "details": {
+        "from": "impl-guide",
+        "to": "phase-1"
+      }
+    },
+    {
+      "id": "UPD-007",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-08T01:43:00.196Z",
+      "details": {
+        "node": "boot-1",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-006",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-08T01:43:00.339Z",
+      "details": {
+        "node": "boot-1",
+        "from": "known",
+        "to": "done",
+        "chore": {
+          "kind": "command",
+          "importance": "recommended"
+        }
+      }
+    },
+    {
+      "id": "STA-007",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-08T01:43:00.487Z",
+      "details": {
+        "node": "phase-1",
+        "from": "known",
+        "to": "in_progress"
+      }
     }
   ],
   "nodes": [
@@ -214,7 +285,7 @@
       "id": "impl-guide",
       "type": "impl-guide",
       "label": "Implementation guide",
-      "status": "in_progress",
+      "status": "done",
       "zone": "preflight",
       "command": "/builder 4 guide",
       "next": [
@@ -227,22 +298,29 @@
         "Exit after guide/decomposition approval, not after the future code baseline. The PM implements, commits and seals the shared contract baseline during implementation before any dispatch.",
         "Use the canonical assets/backpressure.dd.json recipe: actual RUN/EXTEND/BUILD/ABSENT selection, AC and assertion pressure links, observed proven_by links; certainty Partial|Confident|Proven."
       ],
-      "modified_at": "2026-09-08T01:03:16.137Z",
+      "modified_at": "2026-09-08T01:42:59.255Z",
       "comments": [
         {
           "at": "2026-09-08T01:03:16.137Z",
           "text": "Independent r1 changes-requested at21a9f987 preserved canonically. Guidev2 corrections006600d8 address F1–F12 with corecollectionport, recoverablelimits, Unixscope, closedprofile/pins/outputcap/purityinstrument; F13 accepted with actualbaselinecompile obligation. Current plan/guide structuralDD0issues, no productcode/proof yet. Focused independent amended-contract reread underway.",
           "source": "agent",
           "kind": "validation"
+        },
+        {
+          "at": "2026-09-08T01:42:59.119Z",
+          "text": "Independent design r2 approved006600d8 with0openfindings and currentplan/guide digests; sourceboundbaselineconformance is implementation substep, not another productdesign gate. Realsharedbaseline20tests and actualarchitecturegreen recorded; no concrete3lane implementationproof yet.",
+          "source": "agent",
+          "kind": "validation"
         }
-      ]
+      ],
+      "ran_at": "2026-09-08T01:42:59.255Z"
     },
     {
       "id": "phase-1",
       "type": "phase",
       "phase": 1,
       "label": "P1: Explicit Claude loading, mapping and OTLP export",
-      "status": "known",
+      "status": "in_progress",
       "command": "/builder 6 implement",
       "next": [
         "review-1"
@@ -263,7 +341,7 @@
         "Match model tier to work: chores -> cheap subagent, analysis -> Opus-class, judgement -> lead; context may override (§ Shared conventions).",
         "Environment friction is work, not an apology: fix small things, otherwise `harness observe` it — is this environment working for us? (builder SKILL.md invariant #14)"
       ],
-      "modified_at": "2026-09-08T00:49:14.390Z"
+      "modified_at": "2026-09-08T01:43:00.487Z"
     },
     {
       "id": "review-1",
@@ -356,7 +434,7 @@
       "id": "boot-1",
       "type": "harness-boot",
       "label": "Boot check",
-      "status": "known",
+      "status": "done",
       "branch_of": "phase-1",
       "next": [
         "phase-1"
@@ -372,7 +450,17 @@
         "Spend tokens where they can change the outcome; use `--quiet` for routine flow mutations.",
         "Match model tier to work: chores -> cheap subagent, analysis -> Opus-class, judgement -> lead; context may override (§ Shared conventions).",
         "On done, receipt first, status second: harness flow comment --path <flow-path> --node boot-1 --kind validation --source agent --text \"verdict:<…> time:<…>\" (router missing / envelope noop/UNAVAILABLE → text \"decision:unavailable reason:<…> time:<…>\" — a completed attempt, not a skip) THEN harness flow status --path <flow-path> --node boot-1 --to done. Mandatory unless the human declines — a decline is: harness flow comment --path <flow-path> --node boot-1 --kind decision --source user --text \"<their verbatim words>\" THEN harness flow status --path <flow-path> --node boot-1 --to skipped."
-      ]
+      ],
+      "comments": [
+        {
+          "at": "2026-09-08T01:43:00.196Z",
+          "text": "eng-harness-flow pre-flight followed inline: actual inheritedboot at00:39:28Z exited0/readytrue configurationfoundationonly; newbaseline20tests/actualarchitecture checks recorded separately, no newcollectionboot falsely claimed. Current product proof will be extended duringimplementation.",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "modified_at": "2026-09-08T01:43:00.339Z",
+      "ran_at": "2026-09-08T01:43:00.339Z"
     },
     {
       "id": "observe-1",

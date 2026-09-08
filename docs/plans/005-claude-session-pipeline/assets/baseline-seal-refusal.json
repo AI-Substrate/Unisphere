@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "harness",
+    "builder",
+    "contracts",
+    "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline/docs/plans/005-claude-session-pipeline/plan.dd.json",
+    "--seal",
+    "--review",
+    "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline/docs/plans/005-claude-session-pipeline/assets/team/review-decomposition-rv-plan005-baseline-opus-r2.dd.json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline",
+  "exit_code": 1,
+  "stdout": "{\"command\":\"builder contracts\",\"status\":\"error\",\"timestamp\":\"2026-09-08T01:43:53.300Z\",\"error\":{\"code\":\"E475\",\"message\":\"Independent decomposition review is missing, red, unbound or stale.\"},\"next_action\":\"Record an approved independent review of this exact commit and plan/guide digests, with observed runtime and resolved findings.\"}\n",
+  "stderr": "",
+  "data": {
+    "command": "builder contracts",
+    "status": "error",
+    "timestamp": "2026-09-08T01:43:53.300Z",
+    "error": {
+      "code": "E475",
+      "message": "Independent decomposition review is missing, red, unbound or stale."
+    },
+    "next_action": "Record an approved independent review of this exact commit and plan/guide digests, with observed runtime and resolved findings."
+  }
+}

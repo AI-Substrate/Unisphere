@@ -1,0 +1,81 @@
+{
+  "argv": [
+    "cargo",
+    "run",
+    "-p",
+    "unisphere-output-otlp",
+    "--example",
+    "encode"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-output",
+  "exit_code": 0,
+  "stdout": "{\"resourceLogs\":[{\"scopeLogs\":[{\"scope\":{\"name\":\"unisphere\",\"version\":\"0.1.0\"},\"logRecords\":[{\"eventName\":\"unisphere.example\",\"timeUnixNano\":\"1700000000123456789\",\"attributes\":[{\"key\":\"example.count\",\"value\":{\"intValue\":\"9007199254740993\"}}],\"body\":{\"kvlistValue\":{\"values\":[{\"key\":\"parts\",\"value\":{\"arrayValue\":{\"values\":[{\"kvlistValue\":{\"values\":[{\"key\":\"content\",\"value\":{\"stringValue\":\"hello\\n\u4e16\u754c\"}},{\"key\":\"type\",\"value\":{\"stringValue\":\"text\"}}]}}]}}},{\"key\":\"role\",\"value\":{\"stringValue\":\"user\"}}]}}}]}]}]}\n",
+  "stderr": "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.40s\n     Running `target/debug/examples/encode`\n",
+  "data": {
+    "resourceLogs": [
+      {
+        "scopeLogs": [
+          {
+            "scope": {
+              "name": "unisphere",
+              "version": "0.1.0"
+            },
+            "logRecords": [
+              {
+                "eventName": "unisphere.example",
+                "timeUnixNano": "1700000000123456789",
+                "attributes": [
+                  {
+                    "key": "example.count",
+                    "value": {
+                      "intValue": "9007199254740993"
+                    }
+                  }
+                ],
+                "body": {
+                  "kvlistValue": {
+                    "values": [
+                      {
+                        "key": "parts",
+                        "value": {
+                          "arrayValue": {
+                            "values": [
+                              {
+                                "kvlistValue": {
+                                  "values": [
+                                    {
+                                      "key": "content",
+                                      "value": {
+                                        "stringValue": "hello\n\u4e16\u754c"
+                                      }
+                                    },
+                                    {
+                                      "key": "type",
+                                      "value": {
+                                        "stringValue": "text"
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      {
+                        "key": "role",
+                        "value": {
+                          "stringValue": "user"
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

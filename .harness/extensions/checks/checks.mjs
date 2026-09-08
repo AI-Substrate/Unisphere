@@ -101,5 +101,5 @@ export async function runChecks(ctx, locate = resolveProgram) {
       });
     }
   }
-  return ctx.ok({ scope: 'configuration-sdk-cli-foundation', toolchain, provenance_gaps: Object.values(toolchain).filter(tool => tool.warning).map(tool => tool.warning), gates: evidence });
+  return ctx.ok({ scope: 'configuration-and-claude-jsonl', toolchain, provenance_gaps: Object.values(toolchain).filter(tool => tool.warning).map(tool => tool.warning), gates: evidence });
 }

@@ -90,7 +90,7 @@ fn zero_limits_fail_before_file_creation_or_collector_calls() {
         &mut Vec::new(),
         &mut Vec::new(),
     );
-    assert_eq!(exit, 1);
+    assert_eq!(exit, 2);
     assert!(!temporary.path().join("new.jsonl").exists());
     assert!(collector.calls().is_empty());
 }

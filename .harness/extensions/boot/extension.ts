@@ -6,7 +6,7 @@ export default defineExtension({
   summary: 'Report Unisphere readiness through its product quality gate.',
   verbs: {
     'boot': {
-      summary: 'Run quality gates and real SDK/CLI foundation smoke without starting services.',
+      summary: 'Run quality, configuration and explicit Claude collection proofs without starting services.',
       run: runBoot,
     },
   },

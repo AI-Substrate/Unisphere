@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "-p",
+    "unisphere-output-otlp"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-output",
+  "exit_code": 0,
+  "stdout": "\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 9 tests\ntest empty_batches_never_write_or_flush ... ok\ntest write_all_retries_interruptions_and_short_writes_before_flushing ... ok\ntest failed_or_zero_writes_report_safe_errors_without_flushing ... ok\ntest invalid_late_values_reject_entire_batch_before_destination_access ... ok\ntest flush_failure_reports_failure_despite_complete_written_bytes ... ok\ntest preserves_record_order_batch_framing_and_absent_vs_empty_values ... ok\ntest encodes_recursive_any_values_and_only_legal_otlp_fields ... ok\ntest output_budget_counts_json_escape_expansion_not_input_length ... ok\ntest encoded_limit_includes_newline_and_rejects_before_destination_access ... ok\n\ntest result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.40s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+  "stderr": "   Compiling unisphere-output-otlp v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-plan005-output/crates/output-otlp)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.64s\n     Running unittests src/lib.rs (target/debug/deps/unisphere_output_otlp-f08478c999d57f70)\n     Running tests/writer.rs (target/debug/deps/writer-0a8627ecf0e68eb1)\n   Doc-tests unisphere_output_otlp\n"
+}

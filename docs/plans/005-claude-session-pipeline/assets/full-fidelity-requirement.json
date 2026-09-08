@@ -1,0 +1,19 @@
+{
+  "recorded_at": "2026-09-08T02:04:45.590510+00:00",
+  "relayed_by": "pij-female-varl",
+  "operator_requirement": "i do want full fidelity of the telemetry... cursor and maybe others are delayed.",
+  "effect": "Finish the agreed Plan005 implementation and report full-fidelity meaning and gaps at delivery; do not claim the current source-derived projection is lossless or silently add raw-archive/revision scope.",
+  "clarification": "Jordan: we should report on what full fidelity means and what the gaps are once the work is done. Existing explicit-content policy remains; this is not an immediate decision or implementation gate.",
+  "requirements": [
+    "Preserve or explicitly account for native fields, unsupported records/parts and external references",
+    "EOF/snapshot is not final; delayed arrival is expected",
+    "Separate native event time, observation/arrival time and revisions",
+    "Reconcile late inserts and in-place changes without double counting",
+    "Explicit provisional/final/completeness-unknown status, never infer completeness from empty read"
+  ],
+  "current_code_basis": {
+    "loader": "7b6b2417b2714c9365441de7302d4f2e24691fb4",
+    "adapter": "58cb09add80c91d077e901c55391be3691aa9c23",
+    "output": "323877bcc240d7515a9a1866f4a54a97e2c9bed8"
+  }
+}

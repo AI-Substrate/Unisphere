@@ -31,6 +31,16 @@
             "backpressure.dd.json#rows/bp-0003",
             "backpressure.dd.json#rows/bp-000b"
           ]
+        },
+        {
+          "id": "lg-0003",
+          "at": "2026-09-08T02:07:14.008545+00:00",
+          "text": "Allthree fresh nativeAstra/high direct-work packets delivered and accepted by peers under currentruntime (no legacyack/release ceremony). Baseline8files sealed at ac4d28f6 after independently approved resolvedreceipt, all3ready passed. Tested unitdeliveries retained in tested-unit-deliveries.json: loader7b6b2417 reports18passed with filesystem candidate EILSEQ branch explicitly NOTEXERCISED; adapter58cb09ad15passed; writer323877bc9passed and actualencodeexample0. Originaltests failures and repairs preserved. SDK/CLI/proof integration WIP is separatelyprepared, no wholepipelineacceptance yet. Userfidelityclarification requires finalgapmatrix, not extra immediateimplementation or changedcontentpolicy; full-fidelity-requirement.json preserves exactscope.",
+          "links": [
+            "backpressure.dd.json#rows/bp-0002",
+            "backpressure.dd.json#rows/bp-0004",
+            "backpressure.dd.json#rows/bp-0006"
+          ]
         }
       ]
     }

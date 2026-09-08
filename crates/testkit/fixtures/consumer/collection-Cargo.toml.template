@@ -1,0 +1,13 @@
+[package]
+name = "unisphere-collection-consumer"
+version = "0.0.0"
+edition = "2024"
+
+[workspace]
+
+[dependencies]
+unisphere-sdk = { path = @SDK_PATH@ }
+unisphere-loader-jsonl = { path = @LOADER_PATH@ }
+unisphere-adapter-claude = { path = @ADAPTER_PATH@ }
+unisphere-output-otlp = { path = @OUTPUT_PATH@ }
+serde_json = "1"

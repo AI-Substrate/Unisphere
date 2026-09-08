@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "-p",
+    "unisphere-cli",
+    "--lib",
+    "--tests"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline",
+  "exit_code": 0,
+  "stdout": "\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 18 tests\ntest defaults_call_only_the_injected_inspector_and_render_its_report ... ok\ntest config_paths_are_resolved_lexically_without_discovery_or_canonicalization ... ok\ntest global_modes_work_before_between_and_after_subcommands ... ok\ntest failure_output_errors_override_argument_exit_and_tolerate_broken_stderr ... ok\ntest a_relative_context_cannot_silently_create_a_relative_file_request ... ok\ntest conflicting_modes_always_fail_in_json_regardless_of_order_or_terminal ... ok\ntest non_utf8_file_paths_are_preserved_but_non_utf8_root_values_are_rejected_safely ... ok\ntest output_escapes_control_characters_without_changing_semantic_data ... ok\ntest blank_root_is_configuration_input_not_a_parser_diagnostic ... ok\ntest repeated_roots_and_explicit_clear_have_distinct_requests ... ok\ntest mode_looking_values_and_end_of_options_do_not_select_a_mode ... ok\ntest request_values_never_leak_into_failure_diagnostics ... ok\ntest failures_preserve_core_semantics_and_structural_location ... ok\ntest version_uses_explicit_context_and_selected_mode_without_inspection ... ok\ntest output_modes_override_terminal_status_for_success_and_failure ... ok\ntest invalid_invocations_are_safe_typed_failures_without_port_calls ... ok\ntest short_writes_are_completed_and_write_or_flush_failures_exit_one_safely ... ok\ntest help_at_every_command_level_honors_output_mode_without_inspection ... ok\n\ntest result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 7 tests\ntest invalid_invocation_does_not_echo_sensitive_arguments ... ok\ntest empty_listing_says_nonrecursive_and_names_leaf_directory_remedy ... ok\ntest rejected_destination_does_not_report_success ... ok\ntest loader_failure_is_safe_and_not_a_telemetry_record ... ok\ntest export_keeps_diagnostics_off_telemetry_stdout_and_passes_explicit_policy ... ok\ntest zero_limits_fail_before_file_creation_or_collector_calls ... ok\ntest output_file_is_never_overwritten ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s\n\n",
+  "stderr": "   Compiling unisphere-cli v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline/crates/cli)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.76s\n     Running unittests src/lib.rs (target/debug/deps/unisphere_cli-f766d10df4331fdd)\n     Running tests/frontend.rs (target/debug/deps/frontend-25959b5ccd02f8fe)\n     Running tests/sessions.rs (target/debug/deps/sessions-c40e67a67172f696)\n"
+}

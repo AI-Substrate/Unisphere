@@ -22,11 +22,12 @@ export async function runBoot(ctx) {
     return ctx.degraded({ ready: false, checks: envelope }, 'Resolve the non-ok quality gate before running foundation smoke.');
   }
   const proofs = [];
-  for (const name of ['composition', 'sdk-consumer', 'installed-cli']) {
+  const cargo = envelope.data?.toolchain?.cargo?.provenance?.invoked ?? 'cargo';
+  for (const name of ['composition', 'sdk-consumer', 'installed-cli', 'collection']) {
     const args = ['run', '--locked', '-p', 'unisphere-testkit', '--bin', 'unisphere-proof', '--', name];
     try {
-      const result = await ctx.exec('cargo', args, { timeoutMs: 300_000 });
-      proofs.push({ name, command: 'cargo', args, ...result });
+      const result = await ctx.exec(cargo, args, { timeoutMs: name === 'collection' ? 600_000 : 300_000 });
+      proofs.push({ name, command: cargo, args, ...result });
       if (!result.ok) return ctx.error('E_FOUNDATION_SMOKE', `${name} failed (exit ${result.code})`, {
         details: { checks: envelope, proofs }, next_action: `Run cargo ${args.join(' ')}, repair the failure, then rerun harness boot --json.`,
       });
@@ -36,6 +37,6 @@ export async function runBoot(ctx) {
       });
     }
   }
-  return ctx.ok({ ready: true, scope: 'configuration-sdk-cli-foundation', checks: envelope, proofs,
-    limitations: ['No native telemetry reader or collection readiness.', 'No real terminal detection proof.', 'No executed network-denial test; independent core/SDK source review is additionally required.'] });
+  return ctx.ok({ ready: true, scope: 'configuration-and-claude-jsonl', checks: envelope, proofs,
+    limitations: ['Explicit Unix JSONL loading and source-derived Claude records only; no universal session reconstruction or private-store discovery.', 'Metadata-only output is not anonymity: source paths and observed identities remain metadata.', 'No executed network-denial test; independent core/adapter source review is additionally required.'] });
 }

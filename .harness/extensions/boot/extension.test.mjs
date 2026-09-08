@@ -45,7 +45,7 @@ test('failed product checks preserve exit/stdout/stderr and never start smoke', 
 });
 
 test('each required smoke failure prevents readiness and preserves failure evidence', async () => {
-  for (let failed = 0; failed < 3; failed += 1) {
+  for (let failed = 0; failed < 4; failed += 1) {
     let calls = 0;
     const verdict = await runBoot(context(async () => {
       const index = calls++;
@@ -62,10 +62,9 @@ test('only complete quality and assembled proofs establish foundation readiness'
   const calls = [];
   const verdict = await runBoot(context(async (command, args) => { calls.push([command, args]); return good; }));
   assert.equal(verdict.data.ready, true);
-  assert.equal(verdict.data.scope, 'configuration-sdk-cli-foundation');
-  assert.equal(calls.length, 4);
-  assert.deepEqual(calls.slice(1).map(([, args]) => args.at(-1)), ['composition', 'sdk-consumer', 'installed-cli']);
-  assert.match(verdict.data.limitations.join(' '), /No native telemetry/);
+  assert.equal(verdict.data.scope, 'configuration-and-claude-jsonl');
+  assert.equal(calls.length, 5);
+  assert.deepEqual(calls.slice(1).map(([, args]) => args.at(-1)), ['composition', 'sdk-consumer', 'installed-cli', 'collection']);
 });
 
 test('a real harness child failure is not laundered into readiness', () => {

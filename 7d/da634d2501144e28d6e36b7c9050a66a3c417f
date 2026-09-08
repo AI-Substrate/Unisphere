@@ -1,0 +1,14 @@
+.harness/records/retro/2026-09-08/001-adapter-research-structural-probes.md
+  h_9e71e8b09f7cf2 1-47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "7dda634d2501144e28d6e36b7c9050a66a3c417f",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

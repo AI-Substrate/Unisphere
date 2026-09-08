@@ -72,13 +72,27 @@ mod unix {
     }
 
     #[test]
-    fn non_utf8_roots_inputs_and_candidates_are_rejected_without_lossy_paths() {
+    fn non_utf8_roots_and_inputs_are_rejected_before_io() {
         let directory = tempdir().unwrap();
         let path = directory.path().join(OsString::from_vec(b"bad-\xff.jsonl".to_vec()));
-        fs::write(&path, b"a\n").unwrap();
         assert_eq!(FileSessionLoader.read_batch(&SessionRef { path: path.clone() }, None, ReadLimits::default()).unwrap_err().kind(), PipelineErrorKind::InvalidInput);
         assert_eq!(FileSessionLoader.list_sessions(&SourceScope { root: path, max_sessions: 1 }).unwrap_err().kind(), PipelineErrorKind::InvalidInput);
-        assert_eq!(FileSessionLoader.list_sessions(&SourceScope { root: directory.path().into(), max_sessions: 1 }).unwrap_err().kind(), PipelineErrorKind::InvalidInput);
+    }
+
+    #[test]
+    fn non_utf8_candidates_are_rejected_when_filesystem_permits_them() {
+        let directory = tempdir().unwrap();
+        let path = directory.path().join(OsString::from_vec(b"bad-\xff.jsonl".to_vec()));
+        match fs::write(&path, b"a\n") {
+            Ok(()) => assert_eq!(
+                FileSessionLoader.list_sessions(&SourceScope { root: directory.path().into(), max_sessions: 1 }).unwrap_err().kind(),
+                PipelineErrorKind::InvalidInput,
+            ),
+            Err(error) if error.raw_os_error() == Some(libc::EILSEQ) => {
+                eprintln!("NOT EXERCISED: non-UTF-8 candidate rejection; filesystem refused fixture pathname: {error}");
+            }
+            Err(error) => panic!("could not create non-UTF-8 candidate fixture: {error}"),
+        }
     }
 
     #[test]

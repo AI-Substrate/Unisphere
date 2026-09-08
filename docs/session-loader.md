@@ -112,3 +112,11 @@ EOF/no-spin behavior, incompatible cursors, replacement/truncation and
 nonblocking final-symlink/FIFO refusal. A conditional non-Unix test specifies
 fail-fast behavior; a Unix run is not evidence of executing that platform lane.
 No tests read private native session stores.
+
+Non-UTF-8 root and `SessionRef` rejection is exercised without creating those
+paths. Directory-candidate rejection requires a filesystem that permits
+non-UTF-8 names. If fixture creation returns `EILSEQ`, that candidate case emits
+`NOT EXERCISED` (visible with `-- --nocapture`) instead of claiming loader
+coverage; every other fixture creation error fails the test. A passing run on a
+filesystem that refuses such names does not prove candidate rejection. Use a
+filesystem accepting non-UTF-8 names to exercise that branch.

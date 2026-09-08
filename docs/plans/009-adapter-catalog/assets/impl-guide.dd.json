@@ -1,0 +1,273 @@
+{
+  "dd": {
+    "schema": "builder/impl-guide"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Static registered adapter catalog",
+        "plan": "../plan.dd.json#meta",
+        "version": 1
+      }
+    },
+    {
+      "name": "architecture",
+      "value": {
+        "principles": "Pure immutable metadata in core; CLI parses and renders injected descriptor references; the existing app registry owns each descriptor and its executable runner. No new dependency, discovery service, plugin loader or environment expansion.",
+        "composition_root": "crates/app/src/adapters.rs",
+        "contracts": [
+          "core exports serializable AdapterDescriptor {id, application, description, locations, capabilities, limitations}; all string/slice data is static and I/O-free.",
+          "LocationHint {platforms, base, path, session_glob, storage_format}; base=home is symbolic and never expanded. Claude usual hint is .claude/projects with */*.jsonl; paths remain caller-overridable.",
+          "AdapterCapabilities {export_platforms, output_formats, sdk_cursor_resume, cli_persisted_resume, delayed_revision_reconciliation, lossless_archive}; current platforms=[unix], format=[otlp-jsonl], SDK resume=true and remaining three booleans=false.",
+          "CLI run_adapters(Vec<OsString>, &CliContext, &[&AdapterDescriptor], &mut dyn Write, &mut dyn Write) -> u8; reuse JSON/human/help/failure output conventions. Successful JSON is {ok:true,command:adapters.list,v:1,data:{adapters:[...]}}.",
+          "Existing AdapterRegistration stores descriptor+run; const array and stack descriptor-reference projection serve catalog and session selection from descriptor.id. No duplicate ID/name registry."
+        ]
+      }
+    },
+    {
+      "name": "fan_out",
+      "value": {
+        "decision": "solo-pm",
+        "rationale": "One small coupled registration/CLI contract; splitting metadata from dispatch would create needless coordination and drift."
+      }
+    },
+    {
+      "name": "capabilities",
+      "value": [
+        {
+          "id": "cp-0001",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0001",
+          "owner": "tk-0001",
+          "path": "App registration -> injected CLI descriptor view -> stdout; explicit session dispatch remains separate.",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002",
+            "impl-guide.dd.json#checks/vd-0003"
+          ]
+        },
+        {
+          "id": "cp-0002",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0002",
+          "owner": "tk-0001",
+          "path": "App registration -> injected CLI descriptor view -> stdout; explicit session dispatch remains separate.",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002",
+            "impl-guide.dd.json#checks/vd-0003"
+          ]
+        },
+        {
+          "id": "cp-0003",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0003",
+          "owner": "tk-0001",
+          "path": "App registration -> injected CLI descriptor view -> stdout; explicit session dispatch remains separate.",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002",
+            "impl-guide.dd.json#checks/vd-0003"
+          ]
+        },
+        {
+          "id": "cp-0004",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0004",
+          "owner": "tk-0001",
+          "path": "App registration -> injected CLI descriptor view -> stdout; explicit session dispatch remains separate.",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002",
+            "impl-guide.dd.json#checks/vd-0003"
+          ]
+        },
+        {
+          "id": "cp-0005",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0005",
+          "owner": "tk-0001",
+          "path": "App registration -> injected CLI descriptor view -> stdout; explicit session dispatch remains separate.",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002",
+            "impl-guide.dd.json#checks/vd-0003"
+          ]
+        },
+        {
+          "id": "cp-0006",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0006",
+          "owner": "tk-0001",
+          "path": "App registration -> injected CLI descriptor view -> stdout; explicit session dispatch remains separate.",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002",
+            "impl-guide.dd.json#checks/vd-0003"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "units",
+      "value": [
+        {
+          "id": "tk-0001",
+          "name": "Catalog composition",
+          "role": "pm",
+          "responsibility": "Implement typed metadata, registry projection, CLI output, existing registration regression and consumer docs.",
+          "paths": [
+            "crates/core/src/catalog.rs",
+            "crates/core/src/lib.rs",
+            "crates/cli/src/catalog.rs",
+            "crates/cli/src/lib.rs",
+            "crates/cli/src/output.rs",
+            "crates/cli/src/args.rs",
+            "crates/cli/tests/catalog.rs",
+            "crates/app/src/adapters.rs",
+            "crates/app/src/main.rs",
+            "docs/cli.md",
+            "docs/adapters.md"
+          ],
+          "reads": [],
+          "interface": "Architecture contracts above; existing collection APIs stay unchanged.",
+          "depends_on": [],
+          "wave": 0,
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0001",
+            "../plan.dd.json#acceptance_criteria/ac-0002",
+            "../plan.dd.json#acceptance_criteria/ac-0003",
+            "../plan.dd.json#acceptance_criteria/ac-0004",
+            "../plan.dd.json#acceptance_criteria/ac-0005",
+            "../plan.dd.json#acceptance_criteria/ac-0006"
+          ],
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002",
+            "impl-guide.dd.json#checks/vd-0003"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "baseline",
+      "value": {
+        "files": [
+          "crates/core/src/collection.rs",
+          "crates/core/src/ports.rs"
+        ],
+        "proof": [
+          "impl-guide.dd.json#checks/vd-0001"
+        ],
+        "receipt": "team/baseline.dd.json"
+      }
+    },
+    {
+      "name": "isolation",
+      "value": {
+        "mode": "solo",
+        "allocation_owner": "harness",
+        "note": "Dedicated builder/009-adapter-catalog worktree; Plan005 tested code and evidence remain in their original workspace."
+      }
+    },
+    {
+      "name": "roles",
+      "value": [
+        {
+          "id": "rl-0001",
+          "role": "coder",
+          "harness": "omp",
+          "model": "github-copilot/gpt-6-astra",
+          "effort": "high"
+        },
+        {
+          "id": "rl-0002",
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5",
+          "effort": "high"
+        }
+      ]
+    },
+    {
+      "name": "checks",
+      "value": [
+        {
+          "id": "vd-0001",
+          "description": "Inherited pure core contract behavior",
+          "command": "cargo",
+          "args": [
+            "test",
+            "-p",
+            "unisphere-core",
+            "--lib"
+          ],
+          "cwd": ".",
+          "timeout_ms": 120000
+        },
+        {
+          "id": "vd-0002",
+          "description": "Real registered-adapter JSON CLI execution",
+          "command": "cargo",
+          "args": [
+            "run",
+            "--quiet",
+            "--bin",
+            "unisphere",
+            "--",
+            "adapters",
+            "list",
+            "--json"
+          ],
+          "cwd": ".",
+          "timeout_ms": 180000
+        },
+        {
+          "id": "vd-0003",
+          "description": "Workspace quality, registration behavior and architecture/purity gates",
+          "command": "harness",
+          "args": [
+            "checks",
+            "--json"
+          ],
+          "cwd": ".",
+          "timeout_ms": 360000
+        }
+      ]
+    },
+    {
+      "name": "composition",
+      "value": {
+        "owner": "tk-0001",
+        "order": [],
+        "steps": [
+          "Add pure descriptors and reuse the existing registry for both metadata and executable selection.",
+          "Prove actual CLI modes, no implicit private-store access and registry-extension behavior; update existing docs.",
+          "Commit changed product and exact proof; obtain requested independent Opus review without repeating Plan005 review."
+        ],
+        "proof": [
+          "impl-guide.dd.json#checks/vd-0002",
+          "impl-guide.dd.json#checks/vd-0003"
+        ]
+      }
+    },
+    {
+      "name": "review",
+      "value": {
+        "when": "Independent design approval before implementation; exact candidate review after actual proof.",
+        "inputs": [
+          "Product ACs",
+          "Guide contracts",
+          "One registration source",
+          "Actual CLI outputs and unchanged fidelity boundaries"
+        ],
+        "proof": [
+          "Requested Opus/high runtime, exact subject/basis and genuine finding dispositions."
+        ]
+      }
+    },
+    {
+      "name": "risks",
+      "value": [
+        {
+          "id": "rk-0001",
+          "text": "Static hints could be mistaken for actual discovered stores.",
+          "check": "Descriptor/list output explicitly labels hints and never resolves home or calls a loader."
+        },
+        {
+          "id": "rk-0002",
+          "text": "Metadata could drift from executable registrations or overclaim resume/fidelity.",
+          "check": "Shared registration extension regression, current capability booleans, and independent source judgement."
+        }
+      ]
+    }
+  ]
+}

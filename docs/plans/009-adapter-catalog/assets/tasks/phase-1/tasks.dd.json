@@ -1,0 +1,157 @@
+{
+  "dd": {
+    "schema": "builder/plan"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Expose a versioned adapter metadata catalog",
+        "slug": "phase-1",
+        "status": "draft",
+        "summary": "",
+        "log": "../../execution-log.dd.json#entries"
+      }
+    },
+    {
+      "name": "summary",
+      "value": ""
+    },
+    {
+      "name": "tasks",
+      "value": [
+        {
+          "id": "tk-0001",
+          "title": "Expose the registered-adapter catalog",
+          "phase": "ph-14a2",
+          "state": "unchecked",
+          "success": "Real CLI presents versioned descriptors and truthful hints from the executable registry without source discovery; existing configuration/export behavior remains compatible.",
+          "satisfies": [
+            "../../../plan.dd.json#acceptance_criteria/ac-0001",
+            "../../../plan.dd.json#acceptance_criteria/ac-0002",
+            "../../../plan.dd.json#acceptance_criteria/ac-0003",
+            "../../../plan.dd.json#acceptance_criteria/ac-0004",
+            "../../../plan.dd.json#acceptance_criteria/ac-0005",
+            "../../../plan.dd.json#acceptance_criteria/ac-0006"
+          ],
+          "done": "tasks.dd.json#done_when/tk-0001"
+        }
+      ]
+    },
+    {
+      "name": "done_when",
+      "value": {
+        "tk-0001": [
+          {
+            "id": "dw-0001",
+            "assertion": "A successful adapters list --json emits one v1 machine-readable envelope containing only registered production adapters, with stable id, application name and concise description.",
+            "state": "unchecked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0001"
+          },
+          {
+            "id": "dw-0002",
+            "assertion": "Each descriptor gives structured usual-location hints with platform, home base, relative path, session glob and storage format; hints never assert a local installation or existing store.",
+            "state": "unchecked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0002"
+          },
+          {
+            "id": "dw-0003",
+            "assertion": "Capabilities describe explicit export platforms/formats and caller-owned SDK cursor support separately from unsupported persisted CLI resume, delayed revision reconciliation and lossless archival.",
+            "state": "unchecked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0003"
+          },
+          {
+            "id": "dw-0004",
+            "assertion": "Catalog listing performs no source loading, private-store scan, home/config environment expansion or command execution; actual discovery remains explicit and caller-overridable.",
+            "state": "unchecked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0004"
+          },
+          {
+            "id": "dw-0005",
+            "assertion": "Metadata and executable dispatch derive from one registration; adding a fixture registration exposes its descriptor and runs its adapter, while the production catalog excludes that fixture and existing config/session behavior remains compatible.",
+            "state": "unchecked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0005"
+          },
+          {
+            "id": "dw-0006",
+            "assertion": "Help, invalid arguments and output failures keep existing CLI exit/output safety conventions; no hostile argument content leaks into public errors.",
+            "state": "unchecked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0006"
+          }
+        ]
+      }
+    },
+    {
+      "name": "goals",
+      "value": []
+    },
+    {
+      "name": "non_goals",
+      "value": []
+    },
+    {
+      "name": "acceptance_criteria",
+      "value": []
+    },
+    {
+      "name": "phases",
+      "value": []
+    },
+    {
+      "name": "research_context",
+      "value": ""
+    },
+    {
+      "name": "testing_strategy",
+      "value": {}
+    },
+    {
+      "name": "documentation_strategy",
+      "value": {}
+    },
+    {
+      "name": "risks_assumptions",
+      "value": ""
+    },
+    {
+      "name": "open_questions",
+      "value": []
+    },
+    {
+      "name": "workshop_opportunities",
+      "value": []
+    },
+    {
+      "name": "clarifications",
+      "value": []
+    },
+    {
+      "name": "planning_seam",
+      "value": []
+    },
+    {
+      "name": "gate_matrix",
+      "value": []
+    },
+    {
+      "name": "implementation_summary",
+      "value": ""
+    },
+    {
+      "name": "key_findings",
+      "value": []
+    },
+    {
+      "name": "acceptance_coverage",
+      "value": []
+    },
+    {
+      "name": "risks",
+      "value": []
+    },
+    {
+      "name": "execution_guardrails",
+      "value": []
+    }
+  ]
+}

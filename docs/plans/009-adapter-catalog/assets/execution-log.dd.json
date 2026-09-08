@@ -1,0 +1,8 @@
+{
+  "dd": { "schema": "builder/execution-log" },
+  "sections": [
+    { "name": "meta", "value": { "title": "Observed adapter catalog evidence", "plan": "../plan.dd.json#meta" } },
+    { "name": "entries", "value": [] }
+  ],
+  "references": []
+}

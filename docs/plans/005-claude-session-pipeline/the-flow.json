@@ -143,6 +143,18 @@
           "label"
         ]
       }
+    },
+    {
+      "id": "UPD-005",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-08T01:03:16.137Z",
+      "details": {
+        "node": "impl-guide",
+        "fields": [
+          "comments"
+        ]
+      }
     }
   ],
   "nodes": [
@@ -215,7 +227,15 @@
         "Exit after guide/decomposition approval, not after the future code baseline. The PM implements, commits and seals the shared contract baseline during implementation before any dispatch.",
         "Use the canonical assets/backpressure.dd.json recipe: actual RUN/EXTEND/BUILD/ABSENT selection, AC and assertion pressure links, observed proven_by links; certainty Partial|Confident|Proven."
       ],
-      "modified_at": "2026-09-08T00:48:41.540Z"
+      "modified_at": "2026-09-08T01:03:16.137Z",
+      "comments": [
+        {
+          "at": "2026-09-08T01:03:16.137Z",
+          "text": "Independent r1 changes-requested at21a9f987 preserved canonically. Guidev2 corrections006600d8 address F1–F12 with corecollectionport, recoverablelimits, Unixscope, closedprofile/pins/outputcap/purityinstrument; F13 accepted with actualbaselinecompile obligation. Current plan/guide structuralDD0issues, no productcode/proof yet. Focused independent amended-contract reread underway.",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ]
     },
     {
       "id": "phase-1",

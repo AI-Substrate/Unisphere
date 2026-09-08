@@ -3,9 +3,11 @@
 //! This crate performs no filesystem, environment, process, or network operations.
 #![forbid(unsafe_code)]
 
+pub mod collection;
 mod config;
 mod errors;
 mod ports;
+pub use collection::*;
 
 pub use config::{
     ConfigOverrides, ConfigSource, Configuration, InspectionReport, InspectionRequest,

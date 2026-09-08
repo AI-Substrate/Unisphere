@@ -14,7 +14,12 @@ unisphere-core = { path = "crates/core" }
 unisphere-sdk = { path = "crates/sdk" }
 unisphere-cli = { path = "crates/cli" }
 unisphere-testkit = { path = "crates/testkit" }
+unisphere-loader-jsonl = { path = "crates/loader-jsonl" }
+unisphere-adapter-claude = { path = "crates/adapter-claude" }
+unisphere-output-otlp = { path = "crates/output-otlp" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 clap = { version = "4", features = ["derive"] }
 tempfile = "3"
+time = { version = "0.3", default-features = false, features = ["std", "parsing"] }
+libc = "0.2"

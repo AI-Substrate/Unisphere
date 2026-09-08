@@ -1,0 +1,28 @@
+{
+  "dd": {
+    "schema": "builder/execution-log"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Claude pipeline observed evidence",
+        "plan": "../plan.dd.json#meta"
+      }
+    },
+    {
+      "name": "entries",
+      "value": [
+        {
+          "id": "lg-0001",
+          "at": "2026-09-08T01:20:12.854863+00:00",
+          "text": "Approved design r2 at006600d8 (report design-opus-r2.md, canonical review recorded) precedes actual sharedcontract implementation. Actualvd1 cargo test -p unisphere-core -p unisphere-testkit --lib exited0:6core+14testkit, with all3futurepackage directories absent. Scopedclippy --lib --tests -Dwarnings exited0. Evidence baseline-proof.json and exactsharedfiledigestmanifest baseline-source-manifest.json. Thus F13 currentbaseline independence is observed, not a plannedclaim. Functional TextFixtureAdapter and FakeCollector exercise pureadapterconformance and output-error checkpoint behavior. No actualClaude/loader/OTLPimplementation or productAC proof claimed yet.",
+          "links": [
+            "backpressure.dd.json#rows/bp-0001",
+            "backpressure.dd.json#rows/bp-0003"
+          ]
+        }
+      ]
+    }
+  ]
+}

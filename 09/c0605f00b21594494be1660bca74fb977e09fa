@@ -1,0 +1,50 @@
+.harness/records/retro/2026-09-08/001-plan005-delivery.md
+  h_9e71e8b09f7cf2 2-22
+.harness/records/retro/2026-09-08/002-plan005-review-intake.md
+  h_9e71e8b09f7cf2 2-22
+docs/plans/009-adapter-catalog/assets/backpressure.dd.json
+  h_9e71e8b09f7cf2 12,40,60
+docs/plans/009-adapter-catalog/assets/backpressure.dd.md
+  h_9e71e8b09f7cf2 14,25,27
+docs/plans/009-adapter-catalog/assets/design-commit.json
+  h_9e71e8b09f7cf2 1-14
+docs/plans/009-adapter-catalog/assets/design-corrections.json
+  h_9e71e8b09f7cf2 1-11
+docs/plans/009-adapter-catalog/assets/design-r1-intake.json
+  h_9e71e8b09f7cf2 1-15
+docs/plans/009-adapter-catalog/assets/impl-guide.dd.json
+  h_9e71e8b09f7cf2 20,22,24-26,47-48,58-59,69-70,80-81,91-92,102-103,127-128,144-145,233-244,260-261
+docs/plans/009-adapter-catalog/assets/impl-guide.dd.md
+  h_9e71e8b09f7cf2 25,42-47,55,95,106
+docs/plans/009-adapter-catalog/assets/plan-validation.json
+  h_9e71e8b09f7cf2 1-14
+docs/plans/009-adapter-catalog/assets/reviews/design-opus-r1.md
+  h_9e71e8b09f7cf2 1-73
+docs/plans/009-adapter-catalog/assets/tasks/phase-1/tasks.dd.json
+  h_9e71e8b09f7cf2 59,71
+docs/plans/009-adapter-catalog/assets/tasks/phase-1/tasks.dd.md
+  h_9e71e8b09f7cf2 50,52
+docs/plans/009-adapter-catalog/assets/team/basis-31e3ccf47289285ba10f64bce57d74952cce8dd740f5f162939975bbaf18fb5c.json
+  h_9e71e8b09f7cf2 1-160
+docs/plans/009-adapter-catalog/assets/team/basis-d114a779c29efbd2bfccd530e03749c9e41b829f3e78070c65a89f3e7984a565.json
+  h_9e71e8b09f7cf2 1-273
+docs/plans/009-adapter-catalog/assets/team/review-decomposition-rv-plan009-design-opus-r1.dd.json
+  h_9e71e8b09f7cf2 1-118
+docs/plans/009-adapter-catalog/assets/team/review-decomposition-rv-plan009-design-opus-r1.dd.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/009-adapter-catalog/plan.dd.json
+  h_9e71e8b09f7cf2 53,65
+docs/plans/009-adapter-catalog/plan.dd.md
+  h_9e71e8b09f7cf2 53,55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "09c0605f00b21594494be1660bca74fb977e09fa",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

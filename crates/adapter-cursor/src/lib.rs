@@ -1,9 +1,12 @@
-//! Pure projection of Cursor's agent-transcript JSONL, not IDE SQLite or CLI blobs.
+//! Pure, distinct projections for Cursor transcript JSONL and IDE snapshots.
 //!
-//! The native transcript writer has already discarded IDs, timing, model, usage
-//! and tool-result data. This adapter preserves supplied physical records without
-//! reconstructing those missing facts or interpreting text as structured events.
+//! Neither mapper reconstructs facts discarded by its native source, reads
+//! storage, or interprets content as executable instructions.
 #![forbid(unsafe_code)]
+
+mod ide;
+
+pub use ide::{CursorIdeAdapter, IDE_DESCRIPTOR};
 
 use std::collections::BTreeMap;
 

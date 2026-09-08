@@ -1,5 +1,5 @@
-//! Pure, record-local projection of Copilot CLI events.jsonl supplied by a caller.
-//! No discovery, context replay, attachment loading, or legacy snapshot decoding.
+//! Pure projections of caller-supplied Copilot CLI events and legacy snapshots.
+//! No discovery, context replay, attachment loading, or ambient state access.
 #![forbid(unsafe_code)]
 
 use std::collections::BTreeMap;
@@ -11,6 +11,9 @@ use unisphere_core::{
     MappingDiagnosticCode, MappingOptions, NativeRecord, PipelineError, PipelineErrorKind,
     SessionAdapter, SessionRef, TelemetryRecord,
 };
+
+mod snapshot;
+pub use snapshot::{CopilotCliAdapterSnapshot, SNAPSHOT_DESCRIPTOR};
 
 /// The JSONL registration only; legacy monolithic JSON needs a separate loader.
 pub const DESCRIPTOR: AdapterDescriptor = AdapterDescriptor {

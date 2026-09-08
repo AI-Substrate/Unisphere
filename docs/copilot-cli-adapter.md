@@ -137,6 +137,73 @@ actual physical offset. Valid but unsupported/malformed structures retain their
 provenance and typed `MappingDiagnosticCode` values. Diagnostics and errors contain
 no parser text, source payloads, arbitrary error strings or new paths.
 
+## Legacy monolithic JSON snapshots
+
+`CopilotCliAdapterSnapshot` implements `SnapshotAdapter`;
+`SNAPSHOT_DESCRIPTOR.id` and `name()` are `copilot-cli-snapshot`. It accepts
+`SnapshotFormat::JsonDocument`, exactly one native record keyed `document`, and
+a nonempty loader-supplied revision. JSONL, journals and SQLite are separate
+representations, not legacy-document fallbacks.
+
+Coverage is based on the PM-supplied structure-only projection of **two inactive
+legacy history-session-state JSON files, each smaller than 32 KiB**, recorded in
+`docs/plans/010-native-adapters/assets/copilot-legacy-structure.json`. No observed
+payload, identifier, timestamp value or private fixture was copied. The mapper
+and fixture cover the observed structural shapes, not every historical release.
+
+Output preserves three distinct views with `unisphere.copilot.view`:
+
+| View | Structural source key | Semantics |
+| --- | --- | --- |
+| `session` | `document` | Header, explicit `sessionId`, native `startTime`. It has no native discriminator, so `unisphere.source.kind=unknown`, not an invented event type. |
+| `chatMessages` | `document#/chatMessages/<index>` | In array order; native `role` is the source kind. Only observed `user`, `assistant`, `tool` roles are projected as messages. |
+| `timeline` | `document#/timeline/<index>` | In array order; actual native `type` and `id`, with the item's own RFC3339 timestamp when valid. |
+
+The two message views may describe the same interaction. They are **not**
+concatenated into a conversation, deduplicated or counted as separate inference
+operations. Every key is qualified by `unisphere.source.revision`; array indices
+identify locations within that revision, not stable event IDs across edits.
+The snapshot service owns full-replacement manifests and checkpoint-after-output.
+This mapper does not create a manifest, a cursor, persisted history or a finality
+claim. Empty chat/timeline arrays still emit the session header.
+
+Every record carries numeric profile version `1`, adapter, source path, structural
+key, exact supplied revision and `unisphere.source.format=json_document`.
+`unisphere.source.offset` is always absent. A nonempty native `sessionId` qualifies
+all records with `unisphere.source.session.id` and `gen_ai.conversation.id`.
+An explicit selector must match that actual ID; mismatch or an unverifiable
+selection fails with `InvalidInput`, not an empty successful export.
+
+Chat messages have **no inferred occurrence time**. Session `startTime` supplies
+only the header timestamp; it never timestamps each chat message or a timeline
+item missing its own time. No native model/usage fields were observed, so this
+legacy projection emits no model attribution or usage counters.
+
+With content opt-in:
+
+- Chat `content:string` becomes text; `role=tool` becomes a tool response with
+  native `tool_call_id`.
+- Assistant `tool_calls[].type=function` retains native `id`, `function.name`
+  and `function.arguments`. Arguments remain the **original string**, including
+  strings that are not valid JSON. They are not parsed, repaired or double-counted
+  against the timeline call.
+- Timeline `user` and `copilot` become user/assistant fragments, retaining `text`
+  and `expandedText` as distinct ordinary/transformed text parts. `info` remains
+  an administrative native body, never an assistant turn.
+- Timeline `tool_call_requested` and `tool_call_completed` retain `callId`,
+  name, object-valued arguments/results and opt-in text/title/intention parts.
+  Results remain supplied structured JSON. No unobserved nested result schema,
+  error state, latency or usage is inferred.
+
+Metadata-only bodies remain absent; tool arguments, results, titles, intentions,
+expanded text and info text are excluded. `mentions` is opaque and diagnosed
+`UnsupportedPart`: the structure-only evidence does not specify its item schema.
+Other roles/types or function-call variants receive safe typed diagnostics,
+never raw-payload fallback. Diagnostics name structural keys, not fake offsets.
+Missing/invalid arrays and malformed items are diagnosed without erasing supported
+sibling records. Malformed document JSON/UTF-8, invalid top-level document shape,
+wrong native key/count or empty revision fail safely without offset/parser text.
+
 ## Validation ownership
 
 The worker authored synthetic behavioral regressions and shared-adapter

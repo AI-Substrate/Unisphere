@@ -1,0 +1,12 @@
+{
+  "sessionId": "synthetic-vscode-v1",
+  "creationDate": 1700000000000,
+  "responderUsername": "copilot",
+  "requests": [{
+    "requestId": "request-v1",
+    "message": "SENSITIVE-LEGACY-REQUEST",
+    "timestamp": 1700000000001,
+    "responseId": "response-v1",
+    "response": [{"value": "SENSITIVE-LEGACY-ANSWER"}]
+  }]
+}

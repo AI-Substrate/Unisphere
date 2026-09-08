@@ -1,10 +1,11 @@
-# Cursor transcript adapter
+# Cursor adapters
 
 `unisphere-adapter-cursor::CursorAdapter` implements the pure `SessionAdapter`
 port. `DESCRIPTOR.id` and `CursorAdapter::name()` are **`cursor-transcript`**.
-The mapper accepts only supplied `SessionRef` and `NativeRecord` values; it never
-opens a file, expands a location, reads a clock/environment, fetches an attachment,
-queries SQLite, or writes output. The application owns registration and export.
+`CursorIdeAdapter` separately implements `SnapshotAdapter`, with
+`IDE_DESCRIPTOR.id` **`cursor-ide`**. Both accept supplied data only: no file
+opening, location expansion, clock/environment reads, attachment fetching,
+SQLite queries or output writes. The application owns registration and export.
 
 ## Native schema basis
 
@@ -83,9 +84,8 @@ not promoted to telemetry facts.
 
 ## Unsupported dialects and completeness ceilings
 
-- **Cursor IDE SQLite** (`state.vscdb`, `cursorDiskKV`, composer/bubble snapshots)
-  is a distinct source representation. This JSONL delivery defines no
-  `CursorIdeAdapter`, `IDE_DESCRIPTOR`, SQLite reader or fake byte offsets.
+- **Cursor IDE SQLite** is handled separately by `CursorIdeAdapter` below; passing
+  a database, whole document or blob to `CursorAdapter` is not supported.
 - **Cursor CLI `store.db`** has mixed JSON/binary blobs. An opaque blob is not
   assumed to be JSON, and there is no semantic blob codec in this adapter.
 - Legacy `.txt`, whole `.json` transcript exports, hook-event JSON, and raw
@@ -104,6 +104,94 @@ not promoted to telemetry facts.
 - This is a projection, not complete-session capture, a lossless archive, a
   reconstructed conversation, an inference span, or a durable exactly-once sink.
 
+## Cursor IDE snapshot adapter
+
+`CursorIdeAdapter::map_snapshot` accepts a bounded, validated `NativeSnapshot`
+whose format is `SqliteKeyValue { table: "cursorDiskKV" }`. Any other table or
+representation is rejected with `Unsupported`; no BLOB codec is guessed.
+The shared snapshot loader, not this crate, owns storage consistency and limits.
+
+### Authoritative spine, identity and provenance
+
+The installed `conversationSearchMain.js` (`ei` parser and ordered bubble reader)
+establishes `composerData:<id>`, matching JSON `composerId`, and
+`fullConversationHeadersOnly` array order. The corresponding bubble key must be
+exactly `bubbleId:<composerId>:<bubbleId>`. A supplied bubble JSON `bubbleId` must
+agree, and its numeric `type` must agree with its header. `_v >= 2` is required on
+composers, as in the installed parser. No search-index `slice(-2000)` export cap is
+copied. The caller's explicit `session_id` selects a composer; otherwise composers
+are visited in lexical native-key order, with each spine in its declared order.
+
+One composer record precedes its mapped bubbles. All records use numeric profile
+`1`, adapter `cursor-ide`, explicit path, exact source key, supplied revision,
+format `sqlite_key_value`, and verified `unisphere.source.session.id` plus
+`gen_ai.conversation.id`. Kind is `composerData` for the composer or the native
+bubble type rendered as a string (`"1"`, `"2"`, or an unsupported integer).
+**`unisphere.source.offset` is absent.** Message identity is the bound bubble ID,
+not row position, a timestamp, or a cross-session guess.
+
+Missing rows, malformed JSON/UTF-8, inconsistent IDs/types and duplicate spine
+references produce key-based diagnostics and no invented substitute messages.
+Unreferenced bubbles produce `UnsupportedRecord`, not alternate-branch turns.
+Duplicate database keys are rejected as ambiguous `InvalidData`. Selected missing
+composers produce an empty projection plus a keyed diagnostic; an empty unselected
+snapshot returns an empty projection. The PM-owned full-replacement revision
+manifest makes those empty results observable. No mapper state is retained across
+revisions, and no persistent merge/deduplication/deletion transaction is claimed.
+
+`composerHeaders` is a separate table, **not** a KV prefix. The frozen single-table
+snapshot contract supplies no cross-table header rows, so this mapper performs no
+fictional header join. It binds the composer key/JSON and referenced bubble keys/
+JSON actually supplied. Header archive/subagent flags and their cross-table
+consistency are not asserted. `conversationMap`, alternate branches and encrypted
+conversation-state blobs are not reconstructed.
+
+### IDE fields and interpretation
+
+Additional installed Cursor 3.17.8 symbols resolve some research unknowns:
+`aiserver.v1.ConversationMessage.MessageType` defines `1=HUMAN`, `2=AI`;
+`ComposerCapabilityType` defines `22=SUMMARIZATION`, `15=TOOL_FORMER`. Bubble
+creation uses `new Date().toISOString()` and composer constructor `RP` uses
+`Date.now()`. The native tool projection returns
+`name/toolCallId/params/rawArgs/result/error` in `toolFormerData`.
+
+| Supplied field | Projection / limit |
+| --- | --- |
+| Bubble type `1` / `2` | `user` / `assistant`; unknown types retain provenance with `UnsupportedRecord` |
+| Bubble `bubbleId` / `requestId` / `checkpointId` | Bound `unisphere.message.id`, optional `unisphere.cursor.request.id` and `unisphere.cursor.checkpoint.id`; not trace/span IDs |
+| Composer `createdAt` | Checked epoch-millisecond conversion to nanoseconds; no `lastUpdatedAt`/clock fallback |
+| Bubble `createdAt` | RFC3339-to-nanoseconds conversion; no numeric-string guessing or composer-time fallback |
+| `modelConfig.modelName` / `modelInfo.modelName` | `unisphere.cursor.model_config.model_name` / `unisphere.cursor.model_info.model_name`; observed native selection information, not proven response-model attribution |
+| `tokenCount.inputTokens` / `outputTokens` | Exact nonnegative `i64` values in `unisphere.cursor.token_count.input_tokens` / `output_tokens`, with scope `native_bubble_snapshot` when any is retained |
+| Composer `usageData` | Nonempty native object under body field `unisphere.cursor.usage_data`, opt-in only, with `UnsupportedPart` because subfield/aggregation semantics are unproven |
+| Bubble `text` / `richText` / `thinking.text` | Opt-in text / `unisphere.cursor.rich_text` / reasoning parts; no rich-text parsing or attachment fetch |
+| `toolFormerData.name`, `params` (else `rawArgs`) | Opt-in structured tool call, optional `toolCallId`; raw argument strings are not parsed or repaired |
+| `toolFormerData.result` / `error` | Opt-in structured response / `unisphere.cursor.tool_error`; not a guessed successful or final result |
+| Nonempty `toolResults` object entries | Opt-in `unisphere.cursor.tool_result` parts retaining the native object, with `UnsupportedPart`; no guessed flattened legacy tool schema |
+| `skipRendering`, `isDisplayOnly`, `isSimulatedMsg`, `isPlanExecution` | Same-cased native fields under `unisphere.cursor.*`; display flags do not silently remove source bubbles |
+| `capabilityType` | Native integer `unisphere.cursor.capability_type`; summaries (`22`) and simulated bubbles have extension control bodies with no ordinary message role |
+
+The native token-counter constructor includes zero defaults. Preserving an
+explicit zero means only that the stored field is zero, **not** that a provider
+measured zero tokens. Missing counters remain absent; repeated values are not
+summed, differenced or deduplicated. Unknown counter keys emit `UnsupportedPart`
+and are not mapped. Negative/fractional/out-of-range values emit `InvalidField`.
+No standard `gen_ai.usage.*` totals or `gen_ai.response.model` are inferred.
+
+Native objects retained only under opt-in remain explicitly native and
+semantically unclassified; they are not claims of normalized complete tools or
+usage. Attachments/context arrays and additional thinking blocks are unsupported
+with diagnostics, never dereferenced. Composer drafts, alternate model
+selections, archive flags, arbitrary unknown fields and blob-backed state are not
+projected. Metadata-only always returns `body=None`, including tool errors and
+unclassified usage objects. Paths, native keys/IDs/model names remain metadata and
+can be sensitive; this is not anonymization.
+
+Snapshot mapping diagnoses semantic incompleteness without claiming the snapshot
+loader missed bytes. A malformed bubble may leave valid siblings available with
+diagnostics. Consumers requiring complete semantic projection must inspect those
+diagnostics, not just a successful raw snapshot read or revision digest.
+
 ## Verification handoff
 
 Regression tests and fixtures are authored in `crates/adapter-cursor`; they were
@@ -115,8 +203,10 @@ cargo test -p unisphere-adapter-cursor
 cargo run --locked -p unisphere-testkit --bin unisphere-arch-check
 ```
 
-The PM must also register `DESCRIPTOR` and `CursorAdapter` together and run actual
-SDK/CLI export over the synthetic transcript in both content modes. Unit tests
-alone do not prove that application composition. The regression cases defend
-outer-role interpretation, content privacy, absent facts, physical duplicates,
-control-record separation, structured tools, malformed inputs and replay.
+The PM must register both descriptor/runner pairs and run actual SDK/CLI exports
+in both content modes. Transcript fixtures use the shared JSONL loader; IDE
+fixtures require real synthetic SQLite `cursorDiskKV` rows and the shared snapshot
+loader. Unit tests alone do not prove that composition. Regression cases defend
+outer-role interpretation, privacy, native absence, duplicates, control records,
+structured tools, spine order, identity binding, selection, timestamp/counter
+boundaries, revision deletion, malformed inputs and replay.

@@ -1,5 +1,5 @@
 [package]
-name = "unisphere-adapter-cursor"
+name = "unisphere-adapter-vscode-copilot"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -9,7 +9,3 @@ repository.workspace = true
 [dependencies]
 unisphere-core.workspace = true
 serde_json.workspace = true
-time.workspace = true
-
-[dev-dependencies]
-unisphere-testkit.workspace = true

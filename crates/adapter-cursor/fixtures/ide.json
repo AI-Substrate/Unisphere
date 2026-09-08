@@ -1,0 +1,8 @@
+[
+  {"key":"bubbleId:alpha:a","value":{"_v":2,"bubbleId":"a","type":2,"requestId":"request-a","createdAt":"1970-01-01T00:00:02.000000007Z","modelInfo":{"modelName":"observed-model"},"tokenCount":{"inputTokens":11,"outputTokens":7},"text":"SENSITIVE-ANSWER","thinking":{"text":"SENSITIVE-REASONING"},"toolFormerData":{"name":"read_file","toolCallId":"call-a","params":{"path":"SENSITIVE-PATH","nested":[true,null,3]},"result":{"contents":"SENSITIVE-RESULT"}},"toolResults":[],"skipRendering":true}},
+  {"key":"bubbleId:beta:z","value":{"_v":2,"bubbleId":"z","type":1,"text":"SENSITIVE-OTHER-SESSION"}},
+  {"key":"composerData:beta","value":{"_v":2,"composerId":"beta","createdAt":1,"fullConversationHeadersOnly":[{"bubbleId":"z","type":1}]}},
+  {"key":"bubbleId:alpha:s","value":{"_v":2,"bubbleId":"s","type":2,"capabilityType":22,"text":"SENSITIVE-SUMMARY","tokenCount":{"inputTokens":11,"outputTokens":7}}},
+  {"key":"composerData:alpha","value":{"_v":2,"composerId":"alpha","createdAt":1000,"modelConfig":{"modelName":"configured-model"},"usageData":{"nativeCounter":{"amount":3,"unprovenScope":"SENSITIVE-NATIVE-USAGE"}},"fullConversationHeadersOnly":[{"bubbleId":"z","type":1},{"bubbleId":"a","type":2},{"bubbleId":"s","type":2}]}},
+  {"key":"bubbleId:alpha:z","value":{"_v":2,"bubbleId":"z","type":1,"checkpointId":"checkpoint-z","createdAt":"1970-01-01T01:00:03+01:00","text":"SENSITIVE-PROMPT","richText":"SENSITIVE-RICH-TEXT","isDisplayOnly":true,"tokenCount":{"inputTokens":0,"outputTokens":0}}}
+]

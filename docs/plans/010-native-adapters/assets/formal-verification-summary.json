@@ -1,0 +1,25 @@
+{
+  "at": "2026-09-08T22:31:24.442Z",
+  "artifact_sha": "6a38efaf4db192a6e35fafa903db7c06cdbe371e",
+  "product_bytes_approved_at": "c6f3636b394f0e17445eb2e143f6ac2c6d1ec998",
+  "integration_sha": "114e1535515a108d91946ba8902fb0200d3d840a",
+  "receipt": {
+    "path": "docs/plans/010-native-adapters/assets/team/composition.dd.json",
+    "sha256": "70fee1b212963f7a26bcf0c52850637e5431dcb7fa2d447dba2b186d78a0a5ef"
+  },
+  "checks": [
+    {
+      "id": "vd-0002",
+      "exit_code": 0
+    },
+    {
+      "id": "vd-0003",
+      "exit_code": 0
+    },
+    {
+      "id": "vd-0004",
+      "exit_code": 0
+    }
+  ],
+  "output_capture": "Eval waiting step reset; canonical CLI-owned receipt recovered after the already-running verifier finished. No verifier/test rerun or fabricated raw stdout."
+}

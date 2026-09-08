@@ -1,0 +1,100 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "review",
+      "value": {
+        "record_type": "review",
+        "id": "rv-plan010-composition-opus-r2-binding",
+        "recorded_at": "2026-09-08T22:36:22.996194Z",
+        "scope": "composition",
+        "subject_sha": "6a38efaf4db192a6e35fafa903db7c06cdbe371e",
+        "plan": {
+          "path": "docs/plans/010-native-adapters/plan.dd.json",
+          "sha256": "2160c94a738ec3cb49c482d8099c4a86ee5dfe36b545ffdaaedd106693eab3ac"
+        },
+        "guide": {
+          "path": "docs/plans/010-native-adapters/assets/impl-guide.dd.json",
+          "sha256": "38d5a0d69c2b56da77e5f2f4648d0592586e4df4a76f0523a1c2a67c3a45c475"
+        },
+        "reviewer_id": "pij-huge-nigel",
+        "requested": {
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5",
+          "effort": "high",
+          "source": {
+            "harness": "guide",
+            "model": "guide",
+            "effort": "guide"
+          }
+        },
+        "observed": {
+          "peer_id": "pij-huge-nigel",
+          "root": "/Users/jordanknight/substrate/unisphere/unishpere-main",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5",
+          "effort": "high",
+          "native_session": "01a07e75-cb05-70b6-a10d-db61a6ed87d8",
+          "pid": 71450,
+          "argv": [
+            "omp",
+            "--auto-approve",
+            "--model",
+            "github-copilot/claude-opus-5",
+            "--thinking",
+            "high"
+          ],
+          "evidence": [
+            "Binding round only, explicitly not a repeated product review: no build, test, clippy, rustdoc, formatter or linter was run, no adapter/loader/core/SDK/CLI source was read this round, and nothing settled at R1 was re-audited. Only the two packet-declared deliverables were written.",
+            "Product-byte equality c6f3636b -> 6a38efaf proven at the Git object level rather than by trusting a textual diff: crates tree OID 98d59964ac0005166bb39596ed0761b20fd80760 identical on both sides, Cargo.lock blob 04ad7e25 identical, root Cargo.toml blob 0d985e25 identical, docs/fidelity.md blob 7aaaa967 identical. A matching crates tree OID transitively covers every crate manifest, source and fixture, so it forecloses any change a path-filtered diff could miss.",
+            "The five intervening commits total 81 files, +3290/-138, and every changed path is under docs/plans/010-native-adapters/ except six additive .harness/records/retro/2026-09-08/*.md worker retrospectives. c6f3636b is a verified ancestor of 6a38efaf.",
+            "Therefore every behavioral statement in composition-opus-r1.md - representation-aware provenance proof, the registry test that builds a real SQLite database per registration, three-way byte-identical parity, mutation-proven revisions, checkpoint-after-output with 11 partial bytes and no checkpoint, SQLITE_OPEN_NOFOLLOW and the immutable=1 rejection, mapper purity enforced by the dependency sensor - describes 6a38efaf verbatim without re-derivation.",
+            "The implementation guide blob is bit-identical to the one sealed at R1 (38d5a0d6...), so the reviewed architecture is the bound architecture.",
+            "The plan digest moved to 2160c94a738ec3cb49c482d8099c4a86ee5dfe36b545ffdaaedd106693eab3ac and I read the entire diff rather than accepting the 'factual completion additions' summary: ac-0001..ac-000a flip state unchecked->checked and gain proven_by execution-log lg-0005, phase ph-cce1 flips to checked, implementation_summary fills from empty. Every AC claim string appears as an unchanged context line - no criterion was added, removed, retitled, weakened or narrowed to fit the delivery, which is the property that makes an approval transferable.",
+            "Formal receipt verified by content, not by reference: assets/team/composition.dd.json is sha256 70fee1b212963f7a26bcf0c52850637e5431dcb7fa2d447dba2b186d78a0a5ef matching the packet, with artifact_sha 6a38efaf, integration_sha 114e1535, integration_method already-integrated, seven units on baseline 3a635c17 and 473 recorded file digests.",
+            "Its three checks are green on parsed captured stdout, not on exit codes alone: cargo test --workspace --all-targets --locked sums to 236 passed across 36 test binaries with '0 failed' in every result line, reconciling exactly with the retained count; harness boot --json reports status ok, ready true, scope configuration-and-native-session-projections, six gates and five proof modes all at 0; harness checks --json exit 0.",
+            "The already-integrated claim was reproduced independently rather than assumed, because it asserts seven workspaces arrived intact with no merge to inspect. Comparing each unit's owned crate tree between its delivery commit and integration commit 114e1535: tk-0002 adapter-codex 6b678d09, tk-0003 adapter-omp e9257ed2, tk-0004 adapter-pi d2156504, tk-0005 adapter-copilot-cli 9f2d4858, tk-0006 adapter-vscode-copilot a7b8552c, tk-0007 adapter-cursor 01b703f9, tk-0008 loader-snapshot 171e783b - seven for seven identical. No delivered tree was rewritten, replayed or reconstructed on the way in.",
+            "The unit commits are correctly NOT ancestors of 6a38efaf because they live in separate workspaces, which is exactly why tree comparison rather than an ancestry check is the honest proof here, and it holds. 114e1535 is a verified ancestor of c6f3636b, and the crate trees legitimately differ at the candidate - that delta is the composition commit itself, already reviewed and approved at R1.",
+            "Prior-round immutability re-verified from committed bytes: composition-opus-r1.md at 6a38efaf hashes f72935cfa47137c9d32ca61533c0d0ae1ffc34e83dae250e8cb4cd759b12c213 and assets/reviews/composition-opus-r1-receipt.json hashes 8d07fa2cffcd1e1d1fc241c51f03969148dd4f2f991085363d1e130b853de6ba, both byte-identical to what I authored. The R1 approval is not relabelled, backdated or restated as if issued against 6a38efaf; it stands as written against c6f3636b.",
+            "R1 findings K1, K2 and K3 carry forward unchanged as low/accepted with no product bytes altered and none required. K3 is directly re-observable inside this receipt: vd-0004's scope is still configuration-and-claude-jsonl while boot's is configuration-and-native-session-projections.",
+            "Native binding observed live at authoring time: PI_SESSION_FILE resolves to native session 01a07e75-cb05-70b6-a10d-db61a6ed87d8 and the parent omp process is pid 71450 with argv 'omp --auto-approve --model github-copilot/claude-opus-5 --thinking high'. An observed process invocation, not an attestation of the serving provider identity."
+          ],
+          "gaps": [
+            "CUSTODY: the canonical receipt is not committed. assets/team/composition.dd.json, its .dd.md sibling, formal-verification-summary.json, activated-historical-import.json and self-handover.md are all untracked at 6a38efaf. Everything I verified about them is verified against working-tree bytes, with digests recorded here so later change is detectable, but 'durable in canonical' is currently true of the path and not of the history. Landing without committing them would ship a plan whose own text says no formal receipt exists while the receipt proving otherwise survives only in a working tree.",
+            "STALE PLAN TEXT: the newly filled implementation_summary still asserts that historical native-binding and baseline-check defects prevent a formal Builder receipt. That is now out of date. It was accurate when committed and under-claims rather than over-claims, so it errs safe, but a reader citing the plan alone would conclude no formal receipt exists. PM-owned.",
+            "I ran nothing this round. Every runtime outcome cited is the formal receipt's own capture, read and reconciled, never reproduced, so my confidence in those outcomes equals my confidence in that capture.",
+            "formal-verification-summary.json states raw verifier stdout was recovered after an eval reset rather than re-run (output_capture). I take that at its word and did not re-run the verifier; I did not independently witness the verifier process.",
+            "Formal Builder machinery being satisfied is a process fact, not new evidence about product behavior, and I have not treated it as such. It does not extend, strengthen or substitute for the R1 product judgement.",
+            "R1's boundaries stand undiminished and are not re-litigated here: synthetic fixtures only so no dialect's interpretation is proven against a live vendor installation, single-host Unix evidence with no Windows/Linux/network-denial coverage, and hostile ancestor directories out of the threat model by documented design.",
+            "observed.root is this seat's working folder while the bound workspace is /Users/jordanknight/substrate/unisphere/unisphere-native-adapters. Divergence is by design; the subject is pinned by subject_sha plus the recorded plan and guide digests."
+          ]
+        },
+        "verdict": "approved",
+        "report": {
+          "path": "docs/plans/010-native-adapters/assets/reviews/composition-opus-r2-binding.md",
+          "sha256": "157d22db0e9aa1258128cbb2fc8fb40e0dd85ce56bb6f4fda7278b18bd49662a"
+        },
+        "findings": [
+          {
+            "id": "B1",
+            "severity": "low",
+            "disposition": "accepted",
+            "description": "The canonical formal receipt and its supporting evidence are present at their canonical paths but untracked at 6a38efaf: assets/team/composition.dd.json (70fee1b2...), composition.dd.md, formal-verification-summary.json, activated-historical-import.json and self-handover.md. My verification of all of them is therefore against working-tree bytes rather than committed history. Recorded as low and accepted because the content is verified, its digests are pinned in this receipt so any later change is detectable, and the remedy is a single commit under PM ownership. It is flagged rather than waved through because a closeout that lands without it would leave the plan asserting no formal receipt exists while the receipt disproving that lives only on disk.",
+            "evidence": "git status --porcelain at 6a38efaf lists docs/plans/010-native-adapters/assets/team/composition.dd.json, assets/team/composition.dd.md, assets/formal-verification-summary.json, assets/activated-historical-import.json and assets/self-handover.md as untracked; by contrast assets/reviews/composition-opus-r1.md and composition-opus-r1-receipt.json are tracked at their authored digests."
+          },
+          {
+            "id": "B2",
+            "severity": "low",
+            "disposition": "accepted",
+            "description": "plan.dd.json's implementation_summary, added in this range, still states that historical native-binding and baseline-check defects prevent a formal Builder receipt and archive. The composition receipt at 70fee1b2 with three green checks contradicts that sentence. It was true when written and it under-claims rather than over-claims, so the error direction is safe, but the plan is the document a later reader trusts first. Accepted, PM-owned, closed by a text correction with no product implication.",
+            "evidence": "git diff c6f3636b 6a38efaf -- docs/plans/010-native-adapters/plan.dd.json shows implementation_summary changing from empty to text ending 'Historical native-binding and baseline-check defects prevent formal Builder receipt/archive only'; assets/team/composition.dd.json records artifact_sha 6a38efaf with checks vd-0002/vd-0003/vd-0004 all at exit_code 0."
+          }
+        ]
+      }
+    }
+  ]
+}

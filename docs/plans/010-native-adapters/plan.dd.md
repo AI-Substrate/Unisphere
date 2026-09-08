@@ -148,7 +148,7 @@ _No entries._
 
 ## Implementation Summary
 
-Implemented, exercised and independently approved at c6f3636b: six native applications, nine catalog registrations/ten representation paths, shared JSONL/snapshot loaders and SDK/CLI/OTLP composition. Exact-candidate boot passed236tests,6qualitygates,5realproofmodes. Historical native-binding and baseline-check defects prevent formal Builder receipt/archive only; documentary closeout and original histories are retained. No landing, push or retirement.
+All six native applications, nine registrations and ten representation cases are implemented and independently approved at product c6f3636b. Genuine historical no-replay integration114e1535 and formal artifact6a38efaf verification now pass; reviewer-owned R2 binding intake succeeded. Actual236tests,6qualitygates and5realproofmodes remain accepted. Formal archive/preservation is being completed, then separately authorized PR/main landing under required controls. No new ingestion scope, restart or retirement.
 
 <a id="key-findings"></a>
 

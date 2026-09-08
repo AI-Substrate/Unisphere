@@ -1,0 +1,37 @@
+{
+  "purpose": "Land completed Plan005/009/010 product through a PR without rewriting existing main or original worker histories",
+  "operator_request": "yes cloase out and prep pr and get this landed on main please.",
+  "product_subject": "c6f3636b394f0e17445eb2e143f6ac2c6d1ec998",
+  "current_local_main": "452e0f3cbf4c045a9d5bb10f16f5dc96134a8e98",
+  "release_branch": "release/native-session-pipeline",
+  "release_workspace": "/Users/jordanknight/substrate/unisphere/unisphere-native-session-release",
+  "source_branch": "builder/010-native-adapters",
+  "converge_after_formal_archive": [
+    "main",
+    "builder/005-claude-session-pipeline",
+    "builder/009-adapter-catalog"
+  ],
+  "observed_merge_previews": {
+    "main_into_plan010": "conflict-free git merge-tree",
+    "plan005_into_plan010": "conflict-free git merge-tree",
+    "plan009_into_plan010": "conflict-free git merge-tree"
+  },
+  "preservation": [
+    "Merge histories rather than overwrite/rebase source branches",
+    "Keep main untouched until remote PR and CI are complete",
+    "Keep source bytes identical to approved product; report any actual integration source change",
+    "Retain complete archived plans, original unit bundles, receipts and formal failure history",
+    "Do not stage main's untracked .serena or generated schema work"
+  ],
+  "remote": "https://github.com/AI-Substrate/Unisphere.git",
+  "base": "main",
+  "ci": "Rust foundation: ubuntu-latest and macos-latest; harness boot --json",
+  "merge_method": "merge commit preferred to preserve main and product ancestry",
+  "controls": {
+    "local_convergence": "typed PROCEED requested; pending",
+    "push": "explicit confirmation required",
+    "open_pr": "separate explicit confirmation required",
+    "remote_merge": "typed PROCEED required after CI"
+  },
+  "not_authorized": ["new ingestion feature implementation", "restart", "worker retirement", "force push"]
+}

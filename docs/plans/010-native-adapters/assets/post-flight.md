@@ -25,19 +25,41 @@ Accepted review advisories remain in `review-dispositions.json`: raw-input limit
 - `retro-harvest.json` reports six records/nine entries and zero malformed skips. No global telemetry-empty or remote-sync success is inferred from absent local evidence.
 - External documentary preservation: `/Users/jordanknight/substrate/unisphere/unisphere-plan010-preserved-vTxLJR/preservation.json`. Its verified `product.bundle` preserves source/evidence commit `56bf73782562119bd1e1351973fb107d16f6798b`, including the accepted product, original unit bundles, review and retrospectives. SHA256 `721b29da6b68428f23d7cbcf35474eb9692d1141d1123774c064467506df70cd`; 2,230,963 bytes. This is explicitly not a fabricated Builder PreservationReceipt; the later locator-only commit is separate from the captured source state.
 
-## Formal Builder disposition — not concealed
+## Formal Builder binding — resolved
 
-Product acceptance is supported by actual runtime and independent review, but **formal Builder composition/archive is not claimed complete**:
+PR206/207 supplied the missing existing-peer binding and historical integration
+observation. All five original native lanes were adopted without respawn.
+`compose --import --already-integrated --integration-sha
+114e1535515a108d91946ba8902fb0200d3d840a` succeeded at the real PM root, retaining
+all seven original delivery SHAs and their exact scoped tree-equality proofs.
+The earlier E475/E470/E471 refusals and failed disposable-checkout attempt remain
+historical evidence; no source, delivery SHA or receipt cwd was rewritten.
 
-1. Five R1-cleared JSONL lanes originally used the operator-authorized native spawn/full-clone + `harness builder adopt --owner pij` workaround. After upstream PR206 activation, all five `dispatch --adopt-peer` operations succeeded against the actual existing peers. Original releases/deliveries remain immutable; no worker was respawned. Packet self-checks matched exact digests/roots, with expected post-delivery HEAD warnings retained.
-2. Upstream PR206 also fixed historical baseline file verification. The semantics-preserving Clippy correction in `core/snapshot.rs` no longer causes the original stale-baseline refusal. That earlier E475 and the missing-composition E470 remain historical evidence, not current diagnoses.
-3. The activated `compose --import --already-integrated` observes only current HEAD. It refused the original delivery bytes because later reviewed PM formatting/Clippy/catalog edits intentionally differ. All seven complete owned-path projections were independently verified equal at their true integration commit `114e1535515a108d91946ba8902fb0200d3d840a`; see `historical-integration-projections.json`.
-4. A separate temporary full clone at that exact historical integration commit was tried without changing the real PM branch, source or index. It refused E471 because the recorded baseline command cwd is the original PM root, not the temporary clone. `formal-historical-import.json` retains the result. A supported explicit historical integration-SHA observation at the original root is still needed; no receipt cwd, delivery SHA or approval was rewritten.
+Formal verification of current artifact
+`6a38efaf4db192a6e35fafa903db7c06cdbe371e` succeeded with all three composition
+checks at exit zero. `team/composition.dd.json` SHA256
+`70fee1b212963f7a26bcf0c52850637e5431dcb7fa2d447dba2b186d78a0a5ef` records the
+true integration boundary separately from the final artifact.
 
-Product source remains unchanged. Canonical archive/close will use the supported path once the remaining historical-integration boundary is resolved; no reset, baseline falsification, test suppression, duplicate mapper, replay or fan-out rewrite is authorized as a substitute.
+Independent reviewer-owned R2 binding addendum approved this evidence-only
+successor, after verifying product-tree identity with `c6f3636b`. Its actual
+intake succeeded: `team/review-composition-rv-plan010-composition-opus-r2-binding.dd.json`,
+SHA256 `373d7d54fcba89e4fa565836b849b86cae765881188b76560b451687b0cdb893`.
+Original R1 product approval is immutable and was neither repeated nor relabelled.
+The raw verifier stdout capture was interrupted by an Eval reset; the CLI-owned
+canonical check receipts were recovered after the original process completed.
+No verification output or extra run was invented.
 
-Main landing, remote push/PR and workspace retirement remain separate decisions. Plan005 and Plan009 are already closed in their own workspaces; retain those histories and Main's research commit at eventual convergence.
+Formal archive and external preservation now follow the supported close command.
+The returned flow locator is authoritative; archival is not claimed before it
+returns. Jordan separately released PR/main landing, with action-specific
+confirmation controls retained. No new ingestion features, restart or workspace
+retirement were authorized; local main and both earlier plan histories must survive
+release-branch convergence.
 
 ## Encodable lesson
 
-Existing-peer binding and historical baseline verification are now available. The remaining encoding is an explicit historical integration commit for no-replay import, separate from the later verified PM artifact. Portable structure-only schema artifacts already replaced unavailable ephemeral research handles in this delivery; future release packets should require those stable pointers before a mapper starts.
+The receipt chain now separates historical unit integration from later reviewed
+PM composition and observes original native workers without replay. Portable
+structure-only schema artifacts replaced ephemeral research handles. These are
+implemented harness improvements, not reasons to reopen accepted product work.

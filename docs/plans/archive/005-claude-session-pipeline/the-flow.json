@@ -384,6 +384,29 @@
           "comments"
         ]
       }
+    },
+    {
+      "id": "UPD-013",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-08T03:50:10.343Z",
+      "details": {
+        "node": "post-flight",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-014",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-08T03:50:10.483Z",
+      "details": {
+        "node": "post-flight",
+        "from": "in_progress",
+        "to": "done"
+      }
     }
   ],
   "nodes": [
@@ -542,7 +565,7 @@
       "id": "post-flight",
       "type": "post-flight",
       "label": "Post-flight",
-      "status": "in_progress",
+      "status": "done",
       "command": "/builder 7b post-flight",
       "next": [
         "ship"
@@ -559,15 +582,22 @@
         "If the gate refuses and departing anyway is the HUMAN's decision, they pass --force — it records a defended override. An agent may not force a dd gate on its own judgment.",
         "Tidy is separate: harness builder tidy <allocation> --preservation <receipt> re-verifies ownership, runtime release and surviving bytes/refs; external ownership or idle-only evidence cannot authorize removal."
       ],
-      "modified_at": "2026-09-08T03:41:57.099Z",
+      "modified_at": "2026-09-08T03:50:10.483Z",
       "comments": [
         {
           "at": "2026-09-08T03:41:57.099Z",
           "text": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-preserved/fa75faee-d644-4835-bd40-3fbf963dd1c9/receipt/preservation.dd.json",
           "source": "agent",
           "kind": "builder-preservation"
+        },
+        {
+          "at": "2026-09-08T03:50:10.343Z",
+          "text": "Actual archive/preservation returned; archived strict completion exit0 with zero errors/warnings/open items. See assets/archive-completion.json and assets/post-flight.md. No retirement or shipping performed.",
+          "source": "agent",
+          "kind": "validation"
         }
-      ]
+      ],
+      "ran_at": "2026-09-08T03:50:10.483Z"
     },
     {
       "id": "ship",

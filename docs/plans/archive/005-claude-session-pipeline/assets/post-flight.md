@@ -22,8 +22,10 @@ The archive conjunct formerly attached to phase assertion `dw-000d` belongs here
 
 - [x] Formal composition receipt intake succeeds without reclassifying unchanged source.
 - [x] Final factual task/AC proof links and harness seam receipts are recorded.
-- [ ] `harness builder close` returns the actual archive and external preservation receipt for the exact allocation inventory.
-- [ ] Archived `harness plan validate --complete` reports zero errors, warnings and open items.
+- [x] `harness builder close` returned this archive and external preservation receipt for all four allocations; no workspace was retired.
+- [x] Archived `harness plan validate --complete` returned zero errors, warnings, open items, contradictions and orphans.
+
+Initial preservation receipt: `/Users/jordanknight/substrate/unisphere/unisphere-plan005-preserved/fa75faee-d644-4835-bd40-3fbf963dd1c9/receipt/preservation.dd.json`, SHA256 `d93ed4f94bc05a9074569704bffcd7d2ead6a2474b2cc19df21dbe7ef6609a8f`. The canonical post-flight flow comments carry any subsequent refresh locator. Archive commit: `5c64d21b33cd6516f639346ceed6a5e1de6b10f0`; strict completion evidence is retained in `archive-completion.json`.
 
 ## Main landing and separate follow-on
 

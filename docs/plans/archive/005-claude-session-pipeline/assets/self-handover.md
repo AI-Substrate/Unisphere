@@ -1,105 +1,55 @@
-# Self-handover — Plan005
-
-Memory-only, operator-requested seam, 2026-09-08.
+# Continuity checkpoint
 
 ## Authority
 
-Finish shared fakeable loader → pure Claude adapter → OTLP writer, SDK/CLI, proof, independent review and post-flight/archive.
+Jordan controls compaction; do not compact/reload/restart this PM. Main landing needs explicit approval. No remote publication, private-store export, global changes or retirement. Six additional source adapters remain research-only. Native tool root is `/Users/jordanknight/substrate/unisphere/unishpere-main`; use explicit workspace paths/cwd.
 
-User: “they shoudl just be provided the data and return a contracted result”.
-User: “we should report on what full fidelity means and what the gaps are once the work is done.”
-Latest: “i will organise the compaction” (Main relay).
+## Plan005: product delivered, archive completed
 
-**Stop after handover; do not self-compact/reload/restart.** Jordan controls timing. Plan005 implementation/closeout authorized; main landing needs approval. No remote publication, globals, private-content export or retirement. Additional client implementations are researched only, not authorized.
+Workspace: `/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline`.
+Branch: `builder/005-claude-session-pipeline`.
+Archive: `docs/plans/archive/005-claude-session-pipeline/plan.dd.json`.
+Tested/reviewed artifact: `093a89811296efb681386047b1da912348c63f10`.
 
-## Location and exact state
+Actual composition verification passed all eight checks; independent Opus approved with zero open findings. Original R2 intake succeeded after the confirmed upstream PR204 fix excluded closeout retro records from code-change detection. No settled product proof/review was repeated.
 
-PM `pij-right-kotallo`; native file tools remain rooted in main clone: use absolute paths and explicit cwd.
+- Compose receipt SHA256: `fef0a9a5d8be8a2e66f8e749279156dc5a7726ba3dc319bb13d181da0553b6ed`.
+- Accepted review: `assets/team/review-composition-rv-plan005-composition-opus-r2.dd.json`, SHA256 `d3db8ed01868e6c514b114e607d29bfbd34db756931c52db2ec77d8dc2a0f31c`.
+- Archive commit: `5c64d21b33cd6516f639346ceed6a5e1de6b10f0`.
+- Strict archived validation: zero errors/warnings/open items; `assets/archive-completion.json`.
+- Initial external preservation: `/Users/jordanknight/substrate/unisphere/unisphere-plan005-preserved/fa75faee-d644-4835-bd40-3fbf963dd1c9/receipt/preservation.dd.json`. Canonical flow comments contain any later refresh locator.
 
-ROOT: `/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline`
-PLAN: `docs/plans/005-claude-session-pipeline` under ROOT.
-Branch: `builder/005-claude-session-pipeline`
-Candidate: `093a89811296efb681386047b1da912348c63f10`
-Baseline: `ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86`; eight frozen files unchanged.
+No main merge or workspace retirement occurred. Preserve Main research commit `452e0f3cbf4c045a9d5bb10f16f5dc96134a8e98` at convergence; a read-only merge-tree preview was conflict-free before final archive changes.
 
-**Actual first-class compose verification succeeded** on candidate: all eight checks `vd-0005` through `vd-000c` exited 0.
+`docs/fidelity.md` remains the accepted report: explicit Unix Claude JSONL projection, not lossless archival or final session history. Metadata-only is not anonymity. CLI restarts at byte zero; SDK provides caller-owned cursor; no persisted CLI resume or revision reconciliation. The nonUTF8 directory-entry branch is explicitly NOT EXERCISED on this filesystem.
 
-Receipt: PLAN `/assets/team/composition.dd.json`
-SHA256: `fef0a9a5d8be8a2e66f8e749279156dc5a7726ba3dc319bb13d181da0553b6ed`
-Summary: PLAN `/assets/composition-verification-summary.json`
+PM observations were committed and then only own buckets cleared; worker custody remains in `assets/observation-custody.json`. Local telemetry lookups returned E100/ref_unavailable: no global-absence or flush claim. Original experiments remain `/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/scratch/native-readers`.
 
-## Review just arrived — next action
+## Plan009: authorized catalog, design approved, implementation next
 
-Reviewer `pij-huge-nigel` reported **APPROVED, zero open findings**. PM subsequently read the handover, report, receipt and fidelity document at Jordan's request. Independent `shasum -a 256` checks matched all three report/review/compose digests below. **Formal receipt intake remains pending**; skip the now-completed hash check in Resume step 1. No new review needed.
+Workspace: `/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog`.
+Branch: `builder/009-adapter-catalog`.
+Plan: `docs/plans/009-adapter-catalog/plan.dd.json`.
+Allocation: `al-009-1ed1bab9-c1d6-42f4-8c83-b4242c50b6d5`.
+Reviewed design: `09c0605f00b21594494be1660bca74fb977e09fa`.
 
-Report: PLAN `/assets/reviews/composition-opus-r1.md`
-SHA256: `836ad3930008adea0b81bcbe2b96c15617ce7597e06ff87f1caf89360d93f5b3`
-Receipt: ROOT `/.harness/temp/plan005-composition-review-r1.dd.json`
-SHA256: `8f4bc570f5909c11ef621003d23fcd21cc591a45ea334d0216afce3af12fff99`
-ID `rv-plan005-composition-opus-r1`; scope composition; subject candidate.
+Opus R2 approved design; intake and implementation remain next. Receipt: `.harness/temp/plan009-design-review-r2.dd.json`; report: `assets/reviews/design-opus-r2.md` under this plan. Preserve R1/R2; no repeated source audit.
 
-Reviewer: OMP `github-copilot/claude-opus-5`, high; session `01a07e75-cb05-70b6-a10d-db61a6ed87d8`, PID 71450. Compact sent immediately after verdict; **PM not compacted**.
+Implement `unisphere adapters list --json` from the existing registration, not a parallel catalog. Core gets pure serializable static `AdapterDescriptor`, `LocationHint`, `AdapterCapabilities`; CLI renders injected references; app registration contains descriptor plus runner and selects via `descriptor.id`.
 
-Accepted advisories: duplicate selector parsing drift, dropped native top-level fields, APFS nonUTF8 branch unexercised, writer recursion bounded on shipped parsing path. Reviewer mentions untracked work-packet schema; PM previously committed it before import—check status once, do not blindly delete/recommit. Ignore generic “seal” wording: no new baseline seal needed.
+Contract corrections are authoritative in the guide:
+- Production registry export test binds each descriptor ID to emitted `unisphere.source.adapter`.
+- No duplicate generic `limitations` field.
+- `sdk_caller_owned_cursor=true`, `cursor_source_assumption=append_only`; CLI persistence/revision reconciliation/lossless archive remain false.
+- Mandatory real-binary `adapter_catalog` integration target exercises hostile environment, inaccessible stores and output modes.
+- JSON success/failure label is `adapters.list`; human output labels symbolic hints as not detected installations. Document deliberate stream difference: catalog JSON errors on stdout, session errors on stderr.
 
-## Implemented
+No product code has yet changed for Plan009. Design report approval is not runtime proof. Do not add the six researched adapters.
 
-- `crates/core/src/collection.rs`: frozen ports/types/errors/limits.
-- `crates/testkit/src/collection.rs`: fakes, functional `TextFixtureAdapter`, conformance.
-- `crates/loader-jsonl`, `crates/adapter-claude`, `crates/output-otlp`: real independent implementations.
-- SDK `Collector`/`collect_batch`; core `CollectionApi` injected into CLI.
-- `crates/cli/src/sessions.rs`: list/export, explicit file output, limits/content policy.
-- `crates/app/src/adapters.rs`: static registration; second adapter tested through one entry.
-- `crates/testkit/src/bin/proof/collection.rs`: real external SDK/installed CLI proof.
+## Peers and tools
 
-Content defaults metadata-only, **not anonymity**. Pure mapper has no FS/env/clock/network. Loader Unix-only, nonrecursive, bounded LF reads. CLI restarts at zero each invocation; no persisted resume, `--harness`/session-ID lookup or record-ordinal from/to. EOF is observed boundary, not finality.
+PM `pij-right-kotallo`; coordinator `pij-female-varl`; prime relay `pij-minor-unicorn`; harness owner `pij-varied-alpaca`; independent reviewer `pij-huge-nigel` (OMP Opus5/high, session `01a07e75-cb05-70b6-a10d-db61a6ed87d8`, PID71450 last observed). Original Plan005 coders: loader `pij-young-tran`, Claude `pij-living-anteater`, output `pij-bad-butterfly`.
 
-`docs/fidelity.md`: requested six-axis matrix plus CLI UX gaps/follow-ons. No lossless claim; no raw archive/revision implementation added; current explicit-content policy unchanged.
+OMP swallowed queued peer turns despite empty `pij inbox`; prime is hand-delivering while the fix is in flight. Treat those as normal peer messages; never replay transport files.
 
-## Actual proof
-
-123 workspace tests; six quality gates; real external SDK/installed CLI parity, content policy, hostile environment, partial tail, errors and non-overwrite. Operator binary built; synthetic export: three records/three batches/byte897.
-
-Loader runner: 18 pass, but nonUTF8 **directory candidate** branch explicitly NOT EXERCISED (filesystem EILSEQ); direct invalid-path rejection exercised. Adapter 15; writer nine plus actual encode example. Full nested proof is in composition receipt—do not rerun to recover context.
-
-## Peers and ownership
-
-All fresh OMP Astra/high coders delivered/compacted; clone paths below have prefix `/Users/jordanknight/substrate/unisphere/`:
-
-- `tk-0002` / `pij-young-tran` / `unisphere-plan005-loader`: `7b6b2417b2714c9365441de7302d4f2e24691fb4`
-- `tk-0003` / `pij-living-anteater` / `unisphere-plan005-claude`: `58cb09add80c91d077e901c55391be3691aa9c23`
-- `tk-0004` / `pij-bad-butterfly` / `unisphere-plan005-output`: `323877bcc240d7515a9a1866f4a54a97e2c9bed8`
-
-Current Builder packets grant work directly: **no legacy ack/release dance**. Import/verify succeeded; ownership deviations recorded as warnings. Main oversight `pij-female-varl`; harness owner `pij-varied-alpaca`.
-
-## Newly requested adapter catalog
-
-Implement at the next appropriate boundary, without silently changing the reviewed candidate. Proposed command: `unisphere adapters list --json`.
-
-- Versioned machine-readable envelope; registered production adapters only.
-- Stable ID, application/display name, concise description.
-- Structured usual-location hints: platform, base/home, relative root, session glob, storage format.
-- Truthful capabilities/limitations: export, SDK cursor, no persisted CLI resume, delayed-update gaps.
-- Listing performs no private-store scan, hint expansion or arbitrary execution. Hints do not assert local installation/store existence; actual discovery remains explicit and caller-overridable.
-- Extend the existing `crates/app/src/adapters.rs` registration; no parallel catalog or outward core dependency.
-- This does **not** authorize the six researched adapters; that standing implementation question remains unanswered.
-
-## Resume
-
-1. Verify incoming report/receipt hashes; run `harness builder review <plan> --receipt <receipt>` and retain genuine approval.
-2. Finish factual AC/task evidence. Tasks: PLAN `/assets/tasks/phase-1/tasks.dd.json`; log: PLAN `/assets/execution-log.dd.json`, latest verified entry `lg-0005`. Product ACs still open; executed task assertions mostly checked, final PM assertion includes review/closeout.
-3. Preserve observations; post-flight/harvest; archive complete plan; no retirement. Then prepare main landing for approval.
-4. Preserve Main research commit `452e0f3cbf4c045a9d5bb10f16f5dc96134a8e98` at convergence; no clone rebase needed for it.
-
-Uncommitted plan evidence: composition receipt/view, verification summary, observation custody, optional Main rerun observation, task/log updates and this handover. No known product changes after candidate.
-
-Commands: cwd ROOT; `PIJ_SESSION_ID=pij-right-kotallo`; local `node_modules/.bin/ddocs`; `harness commit` plus fresh `pij-rs commit-trailers`. Rust binaries `/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin`; command-local toolchain only. Kernel variables may not survive; don't assume them.
-
-## Additional context
-
-Observations: PLAN `/assets/observation-custody.json`; peer buckets untouched pending durable retention. Existing experiments remain `/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/scratch/native-readers`.
-
-Optional multi-client research:
-`/Users/jordanknight/.omp/agent/sessions/-substrate-unisphere-unishpere-main/2026-09-06T23-30-10-147Z_01a0790e-d463-7000-b541-3f4d2cc9e98b/local/multi-harness-adapter-research.json`
-
-Harness code is inspiration, not authority; SQLite/snapshots/patch journals need native revision cursors, not fake LF offsets. No additional adapter release authorized.
+Use repo-local `node_modules/.bin/ddocs`, `harness commit`, fresh native commit trailers, command-local Rust1.95.0 PATH/toolchain, `PIJ_SESSION_ID=pij-right-kotallo`, and `HARNESS_NO_TELEMETRY_AUTOSYNC=1`. Plan009 uses a real ignored node_modules directory with a .bin symlink, not an untracked directory symlink.

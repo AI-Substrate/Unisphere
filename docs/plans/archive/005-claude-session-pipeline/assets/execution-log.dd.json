@@ -102,6 +102,15 @@
             "backpressure.dd.json#rows/bp-000b",
             "backpressure.dd.json#rows/bp-000c"
           ]
+        },
+        {
+          "id": "lg-0008",
+          "at": "2026-09-08T03:50:10.109Z",
+          "text": "Actual Builder close archived the complete Plan005 folder and externally preserved four allocations at /Users/jordanknight/substrate/unisphere/unisphere-plan005-preserved/fa75faee-d644-4835-bd40-3fbf963dd1c9/receipt/preservation.dd.json (d93ed4f94bc05a9074569704bffcd7d2ead6a2474b2cc19df21dbe7ef6609a8f). Archive commit5c64d21b33cd6516f639346ceed6a5e1de6b10f0. Actual archived plan validate --complete exited0 with0errors0warnings0open0contradictions0orphans; assets/archive-completion.json. Original experiments untouched; no retirement, push, PR or main merge. This completes the rescheduled archive conjunct.",
+          "links": [
+            "../plan.dd.json#phases/ph-a437",
+            "tasks/phase-1/tasks.dd.json#done_when/tk-0005/dw-000d"
+          ]
         }
       ]
     }

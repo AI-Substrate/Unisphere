@@ -1,0 +1,17 @@
+{
+  "argv": [
+    "harness",
+    "commit",
+    "feat(core): freeze native snapshot and parallel mapper contracts\n\nPij-Prime: pij-right-kotallo\nPij-Plan: 010-native-adapters",
+    "--",
+    "crates/core/src/snapshot.rs",
+    "crates/core/src/lib.rs",
+    "docs/plans/010-native-adapters"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "started": "2026-09-08T06:20:18.019Z",
+  "completed": "2026-09-08T06:20:20.704Z",
+  "exit_code": 0,
+  "stdout": "{\"command\":\"commit\",\"status\":\"ok\",\"timestamp\":\"2026-09-08T06:20:20.700Z\",\"data\":{\"mode\":\"direct-verified\",\"probe\":\"connected\",\"sha\":\"418a62452af3e766c8a939e6c2a4d9822d559afa\",\"sha_unknown\":false,\"staged\":[\"crates/core/src/lib.rs\",\"crates/core/src/snapshot.rs\",\"docs/plans/010-native-adapters/assets/backpressure.dd.json\",\"docs/plans/010-native-adapters/assets/backpressure.dd.md\",\"docs/plans/010-native-adapters/assets/impl-guide.dd.json\",\"docs/plans/010-native-adapters/assets/impl-guide.dd.md\",\"docs/plans/010-native-adapters/assets/lane-contracts.json\",\"docs/plans/010-native-adapters/assets/native-structural-research.json\",\"docs/plans/010-native-adapters/assets/operator-authorization.json\",\"docs/plans/010-native-adapters/assets/tasks/phase-1/tasks.dd.json\",\"docs/plans/010-native-adapters/assets/tasks/phase-1/tasks.dd.md\",\"docs/plans/010-native-adapters/assets/team/coder-packet.template.md\",\"docs/plans/010-native-adapters/assets/team/model-settings.template.json\",\"docs/plans/010-native-adapters/assets/team/reviewer-packet.template.md\",\"docs/plans/010-native-adapters/plan.dd.json\",\"docs/plans/010-native-adapters/plan.dd.md\",\"docs/plans/010-native-adapters/the-flow.json\",\"docs/plans/010-native-adapters/the-flow.md\"],\"verify\":\"landed\",\"buffer\":null,\"detail\":\"committed 418a62452af3 and VERIFIED: a refs/notes/ai entry landed, so the collector recorded this commit's authorship.\"},\"evidence\":[{\"label\":\"commit 418a62452af3\"}]}\n",
+  "stderr": ""
+}

@@ -33,13 +33,75 @@ _Empty._
 
 ## Tasks
 
-_No entries._
+| id | title | domain | phase | state | note | receipt | done | success | notes | satisfies | satisfies_toward |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| tk-0001 | PM shared contracts | — | ph-cce1 | [ ] unchecked | — | — | [tk-0001](tasks.dd.md#done-when) | Own immutable existing JSONL/catalog contracts plus new raw revision snapshot types; no storage or mapping implementation. | — |  | — |
+| tk-0002 | Codex pure mapper | — | ph-cce1 | [ ] unchecked | — | — | [tk-0002](tasks.dd.md#done-when) | Complete Codex native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/codex-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation. | — | [ac-0001](../../../plan.dd.md#acceptance-criteria) | — |
+| tk-0003 | Oh My Pi pure mapper | — | ph-cce1 | [ ] unchecked | — | — | [tk-0003](tasks.dd.md#done-when) | Complete Oh My Pi native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/oh-my-pi-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation. | — | [ac-0002](../../../plan.dd.md#acceptance-criteria) | — |
+| tk-0004 | Pi pure mapper | — | ph-cce1 | [ ] unchecked | — | — | [tk-0004](tasks.dd.md#done-when) | Complete Pi native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/pi-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation. | — | [ac-0003](../../../plan.dd.md#acceptance-criteria) | — |
+| tk-0005 | Copilot CLI pure mapper | — | ph-cce1 | [ ] unchecked | — | — | [tk-0005](tasks.dd.md#done-when) | Complete Copilot CLI native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/copilot-cli-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation. | — | [ac-0004](../../../plan.dd.md#acceptance-criteria) | — |
+| tk-0006 | VS Code Copilot pure mapper | — | ph-cce1 | [ ] unchecked | — | — | [tk-0006](tasks.dd.md#done-when) | Complete VS Code Copilot native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/vscode-copilot-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation. | — | [ac-0005](../../../plan.dd.md#acceptance-criteria) | — |
+| tk-0007 | Cursor pure mapper | — | ph-cce1 | [ ] unchecked | — | — | [tk-0007](tasks.dd.md#done-when) | Complete Cursor native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/cursor-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation. | — | [ac-0006](../../../plan.dd.md#acceptance-criteria) | — |
+| tk-0008 | Shared native snapshot storage | — | ph-cce1 | [ ] unchecked | — | — | [tk-0008](tasks.dd.md#done-when) | Implement real loader-snapshot crate for bounded JSON document, complete LF journal and read-only transactionally consistent SQLite key/value snapshots. No native semantic mapping. Author synthetic file/database boundary regressions and docs/snapshot-loader.md. | — | [ac-0007](../../../plan.dd.md#acceptance-criteria) | — |
+| tk-0009 | PM full composition | — | ph-cce1 | [ ] unchecked | — | — | [tk-0009](tasks.dd.md#done-when) | Integrate new packages, static descriptor/runner registration, snapshot SDK/application/CLI seam, output manifests, architecture policy and actual whole-pipeline proof. Own all shared lockfile/app/core mutations. | — | [ac-0001](../../../plan.dd.md#acceptance-criteria), [ac-0002](../../../plan.dd.md#acceptance-criteria), [ac-0003](../../../plan.dd.md#acceptance-criteria), [ac-0004](../../../plan.dd.md#acceptance-criteria), [ac-0005](../../../plan.dd.md#acceptance-criteria), [ac-0006](../../../plan.dd.md#acceptance-criteria), [ac-0007](../../../plan.dd.md#acceptance-criteria), [ac-0008](../../../plan.dd.md#acceptance-criteria), [ac-0009](../../../plan.dd.md#acceptance-criteria), [ac-000a](../../../plan.dd.md#acceptance-criteria) | — |
 
 <a id="done-when"></a>
 
 ## Done when
 
-_No fields._
+### tk-0001
+
+| id | assertion | state | pressure |
+| --- | --- | --- | --- |
+| dw-0001 | Own immutable existing JSONL/catalog contracts plus new raw revision snapshot types; no storage or mapping implementation. | [ ] unchecked | [bp-0009](../../backpressure.dd.md#rows) |
+
+### tk-0002
+
+| id | assertion | state | pressure |
+| --- | --- | --- | --- |
+| dw-0002 | Complete Codex native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/codex-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation. | [ ] unchecked | [bp-0001](../../backpressure.dd.md#rows) |
+
+### tk-0003
+
+| id | assertion | state | pressure |
+| --- | --- | --- | --- |
+| dw-0003 | Complete Oh My Pi native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/oh-my-pi-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation. | [ ] unchecked | [bp-0002](../../backpressure.dd.md#rows) |
+
+### tk-0004
+
+| id | assertion | state | pressure |
+| --- | --- | --- | --- |
+| dw-0004 | Complete Pi native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/pi-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation. | [ ] unchecked | [bp-0003](../../backpressure.dd.md#rows) |
+
+### tk-0005
+
+| id | assertion | state | pressure |
+| --- | --- | --- | --- |
+| dw-0005 | Complete Copilot CLI native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/copilot-cli-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation. | [ ] unchecked | [bp-0004](../../backpressure.dd.md#rows) |
+
+### tk-0006
+
+| id | assertion | state | pressure |
+| --- | --- | --- | --- |
+| dw-0006 | Complete VS Code Copilot native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/vscode-copilot-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation. | [ ] unchecked | [bp-0005](../../backpressure.dd.md#rows) |
+
+### tk-0007
+
+| id | assertion | state | pressure |
+| --- | --- | --- | --- |
+| dw-0007 | Complete Cursor native mapper(s), DESCRIPTOR const(s), native semantic synthetic fixtures, regressions and docs/cursor-adapter.md. No FS/env/clock/net/output access and no shared-file writes. Independently runnable from frozen input types; no waits for sibling loader implementation. | [ ] unchecked | [bp-0006](../../backpressure.dd.md#rows) |
+
+### tk-0008
+
+| id | assertion | state | pressure |
+| --- | --- | --- | --- |
+| dw-0008 | Implement real loader-snapshot crate for bounded JSON document, complete LF journal and read-only transactionally consistent SQLite key/value snapshots. No native semantic mapping. Author synthetic file/database boundary regressions and docs/snapshot-loader.md. | [ ] unchecked | [bp-0007](../../backpressure.dd.md#rows) |
+
+### tk-0009
+
+| id | assertion | state | pressure |
+| --- | --- | --- | --- |
+| dw-0009 | Integrate new packages, static descriptor/runner registration, snapshot SDK/application/CLI seam, output manifests, architecture policy and actual whole-pipeline proof. Own all shared lockfile/app/core mutations. | [ ] unchecked | [bp-000a](../../backpressure.dd.md#rows) |
 
 <a id="goals"></a>
 

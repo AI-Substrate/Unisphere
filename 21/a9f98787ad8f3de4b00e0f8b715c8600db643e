@@ -1,0 +1,44 @@
+docs/plans/005-claude-session-pipeline/assets/backpressure.dd.json
+  h_9e71e8b09f7cf2 1-145
+docs/plans/005-claude-session-pipeline/assets/backpressure.dd.md
+  h_9e71e8b09f7cf2 1-40
+docs/plans/005-claude-session-pipeline/assets/design-inputs.md
+  h_9e71e8b09f7cf2 1-15
+docs/plans/005-claude-session-pipeline/assets/design-validation.json
+  h_9e71e8b09f7cf2 1-1648
+docs/plans/005-claude-session-pipeline/assets/impl-guide.dd.json
+  h_9e71e8b09f7cf2 1-690
+docs/plans/005-claude-session-pipeline/assets/impl-guide.dd.md
+  h_9e71e8b09f7cf2 1-146
+docs/plans/005-claude-session-pipeline/assets/tasks/phase-1/tasks.dd.json
+  h_9e71e8b09f7cf2 1-101
+docs/plans/005-claude-session-pipeline/assets/tasks/phase-1/tasks.dd.md
+  h_9e71e8b09f7cf2 1-159
+docs/plans/005-claude-session-pipeline/assets/team/coder-packet.template.md
+  h_9e71e8b09f7cf2 1-41
+docs/plans/005-claude-session-pipeline/assets/team/model-settings.template.json
+  h_9e71e8b09f7cf2 1-10
+docs/plans/005-claude-session-pipeline/assets/team/reviewer-packet.template.md
+  h_9e71e8b09f7cf2 1-44
+docs/plans/005-claude-session-pipeline/original-ask.md
+  h_9e71e8b09f7cf2 1-11
+docs/plans/005-claude-session-pipeline/plan.dd.json
+  h_9e71e8b09f7cf2 1-208
+docs/plans/005-claude-session-pipeline/plan.dd.md
+  h_9e71e8b09f7cf2 1-182
+docs/plans/005-claude-session-pipeline/the-flow.json
+  h_9e71e8b09f7cf2 1-273
+docs/plans/005-claude-session-pipeline/the-flow.md
+  h_9e71e8b09f7cf2 1-40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "21a9f98787ad8f3de4b00e0f8b715c8600db643e",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

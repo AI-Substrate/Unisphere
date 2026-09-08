@@ -1,0 +1,78 @@
+crates/app/src/adapters.rs
+  h_9e71e8b09f7cf2 3,9,13-34,57-58,64-67,69,85,102-108,118-139,174-219
+crates/app/src/main.rs
+  h_9e71e8b09f7cf2 33-36
+crates/app/tests/adapter_catalog.rs
+  h_9e71e8b09f7cf2 1-127
+crates/cli/src/args.rs
+  h_9e71e8b09f7cf2 11-12
+crates/cli/src/catalog.rs
+  h_9e71e8b09f7cf2 1-67
+crates/cli/src/lib.rs
+  h_9e71e8b09f7cf2 1,14,17,19
+crates/cli/src/output.rs
+  h_9e71e8b09f7cf2 3,11-12,24-29,34,52-58,76-77,81-98,101-140,159
+crates/core/src/catalog.rs
+  h_9e71e8b09f7cf2 1-51
+crates/core/src/lib.rs
+  h_9e71e8b09f7cf2 1,6,11
+docs/adapters.md
+  h_9e71e8b09f7cf2 36-40,49-72
+docs/cli.md
+  h_9e71e8b09f7cf2 3-7,18,34,41-45,108-110,131,135-137,187-228
+docs/plans/009-adapter-catalog/assets/baseline-seal.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/009-adapter-catalog/assets/catalog-cli-initial.json
+  h_9e71e8b09f7cf2 1-18
+docs/plans/009-adapter-catalog/assets/catalog-help-smoke.json
+  h_9e71e8b09f7cf2 1-13
+docs/plans/009-adapter-catalog/assets/catalog-human-error-smoke.json
+  h_9e71e8b09f7cf2 1-14
+docs/plans/009-adapter-catalog/assets/catalog-human-smoke.json
+  h_9e71e8b09f7cf2 1-13
+docs/plans/009-adapter-catalog/assets/catalog-io-smoke.json
+  h_9e71e8b09f7cf2 1-9
+docs/plans/009-adapter-catalog/assets/catalog-piped-smoke.json
+  h_9e71e8b09f7cf2 1-12
+docs/plans/009-adapter-catalog/assets/catalog-regressions.json
+  h_9e71e8b09f7cf2 1-15
+docs/plans/009-adapter-catalog/assets/catalog-terminal-observation.json
+  h_9e71e8b09f7cf2 1-12
+docs/plans/009-adapter-catalog/assets/design-r2-intake.json
+  h_9e71e8b09f7cf2 1-15
+docs/plans/009-adapter-catalog/assets/design-v2-commit.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/009-adapter-catalog/assets/execution-log.dd.json
+  h_9e71e8b09f7cf2 2-4,6-31
+docs/plans/009-adapter-catalog/assets/execution-log.dd.md
+  h_9e71e8b09f7cf2 20-22
+docs/plans/009-adapter-catalog/assets/reviews/design-opus-r2.md
+  h_9e71e8b09f7cf2 1-56
+docs/plans/009-adapter-catalog/assets/team/baseline.dd.json
+  h_9e71e8b09f7cf2 1-74
+docs/plans/009-adapter-catalog/assets/team/baseline.dd.md
+  h_9e71e8b09f7cf2 1-21
+docs/plans/009-adapter-catalog/assets/team/basis-a77126067be182fc04fb5a4fa2a1c0f35b43b0bbf43776dd2cf27f15f64fa790.json
+  h_9e71e8b09f7cf2 1-296
+docs/plans/009-adapter-catalog/assets/team/basis-b5cfc5fb5d3d590589607010f963b522acd34b2c77154a08aabbebc0d24d68d8.json
+  h_9e71e8b09f7cf2 1-160
+docs/plans/009-adapter-catalog/assets/team/review-decomposition-rv-plan009-design-opus-r2.dd.json
+  h_9e71e8b09f7cf2 1-126
+docs/plans/009-adapter-catalog/assets/team/review-decomposition-rv-plan009-design-opus-r2.dd.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/009-adapter-catalog/the-flow.json
+  h_9e71e8b09f7cf2 6,29-192,200,209-219,225,236-246,252,264-274,281,303-304,364,381-391,397,413-423
+docs/plans/009-adapter-catalog/the-flow.md
+  h_9e71e8b09f7cf2 4,6,10-13,20-21,32,37,41-57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "17829db8a427d1a6e69681044d58d7cb7c837263",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

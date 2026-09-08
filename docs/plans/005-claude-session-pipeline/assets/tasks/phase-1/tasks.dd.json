@@ -114,14 +114,14 @@
             "assertion": "Shared collection limits/errors/ports and pure fixture fakes compile and behave before any new loader/adapter/output package exists.",
             "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0001",
-            "proven_by": "../../execution-log.dd.json#entries/lg-0001"
+            "proven_by": "../../execution-log.dd.json#entries/lg-0002"
           },
           {
             "id": "dw-0002",
             "assertion": "Source listing/read/output bounds and distinct recoverable limit errors are executable through core public contracts and FakeCollector.",
             "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0003",
-            "proven_by": "../../execution-log.dd.json#entries/lg-0001"
+            "proven_by": "../../execution-log.dd.json#entries/lg-0002"
           }
         ],
         "tk-0002": [

@@ -40,8 +40,11 @@
 //! clears roots, whereas `None` retains the lower-priority roots.
 #![forbid(unsafe_code)]
 
+pub mod collection;
 mod fs;
 mod service;
+pub use collection::{Collector, collect_batch};
+pub use unisphere_core::collection::*;
 
 pub use fs::StdConfigReader;
 pub use service::Inspector;

@@ -11,6 +11,8 @@ use unisphere_core::{ConfigOverrides, ConfigSource, Failure, InspectionApi, Insp
 
 mod args;
 mod output;
+pub mod sessions;
+pub use sessions::{requested_session_adapter, run_sessions, session_error};
 
 use args::Action;
 use output::Response;

@@ -49,8 +49,8 @@ _Empty._
 
 | id | assertion | state | pressure | proven_by |
 | --- | --- | --- | --- | --- |
-| dw-0001 | Shared collection limits/errors/ports and pure fixture fakes compile and behave before any new loader/adapter/output package exists. | [x] checked | [bp-0001](../../backpressure.dd.md#rows) | [lg-0001](../../execution-log.dd.md#entries) |
-| dw-0002 | Source listing/read/output bounds and distinct recoverable limit errors are executable through core public contracts and FakeCollector. | [x] checked | [bp-0003](../../backpressure.dd.md#rows) | [lg-0001](../../execution-log.dd.md#entries) |
+| dw-0001 | Shared collection limits/errors/ports and pure fixture fakes compile and behave before any new loader/adapter/output package exists. | [x] checked | [bp-0001](../../backpressure.dd.md#rows) | [lg-0002](../../execution-log.dd.md#entries) |
+| dw-0002 | Source listing/read/output bounds and distinct recoverable limit errors are executable through core public contracts and FakeCollector. | [x] checked | [bp-0003](../../backpressure.dd.md#rows) | [lg-0002](../../execution-log.dd.md#entries) |
 
 ### tk-0002
 

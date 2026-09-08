@@ -7,6 +7,10 @@
         {
           "name": "serde",
           "kind": null
+        },
+        {
+          "name": "serde_json",
+          "kind": null
         }
       ]
     },

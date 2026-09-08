@@ -14,3 +14,4 @@ serde_json.workspace = true
 
 [dev-dependencies]
 unisphere-testkit.workspace = true
+tempfile.workspace = true

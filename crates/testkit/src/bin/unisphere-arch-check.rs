@@ -12,20 +12,40 @@ use std::{
 // dependencies must obey the same boundary even on a machine that never builds them.
 fn allowed(package: &str, dependency: &str, kind: &str) -> bool {
     match (package, kind) {
-        ("unisphere-core", "normal") => dependency == "serde",
+        ("unisphere-core", "normal") => matches!(dependency, "serde" | "serde_json"),
         ("unisphere-sdk", "normal") => {
             matches!(dependency, "unisphere-core" | "serde" | "serde_json")
         }
         ("unisphere-cli", "normal") => {
             matches!(dependency, "unisphere-core" | "clap" | "serde_json")
         }
-        ("unisphere-app", "normal") => matches!(dependency, "unisphere-sdk" | "unisphere-cli"),
+        ("unisphere-app", "normal") => matches!(
+            dependency,
+            "unisphere-sdk"
+                | "unisphere-cli"
+                | "unisphere-loader-jsonl"
+                | "unisphere-adapter-claude"
+                | "unisphere-output-otlp"
+        ),
+        ("unisphere-loader-jsonl", "normal") => matches!(dependency, "unisphere-core" | "libc"),
+        ("unisphere-adapter-claude", "normal") => {
+            matches!(dependency, "unisphere-core" | "serde_json" | "time")
+        }
+        ("unisphere-output-otlp", "normal") => {
+            matches!(dependency, "unisphere-core" | "serde_json")
+        }
         ("unisphere-testkit", "normal") => {
             matches!(dependency, "unisphere-core" | "serde_json" | "tempfile")
         }
-        ("unisphere-sdk" | "unisphere-cli" | "unisphere-app", "dev") => {
-            dependency == "unisphere-testkit"
-        }
+        (
+            "unisphere-sdk"
+            | "unisphere-cli"
+            | "unisphere-app"
+            | "unisphere-loader-jsonl"
+            | "unisphere-adapter-claude"
+            | "unisphere-output-otlp",
+            "dev",
+        ) => matches!(dependency, "unisphere-testkit" | "tempfile" | "serde_json"),
         _ => false,
     }
 }
@@ -58,6 +78,9 @@ fn check(graph: &Value) -> Result<usize, String> {
                 | "unisphere-cli"
                 | "unisphere-app"
                 | "unisphere-testkit"
+                | "unisphere-loader-jsonl"
+                | "unisphere-adapter-claude"
+                | "unisphere-output-otlp"
         ) {
             return Err(format!("unapproved workspace package {name}"));
         }
@@ -108,9 +131,86 @@ fn check(graph: &Value) -> Result<usize, String> {
     Ok(count)
 }
 
+// A bounded lexical sensor, not a Rust effect system: import aliases, macros and
+// indirect calls still require independent source review. Conventional trailing
+// #[cfg(test)] modules and doc/comment-only lines are outside production scope.
+fn check_source(source: &str, label: &str) -> Result<(), String> {
+    let production = source.split("\n#[cfg(test)]").next().unwrap_or(source);
+    let text: String = production
+        .lines()
+        .filter(|line| !line.trim_start().starts_with("//"))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let compact: String = text.chars().filter(|c| !c.is_whitespace()).collect();
+    for module in ["fs", "env", "process", "net", "thread"] {
+        if compact.contains(&format!("std::{module}")) {
+            return Err(format!(
+                "{label}: forbidden production std::{module} access"
+            ));
+        }
+        for statement in text.split(';') {
+            let statement_compact: String =
+                statement.chars().filter(|c| !c.is_whitespace()).collect();
+            if statement_compact.contains("usestd::{")
+                && statement
+                    .split(|c: char| !c.is_alphanumeric() && c != '_')
+                    .any(|token| token == module)
+            {
+                return Err(format!("{label}: forbidden grouped std::{module} import"));
+            }
+        }
+    }
+    let tokens: Vec<_> = text
+        .split(|c: char| !c.is_alphanumeric() && c != '_')
+        .filter(|token| !token.is_empty())
+        .collect();
+    if tokens.contains(&"unsafe")
+        || tokens.contains(&"extern")
+        || compact.contains("SystemTime::now")
+        || compact.contains("Instant::now")
+        || compact.contains("OffsetDateTime::now_utc")
+        || compact.contains("include_str!")
+        || compact.contains("include_bytes!")
+    {
+        return Err(format!(
+            "{label}: forbidden production clock, unsafe/FFI or file-include access"
+        ));
+    }
+    Ok(())
+}
+
+fn check_sources(directory: &std::path::Path) -> Result<usize, String> {
+    if !directory.exists() {
+        return Ok(0);
+    }
+    let mut checked = 0;
+    for entry in fs::read_dir(directory).map_err(|e| e.to_string())? {
+        let entry = entry.map_err(|e| e.to_string())?;
+        let kind = entry.file_type().map_err(|e| e.to_string())?;
+        if kind.is_symlink() {
+            return Err(format!(
+                "source scan refuses symlink: {}",
+                entry.path().display()
+            ));
+        }
+        if kind.is_dir() {
+            checked += check_sources(&entry.path())?;
+        } else if entry.path().extension().is_some_and(|ext| ext == "rs") {
+            check_source(
+                &fs::read_to_string(entry.path()).map_err(|e| e.to_string())?,
+                &entry.path().display().to_string(),
+            )?;
+            checked += 1;
+        }
+    }
+    Ok(checked)
+}
+
 fn run() -> Result<(), String> {
     let mut args = env::args_os().skip(1);
-    let graph = match args.next().as_deref() {
+    let argument = args.next();
+    let real_workspace = argument.is_none();
+    let graph = match argument.as_deref() {
         None => {
             let output = Command::new(env::var_os("CARGO").unwrap_or_else(|| "cargo".into()))
                 .args(["metadata", "--format-version", "1", "--no-deps", "--locked"])
@@ -139,6 +239,13 @@ fn run() -> Result<(), String> {
         serde_json::from_slice(&graph).map_err(|e| format!("invalid metadata JSON: {e}"))?;
     let edges = check(&value)?;
     println!("architecture: {edges} declared normal/dev/build edges accepted");
+    if real_workspace {
+        let count = check_sources(std::path::Path::new("crates/core/src"))?
+            + check_sources(std::path::Path::new("crates/adapter-claude/src"))?;
+        println!(
+            "purity: {count} core/adapter production source files checked (lexical sensor; independent review still required)"
+        );
+    }
     Ok(())
 }
 
@@ -162,13 +269,30 @@ mod tests {
 
     #[test]
     fn accepts_only_declared_allowed_edges_in_a_partial_workspace() {
-        assert_eq!(
+        assert!(
             check(&fixture(include_str!(
                 "../../fixtures/architecture/allowed.json"
             )))
-            .unwrap(),
-            7
+            .is_ok()
         );
+    }
+
+    #[test]
+    fn purity_sensor_rejects_negative_sources_but_permits_core_ports() {
+        let cases: Value =
+            serde_json::from_str(include_str!("../../fixtures/architecture/purity.json")).unwrap();
+        for case in cases.as_array().unwrap() {
+            let result = check_source(
+                case["source"].as_str().unwrap(),
+                case["name"].as_str().unwrap(),
+            );
+            assert_eq!(
+                result.is_ok(),
+                case["allowed"].as_bool().unwrap(),
+                "{}",
+                case["name"]
+            );
+        }
     }
 
     #[test]

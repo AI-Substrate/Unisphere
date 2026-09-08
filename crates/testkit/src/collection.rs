@@ -11,6 +11,8 @@ pub const CLAUDE_BASIC: &[u8] = include_bytes!("../fixtures/collection/claude-ba
 pub const CLAUDE_PARTS: &[u8] = include_bytes!("../fixtures/collection/claude-parts.jsonl");
 
 /// Frame known complete fixture bytes without doing storage I/O.
+/// Blank means every physical byte is ASCII whitespace (including space, tab,
+/// CR and LF); blanks consume offsets and the loader's physical record budget.
 pub fn fixture_records(bytes: &[u8]) -> Vec<NativeRecord> {
     let mut offset = 0_u64;
     let mut result = Vec::new();
@@ -249,6 +251,10 @@ impl CollectionApi for FakeCollector {
 
 /// Applies to valid, complete records supported by a fixture adapter.
 /// It checks common semantics, not Claude-specific key names or invented totals.
+/// Output bounds here mean one mapped record per supplied physical record.
+/// The OTLP writer separately enforces MAX_OUTPUT_BATCH_BYTES while encoding:
+/// serializing these Rust DTOs would not measure the OTLP representation.
+/// Fixture content uses reserved SENSITIVE-* markers, never metadata fields.
 pub fn assert_adapter_conformance(
     adapter: &dyn SessionAdapter,
     source: &SessionRef,
@@ -265,6 +271,11 @@ pub fn assert_adapter_conformance(
         metadata.records.len(),
         records.len(),
         "retain every physical fixture record"
+    );
+    let metadata_json = serde_json::to_string(&metadata).expect("serializable metadata");
+    assert!(
+        !metadata_json.contains("SENSITIVE-"),
+        "fixture content escaped metadata-only policy"
     );
     for (record, native) in metadata.records.iter().zip(records) {
         assert_eq!(record.event_name, "unisphere.session.record");
@@ -325,7 +336,7 @@ mod tests {
         let source = SessionRef {
             path: "/fixture/text.jsonl".into(),
         };
-        let records = fixture_records(b"sensitive text\nsecond text\n");
+        let records = fixture_records(b"SENSITIVE-TEXT\nsecond text\n");
         assert_adapter_conformance(&TextFixtureAdapter, &source, &records);
         let content = TextFixtureAdapter
             .map(
@@ -338,7 +349,7 @@ mod tests {
             .unwrap();
         assert_eq!(
             content.records[0].body.as_ref().unwrap()["parts"][0]["content"],
-            "sensitive text"
+            "SENSITIVE-TEXT"
         );
         let invalid = [NativeRecord {
             offset: 8,
@@ -404,28 +415,31 @@ mod tests {
         let source = SessionRef {
             path: expected.next_cursor.source.clone(),
         };
+        let collector: &dyn CollectionApi = &fake;
         assert_eq!(
-            fake.collect_batch(
-                &source,
-                None,
-                ReadLimits::default(),
-                MappingOptions::default(),
-                &mut Reject
-            )
-            .unwrap_err()
-            .kind(),
+            collector
+                .collect_batch(
+                    &source,
+                    None,
+                    ReadLimits::default(),
+                    MappingOptions::default(),
+                    &mut Reject
+                )
+                .unwrap_err()
+                .kind(),
             PipelineErrorKind::Write
         );
         let mut output = Vec::new();
         assert_eq!(
-            fake.collect_batch(
-                &source,
-                None,
-                ReadLimits::default(),
-                MappingOptions::default(),
-                &mut output
-            )
-            .unwrap(),
+            collector
+                .collect_batch(
+                    &source,
+                    None,
+                    ReadLimits::default(),
+                    MappingOptions::default(),
+                    &mut output
+                )
+                .unwrap(),
             expected
         );
         assert_eq!(output, b"record\n");

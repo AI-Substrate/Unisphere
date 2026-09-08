@@ -21,6 +21,16 @@
             "backpressure.dd.json#rows/bp-0001",
             "backpressure.dd.json#rows/bp-0003"
           ]
+        },
+        {
+          "id": "lg-0002",
+          "at": "2026-09-08T01:36:42.344200+00:00",
+          "text": "Baseline r1 findings retained; its receipt intake refused missing native_session/PID despite actualnativecanary, no recorded approval invented. CorrectedB1 actualdependencychecker/allowedfixture for core->serde_json/futureapprovedcrates; actualarchitecture exit0 with16edges+5core sourcechecks. Fourchecker tests including negativepurityfixtures pass; vd1 still6+14=20tests; currentfullworkspaceclippy passes. B2 bound split correctly kept at writer(encodedbytes) versus adapter(recordcount); sharedsensitive-marker anddynCollectionApi tests pass. Exactbytes baseline-corrected-manifest.json, actualoutputs baseline-corrected-proof.json. SDK/CLIport preparation exercised28SDK/25CLItests independently; no newloader/Claude/writer package present.",
+          "links": [
+            "backpressure.dd.json#rows/bp-0001",
+            "backpressure.dd.json#rows/bp-0003",
+            "backpressure.dd.json#rows/bp-000b"
+          ]
         }
       ]
     }

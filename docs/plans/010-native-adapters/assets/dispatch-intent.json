@@ -1,0 +1,39 @@
+{
+  "model": "github-copilot/gpt-6-astra",
+  "effort": "high",
+  "harness": "omp",
+  "kind": "clone",
+  "parent": "pij-right-kotallo",
+  "source": "418a62452af3e766c8a939e6c2a4d9822d559afa",
+  "parallel": [
+    {
+      "unit": "tk-0002",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-codex"
+    },
+    {
+      "unit": "tk-0003",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-oh-my-pi"
+    },
+    {
+      "unit": "tk-0004",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-pi"
+    },
+    {
+      "unit": "tk-0005",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-copilot-cli"
+    },
+    {
+      "unit": "tk-0006",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-vscode-copilot"
+    },
+    {
+      "unit": "tk-0007",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-cursor"
+    },
+    {
+      "unit": "tk-0008",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-snapshot-loader"
+    }
+  ],
+  "status": "awaiting genuine baseline review and seal; no coder started yet"
+}

@@ -1,0 +1,27 @@
+{
+  "dd": {
+    "schema": "builder/execution-log"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Native adapter execution evidence",
+        "plan": "../plan.dd.json#meta"
+      }
+    },
+    {
+      "name": "entries",
+      "value": [
+        {
+          "id": "lg-0001",
+          "at": "2026-09-08T06:26:23.237Z",
+          "text": "Standing six-adapter grant retained. Plan010 allocated at418a62452af3e766c8a939e6c2a4d9822d559afa with actual new pure key/revision SnapshotRef/NativeSnapshot/ports and unchanged Plan005 JSONL/Plan009 catalog contracts. Actual scoped core/testkit command exited0 with6+14tests; actual external snapshot-contract consumer passed aggregate key+byte boundary, record-bound and unsafe-table validation (contract-proof.json, snapshot-contract-smoke.json). Native VSCode journal semantics and Cursor key/order facts resolved through two concurrent read-only scouts, not repeated private-store research. Evidence-only e959bc03 retains reports. All six mapper lanes plus storage owner are independently scoped in guide/lane-contracts, no worker validation/shared Cargo.lock edits. Actual ready tk0002 currently lacks baseline receipt; independent bounded contract review is active. No native coder start or adapter implementation proof claimed yet.",
+          "links": [
+            "../plan.dd.json#phases/ph-cce1"
+          ]
+        }
+      ]
+    }
+  ]
+}

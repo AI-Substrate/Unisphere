@@ -16,7 +16,7 @@
 | complexity | — |
 | summary | — |
 | backpressure | — |
-| log | — |
+| log | [entries](../../execution-log.dd.md#entries) |
 | mode | — |
 | plan_version | — |
 | created | — |

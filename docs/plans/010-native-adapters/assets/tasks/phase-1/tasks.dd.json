@@ -9,7 +9,8 @@
         "title": "Implement native mappers and shared snapshot storage",
         "slug": "phase-1",
         "status": "draft",
-        "summary": ""
+        "summary": "",
+        "log": "../../execution-log.dd.json#entries"
       }
     },
     {

@@ -22,7 +22,10 @@
           "SnapshotLoader reads bounded whole documents/journals/SQLite transaction snapshots. It hashes native raw records into revision; source.session_id is selection for pure mapping, not partial DB query masquerading as complete history. Journal partial tails fail rather than emitting half reconstruction.",
           "VSCode SnapshotAdapter reduces journal operations purely before projecting request/response events; source operations are never exported as chat events. Cursor IDE selection binds composer/bubble keys explicitly and is distinct from transcript mapper and opaque blob support disposition.",
           "Each mapper exports static native DESCRIPTOR; PM registers without worker edits to app/core/catalog. Snapshot descriptors declare no append-only cursor guarantee. Metadata-only omits actual message/tool content; safe diagnostics carry only structural IDs/keys.",
-          "Snapshot SDK output includes full-replacement scope/revision manifest, including empty snapshots; consumers can observe deletions by replacement. Cursor checkpoint returned only after writer acceptance. No hidden sink/dedup transaction or final-session claim."
+          "Snapshot SDK output includes full-replacement scope/revision manifest, including empty snapshots; consumers can observe deletions by replacement. Cursor checkpoint returned only after writer acceptance. No hidden sink/dedup transaction or final-session claim.",
+          "Exact required snapshot record attributes: unisphere.source.adapter = descriptor ID, unisphere.source.path = source.path, unisphere.source.key = native DB key or structural document/journal location, unisphere.source.revision = snapshot.revision, unisphere.source.format = json_document|json_journal|sqlite_key_value, unisphere.source.kind = actual native kind, unisphere.profile.version = \"1\". Optional unisphere.source.session.id is a verified native selected session ID. unisphere.source.offset MUST be absent for snapshots. PM tk-0009 updates profile docs and collection proof to select the required provenance set by registered source representation; JSONL keeps actual byte offsets.",
+          "Loader MUST validate input before I/O, enforce limits during read, and return only NativeSnapshot values for which validate(limits) is Ok. PM snapshot collection service revalidates injected loader output against source and limits before mapping; pure mappers may assume validated bounded input. max_record_bytes bounds raw value bytes, while max_snapshot_bytes bounds native UTF-8 key bytes plus raw value bytes, including a single large key.",
+          "PM tk-0009 retains one descriptor+runner registry for JSONL and snapshot variants. Each registration includes its source representation; production provenance regression creates an appropriate real synthetic JSONL/JSON/journal/SQLite fixture per registration, runs actual export, and asserts every emitted native record and snapshot manifest has that descriptor ID. No second metadata-only registry and no snapshot escape from provenance coverage."
         ]
       }
     },
@@ -179,7 +182,7 @@
               ]
             }
           ],
-          "interface": "Public unit CodexAdapter implements SessionAdapter; pub const DESCRIPTOR: AdapterDescriptor with id codex. For Cursor use CursorAdapter for transcripts and CursorIdeAdapter for SQLite snapshots, separate DESCRIPTOR and IDE_DESCRIPTOR with explicit dialect identities. Register no global services; PM composes. Read assets/lane-contracts.json.",
+          "interface": "CodexAdapter implements SessionAdapter; pub const DESCRIPTOR: AdapterDescriptor has id codex. Exact provenance/profile rules are in assets/lane-contracts.json.",
           "depends_on": [
             "tk-0001"
           ],
@@ -211,7 +214,7 @@
               ]
             }
           ],
-          "interface": "Public unit OmpAdapter implements SessionAdapter; pub const DESCRIPTOR: AdapterDescriptor with id oh-my-pi. For Cursor use CursorAdapter for transcripts and CursorIdeAdapter for SQLite snapshots, separate DESCRIPTOR and IDE_DESCRIPTOR with explicit dialect identities. Register no global services; PM composes. Read assets/lane-contracts.json.",
+          "interface": "OmpAdapter implements SessionAdapter; pub const DESCRIPTOR: AdapterDescriptor has id oh-my-pi. Exact provenance/profile rules are in assets/lane-contracts.json.",
           "depends_on": [
             "tk-0001"
           ],
@@ -243,7 +246,7 @@
               ]
             }
           ],
-          "interface": "Public unit PiAdapter implements SessionAdapter; pub const DESCRIPTOR: AdapterDescriptor with id pi. For Cursor use CursorAdapter for transcripts and CursorIdeAdapter for SQLite snapshots, separate DESCRIPTOR and IDE_DESCRIPTOR with explicit dialect identities. Register no global services; PM composes. Read assets/lane-contracts.json.",
+          "interface": "PiAdapter implements SessionAdapter; pub const DESCRIPTOR: AdapterDescriptor has id pi. Exact provenance/profile rules are in assets/lane-contracts.json.",
           "depends_on": [
             "tk-0001"
           ],
@@ -275,7 +278,7 @@
               ]
             }
           ],
-          "interface": "Public unit CopilotCliAdapter implements SessionAdapter and a separate CopilotCliAdapterSnapshot implementing SnapshotAdapter; pub const DESCRIPTOR: AdapterDescriptor with id copilot-cli. For Cursor use CursorAdapter for transcripts and CursorIdeAdapter for SQLite snapshots, separate DESCRIPTOR and IDE_DESCRIPTOR with explicit dialect identities. Register no global services; PM composes. Read assets/lane-contracts.json.",
+          "interface": "CopilotCliAdapter implements SessionAdapter; pub const DESCRIPTOR has id copilot-cli. CopilotCliAdapterSnapshot implements SnapshotAdapter; pub const SNAPSHOT_DESCRIPTOR has id copilot-cli-snapshot. Both obey assets/lane-contracts.json.",
           "depends_on": [
             "tk-0001"
           ],
@@ -307,7 +310,7 @@
               ]
             }
           ],
-          "interface": "Public unit VsCodeCopilotAdapter implements SnapshotAdapter; pub const DESCRIPTOR: AdapterDescriptor with id vscode-copilot. For Cursor use CursorAdapter for transcripts and CursorIdeAdapter for SQLite snapshots, separate DESCRIPTOR and IDE_DESCRIPTOR with explicit dialect identities. Register no global services; PM composes. Read assets/lane-contracts.json.",
+          "interface": "VsCodeCopilotAdapter implements SnapshotAdapter; pub const DESCRIPTOR: AdapterDescriptor has id vscode-copilot. Exact provenance/profile rules are in assets/lane-contracts.json.",
           "depends_on": [
             "tk-0001"
           ],
@@ -339,7 +342,7 @@
               ]
             }
           ],
-          "interface": "Public unit CursorAdapter implements SessionAdapter and a separate CursorAdapterSnapshot implementing SnapshotAdapter; pub const DESCRIPTOR: AdapterDescriptor with id cursor. For Cursor use CursorAdapter for transcripts and CursorIdeAdapter for SQLite snapshots, separate DESCRIPTOR and IDE_DESCRIPTOR with explicit dialect identities. Register no global services; PM composes. Read assets/lane-contracts.json. Explicit dialect IDs: DESCRIPTOR.id=cursor-transcript; IDE_DESCRIPTOR.id=cursor-ide. These supersede generic cursor slug.",
+          "interface": "CursorAdapter implements SessionAdapter; pub const DESCRIPTOR has id cursor-transcript. CursorIdeAdapter implements SnapshotAdapter; pub const IDE_DESCRIPTOR has id cursor-ide. Both obey exact provenance/profile rules in assets/lane-contracts.json.",
           "depends_on": [
             "tk-0001"
           ],
@@ -445,7 +448,7 @@
               ]
             }
           ],
-          "interface": "App composes each mapper/loader/writer and catalog once. Existing JSONL/export behavior retained. Snapshot export emits scoped full-replacement revision manifest and typed records; no persistent sink/exactly-once guarantee. Snapshot source revisions are not append cursors.",
+          "interface": "App composes each mapper/loader/writer and catalog once. Existing JSONL/export behavior retained. Snapshot export emits scoped full-replacement revision manifest and typed records; no persistent sink/exactly-once guarantee. Snapshot source revisions are not append cursors. One typed descriptor+runner registry covers every JSONL/snapshot dialect; PM extends production provenance regression with representation-appropriate real synthetic sources and validates each output record/manifest against descriptor.id. PM owns conditional JSONL-versus-snapshot provenance proof and revalidation of injected snapshot source/limits.",
           "depends_on": [
             "tk-0002",
             "tk-0003",
@@ -537,7 +540,7 @@
         },
         {
           "id": "vd-0002",
-          "description": "Native mapper and storage behavioral regressions",
+          "description": "PM-executed: scoped delivered-clone mapper/storage tests before import, then this coordinated workspace regression after lockfile update; workers supply unexecuted source/fixtures.",
           "command": "cargo",
           "args": [
             "test",

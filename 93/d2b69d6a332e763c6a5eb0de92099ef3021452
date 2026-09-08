@@ -1,0 +1,20 @@
+docs/plans/009-adapter-catalog/assets/post-flight.md
+  h_9e71e8b09f7cf2 1-13
+docs/plans/009-adapter-catalog/assets/retro-harvest.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/009-adapter-catalog/the-flow.json
+  h_9e71e8b09f7cf2 6,193-327,416,422-430,447-448,454,466-476,583,600-610,616,630-640,646,660-670
+docs/plans/009-adapter-catalog/the-flow.md
+  h_9e71e8b09f7cf2 4,6,13-14,21-22,36,52-54,60-68
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "93d2b69d6a332e763c6a5eb0de92099ef3021452",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+docs/plans/archive/010-native-adapters/assets/post-flight.json
+  h_9e71e8b09f7cf2 1-120
+docs/plans/archive/010-native-adapters/the-flow.json
+  h_9e71e8b09f7cf2 340-351,446,521,531-539,714
+docs/plans/archive/010-native-adapters/the-flow.md
+  h_9e71e8b09f7cf2 4,15,59-61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "d9a3c69d7ed649cbd9517a5fa1f7200c61c3dbcf",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

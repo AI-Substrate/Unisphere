@@ -1,0 +1,28 @@
+docs/plans/009-adapter-catalog/assets/candidate-commit.json
+  h_9e71e8b09f7cf2 1-25
+docs/plans/009-adapter-catalog/assets/catalog-io-smoke.json
+  h_9e71e8b09f7cf2 2-12,19-20
+docs/plans/009-adapter-catalog/assets/composition-verification.json
+  h_9e71e8b09f7cf2 1-15
+docs/plans/009-adapter-catalog/assets/composition-verify-before-init.json
+  h_9e71e8b09f7cf2 1-15
+docs/plans/009-adapter-catalog/assets/reviews/composition-opus-r1.md
+  h_9e71e8b09f7cf2 1-68
+docs/plans/009-adapter-catalog/assets/solo-composition-init.json
+  h_9e71e8b09f7cf2 1-15
+docs/plans/009-adapter-catalog/assets/team/composition.dd.json
+  h_9e71e8b09f7cf2 1-1599
+docs/plans/009-adapter-catalog/assets/team/composition.dd.md
+  h_9e71e8b09f7cf2 1-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "1f15eea471b464ab2735caba9429c63d9a2fe268",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

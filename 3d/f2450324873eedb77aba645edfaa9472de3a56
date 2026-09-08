@@ -1,0 +1,29 @@
+Cargo.lock
+  s_61dfe47e9838df::t_521b8af7df3885 327
+Cargo.toml
+  s_61dfe47e9838df::t_decb104a899ab2 17-19,24-25
+crates/core/Cargo.toml
+  s_61dfe47e9838df::t_d14b715d522d92 11
+crates/testkit/fixtures/collection/claude-basic.jsonl
+  s_61dfe47e9838df::t_0f3cdb54363ac6 1-3
+crates/testkit/fixtures/collection/claude-parts.jsonl
+  s_61dfe47e9838df::t_a99107751669f3 1-3
+docs/plans/005-claude-session-pipeline/assets/baseline-check-initial.json
+  s_61dfe47e9838df::t_f13e9d13014551 1-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "3df2450324873eedb77aba645edfaa9472de3a56",
+  "prompts": {},
+  "sessions": {
+    "s_61dfe47e9838df": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cbe08128-4097-4473-9f99-71e9415824f6",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

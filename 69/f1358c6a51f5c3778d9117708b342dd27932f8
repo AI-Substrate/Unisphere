@@ -1,0 +1,26 @@
+docs/plans/archive/005-claude-session-pipeline/assets/archive-completion.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/archive/005-claude-session-pipeline/assets/execution-log.dd.json
+  h_9e71e8b09f7cf2 105-113
+docs/plans/archive/005-claude-session-pipeline/assets/execution-log.dd.md
+  h_9e71e8b09f7cf2 29
+docs/plans/archive/005-claude-session-pipeline/assets/post-flight.md
+  h_9e71e8b09f7cf2 25-28
+docs/plans/archive/005-claude-session-pipeline/assets/self-handover.md
+  h_9e71e8b09f7cf2 1,5,7,9-12,14,16-20,22,24,26,28,30-34,36,38,40-45,47,49,51,53,55
+docs/plans/archive/005-claude-session-pipeline/the-flow.json
+  h_9e71e8b09f7cf2 387-409,568,585,592-597,599-600
+docs/plans/archive/005-claude-session-pipeline/the-flow.md
+  h_9e71e8b09f7cf2 4,6,15,58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "69f1358c6a51f5c3778d9117708b342dd27932f8",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

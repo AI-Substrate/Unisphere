@@ -1,0 +1,42 @@
+.harness/records/retro/2026-09-08/003-plan009-catalog.md
+  h_9e71e8b09f7cf2 1-20
+docs/plans/009-adapter-catalog/assets/backpressure.dd.json
+  h_9e71e8b09f7cf2 11,25-27,36-38,47-49,58-60,69-71,80-82
+docs/plans/009-adapter-catalog/assets/backpressure.dd.md
+  h_9e71e8b09f7cf2 15,23-28
+docs/plans/009-adapter-catalog/assets/closeout-telemetry.json
+  h_9e71e8b09f7cf2 1-15
+docs/plans/009-adapter-catalog/assets/composition-review-intake.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/009-adapter-catalog/assets/execution-log.dd.json
+  h_9e71e8b09f7cf2 28-36
+docs/plans/009-adapter-catalog/assets/execution-log.dd.md
+  h_9e71e8b09f7cf2 23
+docs/plans/009-adapter-catalog/assets/observation-custody.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/009-adapter-catalog/assets/reviews/composition-opus-r1-evidence-addendum.md
+  h_9e71e8b09f7cf2 1-27
+docs/plans/009-adapter-catalog/assets/tasks/phase-1/tasks.dd.json
+  h_9e71e8b09f7cf2 27,37-38,49-51,56-58,63-65,70-72,77-79,84-86
+docs/plans/009-adapter-catalog/assets/tasks/phase-1/tasks.dd.md
+  h_9e71e8b09f7cf2 38,46-53
+docs/plans/009-adapter-catalog/assets/team/review-composition-rv-plan009-composition-opus-r1.dd.json
+  h_9e71e8b09f7cf2 1-149
+docs/plans/009-adapter-catalog/assets/team/review-composition-rv-plan009-composition-opus-r1.dd.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/009-adapter-catalog/plan.dd.json
+  h_9e71e8b09f7cf2 42-44,49-51,56-58,63-65,70-72,77-79,90
+docs/plans/009-adapter-catalog/plan.dd.md
+  h_9e71e8b09f7cf2 51-56,64
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "2c128db57c602da32c2d9e2a786a81d514588107",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

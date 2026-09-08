@@ -349,6 +349,29 @@
           "comments"
         ]
       }
+    },
+    {
+      "id": "UPD-012",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-08T22:39:18.016Z",
+      "details": {
+        "node": "post-flight",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-012",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-08T22:39:18.158Z",
+      "details": {
+        "node": "post-flight",
+        "from": "in_progress",
+        "to": "done"
+      }
     }
   ],
   "nodes": [
@@ -511,7 +534,7 @@
       "id": "post-flight",
       "type": "post-flight",
       "label": "Post-flight",
-      "status": "in_progress",
+      "status": "done",
       "command": "/builder 7b post-flight",
       "next": [
         "ship"
@@ -528,15 +551,22 @@
         "If the gate refuses and departing anyway is the HUMAN's decision, they pass --force — it records a defended override. An agent may not force a dd gate on its own judgment.",
         "Tidy is separate: harness builder tidy <allocation> --preservation <receipt> re-verifies ownership, runtime release and surviving bytes/refs; external ownership or idle-only evidence cannot authorize removal."
       ],
-      "modified_at": "2026-09-08T22:38:25.739Z",
+      "modified_at": "2026-09-08T22:39:18.158Z",
       "comments": [
         {
           "at": "2026-09-08T22:38:25.739Z",
           "text": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-formal-preserved/f098aad7-0985-4645-a1f5-9c6d425ce129/receipt/preservation.dd.json",
           "source": "agent",
           "kind": "builder-preservation"
+        },
+        {
+          "at": "2026-09-08T22:39:18.016Z",
+          "text": "Actual Builder close archived Plan010 with genuine external PreservationReceipt f098aad7 (3261e103). Archived strict plan completion returned0errors0warnings0open. Productc6/formalartifact6a unchanged; all8workspaces retained, no retirement. Final archive evidence committed before preservation refresh.",
+          "source": "agent",
+          "kind": "validation"
         }
-      ]
+      ],
+      "ran_at": "2026-09-08T22:39:18.158Z"
     },
     {
       "id": "ship",

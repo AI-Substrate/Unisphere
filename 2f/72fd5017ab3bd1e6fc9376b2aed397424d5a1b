@@ -1,0 +1,18 @@
+docs/plans/archive/009-adapter-catalog/assets/archive-completion.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/archive/009-adapter-catalog/the-flow.json
+  h_9e71e8b09f7cf2 340-362,517,540-545,548-549
+docs/plans/archive/009-adapter-catalog/the-flow.md
+  h_9e71e8b09f7cf2 4,6,15,57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "2f72fd5017ab3bd1e6fc9376b2aed397424d5a1b",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

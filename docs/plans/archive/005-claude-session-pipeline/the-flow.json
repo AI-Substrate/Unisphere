@@ -372,6 +372,18 @@
         "from": "assumed",
         "to": "in_progress"
       }
+    },
+    {
+      "id": "UPD-012",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-08T03:41:57.099Z",
+      "details": {
+        "node": "post-flight",
+        "fields": [
+          "comments"
+        ]
+      }
     }
   ],
   "nodes": [
@@ -472,7 +484,7 @@
         "review-1"
       ],
       "dd_link": {
-        "address": "docs/plans/005-claude-session-pipeline/assets/tasks/phase-1/tasks.dd.json#tasks",
+        "address": "docs/plans/archive/005-claude-session-pipeline/assets/tasks/phase-1/tasks.dd.json#tasks",
         "basis_sha": "a4fe298cd40e303809375b130210ddd65df4c75feb4cdd7888899e4b922d9c12",
         "reading": {
           "status": "complete",
@@ -537,7 +549,7 @@
       ],
       "zone": "postflight",
       "dd_link": {
-        "address": "docs/plans/005-claude-session-pipeline/plan.dd.json",
+        "address": "docs/plans/archive/005-claude-session-pipeline/plan.dd.json",
         "check": "plan-validate"
       },
       "instructions": [
@@ -547,7 +559,15 @@
         "If the gate refuses and departing anyway is the HUMAN's decision, they pass --force — it records a defended override. An agent may not force a dd gate on its own judgment.",
         "Tidy is separate: harness builder tidy <allocation> --preservation <receipt> re-verifies ownership, runtime release and surviving bytes/refs; external ownership or idle-only evidence cannot authorize removal."
       ],
-      "modified_at": "2026-09-08T03:41:51.006Z"
+      "modified_at": "2026-09-08T03:41:57.099Z",
+      "comments": [
+        {
+          "at": "2026-09-08T03:41:57.099Z",
+          "text": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-preserved/fa75faee-d644-4835-bd40-3fbf963dd1c9/receipt/preservation.dd.json",
+          "source": "agent",
+          "kind": "builder-preservation"
+        }
+      ]
     },
     {
       "id": "ship",
@@ -722,5 +742,5 @@
       "ran_at": "2026-09-08T03:39:04.976Z"
     }
   ],
-  "plan_dir": "docs/plans/005-claude-session-pipeline"
+  "plan_dir": "docs/plans/archive/005-claude-session-pipeline"
 }

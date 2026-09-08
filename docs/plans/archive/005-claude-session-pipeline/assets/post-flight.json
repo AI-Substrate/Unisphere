@@ -1,0 +1,108 @@
+{
+  "recorded_at": "2026-09-08T03:41:56.966Z",
+  "composed_sha": "093a89811296efb681386047b1da912348c63f10",
+  "composition": {
+    "path": "docs/plans/005-claude-session-pipeline/assets/team/composition.dd.json",
+    "sha256": "fef0a9a5d8be8a2e66f8e749279156dc5a7726ba3dc319bb13d181da0553b6ed"
+  },
+  "review": {
+    "path": "docs/plans/005-claude-session-pipeline/assets/team/review-composition-rv-plan005-composition-opus-r2.dd.json",
+    "sha256": "d3db8ed01868e6c514b114e607d29bfbd34db756931c52db2ec77d8dc2a0f31c"
+  },
+  "flow": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline/docs/plans/archive/005-claude-session-pipeline/the-flow.json",
+  "archive": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline/docs/plans/archive/005-claude-session-pipeline",
+  "survivor": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-preserved/fa75faee-d644-4835-bd40-3fbf963dd1c9",
+  "shipping_authorized": false,
+  "chores": [
+    {
+      "id": "backpressure",
+      "status": "done",
+      "comments": [
+        {
+          "at": "2026-09-08T00:48:40.497Z",
+          "text": "eng-harness-flow pre-coding followed inline: scoped12AC survey selects actualBUILD/EXTEND instruments in assets/backpressure.dd.json, linkedbyDDwriters; inheritedbootpassedconfigurationfoundationonly, newcollectionproof absent untilimplementation. basis_sha256:ff6bcc7faa386dc47145da1f678afeef48b4c4b2e9af5bcf0783d91988a3218b time:2026-09-08T00:48:39.420406+00:00",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ]
+    },
+    {
+      "id": "boot-1",
+      "status": "done",
+      "comments": [
+        {
+          "at": "2026-09-08T01:43:00.196Z",
+          "text": "eng-harness-flow pre-flight followed inline: actual inheritedboot at00:39:28Z exited0/readytrue configurationfoundationonly; newbaseline20tests/actualarchitecture checks recorded separately, no newcollectionboot falsely claimed. Current product proof will be extended duringimplementation.",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ]
+    },
+    {
+      "id": "observe-1",
+      "status": "done",
+      "comments": [
+        {
+          "at": "2026-09-08T03:25:39.870Z",
+          "text": "Actual captures retained in assets/observations-pij-right-kotallo-plan005.json and assets/observations-pij-right-kotallo.json; committed PM retro records at98bb1cdd34e7b65233c7db5cf755f7ec420c832d. Worker custody is preserved in assets/observation-custody.json; no worker bucket was cleared. time:2026-09-08T03:25:39.632Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ]
+    },
+    {
+      "id": "retro-1",
+      "status": "done",
+      "comments": [
+        {
+          "at": "2026-09-08T03:25:40.160Z",
+          "text": "eng-harness-flow --hook post-coding followed inline per repo AGENTS: installed CLI/loaded extensions and existing governance plus actual candidate boot support the loop; two PM buckets were read, saved via harness record retro, committed with verified attribution at98bb1cdd, then only those own buckets cleared. Records .harness/records/retro/2026-09-08/001-plan005-delivery.md and002-plan005-review-intake.md. No new product proof or successful telemetry flush implied. time:2026-09-08T03:25:40.015Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ]
+    },
+    {
+      "id": "retro-harvest",
+      "status": "done",
+      "comments": [
+        {
+          "at": "2026-09-08T03:39:04.834Z",
+          "text": "eng-harness-flow --hook post-flight followed inline per repo AGENTS after actual phase drain: harness retro insights --plan005-claude-session-pipeline returned2records/2entries/malformed0 (assets/retro-harvest.json). Highest leverage classification defect fixed upstreamPR204 and original review intake now passed; receipt-schema validation before handoff is the named next encoding offer in assets/post-flight.md. Explicit local telemetry lookups returnedE100/ref_unavailable; no global-absence or flush claim and no remote sync under HARNESS_NO_TELEMETRY_AUTOSYNC=1. time:2026-09-08T03:39:04.699Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "path": "docs/plans/005-claude-session-pipeline/assets/observation-custody.json",
+      "category": "observation"
+    },
+    {
+      "path": "docs/plans/005-claude-session-pipeline/assets/retro-harvest.json",
+      "category": "observation"
+    },
+    {
+      "path": "docs/plans/005-claude-session-pipeline/assets/closeout-telemetry.json",
+      "category": "telemetry"
+    },
+    {
+      "path": "docs/plans/005-claude-session-pipeline/assets/closeout-telemetry-main.json",
+      "category": "telemetry"
+    },
+    {
+      "path": ".harness/records/retro/2026-09-08/001-plan005-delivery.md",
+      "category": "observation"
+    },
+    {
+      "path": ".harness/records/retro/2026-09-08/002-plan005-review-intake.md",
+      "category": "observation"
+    },
+    {
+      "path": ".harness/temp/plan005-composition-review-r2.dd.json",
+      "category": "report"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+.harness/records/retro/2026-09-08/001-plan005-delivery.md
+  h_9e71e8b09f7cf2 2
+.harness/records/retro/2026-09-08/002-plan005-review-intake.md
+  h_9e71e8b09f7cf2 2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "36b2c41987f69b05a1d6cf3a0a495bbcc405354e",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

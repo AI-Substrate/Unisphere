@@ -1,0 +1,56 @@
+Cargo.lock
+  h_9e71e8b09f7cf2 318
+crates/cli/Cargo.toml
+  h_9e71e8b09f7cf2 17
+crates/cli/src/lib.rs
+  h_9e71e8b09f7cf2 14-15
+crates/cli/src/sessions.rs
+  h_9e71e8b09f7cf2 1-242
+crates/cli/tests/sessions.rs
+  h_9e71e8b09f7cf2 1-246
+crates/sdk/src/collection.rs
+  h_9e71e8b09f7cf2 1-239
+crates/sdk/src/lib.rs
+  h_9e71e8b09f7cf2 43,46-47
+crates/testkit/fixtures/architecture/allowed.json
+  h_9e71e8b09f7cf2 10-13
+crates/testkit/fixtures/architecture/purity.json
+  h_9e71e8b09f7cf2 1-13
+crates/testkit/src/bin/unisphere-arch-check.rs
+  h_9e71e8b09f7cf2 15,22-36,40-48,81-83,134-208,211-213,242-248,272,276,280-297
+crates/testkit/src/collection.rs
+  h_9e71e8b09f7cf2 14-15,254-257,275-279,339,352,418,420-429,434-442
+docs/plans/005-claude-session-pipeline/assets/baseline-corrected-manifest.json
+  h_9e71e8b09f7cf2 1-39
+docs/plans/005-claude-session-pipeline/assets/baseline-corrected-proof.json
+  h_9e71e8b09f7cf2 1-82
+docs/plans/005-claude-session-pipeline/assets/baseline-r1-ingestion-refusal.json
+  h_9e71e8b09f7cf2 1-177
+docs/plans/005-claude-session-pipeline/assets/baseline-review-dispositions.json
+  h_9e71e8b09f7cf2 1-9
+docs/plans/005-claude-session-pipeline/assets/cli-collection-preflight.json
+  h_9e71e8b09f7cf2 1-14
+docs/plans/005-claude-session-pipeline/assets/execution-log.dd.json
+  h_9e71e8b09f7cf2 24-33
+docs/plans/005-claude-session-pipeline/assets/execution-log.dd.md
+  h_9e71e8b09f7cf2 23
+docs/plans/005-claude-session-pipeline/assets/reviews/baseline-opus-r1.md
+  h_9e71e8b09f7cf2 1-203
+docs/plans/005-claude-session-pipeline/assets/sdk-orchestration-preflight.json
+  h_9e71e8b09f7cf2 1-14
+docs/plans/005-claude-session-pipeline/assets/tasks/phase-1/tasks.dd.json
+  h_9e71e8b09f7cf2 117,124
+docs/plans/005-claude-session-pipeline/assets/tasks/phase-1/tasks.dd.md
+  h_9e71e8b09f7cf2 52-53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

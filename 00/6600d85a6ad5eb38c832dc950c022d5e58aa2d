@@ -1,0 +1,42 @@
+docs/plans/005-claude-session-pipeline/assets/backpressure.dd.json
+  h_9e71e8b09f7cf2 12,24
+docs/plans/005-claude-session-pipeline/assets/backpressure.dd.md
+  h_9e71e8b09f7cf2 14,23
+docs/plans/005-claude-session-pipeline/assets/design-review-dispositions.json
+  h_9e71e8b09f7cf2 1-76
+docs/plans/005-claude-session-pipeline/assets/design-v2-validation.json
+  h_9e71e8b09f7cf2 1-777
+docs/plans/005-claude-session-pipeline/assets/impl-guide.dd.json
+  h_9e71e8b09f7cf2 11-12,22-24,26-27,29-34,56-57,174,186,472,496,520
+docs/plans/005-claude-session-pipeline/assets/impl-guide.dd.md
+  h_9e71e8b09f7cf2 14-15,25,42,61,103,105,107
+docs/plans/005-claude-session-pipeline/assets/reviews/design-opus-r1.md
+  h_9e71e8b09f7cf2 1-304
+docs/plans/005-claude-session-pipeline/assets/team/basis-f2155e8adbe9e2ce3ba440c6dc790cbff25ad2c918a6547f05b4bf7ae2b81a4d.json
+  h_9e71e8b09f7cf2 1-690
+docs/plans/005-claude-session-pipeline/assets/team/basis-ff6bcc7faa386dc47145da1f678afeef48b4c4b2e9af5bcf0783d91988a3218b.json
+  h_9e71e8b09f7cf2 1-208
+docs/plans/005-claude-session-pipeline/assets/team/review-decomposition-rv-plan005-design-opus-r1.dd.json
+  h_9e71e8b09f7cf2 1-170
+docs/plans/005-claude-session-pipeline/assets/team/review-decomposition-rv-plan005-design-opus-r1.dd.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/005-claude-session-pipeline/plan.dd.json
+  h_9e71e8b09f7cf2 41-42,62
+docs/plans/005-claude-session-pipeline/plan.dd.md
+  h_9e71e8b09f7cf2 51,61
+docs/plans/005-claude-session-pipeline/the-flow.json
+  h_9e71e8b09f7cf2 6-8,30-145,153,162-172,178,189-199,205,217-218,224,245-246,306,323-333
+docs/plans/005-claude-session-pipeline/the-flow.md
+  h_9e71e8b09f7cf2 4,6,10-13,20,32,38,42-52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "006600d85a6ad5eb38c832dc950c022d5e58aa2d",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

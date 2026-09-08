@@ -1,0 +1,34 @@
+.harness/records/retro/2026-09-08/003-plan010-pij-ideological-koala.md
+  h_9e71e8b09f7cf2 1-20
+.harness/records/retro/2026-09-08/004-plan010-pij-homeless-dudley.md
+  h_9e71e8b09f7cf2 1-29
+.harness/records/retro/2026-09-08/005-plan010-pij-mechanical-tsarina.md
+  h_9e71e8b09f7cf2 1-20
+.harness/records/retro/2026-09-08/006-plan010-pij-adorable-bat.md
+  h_9e71e8b09f7cf2 1-20
+.harness/records/retro/2026-09-08/007-plan010-pij-kind-turkey.md
+  h_9e71e8b09f7cf2 1-30
+.harness/records/retro/2026-09-08/008-plan010-pij-right-kotallo-plan010.md
+  h_9e71e8b09f7cf2 1-32
+docs/plans/010-native-adapters/assets/committed-candidate-boot.json
+  h_9e71e8b09f7cf2 1-13
+docs/plans/010-native-adapters/assets/composition-verification-summary.json
+  h_9e71e8b09f7cf2 1-57
+docs/plans/010-native-adapters/assets/formal-composition-probe.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/010-native-adapters/assets/retrospective-custody.json
+  h_9e71e8b09f7cf2 1-36
+docs/plans/010-native-adapters/assets/worker-observation-custody.json
+  h_9e71e8b09f7cf2 1-230
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "32a4544eaf107f6899992af2cef02ce2ac98af2d",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

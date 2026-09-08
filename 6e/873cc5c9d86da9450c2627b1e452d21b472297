@@ -1,0 +1,116 @@
+.harness/extensions/boot/boot.mjs
+  h_9e71e8b09f7cf2 25-26,29-30,40-41
+.harness/extensions/boot/extension.test.mjs
+  h_9e71e8b09f7cf2 48,65-67
+.harness/extensions/boot/extension.ts
+  h_9e71e8b09f7cf2 9
+.harness/extensions/checks/checks.mjs
+  h_9e71e8b09f7cf2 104
+crates/cli/src/args.rs
+  h_9e71e8b09f7cf2 11-12
+crates/cli/src/sessions.rs
+  h_9e71e8b09f7cf2 240-243
+crates/cli/tests/sessions.rs
+  h_9e71e8b09f7cf2 93
+crates/testkit/fixtures/consumer/collection-Cargo.toml.template
+  h_9e71e8b09f7cf2 1-13
+crates/testkit/fixtures/consumer/collection-main.rs
+  h_9e71e8b09f7cf2 1-33
+crates/testkit/src/bin/proof/collection.rs
+  h_9e71e8b09f7cf2 1-131
+crates/testkit/src/bin/unisphere-arch-check.rs
+  h_9e71e8b09f7cf2 243-247
+crates/testkit/src/bin/unisphere-proof.rs
+  h_9e71e8b09f7cf2 13-15,559,581
+docs/adapters.md
+  h_9e71e8b09f7cf2 1-83
+docs/plans/005-claude-session-pipeline/assets/baseline-seal-readiness.json
+  h_9e71e8b09f7cf2 1-2377
+docs/plans/005-claude-session-pipeline/assets/baseline-seal-refusal.json
+  h_9e71e8b09f7cf2 1-25
+docs/plans/005-claude-session-pipeline/assets/cli-collection-recheck.json
+  h_9e71e8b09f7cf2 1-14
+docs/plans/005-claude-session-pipeline/assets/coder-bootstrap.json
+  h_9e71e8b09f7cf2 1-47
+docs/plans/005-claude-session-pipeline/assets/dispatch-tk-0002.json
+  h_9e71e8b09f7cf2 1-234
+docs/plans/005-claude-session-pipeline/assets/dispatch-tk-0003.json
+  h_9e71e8b09f7cf2 1-236
+docs/plans/005-claude-session-pipeline/assets/dispatch-tk-0004.json
+  h_9e71e8b09f7cf2 1-233
+docs/plans/005-claude-session-pipeline/assets/execution-log.dd.json
+  h_9e71e8b09f7cf2 34-43
+docs/plans/005-claude-session-pipeline/assets/execution-log.dd.md
+  h_9e71e8b09f7cf2 24
+docs/plans/005-claude-session-pipeline/assets/full-fidelity-requirement.json
+  h_9e71e8b09f7cf2 1-19
+docs/plans/005-claude-session-pipeline/assets/reviews/baseline-opus-r2-accepted.md
+  h_9e71e8b09f7cf2 1-49
+docs/plans/005-claude-session-pipeline/assets/reviews/baseline-opus-r2.md
+  h_9e71e8b09f7cf2 1-176
+docs/plans/005-claude-session-pipeline/assets/team/baseline-v1.dd.json
+  h_9e71e8b09f7cf2 1-82
+docs/plans/005-claude-session-pipeline/assets/team/baseline-v1.dd.md
+  h_9e71e8b09f7cf2 1-20
+docs/plans/005-claude-session-pipeline/assets/team/dispatch-tk-0002-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86.dd.json
+  h_9e71e8b09f7cf2 1-106
+docs/plans/005-claude-session-pipeline/assets/team/dispatch-tk-0002-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86.dd.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/005-claude-session-pipeline/assets/team/dispatch-tk-0003-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86.dd.json
+  h_9e71e8b09f7cf2 1-106
+docs/plans/005-claude-session-pipeline/assets/team/dispatch-tk-0003-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86.dd.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/005-claude-session-pipeline/assets/team/dispatch-tk-0004-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86.dd.json
+  h_9e71e8b09f7cf2 1-106
+docs/plans/005-claude-session-pipeline/assets/team/dispatch-tk-0004-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86.dd.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/005-claude-session-pipeline/assets/team/packet-tk-0002-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86.dd.json
+  h_9e71e8b09f7cf2 1-105
+docs/plans/005-claude-session-pipeline/assets/team/packet-tk-0002-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86.dd.md
+  h_9e71e8b09f7cf2 1-26
+docs/plans/005-claude-session-pipeline/assets/team/packet-tk-0003-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86.dd.json
+  h_9e71e8b09f7cf2 1-107
+docs/plans/005-claude-session-pipeline/assets/team/packet-tk-0003-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86.dd.md
+  h_9e71e8b09f7cf2 1-26
+docs/plans/005-claude-session-pipeline/assets/team/packet-tk-0004-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86.dd.json
+  h_9e71e8b09f7cf2 1-104
+docs/plans/005-claude-session-pipeline/assets/team/packet-tk-0004-ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86.dd.md
+  h_9e71e8b09f7cf2 1-26
+docs/plans/005-claude-session-pipeline/assets/team/review-decomposition-rv-plan005-baseline-opus-r2-accepted.dd.json
+  h_9e71e8b09f7cf2 1-193
+docs/plans/005-claude-session-pipeline/assets/team/review-decomposition-rv-plan005-baseline-opus-r2-accepted.dd.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/005-claude-session-pipeline/assets/team/review-decomposition-rv-plan005-baseline-opus-r2.dd.json
+  h_9e71e8b09f7cf2 1-187
+docs/plans/005-claude-session-pipeline/assets/team/review-decomposition-rv-plan005-baseline-opus-r2.dd.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/005-claude-session-pipeline/assets/tested-unit-deliveries.json
+  h_9e71e8b09f7cf2 1-47
+docs/plans/005-claude-session-pipeline/assets/tk-0002-validation-corrected.json
+  h_9e71e8b09f7cf2 1-14
+docs/plans/005-claude-session-pipeline/assets/tk-0002-validation-initial.json
+  h_9e71e8b09f7cf2 1-12
+docs/plans/005-claude-session-pipeline/assets/tk-0003-validation-initial.json
+  h_9e71e8b09f7cf2 1-12
+docs/plans/005-claude-session-pipeline/assets/tk-0004-example.json
+  h_9e71e8b09f7cf2 1-81
+docs/plans/005-claude-session-pipeline/assets/tk-0004-validation-corrected.json
+  h_9e71e8b09f7cf2 1-12
+docs/plans/005-claude-session-pipeline/assets/tk-0004-validation-initial.json
+  h_9e71e8b09f7cf2 1-12
+docs/plans/005-claude-session-pipeline/the-flow.json
+  h_9e71e8b09f7cf2 6,158-228,288,301,308-313,315-316,323,344,437,453-463
+docs/plans/005-claude-session-pipeline/the-flow.md
+  h_9e71e8b09f7cf2 4,6,12-13,21,37,52,56-58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "6e873cc5c9d86da9450c2627b1e452d21b472297",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

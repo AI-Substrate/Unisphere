@@ -1,0 +1,21 @@
+docs/plans/005-claude-session-pipeline/assets/observations-pij-right-kotallo-plan005.json
+  s_61dfe47e9838df::t_340fe46bd17d4f 1-16
+docs/plans/005-claude-session-pipeline/assets/observations-pij-right-kotallo.json
+  s_61dfe47e9838df::t_7355be2a152892 1-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "32eda4e119af6f2ab8b3c1bb1304b19aca1355a5",
+  "prompts": {},
+  "sessions": {
+    "s_61dfe47e9838df": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cbe08128-4097-4473-9f99-71e9415824f6",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+crates/core/src/snapshot.rs
+  s_698fb366cc9ef3::t_09694d1446bff4 1-146
+docs/plans/010-native-adapters/assets/backpressure.dd.json
+  s_698fb366cc9ef3::t_4daff1b65719b1 1-125
+docs/plans/010-native-adapters/assets/backpressure.dd.md
+  s_698fb366cc9ef3::t_938730ec5a635c 1-38
+docs/plans/010-native-adapters/assets/impl-guide.dd.json
+  s_698fb366cc9ef3::t_b42454d5a71bc7 1-636
+docs/plans/010-native-adapters/assets/impl-guide.dd.md
+  s_698fb366cc9ef3::t_d7b2953a299b66 1-138
+docs/plans/010-native-adapters/assets/native-structural-research.json
+  s_a003bfa141bd2a::t_378af313130b22 1-182
+docs/plans/010-native-adapters/assets/operator-authorization.json
+  s_a003bfa141bd2a::t_0eed4310b43a49 1-35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "418a62452af3e766c8a939e6c2a4d9822d559afa",
+  "prompts": {},
+  "sessions": {
+    "s_698fb366cc9ef3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bcc8e63d-398b-4ab3-b9c2-33db8aa78309",
+        "model": "unknown"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    },
+    "s_a003bfa141bd2a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1155ef96-b6e6-4a2b-8e33-02cc8480db23",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

@@ -24,7 +24,7 @@
           "id": "tk-0001",
           "title": "Expose the registered-adapter catalog",
           "phase": "ph-14a2",
-          "state": "unchecked",
+          "state": "checked",
           "success": "Real CLI presents versioned descriptors and truthful hints from the executable registry without source discovery; existing configuration/export behavior remains compatible.",
           "satisfies": [
             "../../../plan.dd.json#acceptance_criteria/ac-0001",
@@ -34,7 +34,8 @@
             "../../../plan.dd.json#acceptance_criteria/ac-0005",
             "../../../plan.dd.json#acceptance_criteria/ac-0006"
           ],
-          "done": "tasks.dd.json#done_when/tk-0001"
+          "done": "tasks.dd.json#done_when/tk-0001",
+          "receipt": "../../execution-log.dd.json#entries/lg-0002"
         }
       ]
     },
@@ -45,38 +46,44 @@
           {
             "id": "dw-0001",
             "assertion": "A successful adapters list --json emits one v1 machine-readable envelope containing only registered production adapters, with stable id, application name and concise description.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0001"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0001",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0002"
           },
           {
             "id": "dw-0002",
             "assertion": "Each descriptor gives structured usual-location hints with platform, home base, relative path, session glob and storage format; hints never assert a local installation or existing store.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0002"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0002",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0002"
           },
           {
             "id": "dw-0003",
             "assertion": "Capabilities describe explicit export platforms/formats and a caller-owned SDK cursor with an append-only source assumption, separately from unsupported persisted CLI resume, delayed revision reconciliation and lossless archival.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0003"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0003",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0002"
           },
           {
             "id": "dw-0004",
             "assertion": "Catalog listing performs no source loading, private-store scan, home/config environment expansion or command execution; actual discovery remains explicit and caller-overridable.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0004"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0004",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0002"
           },
           {
             "id": "dw-0005",
             "assertion": "Metadata and executable dispatch derive from one registration, and every production descriptor id equals emitted unisphere.source.adapter provenance. A fixture registration exposes its descriptor and runs its adapter, while the production catalog excludes fixtures and existing config/session behavior remains compatible.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0005"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0005",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0002"
           },
           {
             "id": "dw-0006",
             "assertion": "Help, invalid arguments and output failures keep existing CLI exit/output safety conventions; no hostile argument content leaks into public errors.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0006"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0006",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0002"
           }
         ]
       }

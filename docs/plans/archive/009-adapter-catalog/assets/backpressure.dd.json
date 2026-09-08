@@ -8,7 +8,7 @@
       "value": {
         "title": "Backpressure survey",
         "plan": "../plan.dd.json#meta",
-        "certainty": "Confident",
+        "certainty": "Proven",
         "basis_sha": "b5cfc5fb5d3d590589607010f963b522acd34b2c77154a08aabbebc0d24d68d8"
       }
     },
@@ -22,8 +22,9 @@
           "mode": "EXTEND",
           "tier": "computational",
           "proof": "EXTEND→RUN: Machine-parse real CLI v1 catalog and assert registered Claude metadata.",
-          "state": "unchecked",
-          "probe": "Inspected existing app registry, injected CLI output, core serialization and collection proof; catalog is not implemented yet."
+          "state": "checked",
+          "probe": "Inspected existing app registry, injected CLI output, core serialization and collection proof; catalog is not implemented yet.",
+          "receipt": "execution-log.dd.json#entries/lg-0002"
         },
         {
           "id": "bp-0002",
@@ -32,8 +33,9 @@
           "mode": "EXTEND",
           "tier": "computational",
           "proof": "EXTEND→RUN: Inspect parsed location hints; repeat real command under hostile HOME/CLAUDE_CONFIG_DIR and compare bytes.",
-          "state": "unchecked",
-          "probe": "Inspected existing app registry, injected CLI output, core serialization and collection proof; catalog is not implemented yet."
+          "state": "checked",
+          "probe": "Inspected existing app registry, injected CLI output, core serialization and collection proof; catalog is not implemented yet.",
+          "receipt": "execution-log.dd.json#entries/lg-0002"
         },
         {
           "id": "bp-0003",
@@ -42,8 +44,9 @@
           "mode": "EXTEND",
           "tier": "human-judgement",
           "proof": "EXTEND→RUN: Assert named capabilities and limitations against existing collector/loader/export contracts and docs/fidelity.md.",
-          "state": "unchecked",
-          "probe": "Inspected existing app registry, injected CLI output, core serialization and collection proof; catalog is not implemented yet."
+          "state": "checked",
+          "probe": "Inspected existing app registry, injected CLI output, core serialization and collection proof; catalog is not implemented yet.",
+          "receipt": "execution-log.dd.json#entries/lg-0002"
         },
         {
           "id": "bp-0004",
@@ -52,8 +55,9 @@
           "mode": "EXTEND",
           "tier": "computational",
           "proof": "EXTEND→RUN: Real catalog under inaccessible synthetic store roots; inspect no collector call through fixture registration test.",
-          "state": "unchecked",
-          "probe": "Inspected existing app registry, injected CLI output, core serialization and collection proof; catalog is not implemented yet."
+          "state": "checked",
+          "probe": "Inspected existing app registry, injected CLI output, core serialization and collection proof; catalog is not implemented yet.",
+          "receipt": "execution-log.dd.json#entries/lg-0002"
         },
         {
           "id": "bp-0005",
@@ -62,8 +66,9 @@
           "mode": "EXTEND",
           "tier": "computational",
           "proof": "EXTEND→RUN: Extend the existing second-registration behavioral test to observe both catalog and export through the same registry.",
-          "state": "unchecked",
-          "probe": "Inspected existing app registry, injected CLI output, core serialization and collection proof; catalog is not implemented yet."
+          "state": "checked",
+          "probe": "Inspected existing app registry, injected CLI output, core serialization and collection proof; catalog is not implemented yet.",
+          "receipt": "execution-log.dd.json#entries/lg-0002"
         },
         {
           "id": "bp-0006",
@@ -72,8 +77,9 @@
           "mode": "EXTEND",
           "tier": "computational",
           "proof": "EXTEND→RUN: Real help, invalid argument, human output and injected output failure scenarios; retain existing frontend regressions.",
-          "state": "unchecked",
-          "probe": "Inspected existing app registry, injected CLI output, core serialization and collection proof; catalog is not implemented yet."
+          "state": "checked",
+          "probe": "Inspected existing app registry, injected CLI output, core serialization and collection proof; catalog is not implemented yet.",
+          "receipt": "execution-log.dd.json#entries/lg-0002"
         }
       ]
     },

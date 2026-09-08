@@ -1,0 +1,15 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--test",
+    "adapter_catalog",
+    "--bin",
+    "unisphere"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog",
+  "at": "2026-09-08T04:15:03.157Z",
+  "exit_code": 0,
+  "stdout": "\nrunning 2 tests\ntest adapters::tests::another_adapter_needs_one_registration_and_no_core_or_claude_change ... ok\ntest adapters::tests::production_catalog_ids_match_exported_provenance ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 3 tests\ntest catalog_argument_errors_keep_the_catalog_label_and_hide_input ... ok\ntest catalog_does_not_resolve_inaccessible_store_roots ... ok\ntest catalog_json_is_static_under_hostile_environment ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.41s\n\n",
+  "stderr": "   Compiling rustix v1.1.4\n   Compiling getrandom v0.4.3\n   Compiling cfg-if v1.0.4\n   Compiling bitflags v2.13.1\n   Compiling fastrand v2.5.0\n   Compiling once_cell v1.21.4\n   Compiling errno v0.3.14\n   Compiling unisphere-core v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog/crates/core)\n   Compiling unisphere-cli v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog/crates/cli)\n   Compiling unisphere-loader-jsonl v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog/crates/loader-jsonl)\n   Compiling unisphere-sdk v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog/crates/sdk)\n   Compiling unisphere-adapter-claude v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog/crates/adapter-claude)\n   Compiling unisphere-output-otlp v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog/crates/output-otlp)\n   Compiling unisphere-app v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog/crates/app)\n   Compiling tempfile v3.27.0\n   Compiling unisphere-testkit v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog/crates/testkit)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.57s\n     Running unittests src/main.rs (target/debug/deps/unisphere-41395126aa563583)\n     Running tests/adapter_catalog.rs (target/debug/deps/adapter_catalog-2ebd9d9666ea0288)\n"
+}

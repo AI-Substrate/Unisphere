@@ -1,4 +1,4 @@
-//! Configuration and session commands over injected core application ports.
+//! Configuration, session and catalog commands over injected core data and ports.
 //!
 //! This is a frontend library, not an executable or an SDK composition root.
 //! The caller supplies argv (including argv[0]), working directory, terminal
@@ -11,9 +11,12 @@ use std::{ffi::OsString, io::Write, path::PathBuf};
 use unisphere_core::{ConfigOverrides, ConfigSource, Failure, InspectionApi, InspectionRequest};
 
 mod args;
+mod catalog;
 mod output;
 pub mod sessions;
+pub use catalog::run_adapters;
 pub use sessions::{requested_session_adapter, run_sessions, session_error};
+pub use unisphere_core::{AdapterCapabilities, AdapterDescriptor, LocationHint};
 
 use args::Action;
 use output::Response;

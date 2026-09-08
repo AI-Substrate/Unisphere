@@ -3,7 +3,7 @@
   "kind": "flight-plan",
   "slug": "adapter-catalog",
   "nav": {
-    "now": "research",
+    "now": "phase-1",
     "next": null
   },
   "created_at": "2026-09-08T03:07:46.440Z",
@@ -26,6 +26,170 @@
         "kind": "flight-plan",
         "slug": "adapter-catalog"
       }
+    },
+    {
+      "id": "UPD-001",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-08T04:35:35.751Z",
+      "details": {
+        "node": "research",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-001",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-08T04:35:35.886Z",
+      "details": {
+        "node": "research",
+        "from": "in_progress",
+        "to": "done"
+      }
+    },
+    {
+      "id": "UPD-002",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-08T04:35:36.021Z",
+      "details": {
+        "node": "plan",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-002",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-08T04:35:36.157Z",
+      "details": {
+        "node": "plan",
+        "from": "assumed",
+        "to": "done"
+      }
+    },
+    {
+      "id": "UPD-003",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-08T04:35:36.295Z",
+      "details": {
+        "node": "impl-guide",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-003",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-08T04:35:36.433Z",
+      "details": {
+        "node": "impl-guide",
+        "from": "known",
+        "to": "done"
+      }
+    },
+    {
+      "id": "UPD-004",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-08T04:35:36.568Z",
+      "details": {
+        "node": "backpressure",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-004",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-08T04:35:36.704Z",
+      "details": {
+        "node": "backpressure",
+        "from": "known",
+        "to": "done",
+        "chore": {
+          "kind": "command",
+          "importance": "optional"
+        }
+      }
+    },
+    {
+      "id": "UPD-005",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-08T04:35:36.841Z",
+      "details": {
+        "node": "boot-1",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-005",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-08T04:35:36.983Z",
+      "details": {
+        "node": "boot-1",
+        "from": "known",
+        "to": "done",
+        "chore": {
+          "kind": "command",
+          "importance": "recommended"
+        }
+      }
+    },
+    {
+      "id": "STA-006",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-08T04:35:37.418Z",
+      "details": {
+        "node": "phase-1",
+        "from": "known",
+        "to": "in_progress"
+      }
+    },
+    {
+      "id": "CUR-001",
+      "kind": "cursor-moved",
+      "origin": "engine",
+      "fired_at": "2026-09-08T04:39:07.508Z",
+      "details": {
+        "from": "research",
+        "to": "plan"
+      }
+    },
+    {
+      "id": "CUR-002",
+      "kind": "cursor-moved",
+      "origin": "engine",
+      "fired_at": "2026-09-08T04:39:08.064Z",
+      "details": {
+        "from": "plan",
+        "to": "impl-guide"
+      }
+    },
+    {
+      "id": "CUR-003",
+      "kind": "cursor-moved",
+      "origin": "engine",
+      "fired_at": "2026-09-08T04:39:08.772Z",
+      "details": {
+        "from": "impl-guide",
+        "to": "phase-1"
+      }
     }
   ],
   "nodes": [
@@ -33,7 +197,7 @@
       "id": "research",
       "type": "research",
       "label": "Research",
-      "status": "in_progress",
+      "status": "done",
       "command": "/builder 1a explore",
       "next": [
         "plan"
@@ -42,13 +206,23 @@
         "Explore how the relevant code works before you plan — start cheap, climb only when the evidence demands it; never jump straight to a plan.",
         "Run /builder 1a explore \"<intent>\" — it produces research-dossier.md, a decision packet (not a transcript) with evidence links.",
         "Done when the dossier names the core decision the plan must resolve and the findings that bound it."
-      ]
+      ],
+      "comments": [
+        {
+          "at": "2026-09-08T04:35:35.751Z",
+          "text": "Existing app registry, output conventions, core serialization and fidelity constraints inspected; Main supplemental request provides bounded catalog intent. No six-adapter implementation authorized. time:2026-09-08T04:35:35.553Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "modified_at": "2026-09-08T04:35:35.886Z",
+      "ran_at": "2026-09-08T04:35:35.886Z"
     },
     {
       "id": "plan",
       "type": "plan",
       "label": "Plan",
-      "status": "assumed",
+      "status": "done",
       "command": "/builder 1b plan",
       "next": [
         "impl-guide"
@@ -59,13 +233,23 @@
         "Product intent is ready when plan.dd.json has resolved claims and constraints; this is not baseline readiness or proof. Never pre-check future work.",
         "Scaffold and fill through the CLI: harness plan new <slug> --title \"<title>\" --phase \"<title>\", then node_modules/.bin/ddocs set / node_modules/.bin/ddocs add (add --mint ac for criteria). Validation runs BEFORE every write and the sibling rebuilds in the same operation — never hand-edit either file.",
         "Create the flow with harness flow create flight-plan --plan-dir \"<plan dir>\" — without it the baked gate addresses stay plan-relative and every departure refuses E441."
-      ]
+      ],
+      "comments": [
+        {
+          "at": "2026-09-08T04:35:36.021Z",
+          "text": "Six observable catalog ACs authored and validated with zero errors/warnings at the committed design; no implementation proof claimed by planning. time:2026-09-08T04:35:35.892Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "modified_at": "2026-09-08T04:35:36.156Z",
+      "ran_at": "2026-09-08T04:35:36.156Z"
     },
     {
       "id": "impl-guide",
       "type": "impl-guide",
       "label": "Implementation guide",
-      "status": "known",
+      "status": "done",
       "zone": "preflight",
       "command": "/builder 4 guide",
       "next": [
@@ -77,14 +261,24 @@
         "Run harness builder guide <plan> --check and obtain independent decomposition review. Ownership-only findings are visible warnings, not guide invalidity or readiness vetoes. Real malformed data, ambiguous identities and invalid executable checks remain errors. Structural validity is not architectural judgement; do not claim unavailable cross-model review ran.",
         "Exit after guide/decomposition approval, not after the future code baseline. The PM implements, commits and seals the shared contract baseline during implementation before any dispatch.",
         "Use the canonical assets/backpressure.dd.json recipe: actual RUN/EXTEND/BUILD/ABSENT selection, AC and assertion pressure links, observed proven_by links; certainty Partial|Confident|Proven."
-      ]
+      ],
+      "comments": [
+        {
+          "at": "2026-09-08T04:35:36.295Z",
+          "text": "Independent design R2 rv-plan009-design-opus-r2 approved09c0605f; D1-D5 fixed, accepted stream-compatibility note retained. Core baseline sealed with actual declared check; no coder fan-out needed. time:2026-09-08T04:35:36.162Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "modified_at": "2026-09-08T04:35:36.433Z",
+      "ran_at": "2026-09-08T04:35:36.433Z"
     },
     {
       "id": "phase-1",
       "type": "phase",
       "phase": 1,
       "label": "P1: Implementation",
-      "status": "known",
+      "status": "in_progress",
       "command": "/builder 6 implement",
       "next": [
         "review-1"
@@ -106,7 +300,8 @@
         "Spend tokens where they can change the outcome; use `--quiet` for routine flow mutations.",
         "Match model tier to work: chores -> cheap subagent, analysis -> Opus-class, judgement -> lead; context may override (§ Shared conventions).",
         "Environment friction is work, not an apology: fix small things, otherwise `harness observe` it — is this environment working for us? (builder SKILL.md invariant #14)"
-      ]
+      ],
+      "modified_at": "2026-09-08T04:35:37.418Z"
     },
     {
       "id": "review-1",
@@ -166,7 +361,7 @@
       "id": "backpressure",
       "type": "backpressure",
       "label": "Backpressure survey",
-      "status": "known",
+      "status": "done",
       "branch_of": "plan",
       "next": [
         "plan"
@@ -183,13 +378,23 @@
         "On done, receipt first, status second: harness flow comment --path <flow-path> --node backpressure --kind validation --source agent --text \"decision:<…> verdict:<…> time:<…> basis_sha256:<full SHA-256 of the plan file>\" THEN harness flow status --path <flow-path> --node backpressure --to done. Mandatory unless the human declines — a decline is: harness flow comment --path <flow-path> --node backpressure --kind decision --source user --text \"<their verbatim words>\" THEN harness flow status --path <flow-path> --node backpressure --to skipped; never a narrated skip.",
         "Basis is the LATEST plan: on each guided entry recompute the plan file's SHA-256 — a mismatch with (or absence of) the recorded basis_sha256 re-opens this seam via a deterministic new chore, id backpressure-<first 12 hex of that SHA-256> (full hash in its receipt; same bytes re-use this node + receipt, changed bytes create exactly one new node; never resurrect this one — D5).",
         "Router missing, or envelope noop/UNAVAILABLE → same two calls with the detection receipt/envelope as the text: harness flow comment --path <flow-path> --node backpressure --kind validation --source agent --text \"decision:unavailable reason:<…> time:<…>\" THEN harness flow status --path <flow-path> --node backpressure --to done — a completed attempt, not a skip."
-      ]
+      ],
+      "comments": [
+        {
+          "at": "2026-09-08T04:35:36.568Z",
+          "text": "eng-harness-flow pre-coding followed inline per repo guidance: six selected proof rows, named real-binary adapter_catalog target and production provenance gate. Current basis_sha256:b5cfc5fb5d3d590589607010f963b522acd34b2c77154a08aabbebc0d24d68d8 time:2026-09-08T04:35:36.439Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "modified_at": "2026-09-08T04:35:36.704Z",
+      "ran_at": "2026-09-08T04:35:36.704Z"
     },
     {
       "id": "boot-1",
       "type": "harness-boot",
       "label": "Boot check",
-      "status": "known",
+      "status": "done",
       "branch_of": "phase-1",
       "next": [
         "phase-1"
@@ -205,7 +410,17 @@
         "Spend tokens where they can change the outcome; use `--quiet` for routine flow mutations.",
         "Match model tier to work: chores -> cheap subagent, analysis -> Opus-class, judgement -> lead; context may override (§ Shared conventions).",
         "On done, receipt first, status second: harness flow comment --path <flow-path> --node boot-1 --kind validation --source agent --text \"verdict:<…> time:<…>\" (router missing / envelope noop/UNAVAILABLE → text \"decision:unavailable reason:<…> time:<…>\" — a completed attempt, not a skip) THEN harness flow status --path <flow-path> --node boot-1 --to done. Mandatory unless the human declines — a decline is: harness flow comment --path <flow-path> --node boot-1 --kind decision --source user --text \"<their verbatim words>\" THEN harness flow status --path <flow-path> --node boot-1 --to skipped."
-      ]
+      ],
+      "comments": [
+        {
+          "at": "2026-09-08T04:35:36.841Z",
+          "text": "eng-harness-flow pre-flight followed inline: inherited product boot proof remains Plan005 candidate093a8981; local sealed core baseline executed in this worktree, and the new catalog actual CLI smoke is recorded separately. No full pre-change boot rerun in this worktree is claimed. time:2026-09-08T04:35:36.709Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "modified_at": "2026-09-08T04:35:36.983Z",
+      "ran_at": "2026-09-08T04:35:36.983Z"
     },
     {
       "id": "observe-1",

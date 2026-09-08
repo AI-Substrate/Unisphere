@@ -8,8 +8,8 @@ use clap::{
 #[command(
     name = "unisphere",
     bin_name = "unisphere",
-    about = "Inspect explicit configuration and export explicit session records",
-    after_help = "Session commands: unisphere sessions list --root <leaf-project-directory>\n                  unisphere sessions export --input <file> [--include-content]\nSession exports are OTLP JSONL; no implicit source discovery or daemon.",
+    about = "Inspect configuration, describe adapters and export explicit session records",
+    after_help = "Adapter catalog: unisphere adapters list [--json | --human]\nSession commands: unisphere sessions list --root <leaf-project-directory>\n                  unisphere sessions export --input <file> [--include-content]\nCatalog locations are hints, not detected installations. Session exports are OTLP JSONL; no implicit source discovery or daemon.",
     disable_version_flag = true,
     disable_help_subcommand = true,
     color = ColorChoice::Never,

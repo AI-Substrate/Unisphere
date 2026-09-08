@@ -1,12 +1,14 @@
-//! Pure contracts for explicit configuration inspection.
+//! Pure contracts for explicit configuration, collection and adapter metadata.
 //!
 //! This crate performs no filesystem, environment, process, or network operations.
 #![forbid(unsafe_code)]
 
+mod catalog;
 pub mod collection;
 mod config;
 mod errors;
 mod ports;
+pub use catalog::{AdapterCapabilities, AdapterDescriptor, LocationHint};
 pub use collection::*;
 
 pub use config::{

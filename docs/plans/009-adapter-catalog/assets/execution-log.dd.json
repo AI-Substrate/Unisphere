@@ -1,8 +1,32 @@
 {
-  "dd": { "schema": "builder/execution-log" },
+  "dd": {
+    "schema": "builder/execution-log"
+  },
   "sections": [
-    { "name": "meta", "value": { "title": "Observed adapter catalog evidence", "plan": "../plan.dd.json#meta" } },
-    { "name": "entries", "value": [] }
-  ],
-  "references": []
+    {
+      "name": "meta",
+      "value": {
+        "title": "Observed adapter catalog evidence",
+        "plan": "../plan.dd.json#meta"
+      }
+    },
+    {
+      "name": "entries",
+      "value": [
+        {
+          "id": "lg-0001",
+          "at": "2026-09-08T04:35:35.347Z",
+          "text": "Implemented the approved static core descriptor contract and single app descriptor+runner registry. Actual cargo run --bin unisphere -- adapters list --json exited0 and emitted only claude-code with symbolic home/.claude/projects, native jsonl and truthful Unix/OTLP/caller-owned append-only cursor fields. Real terminal default human rendering was observed; explicit human, piped JSON, JSON help and human invalid-argument paths were exercised. Two app registry/provenance tests and three real-process integration cases passed, including hostile environment byte identity, inaccessible store roots and safe correctly labelled errors. A throwaway external frontend consumer proved write/flush failures return1 without leaking I/O text; its source/result is retained in catalog-io-smoke.json and its directory was removed. Existing CLI/adapters docs updated, including the deliberate JSON-error stream difference from sessions. No additional adapters, dependencies, private scans or persisted resume were added. Exact committed-candidate quality and independent composition review remain next.",
+          "links": [
+            "backpressure.dd.json#rows/bp-0001",
+            "backpressure.dd.json#rows/bp-0002",
+            "backpressure.dd.json#rows/bp-0003",
+            "backpressure.dd.json#rows/bp-0004",
+            "backpressure.dd.json#rows/bp-0005",
+            "backpressure.dd.json#rows/bp-0006"
+          ]
+        }
+      ]
+    }
+  ]
 }

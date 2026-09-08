@@ -33,10 +33,11 @@ For a new ordinary adapter:
    including unsupported data, malformed input and metadata/content policy.
 3. Run `assert_adapter_conformance` on supported complete fixture records and add
    the format-specific edge cases the common suite cannot know.
-4. Register the implementation in the app's explicit adapter factory and declare
-   its inward dependencies in Cargo and the architecture policy; no core or
-   existing adapter implementation change is needed for another mapper fitting
-   the current record contract.
+4. Add one descriptor-plus-runner entry to `ADAPTERS` in
+   `crates/app/src/adapters.rs`, and declare inward dependencies in Cargo and the
+   architecture policy. Its `descriptor.id` must match `SessionAdapter::name()`
+   and the emitted `unisphere.source.adapter`; neither core nor existing mapper
+   implementations need changing for another mapper fitting the current contract.
 5. Compose it with an existing loader and `OtlpJsonlWriter`, or an injected test
    loader/writer, using `Collector::new(loader, adapter, writer)`.
 
@@ -44,6 +45,30 @@ No dynamic library loading, reflection or hidden service locator is involved.
 A genuinely different storage/resumption model may require a new loader contract;
 the current file cursor is not a promise that SQLite/API state can be represented
 by an invented file offset.
+
+## Registration metadata
+
+`AdapterDescriptor`, `LocationHint` and `AdapterCapabilities` are pure static DTOs
+in `unisphere-core`, also re-exported by `unisphere-cli`. Keep each descriptor beside
+its executable runner in the existing registration array. Both catalog listing
+and session selection read that entry; do not create a second catalog or name map.
+The CLI receives borrowed descriptor references and does not instantiate a loader
+to list them.
+
+Location hints use a symbolic base and relative path/pattern. Never resolve HOME,
+scan a store, execute a template or claim local installation while constructing
+metadata. Describe the actual registered loader/writer pipeline, not hypothetical
+capabilities of the source application. A caller-owned cursor is a mechanism with
+the declared source assumption, not persisted CLI resume or arbitrary-rewrite safety.
+Use the explicit capability values instead of a duplicate generic limitations list.
+
+`production_catalog_ids_match_exported_provenance` walks the production registry
+and checks real fixture exports against descriptor IDs. Extend its native fixture
+coverage when registering another dialect. The existing fixture-registration test
+also exercises both catalog visibility and export through one entry.
+
+The wire fields and CLI stream conventions are documented in
+[cli.md](cli.md#registered-adapter-catalog).
 
 ## What conformance proves
 

@@ -1,0 +1,12 @@
+{
+  "observed_at": "2026-09-08T04:39:08.911Z",
+  "command": [
+    "target/debug/unisphere",
+    "adapters",
+    "list"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog",
+  "surface": "real PTY via functions.bash pty=true",
+  "exit_code": 0,
+  "observation": "Default terminal output was the human descriptor/hint/capability listing, with an explicit not-detected-installations label. Explicit --human output is separately retained in catalog-human-smoke.json."
+}

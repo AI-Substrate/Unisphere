@@ -30,7 +30,10 @@ fn main() -> ExitCode {
         version: env!("CARGO_PKG_VERSION").to_owned(),
     };
     let args: Vec<_> = env::args_os().collect();
-    if args.get(1).is_some_and(|arg| arg == "sessions") {
+    if args
+        .get(1)
+        .is_some_and(|arg| arg == "sessions" || arg == "adapters")
+    {
         return ExitCode::from(adapters::run(
             args,
             &context,

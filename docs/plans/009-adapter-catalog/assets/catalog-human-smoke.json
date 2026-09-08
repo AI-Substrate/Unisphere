@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "target/debug/unisphere",
+    "adapters",
+    "list",
+    "--human"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog",
+  "at": "2026-09-08T04:17:05.001Z",
+  "exit_code": 0,
+  "stdout": "Registered adapters; location hints are not detected installations:\n\"claude-code\" (\"Claude Code\")\n  \"Source-derived Claude Code JSONL projection; metadata by default, content by explicit opt-in.\"\n  Location hint: \"home\"/\".claude/projects\"; pattern \"*/*.jsonl\"; \"jsonl\" on [\"macos\", \"linux\"]\n  Export: [\"otlp-jsonl\"] on [\"unix\"]\n  Caller-owned SDK cursor: true; source assumption: \"append_only\"\n  Persisted CLI resume: false; revision reconciliation: false; lossless archive: false\n",
+  "stderr": ""
+}

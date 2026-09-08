@@ -1,9 +1,10 @@
 # Unisphere CLI
 
-Unisphere provides configuration inspection plus an explicit Claude JSONL session
-pipeline. Configuration-command JSON and OTLP telemetry JSONL are distinct output
-contracts. No implicit HOME scan, daemon, remote service or persistent ingest store
-is started. Session projection is not lossless or complete-session capture.
+Unisphere provides configuration inspection, a registered-adapter catalog and an
+explicit Claude JSONL session pipeline. Catalog/configuration command JSON and
+OTLP telemetry JSONL are distinct output contracts. No implicit HOME scan, daemon,
+remote service or persistent ingest store is started. Session projection is not
+lossless or complete-session capture.
 
 ## Install and run
 
@@ -14,6 +15,7 @@ cargo install --path crates/app --root ./local-install
 ./local-install/bin/unisphere --help --human
 ./local-install/bin/unisphere --version --json
 ./local-install/bin/unisphere config check --json
+./local-install/bin/unisphere adapters list --json
 ```
 
 The executable is `unisphere`, packaged by `unisphere-app`. `unisphere-cli` is the
@@ -29,16 +31,18 @@ all platform-specific filesystem permissions or real-terminal behavior.
 ```text
 unisphere config check [--config PATH]
     [--source-root ROOT ... | --clear-source-roots] [--json | --human]
+unisphere adapters list [--json | --human]
 unisphere [--json | --human] --help
 unisphere [--json | --human] --version
 ```
 
 `--source-root` is repeatable: use `--source-root first --source-root second`.
 Use `--source-root=--literal` for a root beginning with a hyphen.
-`--clear-source-roots` conflicts with `--source-root`. `--json` and `--human` are
-global options and may appear before, between, or after subcommands; they
-conflict. `--` ends option processing. `--help`/`-h` is available at each command
-level; `--version`/`-V` returns the executable-supplied version. Missing/unknown
+`--clear-source-roots` conflicts with `--source-root`. For configuration commands,
+`--json` and `--human` may appear before, between, or after subcommands. Catalog
+mode flags follow the `adapters` token, before or after `list`. The flags conflict.
+`--` ends option processing. `--help`/`-h` is available at each command level;
+root `--version`/`-V` returns the executable-supplied version. Missing/unknown
 commands, missing option values, conflicting options and unexpected positional
 arguments are invocation failures. Bare `unisphere` is not a configuration check.
 
@@ -101,6 +105,9 @@ unisphere config check --config ./config.json --clear-source-roots --json
 
 ## Output contract: version 1
 
+Configuration and catalog commands share these mode and envelope conventions.
+Session telemetry/diagnostic streams are described separately below.
+
 Captured/piped stdout defaults to machine mode; terminal stdout defaults to human
 mode. Explicit `--json` or `--human` wins over terminal detection. No environment
 variable changes this selection. If both mode flags are supplied, the invocation
@@ -121,11 +128,13 @@ The command discriminators are:
 | Operation | `command` | Successful `data` |
 |---|---|---|
 | Configuration inspection | `config.check` | `{"configuration":{"source_roots":[...]}}` |
+| Registered-adapter catalog | `adapters.list` | `{"adapters":[...]}` |
 | Help | `help` | `{"text":"..."}` |
 | Version | `version` | `{"version":"0.1.0"}` |
 
-Invocation failures use `command: "config.check"`. Help/version honor the selected
-mode and do not invoke configuration inspection. Help prose and human layouts are
+Catalog invocation failures use `command: "adapters.list"`; configuration/root
+invocation failures use `command: "config.check"`. Help/version honor the selected
+mode and do not invoke configuration inspection or source collection. Help prose and human layouts are
 not machine-stable contracts.
 
 The error object has `kind`, `code`, `message`, `fix`, `retryable`, and `location`:
@@ -174,6 +183,48 @@ dev-only testkit. They prove requests, rendering, safe diagnostics and output
 failure behavior without an SDK/app implementation. Real-file validation,
 SDK/CLI parity, installation, and platform/runtime isolation require the separate
 composed proof lane. No Flowspace3 or git-ai source was copied into this frontend.
+
+`unisphere_cli::run_adapters` accepts argv including the binary name and `adapters`,
+`&CliContext`, a borrowed `&[&AdapterDescriptor]` and caller-owned output writers.
+The descriptor types live in `unisphere-core` and are re-exported by the CLI.
+The function renders supplied data without acquiring a loader or inspecting the
+environment, so embedding applications retain registration and discovery control.
+
+## Registered-adapter catalog
+
+```sh
+unisphere adapters list --json
+unisphere adapters list --human
+```
+
+The catalog contains registered production adapters only: currently `claude-code`
+for **Claude Code**, not the test fixture or the six researched follow-on adapters.
+The v1 envelope is `{"ok":true,"command":"adapters.list","v":1,"data":{"adapters":[...]}}`.
+Each descriptor supplies:
+
+| Field | Meaning |
+| --- | --- |
+| `id`, `application`, `description` | Stable selection/provenance ID, application name and projection scope. |
+| `locations` | Usual-location hints, not detected installations or an inventory of existing sessions. |
+| `locations[].platforms`, `base`, `path` | Applicable platform names and a relative path beneath a symbolic base such as `home`. |
+| `locations[].session_glob`, `storage_format` | Pattern relative to the hinted path and native format; the catalog evaluates neither. |
+| `capabilities.export_platforms`, `output_formats` | Current registered pipeline support: `["unix"]` and `["otlp-jsonl"]`; `unix` denotes the Unix platform family. |
+| `capabilities.sdk_caller_owned_cursor` | The SDK returns a cursor for the caller to retain; not a guarantee of safe resume after arbitrary source mutation. |
+| `capabilities.cursor_source_assumption` | Currently `append_only`; in-place rewrite/regrowth and truncation above a checkpoint are not fully detected. |
+| `capabilities.cli_persisted_resume` | Currently false: the CLI starts a fresh export at byte zero. |
+| `capabilities.delayed_revision_reconciliation`, `lossless_archive` | Both false; see [fidelity.md](fidelity.md) for the delivered boundaries. |
+
+The usual Claude hint on macOS/Linux is symbolic `home` + `.claude/projects`,
+pattern `*/*.jsonl`, native format `jsonl`. No HOME/config lookup, glob expansion,
+source scan or arbitrary command execution occurs when listing the catalog.
+Custom storage locations remain valid: callers choose the location, and pass an
+explicit leaf directory to `sessions list --root` or file to `sessions export --input`.
+The existing session listing is nonrecursive; the hint does not add automatic discovery.
+
+Piped catalog output defaults to JSON; terminal output defaults to readable
+descriptions, hints and capabilities. **Catalog JSON failures go to stdout;
+session-command errors remain on stderr.** Human catalog failures go to stderr.
+This deliberate stream distinction preserves the existing command contracts.
 
 ## Session commands
 

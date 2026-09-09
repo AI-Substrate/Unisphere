@@ -1,0 +1,44 @@
+docs/plans/014-git-ai-notes/assets/backpressure.dd.json
+  h_9e71e8b09f7cf2 1-24
+docs/plans/014-git-ai-notes/assets/backpressure.dd.md
+  h_9e71e8b09f7cf2 1-27
+docs/plans/014-git-ai-notes/assets/git-ai-reconnaissance.json
+  h_9e71e8b09f7cf2 1-317
+docs/plans/014-git-ai-notes/assets/impl-guide.dd.json
+  h_9e71e8b09f7cf2 1-329
+docs/plans/014-git-ai-notes/assets/impl-guide.dd.md
+  h_9e71e8b09f7cf2 1-125
+docs/plans/014-git-ai-notes/assets/implementation-brief.md
+  h_9e71e8b09f7cf2 1-76
+docs/plans/014-git-ai-notes/assets/tasks/phase-1/tasks.dd.json
+  h_9e71e8b09f7cf2 1-101
+docs/plans/014-git-ai-notes/assets/tasks/phase-1/tasks.dd.md
+  h_9e71e8b09f7cf2 1-159
+docs/plans/014-git-ai-notes/assets/team/coder-packet.template.md
+  h_9e71e8b09f7cf2 1-59
+docs/plans/014-git-ai-notes/assets/team/model-settings.template.json
+  h_9e71e8b09f7cf2 1-10
+docs/plans/014-git-ai-notes/assets/team/reviewer-packet.template.md
+  h_9e71e8b09f7cf2 1-50
+docs/plans/014-git-ai-notes/original-ask.md
+  h_9e71e8b09f7cf2 1-11
+docs/plans/014-git-ai-notes/plan.dd.json
+  h_9e71e8b09f7cf2 1-171
+docs/plans/014-git-ai-notes/plan.dd.md
+  h_9e71e8b09f7cf2 1-178
+docs/plans/014-git-ai-notes/the-flow.json
+  h_9e71e8b09f7cf2 1-278
+docs/plans/014-git-ai-notes/the-flow.md
+  h_9e71e8b09f7cf2 1-40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "2fb5b15349873cd62ccd75c94fdfedae40d561f5",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

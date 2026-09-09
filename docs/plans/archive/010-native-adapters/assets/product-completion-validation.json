@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "harness",
+    "plan",
+    "validate",
+    "docs/plans/010-native-adapters/plan.dd.json",
+    "--complete",
+    "--json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "started": "2026-09-08T08:18:31.528Z",
+  "completed": "2026-09-08T08:18:31.694Z",
+  "exit_code": 0,
+  "stdout": "{\"command\":\"plan validate\",\"status\":\"ok\",\"timestamp\":\"2026-09-08T08:18:31.691Z\",\"data\":{\"path\":\"/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/docs/plans/010-native-adapters/plan.dd.json\",\"depth\":3,\"mode\":\"complete\",\"counts\":{\"error\":0,\"warn\":0,\"semantic\":{\"items\":408,\"completable\":39,\"open\":0,\"contradictions\":0,\"orphans\":0,\"in_scope\":408}},\"issues\":[],\"findings\":[]},\"next_action\":\"Nothing open, nothing unclaimed, nothing contradictory — this plan is complete by its own documents.\"}\n",
+  "stderr": ""
+}

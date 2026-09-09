@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "eng-harness-0-harnessability-assessment": {
+      "source": "AI-Substrate/harness-engineering",
+      "sourceType": "github",
+      "skillPath": "skills/eng-harness-0-harnessability-assessment/SKILL.md",
+      "computedHash": "ef0bec44e4cd3186675db668dd294b7b50d890000b297d92f6f1c48f47ad5c6d"
+    },
+    "eng-harness-flow": {
+      "source": "AI-Substrate/harness-engineering",
+      "sourceType": "github",
+      "skillPath": "skills/eng-harness-flow/SKILL.md",
+      "computedHash": "a33bcf5f3d640820646128879a26eec85db8d35d883b89041f4d4d8a381927ea"
+    }
+  }
+}

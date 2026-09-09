@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "harness",
+    "builder",
+    "compose",
+    "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline/docs/plans/005-claude-session-pipeline/plan.dd.json",
+    "--import",
+    "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline/.harness/temp/import-plan005.json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline",
+  "exit_code": 1,
+  "stdout": "{\"command\":\"builder compose\",\"status\":\"error\",\"timestamp\":\"2026-09-08T02:07:17.598Z\",\"error\":{\"code\":\"E475\",\"message\":\"Uncommitted source would contaminate the artifact proof.\",\"details\":[\".dd/schemas/builder/work-packet/schema.json\"]},\"next_action\":\"Commit the declared source changes before verification. Plan receipts may remain uncommitted.\"}\n",
+  "stderr": "",
+  "data": {
+    "command": "builder compose",
+    "status": "error",
+    "timestamp": "2026-09-08T02:07:17.598Z",
+    "error": {
+      "code": "E475",
+      "message": "Uncommitted source would contaminate the artifact proof.",
+      "details": [
+        ".dd/schemas/builder/work-packet/schema.json"
+      ]
+    },
+    "next_action": "Commit the declared source changes before verification. Plan receipts may remain uncommitted."
+  }
+}

@@ -1,0 +1,206 @@
+{
+  "at": "2026-09-08T07:00:21.449Z",
+  "proof": [
+    {
+      "id": "codex",
+      "include_content": false,
+      "records": 15,
+      "exit_code": 0,
+      "summary": {
+        "command": "sessions.export",
+        "data": {
+          "adapter": "codex",
+          "batches": 15,
+          "diagnostics": 18,
+          "incomplete_tail": false,
+          "offset": 3422,
+          "output": null,
+          "records": 15
+        },
+        "ok": true,
+        "v": 1
+      }
+    },
+    {
+      "id": "codex",
+      "include_content": true,
+      "records": 15,
+      "exit_code": 0,
+      "summary": {
+        "command": "sessions.export",
+        "data": {
+          "adapter": "codex",
+          "batches": 15,
+          "diagnostics": 7,
+          "incomplete_tail": false,
+          "offset": 3422,
+          "output": null,
+          "records": 15
+        },
+        "ok": true,
+        "v": 1
+      }
+    },
+    {
+      "id": "oh-my-pi",
+      "include_content": false,
+      "records": 9,
+      "exit_code": 0,
+      "summary": {
+        "command": "sessions.export",
+        "data": {
+          "adapter": "oh-my-pi",
+          "batches": 9,
+          "diagnostics": 13,
+          "incomplete_tail": false,
+          "offset": 2517,
+          "output": null,
+          "records": 9
+        },
+        "ok": true,
+        "v": 1
+      }
+    },
+    {
+      "id": "oh-my-pi",
+      "include_content": true,
+      "records": 9,
+      "exit_code": 0,
+      "summary": {
+        "command": "sessions.export",
+        "data": {
+          "adapter": "oh-my-pi",
+          "batches": 9,
+          "diagnostics": 5,
+          "incomplete_tail": false,
+          "offset": 2517,
+          "output": null,
+          "records": 9
+        },
+        "ok": true,
+        "v": 1
+      }
+    },
+    {
+      "id": "pi",
+      "include_content": false,
+      "records": 18,
+      "exit_code": 0,
+      "summary": {
+        "command": "sessions.export",
+        "data": {
+          "adapter": "pi",
+          "batches": 18,
+          "diagnostics": 30,
+          "incomplete_tail": false,
+          "offset": 4916,
+          "output": null,
+          "records": 18
+        },
+        "ok": true,
+        "v": 1
+      }
+    },
+    {
+      "id": "pi",
+      "include_content": true,
+      "records": 18,
+      "exit_code": 0,
+      "summary": {
+        "command": "sessions.export",
+        "data": {
+          "adapter": "pi",
+          "batches": 18,
+          "diagnostics": 12,
+          "incomplete_tail": false,
+          "offset": 4916,
+          "output": null,
+          "records": 18
+        },
+        "ok": true,
+        "v": 1
+      }
+    },
+    {
+      "id": "copilot-cli",
+      "include_content": false,
+      "records": 15,
+      "exit_code": 0,
+      "summary": {
+        "command": "sessions.export",
+        "data": {
+          "adapter": "copilot-cli",
+          "batches": 15,
+          "diagnostics": 13,
+          "incomplete_tail": false,
+          "offset": 3450,
+          "output": null,
+          "records": 15
+        },
+        "ok": true,
+        "v": 1
+      }
+    },
+    {
+      "id": "copilot-cli",
+      "include_content": true,
+      "records": 15,
+      "exit_code": 0,
+      "summary": {
+        "command": "sessions.export",
+        "data": {
+          "adapter": "copilot-cli",
+          "batches": 15,
+          "diagnostics": 2,
+          "incomplete_tail": false,
+          "offset": 3450,
+          "output": null,
+          "records": 15
+        },
+        "ok": true,
+        "v": 1
+      }
+    },
+    {
+      "id": "cursor-transcript",
+      "include_content": false,
+      "records": 6,
+      "exit_code": 0,
+      "summary": {
+        "command": "sessions.export",
+        "data": {
+          "adapter": "cursor-transcript",
+          "batches": 7,
+          "diagnostics": 5,
+          "incomplete_tail": false,
+          "offset": 817,
+          "output": null,
+          "records": 6
+        },
+        "ok": true,
+        "v": 1
+      }
+    },
+    {
+      "id": "cursor-transcript",
+      "include_content": true,
+      "records": 6,
+      "exit_code": 0,
+      "summary": {
+        "command": "sessions.export",
+        "data": {
+          "adapter": "cursor-transcript",
+          "batches": 7,
+          "diagnostics": 0,
+          "incomplete_tail": false,
+          "offset": 817,
+          "output": null,
+          "records": 6
+        },
+        "ok": true,
+        "v": 1
+      }
+    }
+  ],
+  "scope": "Actual compiled CLI, isolated synthetic native fixtures; external SDK/installed CLI snapshot integration still owed."
+}

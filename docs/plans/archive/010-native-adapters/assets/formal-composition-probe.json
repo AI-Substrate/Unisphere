@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "harness",
+    "builder",
+    "compose",
+    "docs/plans/010-native-adapters/plan.dd.json",
+    "--verify",
+    "c6f3636b394f0e17445eb2e143f6ac2c6d1ec998"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "started": "2026-09-08T07:51:47.369Z",
+  "completed": "2026-09-08T07:51:47.568Z",
+  "exit_code": 1,
+  "stdout": "{\"command\":\"builder compose\",\"status\":\"error\",\"timestamp\":\"2026-09-08T07:51:47.564Z\",\"error\":{\"code\":\"E475\",\"message\":\"Stale evidence: crates/core/src/snapshot.rs\"},\"next_action\":\"Refresh the evidence against the actual artifact; historical receipts must not be relabelled.\"}\n",
+  "stderr": ""
+}

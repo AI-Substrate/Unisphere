@@ -1,0 +1,283 @@
+{
+  "subject_sha": "560dbd2bf89b3ba030c2c8259c91e5b5f9417ecc",
+  "capture_reason": "Full envelope retained after prior asynchronous display truncated its JSON line",
+  "result": {
+    "argv": [
+      "harness",
+      "boot",
+      "--json"
+    ],
+    "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+    "exit_code": 0,
+    "stdout": "{\"command\":\"boot\",\"status\":\"ok\",\"timestamp\":\"2026-09-07T08:12:31.064Z\",\"data\":{\"ready\":true,\"scope\":\"configuration-sdk-cli-foundation\",\"checks\":{\"command\":\"checks\",\"status\":\"ok\",\"timestamp\":\"2026-09-07T08:12:07.644Z\",\"data\":{\"scope\":\"configuration-sdk-cli-foundation\",\"toolchain\":{\"rustc\":{\"release\":\"1.95.0\",\"normalized_release\":\"1.95.0\",\"commit\":\"59807616e1fa2540724bfbac14d7976d7e4a3860\",\"commit_metadata\":\"emitted\",\"release_matches\":true,\"commit_matches\":true,\"approved\":true,\"provenance\":{\"invoked\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/rustc\",\"resolved\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/rustc\"},\"args\":[\"-vV\"],\"code\":0,\"stdout\":\"rustc 1.95.0 (59807616e 2026-04-14)\\nbinary: rustc\\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\\ncommit-date: 2026-04-14\\nhost: aarch64-apple-darwin\\nrelease: 1.95.0\\nLLVM version: 22.1.2\\n\",\"stderr\":\"\"},\"cargo\":{\"release\":\"1.95.0\",\"normalized_release\":\"1.95.0\",\"commit\":\"f2d3ce0bd7f24a49f8f72d9000448f8838c4e850\",\"commit_metadata\":\"emitted\",\"release_matches\":true,\"commit_matches\":true,\"approved\":true,\"provenance\":{\"invoked\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo\",\"resolved\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo\"},\"args\":[\"-vV\"],\"code\":0,\"stdout\":\"cargo 1.95.0 (f2d3ce0bd 2026-03-21)\\nrelease: 1.95.0\\ncommit-hash: f2d3ce0bd7f24a49f8f72d9000448f8838c4e850\\ncommit-date: 2026-03-21\\nhost: aarch64-apple-darwin\\nlibgit2: 1.9.2 (sys:0.20.4 vendored)\\nlibcurl: 8.7.1 (sys:0.4.83+curl-8.15.0 system ssl:(SecureTransport) LibreSSL/3.3.6)\\nssl: OpenSSL 3.5.4 30 Sep 2025\\nos: Mac OS 26.6.2 [64-bit]\\n\",\"stderr\":\"\"},\"clippy\":{\"release\":\"0.1.95\",\"normalized_release\":\"0.1.95\",\"commit\":\"59807616e1\",\"commit_metadata\":\"emitted\",\"release_matches\":true,\"commit_matches\":true,\"approved\":true,\"provenance\":{\"invoked\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo\",\"resolved\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo\"},\"args\":[\"clippy\",\"--version\"],\"code\":0,\"stdout\":\"clippy 0.1.95 (59807616e1 2026-04-14)\\n\",\"stderr\":\"\",\"binaries\":{\"cargo-clippy\":{\"invoked\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo-clippy\",\"resolved\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo-clippy\"},\"clippy-driver\":{\"invoked\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/clippy-driver\",\"resolved\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/clippy-driver\"}}},\"rustfmt\":{\"release\":\"1.9.0-stable\",\"normalized_release\":\"1.9.0\",\"commit\":\"59807616e1\",\"commit_metadata\":\"emitted\",\"release_matches\":true,\"commit_matches\":true,\"approved\":true,\"provenance\":{\"invoked\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo\",\"resolved\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo\"},\"args\":[\"fmt\",\"--version\"],\"code\":0,\"stdout\":\"rustfmt 1.9.0-stable (59807616e1 2026-04-14)\\n\",\"stderr\":\"\",\"binaries\":{\"cargo-fmt\":{\"invoked\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo-fmt\",\"resolved\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo-fmt\"},\"rustfmt\":{\"invoked\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/rustfmt\",\"resolved\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/rustfmt\"}}}},\"provenance_gaps\":[],\"gates\":[{\"name\":\"format\",\"command\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo\",\"args\":[\"fmt\",\"--all\",\"--check\"],\"code\":0,\"stdout\":\"\",\"stderr\":\"\",\"ok\":true},{\"name\":\"clippy\",\"command\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo\",\"args\":[\"clippy\",\"--workspace\",\"--all-targets\",\"--locked\",\"--\",\"-D\",\"warnings\"],\"code\":0,\"stdout\":\"\",\"stderr\":\"    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s\\n\",\"ok\":true},{\"name\":\"tests\",\"command\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo\",\"args\":[\"test\",\"--workspace\",\"--all-targets\",\"--locked\"],\"code\":0,\"stdout\":\"\\nrunning 0 tests\\n\\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\\n\\n\\nrunning 0 tests\\n\\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\\n\\n\\nrunning 18 tests\\ntest defaults_call_only_the_injected_inspector_and_render_its_report ... ok\\ntest mode_looking_values_and_end_of_options_do_not_select_a_mode ... ok\\ntest conflicting_modes_always_fail_in_json_regardless_of_order_or_terminal ... ok\\ntest config_paths_are_resolved_lexically_without_discovery_or_canonicalization ... ok\\ntest request_values_never_leak_into_failure_diagnostics ... ok\\ntest non_utf8_file_paths_are_preserved_but_non_utf8_root_values_are_rejected_safely ... ok\\ntest blank_root_is_configuration_input_not_a_parser_diagnostic ... ok\\ntest a_relative_context_cannot_silently_create_a_relative_file_request ... ok\\ntest global_modes_work_before_between_and_after_subcommands ... ok\\ntest output_escapes_control_characters_without_changing_semantic_data ... ok\\ntest repeated_roots_and_explicit_clear_have_distinct_requests ... ok\\ntest failure_output_errors_override_argument_exit_and_tolerate_broken_stderr ... ok\\ntest version_uses_explicit_context_and_selected_mode_without_inspection ... ok\\ntest invalid_invocations_are_safe_typed_failures_without_port_calls ... ok\\ntest failures_preserve_core_semantics_and_structural_location ... ok\\ntest output_modes_override_terminal_status_for_success_and_failure ... ok\\ntest short_writes_are_completed_and_write_or_flush_failures_exit_one_safely ... ok\\ntest help_at_every_command_level_honors_output_mode_without_inspection ... ok\\n\\ntest result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\\n\\n\\nrunning 3 tests\\ntest config::tests::omitted_and_explicit_empty_overrides_remain_distinct ... ok\\ntest errors::tests::public_constructors_preserve_typed_categories_and_location ... ok\\ntest errors::tests::display_does_not_include_caller_supplied_location_text ... ok\\n\\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\\n\\n\\nrunning 2 tests\\ntest fs::tests::a_growing_input_stops_after_the_single_oversize_probe_byte ... ok\\ntest fs::tests::io_categories_are_preserved_without_carrying_os_messages ... ok\\n\\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\\n\\n\\nrunning 8 tests\\ntest direct_adapter_rejects_relative_paths_without_opening_them ... ok\\ntest public_facade_defaults_inline_overrides_and_diagnostics_are_usable ... ok\\ntest missing_and_non_file_inputs_are_typed_read_failures_not_defaults ... ok\\ntest public_facade_and_injected_service_agree_on_explicit_file ... ok\\ntest filesystem_calls_are_parallel_safe_with_private_fixture_roots ... ok\\ntest adapter_enforces_byte_limits_including_zero_and_exact_length ... ok\\ntest real_file_parser_failures_retain_path_but_not_sensitive_document_values ... ok\\ntest facade_file_limit_distinguishes_exact_size_from_one_byte_over ... ok\\n\\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\\n\\n\\nrunning 14 tests\\ntest relative_file_paths_fail_before_reader_calls ... ok\\ntest escaped_keys_and_structural_characters_inside_roots_remain_valid ... ok\\ntest explicit_file_reads_once_with_the_bound_and_preserves_document_roots ... ok\\ntest built_in_defaults_and_explicit_empty_are_valid ... ok\\ntest oversized_bytes_from_a_nonconforming_reader_are_still_rejected ... ok\\ntest precedence_preserves_omission_and_explicit_empty_at_each_layer ... ok\\ntest file_failures_preserve_typed_reason_and_supplied_path ... ok\\ntest roots_are_literal_in_all_supplied_layers ... ok\\ntest invalid_root_locations_are_structural_and_parser_coordinates_are_safe ... ok\\ntest independent_readers_and_defaults_are_parallel_safe ... ok\\ntest invalid_defaults_and_overrides_are_not_hidden_by_precedence ... ok\\ntest json_edges_reject_duplicates_escaped_aliases_unknowns_and_trailing_input ... ok\\ntest shared_invalid_documents_fail_inline_and_file_without_secret_diagnostics ... ok\\ntest inline_size_boundary_accepts_exact_limit_and_never_calls_reader ... ok\\n\\ntest result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\\n\\n\\nrunning 10 tests\\ntest fakes::tests::inspector_records_requests_for_both_success_and_error ... ok\\ntest fakes::tests::fakes_are_parallel_safe_without_shared_environment ... ok\\ntest fixtures::tests::duplicate_fixture_retains_both_keys_in_the_input_stream ... ok\\ntest fixtures::tests::invalid_documents_and_read_failures_have_explicit_expected_categories ... ok\\ntest fakes::tests::reader_records_limits_and_returns_isolated_values_or_typed_failures ... ok\\ntest fixtures::tests::valid_documents_express_empty_and_uninterpreted_roots ... ok\\ntest sealed::tests::rejects_relative_paths_before_creating_directories ... ok\\ntest fakes::tests::relative_fixture_paths_are_rejected - should panic ... ok\\ntest sealed::tests::constructs_without_executing_and_replaces_ambient_configuration ... ok\\ntest fixtures::tests::oversized_fixture_is_valid_json_but_exceeds_the_limit ... ok\\n\\ntest result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\\n\\n\\nrunning 3 tests\\ntest tests::malformed_or_incomplete_graphs_never_pass ... ok\\ntest tests::accepts_only_declared_allowed_edges_in_a_partial_workspace ... ok\\ntest tests::forbidden_graph_fixtures_are_rejected_with_the_edge_kind ... ok\\n\\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\\n\\n\\nrunning 3 tests\\ntest tests::absent_targets_fail_before_any_build ... ok\\ntest tests::child_failure_preserves_status_and_both_streams ... ok\\ntest tests::rejects_nonmachine_output_and_wrong_discrimination ... ok\\n\\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s\\n\\n\",\"stderr\":\"    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.08s\\n     Running unittests src/main.rs (target/debug/deps/unisphere-bf5ced08605964d1)\\n     Running unittests src/lib.rs (target/debug/deps/unisphere_cli-4b5be49680769293)\\n     Running tests/frontend.rs (target/debug/deps/frontend-c253f7be163951fa)\\n     Running unittests src/lib.rs (target/debug/deps/unisphere_core-baedda8476230e92)\\n     Running unittests src/lib.rs (target/debug/deps/unisphere_sdk-6a371a84f6bbc1c1)\\n     Running tests/public_api.rs (target/debug/deps/public_api-89a8ab2a666c1b95)\\n     Running tests/service_in_isolation.rs (target/debug/deps/service_in_isolation-7f84b72449bfe77a)\\n     Running unittests src/lib.rs (target/debug/deps/unisphere_testkit-df0b87b03e014e73)\\n     Running unittests src/bin/unisphere-arch-check.rs (target/debug/deps/unisphere_arch_check-fdae855758924491)\\n     Running unittests src/bin/unisphere-proof.rs (target/debug/deps/unisphere_proof-f7fdb684f22d827b)\\n\",\"ok\":true},{\"name\":\"rustdoc\",\"command\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo\",\"args\":[\"test\",\"--workspace\",\"--doc\",\"--locked\"],\"code\":0,\"stdout\":\"\\nrunning 0 tests\\n\\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\\n\\n\\nrunning 0 tests\\n\\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\\n\\n\\nrunning 2 tests\\ntest crates/sdk/src/lib.rs - (line 8) ... ok\\ntest crates/sdk/src/lib.rs - (line 23) ... ok\\n\\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\\n\\nall doctests ran in 1.26s; merged doctests compilation took 0.85s\\n\\nrunning 0 tests\\n\\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\\n\\n\",\"stderr\":\"    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.05s\\n   Doc-tests unisphere_cli\\n   Doc-tests unisphere_core\\n   Doc-tests unisphere_sdk\\n   Doc-tests unisphere_testkit\\n\",\"ok\":true},{\"name\":\"architecture\",\"command\":\"/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo\",\"args\":[\"run\",\"--locked\",\"-p\",\"unisphere-testkit\",\"--bin\",\"unisphere-arch-check\"],\"code\":0,\"stdout\":\"architecture: 14 declared normal/dev/build edges accepted\\n\",\"stderr\":\"    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.09s\\n     Running `target/debug/unisphere-arch-check`\\n\",\"ok\":true},{\"name\":\"harness-regression\",\"command\":\"/opt/homebrew/Cellar/node/24.7.0/bin/node\",\"args\":[\"--test\",\".harness/extensions/checks/checks.test.mjs\",\".harness/extensions/boot/extension.test.mjs\"],\"code\":0,\"stdout\":\"\u2714 missing, unconfigured, malformed and degraded gates cannot imply readiness (1.099209ms)\\n\u2714 failed product checks preserve exit/stdout/stderr and never start smoke (0.071ms)\\n\u2714 each required smoke failure prevents readiness and preserves failure evidence (0.111083ms)\\n\u2714 only complete quality and assembled proofs establish foundation readiness (0.339833ms)\\n\u2714 a real harness child failure is not laundered into readiness (343.838625ms)\\n\u2714 release and commit identity ignore distribution wording and installation path (1.126167ms)\\n\u2714 missing formatter commit metadata is named, not invented as a match (0.127875ms)\\n\u2714 mixed or missing tool identity records all tools and prevents quality gates (0.291917ms)\\n\u2714 unavailable formatter commit permits gates while retaining an explicit provenance gap (0.13275ms)\\n\u2714 failing product check preserves child evidence and stops later gates (0.366083ms)\\n\u2714 all gates run once after coherent observations without boot recursion (0.173917ms)\\n\u2139 tests 11\\n\u2139 suites 0\\n\u2139 pass 11\\n\u2139 fail 0\\n\u2139 cancelled 0\\n\u2139 skipped 0\\n\u2139 todo 0\\n\u2139 duration_ms 388.12975\\n\",\"stderr\":\"\",\"ok\":true}]}},\"proofs\":[{\"name\":\"composition\",\"command\":\"cargo\",\"args\":[\"run\",\"--locked\",\"-p\",\"unisphere-testkit\",\"--bin\",\"unisphere-proof\",\"--\",\"composition\"],\"code\":0,\"stdout\":\"foundation proof composition: passed (temporary isolated build and product runtime; no telemetry-reader claim)\\n\",\"stderr\":\"    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.03s\\n     Running `target/debug/unisphere-proof composition`\\n\",\"ok\":true},{\"name\":\"sdk-consumer\",\"command\":\"cargo\",\"args\":[\"run\",\"--locked\",\"-p\",\"unisphere-testkit\",\"--bin\",\"unisphere-proof\",\"--\",\"sdk-consumer\"],\"code\":0,\"stdout\":\"foundation proof sdk-consumer: passed (temporary isolated build and product runtime; no telemetry-reader claim)\\n\",\"stderr\":\"    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s\\n     Running `target/debug/unisphere-proof sdk-consumer`\\n\",\"ok\":true},{\"name\":\"installed-cli\",\"command\":\"cargo\",\"args\":[\"run\",\"--locked\",\"-p\",\"unisphere-testkit\",\"--bin\",\"unisphere-proof\",\"--\",\"installed-cli\"],\"code\":0,\"stdout\":\"foundation proof installed-cli: passed (temporary isolated build and product runtime; no telemetry-reader claim)\\n\",\"stderr\":\"    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.03s\\n     Running `target/debug/unisphere-proof installed-cli`\\n\",\"ok\":true}],\"limitations\":[\"No native telemetry reader or collection readiness.\",\"No real terminal detection proof.\",\"No executed network-denial test; independent core/SDK source review is additionally required.\"]}}\n",
+    "stderr": "",
+    "data": {
+      "command": "boot",
+      "status": "ok",
+      "timestamp": "2026-09-07T08:12:31.064Z",
+      "data": {
+        "ready": true,
+        "scope": "configuration-sdk-cli-foundation",
+        "checks": {
+          "command": "checks",
+          "status": "ok",
+          "timestamp": "2026-09-07T08:12:07.644Z",
+          "data": {
+            "scope": "configuration-sdk-cli-foundation",
+            "toolchain": {
+              "rustc": {
+                "release": "1.95.0",
+                "normalized_release": "1.95.0",
+                "commit": "59807616e1fa2540724bfbac14d7976d7e4a3860",
+                "commit_metadata": "emitted",
+                "release_matches": true,
+                "commit_matches": true,
+                "approved": true,
+                "provenance": {
+                  "invoked": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/rustc",
+                  "resolved": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/rustc"
+                },
+                "args": [
+                  "-vV"
+                ],
+                "code": 0,
+                "stdout": "rustc 1.95.0 (59807616e 2026-04-14)\nbinary: rustc\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\ncommit-date: 2026-04-14\nhost: aarch64-apple-darwin\nrelease: 1.95.0\nLLVM version: 22.1.2\n",
+                "stderr": ""
+              },
+              "cargo": {
+                "release": "1.95.0",
+                "normalized_release": "1.95.0",
+                "commit": "f2d3ce0bd7f24a49f8f72d9000448f8838c4e850",
+                "commit_metadata": "emitted",
+                "release_matches": true,
+                "commit_matches": true,
+                "approved": true,
+                "provenance": {
+                  "invoked": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo",
+                  "resolved": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo"
+                },
+                "args": [
+                  "-vV"
+                ],
+                "code": 0,
+                "stdout": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)\nrelease: 1.95.0\ncommit-hash: f2d3ce0bd7f24a49f8f72d9000448f8838c4e850\ncommit-date: 2026-03-21\nhost: aarch64-apple-darwin\nlibgit2: 1.9.2 (sys:0.20.4 vendored)\nlibcurl: 8.7.1 (sys:0.4.83+curl-8.15.0 system ssl:(SecureTransport) LibreSSL/3.3.6)\nssl: OpenSSL 3.5.4 30 Sep 2025\nos: Mac OS 26.6.2 [64-bit]\n",
+                "stderr": ""
+              },
+              "clippy": {
+                "release": "0.1.95",
+                "normalized_release": "0.1.95",
+                "commit": "59807616e1",
+                "commit_metadata": "emitted",
+                "release_matches": true,
+                "commit_matches": true,
+                "approved": true,
+                "provenance": {
+                  "invoked": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo",
+                  "resolved": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo"
+                },
+                "args": [
+                  "clippy",
+                  "--version"
+                ],
+                "code": 0,
+                "stdout": "clippy 0.1.95 (59807616e1 2026-04-14)\n",
+                "stderr": "",
+                "binaries": {
+                  "cargo-clippy": {
+                    "invoked": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo-clippy",
+                    "resolved": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo-clippy"
+                  },
+                  "clippy-driver": {
+                    "invoked": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/clippy-driver",
+                    "resolved": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/clippy-driver"
+                  }
+                }
+              },
+              "rustfmt": {
+                "release": "1.9.0-stable",
+                "normalized_release": "1.9.0",
+                "commit": "59807616e1",
+                "commit_metadata": "emitted",
+                "release_matches": true,
+                "commit_matches": true,
+                "approved": true,
+                "provenance": {
+                  "invoked": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo",
+                  "resolved": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo"
+                },
+                "args": [
+                  "fmt",
+                  "--version"
+                ],
+                "code": 0,
+                "stdout": "rustfmt 1.9.0-stable (59807616e1 2026-04-14)\n",
+                "stderr": "",
+                "binaries": {
+                  "cargo-fmt": {
+                    "invoked": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo-fmt",
+                    "resolved": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo-fmt"
+                  },
+                  "rustfmt": {
+                    "invoked": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/rustfmt",
+                    "resolved": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/rustfmt"
+                  }
+                }
+              }
+            },
+            "provenance_gaps": [],
+            "gates": [
+              {
+                "name": "format",
+                "command": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo",
+                "args": [
+                  "fmt",
+                  "--all",
+                  "--check"
+                ],
+                "code": 0,
+                "stdout": "",
+                "stderr": "",
+                "ok": true
+              },
+              {
+                "name": "clippy",
+                "command": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo",
+                "args": [
+                  "clippy",
+                  "--workspace",
+                  "--all-targets",
+                  "--locked",
+                  "--",
+                  "-D",
+                  "warnings"
+                ],
+                "code": 0,
+                "stdout": "",
+                "stderr": "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s\n",
+                "ok": true
+              },
+              {
+                "name": "tests",
+                "command": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo",
+                "args": [
+                  "test",
+                  "--workspace",
+                  "--all-targets",
+                  "--locked"
+                ],
+                "code": 0,
+                "stdout": "\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 18 tests\ntest defaults_call_only_the_injected_inspector_and_render_its_report ... ok\ntest mode_looking_values_and_end_of_options_do_not_select_a_mode ... ok\ntest conflicting_modes_always_fail_in_json_regardless_of_order_or_terminal ... ok\ntest config_paths_are_resolved_lexically_without_discovery_or_canonicalization ... ok\ntest request_values_never_leak_into_failure_diagnostics ... ok\ntest non_utf8_file_paths_are_preserved_but_non_utf8_root_values_are_rejected_safely ... ok\ntest blank_root_is_configuration_input_not_a_parser_diagnostic ... ok\ntest a_relative_context_cannot_silently_create_a_relative_file_request ... ok\ntest global_modes_work_before_between_and_after_subcommands ... ok\ntest output_escapes_control_characters_without_changing_semantic_data ... ok\ntest repeated_roots_and_explicit_clear_have_distinct_requests ... ok\ntest failure_output_errors_override_argument_exit_and_tolerate_broken_stderr ... ok\ntest version_uses_explicit_context_and_selected_mode_without_inspection ... ok\ntest invalid_invocations_are_safe_typed_failures_without_port_calls ... ok\ntest failures_preserve_core_semantics_and_structural_location ... ok\ntest output_modes_override_terminal_status_for_success_and_failure ... ok\ntest short_writes_are_completed_and_write_or_flush_failures_exit_one_safely ... ok\ntest help_at_every_command_level_honors_output_mode_without_inspection ... ok\n\ntest result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 3 tests\ntest config::tests::omitted_and_explicit_empty_overrides_remain_distinct ... ok\ntest errors::tests::public_constructors_preserve_typed_categories_and_location ... ok\ntest errors::tests::display_does_not_include_caller_supplied_location_text ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 2 tests\ntest fs::tests::a_growing_input_stops_after_the_single_oversize_probe_byte ... ok\ntest fs::tests::io_categories_are_preserved_without_carrying_os_messages ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 8 tests\ntest direct_adapter_rejects_relative_paths_without_opening_them ... ok\ntest public_facade_defaults_inline_overrides_and_diagnostics_are_usable ... ok\ntest missing_and_non_file_inputs_are_typed_read_failures_not_defaults ... ok\ntest public_facade_and_injected_service_agree_on_explicit_file ... ok\ntest filesystem_calls_are_parallel_safe_with_private_fixture_roots ... ok\ntest adapter_enforces_byte_limits_including_zero_and_exact_length ... ok\ntest real_file_parser_failures_retain_path_but_not_sensitive_document_values ... ok\ntest facade_file_limit_distinguishes_exact_size_from_one_byte_over ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 14 tests\ntest relative_file_paths_fail_before_reader_calls ... ok\ntest escaped_keys_and_structural_characters_inside_roots_remain_valid ... ok\ntest explicit_file_reads_once_with_the_bound_and_preserves_document_roots ... ok\ntest built_in_defaults_and_explicit_empty_are_valid ... ok\ntest oversized_bytes_from_a_nonconforming_reader_are_still_rejected ... ok\ntest precedence_preserves_omission_and_explicit_empty_at_each_layer ... ok\ntest file_failures_preserve_typed_reason_and_supplied_path ... ok\ntest roots_are_literal_in_all_supplied_layers ... ok\ntest invalid_root_locations_are_structural_and_parser_coordinates_are_safe ... ok\ntest independent_readers_and_defaults_are_parallel_safe ... ok\ntest invalid_defaults_and_overrides_are_not_hidden_by_precedence ... ok\ntest json_edges_reject_duplicates_escaped_aliases_unknowns_and_trailing_input ... ok\ntest shared_invalid_documents_fail_inline_and_file_without_secret_diagnostics ... ok\ntest inline_size_boundary_accepts_exact_limit_and_never_calls_reader ... ok\n\ntest result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 10 tests\ntest fakes::tests::inspector_records_requests_for_both_success_and_error ... ok\ntest fakes::tests::fakes_are_parallel_safe_without_shared_environment ... ok\ntest fixtures::tests::duplicate_fixture_retains_both_keys_in_the_input_stream ... ok\ntest fixtures::tests::invalid_documents_and_read_failures_have_explicit_expected_categories ... ok\ntest fakes::tests::reader_records_limits_and_returns_isolated_values_or_typed_failures ... ok\ntest fixtures::tests::valid_documents_express_empty_and_uninterpreted_roots ... ok\ntest sealed::tests::rejects_relative_paths_before_creating_directories ... ok\ntest fakes::tests::relative_fixture_paths_are_rejected - should panic ... ok\ntest sealed::tests::constructs_without_executing_and_replaces_ambient_configuration ... ok\ntest fixtures::tests::oversized_fixture_is_valid_json_but_exceeds_the_limit ... ok\n\ntest result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 3 tests\ntest tests::malformed_or_incomplete_graphs_never_pass ... ok\ntest tests::accepts_only_declared_allowed_edges_in_a_partial_workspace ... ok\ntest tests::forbidden_graph_fixtures_are_rejected_with_the_edge_kind ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 3 tests\ntest tests::absent_targets_fail_before_any_build ... ok\ntest tests::child_failure_preserves_status_and_both_streams ... ok\ntest tests::rejects_nonmachine_output_and_wrong_discrimination ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s\n\n",
+                "stderr": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.08s\n     Running unittests src/main.rs (target/debug/deps/unisphere-bf5ced08605964d1)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_cli-4b5be49680769293)\n     Running tests/frontend.rs (target/debug/deps/frontend-c253f7be163951fa)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_core-baedda8476230e92)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_sdk-6a371a84f6bbc1c1)\n     Running tests/public_api.rs (target/debug/deps/public_api-89a8ab2a666c1b95)\n     Running tests/service_in_isolation.rs (target/debug/deps/service_in_isolation-7f84b72449bfe77a)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_testkit-df0b87b03e014e73)\n     Running unittests src/bin/unisphere-arch-check.rs (target/debug/deps/unisphere_arch_check-fdae855758924491)\n     Running unittests src/bin/unisphere-proof.rs (target/debug/deps/unisphere_proof-f7fdb684f22d827b)\n",
+                "ok": true
+              },
+              {
+                "name": "rustdoc",
+                "command": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo",
+                "args": [
+                  "test",
+                  "--workspace",
+                  "--doc",
+                  "--locked"
+                ],
+                "code": 0,
+                "stdout": "\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 2 tests\ntest crates/sdk/src/lib.rs - (line 8) ... ok\ntest crates/sdk/src/lib.rs - (line 23) ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\nall doctests ran in 1.26s; merged doctests compilation took 0.85s\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+                "stderr": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.05s\n   Doc-tests unisphere_cli\n   Doc-tests unisphere_core\n   Doc-tests unisphere_sdk\n   Doc-tests unisphere_testkit\n",
+                "ok": true
+              },
+              {
+                "name": "architecture",
+                "command": "/Users/jordanknight/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/cargo",
+                "args": [
+                  "run",
+                  "--locked",
+                  "-p",
+                  "unisphere-testkit",
+                  "--bin",
+                  "unisphere-arch-check"
+                ],
+                "code": 0,
+                "stdout": "architecture: 14 declared normal/dev/build edges accepted\n",
+                "stderr": "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.09s\n     Running `target/debug/unisphere-arch-check`\n",
+                "ok": true
+              },
+              {
+                "name": "harness-regression",
+                "command": "/opt/homebrew/Cellar/node/24.7.0/bin/node",
+                "args": [
+                  "--test",
+                  ".harness/extensions/checks/checks.test.mjs",
+                  ".harness/extensions/boot/extension.test.mjs"
+                ],
+                "code": 0,
+                "stdout": "\u2714 missing, unconfigured, malformed and degraded gates cannot imply readiness (1.099209ms)\n\u2714 failed product checks preserve exit/stdout/stderr and never start smoke (0.071ms)\n\u2714 each required smoke failure prevents readiness and preserves failure evidence (0.111083ms)\n\u2714 only complete quality and assembled proofs establish foundation readiness (0.339833ms)\n\u2714 a real harness child failure is not laundered into readiness (343.838625ms)\n\u2714 release and commit identity ignore distribution wording and installation path (1.126167ms)\n\u2714 missing formatter commit metadata is named, not invented as a match (0.127875ms)\n\u2714 mixed or missing tool identity records all tools and prevents quality gates (0.291917ms)\n\u2714 unavailable formatter commit permits gates while retaining an explicit provenance gap (0.13275ms)\n\u2714 failing product check preserves child evidence and stops later gates (0.366083ms)\n\u2714 all gates run once after coherent observations without boot recursion (0.173917ms)\n\u2139 tests 11\n\u2139 suites 0\n\u2139 pass 11\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 388.12975\n",
+                "stderr": "",
+                "ok": true
+              }
+            ]
+          }
+        },
+        "proofs": [
+          {
+            "name": "composition",
+            "command": "cargo",
+            "args": [
+              "run",
+              "--locked",
+              "-p",
+              "unisphere-testkit",
+              "--bin",
+              "unisphere-proof",
+              "--",
+              "composition"
+            ],
+            "code": 0,
+            "stdout": "foundation proof composition: passed (temporary isolated build and product runtime; no telemetry-reader claim)\n",
+            "stderr": "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.03s\n     Running `target/debug/unisphere-proof composition`\n",
+            "ok": true
+          },
+          {
+            "name": "sdk-consumer",
+            "command": "cargo",
+            "args": [
+              "run",
+              "--locked",
+              "-p",
+              "unisphere-testkit",
+              "--bin",
+              "unisphere-proof",
+              "--",
+              "sdk-consumer"
+            ],
+            "code": 0,
+            "stdout": "foundation proof sdk-consumer: passed (temporary isolated build and product runtime; no telemetry-reader claim)\n",
+            "stderr": "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s\n     Running `target/debug/unisphere-proof sdk-consumer`\n",
+            "ok": true
+          },
+          {
+            "name": "installed-cli",
+            "command": "cargo",
+            "args": [
+              "run",
+              "--locked",
+              "-p",
+              "unisphere-testkit",
+              "--bin",
+              "unisphere-proof",
+              "--",
+              "installed-cli"
+            ],
+            "code": 0,
+            "stdout": "foundation proof installed-cli: passed (temporary isolated build and product runtime; no telemetry-reader claim)\n",
+            "stderr": "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.03s\n     Running `target/debug/unisphere-proof installed-cli`\n",
+            "ok": true
+          }
+        ],
+        "limitations": [
+          "No native telemetry reader or collection readiness.",
+          "No real terminal detection proof.",
+          "No executed network-denial test; independent core/SDK source review is additionally required."
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "harness",
+    "commit",
+    "feat(cli): expose registered adapter metadata without source discovery\n\nPij-Prime: pij-right-kotallo\nPij-Plan: 009-adapter-catalog",
+    "--",
+    "crates/core/src/catalog.rs",
+    "crates/core/src/lib.rs",
+    "crates/cli/src/catalog.rs",
+    "crates/cli/src/lib.rs",
+    "crates/cli/src/args.rs",
+    "crates/cli/src/output.rs",
+    "crates/app/src/adapters.rs",
+    "crates/app/src/main.rs",
+    "crates/app/tests/adapter_catalog.rs",
+    "docs/cli.md",
+    "docs/adapters.md",
+    "docs/plans/009-adapter-catalog"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog",
+  "at": "2026-09-08T04:39:11.551Z",
+  "exit_code": 0,
+  "stdout": "{\"command\":\"commit\",\"status\":\"ok\",\"timestamp\":\"2026-09-08T04:39:11.547Z\",\"data\":{\"mode\":\"direct-verified\",\"probe\":\"connected\",\"sha\":\"17829db8a427d1a6e69681044d58d7cb7c837263\",\"sha_unknown\":false,\"staged\":[\"crates/app/src/adapters.rs\",\"crates/app/src/main.rs\",\"crates/app/tests/adapter_catalog.rs\",\"crates/cli/src/args.rs\",\"crates/cli/src/catalog.rs\",\"crates/cli/src/lib.rs\",\"crates/cli/src/output.rs\",\"crates/core/src/catalog.rs\",\"crates/core/src/lib.rs\",\"docs/adapters.md\",\"docs/cli.md\",\"docs/plans/009-adapter-catalog/assets/baseline-seal.json\",\"docs/plans/009-adapter-catalog/assets/catalog-cli-initial.json\",\"docs/plans/009-adapter-catalog/assets/catalog-help-smoke.json\",\"docs/plans/009-adapter-catalog/assets/catalog-human-error-smoke.json\",\"docs/plans/009-adapter-catalog/assets/catalog-human-smoke.json\",\"docs/plans/009-adapter-catalog/assets/catalog-io-smoke.json\",\"docs/plans/009-adapter-catalog/assets/catalog-piped-smoke.json\",\"docs/plans/009-adapter-catalog/assets/catalog-regressions.json\",\"docs/plans/009-adapter-catalog/assets/catalog-terminal-observation.json\",\"docs/plans/009-adapter-catalog/assets/design-r2-intake.json\",\"docs/plans/009-adapter-catalog/assets/design-v2-commit.json\",\"docs/plans/009-adapter-catalog/assets/execution-log.dd.json\",\"docs/plans/009-adapter-catalog/assets/execution-log.dd.md\",\"docs/plans/009-adapter-catalog/assets/reviews/design-opus-r2.md\",\"docs/plans/009-adapter-catalog/assets/team/baseline.dd.json\",\"docs/plans/009-adapter-catalog/assets/team/baseline.dd.md\",\"docs/plans/009-adapter-catalog/assets/team/basis-a77126067be182fc04fb5a4fa2a1c0f35b43b0bbf43776dd2cf27f15f64fa790.json\",\"docs/plans/009-adapter-catalog/assets/team/basis-b5cfc5fb5d3d590589607010f963b522acd34b2c77154a08aabbebc0d24d68d8.json\",\"docs/plans/009-adapter-catalog/assets/team/coder-packet.template.md\",\"docs/plans/009-adapter-catalog/assets/team/model-settings.template.json\",\"docs/plans/009-adapter-catalog/assets/team/review-decomposition-rv-plan009-design-opus-r2.dd.json\",\"docs/plans/009-adapter-catalog/assets/team/review-decomposition-rv-plan009-design-opus-r2.dd.md\",\"docs/plans/009-adapter-catalog/assets/team/reviewer-packet.template.md\",\"docs/plans/009-adapter-catalog/the-flow.json\",\"docs/plans/009-adapter-catalog/the-flow.md\"],\"verify\":\"landed\",\"buffer\":null,\"detail\":\"committed 17829db8a427 and VERIFIED: a refs/notes/ai entry landed, so the collector recorded this commit's authorship.\"},\"evidence\":[{\"label\":\"commit 17829db8a427\"}]}\n",
+  "stderr": ""
+}

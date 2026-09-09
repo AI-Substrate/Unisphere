@@ -1,0 +1,239 @@
+{
+  "schema_version": "harnessability-assessment.v0.2",
+  "run": {
+    "timestamp_utc": "20260604T224407Z",
+    "repo_root": ".",
+    "repo_name": "sample-service",
+    "branch": "main",
+    "commit": "unknown",
+    "mode": "static",
+    "commands_executed": [],
+    "commands_skipped": ["service boot", "dependency install", "external calls"],
+    "safety_notes": [
+      "No secret values read",
+      "No dependency installation attempted",
+      "No service boot attempted",
+      "No product-code changes applied"
+    ]
+  },
+  "verdict": {
+    "operate_today_percent": 62,
+    "operate_today_grade": "C",
+    "adaptability_percent": 55,
+    "adaptability_grade": "C",
+    "harnessability_index_percent": 58.5,
+    "harnessability_index_grade": "C",
+    "readiness_level": "H2",
+    "highest_proof_level": "L2 Static/build/test",
+    "target_proof_level": "L3 Runtime interaction",
+    "confidence": "medium",
+    "final_grade": "C"
+  },
+  "harness_surfaces": [
+    { "name": "Governance file", "path": ".harness/engineering-harness.md", "kind": "canonical", "status": "present", "notes": "Canonical governance file." },
+    { "name": "Agent route", "path": "AGENTS.md", "kind": "canonical", "status": "present", "notes": "Routes agents to the harness." },
+    { "name": "Command map", "path": "harness/cli/commands.json", "kind": "canonical", "status": "present", "notes": "Sensor inventory." }
+  ],
+  "topology": {
+    "primary_type": "api",
+    "languages": ["TypeScript"],
+    "runtimes": ["node"],
+    "package_roots": ["."],
+    "service_types": ["api"],
+    "frameworks": ["express-like"],
+    "ci": [".github/workflows/ci.yml"],
+    "is_monorepo": false,
+    "notes": "Single-package HTTP service inferred from package manifest."
+  },
+  "axis_a_operate_today": [
+    { "id": "A1", "name": "Cold-start orientation and repo map", "band": "Partial", "points": 2, "evidence": ["README present", "AGENTS.md present"], "notes": "No explicit first-session steps.", "provenance": "evidence", "confidence": "high" },
+    { "id": "A2", "name": "Setup and environment contract", "band": "Partial", "points": 2, "evidence": [".env.example present", "package.json + lockfile present"], "notes": "No doctor/preflight check.", "provenance": "evidence", "confidence": "high" },
+    { "id": "A3", "name": "Locality of infrastructure and external-dependency exposure", "band": "Weak", "points": 1, "evidence": ["DATABASE_URL referenced", "no compose file"], "notes": "No local substitute for the database.", "provenance": "inference", "confidence": "medium" },
+    { "id": "A4", "name": "Harness front door and command discoverability", "band": "Strong", "points": 3, "evidence": ["harness/cli/commands.json present"], "notes": "Front door wraps existing scripts.", "provenance": "evidence", "confidence": "high" },
+    { "id": "A5", "name": "Boot and health/readiness path", "band": "Weak", "points": 1, "evidence": ["start script present", "no health endpoint detected"], "notes": "Readiness not provable today.", "provenance": "inference", "confidence": "medium" },
+    { "id": "A6", "name": "Seed, fixture, reset, and cleanup state", "band": "Absent", "points": 0, "evidence": ["no seed/reset scripts detected"], "notes": "No known repeatable state path.", "provenance": "evidence", "confidence": "medium" },
+    { "id": "A7", "name": "Supported interaction surfaces", "band": "Partial", "points": 2, "evidence": ["route handlers present", "no OpenAPI spec"], "notes": "Interaction possible but undocumented.", "provenance": "inference", "confidence": "medium" },
+    { "id": "A8", "name": "Existing deterministic back-pressure sensors", "band": "Partial", "points": 2, "evidence": ["test + lint scripts present", "CI workflow present"], "notes": "Unit lane only; no smoke.", "provenance": "evidence", "confidence": "high" },
+    { "id": "A9", "name": "Observability and evidence artifacts", "band": "Weak", "points": 1, "evidence": ["console logging only"], "notes": "No structured run artifacts.", "provenance": "inference", "confidence": "medium" },
+    { "id": "A10", "name": "Compounding harness loop", "band": "Weak", "points": 1, "evidence": ["docs/harness/ present but empty"], "notes": "No friction ledger yet.", "provenance": "evidence", "confidence": "medium" }
+  ],
+  "axis_b_adaptability": [
+    { "id": "B1", "name": "Structural coupling and blast radius", "band": "Partial", "points": 2, "evidence": ["modules grouped by feature", "one broad util module"], "notes": "Static inspection only.", "provenance": "inference", "confidence": "medium" },
+    { "id": "B2", "name": "Temporal/change coupling", "band": "Unknown", "points": 0, "evidence": [], "notes": "Not computed in static mode.", "provenance": "unknown", "confidence": "low" },
+    { "id": "B3", "name": "Cohesion and locality of change", "band": "Partial", "points": 2, "evidence": ["tests near code"], "notes": "Some catch-all helpers.", "provenance": "inference", "confidence": "medium" },
+    { "id": "B4", "name": "Seams, substitution, and dependency inversion", "band": "Weak", "points": 1, "evidence": ["direct SDK client construction in handlers"], "notes": "Few injection seams.", "provenance": "inference", "confidence": "medium" },
+    { "id": "B5", "name": "Hermetic, offline, and isolated testability", "band": "Partial", "points": 2, "evidence": ["unit tests run without network"], "notes": "Integration lane not isolated.", "provenance": "evidence", "confidence": "medium" },
+    { "id": "B6", "name": "Side-effect isolation and external-effect sinks", "band": "Weak", "points": 1, "evidence": ["email send called directly"], "notes": "No local sink/sandbox.", "provenance": "inference", "confidence": "medium" },
+    { "id": "B7", "name": "State evolution and consequence verification", "band": "Weak", "points": 1, "evidence": ["migration tool present", "no consequence checks"], "notes": "Rollforward only.", "provenance": "inference", "confidence": "low" },
+    { "id": "B8", "name": "Architecture boundary enforceability", "band": "Absent", "points": 0, "evidence": ["no boundary linter detected"], "notes": "Rules are prose only.", "provenance": "evidence", "confidence": "medium" },
+    { "id": "B9", "name": "Complexity, size, and navigability thresholds", "band": "Partial", "points": 2, "evidence": ["eslint present", "no complexity rules enabled"], "notes": "Lint enforced; complexity not.", "provenance": "evidence", "confidence": "medium" },
+    { "id": "B10", "name": "Inner-loop speed and repeatability", "band": "Partial", "points": 2, "evidence": ["fast unit lane", "no watch mode"], "notes": "Edit-to-feedback is moderate.", "provenance": "inference", "confidence": "medium" }
+  ],
+  "backpressure_surfaces": [
+    { "category": "static", "name": "Unit tests", "command_or_check": "npm test", "scope": "package", "local_available": true, "ci_available": true, "proof_level": "L2", "status": "candidate_unverified", "evidence": "package.json#scripts.test" },
+    { "category": "static", "name": "Lint", "command_or_check": "npm run lint", "scope": "package", "local_available": true, "ci_available": true, "proof_level": "L2", "status": "candidate_unverified", "evidence": "package.json#scripts.lint" },
+    { "category": "runtime", "name": "Smoke", "command_or_check": null, "scope": "service", "local_available": false, "ci_available": false, "proof_level": "L3", "status": "unknown", "evidence": "No smoke path detected." }
+  ],
+  "scenario_probes": [
+    {
+      "name": "API behavior loop",
+      "applicable": true,
+      "relevant_surfaces": ["route handlers", "unit tests"],
+      "likely_edit_target": "src/routes/*",
+      "required_setup": "node install; local config",
+      "supported_interaction": "HTTP request to a route",
+      "expected_observable_consequence": "JSON response and log line",
+      "deterministic_verdict": "assert response schema in a smoke test",
+      "reset_cleanup_path": "stateless route; no reset needed",
+      "local_substitute_available": "database fake not present",
+      "remote_or_secret_blockers": "DATABASE_URL required for some routes",
+      "highest_plausible_proof_level": "L3 Runtime interaction",
+      "what_agent_would_infer": "whether the route was actually exercised",
+      "highest_leverage_missing_sensor": "a fixture-backed smoke test hitting one route"
+    },
+    {
+      "name": "State/storage loop",
+      "applicable": true,
+      "relevant_surfaces": ["migration tool", "data layer"],
+      "likely_edit_target": "src/db/*",
+      "required_setup": "local database or container",
+      "supported_interaction": "run a query through the data layer",
+      "expected_observable_consequence": "row created or updated",
+      "deterministic_verdict": "assert row state after the call",
+      "reset_cleanup_path": "no reset command detected",
+      "local_substitute_available": "none detected",
+      "remote_or_secret_blockers": "remote database may be required",
+      "highest_plausible_proof_level": "L2 Static/build/test",
+      "what_agent_would_infer": "whether state changed as intended",
+      "highest_leverage_missing_sensor": "containerized local database plus seed/reset"
+    }
+  ],
+  "command_tiers": [
+    { "command_or_check": "npm install", "tier": "bootstrap", "category": "setup", "local_available": true, "ci_available": true, "requires_services": false, "requires_secrets": false, "mutates_state": true, "expected_duration_if_known": "unknown", "output_artifact": "node_modules", "proof_level": "L1", "status": "candidate_unverified", "evidence": "package.json present" },
+    { "command_or_check": "npm test", "tier": "fast", "category": "test", "local_available": true, "ci_available": true, "requires_services": false, "requires_secrets": false, "mutates_state": false, "expected_duration_if_known": "unknown", "output_artifact": "test report", "proof_level": "L2", "status": "candidate_unverified", "evidence": "package.json#scripts.test" },
+    { "command_or_check": "npm start", "tier": "boot", "category": "runtime", "local_available": true, "ci_available": false, "requires_services": true, "requires_secrets": true, "mutates_state": true, "expected_duration_if_known": "unknown", "output_artifact": "running process", "proof_level": "L3", "status": "candidate_unverified", "evidence": "package.json#scripts.start" }
+  ],
+  "environment_variables": [
+    { "name": "DATABASE_URL", "required": "yes", "purpose_inferred": "primary datastore connection", "source_files": [".env.example"], "example_present": "yes", "safe_default_present": "no", "secret_like": "yes", "local_dev_notes": "No local default; remote database likely required." },
+    { "name": "LOG_LEVEL", "required": "optional", "purpose_inferred": "logging verbosity", "source_files": [".env.example"], "example_present": "yes", "safe_default_present": "yes", "secret_like": "no", "local_dev_notes": "Safe local default available." }
+  ],
+  "external_dependencies": [
+    { "name": "Primary database", "type": "database", "where_detected": ".env.example, src/db/*", "local_option": "none", "remote_required": "yes", "secret_required": "yes", "mutation_risk": "remote_shared", "proof_blocked_by_dependency": "partial", "recommended_affordance": "Add a containerized local database with seed/reset." },
+    { "name": "Transactional email", "type": "email", "where_detected": "src/notify/*", "local_option": "none", "remote_required": "yes", "secret_required": "yes", "mutation_risk": "production_risk", "proof_blocked_by_dependency": "yes", "recommended_affordance": "Add a local email sink for captured payload assertions." }
+  ],
+  "gaps": [
+    { "id": "G001", "title": "No meaningful smoke scenario", "axis": "operate_today", "subsystem": "feedback", "loop_stage": "validate", "backpressure_category": "runtime", "scenario_impacted": "API behavior loop", "target_layer": "harness", "encoding_type": "sensor", "severity": "high", "status": "absent", "provenance": "inference", "confidence": "medium", "recommended_next_action": "Add one fixture-backed smoke test hitting a single route.", "proof_level_unblocked": "L3", "estimated_effort": "S", "risk_tier": "low" },
+    { "id": "G002", "title": "No local substitute for the database", "axis": "both", "subsystem": "external_dependency", "loop_stage": "observe", "backpressure_category": "consequence", "scenario_impacted": "State/storage loop", "target_layer": "environment", "encoding_type": "fixture", "severity": "high", "status": "weak", "provenance": "inference", "confidence": "medium", "recommended_next_action": "Add a containerized database plus seed/reset commands.", "proof_level_unblocked": "L4", "estimated_effort": "M", "risk_tier": "low" }
+  ],
+  "remediations": [
+    { "id": "R001", "title": "Add a single-route smoke test", "recommended_encoding": "harness smoke command wrapping a fixture-backed route test", "target_layer": "harness", "proof_level_unblocked": "L3", "estimated_effort": "S", "risk_tier": "low", "addresses_gaps": ["G001"] },
+    { "id": "R002", "title": "Add local database with seed/reset", "recommended_encoding": "compose service plus idempotent seed and reset commands", "target_layer": "environment", "proof_level_unblocked": "L4", "estimated_effort": "M", "risk_tier": "low", "addresses_gaps": ["G002"] }
+  ],
+  "product_code_affordances": [
+    {
+      "id": "CBA001",
+      "title": "Add local/test email sink",
+      "category": "external_effect",
+      "status": "proposed",
+      "risk_tier": "medium",
+      "target_layer": "product_code",
+      "environment_scope": ["local", "test", "ci-preview"],
+      "environments_where_it_must_not_apply": ["production"],
+      "safety_requirements": [
+        "Disabled unless an explicit local/test profile is active",
+        "Fails startup if enabled in production",
+        "Captures payloads to a local sink only"
+      ],
+      "human_or_security_review_required": true,
+      "which_gap_it_addresses": "G002-adjacent external-effect proof gap",
+      "which_harness_command_or_proof_level_it_unblocks": "L4 external-effect consequence proof for email",
+      "why_it_is_better_than_more_documentation": "It makes email side effects observable and assertable instead of described."
+    }
+  ],
+  "harness_recommendations": [
+    { "id": "P001", "title": "Populate candidate command tiers", "path": "harness/cli/commands.json", "risk": "low", "type": "suggested", "summary": "Fill fast/proof/smoke tiers from detected scripts.", "rationale": "Detected scripts are not yet mapped into the command surface.", "requires_human_review": true }
+  ],
+  "applied_patches": [],
+  "onboarding_consolidation": [
+    { "item": "Run-and-test steps currently in README", "action": "fold_in", "source_path": "README.md", "notes": "Promote into the harness front door and assessment report." }
+  ],
+  "first_safe_session_plan": [
+    "Read .harness/engineering-harness.md (the canonical governance doc — the only location).",
+    "Inspect harness/cli/commands.json.",
+    "Confirm prerequisites and env var names without reading secret values.",
+    "Read the test suite to see how it mocks, injects, seeds, and resets state, and record reusable mechanisms as candidate harness affordances.",
+    "Run the candidate fast check only if safe and permitted.",
+    "Ask the human for the smallest meaningful smoke path before claiming runtime proof."
+  ],
+  "human_questions": [
+    { "id": "Q001", "question": "What is the smallest meaningful smoke path for this repo?", "reason": "Repository evidence did not identify a verified product-behavior scenario.", "answer_type": "health_endpoint | api_call | cli_command | queue_event | fixture_flow" }
+  ],
+  "evidence_log": [
+    { "source": "package.json", "claim": "Candidate fast command may be npm test.", "provenance": "inference", "confidence": "medium" },
+    { "source": "harness/cli/commands.json", "claim": "A harness front door exists.", "provenance": "evidence", "confidence": "high" }
+  ],
+  "report_paths": {
+    "run_dir": ".harness/reports/harnessability/001-sample-service",
+    "report_md": ".harness/reports/harnessability/001-sample-service/report.md",
+    "report_json": ".harness/reports/harnessability/001-sample-service/report.json",
+    "summary_md": ".harness/reports/harnessability/001-sample-service/summary.md",
+    "evidence_jsonl": ".harness/reports/harnessability/001-sample-service/evidence.jsonl",
+    "latest_md": ".harness/reports/harnessability/latest.md",
+    "latest_json": ".harness/reports/harnessability/latest.json",
+    "schema_json": ".harness/reports/harnessability/schema.json"
+  },
+  "assessment_matrix": [
+    { "area": "Engineering flows", "grade": "C", "score_percent": 60, "rationale": "Build/test/CI present; no canonical SDD flow." },
+    { "area": "Pre-commit & local gates", "grade": "D", "score_percent": 45, "rationale": "Lint/test exist but no pre-commit hook wiring." },
+    { "area": "CI / local equivalence", "grade": "B", "score_percent": 75, "rationale": "Unit + lint identical local vs CI; no smoke either side." },
+    { "area": "Existing harness concept", "grade": "B", "score_percent": 72, "rationale": "Canonical front door via harness/cli/commands.json." },
+    { "area": "Test mechanisms", "grade": "C", "score_percent": 58, "rationale": "Unit tests hermetic; few fakes/sinks; direct SDK construction." },
+    { "area": "External-dependency pressure", "grade": "D", "score_percent": 42, "rationale": "Database + email have no local substitute." },
+    { "area": "Code composition & seams", "grade": "C", "score_percent": 55, "rationale": "Feature-grouped modules; few injection seams." },
+    { "area": "Observability & evidence", "grade": "D", "score_percent": 40, "rationale": "Console logging only; no structured artifacts." }
+  ],
+  "engineering_flows": [
+    { "name": "Build/test", "kind": "test", "commands": ["npm test", "npm run lint"], "where_detected": "package.json#scripts", "canonical": "yes", "provenance": "evidence", "notes": "Primary deterministic lane." },
+    { "name": "CI", "kind": "ci", "commands": [".github/workflows/ci.yml"], "where_detected": ".github/workflows/ci.yml", "canonical": "yes", "provenance": "evidence", "notes": "Runs unit + lint." },
+    { "name": "Spec-driven planning", "kind": "sdd", "commands": [], "where_detected": "none", "canonical": "no", "provenance": "evidence", "notes": "No plans/ pipeline detected." }
+  ],
+  "pre_commit_gates": [
+    { "name": "Lint", "mechanism": "npm_script", "checks": ["eslint"], "local_available": true, "ci_equivalent": true, "notes": "Run manually; no git-hook wiring." },
+    { "name": "Unit tests", "mechanism": "ci_only", "checks": ["npm test"], "local_available": true, "ci_equivalent": true, "notes": "Enforced in CI, not pre-commit." }
+  ],
+  "ci_local_equivalence": [
+    { "check": "Unit tests", "ci_command": "npm test", "local_command": "npm test", "equivalence": "identical", "notes": "Same command both sides." },
+    { "check": "Lint", "ci_command": "npm run lint", "local_command": "npm run lint", "equivalence": "identical", "notes": "Same command both sides." },
+    { "check": "Smoke", "ci_command": "", "local_command": "", "equivalence": "unknown", "notes": "No smoke lane exists." }
+  ],
+  "existing_harness_concepts": [
+    { "name": "Harness front door", "kind": "canonical", "surfaces": ["harness/cli/commands.json"], "coverage": "Partial", "notes": "Maps some scripts; tiers not fully populated." },
+    { "name": "Ad-hoc onboarding", "kind": "diffuse", "surfaces": ["README.md"], "coverage": "Weak", "notes": "Run/test steps live only in prose." }
+  ],
+  "deterministic_encoding_opportunities": [
+    { "id": "DE001", "title": "Run/test steps live in README prose", "current_encoding": "doc", "proposed_encoding": "Map them into harness/cli/commands.json as fast/proof tiers.", "proof_level": "L2", "rationale": "A command surface is enforceable; prose is not." },
+    { "id": "DE002", "title": "Architecture boundaries described in a context file", "current_encoding": "context_file", "proposed_encoding": "Add a boundary linter rule.", "proof_level": "L2", "rationale": "Make the rule fail the build instead of relying on review." }
+  ],
+  "test_mechanisms": [
+    { "name": "Unit tests", "type": "unit", "where_detected": "test/*.test.ts", "deterministic": "yes", "notes": "Run without network." },
+    { "name": "HTTP client mock", "type": "mock", "where_detected": "test/routes.test.ts", "deterministic": "yes", "notes": "Asserts interaction; brittle under refactor." },
+    { "name": "Email sink", "type": "sink", "where_detected": "none", "deterministic": "unknown", "notes": "No local sink present — recommended affordance." }
+  ],
+  "external_dependency_pressure": [
+    { "dependency": "Primary database", "pressure": "high", "local_substitute": "none", "proof_impact": "Blocks L4 state-consequence proof locally.", "notes": "No container/fake present." },
+    { "dependency": "Transactional email", "pressure": "blocking", "local_substitute": "none", "proof_impact": "Blocks external-effect proof; production mutation risk.", "notes": "Needs a local sink." }
+  ],
+  "code_composition": [
+    { "area": "Routes", "kind": "layer", "coupling": "Handlers construct SDK clients directly.", "test_seam": "no", "notes": "Few injection seams." },
+    { "area": "Data layer", "kind": "module", "coupling": "Shared util module is broad.", "test_seam": "no", "notes": "Hard to substitute storage." },
+    { "area": "Notify", "kind": "module", "coupling": "Email send called inline.", "test_seam": "no", "notes": "No sink seam." }
+  ],
+  "candidate_first_harness_surfaces": [
+    { "surface": "smoke", "rationale": "One fixture-backed route test unblocks L3 runtime proof.", "proof_level": "L3", "already_exists": "no", "priority": "high", "notes": "Highest leverage per gap G001." },
+    { "surface": "seed/reset", "rationale": "Containerized DB + seed/reset unblocks L4 state proof.", "proof_level": "L4", "already_exists": "no", "priority": "medium", "notes": "Depends on a local DB substitute." }
+  ],
+  "manual_operation_signals": [
+    { "signal": "Service started via README copy-paste, not a harness verb", "kind": "manual_step", "influences": ["A4", "A5"], "penalize": "yes", "notes": "Fixable: wrap as a boot verb." },
+    { "signal": "No manual/IDE-only blockers for this API topology", "kind": "unknown", "influences": [], "penalize": "no", "notes": "API service — no desktop/mobile/hardware penalty applies." }
+  ]
+}

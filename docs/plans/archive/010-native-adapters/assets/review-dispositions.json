@@ -1,0 +1,23 @@
+{
+  "subject": "c6f3636b394f0e17445eb2e143f6ac2c6d1ec998",
+  "review": "rv-plan010-composition-opus-r1",
+  "verdict": "approved",
+  "findings": [
+    {
+      "id": "K1",
+      "disposition": "accepted",
+      "reason": "Input limits count raw keys/values, not peak RSS. No measured RSS bound is claimed; retain memory-measurement follow-on rather than invent a multiplier."
+    },
+    {
+      "id": "K2",
+      "disposition": "accepted",
+      "reason": "Explicit source-format remains the documented fail-closed contract. Actual VSCode catalog has six hints (three paired document/journal platforms), not four as the review prose says; this count correction does not change its discoverability advisory."
+    },
+    {
+      "id": "K3",
+      "disposition": "accepted",
+      "reason": "Nested checks scope underclaims coverage; actual gate results and top-level native boot scope are retained. No full-fidelity or all-platform claim is inferred."
+    }
+  ],
+  "formal_builder_approval": false
+}

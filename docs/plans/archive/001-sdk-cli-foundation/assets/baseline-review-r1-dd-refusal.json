@@ -1,0 +1,24 @@
+{
+  "argv": [
+    "harness",
+    "builder",
+    "review",
+    "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/plan.dd.json",
+    "--receipt",
+    "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/.harness/temp/plan001-baseline-review-receipt-r1.dd.json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+  "exit_code": 1,
+  "stdout": "{\"command\":\"builder review\",\"status\":\"error\",\"timestamp\":\"2026-09-07T05:13:32.675Z\",\"error\":{\"code\":\"E475\",\"message\":\"Approved review contains unresolved material findings.\"},\"next_action\":\"Resolve findings with evidence or record changes-requested honestly.\"}\n",
+  "stderr": "",
+  "data": {
+    "command": "builder review",
+    "status": "error",
+    "timestamp": "2026-09-07T05:13:32.675Z",
+    "error": {
+      "code": "E475",
+      "message": "Approved review contains unresolved material findings."
+    },
+    "next_action": "Resolve findings with evidence or record changes-requested honestly."
+  }
+}

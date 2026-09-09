@@ -1,0 +1,230 @@
+{
+  "at": "2026-09-08T07:55:34.401Z",
+  "policy": "PM preserves original observations; only owners may clear their own buckets after durable retention. No worker bucket cleared by PM.",
+  "buckets": [
+    {
+      "worker": {
+        "peer": "pij-ideological-koala",
+        "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-codex"
+      },
+      "observed": {
+        "exit_code": 0,
+        "data": {
+          "command": "observe",
+          "status": "ok",
+          "timestamp": "2026-09-08T07:55:34.387Z",
+          "data": {
+            "observations": [
+              {
+                "id": "DL-001",
+                "kind": "difficulty",
+                "description": "Native pij list --prime --json refuses E-RS-UNPORTED; governance was located via public git worktree list and read only. Codex worker validation remains explicitly PM-owned; authored tests are unrun, not proof.",
+                "severity": "degrading",
+                "fp": "649c22468777",
+                "first_seen_at": "2026-09-08T06:41:48.882Z",
+                "bucket": "pij-ideological-koala"
+              }
+            ],
+            "buckets_scanned": [
+              "pij-ideological-koala"
+            ],
+            "malformed_skipped": 0
+          },
+          "next_action": "Drain: save what matters via `harness record retro`, then `harness observe --clear`."
+        },
+        "stderr": ""
+      }
+    },
+    {
+      "worker": {
+        "peer": "pij-financial-elle",
+        "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-oh-my-pi"
+      },
+      "observed": {
+        "exit_code": 0,
+        "data": {
+          "command": "observe",
+          "status": "ok",
+          "timestamp": "2026-09-08T07:55:34.392Z",
+          "data": {
+            "observations": [],
+            "buckets_scanned": [],
+            "malformed_skipped": 0
+          },
+          "next_action": "Drain: save what matters via `harness record retro`, then `harness observe --clear`."
+        },
+        "stderr": ""
+      }
+    },
+    {
+      "worker": {
+        "peer": "pij-remarkable-woodpecker",
+        "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-pi"
+      },
+      "observed": {
+        "exit_code": 0,
+        "data": {
+          "command": "observe",
+          "status": "ok",
+          "timestamp": "2026-09-08T07:55:34.390Z",
+          "data": {
+            "observations": [],
+            "buckets_scanned": [],
+            "malformed_skipped": 0
+          },
+          "next_action": "Drain: save what matters via `harness record retro`, then `harness observe --clear`."
+        },
+        "stderr": ""
+      }
+    },
+    {
+      "worker": {
+        "peer": "pij-homeless-dudley",
+        "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-copilot-cli"
+      },
+      "observed": {
+        "exit_code": 0,
+        "data": {
+          "command": "observe",
+          "status": "ok",
+          "timestamp": "2026-09-08T07:55:34.392Z",
+          "data": {
+            "observations": [
+              {
+                "id": "DL-001",
+                "kind": "difficulty",
+                "description": "Copilot legacy snapshot release names chatMessages/timeline but packet lacks their field schema; referenced agent://CopilotCliRetry artifact is unavailable. Requested sanitized structural evidence from PM; JSONL implementation and regressions are authored with no worker validation.",
+                "severity": "degrading",
+                "fp": "f5995b5313e4",
+                "first_seen_at": "2026-09-08T06:40:33.109Z",
+                "bucket": "pij-homeless-dudley"
+              },
+              {
+                "id": "INS-001",
+                "kind": "insight",
+                "description": "DL-001 resolved: PM supplied durable copilot-legacy-structure.json with bounded field/type evidence from two inactive legacy JSON snapshots; implemented snapshot mapper and synthetic regressions without private-store scans. Release packets should retain a structure-only schema pointer rather than ephemeral agent handles.",
+                "fp": "e1b8fc7d62b1",
+                "first_seen_at": "2026-09-08T06:49:55.113Z",
+                "bucket": "pij-homeless-dudley"
+              }
+            ],
+            "buckets_scanned": [
+              "pij-homeless-dudley"
+            ],
+            "malformed_skipped": 0
+          },
+          "next_action": "Drain: save what matters via `harness record retro`, then `harness observe --clear`."
+        },
+        "stderr": ""
+      }
+    },
+    {
+      "worker": {
+        "peer": "pij-mechanical-tsarina",
+        "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-cursor"
+      },
+      "observed": {
+        "exit_code": 0,
+        "data": {
+          "command": "observe",
+          "status": "ok",
+          "timestamp": "2026-09-08T07:55:34.387Z",
+          "data": {
+            "observations": [
+              {
+                "id": "DL-001",
+                "kind": "difficulty",
+                "description": "Cursor packet research refers to unavailable agent://CursorRetry and IDE-only retained schema; JSONL field structure is not in portable lane artifacts. Requested sanitized transcript schema from PM; no private store reads.",
+                "severity": "degrading",
+                "fp": "7ae4d0c32ac8",
+                "first_seen_at": "2026-09-08T06:34:55.546Z",
+                "bucket": "pij-mechanical-tsarina"
+              }
+            ],
+            "buckets_scanned": [
+              "pij-mechanical-tsarina"
+            ],
+            "malformed_skipped": 0
+          },
+          "next_action": "Drain: save what matters via `harness record retro`, then `harness observe --clear`."
+        },
+        "stderr": ""
+      }
+    },
+    {
+      "worker": {
+        "peer": "pij-adorable-bat",
+        "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-vscode-copilot"
+      },
+      "observed": {
+        "exit_code": 0,
+        "data": {
+          "command": "observe",
+          "status": "ok",
+          "timestamp": "2026-09-08T07:55:34.386Z",
+          "data": {
+            "observations": [
+              {
+                "id": "DL-001",
+                "kind": "difficulty",
+                "description": "VS Code structural probe did not establish usage; pinned native source does: promptTokens is latest-call, modelTotals is whole-turn including subagents, sessionCopilotCredits is cumulative. Journal length extension also requires an explicit allocation bound.",
+                "severity": "degrading",
+                "fp": "30c0fdbc07dc",
+                "first_seen_at": "2026-09-08T06:37:39.874Z",
+                "bucket": "pij-adorable-bat"
+              }
+            ],
+            "buckets_scanned": [
+              "pij-adorable-bat"
+            ],
+            "malformed_skipped": 0
+          },
+          "next_action": "Drain: save what matters via `harness record retro`, then `harness observe --clear`."
+        },
+        "stderr": ""
+      }
+    },
+    {
+      "worker": {
+        "peer": "pij-kind-turkey",
+        "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-snapshot-loader"
+      },
+      "observed": {
+        "exit_code": 0,
+        "data": {
+          "command": "observe",
+          "status": "ok",
+          "timestamp": "2026-09-08T07:55:34.391Z",
+          "data": {
+            "observations": [
+              {
+                "id": "DL-001",
+                "kind": "difficulty",
+                "description": "Required governance probe pij list --prime --json refuses E-RS-UNPORTED in worker clone; standing absolute government read without mutation. Replace stale registry flags in onboarding with supported identity probe.",
+                "severity": "degrading",
+                "fp": "d4271fb089ab",
+                "first_seen_at": "2026-09-08T06:37:10.519Z",
+                "bucket": "pij-kind-turkey"
+              },
+              {
+                "id": "DL-002",
+                "kind": "difficulty",
+                "description": "Preflight harness boot failed checks at baseline clippy exit101, before loader edits. vd-0002 and repo policy put scoped tests/full validation with PM during fan-out; worker will return authored regressions for PM proof.",
+                "severity": "degrading",
+                "fp": "4e5edfedba61",
+                "first_seen_at": "2026-09-08T06:37:49.585Z",
+                "bucket": "pij-kind-turkey"
+              }
+            ],
+            "buckets_scanned": [
+              "pij-kind-turkey"
+            ],
+            "malformed_skipped": 0
+          },
+          "next_action": "Drain: save what matters via `harness record retro`, then `harness observe --clear`."
+        },
+        "stderr": ""
+      }
+    }
+  ]
+}

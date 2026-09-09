@@ -1,0 +1,9 @@
+{
+  "source_commit": "0a72b5d461a9221047ce4243f3d1662762b42c77",
+  "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-cursor",
+  "observed": {
+    "exit_code": 0,
+    "data": "crates/adapter-cursor/Cargo.toml\n  h_9e71e8b09f7cf2 12\ncrates/adapter-cursor/fixtures/ide.json\n  h_9e71e8b09f7cf2 1-8\ncrates/adapter-cursor/src/ide.rs\n  h_9e71e8b09f7cf2 1-362\ncrates/adapter-cursor/src/lib.rs\n  h_9e71e8b09f7cf2 1,3-4,7-10\ncrates/adapter-cursor/tests/ide.rs\n  h_9e71e8b09f7cf2 1-260\ndocs/cursor-adapter.md\n  h_9e71e8b09f7cf2 1,5-8,87-88,107-194,206-212\n---\n{\n  \"schema_version\": \"authorship/3.0.0\",\n  \"git_ai_version\": \"1.6.21\",\n  \"base_commit_sha\": \"0a72b5d461a9221047ce4243f3d1662762b42c77\",\n  \"prompts\": {},\n  \"humans\": {\n    \"h_9e71e8b09f7cf2\": {\n      \"author\": \"Jordan Knight <jakkaj@gmail.com>\"\n    }\n  }\n}",
+    "stderr": ""
+  }
+}

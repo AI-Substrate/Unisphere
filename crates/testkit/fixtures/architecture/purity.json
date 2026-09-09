@@ -1,0 +1,13 @@
+[
+  {"name":"explicit filesystem","source":"fn map() { std::fs::read(\"input\"); }","allowed":false},
+  {"name":"grouped filesystem import","source":"use std::{collections::BTreeMap, fs}; fn map() {}","allowed":false},
+  {"name":"environment import","source":"use std::{env, path::Path}; fn map() {}","allowed":false},
+  {"name":"process launch","source":"fn map() { std::process::Command::new(\"tool\"); }","allowed":false},
+  {"name":"network","source":"fn map() { std::net::TcpStream::connect(\"address\"); }","allowed":false},
+  {"name":"clock read","source":"use std::time::SystemTime; fn map() { SystemTime::now(); }","allowed":false},
+  {"name":"included file","source":"const DATA: &[u8] = include_bytes!(\"private\");","allowed":false},
+  {"name":"unsafe block","source":"fn map() { unsafe { dangerous(); } }","allowed":false},
+  {"name":"core port and forbid attribute","source":"#![forbid(unsafe_code)]\nuse std::io::Write; pub trait Output { fn write(&self, output: &mut dyn Write); }","allowed":true},
+  {"name":"test module is not production","source":"#![forbid(unsafe_code)]\nfn map() {}\n#[cfg(test)]\nmod tests { use std::fs; }","allowed":true},
+  {"name":"documented purity is not access","source":"//! No std::fs or std::env accesses.\n#![forbid(unsafe_code)]\nfn map(bytes: &[u8]) -> usize { bytes.len() }","allowed":true}
+]

@@ -1,0 +1,25 @@
+{
+  "at": "2026-09-08T03:20:34.255Z",
+  "purpose": "Machine-readable registered adapter metadata for explicit caller-owned source selection",
+  "proof_target": "Contract",
+  "verdict": "No material design issue in lead assessment; independent Opus judgement still pending",
+  "authority": "Main supplemental catalog request",
+  "sources": [
+    "crates/app/src/adapters.rs",
+    "crates/cli/src/args.rs",
+    "crates/cli/src/output.rs",
+    "docs/fidelity.md"
+  ],
+  "boundaries": [
+    "No new adapter implementation",
+    "No implicit source scan or environment expansion",
+    "One metadata+runner registration",
+    "Current CLI resume and revision gaps stay false"
+  ],
+  "proof": "harness builder guide --check succeeded; plan validation had only untracked-document warnings and a missing execution log which was then created",
+  "consumers": [
+    "CLI programs reading v1 JSON",
+    "Existing session dispatch",
+    "Fixture registration extension test"
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "dispatch",
+      "value": {
+        "record_type": "dispatch",
+        "id": "dispatch-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86",
+        "recorded_at": "2026-09-07T07:06:32.588Z",
+        "unit_id": "tk-0002",
+        "packet": {
+          "path": "docs/plans/001-sdk-cli-foundation/assets/team/packet-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86.dd.json",
+          "sha256": "bfdec9cb0c85a41ded97158f3b74871332adef3c058fa40d716e8f7832b52190"
+        },
+        "baseline": {
+          "path": "docs/plans/001-sdk-cli-foundation/assets/team/baseline-v7.dd.json",
+          "sha256": "c9fabdbdb8f7ccc0093f178cf5111d175f12e7cc310196a47372d5aa9da0c92c"
+        },
+        "allocation": {
+          "path": "/Users/jordanknight/substrate/unisphere/unishpere-main/.git/builder/allocations/allocation-al-003-78486968-1418-4921-8f53-f956bd367280.dd.json",
+          "sha256": "e7b6e91113dda1f3848204fc1dd800e85ebece80d112626f069b6e50bed9b9d7"
+        },
+        "requested": {
+          "role": "coder",
+          "harness": "omp",
+          "model": "github-copilot/gpt-6-astra",
+          "effort": "high",
+          "source": {
+            "harness": "override",
+            "model": "override",
+            "effort": "override"
+          }
+        },
+        "observed": {
+          "peer_id": "pij-partial-koi",
+          "root": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-sdk",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/gpt-6-astra",
+          "effort": "high",
+          "native_session": "01a07ab0-a228-7000-b0e9-37dcab8366c4",
+          "pid": 38443,
+          "evidence": [
+            "pij-rs state: {\"id\":\"pij-partial-koi\",\"liveness\":\"active\",\"cwd\":\"/Users/jordanknight/substrate/unisphere/unisphere-plan001-sdk\",\"harness\":\"omp\",\"boundModel\":\"github-copilot/gpt-6-astra\",\"effort\":\"high\",\"pid\":38443,\"procStart\":20260907170629,\"parent\":\"pij-right-kotallo\"}",
+            "pij-rs list: {\"id\":\"pij-partial-koi\",\"session\":\"01a07ab0-a228-7000-b0e9-37dcab8366c4\",\"folder\":\"/Users/jordanknight/substrate/unisphere/unisphere-plan001-sdk\",\"proc\":{\"pid\":38443,\"proc_start\":20260907170629},\"harness\":\"omp\",\"model\":\"github-copilot/gpt-6-astra\",\"effort\":\"high\"}",
+            "Native repository-relative read of packet and canary; sha256sum confirmed packet digest.",
+            "git rev-parse HEAD --show-toplevel and pwd confirmed baseline and workspace.",
+            "pij state pij-partial-koi reported active omp peer in expected root with parent pij-right-kotallo.",
+            "PI_SESSION_FILE and PI_TOOL_BRIDGE_SESSION identify native session and native tool cwd.",
+            "ps -p 38443 -o pid=,ppid=,command= observed omp process argv; model and effort are process configuration, not provider attestation.",
+            "Packet, canary, SHA256, HEAD/root, peer state, session environment, process argv and pwd refreshed after PM excluded preserved .serena files clone-locally; no source edits.",
+            "pij-rs state: {\"id\":\"pij-partial-koi\",\"liveness\":\"active\",\"cwd\":\"/Users/jordanknight/substrate/unisphere/unisphere-plan001-sdk\",\"harness\":\"omp\",\"boundModel\":\"github-copilot/gpt-6-astra\",\"effort\":\"high\",\"pid\":38443,\"procStart\":20260907170629,\"parent\":\"pij-right-kotallo\"}",
+            "pij-rs list: {\"id\":\"pij-partial-koi\",\"session\":\"01a07ab0-a228-7000-b0e9-37dcab8366c4\",\"folder\":\"/Users/jordanknight/substrate/unisphere/unisphere-plan001-sdk\",\"proc\":{\"pid\":38443,\"proc_start\":20260907170629},\"harness\":\"omp\",\"model\":\"github-copilot/gpt-6-astra\",\"effort\":\"high\"}",
+            "Native repository-relative read of packet and canary; sha256sum confirmed packet digest.",
+            "git rev-parse HEAD --show-toplevel and pwd confirmed baseline and workspace.",
+            "pij state pij-partial-koi reported active omp peer in expected root with parent pij-right-kotallo.",
+            "PI_SESSION_FILE and PI_TOOL_BRIDGE_SESSION identify native session and native tool cwd.",
+            "ps -p 38443 -o pid=,ppid=,command= observed omp process argv; model and effort are process configuration, not provider attestation.",
+            "Exact IMPLEMENTATION RELEASE observed from pij-right-kotallo. PM supplied retained release.message_id 7ae4d03c-a61d-4bde-92e3-fdea4c8a8374 and release.recorded_at 2026-09-07T07:17:42.140Z. Packet/canary refreshed through native relative reads after release; runtime/session/root observations refreshed at receipt creation.",
+            "builder release confirmation: {\"transport\":{\"message_id\":\"7ae4d03c-a61d-4bde-92e3-fdea4c8a8374\",\"outcome\":\"queued\",\"recorded_at\":\"2026-09-07T07:17:42.140Z\"},\"confirmation\":{\"path\":\"docs/plans/001-sdk-cli-foundation/assets/team/ack-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86-release.dd.json\",\"sha256\":\"f31b201b2a73911126dbe0f79e2e0799cc4ed5d327bef7196380d3843d61bc98\"},\"observed_at\":\"2026-09-07T07:19:24.128Z\",\"ingested_at\":\"2026-09-07T07:23:34.418Z\"}"
+          ],
+          "gaps": [
+            "Provider-served inference identity is unverified; these observations bind launch/session configuration only.",
+            "Native public state does not expose process argv or environment; the peer acknowledgement must name its observation limits.",
+            "pij state --json refused E-RS schema projection; plain state observation used.",
+            "No independent provider-side model or effort attestation available."
+          ],
+          "argv": [
+            "bun",
+            "/Users/jordanknight/.npm-global/bin/omp",
+            "--auto-approve",
+            "--model",
+            "github-copilot/gpt-6-astra",
+            "--thinking",
+            "high"
+          ]
+        },
+        "seed_files": [
+          {
+            "path": "docs/plans/001-sdk-cli-foundation/plan.dd.json",
+            "sha256": "bc208a54522fe9d5d26c87d25270806ad72b6b0a53d9155ae4cff1b2871fe3cc"
+          },
+          {
+            "path": "docs/plans/001-sdk-cli-foundation/plan.dd.md",
+            "sha256": "8910d82cb2b16bb6bb2dde9eba92a1d652a834047f7e599527fac7faced933de"
+          },
+          {
+            "path": "docs/plans/001-sdk-cli-foundation/assets/impl-guide.dd.json",
+            "sha256": "9a2977c85b3c025eafb434ef1306fc71bf3c35fcaa3bc39fd7784a97a868899d"
+          },
+          {
+            "path": "docs/plans/001-sdk-cli-foundation/assets/impl-guide.dd.md",
+            "sha256": "e5a676efaa8a2e4b44644dd1e977f287b2675c408e7a1f10db20816866da7ae3"
+          },
+          {
+            "path": "docs/plans/001-sdk-cli-foundation/assets/team/baseline-v7.dd.json",
+            "sha256": "c9fabdbdb8f7ccc0093f178cf5111d175f12e7cc310196a47372d5aa9da0c92c"
+          },
+          {
+            "path": "docs/plans/001-sdk-cli-foundation/assets/team/baseline-v7.dd.md",
+            "sha256": "8ff386d7f1e7687e5d9589031baa589e7ef53f0ef7ddd1e81d341bfbd1716fda"
+          },
+          {
+            "path": "docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-1ec7213-pij-xenacious-yarpen-r6.dd.json",
+            "sha256": "e3c91d26195974f6d761e7993a30945fcd6dd6a5c3a7dff6e94115322c188073"
+          },
+          {
+            "path": "docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-1ec7213-pij-xenacious-yarpen-r6.dd.md",
+            "sha256": "ba76e49506cc42b46ebfc68230de6c121785be4f5ca55aae7fd2d61f061d5243"
+          },
+          {
+            "path": "docs/plans/001-sdk-cli-foundation/assets/team/canary-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86.txt",
+            "sha256": "573b92db4c58255e9528091fa684cd8a8f5fa9952b2ae1d1e5d34ded9567a556"
+          },
+          {
+            "path": "docs/plans/001-sdk-cli-foundation/assets/team/packet-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86.dd.json",
+            "sha256": "bfdec9cb0c85a41ded97158f3b74871332adef3c058fa40d716e8f7832b52190"
+          },
+          {
+            "path": "docs/plans/001-sdk-cli-foundation/assets/team/packet-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86.dd.md",
+            "sha256": "56d3d353e8766ac5af734a0c2806bafecc03dc634e55f20372087e5065f90b2f"
+          }
+        ],
+        "acknowledgement": {
+          "path": "docs/plans/001-sdk-cli-foundation/assets/team/ack-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86.dd.json",
+          "sha256": "127e19a0be16635ccc07560c5a0c4b340d9af0a4e75dbf821221633785a32c7b"
+        },
+        "release": {
+          "message_id": "7ae4d03c-a61d-4bde-92e3-fdea4c8a8374",
+          "outcome": "delivered",
+          "recorded_at": "2026-09-07T07:17:42.140Z"
+        }
+      }
+    }
+  ],
+  "references": []
+}

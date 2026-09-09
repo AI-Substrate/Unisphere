@@ -1,0 +1,47 @@
+[
+  {
+    "unit": "tk-0002",
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-loader",
+    "dd": {
+      "argv": [
+        "node_modules/.bin/ddocs",
+        "--version"
+      ],
+      "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-loader",
+      "exit_code": 0,
+      "stdout": "0.1.0\n",
+      "stderr": ""
+    },
+    "native_metadata": "/.serena/ excluded only through local .git/info/exclude; bytes untouched"
+  },
+  {
+    "unit": "tk-0003",
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-claude",
+    "dd": {
+      "argv": [
+        "node_modules/.bin/ddocs",
+        "--version"
+      ],
+      "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-claude",
+      "exit_code": 0,
+      "stdout": "0.1.0\n",
+      "stderr": ""
+    },
+    "native_metadata": "/.serena/ excluded only through local .git/info/exclude; bytes untouched"
+  },
+  {
+    "unit": "tk-0004",
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-output",
+    "dd": {
+      "argv": [
+        "node_modules/.bin/ddocs",
+        "--version"
+      ],
+      "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-output",
+      "exit_code": 0,
+      "stdout": "0.1.0\n",
+      "stderr": ""
+    },
+    "native_metadata": "/.serena/ excluded only through local .git/info/exclude; bytes untouched"
+  }
+]

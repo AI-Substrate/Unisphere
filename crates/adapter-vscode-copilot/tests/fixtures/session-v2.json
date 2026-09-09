@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "sessionId": "synthetic-vscode-v2",
+  "creationDate": 1700000001000,
+  "computedTitle": "SENSITIVE-COMPUTED-TITLE",
+  "responderUsername": "copilot",
+  "requests": [{
+    "requestId": "request-v2",
+    "message": {"text": "SENSITIVE-PARSED-REQUEST", "parts": []},
+    "timestamp": 1700000001001,
+    "responseId": "response-v2",
+    "responseTimestamp": 1700000001002,
+    "isCanceled": false,
+    "response": [{"value": "SENSITIVE-V2-ANSWER", "isTrusted": false}]
+  }]
+}

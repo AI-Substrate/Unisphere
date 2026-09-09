@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "harness",
+    "retro",
+    "insights",
+    "--plan",
+    "005-claude-session-pipeline",
+    "--json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline",
+  "started": "2026-09-08T03:25:40.302Z",
+  "completed": "2026-09-08T03:25:40.448Z",
+  "exit_code": 0,
+  "stdout": "{\"command\":\"retro\",\"status\":\"ok\",\"timestamp\":\"2026-09-08T03:25:40.444Z\",\"data\":{\"schema_version\":\"harness.retro-insights/v1\",\"generated_at\":\"2026-09-08T03:25:40.441Z\",\"headline\":{\"records\":0,\"entries\":0,\"plans_touched\":[],\"agents\":[],\"date_range\":{\"from\":null,\"to\":null},\"status_counts\":{\"open\":0,\"suggested\":0,\"encoded\":0,\"wontfix\":0,\"stale\":0,\"other\":0},\"kind_counts\":{\"difficulty\":0,\"magic-wand\":0,\"gift\":0,\"insight\":0,\"coordination\":0,\"improvement-suggestion\":0,\"confusion\":0,\"win\":0,\"other\":0},\"disposition_counts\":{\"fixed-now\":0,\"task\":0,\"plan\":0,\"diffs\":0,\"command\":0,\"kept\":0,\"declined\":0,\"deferred\":0,\"unspecified\":0},\"open_to_encoded_ratio\":\"0:0\"},\"sections\":{\"totals\":{\"id\":\"totals\",\"title\":\"Retro totals\",\"available\":true,\"rows\":[{\"claim\":\"0 record(s), 0 entr(y/ies)\",\"measures_used\":[\"parsed committed retro records\"],\"n\":0,\"caveat\":\"Counts cover the records supplied to the engine after reader validation, deduplication, and scope filters.\",\"values\":{\"records\":0,\"entries\":0,\"plans\":0,\"agents\":0}}],\"note\":\"Exact status counts remain in headline.status_counts; low-n status rows are folded visibly.\"},\"top_clusters\":{\"id\":\"top_clusters\",\"title\":\"Open clusters\",\"available\":false,\"rows\":[],\"note\":\"Top 10 open clusters, ranked by recurrence, severity, proof leverage, then oldest first-seen time.\"},\"stale\":{\"id\":\"stale\",\"title\":\"Stale lifecycle entries\",\"available\":false,\"rows\":[],\"note\":\"Flags only; the report is read-only.\"},\"disposition_mix_records\":{\"id\":\"disposition_mix_records\",\"title\":\"Disposition mix from records\",\"available\":false,\"rows\":[],\"note\":\"Disposition fields observed across 0 committed entr(y/ies).\"}},\"scope\":{\"plans\":[\"005-claude-session-pipeline\"],\"since\":null,\"kinds\":[],\"agents\":[]},\"sources\":{\"canonical\":{\"scanned\":10,\"parsed\":8,\"included\":0,\"deduped\":0},\"agents\":{\"scanned\":0,\"parsed\":0,\"included\":0,\"deduped\":0},\"retros\":{\"scanned\":0,\"parsed\":0,\"included\":0,\"deduped\":0}},\"malformed_skipped\":2,\"unsupported_versions\":[],\"buffer_pending\":0,\"buffer_malformed_skipped\":0},\"evidence\":[{\"label\":\"retro insights report\",\"none\":true}]}\n",
+  "stderr": ""
+}

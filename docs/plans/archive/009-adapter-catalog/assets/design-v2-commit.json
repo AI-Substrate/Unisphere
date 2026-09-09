@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "harness",
+    "commit",
+    "docs(plan): bind catalog identity and honest cursor metadata\n\nPij-Prime: pij-right-kotallo\nPij-Plan: 009-adapter-catalog",
+    "--",
+    "docs/plans/009-adapter-catalog",
+    ".harness/records/retro/2026-09-08/001-plan005-delivery.md",
+    ".harness/records/retro/2026-09-08/002-plan005-review-intake.md"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog",
+  "at": "2026-09-08T03:38:09.001Z",
+  "exit_code": 0,
+  "stdout": "{\"command\":\"commit\",\"status\":\"ok\",\"timestamp\":\"2026-09-08T03:38:08.997Z\",\"data\":{\"mode\":\"direct-verified\",\"probe\":\"connected\",\"sha\":\"09c0605f00b21594494be1660bca74fb977e09fa\",\"sha_unknown\":false,\"staged\":[\".harness/records/retro/2026-09-08/001-plan005-delivery.md\",\".harness/records/retro/2026-09-08/002-plan005-review-intake.md\",\"docs/plans/009-adapter-catalog/assets/backpressure.dd.json\",\"docs/plans/009-adapter-catalog/assets/backpressure.dd.md\",\"docs/plans/009-adapter-catalog/assets/design-commit.json\",\"docs/plans/009-adapter-catalog/assets/design-corrections.json\",\"docs/plans/009-adapter-catalog/assets/design-r1-intake.json\",\"docs/plans/009-adapter-catalog/assets/impl-guide.dd.json\",\"docs/plans/009-adapter-catalog/assets/impl-guide.dd.md\",\"docs/plans/009-adapter-catalog/assets/plan-validation.json\",\"docs/plans/009-adapter-catalog/assets/reviews/design-opus-r1.md\",\"docs/plans/009-adapter-catalog/assets/tasks/phase-1/tasks.dd.json\",\"docs/plans/009-adapter-catalog/assets/tasks/phase-1/tasks.dd.md\",\"docs/plans/009-adapter-catalog/assets/team/basis-31e3ccf47289285ba10f64bce57d74952cce8dd740f5f162939975bbaf18fb5c.json\",\"docs/plans/009-adapter-catalog/assets/team/basis-d114a779c29efbd2bfccd530e03749c9e41b829f3e78070c65a89f3e7984a565.json\",\"docs/plans/009-adapter-catalog/assets/team/review-decomposition-rv-plan009-design-opus-r1.dd.json\",\"docs/plans/009-adapter-catalog/assets/team/review-decomposition-rv-plan009-design-opus-r1.dd.md\",\"docs/plans/009-adapter-catalog/plan.dd.json\",\"docs/plans/009-adapter-catalog/plan.dd.md\"],\"verify\":\"landed\",\"buffer\":null,\"detail\":\"committed 09c0605f00b2 and VERIFIED: a refs/notes/ai entry landed, so the collector recorded this commit's authorship.\"},\"evidence\":[{\"label\":\"commit 09c0605f00b2\"}]}\n",
+  "stderr": ""
+}

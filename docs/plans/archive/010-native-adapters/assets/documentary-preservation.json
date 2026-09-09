@@ -1,0 +1,30 @@
+{
+  "record_type": "documentary-native-delivery-preservation",
+  "recorded_at": "2026-09-08T08:21:34.752Z",
+  "source_root": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "source_branch": "builder/010-native-adapters",
+  "source_sha": "56bf73782562119bd1e1351973fb107d16f6798b",
+  "product_subject_sha": "c6f3636b394f0e17445eb2e143f6ac2c6d1ec998",
+  "product_bundle": {
+    "path": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-preserved-vTxLJR/product.bundle",
+    "sha256": "721b29da6b68428f23d7cbcf35474eb9692d1141d1123774c064467506df70cd",
+    "bytes": 2230963,
+    "verified_exit_code": 0
+  },
+  "original_unit_histories": "Seven verified delta bundles and attribution captures are committed under docs/plans/010-native-adapters/assets/original-deliveries; common prerequisite3a635c17 is included in the product history.",
+  "product_acceptance": {
+    "tests": 236,
+    "quality_gates": 6,
+    "boot_modes": 5,
+    "independent_review": "rv-plan010-composition-opus-r1",
+    "verdict": "approved",
+    "dd_complete_errors": 0,
+    "dd_complete_warnings": 0,
+    "dd_complete_open_items": 0
+  },
+  "formal_builder_preservation_receipt": false,
+  "formal_disposition": "Rows54/55 unresolved: actual formal compose/intake refusals retained; no fabricated receipt or canonical archive claim.",
+  "workspaces_retired": [],
+  "remote_actions": [],
+  "main_landing_authorized": false
+}

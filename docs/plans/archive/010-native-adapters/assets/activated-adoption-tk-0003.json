@@ -1,0 +1,24 @@
+{
+  "argv": [
+    "harness",
+    "builder",
+    "dispatch",
+    "docs/plans/010-native-adapters/plan.dd.json",
+    "--unit",
+    "tk-0003",
+    "--workspace",
+    "/Users/jordanknight/substrate/unisphere/unisphere-plan010-oh-my-pi",
+    "--parent",
+    "pij-right-kotallo",
+    "--adopt-peer",
+    "pij-financial-elle",
+    "--kind",
+    "clone"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "started": "2026-09-08T10:05:34.277Z",
+  "completed": "2026-09-08T10:05:35.110Z",
+  "exit_code": 1,
+  "stdout": "{\"command\":\"builder dispatch\",\"status\":\"error\",\"timestamp\":\"2026-09-08T10:05:35.105Z\",\"error\":{\"code\":\"E472\",\"message\":\"Allocation is busy: /Users/jordanknight/substrate/unisphere/unishpere-main/.git/builder/allocations/reserve.lock\",\"details\":{\"warnings\":[{\"file\":\"crates/testkit/src/collection.rs\",\"owning_unit\":\"tk-0001\",\"stage\":\"guide\",\"code\":\"read-coverage\",\"message\":\"tk-0001 has no matching map for crates/testkit/src/collection.rs.\",\"next_action\":\"Review units/tk-0002/reads/0/paths with the named unit and update the ownership guidance if useful; this warning does not block work.\"},{\"file\":\"crates/testkit/src/collection.rs\",\"owning_unit\":\"tk-0001\",\"stage\":\"guide\",\"code\":\"read-coverage\",\"message\":\"tk-0001 has no matching map for crates/testkit/src/collection.rs.\",\"next_action\":\"Review units/tk-0003/reads/0/paths with the named unit and update the ownership guidance if useful; this warning does not block work.\"},{\"file\":\"crates/testkit/src/collection.rs\",\"owning_unit\":\"tk-0001\",\"stage\":\"guide\",\"code\":\"read-coverage\",\"message\":\"tk-0001 has no matching map for crates/testkit/src/collection.rs.\",\"next_action\":\"Review units/tk-0004/reads/0/paths with the named unit and update the ownership guidance if useful; this warning does not block work.\"},{\"file\":\"crates/testkit/src/collection.rs\",\"owning_unit\":\"tk-0001\",\"stage\":\"guide\",\"code\":\"read-coverage\",\"message\":\"tk-0001 has no matching map for crates/testkit/src/collection.rs.\",\"next_action\":\"Review units/tk-0005/reads/0/paths with the named unit and update the ownership guidance if useful; this warning does not block work.\"},{\"file\":\"crates/testkit/src/collection.rs\",\"owning_unit\":\"tk-0001\",\"stage\":\"guide\",\"code\":\"read-coverage\",\"message\":\"tk-0001 has no matching map for crates/testkit/src/collection.rs.\",\"next_action\":\"Review units/tk-0006/reads/0/paths with the named unit and update the ownership guidance if useful; this warning does not block work.\"},{\"file\":\"crates/testkit/src/collection.rs\",\"owning_unit\":\"tk-0001\",\"stage\":\"guide\",\"code\":\"read-coverage\",\"message\":\"tk-0001 has no matching map for crates/testkit/src/collection.rs.\",\"next_action\":\"Review units/tk-0007/reads/0/paths with the named unit and update the ownership guidance if useful; this warning does not block work.\"},{\"file\":\"crates/testkit/src/collection.rs\",\"owning_unit\":\"tk-0001\",\"stage\":\"guide\",\"code\":\"read-coverage\",\"message\":\"tk-0001 has no matching map for crates/testkit/src/collection.rs.\",\"next_action\":\"Review units/tk-0008/reads/0/paths with the named unit and update the ownership guidance if useful; this warning does not block work.\"}]}},\"next_action\":\"Retry after the active writer; inspect an interrupted lock before explicitly recovering it.\"}\n",
+  "stderr": ""
+}

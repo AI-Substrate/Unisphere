@@ -1,0 +1,31 @@
+[package]
+name = "unisphere-app"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "unisphere"
+path = "src/main.rs"
+
+[dependencies]
+unisphere-sdk.workspace = true
+unisphere-cli.workspace = true
+unisphere-loader-jsonl.workspace = true
+unisphere-adapter-claude.workspace = true
+unisphere-output-otlp.workspace = true
+unisphere-adapter-codex.workspace = true
+unisphere-adapter-omp.workspace = true
+unisphere-adapter-pi.workspace = true
+unisphere-adapter-copilot-cli.workspace = true
+unisphere-adapter-cursor.workspace = true
+unisphere-adapter-vscode-copilot.workspace = true
+unisphere-loader-snapshot.workspace = true
+
+[dev-dependencies]
+unisphere-testkit.workspace = true
+tempfile.workspace = true
+serde_json.workspace = true
+rusqlite.workspace = true

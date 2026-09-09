@@ -1,0 +1,182 @@
+{
+  "scope": "Read-only local six-harness investigation plus Flowspace3 scan of harness-engineering; no adapter implementation or private payload copying.",
+  "authority": "Unisphere requirements and observed native behavior govern design. harness-engineering is optional inspiration and test material, not authority; its output model, architecture and heuristics need not be copied.",
+  "research_execution": {
+    "initial_batch": "six scouts failed before work: No model selected",
+    "retry": "six scouts completed",
+    "parent_probes": [
+      "Codex three rollouts:447 bounded JSONL records, structural projection only",
+      "Cursor live SQLite mode=ro transaction:33 composer headers,32 composerData rows,881 bubble rows",
+      "VS Code populated v3 snapshot:391530 bytes,5 requests;100-line mutation-journal sample"
+    ],
+    "no_private_content_in_report": true
+  },
+  "harnesses": [
+    {
+      "name": "Codex",
+      "roots": [
+        "~/.codex/sessions/YYYY/MM/DD/rollout-*.jsonl"
+      ],
+      "evidence": "164 rollout paths observed;147 indexed threads;447 records projected from3non-active files spanning3CLI eras. Counts are observed inventory/sample, not a complete product support claim.",
+      "format": "timestamp/type/payload JSONL; session_meta,turn_context,response_item,event_msg and evolving variants.",
+      "mapping": "Native session/turn/call IDs where present, messages/reasoning/function and custom tool calls; token_count last_token_usage versus cumulative total_token_usage.",
+      "hazards": [
+        "Do not sum repeated cumulative totals or duplicate tool event summaries and call/output pairs.",
+        "Header-only identity is not present on every later batch; preserve source identity and optional native IDs without filename-derived facts disguised as native.",
+        "Indexes incomplete; date-tree discovery belongs to loader."
+      ],
+      "readiness": "Independent pure source-event mapper ready once shared contract lands. Existing explicit-file framing fits; automatic discovery needs bounded date-tree traversal.",
+      "evidence_refs": [
+        "agent://CodexRetry",
+        "/Users/jordanknight/.omp/agent/sessions/-substrate-unisphere-unishpere-main/2026-09-06T23-30-10-147Z_01a0790e-d463-7000-b541-3f4d2cc9e98b/local/codex-structural-probe.json"
+      ]
+    },
+    {
+      "name": "Oh My Pi",
+      "roots": [
+        "~/.omp/agent/sessions/<project>/*.jsonl"
+      ],
+      "evidence": "22files in three scoped non-Unisphere directories; installed/current source plus prior sanitized193record fixture; earlier98file title-slot survey was NOT rerun.",
+      "format": "256byte mutable title slot, v3 session header, append/tree entry journal.",
+      "mapping": "Messages, toolCall/toolResult, native usage/model/provider, parentId branches, compaction/custom records and explicit source events.",
+      "hazards": [
+        "OMP differs from Pi: fixed mutable title prefix, extra entry kinds and blob/artifact references.",
+        "Append-only cursor misses in-place retitle; retain limitation or add loader-owned metadata refresh.",
+        "No implicit sidecar traversal; preserve unresolved references.",
+        "Full current-session reconstruction/header enrichment needs a separate explicit context/state contract, not a mandatory dependency for basic source-event export."
+      ],
+      "readiness": "Independent mapper ready with declared title-refresh and sidecar limitations; share framing rather than pretend wire-identical Pi.",
+      "evidence_refs": [
+        "agent://OhMyPiRetry",
+        "/Users/jordanknight/github/oh-my-pi/packages/coding-agent/src/session/session-entries.ts",
+        "/Users/jordanknight/github/oh-my-pi/packages/coding-agent/src/session/session-title-slot.ts"
+      ]
+    },
+    {
+      "name": "Pi",
+      "roots": [
+        "~/.pi/agent/sessions/<project>/*.jsonl"
+      ],
+      "evidence": "945files with v3 session headers observed; installed @earendil-works/pi-coding-agent0.83.0 format and migration source inspected.",
+      "format": "Ordinary header-first v3 JSONL tree; no OMP256byte title prefix.",
+      "mapping": "Messages/model/provider/usage/tool records, branches, compaction, labels, session_info and custom/custom_message distinctions.",
+      "hazards": [
+        "Do not count compaction summaries/custom extension state as ordinary model turns.",
+        "Migration and repair can rewrite files; current byte/inode cursor has truncate-and-regrow ceiling.",
+        "Pi and OMP share concepts, not an assumed single dialect."
+      ],
+      "readiness": "Independent pure Pi mapper ready; common helpers only where actual behavior agrees.",
+      "evidence_refs": [
+        "agent://PiRetry",
+        "/Users/jordanknight/.npm-global/lib/node_modules/@earendil-works/pi-coding-agent/dist/core/session-manager.d.ts"
+      ]
+    },
+    {
+      "name": "Copilot CLI",
+      "roots": [
+        "~/.copilot/session-state/<id>/events.jsonl"
+      ],
+      "evidence": "1988session directories,1720events streams;24inactive streams/4211records projected;4legacy monolithic files. Parent inspected supervised probe logs.",
+      "format": "type/id/parentId/timestamp/data event JSONL; legacy sessionId/startTime/chatMessages/timeline snapshots are separate.",
+      "mapping": "Session/context changes, message/turn/tool lifecycle, native model/usage checkpoints/shutdown and agent/subagent lineage.",
+      "hazards": [
+        "Global session-store.db is a derived/incomplete index, not full event authority.",
+        "Usage observations have different scopes; do not aggregate overlapping message/checkpoint/shutdown values blindly.",
+        "Legacy snapshot and artifact loading are separate storage scopes."
+      ],
+      "readiness": "Current JSONL pure mapper ready independently; legacy snapshot support later or parallel behind snapshot contract.",
+      "evidence_refs": [
+        "agent://CopilotCliRetry",
+        "Supervised process copilot-struct-probe: actual exited-process logs inspected through hub logs",
+        "Supervised process copilot-store-counts: actual exited-process logs inspected through hub logs"
+      ]
+    },
+    {
+      "name": "VS Code Copilot",
+      "roots": [
+        "~/Library/Application Support/Code/User/workspaceStorage/*/chatSessions/"
+      ],
+      "evidence": ">=200JSON snapshots and17JSONL files observed;3newest snapshots were empty; one391530byte v3 snapshot has5requests and serialized tool activity.100journal lines:kind0=1,kind1=79,kind2=20.",
+      "format": "Two persisted forms, chronology unproven: v3 whole-session JSON snapshots and numeric-kind/path/value mutation journals. JSONL here is NOT one line per chat event.",
+      "mapping": "Populated snapshot has native session/request/response IDs, integer times, modelId, toolInvocationSerialized and edit/undo parts; usage not established by this probe.",
+      "hazards": [
+        "Need versioned patch-journal reconstruction, not direct patch-to-message export. Exact kind1/kind2 semantics remain unverified.",
+        "Snapshot files exceed current1MiB default; bounded whole-document policy must be explicit.",
+        "Editing sidecars contain file snapshots; do not ingest automatically.",
+        "Copilot SQLite cache has flattened turn text and incomplete tool-turn links; existing fixture projection is not full transcript coverage."
+      ],
+      "readiness": "Pure snapshot mapper can be developed in parallel against frozen logical input fixtures; end-to-end requires snapshot/reducer loader contract.",
+      "evidence_refs": [
+        "agent://VsCodeCopilotRetry",
+        "/Users/jordanknight/.omp/agent/sessions/-substrate-unisphere-unishpere-main/2026-09-06T23-30-10-147Z_01a0790e-d463-7000-b541-3f4d2cc9e98b/local/vscode-nonempty-structural-probe.json"
+      ]
+    },
+    {
+      "name": "Cursor",
+      "roots": [
+        "~/.cursor/projects/**/agent-transcripts/**/*.jsonl",
+        "~/Library/Application Support/Cursor/User/globalStorage/state.vscdb",
+        "~/.cursor/chats/<root>/<id>/store.db"
+      ],
+      "evidence": "14JSONLs observed; liveIDE DB has33headers/32composerData/881bubbles;3CLIblob stores44blobs,15JSON-valid and29opaque.",
+      "format": "Distinct transcript JSONL, IDE SQLite composer/header/bubble snapshots, and mixedJSON/binary CLIblob storage.",
+      "mapping": "IDE JSON samples expose composerId,bubbleId,requestId,createdAt,modelInfo,tokenCount/toolResults and branch/context structures; keys alone do not establish all counter semantics.",
+      "hazards": [
+        "conversation-search.db is derived FTS/cache, not message truth.",
+        "Mutable composer/branch/bubble rows need consistent snapshot identity and revision semantics, not fabricated byte offsets.",
+        "CLIopaque blobs remain undecoded; no complete blob-store support claim.",
+        "Transcript timestamps/usage may be absent; no invented wallclock event timestamps."
+      ],
+      "readiness": "Transcript mapper ready with absence caveats; IDE mapper parallel after snapshot contract. Blob codec is separate follow-on work.",
+      "evidence_refs": [
+        "agent://CursorRetry",
+        "/Users/jordanknight/.omp/agent/sessions/-substrate-unisphere-unishpere-main/2026-09-06T23-30-10-147Z_01a0790e-d463-7000-b541-3f4d2cc9e98b/local/cursor-structural-probe.json"
+      ]
+    }
+  ],
+  "scaffold": {
+    "current_source": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline/crates/core/src/collection.rs",
+    "current_contract": "SessionLoader owns list_sessions/read_batch; current NativeRecord/ReadCursor semantics are LFbyteoffset + Unixdevice/inode. SessionAdapter::map is pure and stateless. Collector<L,A,W> already injects loader, mapper and output.",
+    "preserve": [
+      "One shared source-record output and OTLPwriter",
+      "Pure adapters without filesystem/network/clock/global registry",
+      "Determinism, explicit provenance, contentopt-in and unknown-field diagnostics",
+      "No duplicated per-harness cursor/filesystem machinery"
+    ],
+    "needed_for_bulk_jsonl": "Bounded harness-specific discovery layouts; explicit file export can use existing framing before recursive discovery is added.",
+    "needed_for_ide": "Explicit snapshot/logical session identity and revision checkpoint; VSCodepatch reducer state; consistent readonlySQLite reads. Do not fake LFbyteoffsets or force snapshots into existing LoadedBatch.validate invariants.",
+    "parallel_recommendation": "Five independent JSONL mapping lanes:Codex,OMP,Pi,CopilotCLI,Cursortranscripts. In parallel define one narrow snapshot/query loader contract enabling separate VSCodeCopilot and CursorIDE mapping lanes. Claude work need not pause; worker fences stay adapter+registration+fixtures."
+  },
+  "harness_engineering_reference": {
+    "method": "Actual Flowspace3 scoped code/doc searches and get/tree reads in indexed harness-engineering checkout, with direct local source/fixture metadata checks. Automated ask produced only partial evidence and no synthesized answer; conclusions below are from direct reads.",
+    "providers": "Real Azure embedding provider observed; conversation polling degraded, but this scan excluded conversations.",
+    "optional_code_reuse": [
+      "harness/cli/src/services/telemetry/copilot-ledger.ts::extractCopilotUsageObservations: message/cumulativecheckpoint/partialcompaction/finalshutdown distinction",
+      "harness/cli/src/services/telemetry/codex-ledger.ts::extractCodexLedger: last native cumulative snapshot; not a general event mapper",
+      "harness/cli/src/services/telemetry/adapters/cursor-adapter.ts::readBubbleTimeline: keyprefix,type1user/type2assistant,modelName/time field examples; mixes DB I/O and policy, so not copied wholesale",
+      "harness/cli/src/services/telemetry/fixture-extract.ts::projectCopilotVscodeRows: reduced counts-only SQL projection; not rich snapshot decoder",
+      "harness/cli/src/services/telemetry/fixture-scrub.ts and test/services/telemetry/fixture-privacy-scan.test.ts: privacy guard ideas"
+    ],
+    "fixture_families": [
+      "harness/cli/test/services/telemetry/fixtures/real/{claude,copilot-cli,copilot-vscode,cursor}",
+      "harness/cli/test/services/telemetry/fixtures/lane-sources/{codex,copilot,p063}",
+      "harness/cli/test/services/telemetry/real-capture.e2e.test.ts",
+      "harness/cli/test/services/telemetry/copilot-vscode-sqlite.int.test.ts"
+    ],
+    "fixture_caveats": [
+      "Real fixture README says scrubbed paths/identity/secrets but prompts/toolcalls intentionally retained; no new privacy audit performed here.",
+      "meta.json scrub attestation and human-reviewed invariants are useful provenance, not proof of all current native variants.",
+      "VSCode raw.rows omit message text and do not cover rich snapshots/patchjournal; Cursorfixtures have timing/model gaps for headlessCLI.",
+      "Do not copy expected-segment.json as Unisphere OTLP oracle: it pins a different product/output contract."
+    ],
+    "reject_as_defaults": [
+      "Legacy counts-only/window aggregation policy",
+      "Char/4 estimated tool-result tokens",
+      "Invented or anchored/interval event timestamps as native timestamps",
+      "Silent null/zero defaults replacing explicit unknown/unsupported semantics",
+      "Whole adapter architecture containing environment/FS/DB access"
+    ],
+    "licence": "MIT Copyright(c)2026 AI-Substrate; retain notice for substantial code reuse."
+  },
+  "outcome": "Research complete; product adapters not implemented by this investigation, no new private fixtures captured. Recommendations remain independent of harness-engineering authority."
+}

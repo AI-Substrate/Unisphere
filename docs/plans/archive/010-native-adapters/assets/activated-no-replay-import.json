@@ -1,0 +1,17 @@
+{
+  "argv": [
+    "harness",
+    "builder",
+    "compose",
+    "docs/plans/010-native-adapters/plan.dd.json",
+    "--import",
+    "docs/plans/010-native-adapters/assets/activated-unit-deliveries.json",
+    "--already-integrated"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "started": "2026-09-08T10:07:30.506Z",
+  "completed": "2026-09-08T10:07:31.396Z",
+  "exit_code": 1,
+  "stdout": "{\"command\":\"builder compose\",\"status\":\"error\",\"timestamp\":\"2026-09-08T10:07:31.392Z\",\"error\":{\"code\":\"E475\",\"message\":\"Already-integrated tree mismatch for tk-0002 at crates/adapter-codex/src/lib.rs.\",\"details\":{\"unit_id\":\"tk-0002\",\"path\":\"crates/adapter-codex/src/lib.rs\",\"delivery\":[\"100644\",\"blob\",\"a2957951bc06fac4945a019b5775ab3d810d0d7c\"],\"pm\":[\"100644\",\"blob\",\"e9f26d5b3586c0d957b282f0e90cbaf1bed8c2a8\"]}},\"next_action\":\"Commit the delivered path, mode, type and bytes (or deletion) from 891ff3a8860ac5f1ab2e033c8464adbe6c87c8f3 in the PM checkout, or use normal import if replay is intended.\"}\n",
+  "stderr": ""
+}

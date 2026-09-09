@@ -1,0 +1,47 @@
+{
+  "deliveries": {
+    "tk-0002": {
+      "unit_id": "tk-0002",
+      "peer_id": "pij-young-tran",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-loader",
+      "commit_sha": "7b6b2417b2714c9365441de7302d4f2e24691fb4",
+      "packet_sha256": "2dfb1c46f2ade2f6358192e1f58abd1bac53225fc48d7ca66cc3869d205f90d0",
+      "baseline_sha": "ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86"
+    },
+    "tk-0003": {
+      "unit_id": "tk-0003",
+      "peer_id": "pij-living-anteater",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-claude",
+      "commit_sha": "58cb09add80c91d077e901c55391be3691aa9c23",
+      "packet_sha256": "1cc6ed264ae3313dd9097af3e0b8ed942895f65431e005d473dfb4bef3d34697",
+      "baseline_sha": "ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86"
+    },
+    "tk-0004": {
+      "unit_id": "tk-0004",
+      "peer_id": "pij-bad-butterfly",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-output",
+      "commit_sha": "323877bcc240d7515a9a1866f4a54a97e2c9bed8",
+      "packet_sha256": "35118101b4fb3b727524f062752b70560964b4228218ac1c1eda89fc3e846637",
+      "baseline_sha": "ac4d28f682739c36f08bb5b8f3dd1c605a7e1a86"
+    }
+  },
+  "receipt_digests": {
+    "tk-0002": "7d9d308dba5ecb71c3900dc296bd18f1638a2784f6cf9e58aa4edf7971194d20",
+    "tk-0003": "13acc5289a74cf95c767cac63bb331604fd57c493c3dc3d887438b25e266f911",
+    "tk-0004": "048e4c7635972ab6f838aead3e57e95d860a2b986c3bf597c162d1199b8a33f8"
+  },
+  "tests": {
+    "tk-0002": "18 tests passed; nonUTF8 candidate filesystem branch explicitly not exercised on this filesystem (EILSEQ), direct before-I/O rejection exercised.",
+    "tk-0003": "15 pure mapping/conformance tests passed.",
+    "tk-0004": "9 writer tests passed plus actual encode example exited0."
+  },
+  "proof_files": [
+    "tk-0002-validation-initial.json",
+    "tk-0002-validation-corrected.json",
+    "tk-0003-validation-initial.json",
+    "tk-0004-validation-initial.json",
+    "tk-0004-validation-corrected.json",
+    "tk-0004-example.json"
+  ],
+  "whole_pipeline_proven": false
+}

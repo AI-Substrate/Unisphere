@@ -1,0 +1,72 @@
+{
+  "record_type": "manual-main-landing",
+  "recorded_at": "2026-09-07T22:05:35.301391+00:00",
+  "merge_sha": "6fb86b8649dd25e1ca507a4d6ec59d0bb698e4c5",
+  "archive_commit": "8623dd9b1b07eaf2c6834741544141fcbb5734eb",
+  "archive_path": "docs/plans/archive/001-sdk-cli-foundation",
+  "command": [
+    "harness",
+    "boot",
+    "--json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unishpere-main",
+  "exit_code": 0,
+  "observed_result": {
+    "command": "boot",
+    "status": "ok",
+    "timestamp": "2026-09-07T22:04:25.916Z",
+    "data": {
+      "ready": true,
+      "scope": "configuration-sdk-cli-foundation",
+      "checks": {
+        "command": "checks",
+        "status": "ok",
+        "timestamp": "2026-09-07T22:03:49.640Z"
+      }
+    }
+  },
+  "elapsed_seconds": 64.73,
+  "capture_note": "Observed successful background command result. Tool display truncated the long JSON line; this record retains the observed top-level fields only, not invented nested logs. Full earlier same-product proof remains composed-boot-full.json.",
+  "archive_validation": {
+    "argv": [
+      "harness",
+      "plan",
+      "validate",
+      "/Users/jordanknight/substrate/unisphere/unishpere-main/docs/plans/archive/001-sdk-cli-foundation/plan.dd.json",
+      "--complete"
+    ],
+    "cwd": "/Users/jordanknight/substrate/unisphere/unishpere-main",
+    "exit_code": 0,
+    "stdout": "{\"command\":\"plan validate\",\"status\":\"ok\",\"timestamp\":\"2026-09-07T22:03:51.391Z\",\"data\":{\"path\":\"/Users/jordanknight/substrate/unisphere/unishpere-main/docs/plans/archive/001-sdk-cli-foundation/plan.dd.json\",\"depth\":3,\"mode\":\"complete\",\"counts\":{\"error\":0,\"warn\":0,\"semantic\":{\"items\":569,\"completable\":48,\"open\":0,\"contradictions\":0,\"orphans\":0,\"in_scope\":569}},\"issues\":[],\"findings\":[]},\"next_action\":\"Nothing open, nothing unclaimed, nothing contradictory \u2014 this plan is complete by its own documents.\"}\n",
+    "stderr": "",
+    "data": {
+      "command": "plan validate",
+      "status": "ok",
+      "timestamp": "2026-09-07T22:03:51.391Z",
+      "data": {
+        "path": "/Users/jordanknight/substrate/unisphere/unishpere-main/docs/plans/archive/001-sdk-cli-foundation/plan.dd.json",
+        "depth": 3,
+        "mode": "complete",
+        "counts": {
+          "error": 0,
+          "warn": 0,
+          "semantic": {
+            "items": 569,
+            "completable": 48,
+            "open": 0,
+            "contradictions": 0,
+            "orphans": 0,
+            "in_scope": 569
+          }
+        },
+        "issues": [],
+        "findings": []
+      },
+      "next_action": "Nothing open, nothing unclaimed, nothing contradictory \u2014 this plan is complete by its own documents."
+    }
+  },
+  "preservation_directory": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-preserved-mkhv2li6",
+  "workspaces_retired": [],
+  "remote_pushed": false,
+  "formal_builder_receipt": "absent; explicit operator workaround recorded in manual-closeout-authorization.json"
+}

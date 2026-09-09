@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pij-rs",
+    "spawn",
+    "--harness",
+    "omp",
+    "--model",
+    "github-copilot/gpt-6-astra",
+    "--effort",
+    "high",
+    "--cwd",
+    "/Users/jordanknight/substrate/unisphere/unisphere-plan010-cursor",
+    "--parent",
+    "pij-right-kotallo",
+    "--name",
+    "p010-tk-0007",
+    "--json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "started": "2026-09-08T06:33:16.639Z",
+  "completed": "2026-09-08T06:33:18.393Z",
+  "exit_code": 0,
+  "stdout": "{\"ok\":true,\"command\":\"pij spawn\",\"v\":2,\"data\":{\"id\":\"pij-mechanical-tsarina\",\"harness\":\"omp\",\"session\":\"01a07fb8-9304-7154-be26-39ff3c525b5b\",\"pane\":\"%4414\",\"proc\":{\"pid\":87573,\"proc_start\":20260908163316},\"folder\":\"/Users/jordanknight/substrate/unisphere/unisphere-plan010-cursor\",\"state\":\"idle\",\"semantic_state\":null,\"role\":null,\"parent\":\"pij-right-kotallo\",\"relay\":false,\"cross_session_inbound_accept\":false,\"native_extension_delivery\":false,\"spawn_id\":\"s-1d2bc663fcfb2184e9937e995f1fe9b2\",\"model\":\"github-copilot/gpt-6-astra\",\"effort\":\"high\",\"dispatched\":true,\"bound\":true,\"pid\":87573}}\n",
+  "stderr": ""
+}

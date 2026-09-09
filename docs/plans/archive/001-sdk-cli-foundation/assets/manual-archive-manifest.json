@@ -1,0 +1,69 @@
+{
+  "recorded_at": "2026-09-07T22:02:57.066512+00:00",
+  "method": "Operator-authorized manual archive; not a Builder preservation receipt",
+  "old_plan_path": "docs/plans/001-sdk-cli-foundation",
+  "archive_path": "docs/plans/archive/001-sdk-cli-foundation",
+  "candidate_sha": "126423b7eaf9912158a67676cddaa0d3ed306de1",
+  "source_review_sha": "560dbd2bf89b3ba030c2c8259c91e5b5f9417ecc",
+  "preservation_directory": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-preserved-mkhv2li6",
+  "scratch_original": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/scratch/native-readers",
+  "scratch_archive": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-preserved-mkhv2li6/native-readers.zip",
+  "snapshots": {
+    "plan-before-archive.zip": "b57e2165d201d6a90476c64144bf54d6920bd95404a89c4b64cdee3abcddb254",
+    "before-closeout.bundle": "561cadfcd410fb5101d369bc52ff51c1f82693d1b113acdca6f7bab937e42456",
+    "native-readers.zip": "ba06bbd20d56cdcac39cf79b6a3110ca0c5614aeb6b8436da5e0acef7a1ff82c"
+  },
+  "flow_relocation": {
+    "argv": [
+      "harness",
+      "flow",
+      "relocate",
+      "--path",
+      "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/archive/001-sdk-cli-foundation/the-flow.json",
+      "--to",
+      "docs/plans/archive/001-sdk-cli-foundation"
+    ],
+    "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+    "exit_code": 0,
+    "stdout": "{\"command\":\"flow\",\"status\":\"ok\",\"timestamp\":\"2026-09-07T22:02:21.530Z\",\"data\":{\"path\":\"/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/archive/001-sdk-cli-foundation/the-flow.json\",\"plan_dir\":{\"from\":\"docs/plans/001-sdk-cli-foundation\",\"to\":\"docs/plans/archive/001-sdk-cli-foundation\"},\"rewritten\":[{\"node\":\"phase-1\",\"from\":\"docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json#tasks\",\"to\":\"docs/plans/archive/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json#tasks\"},{\"node\":\"post-flight\",\"from\":\"docs/plans/001-sdk-cli-foundation/plan.dd.json\",\"to\":\"docs/plans/archive/001-sdk-cli-foundation/plan.dd.json\"}],\"count\":2},\"evidence\":[{\"label\":\"flow\",\"path\":\"/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/archive/001-sdk-cli-foundation/the-flow.json\"}],\"next_action\":\"Verify the gates resolve: `harness dd link resolve docs/plans/archive/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json#tasks`.\"}\n",
+    "stderr": "",
+    "data": {
+      "command": "flow",
+      "status": "ok",
+      "timestamp": "2026-09-07T22:02:21.530Z",
+      "data": {
+        "path": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/archive/001-sdk-cli-foundation/the-flow.json",
+        "plan_dir": {
+          "from": "docs/plans/001-sdk-cli-foundation",
+          "to": "docs/plans/archive/001-sdk-cli-foundation"
+        },
+        "rewritten": [
+          {
+            "node": "phase-1",
+            "from": "docs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json#tasks",
+            "to": "docs/plans/archive/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json#tasks"
+          },
+          {
+            "node": "post-flight",
+            "from": "docs/plans/001-sdk-cli-foundation/plan.dd.json",
+            "to": "docs/plans/archive/001-sdk-cli-foundation/plan.dd.json"
+          }
+        ],
+        "count": 2
+      },
+      "evidence": [
+        {
+          "label": "flow",
+          "path": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/archive/001-sdk-cli-foundation/the-flow.json"
+        }
+      ],
+      "next_action": "Verify the gates resolve: `harness dd link resolve docs/plans/archive/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json#tasks`."
+    }
+  },
+  "acceptance": {
+    "product_ac_checked": 11,
+    "formal_builder_receipt": "absent; operator accepted",
+    "formal_only_assertion": "dw-0011 human-skipped; independent source review actually passed"
+  },
+  "retired_workspaces": []
+}

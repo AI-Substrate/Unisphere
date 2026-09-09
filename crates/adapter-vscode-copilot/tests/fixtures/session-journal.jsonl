@@ -1,0 +1,10 @@
+{"kind":0,"v":{"version":3,"sessionId":"synthetic-journal","creationDate":1700000004000,"customTitle":"SENSITIVE-REMOVED-TITLE","requests":[]}}
+{"kind":2,"k":["requests"],"v":[{"requestId":"request-journal","message":{"text":"SENSITIVE-JOURNAL-USER","parts":[]},"modelId":"synthetic-requested-model","responseId":"response-journal","response":[]}]}
+{"kind":2,"k":["requests",0,"response"],"v":[{"value":"SENSITIVE-OBSOLETE-TEXT"}]}
+{"kind":1,"k":["requests",0,"response",0,"value"],"v":"SENSITIVE-FINAL-TEXT"}
+{"kind":2,"k":["requests",0,"response"],"v":[{"kind":"toolInvocationSerialized","toolId":"read_file","toolCallId":"journal-tool","isComplete":false,"isConfirmed":true,"invocationMessage":"SENSITIVE-JOURNAL-TOOL"}]}
+{"kind":1,"k":["requests",0,"response",1,"isComplete"],"v":true}
+{"kind":2,"k":["requests"],"v":[{"requestId":"removed-request","message":"SENSITIVE-REMOVED-REQUEST"}]}
+{"kind":2,"k":["requests"],"i":1}
+{"kind":1,"k":["requests",0,"promptTokens"],"v":13}
+{"kind":3,"k":["customTitle"]}

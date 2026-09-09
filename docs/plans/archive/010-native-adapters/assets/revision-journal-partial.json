@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "target/debug/unisphere",
+    "sessions",
+    "export",
+    "--adapter",
+    "vscode-copilot",
+    "--input",
+    "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/.harness/temp/native-revisions/session.jsonl",
+    "--source-format",
+    "json-journal"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "started": "2026-09-08T07:20:08.156Z",
+  "completed": "2026-09-08T07:20:08.159Z",
+  "exit_code": 1,
+  "stdout": "",
+  "stderr": "{\"command\":\"sessions\",\"error\":{\"code\":\"UNI-DATA\",\"fix\":\"Inspect the record at the reported byte offset or correct the injected loader result; malformed data is not silently skipped.\",\"kind\":\"invalid_data\",\"message\":\"The supplied native data or batch structure is invalid.\",\"offset\":null},\"ok\":false,\"v\":1}\n"
+}

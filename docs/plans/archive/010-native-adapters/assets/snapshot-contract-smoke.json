@@ -1,0 +1,8 @@
+{
+  "source": "use unisphere_core::*;\nfn main(){\n let source=SnapshotRef{path:\"/explicit/test.json\".into(),format:SnapshotFormat::JsonDocument,session_id:None};\n let snapshot=NativeSnapshot{source:source.clone(),revision:\"digest\".into(),records:vec![SnapshotRecord{key:\"document\".into(),bytes:b\"{}\".to_vec()}]};\n assert!(snapshot.validate(SnapshotLimits{max_records:1,max_record_bytes:2,max_snapshot_bytes:10}).is_ok());\n assert_eq!(snapshot.validate(SnapshotLimits{max_records:1,max_record_bytes:2,max_snapshot_bytes:9}).unwrap_err().kind(),PipelineErrorKind::BatchLimit);\n assert_eq!(snapshot.validate(SnapshotLimits{max_records:1,max_record_bytes:1,max_snapshot_bytes:10}).unwrap_err().kind(),PipelineErrorKind::RecordLimit);\n let mut unsafe_source=source;unsafe_source.format=SnapshotFormat::SqliteKeyValue{table:\"table;DROP\".into()};assert_eq!(unsafe_source.validate().unwrap_err().kind(),PipelineErrorKind::InvalidInput);\n println!(\"snapshot contract: exact key+byte aggregate boundary, per-record limit and invalid table rejection passed\");\n}\n",
+  "result": {
+    "exit_code": 0,
+    "data": "snapshot contract: exact key+byte aggregate boundary, per-record limit and invalid table rejection passed\n",
+    "stderr": ""
+  }
+}

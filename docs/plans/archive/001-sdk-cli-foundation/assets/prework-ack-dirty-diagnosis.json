@@ -1,0 +1,47 @@
+[
+  {
+    "unit": "tk-0002",
+    "result": {
+      "argv": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=all"
+      ],
+      "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-sdk",
+      "exit_code": 0,
+      "stdout": "?? .serena/.gitignore\n?? .serena/project.yml\n?? docs/plans/001-sdk-cli-foundation/assets/team/baseline-v7.dd.json\n?? docs/plans/001-sdk-cli-foundation/assets/team/baseline-v7.dd.md\n?? docs/plans/001-sdk-cli-foundation/assets/team/canary-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86.txt\n?? docs/plans/001-sdk-cli-foundation/assets/team/packet-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86.dd.json\n?? docs/plans/001-sdk-cli-foundation/assets/team/packet-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86.dd.md\n?? docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-1ec7213-pij-xenacious-yarpen-r6.dd.json\n?? docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-1ec7213-pij-xenacious-yarpen-r6.dd.md\n",
+      "stderr": ""
+    }
+  },
+  {
+    "unit": "tk-0003",
+    "result": {
+      "argv": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=all"
+      ],
+      "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli",
+      "exit_code": 0,
+      "stdout": "?? .serena/.gitignore\n?? .serena/project.yml\n?? docs/plans/001-sdk-cli-foundation/assets/team/baseline-v7.dd.json\n?? docs/plans/001-sdk-cli-foundation/assets/team/baseline-v7.dd.md\n?? docs/plans/001-sdk-cli-foundation/assets/team/canary-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.txt\n?? docs/plans/001-sdk-cli-foundation/assets/team/packet-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.json\n?? docs/plans/001-sdk-cli-foundation/assets/team/packet-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86.dd.md\n?? docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-1ec7213-pij-xenacious-yarpen-r6.dd.json\n?? docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-1ec7213-pij-xenacious-yarpen-r6.dd.md\n",
+      "stderr": ""
+    }
+  },
+  {
+    "unit": "tk-0005",
+    "result": {
+      "argv": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=all"
+      ],
+      "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-proof",
+      "exit_code": 0,
+      "stdout": "?? .serena/.gitignore\n?? .serena/project.yml\n?? docs/plans/001-sdk-cli-foundation/assets/team/baseline-v7.dd.json\n?? docs/plans/001-sdk-cli-foundation/assets/team/baseline-v7.dd.md\n?? docs/plans/001-sdk-cli-foundation/assets/team/canary-tk-0005-1ec7213488044ba083da3db7f45a958024a86c86.txt\n?? docs/plans/001-sdk-cli-foundation/assets/team/packet-tk-0005-1ec7213488044ba083da3db7f45a958024a86c86.dd.json\n?? docs/plans/001-sdk-cli-foundation/assets/team/packet-tk-0005-1ec7213488044ba083da3db7f45a958024a86c86.dd.md\n?? docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-1ec7213-pij-xenacious-yarpen-r6.dd.json\n?? docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-1ec7213-pij-xenacious-yarpen-r6.dd.md\n",
+      "stderr": ""
+    }
+  }
+]

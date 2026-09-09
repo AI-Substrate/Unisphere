@@ -1,0 +1,18 @@
+{
+  "argv": [
+    "cargo",
+    "run",
+    "--quiet",
+    "--bin",
+    "unisphere",
+    "--",
+    "adapters",
+    "list",
+    "--json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog",
+  "at": "2026-09-08T04:11:48.491Z",
+  "exit_code": 0,
+  "stdout": "{\"ok\":true,\"command\":\"adapters.list\",\"v\":1,\"data\":{\"adapters\":[{\"id\":\"claude-code\",\"application\":\"Claude Code\",\"description\":\"Source-derived Claude Code JSONL projection; metadata by default, content by explicit opt-in.\",\"locations\":[{\"platforms\":[\"macos\",\"linux\"],\"base\":\"home\",\"path\":\".claude/projects\",\"session_glob\":\"*/*.jsonl\",\"storage_format\":\"jsonl\"}],\"capabilities\":{\"export_platforms\":[\"unix\"],\"output_formats\":[\"otlp-jsonl\"],\"sdk_caller_owned_cursor\":true,\"cursor_source_assumption\":\"append_only\",\"cli_persisted_resume\":false,\"delayed_revision_reconciliation\":false,\"lossless_archive\":false}}]}}\n",
+  "stderr": ""
+}

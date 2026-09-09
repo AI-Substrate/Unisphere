@@ -1,0 +1,38 @@
+{
+  "files": [
+    {
+      "path": "Cargo.toml",
+      "sha256": "3eb376b649974e88cb6308bd98cef90f3b5a7e1198efece32b1beea00cd06d40"
+    },
+    {
+      "path": "crates/core/Cargo.toml",
+      "sha256": "298a2002cea077f9ac1b338f9baddc811cf8c2d00a5bfa1658fbc84dcf93ef28"
+    },
+    {
+      "path": "crates/core/src/lib.rs",
+      "sha256": "e4b506483be5c98e2af6437edd4c69fba37ef620a13924feaa989217c51cc657"
+    },
+    {
+      "path": "crates/core/src/collection.rs",
+      "sha256": "7d8062a3ae40a0257422427d5a2bd99b20a93b2ee5e97a25867373a175fd5f53"
+    },
+    {
+      "path": "crates/testkit/src/lib.rs",
+      "sha256": "0198340f306816fd4ee2d9a3c84bdd82d937a5ce8fbcceadb27f0e01e8089db5"
+    },
+    {
+      "path": "crates/testkit/src/collection.rs",
+      "sha256": "8ce28bb35e29efd626c75b83ce4c75a52f61904fc8a1ae51176d61fa103571e0"
+    },
+    {
+      "path": "crates/testkit/fixtures/collection/claude-basic.jsonl",
+      "sha256": "3b4b1444f9a54782da17a260735a701ef1e83ef0a71a21810e1ec5deb2609ce2"
+    },
+    {
+      "path": "crates/testkit/fixtures/collection/claude-parts.jsonl",
+      "sha256": "c18cbab69f7afbd9cad2cfcfdd6af1fcf47407cba6474332072b3793faf316b1"
+    }
+  ],
+  "checks": "baseline-proof.json",
+  "scope": "All8 new/changed sharedcontract files;3futureimplementation dirs absent at actualvd1."
+}

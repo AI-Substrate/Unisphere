@@ -1,0 +1,9 @@
+{
+  "reviewed_subject": "3df2450324873eedb77aba645edfaa9472de3a56",
+  "B1": "Fixed actualarchitectureallowlist/fixture and futureapprovedcrateedges; actualgate exits0 with16edges+5coresourcechecks. Incidental numeric-edge testpin removed.",
+  "B2": "Reviewer withdrew wrongrepresentationbyte-size mechanism. Adapter bounds mean one outputrecord per inputrecord;32MiBOTLPencoding cap is writer responsibility. Split explicitly documented in frozenhelper; sharedmetadata SENSITIVE-content detector exercised.",
+  "B3": "Blank means ASCIIwhitespace-only physicalline includingCR/LF; frozenhelper docs/code agree; loader supplement repeats interpretation.",
+  "B4": "FakeCollector failure/success test dispatches through &dynCollectionApi; actualcompiled proof.",
+  "B5": "Puritysensor scans core/adapter only, excludes testkit/trailingcfgtestmodules; exactunsafe token doesnotmatch forbid(unsafe_code), positive/negative sourcefixtures exercised; lexicalbound+independentreview retained.",
+  "PM_integration_preparation": "SDK/CLIport WIP exercised withfakes is included so16edge actualgraph equalscommitted manifests. No newconcreteadapter packages or wholepipelineproof."
+}

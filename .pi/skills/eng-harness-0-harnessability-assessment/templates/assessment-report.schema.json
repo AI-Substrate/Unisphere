@@ -1,0 +1,679 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/harnessability-assessment/assessment-report.schema.json",
+  "title": "Harnessability assessment report",
+  "description": "Core v0.2 JSON contract for harnessability-assessment reports. v0.2 adds optional survey arrays (engineering flows, pre-commit gates, CI/local equivalence, existing harness concepts, deterministic-encoding opportunities, test mechanisms, external-dependency pressure, code composition, candidate-first harness surfaces, manual/IDE-only signals), an A-F assessment matrix, and report-path metadata. All v0.2 additions are optional; existing required keys are unchanged.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run",
+    "verdict",
+    "harness_surfaces",
+    "topology",
+    "axis_a_operate_today",
+    "axis_b_adaptability",
+    "backpressure_surfaces",
+    "scenario_probes",
+    "command_tiers",
+    "environment_variables",
+    "external_dependencies",
+    "gaps",
+    "remediations",
+    "product_code_affordances",
+    "harness_recommendations",
+    "applied_patches",
+    "onboarding_consolidation",
+    "first_safe_session_plan",
+    "human_questions",
+    "evidence_log"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "harnessability-assessment.v0.2"
+    },
+    "run": {
+      "type": "object",
+      "required": [
+        "timestamp_utc",
+        "repo_root",
+        "repo_name",
+        "branch",
+        "commit",
+        "mode",
+        "commands_executed",
+        "commands_skipped",
+        "safety_notes"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "timestamp_utc": { "type": "string" },
+        "repo_root": { "type": "string" },
+        "repo_name": { "type": "string" },
+        "branch": { "type": "string" },
+        "commit": { "type": "string" },
+        "mode": { "type": "string", "enum": ["static", "safe-probe", "deep", "comparison"] },
+        "commands_executed": { "type": "array", "items": { "type": "string" } },
+        "commands_skipped": { "type": "array", "items": { "type": "string" } },
+        "safety_notes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "verdict": {
+      "type": "object",
+      "required": [
+        "operate_today_percent",
+        "operate_today_grade",
+        "adaptability_percent",
+        "adaptability_grade",
+        "readiness_level",
+        "highest_proof_level",
+        "confidence"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "operate_today_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+        "operate_today_grade": { "$ref": "#/$defs/grade" },
+        "adaptability_percent": { "type": "number", "minimum": 0, "maximum": 100 },
+        "adaptability_grade": { "$ref": "#/$defs/grade" },
+        "harnessability_index_percent": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+        "harnessability_index_grade": { "oneOf": [{ "$ref": "#/$defs/grade" }, { "type": "null" }] },
+        "readiness_level": { "$ref": "#/$defs/readinessLevel" },
+        "highest_proof_level": { "$ref": "#/$defs/proofLevel" },
+        "target_proof_level": { "$ref": "#/$defs/proofLevel" },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "final_grade": { "oneOf": [{ "$ref": "#/$defs/grade" }, { "type": "null" }] }
+      }
+    },
+    "harness_surfaces": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/harnessSurface" }
+    },
+    "topology": { "$ref": "#/$defs/topology" },
+    "axis_a_operate_today": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/dimension" }
+    },
+    "axis_b_adaptability": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/dimension" }
+    },
+    "backpressure_surfaces": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/backpressureSurface" }
+    },
+    "scenario_probes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/scenarioProbe" }
+    },
+    "command_tiers": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/commandTier" }
+    },
+    "environment_variables": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/environmentVariable" }
+    },
+    "external_dependencies": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/externalDependency" }
+    },
+    "gaps": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/gap" }
+    },
+    "remediations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/remediation" }
+    },
+    "product_code_affordances": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/productCodeAffordance" }
+    },
+    "harness_recommendations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/harnessRecommendation" }
+    },
+    "applied_patches": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/appliedPatch" }
+    },
+    "onboarding_consolidation": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/onboardingConsolidationEntry" }
+    },
+    "first_safe_session_plan": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "human_questions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/humanQuestion" }
+    },
+    "evidence_log": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidenceLogEntry" }
+    },
+    "report_paths": { "$ref": "#/$defs/reportPaths" },
+    "assessment_matrix": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/assessmentMatrixRow" }
+    },
+    "engineering_flows": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/engineeringFlow" }
+    },
+    "pre_commit_gates": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/preCommitGate" }
+    },
+    "ci_local_equivalence": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/ciLocalEquivalenceEntry" }
+    },
+    "existing_harness_concepts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/existingHarnessConcept" }
+    },
+    "deterministic_encoding_opportunities": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/deterministicEncodingOpportunity" }
+    },
+    "test_mechanisms": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/testMechanism" }
+    },
+    "external_dependency_pressure": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/externalDependencyPressureEntry" }
+    },
+    "code_composition": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/codeCompositionEntry" }
+    },
+    "candidate_first_harness_surfaces": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/candidateFirstHarnessSurface" }
+    },
+    "manual_operation_signals": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/manualOperationSignal" }
+    }
+  },
+  "$defs": {
+    "grade": { "type": "string", "enum": ["A", "B", "C", "D", "E", "F"] },
+    "readinessLevel": { "type": "string", "pattern": "^H[0-5]$" },
+    "proofLevel": { "type": "string", "pattern": "^L[0-6]" },
+    "confidence": { "type": "string", "enum": ["high", "medium", "low"] },
+    "provenance": { "type": "string", "enum": ["evidence", "inference", "human_supplied", "unknown"] },
+    "yesNoUnknown": { "type": "string", "enum": ["yes", "no", "optional", "unknown"] },
+    "yesNo": { "type": "string", "enum": ["yes", "no"] },
+    "band": { "type": "string", "enum": ["Strong", "Partial", "Weak", "Absent", "Not applicable", "Unknown"] },
+    "commandStatus": {
+      "type": "string",
+      "enum": ["verified", "configured_unverified", "candidate_unverified", "not_applicable", "unknown"]
+    },
+    "harnessSurface": {
+      "type": "object",
+      "required": ["name", "status"],
+      "additionalProperties": true,
+      "properties": {
+        "name": { "type": "string" },
+        "path": { "type": "string" },
+        "kind": { "type": "string", "enum": ["canonical", "prior", "generic", "none"] },
+        "status": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+    "topology": {
+      "type": "object",
+      "required": ["primary_type"],
+      "additionalProperties": true,
+      "properties": {
+        "primary_type": { "type": "string" },
+        "languages": { "type": "array", "items": { "type": "string" } },
+        "runtimes": { "type": "array", "items": { "type": "string" } },
+        "package_roots": { "type": "array", "items": { "type": "string" } },
+        "service_types": { "type": "array", "items": { "type": "string" } },
+        "frameworks": { "type": "array", "items": { "type": "string" } },
+        "ci": { "type": "array", "items": { "type": "string" } },
+        "is_monorepo": { "type": "boolean" },
+        "notes": { "type": "string" }
+      }
+    },
+    "dimension": {
+      "type": "object",
+      "required": ["id", "name", "band", "points", "provenance"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[AB][0-9]+$" },
+        "name": { "type": "string" },
+        "band": { "$ref": "#/$defs/band" },
+        "points": { "type": ["integer", "null"], "minimum": 0, "maximum": 3 },
+        "evidence": { "type": "array", "items": { "type": "string" } },
+        "notes": { "type": "string" },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      }
+    },
+    "backpressureSurface": {
+      "type": "object",
+      "required": ["category", "status"],
+      "additionalProperties": true,
+      "properties": {
+        "category": {
+          "type": "string",
+          "enum": ["static", "runtime", "consequence", "external_effect", "observability", "human_inferential", "production_customer"]
+        },
+        "name": { "type": "string" },
+        "command_or_check": { "type": ["string", "null"] },
+        "scope": { "type": "string" },
+        "local_available": { "type": ["boolean", "string"] },
+        "ci_available": { "type": ["boolean", "string"] },
+        "proof_level": { "$ref": "#/$defs/proofLevel" },
+        "status": { "type": "string" },
+        "evidence": { "type": "string" }
+      }
+    },
+    "scenarioProbe": {
+      "type": "object",
+      "required": ["name", "highest_plausible_proof_level"],
+      "additionalProperties": true,
+      "properties": {
+        "name": { "type": "string" },
+        "applicable": { "type": "boolean" },
+        "relevant_surfaces": { "type": "array", "items": { "type": "string" } },
+        "likely_edit_target": { "type": "string" },
+        "required_setup": { "type": "string" },
+        "supported_interaction": { "type": "string" },
+        "expected_observable_consequence": { "type": "string" },
+        "deterministic_verdict": { "type": "string" },
+        "reset_cleanup_path": { "type": "string" },
+        "local_substitute_available": { "type": "string" },
+        "remote_or_secret_blockers": { "type": "string" },
+        "highest_plausible_proof_level": { "$ref": "#/$defs/proofLevel" },
+        "what_agent_would_infer": { "type": "string" },
+        "highest_leverage_missing_sensor": { "type": "string" }
+      }
+    },
+    "commandTier": {
+      "type": "object",
+      "required": ["command_or_check", "tier", "status"],
+      "additionalProperties": true,
+      "properties": {
+        "command_or_check": { "type": "string" },
+        "tier": {
+          "type": "string",
+          "enum": [
+            "bootstrap", "setup_services", "doctor", "boot", "health", "fast", "quick",
+            "proof", "ci_equivalent", "smoke", "seed_or_reset", "observe", "cleanup", "retro_or_improve"
+          ]
+        },
+        "category": { "type": "string" },
+        "local_available": { "type": ["boolean", "string"] },
+        "ci_available": { "type": ["boolean", "string"] },
+        "requires_services": { "type": ["boolean", "string"] },
+        "requires_secrets": { "type": ["boolean", "string"] },
+        "mutates_state": { "type": ["boolean", "string"] },
+        "expected_duration_if_known": { "type": "string" },
+        "output_artifact": { "type": "string" },
+        "proof_level": { "$ref": "#/$defs/proofLevel" },
+        "status": { "$ref": "#/$defs/commandStatus" },
+        "evidence": { "type": "string" }
+      }
+    },
+    "environmentVariable": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "required": { "$ref": "#/$defs/yesNoUnknown" },
+        "purpose_inferred": { "type": "string" },
+        "source_files": { "type": "array", "items": { "type": "string" } },
+        "example_present": { "$ref": "#/$defs/yesNo" },
+        "safe_default_present": { "$ref": "#/$defs/yesNo" },
+        "secret_like": { "type": "string", "enum": ["yes", "no", "unknown"] },
+        "local_dev_notes": { "type": "string" }
+      }
+    },
+    "externalDependency": {
+      "type": "object",
+      "required": ["name", "type"],
+      "additionalProperties": true,
+      "properties": {
+        "name": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": [
+            "database", "cache", "queue", "object_store", "search", "auth", "payment",
+            "email", "sms", "webhook", "analytics", "model_provider", "internal_service",
+            "external_api", "other"
+          ]
+        },
+        "where_detected": { "type": "string" },
+        "local_option": {
+          "type": "string",
+          "enum": ["native", "container", "fake", "in_memory", "testcontainers", "sandbox", "dry_run", "none", "unknown"]
+        },
+        "remote_required": { "$ref": "#/$defs/yesNoUnknown" },
+        "secret_required": { "$ref": "#/$defs/yesNoUnknown" },
+        "mutation_risk": {
+          "type": "string",
+          "enum": ["none", "local_only", "remote_safe_sandbox", "remote_shared", "production_risk", "unknown"]
+        },
+        "proof_blocked_by_dependency": { "type": "string", "enum": ["yes", "no", "partial", "unknown"] },
+        "recommended_affordance": { "type": "string" }
+      }
+    },
+    "gap": {
+      "type": "object",
+      "required": ["id", "title", "axis", "severity", "status", "provenance", "confidence"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "axis": { "type": "string", "enum": ["operate_today", "adaptability", "both"] },
+        "subsystem": { "type": "string" },
+        "loop_stage": { "type": "string", "enum": ["boot", "interact", "observe", "validate", "improve"] },
+        "backpressure_category": {
+          "type": "string",
+          "enum": ["static", "runtime", "consequence", "external_effect", "observability", "human_inferential", "production_customer"]
+        },
+        "scenario_impacted": { "type": "string" },
+        "target_layer": { "type": "string" },
+        "encoding_type": { "type": "string" },
+        "severity": { "type": "string", "enum": ["blocker", "high", "medium", "low", "info"] },
+        "status": { "type": "string", "enum": ["absent", "weak", "partial", "unknown", "proposed"] },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "recommended_next_action": { "type": "string" },
+        "proof_level_unblocked": { "$ref": "#/$defs/proofLevel" },
+        "estimated_effort": { "type": "string", "enum": ["XS", "S", "M", "L", "XL"] },
+        "risk_tier": { "type": "string", "enum": ["low", "medium", "high", "critical"] }
+      }
+    },
+    "remediation": {
+      "type": "object",
+      "required": ["id", "title"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "recommended_encoding": { "type": "string" },
+        "target_layer": { "type": "string" },
+        "proof_level_unblocked": { "$ref": "#/$defs/proofLevel" },
+        "estimated_effort": { "type": "string", "enum": ["XS", "S", "M", "L", "XL"] },
+        "risk_tier": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+        "addresses_gaps": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "productCodeAffordance": {
+      "type": "object",
+      "required": [
+        "status",
+        "risk_tier",
+        "target_layer",
+        "environment_scope",
+        "environments_where_it_must_not_apply",
+        "safety_requirements",
+        "human_or_security_review_required",
+        "which_gap_it_addresses"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "status": { "type": "string", "const": "proposed" },
+        "risk_tier": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+        "target_layer": { "type": "string", "const": "product_code" },
+        "environment_scope": { "type": "array", "items": { "type": "string" } },
+        "environments_where_it_must_not_apply": { "type": "array", "items": { "type": "string" } },
+        "safety_requirements": { "type": "array", "items": { "type": "string" } },
+        "human_or_security_review_required": { "type": "boolean" },
+        "which_gap_it_addresses": { "type": "string" },
+        "which_harness_command_or_proof_level_it_unblocks": { "type": "string" },
+        "why_it_is_better_than_more_documentation": { "type": "string" }
+      }
+    },
+    "harnessRecommendation": {
+      "type": "object",
+      "required": ["id", "title"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "path": { "type": "string" },
+        "risk": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+        "type": { "type": "string" },
+        "summary": { "type": "string" },
+        "rationale": { "type": "string" },
+        "requires_human_review": { "type": "boolean" }
+      }
+    },
+    "appliedPatch": {
+      "type": "object",
+      "required": ["id", "path", "target_layer", "risk"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string" },
+        "path": { "type": "string" },
+        "target_layer": { "type": "string", "const": "harness" },
+        "risk": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+        "type": { "type": "string" },
+        "summary": { "type": "string" },
+        "applied": { "type": "boolean" }
+      }
+    },
+    "onboardingConsolidationEntry": {
+      "type": "object",
+      "required": ["item"],
+      "additionalProperties": true,
+      "properties": {
+        "item": { "type": "string" },
+        "action": { "type": "string", "enum": ["fold_in", "keep", "replace"] },
+        "source_path": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+    "humanQuestion": {
+      "type": "object",
+      "required": ["id", "question"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string" },
+        "question": { "type": "string" },
+        "reason": { "type": "string" },
+        "answer_type": { "type": "string" }
+      }
+    },
+    "evidenceLogEntry": {
+      "type": "object",
+      "required": ["claim", "provenance"],
+      "additionalProperties": true,
+      "properties": {
+        "source": { "type": "string" },
+        "claim": { "type": "string" },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "confidence": { "$ref": "#/$defs/confidence" }
+      }
+    },
+    "reportPaths": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "run_dir": { "type": "string" },
+        "report_md": { "type": "string" },
+        "report_json": { "type": "string" },
+        "summary_md": { "type": "string" },
+        "evidence_jsonl": { "type": "string" },
+        "latest_md": { "type": "string" },
+        "latest_json": { "type": "string" },
+        "schema_json": { "type": "string" }
+      }
+    },
+    "assessmentMatrixRow": {
+      "type": "object",
+      "required": ["area", "grade"],
+      "additionalProperties": true,
+      "properties": {
+        "area": { "type": "string" },
+        "grade": { "$ref": "#/$defs/grade" },
+        "score_percent": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+        "weight": { "type": ["number", "null"] },
+        "rationale": { "type": "string" },
+        "evidence": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "engineeringFlow": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": true,
+      "properties": {
+        "name": { "type": "string" },
+        "kind": {
+          "type": "string",
+          "enum": ["sdd", "build", "test", "release", "review", "ci", "local", "onboarding", "deploy", "custom", "unknown"]
+        },
+        "commands": { "type": "array", "items": { "type": "string" } },
+        "where_detected": { "type": "string" },
+        "canonical": { "$ref": "#/$defs/yesNoUnknown" },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "notes": { "type": "string" }
+      }
+    },
+    "preCommitGate": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": true,
+      "properties": {
+        "name": { "type": "string" },
+        "mechanism": {
+          "type": "string",
+          "enum": ["husky", "pre-commit", "lefthook", "git_hook", "just", "make", "npm_script", "ci_only", "none", "unknown"]
+        },
+        "checks": { "type": "array", "items": { "type": "string" } },
+        "local_available": { "type": ["boolean", "string"] },
+        "ci_equivalent": { "type": ["boolean", "string"] },
+        "notes": { "type": "string" }
+      }
+    },
+    "ciLocalEquivalenceEntry": {
+      "type": "object",
+      "required": ["check", "equivalence"],
+      "additionalProperties": true,
+      "properties": {
+        "check": { "type": "string" },
+        "ci_command": { "type": "string" },
+        "local_command": { "type": "string" },
+        "equivalence": {
+          "type": "string",
+          "enum": ["identical", "equivalent", "partial", "divergent", "ci_only", "local_only", "unknown"]
+        },
+        "notes": { "type": "string" }
+      }
+    },
+    "existingHarnessConcept": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": true,
+      "properties": {
+        "name": { "type": "string" },
+        "kind": { "type": "string", "enum": ["canonical", "diffuse", "prior", "generic", "none", "unknown"] },
+        "surfaces": { "type": "array", "items": { "type": "string" } },
+        "coverage": { "$ref": "#/$defs/band" },
+        "notes": { "type": "string" }
+      }
+    },
+    "deterministicEncodingOpportunity": {
+      "type": "object",
+      "required": ["title"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "current_encoding": {
+          "type": "string",
+          "enum": ["context_file", "doc", "convention", "manual", "ide_only", "none", "deterministic", "unknown"]
+        },
+        "proposed_encoding": { "type": "string" },
+        "proof_level": { "$ref": "#/$defs/proofLevel" },
+        "rationale": { "type": "string" }
+      }
+    },
+    "testMechanism": {
+      "type": "object",
+      "required": ["type"],
+      "additionalProperties": true,
+      "properties": {
+        "name": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": ["mock", "fake", "sink", "stub", "contract", "testcontainer", "in_memory", "golden", "snapshot", "e2e", "integration", "unit", "property", "none", "unknown"]
+        },
+        "where_detected": { "type": "string" },
+        "deterministic": { "$ref": "#/$defs/yesNoUnknown" },
+        "notes": { "type": "string" }
+      }
+    },
+    "externalDependencyPressureEntry": {
+      "type": "object",
+      "required": ["dependency", "pressure"],
+      "additionalProperties": true,
+      "properties": {
+        "dependency": { "type": "string" },
+        "pressure": { "type": "string", "enum": ["none", "low", "medium", "high", "blocking", "unknown"] },
+        "local_substitute": {
+          "type": "string",
+          "enum": ["native", "container", "fake", "in_memory", "testcontainers", "sandbox", "dry_run", "none", "unknown"]
+        },
+        "proof_impact": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+    "codeCompositionEntry": {
+      "type": "object",
+      "required": ["area"],
+      "additionalProperties": true,
+      "properties": {
+        "area": { "type": "string" },
+        "kind": {
+          "type": "string",
+          "enum": ["module", "package", "service", "layer", "boundary", "plugin", "extension_point", "seam", "monolith", "other", "unknown"]
+        },
+        "coupling": { "type": "string" },
+        "test_seam": { "$ref": "#/$defs/yesNoUnknown" },
+        "notes": { "type": "string" }
+      }
+    },
+    "candidateFirstHarnessSurface": {
+      "type": "object",
+      "required": ["surface"],
+      "additionalProperties": true,
+      "properties": {
+        "surface": { "type": "string" },
+        "rationale": { "type": "string" },
+        "proof_level": { "$ref": "#/$defs/proofLevel" },
+        "already_exists": { "$ref": "#/$defs/yesNoUnknown" },
+        "priority": { "type": "string", "enum": ["high", "medium", "low", "unknown"] },
+        "notes": { "type": "string" }
+      }
+    },
+    "manualOperationSignal": {
+      "type": "object",
+      "required": ["signal"],
+      "additionalProperties": true,
+      "properties": {
+        "signal": { "type": "string" },
+        "kind": {
+          "type": "string",
+          "enum": ["ide_only", "manual_step", "gui_required", "desktop", "mobile", "hardware", "brownfield", "click_ops", "undocumented", "unknown"]
+        },
+        "influences": { "type": "array", "items": { "type": "string", "enum": ["A4", "A5", "A7", "A8", "A9", "B5", "B10"] } },
+        "penalize": { "$ref": "#/$defs/yesNoUnknown" },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

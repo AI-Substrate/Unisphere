@@ -1,0 +1,40 @@
+{
+  "version": 3,
+  "sessionId": "synthetic-vscode-v3",
+  "creationDate": 1700000002000,
+  "customTitle": "SENSITIVE-CUSTOM-TITLE",
+  "responderUsername": "copilot",
+  "inputState": {"inputText": "SENSITIVE-UNSENT-DRAFT"},
+  "requests": [{
+    "requestId": "request-v3",
+    "message": {"text": "SENSITIVE-USER-TEXT", "parts": []},
+    "timestamp": 1700000002001,
+    "modelId": "auto",
+    "agent": {"id": "github.copilot.editsAgent"},
+    "responseId": "response-v3",
+    "responseTimestamp": 1700000002002,
+    "modelState": {"value": 1, "completedAt": 1700000003000},
+    "promptTokens": 120,
+    "completionTokens": 31,
+    "copilotCredits": 0.5,
+    "sessionCopilotCredits": 1.75,
+    "modelTotals": [{"model": "synthetic-served-model", "inputTokens": 250, "cachedTokens": 40, "outputTokens": 65}],
+    "variableData": {"variables": [{"value": "SENSITIVE-ATTACHMENT"}]},
+    "response": [
+      {"value": "SENSITIVE-ASSISTANT-TEXT"},
+      {"kind": "thinking", "value": ["SENSITIVE-THINKING-A", "SENSITIVE-THINKING-B"]},
+      {
+        "kind": "toolInvocationSerialized",
+        "toolId": "read_file",
+        "toolCallId": "tool-call-v3",
+        "isComplete": true,
+        "isConfirmed": {"type": 1},
+        "invocationMessage": "SENSITIVE-TOOL-DISPLAY",
+        "resultDetails": {"input": "SENSITIVE-NATIVE-INPUT-DISPLAY", "output": "SENSITIVE-NATIVE-OUTPUT-DISPLAY"},
+        "toolSpecificData": {"kind": "input", "rawInput": "SENSITIVE-TOOL-DETAILS"}
+      },
+      {"kind": "textEditGroup", "uri": "SENSITIVE-EDIT-URI", "edits": ["SENSITIVE-EDIT"]},
+      {"kind": "futurePart", "payload": "SENSITIVE-UNKNOWN"}
+    ]
+  }]
+}

@@ -1,0 +1,11 @@
+{
+  "at": "2026-09-08T03:38:06.349Z",
+  "review": "reviews/design-opus-r1.md",
+  "changes": {
+    "D1": "Production registry export-provenance equality is required and named as a behavioral test.",
+    "D2": "Dropped uncontracted limitations field; no duplicate representation of false capabilities.",
+    "D3": "Renamed SDK boolean to caller-owned cursor and declared append_only source assumption.",
+    "D4": "Named real-binary integration target adapter_catalog as mandatory guide check vd-0004.",
+    "D5": "Pinned JSON failure command label and mode-aware human rendering; no config.check leakage."
+  }
+}

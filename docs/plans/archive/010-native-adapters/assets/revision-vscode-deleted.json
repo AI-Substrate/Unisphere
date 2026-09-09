@@ -1,0 +1,20 @@
+{
+  "argv": [
+    "target/debug/unisphere",
+    "sessions",
+    "export",
+    "--adapter",
+    "vscode-copilot",
+    "--input",
+    "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/.harness/temp/native-revisions/session.json",
+    "--source-format",
+    "json-document",
+    "--include-content"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "started": "2026-09-08T07:20:08.147Z",
+  "completed": "2026-09-08T07:20:08.150Z",
+  "exit_code": 0,
+  "stdout": "{\"resourceLogs\":[{\"scopeLogs\":[{\"scope\":{\"name\":\"unisphere\",\"version\":\"0.1.0\"},\"logRecords\":[{\"eventName\":\"unisphere.session.record\",\"timeUnixNano\":\"1700000002000000000\",\"attributes\":[{\"key\":\"gen_ai.conversation.id\",\"value\":{\"stringValue\":\"synthetic-vscode-v3\"}},{\"key\":\"unisphere.profile.version\",\"value\":{\"intValue\":\"1\"}},{\"key\":\"unisphere.source.adapter\",\"value\":{\"stringValue\":\"vscode-copilot\"}},{\"key\":\"unisphere.source.format\",\"value\":{\"stringValue\":\"json_document\"}},{\"key\":\"unisphere.source.key\",\"value\":{\"stringValue\":\"document\"}},{\"key\":\"unisphere.source.kind\",\"value\":{\"stringValue\":\"session\"}},{\"key\":\"unisphere.source.path\",\"value\":{\"stringValue\":\"/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/.harness/temp/native-revisions/session.json\"}},{\"key\":\"unisphere.source.revision\",\"value\":{\"stringValue\":\"sha256:631a4968dd3612d01e9963300312cbd3767867d4dc00c1c142530a1446dec6c3\"}},{\"key\":\"unisphere.source.session.id\",\"value\":{\"stringValue\":\"synthetic-vscode-v3\"}},{\"key\":\"unisphere.vscode.responder_username\",\"value\":{\"stringValue\":\"copilot\"}},{\"key\":\"unisphere.vscode.schema.version\",\"value\":{\"intValue\":\"3\"}}],\"body\":{\"kvlistValue\":{\"values\":[{\"key\":\"title\",\"value\":{\"stringValue\":\"SENSITIVE-CUSTOM-TITLE\"}},{\"key\":\"type\",\"value\":{\"stringValue\":\"unisphere.session\"}}]}}},{\"eventName\":\"unisphere.session.snapshot\",\"attributes\":[{\"key\":\"unisphere.profile.version\",\"value\":{\"intValue\":\"1\"}},{\"key\":\"unisphere.snapshot.finality\",\"value\":{\"stringValue\":\"unknown\"}},{\"key\":\"unisphere.snapshot.include_content\",\"value\":{\"boolValue\":true}},{\"key\":\"unisphere.snapshot.records\",\"value\":{\"intValue\":\"1\"}},{\"key\":\"unisphere.snapshot.selection\",\"value\":{\"kvlistValue\":{\"values\":[{\"key\":\"format\",\"value\":{\"kvlistValue\":{\"values\":[{\"key\":\"kind\",\"value\":{\"stringValue\":\"json_document\"}}]}}},{\"key\":\"path\",\"value\":{\"stringValue\":\"/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/.harness/temp/native-revisions/session.json\"}},{\"key\":\"session_id\",\"value\":{}}]}}},{\"key\":\"unisphere.snapshot.semantics\",\"value\":{\"stringValue\":\"replace_projection\"}},{\"key\":\"unisphere.source.adapter\",\"value\":{\"stringValue\":\"vscode-copilot\"}},{\"key\":\"unisphere.source.format\",\"value\":{\"stringValue\":\"json_document\"}},{\"key\":\"unisphere.source.key\",\"value\":{\"stringValue\":\"$snapshot\"}},{\"key\":\"unisphere.source.kind\",\"value\":{\"stringValue\":\"snapshot_manifest\"}},{\"key\":\"unisphere.source.path\",\"value\":{\"stringValue\":\"/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/.harness/temp/native-revisions/session.json\"}},{\"key\":\"unisphere.source.revision\",\"value\":{\"stringValue\":\"sha256:631a4968dd3612d01e9963300312cbd3767867d4dc00c1c142530a1446dec6c3\"}}]}]}]}]}\n",
+  "stderr": "{\"command\":\"sessions.export\",\"data\":{\"adapter\":\"vscode-copilot\",\"diagnostics\":1,\"finality\":\"unknown\",\"persisted_resume\":false,\"records\":2,\"revision\":\"sha256:631a4968dd3612d01e9963300312cbd3767867d4dc00c1c142530a1446dec6c3\",\"semantics\":\"replace_projection\"},\"ok\":true,\"v\":1}\n"
+}

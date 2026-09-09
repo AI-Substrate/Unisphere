@@ -1,0 +1,83 @@
+{
+  "recorded_at": "2026-09-08T10:09:44.428Z",
+  "current_product_unchanged": "c6f3636b394f0e17445eb2e143f6ac2c6d1ec998",
+  "projections": [
+    {
+      "unit": "tk-0002",
+      "delivery_sha": "891ff3a8860ac5f1ab2e033c8464adbe6c87c8f3",
+      "pm_integration_sha": "114e1535515a108d91946ba8902fb0200d3d840a",
+      "paths": [
+        "crates/adapter-codex",
+        "docs/codex-adapter.md"
+      ],
+      "exit_code": 0,
+      "diff": ""
+    },
+    {
+      "unit": "tk-0003",
+      "delivery_sha": "ec22339a50191fd782b5fb5559c1e71ac3b22294",
+      "pm_integration_sha": "114e1535515a108d91946ba8902fb0200d3d840a",
+      "paths": [
+        "crates/adapter-omp",
+        "docs/oh-my-pi-adapter.md"
+      ],
+      "exit_code": 0,
+      "diff": ""
+    },
+    {
+      "unit": "tk-0004",
+      "delivery_sha": "c3b2fb969e68c7b0abbb1c938407738e9ddfbf34",
+      "pm_integration_sha": "114e1535515a108d91946ba8902fb0200d3d840a",
+      "paths": [
+        "crates/adapter-pi",
+        "docs/pi-adapter.md"
+      ],
+      "exit_code": 0,
+      "diff": ""
+    },
+    {
+      "unit": "tk-0005",
+      "delivery_sha": "3f86982c34f9d6a26a7b9bd1e90c414d4820546c",
+      "pm_integration_sha": "114e1535515a108d91946ba8902fb0200d3d840a",
+      "paths": [
+        "crates/adapter-copilot-cli",
+        "docs/copilot-cli-adapter.md"
+      ],
+      "exit_code": 0,
+      "diff": ""
+    },
+    {
+      "unit": "tk-0006",
+      "delivery_sha": "58159df4729eb229fdcf5fd3ec8037e3314d7eb9",
+      "pm_integration_sha": "114e1535515a108d91946ba8902fb0200d3d840a",
+      "paths": [
+        "crates/adapter-vscode-copilot",
+        "docs/vscode-copilot-adapter.md"
+      ],
+      "exit_code": 0,
+      "diff": ""
+    },
+    {
+      "unit": "tk-0007",
+      "delivery_sha": "0a72b5d461a9221047ce4243f3d1662762b42c77",
+      "pm_integration_sha": "114e1535515a108d91946ba8902fb0200d3d840a",
+      "paths": [
+        "crates/adapter-cursor",
+        "docs/cursor-adapter.md"
+      ],
+      "exit_code": 0,
+      "diff": ""
+    },
+    {
+      "unit": "tk-0008",
+      "delivery_sha": "3a33c79a268eedc2f44ed827418dde88d3625be7",
+      "pm_integration_sha": "114e1535515a108d91946ba8902fb0200d3d840a",
+      "paths": [
+        "crates/loader-snapshot",
+        "docs/snapshot-loader.md"
+      ],
+      "exit_code": 0,
+      "diff": ""
+    }
+  ]
+}

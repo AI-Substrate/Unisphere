@@ -1,0 +1,24 @@
+{
+  "observed_at": "2026-09-09T00:00:58.561Z",
+  "run_id": 34292699381,
+  "url": "https://github.com/AI-Substrate/Unisphere/actions/runs/34292699381",
+  "release_sha": "4a907d6e2832f3907c6538809b4e07e7d2c7a724",
+  "runners": [
+    "macos-latest",
+    "ubuntu-latest"
+  ],
+  "failed_step": "Install development harness",
+  "npm_code": "ETARGET",
+  "missing_version": "@ai-substrate/engineering-harness@0.14.0",
+  "product_tests_executed_in_ci": false,
+  "source": "Actual gh run view --log-failed and jobs results",
+  "published_probe": {
+    "version": "0.13.0",
+    "actual_boot": "passed six gates and five proof modes",
+    "pin_selected": false,
+    "reason": "Tooling owner requires new published0.15.0 with current Builder/DD; wait activation."
+  },
+  "pending_ci_edit": "job-local NPM_CONFIG_ALLOW_GIT: all",
+  "upstream_owners": "pij-varied-alpaca rows57/58",
+  "product_installation": "Only isolated validation scratch; operator installation deferred until main."
+}

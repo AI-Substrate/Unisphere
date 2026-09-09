@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "harness",
+    "commit",
+    "feat(storage): integrate tested bounded native snapshot loader\n\nOriginal-Deliveries: 1c1799c71decefdc2ced6b56b9c865509a79af11, 3a33c79a268eedc2f44ed827418dde88d3625be7\n\nPij-Prime: pij-right-kotallo\nPij-Plan: 010-native-adapters",
+    "--",
+    "crates/loader-snapshot",
+    "docs/snapshot-loader.md"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "started": "2026-09-08T07:07:55.875Z",
+  "completed": "2026-09-08T07:07:58.191Z",
+  "exit_code": 0,
+  "stdout": "{\"command\":\"commit\",\"status\":\"ok\",\"timestamp\":\"2026-09-08T07:07:58.187Z\",\"data\":{\"mode\":\"direct-verified\",\"probe\":\"connected\",\"sha\":\"114e1535515a108d91946ba8902fb0200d3d840a\",\"sha_unknown\":false,\"staged\":[\"crates/loader-snapshot/Cargo.toml\",\"crates/loader-snapshot/src/lib.rs\",\"crates/loader-snapshot/src/unix.rs\",\"crates/loader-snapshot/src/unix/sqlite.rs\",\"crates/loader-snapshot/tests/filesystem.rs\",\"crates/loader-snapshot/tests/sqlite.rs\",\"docs/snapshot-loader.md\"],\"verify\":\"landed\",\"buffer\":null,\"detail\":\"committed 114e1535515a and VERIFIED: a refs/notes/ai entry landed, so the collector recorded this commit's authorship.\"},\"evidence\":[{\"label\":\"commit 114e1535515a\"}]}\n",
+  "stderr": ""
+}

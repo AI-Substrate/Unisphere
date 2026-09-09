@@ -1,0 +1,14 @@
+{
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "args": [
+    "harness",
+    "telemetry",
+    "get",
+    "pij-right-kotallo",
+    "--json"
+  ],
+  "at": "2026-09-08T22:33:24.595Z",
+  "exit_code": 1,
+  "stdout": "{\"command\":\"telemetry\",\"status\":\"error\",\"timestamp\":\"2026-09-08T22:33:24.756Z\",\"error\":{\"code\":\"E100\",\"message\":\"no telemetry found for pij session 'pij-right-kotallo'\",\"details\":{\"ref_checked\":false,\"resolution\":\"ref_unavailable\",\"ref_namespace\":\"absent\"}},\"next_action\":\"The live buffer held nothing and there was NO local refs/harness-telemetry/* namespace to check (ref_checked: false) — this is NOT proof the ref surface is empty. Fetch the namespace (`git fetch <remote> \\\"refs/harness-telemetry/*:refs/harness-telemetry/*\\\"`) and retry, or check the id (`pij list`). Use --worktree <path> if it ran from a git worktree.\"}\n",
+  "stderr": ""
+}

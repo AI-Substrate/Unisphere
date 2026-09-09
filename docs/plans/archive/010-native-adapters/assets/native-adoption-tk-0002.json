@@ -1,0 +1,39 @@
+{
+  "exit_code": 0,
+  "data": {
+    "command": "builder adopt",
+    "status": "ok",
+    "timestamp": "2026-09-08T06:33:16.626Z",
+    "data": {
+      "allocation": {
+        "ref": {
+          "path": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-codex/.git/builder/allocations/allocation-al-adopt-c7289380-4dff-4483-ba88-8eb319eb19db.dd.json",
+          "sha256": "b1b4bac9520a9fa20ca7abba6f64c4e1fb85f6f6db6f7b3abcc93f1f59e965f9"
+        },
+        "value": {
+          "record_type": "allocation",
+          "id": "al-adopt-c7289380-4dff-4483-ba88-8eb319eb19db",
+          "owner": "pij",
+          "kind": "clone",
+          "purpose": "plan",
+          "root": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-codex",
+          "authority_root": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-codex/.git",
+          "git_dir": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-codex/.git",
+          "branch": "builder/010-codex-mapper",
+          "base_sha": "3a635c17110521a3ed93d03daf5eface57dc0bfd",
+          "ordinal": 10,
+          "slug": "native-adapters",
+          "actor": "pij-right-kotallo",
+          "recorded_at": "2026-09-08T06:33:16.624Z",
+          "journal": [
+            "adopted"
+          ],
+          "plan_path": "docs/plans/010-native-adapters/plan.dd.json"
+        }
+      },
+      "plan": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-codex/docs/plans/010-native-adapters/plan.dd.json",
+      "flow": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-codex/docs/plans/010-native-adapters/the-flow.json"
+    }
+  },
+  "stderr": ""
+}

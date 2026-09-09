@@ -1,0 +1,20 @@
+{
+  "at": "2026-09-08T07:20:08.219Z",
+  "json_update_and_deletion": true,
+  "journal_partial_tail_no_output": true,
+  "journal_late_append": true,
+  "sqlite_late_update_and_empty_deletion": true,
+  "sqlite_revisions": [
+    "sha256:513ac05b5c7cded5b38f7069b6b9ce06d6b7cb21b42eb88005bf30d5f18707e5",
+    "sha256:81bdf8f91b919c7ee7c0a17fada2eeb55b10a1f70a5ef0a063025c2f61b93544",
+    "sha256:8554724edf5b2eb033f1bbe879cb498c1bb783db870b63d716fdb0208968bf36",
+    "sha256:92a5ab231121802e6e0b5fcf1f99101dbe21cd3fbb3b5b81034366f3f711e7ed"
+  ],
+  "partial_output_no_checkpoint": {
+    "checkpoint_on_failure": false,
+    "partial_bytes": 11,
+    "retry_records": 2,
+    "retry_revision": "sha256:631a4968dd3612d01e9963300312cbd3767867d4dc00c1c142530a1446dec6c3"
+  },
+  "scope": "Actual file and SQLite loaders, native mappers, SDK writer and CLI; no user stores."
+}

@@ -1,0 +1,122 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "review",
+      "value": {
+        "record_type": "review",
+        "id": "rv-plan010-contracts-opus-r1",
+        "recorded_at": "2026-09-08T06:28:05.801894Z",
+        "scope": "decomposition",
+        "subject_sha": "418a62452af3e766c8a939e6c2a4d9822d559afa",
+        "plan": {
+          "path": "docs/plans/010-native-adapters/plan.dd.json",
+          "sha256": "fdd88eb6925cc55243d76f6e5d4f682cf91ac8daa3e5eddc6cdc78915ccd6511"
+        },
+        "guide": {
+          "path": "docs/plans/010-native-adapters/assets/impl-guide.dd.json",
+          "sha256": "4f33e5548e88cdc2164f1cf959b5edd662526a85d2700233f89886cbe03de2ca"
+        },
+        "reviewer_id": "pij-huge-nigel",
+        "requested": {
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5",
+          "effort": "high",
+          "source": {
+            "harness": "guide",
+            "model": "guide",
+            "effort": "guide"
+          }
+        },
+        "observed": {
+          "peer_id": "pij-huge-nigel",
+          "root": "/Users/jordanknight/substrate/unisphere/unishpere-main",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5",
+          "effort": "high",
+          "native_session": "01a07e75-cb05-70b6-a10d-db61a6ed87d8",
+          "pid": 71450,
+          "argv": [
+            "omp",
+            "--auto-approve",
+            "--model",
+            "github-copilot/claude-opus-5",
+            "--thinking",
+            "high"
+          ],
+          "evidence": [
+            "Recomputed both pinned digests before reading and matched the packet: plan fdd88eb6925cc55243d76f6e5d4f682cf91ac8daa3e5eddc6cdc78915ccd6511 and guide 4f33e5548e88cdc2164f1cf959b5edd662526a85d2700233f89886cbe03de2ca at subject 418a6245, whose parent is 1f15eea4, the Plan009 composition commit I cleared.",
+            "Scoped the review by diff rather than by assertion: 1f15eea4..418a6245 is 18 files and purely additive - crates/core/src/lib.rs +2 lines, the new crates/core/src/snapshot.rs, and 010 plan assets. No existing crate is modified, so the Plan005 JSONL contracts and Plan009 catalog are unchanged bytes and were not re-audited.",
+            "Folded evidence-only commit e959bc03ac35c8a0e7bae3699fd874dd70f63226 and verified the claim rather than accepting it: git diff --name-only 418a6245..e959bc03 over crates, all Cargo.toml, Cargo.lock, plan.dd.json, impl-guide.dd.json and lane-contracts.json is empty, and plan, guide and snapshot.rs hash identically at both commits (snapshot.rs f455b99bd430d1f14ca512fa3516f00a02b42f3dccb2fbdaf1c295de330a57d0).",
+            "Read the new contract in full: crates/core/src/snapshot.rs, plus assets/lane-contracts.json, assets/impl-guide.dd.json (all twelve sections), plan.dd.json acceptance criteria ac-0001..ac-000a, and the committed contract-proof.json and snapshot-contract-smoke.json.",
+            "Verified the parallel-safety property structurally rather than trusting the fan_out rationale: NativeSnapshot, SnapshotRecord and SnapshotRef have all-public fields and no private constructor, and SnapshotAdapter::map_snapshot takes &NativeSnapshot with no I/O in its signature, so every mapper owner can construct inputs without tk-0008 existing. This is the load-bearing half of ac-0009 and it holds.",
+            "Read the bounds logic line by line: SnapshotLimits::validate rejects zero limits and max_snapshot_bytes < max_record_bytes; NativeSnapshot::validate distinguishes RecordLimit from BatchLimit and uses checked_add so the aggregate cannot wrap into a false pass; SnapshotRef::validate requires an absolute UTF-8 path and constrains a SQLite table identifier to ASCII alphanumerics and underscore, closing identifier injection at the type boundary.",
+            "C1 established by grep, not by impression: at 418a6245 the only provenance vocabulary anywhere in crates or the 010 assets is unisphere.source.{adapter,path,offset,kind,record.id,parent.id,is_sidechain} plus unisphere.profile.version. No snapshot revision or key attribute name exists in snapshot.rs, the guide or lane-contracts.json.",
+            "C1 conflict read directly in the sealed proof: crates/testkit/src/bin/proof/collection.rs requires unisphere.source.adapter, unisphere.source.path, unisphere.source.offset, unisphere.source.kind and unisphere.profile.version on every validated record and returns Err(\"missing unisphere.source.offset\") otherwise, while lane-contracts.json instructs snapshot lanes to include key/session/revision provenance and 'not fake unisphere.source.offset'. Both cannot hold; the resolution lives in crates/testkit/**, which is tk-0009's path.",
+            "C2 read as a direct contradiction between two authoritative documents: guide unit tk-0007 interface says 'CursorAdapterSnapshot implementing SnapshotAdapter' and 'DESCRIPTOR with id cursor', then says 'DESCRIPTOR.id=cursor-transcript; IDE_DESCRIPTOR.id=cursor-ide'; lane-contracts.json tk-0007 says CursorIdeAdapter. The guide's own repeated boilerplate also says CursorIdeAdapter. tk-0005's guide interface omits SNAPSHOT_DESCRIPTOR/copilot-cli-snapshot entirely, which appears only in lane-contracts.json.",
+            "C3 grounded in the Plan009 artifact I previously cleared: the production provenance test iterates &ADAPTERS and invokes (registration.run) asserting emitted unisphere.source.adapter equals registration.descriptor.id. SnapshotAdapter has no runner and AdapterRegistration is {descriptor, run}, so snapshot registrations either need runners the test will invoke without a source or fall outside the iteration. Neither the guide's tk-0009 interface nor lane-contracts.json states which.",
+            "C5 grounded in both artifacts at once: impl-guide.dd.json#checks/vd-0002 is 'cargo test --workspace --all-targets --locked' and is the sole declared proof for all seven wave-1 units, while lane-contracts.json worker rule two forbids those owners any build, test, formatter, lint or Cargo.lock change. Root Cargo.toml uses members = [\"crates/*\"], so all seven new crates first compile together at tk-0009 against a lockfile that cannot yet contain tk-0008's rusqlite and sha2.",
+            "Confirmed the honest-separation intent actually landed in code rather than only in prose: SnapshotRecord.key is documented as a native key or structural location and 'never pretend file byte offsets', NativeSnapshot.revision is a loader-owned digest of the complete bounded representation, and SnapshotFormat is a closed tagged enum so a fourth storage shape is a deliberate PM edit.",
+            "Read your smoke as evidence of the discriminating cases: snapshot-contract-smoke.json exercises the aggregate boundary at 9 versus 10 bytes for an 8-byte key plus 2-byte value, the per-record limit, and invalid table rejection, exit 0. contract-proof.json records cargo test -p unisphere-core -p unisphere-testkit --lib at exit 0 with 6 and 14 tests. Both are read as your execution.",
+            "No build, test, formatter, lint or rustdoc was run by me, and no plan, guide, lane-contract or product source was modified. Only the report and this receipt were authored.",
+            "Native binding observed live at authoring time: PI_SESSION_FILE resolves to native session 01a07e75-cb05-70b6-a10d-db61a6ed87d8 and the parent omp process is pid 71450 with argv 'omp --auto-approve --model github-copilot/claude-opus-5 --thinking high'. An observed process invocation, not an attestation of the serving provider identity."
+          ],
+          "gaps": [
+            "This is a verdict on a frozen contract and a decomposition, not on behavior. No mapper, loader or registration exists at the subject, so nothing here says the six dialects can actually be mapped correctly - only that seven owners can or cannot start independently.",
+            "I did not verify assets/native-structural-research.json, vscode-journal-schema.json or cursor-snapshot-schema.json against any real installation. They were read as structural schema evidence; I confirmed no private payload appears in them but cannot confirm they are accurate about the native formats.",
+            "C1's severity depends on a routing decision I cannot see yet: if PM never routes snapshot output through crates/testkit/src/bin/proof/collection.rs, the offset conflict is latent rather than immediate. The undefined attribute vocabulary is material either way, because three lanes will hard-code names into fixtures before PM chooses.",
+            "I did not assess whether SnapshotLimits default values (100k records, 32 MiB per record, 64 MiB aggregate) are right for any real native store; they are internally coherent, which is all the contract can be judged on now.",
+            "vd-0001 through vd-0004 outcomes are your execution as recorded in contract-proof.json; only vd-0001's command appears there. I ran nothing and can attest to no check result.",
+            "observed.root is this seat's working folder while the reviewed workspace is /Users/jordanknight/substrate/unisphere/unisphere-native-adapters. Divergence is by design; the subject is pinned by subject_sha and the two digests."
+          ]
+        },
+        "verdict": "changes-requested",
+        "report": {
+          "path": "docs/plans/010-native-adapters/assets/reviews/contracts-opus-r1.md",
+          "sha256": "1cd645df8d25cb4600d8452ff6a913b155dc680abe964e6d3e4f76423ef8fd31"
+        },
+        "findings": [
+          {
+            "id": "C1",
+            "severity": "medium",
+            "disposition": "open",
+            "description": "Snapshot provenance attribute vocabulary is undefined, and the sealed proof binary requires an attribute snapshot records cannot honestly emit. crates/testkit/src/bin/proof/collection.rs hard-requires unisphere.source.offset on every validated record, while lane-contracts.json instructs snapshot lanes not to fake it; and no replacement names exist anywhere in the repository, so tk-0005 (snapshot half), tk-0006 and tk-0007 (IDE half) will each invent their own attribute keys and hard-code them into per-dialect fixtures. The resolution lives in crates/testkit/**, which no coder may touch. This is the specific counterexample to ac-0009's claim that all six owners can implement against frozen types without sibling dependencies: it holds for the five JSONL lanes and does not yet hold for the snapshot lanes, while ac-0008 makes provenance an acceptance requirement. Fix before dispatching those lanes: name the exact keys snapshot-derived records carry, state whether unisphere.source.offset is absent for them, and assign the proof's conditional required set to tk-0009.",
+            "evidence": "crates/testkit/src/bin/proof/collection.rs at 418a6245 requires [unisphere.source.adapter, unisphere.source.path, unisphere.source.offset, unisphere.source.kind, unisphere.profile.version] and returns Err(format!(\"missing {key}\")); lane-contracts.json snapshot_contract item 2: 'Include source key/session/revision provenance, not fake unisphere.source.offset'; git grep for any snapshot revision/key attribute name across crates and docs/plans/010-native-adapters at 418a6245 returns nothing."
+          },
+          {
+            "id": "C2",
+            "severity": "medium",
+            "disposition": "open",
+            "description": "The tk-0007 unit interface contradicts itself and lane-contracts.json on names the PM alone must import at composition. The guide says CursorAdapterSnapshot while lane-contracts.json and the guide's own repeated boilerplate say CursorIdeAdapter; the same unit says 'DESCRIPTOR with id cursor' and then that DESCRIPTOR.id is cursor-transcript. A descriptor id is not internal - the Plan009 integration test asserts exact ids on the adapters list --json wire and its provenance test asserts the same string in emitted telemetry, so a wrong id is a published wire value. tk-0005's guide interface separately omits SNAPSHOT_DESCRIPTOR/copilot-cli-snapshot, which appears only in lane-contracts.json, so a coder reading only their unit packet ships one descriptor. Fix: state each exported const name and exact id in the unit interfaces, delete the superseded 'id cursor' clause, settle the type name in both files, and remove the Cursor boilerplate sentence from the five units where it is irrelevant - that duplication is how the contradiction propagated.",
+            "evidence": "impl-guide.dd.json units tk-0007 interface at 418a6245 contains both 'a separate CursorAdapterSnapshot implementing SnapshotAdapter; pub const DESCRIPTOR: AdapterDescriptor with id cursor' and 'Explicit dialect IDs: DESCRIPTOR.id=cursor-transcript; IDE_DESCRIPTOR.id=cursor-ide'; lane-contracts.json lanes.tk-0007 says 'CursorIdeAdapter implements SnapshotAdapter, IDE_DESCRIPTOR id cursor-ide'; lane-contracts.json lanes.tk-0005 names SNAPSHOT_DESCRIPTOR id copilot-cli-snapshot, absent from the tk-0005 unit interface."
+          },
+          {
+            "id": "C3",
+            "severity": "medium",
+            "disposition": "open",
+            "description": "Plan009's production provenance invariant has no named owner for snapshot registrations, so it can degrade silently while still passing. That test iterates the production ADAPTERS constant and invokes each entry's runner to assert emitted unisphere.source.adapter equals registration.descriptor.id; its whole value was that coverage extends automatically to the next registration. SnapshotAdapter has no runner and AdapterRegistration is {descriptor, run}, so at composition either snapshot descriptors join ADAPTERS with runners the test will invoke without a source, or they are registered elsewhere and three new identities silently drop out of D1's coverage. Neither the guide's tk-0009 interface nor lane-contracts.json says which, and no declared check names the invariant. Not blocking for any coder; blocking for the seal retaining the value it had last plan. Decide it in the tk-0009 interface before composition.",
+            "evidence": "crates/app/src/adapters.rs at 418a6245: production_catalog_ids_match_exported_provenance iterates &ADAPTERS, calls (registration.run) and asserts the emitted unisphere.source.adapter equals registration.descriptor.id; crates/core/src/snapshot.rs SnapshotAdapter declares only name() and map_snapshot(); impl-guide.dd.json units tk-0009 interface says only 'App composes each mapper/loader/writer and catalog once'."
+          },
+          {
+            "id": "C4",
+            "severity": "low",
+            "disposition": "open",
+            "description": "No party is contractually required to call NativeSnapshot::validate. SnapshotLoader::read_snapshot takes SnapshotLimits and returns a NativeSnapshot, but neither the trait doc nor lane-contracts.json says the returned snapshot must satisfy validate(limits), and no mapper is told it may assume that; validate is also inherently post-hoc, measuring an already-materialized snapshot, so it cannot itself be the allocation guard. tk-0008's lane text does instruct enforcement before unbounded allocation, which is right, leaving validate a method with no named caller. Secondary asymmetry to settle at the same time: max_snapshot_bytes counts key.len() + bytes.len() while max_record_bytes bounds only bytes, so a single arbitrarily long native key - source-controlled in the SQLite case - is caught only in aggregate. Fix: state in lane-contracts.json that read_snapshot returns only snapshots for which validate(limits) is Ok, that limits are enforced during read, and that mappers may assume a validated snapshot.",
+            "evidence": "crates/core/src/snapshot.rs at 418a6245: 'pub trait SnapshotLoader { fn read_snapshot(&self, source: &SnapshotRef, limits: SnapshotLimits) -> Result<NativeSnapshot, PipelineError>; }' with no validate obligation; NativeSnapshot::validate accumulates record.key.len() + record.bytes.len() against max_snapshot_bytes while the RecordLimit check tests only record.bytes.len() > limits.max_record_bytes."
+          },
+          {
+            "id": "C5",
+            "severity": "low",
+            "disposition": "open",
+            "description": "Every wave-1 unit's sole declared proof is a command its owner is forbidden to run. impl-guide.dd.json#checks/vd-0002 is 'cargo test --workspace --all-targets --locked' and is the declared proof for tk-0002 through tk-0008, while lane-contracts.json worker rule two forbids those owners any build, test, formatter, lint or Cargo.lock change. Root Cargo.toml uses members = [\"crates/*\"], so all seven new crates first compile together at tk-0009, against a lockfile that cannot yet contain tk-0008's rusqlite and sha2, and every regression those owners write is unexecuted code until then. I am not asking you to loosen the purity rule. Either state plainly that vd-0002 is PM-executed and wave-1 acceptance is source-only, or give each owner a scoped 'cargo test -p <own crate>' inside their own clone. As written the artifact declares a proof the unit structurally cannot produce.",
+            "evidence": "impl-guide.dd.json checks vd-0002 args ['test','--workspace','--all-targets','--locked'] and units tk-0002..tk-0008 each proof ['impl-guide.dd.json#checks/vd-0002']; lane-contracts.json worker_rules[1]: 'No builds, tests, formatters, lint, rustdoc, Cargo.lock changes or root Cargo/app/core edits. PM validates and integrates.'; Cargo.toml at 418a6245: members = [\"crates/*\"]."
+          }
+        ]
+      }
+    }
+  ]
+}

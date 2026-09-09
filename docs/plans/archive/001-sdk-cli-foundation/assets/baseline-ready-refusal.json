@@ -1,0 +1,118 @@
+{
+  "sealed_source_sha": "8eafef5ef7dd5e798d8c869f3fb367c884789948",
+  "evidence_commit": "6c3d29209cdeb8052513a2f2d1ab00eb06c6837b",
+  "baseline": {
+    "path": "docs/plans/001-sdk-cli-foundation/assets/team/baseline.dd.json",
+    "sha256": "a665d6971e0aaad60008a7cb9ba6fcbcdaf238f511e8175afdf0f59f459cff46"
+  },
+  "approved_review": {
+    "path": "docs/plans/001-sdk-cli-foundation/assets/team/review-decomposition-review-decomposition-8eafef5-pij-xenacious-yarpen-r3.dd.json",
+    "sha256": "55f2ada27f3a1b94fb9b011b9042f8e11b691b83b0c710ad7bdcc650d47da2c2"
+  },
+  "task": "tk-0001 checked with four proven assertions",
+  "ready_attempts": [
+    {
+      "argv": [
+        "harness",
+        "builder",
+        "ready",
+        "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/plan.dd.json",
+        "--unit",
+        "tk-0002"
+      ],
+      "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+      "exit_code": 1,
+      "stdout": "{\"command\":\"builder ready\",\"status\":\"error\",\"timestamp\":\"2026-09-07T05:31:24.627Z\",\"error\":{\"code\":\"E471\",\"message\":\"Builder is not ready to dispatch.\",\"details\":{\"status\":\"not-ready\",\"issues\":[{\"code\":\"baseline\",\"message\":\"Dependencies lack committed proof: tk-0001\",\"next_action\":\"Complete and verify those dependencies in the composition receipt before dispatching this unit.\"}]}},\"next_action\":\"Complete and verify those dependencies in the composition receipt before dispatching this unit.\"}\n",
+      "stderr": "",
+      "data": {
+        "command": "builder ready",
+        "status": "error",
+        "timestamp": "2026-09-07T05:31:24.627Z",
+        "error": {
+          "code": "E471",
+          "message": "Builder is not ready to dispatch.",
+          "details": {
+            "status": "not-ready",
+            "issues": [
+              {
+                "code": "baseline",
+                "message": "Dependencies lack committed proof: tk-0001",
+                "next_action": "Complete and verify those dependencies in the composition receipt before dispatching this unit."
+              }
+            ]
+          }
+        },
+        "next_action": "Complete and verify those dependencies in the composition receipt before dispatching this unit."
+      }
+    },
+    {
+      "argv": [
+        "harness",
+        "builder",
+        "ready",
+        "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/plan.dd.json",
+        "--unit",
+        "tk-0003"
+      ],
+      "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+      "exit_code": 1,
+      "stdout": "{\"command\":\"builder ready\",\"status\":\"error\",\"timestamp\":\"2026-09-07T05:31:24.627Z\",\"error\":{\"code\":\"E471\",\"message\":\"Builder is not ready to dispatch.\",\"details\":{\"status\":\"not-ready\",\"issues\":[{\"code\":\"baseline\",\"message\":\"Dependencies lack committed proof: tk-0001\",\"next_action\":\"Complete and verify those dependencies in the composition receipt before dispatching this unit.\"}]}},\"next_action\":\"Complete and verify those dependencies in the composition receipt before dispatching this unit.\"}\n",
+      "stderr": "",
+      "data": {
+        "command": "builder ready",
+        "status": "error",
+        "timestamp": "2026-09-07T05:31:24.627Z",
+        "error": {
+          "code": "E471",
+          "message": "Builder is not ready to dispatch.",
+          "details": {
+            "status": "not-ready",
+            "issues": [
+              {
+                "code": "baseline",
+                "message": "Dependencies lack committed proof: tk-0001",
+                "next_action": "Complete and verify those dependencies in the composition receipt before dispatching this unit."
+              }
+            ]
+          }
+        },
+        "next_action": "Complete and verify those dependencies in the composition receipt before dispatching this unit."
+      }
+    },
+    {
+      "argv": [
+        "harness",
+        "builder",
+        "ready",
+        "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/plan.dd.json",
+        "--unit",
+        "tk-0005"
+      ],
+      "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+      "exit_code": 1,
+      "stdout": "{\"command\":\"builder ready\",\"status\":\"error\",\"timestamp\":\"2026-09-07T05:31:24.627Z\",\"error\":{\"code\":\"E471\",\"message\":\"Builder is not ready to dispatch.\",\"details\":{\"status\":\"not-ready\",\"issues\":[{\"code\":\"baseline\",\"message\":\"Dependencies lack committed proof: tk-0001\",\"next_action\":\"Complete and verify those dependencies in the composition receipt before dispatching this unit.\"}]}},\"next_action\":\"Complete and verify those dependencies in the composition receipt before dispatching this unit.\"}\n",
+      "stderr": "",
+      "data": {
+        "command": "builder ready",
+        "status": "error",
+        "timestamp": "2026-09-07T05:31:24.627Z",
+        "error": {
+          "code": "E471",
+          "message": "Builder is not ready to dispatch.",
+          "details": {
+            "status": "not-ready",
+            "issues": [
+              {
+                "code": "baseline",
+                "message": "Dependencies lack committed proof: tk-0001",
+                "next_action": "Complete and verify those dependencies in the composition receipt before dispatching this unit."
+              }
+            ]
+          }
+        },
+        "next_action": "Complete and verify those dependencies in the composition receipt before dispatching this unit."
+      }
+    }
+  ],
+  "pm_disposition": "Do not invent composition evidence or bypass readiness; investigate baseline dependency recognition with harness owner"
+}

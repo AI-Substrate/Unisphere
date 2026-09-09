@@ -1,0 +1,35 @@
+{
+  "authorization": {
+    "question": "Do you authorize Kotallo to implement Codex, Oh My Pi, Pi, Copilot CLI, VS Code Copilot and Cursor in parallel as their required loaders become ready, without another approval per adapter?",
+    "user_answer_verbatim": "yes, fan out the work effectiely",
+    "effect": "Standing authorization to implement all six harnesses; no additional approval per adapter. Supersedes earlier research-only/unanswered-release status."
+  },
+  "owner": "pij-right-kotallo",
+  "scope": ["Codex", "Oh My Pi", "Pi", "Copilot CLI", "VS Code Copilot", "Cursor"],
+  "fan_out_contract": {
+    "mapper_ownership": "Six independent harness mapper owners, each owning implementation, format fixtures, native-semantic expectations and adapter descriptor. Cursor transcript and IDE dialects must remain explicitly distinguished; split further only for genuine independent work.",
+    "shared_storage": "One named integration owner for shared identity/checkpoint/envelope contracts; independently owned loader work for actual JSON snapshot/SQLite needs. VS Code mutation-journal reconstruction must use an explicit pure reducer/state contract, not treat each patch as a chat event.",
+    "parallelism": "Ready JSONL mapper lanes need not wait for snapshot/SQLite implementation or a sibling mapper. Freeze the minimum input/output/metadata fixture contract, then map against fakes while loader work proceeds. Serialize only shared core/catalog/app mutations, not the independent implementations.",
+    "existing_substrate": "Reuse the tested Plan005 loader/SessionAdapter/OTLP pipeline and Plan009's catalog contract as appropriate; do not rewrite or duplicate them. PM owns shared catalog/app registration and final composition. No silent edits to an already reviewed artifact.",
+    "models": "Native OMP github-copilot/gpt-6-astra high for coders; independent OMP github-copilot/claude-opus-5 high review. Use current supported Builder/runtime behavior and explicit full clones where required; no invented legacy ack gates.",
+    "proof_ownership": "Workers implement complete code, behavioral regressions and fixtures; PM owns coordinated formatting/build/lint/test runs and real composed SDK/CLI smoke. Avoid concurrent project-wide validators and shared lockfile edits."
+  },
+  "requirements": [
+    "Pure adapters have no filesystem, environment, network or clock access; storage I/O stays in loaders.",
+    "Common OTLP output and machine-readable adapter catalog expose honest capabilities and structured discovery hints.",
+    "Use observed native schemas and preserve source provenance; distinguish cumulative usage from per-update measurements and avoid double counting.",
+    "Treat delayed appends, mutable snapshots, revisions and source incompleteness explicitly; never use fake LF offsets for SQLite or claim EOF means final.",
+    "Report full-fidelity meaning, what is preserved/omitted, actual proof and remaining gaps for every adapter. Do not label a partial implementation complete or silently shrink named scope; unresolved formats need an explicit disposition.",
+    "Content remains explicit opt-in; use sanitized/synthetic fixtures and bounded structural evidence, not copied private payloads.",
+    "Harness-engineering is optional inspiration, not authority. Evaluate its code/fixtures and replace assumptions where Unisphere can do better.",
+    "Harness observations contain improvement-worthy friction, not progress reports. Progress goes in task/execution/status records."
+  ],
+  "research": "/Users/jordanknight/.omp/agent/sessions/-substrate-unisphere-unishpere-main/2026-09-06T23-30-10-147Z_01a0790e-d463-7000-b541-3f4d2cc9e98b/local/multi-harness-adapter-research.json",
+  "boundaries": [
+    "No additional user approval for each adapter's implementation.",
+    "Main landing, pushes/PRs, global changes, destructive retirement and private-data export remain outside this grant unless separately authorized.",
+    "Jordan controls compaction/restart. Known Kotallo custom-message delivery was unhealthy; queued transport alone does not prove receipt. Obtain actual acknowledgment, using prime's manual bridge if needed.",
+    "Retain ongoing Plan005/Plan009 evidence and work. Allocate follow-on product work through the current Builder mechanism; do not create duplicate PMs or duplicate worker assignments."
+  ],
+  "next_checkpoint": "PM acknowledges this new grant, records plan/workspace and exact ownership/interfaces, and reports actual first parallel worker starts. Do not describe queued or failed spawns as running implementation."
+}

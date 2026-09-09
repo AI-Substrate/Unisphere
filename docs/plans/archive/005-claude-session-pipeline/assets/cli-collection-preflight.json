@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "-p",
+    "unisphere-cli",
+    "--lib",
+    "--tests"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline",
+  "exit_code": 101,
+  "stdout": "",
+  "stderr": "   Compiling unisphere-core v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline/crates/core)\n   Compiling unisphere-testkit v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline/crates/testkit)\n   Compiling unisphere-cli v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline/crates/cli)\nerror[E0433]: cannot find module or crate `tempfile` in this scope\n  --> crates/cli/tests/sessions.rs:35:21\n   |\n35 |     let temporary = tempfile::tempdir().unwrap();\n   |                     ^^^^^^^^ use of unresolved module or unlinked crate `tempfile`\n   |\n   = help: if you wanted to use a crate named `tempfile`, use `cargo add tempfile` to add it to your `Cargo.toml`\n\nerror[E0433]: cannot find module or crate `tempfile` in this scope\n  --> crates/cli/tests/sessions.rs:46:21\n   |\n46 |     let temporary = tempfile::tempdir().unwrap();\n   |                     ^^^^^^^^ use of unresolved module or unlinked crate `tempfile`\n   |\n   = help: if you wanted to use a crate named `tempfile`, use `cargo add tempfile` to add it to your `Cargo.toml`\n\nFor more information about this error, try `rustc --explain E0433`.\nerror: could not compile `unisphere-cli` (test \"sessions\") due to 2 previous errors\nwarning: build failed, waiting for other jobs to finish...\n"
+}

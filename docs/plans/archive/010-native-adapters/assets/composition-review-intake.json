@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "harness",
+    "builder",
+    "review",
+    "docs/plans/010-native-adapters/plan.dd.json",
+    "--receipt",
+    ".harness/temp/plan010-composition-review-r1.dd.json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "started": "2026-09-08T08:08:08.213Z",
+  "completed": "2026-09-08T08:08:08.428Z",
+  "exit_code": 1,
+  "stdout": "{\"command\":\"builder review\",\"status\":\"error\",\"timestamp\":\"2026-09-08T08:08:08.424Z\",\"error\":{\"code\":\"E470\",\"message\":\"Cannot read /Users/jordanknight/substrate/unisphere/unisphere-native-adapters/docs/plans/010-native-adapters/assets/team/composition.dd.json: missing\",\"details\":{\"max_bytes\":4194304}},\"next_action\":\"Supply a readable regular DD JSON document of at most 4194304 bytes.\"}\n",
+  "stderr": ""
+}

@@ -1,0 +1,221 @@
+{
+  "dd": {
+    "schema": "builder/plan"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Pure Claude adapter and standard session output",
+        "slug": "claude-session-pipeline",
+        "ordinal": 5,
+        "status": "ready",
+        "summary": "Explicit source loading -> pure Claude mapping -> common standard-first records -> OTLP JSONL, usable through SDK and CLI.",
+        "backpressure": "assets/backpressure.dd.json#rows",
+        "mode": "Full",
+        "complexity": "CS-4",
+        "confidence": "Product boundaries agreed; architecture/profile details and independent design review pending, no new feature proof yet."
+      }
+    },
+    {
+      "name": "summary",
+      "value": "Turn the configuration-only foundation into one useful collection path: enumerate/read explicitly supplied Claude Code JSONL files, map supplied native data without adapter I/O, and expose the same common records through an in-process Rust SDK and standard-first OTLP JSONL file/stdout output. A shared fakeable loader owns storage access; adapters remain deterministic units. Make ordinary new adapters cheap through stable contracts, a functional authoring example and shared conformance tests rather than runtime plugin machinery."
+    },
+    {
+      "name": "goals",
+      "value": [
+        "Read explicitly authorized Claude session inputs without coupling parsing to storage or output.",
+        "Provide deterministic independently unit-testable adapters and injectable storage/output ports.",
+        "Export useful standard-first records with native provenance and explicit limits rather than silently lose source facts.",
+        "Offer usable SDK and CLI paths plus a low-friction recipe for registering another adapter without editing core or existing adapters."
+      ]
+    },
+    {
+      "name": "non_goals",
+      "value": [
+        "No access to real private transcripts during implementation or tests; all proof uses sanitized/synthetic fixtures and explicit temporary roots.",
+        "No daemon/watch service, remote OTLP transport, database, dynamic plugin loader, Flowspace indexing integration, pricing or live pij registry enrichment.",
+        "No universal conversation reconstruction, full-history branch/rewind materialization, automatic sidecar/attachment reads, or exactly-once delivery promise.",
+        "No SDK implicit HOME/environment source discovery; CLI requires explicit source scope.",
+        "No new independent canonical persisted telemetry encoding beside the standard-first OTLP JSONL profile.",
+        "No remote publication/main landing/global installation or workspace retirement without separate authorization.",
+        "The initial filesystem SessionLoader is Unix-only (macOS/Linux); non-Unix calls fail fast before I/O. Pure adapters and OTLP writer remain portable over supplied data. Broader loader platform support is separate scope, not implicit partial support."
+      ]
+    },
+    {
+      "name": "acceptance_criteria",
+      "value": [
+        {
+          "id": "ac-0001",
+          "claim": "An application can inject a SessionLoader and choose a pure adapter without a filesystem or CLI dependency in the adapter; the same provided native data/state/options produces the same contracted result.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0001",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0007"
+        },
+        {
+          "id": "ac-0002",
+          "claim": "The shared file loader lists candidate sessions deterministically within an explicit source scope and reads bounded native batches; it neither interprets Claude content nor implicitly scans HOME or follows out-of-scope sidecars/symlinks.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0002",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0007"
+        },
+        {
+          "id": "ac-0003",
+          "claim": "Batch reads support explicit caller-owned resume positions, make progress across blank lines, retain incomplete final JSONL records without advancing beyond them, and report changed/truncated/replaced sources instead of silently losing data; unsupported source identity is named. Oversize records return a typed limit with original progress intact and can be retried using larger explicit limits; the documented initial filesystem loader is Unix-only and fails fast elsewhere.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0003",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0007"
+        },
+        {
+          "id": "ac-0004",
+          "claim": "The Claude adapter maps user/assistant messages and supported text/reasoning/tool-call/tool-result parts, native identity/parent/session links, model and usage facts where present; repeated logical message IDs do not silently erase physical source records or fabricate a full inference operation.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0004",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0007"
+        },
+        {
+          "id": "ac-0005",
+          "claim": "Malformed or unsupported native records/parts, absent fields and source fragments have explicit diagnostics/provenance rather than panic, guessed values or an unqualified lossless/full-session claim; malformed bytes are not echoed in public errors.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0005",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0007"
+        },
+        {
+          "id": "ac-0006",
+          "claim": "The output writer emits valid UTF-8 OTLP LogsData JSONL with correct structured AnyValue/64-bit timestamp encoding and a documented standard-first semantic profile; native-only semantics use clearly named extensions, not invented standard attributes.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0006",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0007"
+        },
+        {
+          "id": "ac-0007",
+          "claim": "The SDK collection service composes loader, pure adapter and injected destination, returning a next checkpoint only after the batch is accepted by the output; output/read/map failures retain actionable error context without falsely advancing successful progress or claiming exactly-once writes.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0007",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0007"
+        },
+        {
+          "id": "ac-0008",
+          "claim": "Content collection/export is explicit: metadata-only is the conservative default and the caller/CLI can opt into message content; omitted/redacted/unsupported content is distinguished, and attachment references are never dereferenced implicitly.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0008",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0007"
+        },
+        {
+          "id": "ac-0009",
+          "claim": "The CLI can list explicit session inputs and export a selected Claude file to stdout or an explicitly selected file using the same SDK pipeline; machine diagnostics do not corrupt OTLP stdout and file creation does not silently overwrite existing data.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0009",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0007"
+        },
+        {
+          "id": "ac-000a",
+          "claim": "A second fixture adapter can be implemented and composed through the public contracts and one registration entry without modifying core or the Claude adapter; a concrete authoring example/template and common conformance suite document that path.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000a",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0007"
+        },
+        {
+          "id": "ac-000b",
+          "claim": "Existing configuration SDK/CLI behavior stays compatible, dependency checks reject I/O or outer-adapter dependencies in pure mapping/core surfaces, and all product tests are isolated from actual user stores and process-global environment mutation.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000b",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0007"
+        },
+        {
+          "id": "ac-000c",
+          "claim": "A fresh external Rust consumer and a temporary installed CLI execute equivalent fixture-backed collection/export with bounded batches and output error cases, documented usage/profile limits, and actual shared-loader/adapter/writer contract proof.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000c",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0007"
+        }
+      ]
+    },
+    {
+      "name": "phases",
+      "value": [
+        {
+          "id": "ph-a437",
+          "title": "Read and export explicit Claude sessions through shared contracts",
+          "brief": "",
+          "state": "checked",
+          "tasks": "assets/tasks/phase-1/tasks.dd.json#tasks",
+          "objective": "Deliver one complete explicit Claude JSONL -> pure mapping -> typed/common OTLP output path with independently testable components and SDK/CLI parity."
+        }
+      ]
+    },
+    {
+      "name": "tasks",
+      "value": []
+    },
+    {
+      "name": "done_when",
+      "value": {}
+    },
+    {
+      "name": "research_context",
+      "value": "Prior standard-first decision: ../archive/001-sdk-cli-foundation/assets/workshops/001-output-format.md; prior scratch reader experiments are inputs, not shipped proof. SessionLoader storage framing and pure native mapping are separate user-mandated boundaries. Native record/message/request identities differ; Claude sidecars can report parent sessionId; no data should be invented from missing fields. First-consumer Flowspace policies remain outside shared contracts."
+    },
+    {
+      "name": "testing_strategy",
+      "value": {
+        "approach": "Fixture-driven unit and shared-contract tests for each pure/I/O boundary, then real temporary-file SDK/CLI end-to-end and external consumer proof.",
+        "rationale": "Pure adapters are independently testable without mocks; loader/service/output failure and resume semantics need their own contract tests plus assembled proof.",
+        "focus_areas": "No adapter I/O, bounded reads, partial tails, stale cursors, unknown records, multipart Claude messages, usage non-invention, OTLP encoding, explicit content opt-in, output failures, extension recipe, config regressions.",
+        "excluded": "No live private stores, network services, exactly-once guarantee, broad native dialect coverage or unobserved platform claims.",
+        "mock_usage": "Inject fake loader and output ports for orchestration; invoke pure adapters on bytes directly; use real tmp files and installed CLI for final integration."
+      }
+    },
+    {
+      "name": "documentation_strategy",
+      "value": {
+        "location": "docs/adapters.md, docs/telemetry-profile.md, SDK rustdoc and CLI/development usage sections.",
+        "rationale": "Make the next ordinary adapter require only isolated mapping, fixtures/conformance and registration; document actual native coverage and output-profile semantics."
+      }
+    },
+    {
+      "name": "risks_assumptions",
+      "value": "Strict separation must be executable, not just a trait diagram. Claude physical JSONL records may be fragments/repeated IDs; OTLP standard fields must retain their real meanings. Session listing and raw batches need bounded resource behavior. Metadata-only default avoids accidental content export; explicit opt-in is documented and independently checked. Standard profile is source-derived logs, not a fake trace/inference model. No source is considered proven merely because prior scratch tests passed."
+    },
+    {
+      "name": "open_questions",
+      "value": []
+    },
+    {
+      "name": "workshop_opportunities",
+      "value": []
+    },
+    {
+      "name": "clarifications",
+      "value": []
+    },
+    {
+      "name": "planning_seam",
+      "value": []
+    },
+    {
+      "name": "gate_matrix",
+      "value": []
+    },
+    {
+      "name": "implementation_summary",
+      "value": ""
+    },
+    {
+      "name": "key_findings",
+      "value": []
+    },
+    {
+      "name": "acceptance_coverage",
+      "value": []
+    },
+    {
+      "name": "risks",
+      "value": []
+    },
+    {
+      "name": "execution_guardrails",
+      "value": []
+    }
+  ]
+}

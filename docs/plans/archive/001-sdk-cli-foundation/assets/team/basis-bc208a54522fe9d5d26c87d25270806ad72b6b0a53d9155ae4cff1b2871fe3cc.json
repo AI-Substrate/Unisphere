@@ -1,0 +1,325 @@
+{
+  "dd": {
+    "schema": "builder/plan"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Rust SDK and CLI foundation",
+        "slug": "sdk-cli-foundation",
+        "ordinal": 1,
+        "status": "ready",
+        "summary": "Foundation-only Rust SDK and CLI with shared explicit configuration/diagnostics, independent service construction and real composed proof.",
+        "backpressure": "assets/backpressure.dd.json#rows",
+        "mode": "Simple",
+        "complexity": "CS-3",
+        "confidence": "Product scope is explicit; implementation feasibility and exact public contracts require the guide and applicable proof. No acceptance criterion is proven yet."
+      }
+    },
+    {
+      "name": "summary",
+      "value": "Establish a useful, embeddable Rust SDK and a thin standalone CLI for Unisphere before native telemetry normalization is shipped. The first shared operation resolves and validates explicitly supplied source-root configuration and returns structured diagnostics, so this delivery proves real SDK/CLI behavior rather than only compiling empty crates. Components must be independently executable against injected contracts and later composed; services do not wait for a finished CLI. Flowspace3 is the first intended consumer, not the owner of the public model. This product plan is prime-authored; a subsequently assigned PM owns implementation orchestration and peer composition through the reviewed guide."
+    },
+    {
+      "name": "goals",
+      "value": [
+        "A Rust application can consume Unisphere as an ordinary in-process dependency and invoke real foundation behavior without a CLI subprocess, daemon, database or ML service.",
+        "Humans and automation can install/run a thin CLI that exposes the same successful and failing foundation operations as the SDK with predictable output and exit behavior.",
+        "Provide explicit configuration resolution/validation and actionable typed diagnostics as the first useful shared vertical slice, without prematurely selecting a native-session or telemetry persistence schema.",
+        "Make independently testable services and adapters possible from agreed contracts, allowing PM-led parallel construction and later composition without an artificial finished-CLI prerequisite.",
+        "Establish reproducible local build, test, architecture and smoke evidence plus developer-facing SDK/CLI documentation; adapt useful Flowspace3 code with preserved provenance rather than copy its server architecture."
+      ]
+    },
+    {
+      "name": "non_goals",
+      "value": [
+        "Shipping a native session reader, harness discovery sweep, normalization pipeline, historical ingestion or Flowspace3 integration in Plan001; those need separate accepted scope.",
+        "Choosing or implementing the final telemetry/session record format, OTLP exporter, archive format, update/rewind semantics, content/counts privacy profiles or durable cursor store in this foundation plan.",
+        "A required daemon, HTTP/RPC service, Postgres/SQLite product store, job queue, watcher, model provider, embeddings, pricing engine or git attribution integration.",
+        "Registry publication, release automation beyond applicable local/CI proof, cloud deployment, machine-global installs/config changes, hook installation or real private transcript access.",
+        "Promoting gitignored scratch reader experiments into shipping code or treating their provisional native-observation contract as the public SDK model; experimentation may proceed independently under the separately authorized scratch scope.",
+        "Using Flowspace-specific error codes, configuration fields, truncation policies, PostgreSQL turn schema or summarization scheduling as Unisphere requirements."
+      ]
+    },
+    {
+      "name": "acceptance_criteria",
+      "value": [
+        {
+          "id": "ac-0001",
+          "claim": "An external Rust application consumes the SDK from the checkout through ordinary Cargo dependency configuration and invokes the configuration/diagnostic use case in-process, without spawning the CLI or requiring a daemon, database, ML service or caller-created async runtime.",
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0001"
+        },
+        {
+          "id": "ac-0002",
+          "claim": "The shared configuration use case accepts a documented minimal configuration for caller-supplied source roots, produces the effective settings and diagnostics deterministically, treats an empty root list as valid, and rejects malformed documents, blank root entries and incompatible value types with field/path-specific errors rather than panicking or substituting guessed values. It does not inspect session content.",
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0002"
+        },
+        {
+          "id": "ac-0003",
+          "claim": "Configuration precedence is documented and identical in SDK and CLI: defaults are overridden by explicitly supplied configuration, then explicit caller/CLI overrides; omitted values retain defaults. Library calls do not read ambient HOME, process environment or global config implicitly.",
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0003"
+        },
+        {
+          "id": "ac-0004",
+          "claim": "The installable CLI exposes help/version and the shared configuration/diagnostic operation; on equivalent successful and invalid inputs its semantic data/error agrees with direct SDK invocation. A missing or unreadable explicit config file produces a named failure, not success or an empty configuration.",
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0004"
+        },
+        {
+          "id": "ac-0005",
+          "claim": "Machine-mode CLI output has a documented versioned success/error envelope and remains parseable without terminal decoration; explicit output selection takes precedence over terminal detection, and piped/captured output defaults to machine mode. Human output is derived from the same result, logs do not corrupt stdout, and successful operations, operational/configuration failures and invalid CLI invocation have documented distinct exit behavior.",
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0005"
+        },
+        {
+          "id": "ac-0006",
+          "claim": "Public failures are actionable and typed: callers can distinguish invalid configuration from explicit input I/O failures without parsing prose; CLI failures carry a stable category/code, a useful location when known and remediation guidance, without dumping secrets, full config documents or unrelated session content.",
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0006"
+        },
+        {
+          "id": "ac-0007",
+          "claim": "Foundation services are executable in isolation through their public contracts with injected dependencies before a CLI or sibling adapter implementation exists; automated dependency checks reject core/service dependencies on the CLI or concrete outer adapters, and a deliberate forbidden-edge fixture makes the check fail.",
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0007"
+        },
+        {
+          "id": "ac-0008",
+          "claim": "Tests and smoke scenarios are deterministic, parallel-safe and isolated from real user configuration/session stores: temporary paths and explicit injected settings are used, foundation operations do not write outside supplied test/workspace paths or start hidden background workers, and ordinary library invocation performs no network calls.",
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0008"
+        },
+        {
+          "id": "ac-0009",
+          "claim": "A fresh checkout with the documented Rust toolchain and declared dependencies can build/test the SDK and install/run the CLI locally; SDK consumption and the installed CLI do not require Node/DD/Builder tooling at runtime, repository-private absolute paths, or unpublished sibling binaries.",
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0009"
+        },
+        {
+          "id": "ac-000a",
+          "claim": "The repository engineering harness exposes one real product validation lane and a meaningful foundation boot/smoke lane; a passing lane proves the delivered configuration/SDK/CLI behavior and must not claim native telemetry collection or reader support. A deliberately failing product check propagates a failing verdict.",
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000a"
+        },
+        {
+          "id": "ac-000b",
+          "claim": "A new consumer can follow documented SDK and CLI examples to reproduce a successful configuration check and an actionable failure; docs state foundation-only capabilities and version/support limits, and any substantial Flowspace3/git-ai code reuse retains applicable licence and provenance notices.",
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000b"
+        }
+      ]
+    },
+    {
+      "name": "phases",
+      "value": [
+        {
+          "id": "ph-415a",
+          "title": "Usable independent SDK and CLI foundation",
+          "brief": "One integrated outcome checkpoint: external Rust consumption, shared configuration/diagnostics, CLI parity and isolated proof. Internal unit waves are defined by the reviewed guide, not a serial SDK-then-CLI phase order.",
+          "state": "unchecked",
+          "tasks": "assets/tasks/phase-1/tasks.dd.json#tasks",
+          "objective": "Deliver real foundation behavior through the SDK and CLI without shipping native readers or settling the telemetry format.",
+          "delivers": [
+            "Public in-process SDK and locally installable CLI",
+            "Shared explicit configuration and actionable diagnostics",
+            "Independent service contracts and negative dependency checks",
+            "Real composed smoke, contributor docs and licence/provenance preservation"
+          ],
+          "key_risks": "Avoid empty scaffolding, daemon coupling, ambient state and interpreting scratch prototypes or generated teaching guides as approved product contracts."
+        }
+      ]
+    },
+    {
+      "name": "tasks",
+      "value": []
+    },
+    {
+      "name": "done_when",
+      "value": {}
+    },
+    {
+      "name": "research_context",
+      "value": "Inputs: requirements-spine.md (RQ-001–017); original-ask.md; assets/research/otel-common-format.md; pending first-consumer interview assets/requirements/flowspace3-interview.md. Flowspace3 source was reviewed for pure configuration resolution, structured error/envelope behavior, audience-aware output and kind-aware architecture checks. Reuse candidates: crates/core/src/config.rs, catalog.rs, envelope.rs and output.rs; crates/cli/src/render; crates/testkit/src/arch.rs and spawn.rs. Adapt only the parts needed for this product: its daemon/store/ML stack is outside scope. MIT licence in Flowspace3 LICENSE requires retaining notices for substantial copies. OTLP JSONL is a Development-stage official telemetry file scheme, but choosing the eventual telemetry output is a separate workshop, not a dependency for foundation diagnostics."
+    },
+    {
+      "name": "testing_strategy",
+      "value": {
+        "approach": "Build behavioral unit/contract tests for configuration resolution and diagnostics, an external-consumer SDK integration check, a real subprocess CLI smoke for success and failure, and a negative dependency-boundary check. Run them through the repository engineering harness once implementation supplies the canonical Rust lane.",
+        "rationale": "The project currently has no product source or runnable product proof. Harness onboarding tests are not SDK proof. Pure tests alone cannot establish CLI/library parity, and an architecture diagram cannot catch a reverse dependency.",
+        "focus_areas": "Explicit configuration precedence; empty/invalid configuration; deterministic diagnostics; SDK/CLI semantic parity; machine/human rendering; caller-controlled side effects; injected service independence; clean checkout consumption; negative dependency drift; sealed temporary HOME/config/fixtures.",
+        "excluded": "Native reader correctness, telemetry schema compatibility, collector round trips, real vendor stores and pricing are not Plan001 acceptance. Scratch experiment tests remain separate and cannot make foundation ACs pass.",
+        "mock_usage": "Prefer injected deterministic fakes and temporary filesystem fixtures at real variation boundaries; use real Rust caller/CLI composition for integration. Do not introduce a trait or mocking framework solely to satisfy a plumbing assertion."
+      }
+    },
+    {
+      "name": "documentation_strategy",
+      "value": {
+        "location": "Public SDK rustdoc and a concise repository CLI/development guide with executable usage examples; source provenance/licence notices for adapted Flowspace3 or other borrowed code.",
+        "rationale": "A new Rust consumer and a terminal user must be able to build, call, diagnose and verify the delivered foundation without inspecting internal source. Clearly label unimplemented reader/format capabilities and keep architecture details in the implementation guide rather than duplicate them here."
+      }
+    },
+    {
+      "name": "risks_assumptions",
+      "value": "Foundation-only scope was explicitly selected by Jordan. The first real operation is configuration inspection/validation, not a fake reader or a claim that telemetry collection works. Assume an explicitly supplied configuration document and caller overrides are sufficient initially; do not silently import ambient user configuration. The exact configuration shape, SDK/CLI signatures, crate topology, worker units/waves and code-level checks belong to the reviewed implementation guide. The outstanding Flowspace3 interview can refine later reader integration but does not block an independent library/configuration foundation. Product intent ready does not imply guide approval, baseline sealing, dispatched peers or any completed AC."
+    },
+    {
+      "name": "open_questions",
+      "value": []
+    },
+    {
+      "name": "workshop_opportunities",
+      "value": [
+        {
+          "topic": "Common telemetry output fields and encoding",
+          "type": "Storage Design / Data Model",
+          "why": "Choose how standard OTel/GenAI fields, source-reconstruction facts and explicit pij identity/role metadata coexist without inventing a competing standard unnecessarily.",
+          "key_questions": "Canonical OTLP LogsData versus standard-aligned typed model/projection; pij peer names/roles/lineage provenance; unknowns, privacy, revisions and versioning.",
+          "status": "Requested by operator; separate from foundation-only delivery and not yet approved."
+        }
+      ]
+    },
+    {
+      "name": "clarifications",
+      "value": [
+        {
+          "session": "2026-09-07",
+          "question": "Foundation only, or foundation plus the first native-session reader?",
+          "answer": "Jordan selected Foundation only: public Rust SDK, thin CLI, real shared configuration/diagnostic behavior, dependency boundaries, packaging and tests; no native-session reader in this plan."
+        },
+        {
+          "session": "2026-09-07",
+          "question": "Who authors the plan and orchestrates implementation?",
+          "answer": "Operator ruling: primes write the initial product plan; assigned PMs later orchestrate implementations with their peers. Initial plan authorship stays here; no implementation release is granted by this document."
+        },
+        {
+          "session": "2026-09-07",
+          "question": "Must service work wait for the CLI implementation?",
+          "answer": "No. Jordan requires separate agents to build services and components against agreed contracts and compose them later; only true contract dependencies may precede independent work, not completion of the CLI or sibling implementation."
+        },
+        {
+          "session": "2026-09-07",
+          "question": "May native reader work start concurrently with the foundation?",
+          "answer": "Jordan separately authorized Rust service/adapter experiments in gitignored scratch. They are not shipping Plan001 readers, do not expand its ACs, and do not settle the output schema."
+        },
+        {
+          "session": "2026-09-07",
+          "question": "Has the canonical telemetry output format been selected?",
+          "answer": "No. An official Development-stage OTLP JSONL file format was found; a requested output-format workshop compares direct OTLP use with a typed session model plus projection. Foundation command-result formatting is a separate contract."
+        }
+      ]
+    },
+    {
+      "name": "planning_seam",
+      "value": [
+        {
+          "artifact": "original-ask.md and requirements-spine.md",
+          "present": "present",
+          "effect": "Operator authorized foundation-only product planning and independently constructible services; primes author initial plans and PMs later orchestrate peers."
+        },
+        {
+          "artifact": "assets/research/otel-common-format.md",
+          "present": "present",
+          "effect": "Standard OTLP JSONL/GenAI field research informs a separate output-format workshop; this plan does not settle the telemetry format."
+        },
+        {
+          "artifact": "assets/requirements/flowspace3-interview.md",
+          "present": "pending response",
+          "effect": "First-consumer needs remain unconfirmed; no Flowspace-specific indexing policy is imported or treated as blocking for foundation-only scope."
+        },
+        {
+          "artifact": "assets/impl-guide.dd.json",
+          "present": "unapproved teaching scaffold",
+          "effect": "Known Builder defect row37; not Unisphere architecture and not dispatch authority. A real reviewed guide is required before implementation."
+        }
+      ]
+    },
+    {
+      "name": "gate_matrix",
+      "value": []
+    },
+    {
+      "name": "implementation_summary",
+      "value": ""
+    },
+    {
+      "name": "key_findings",
+      "value": [
+        {
+          "impact": "High",
+          "finding": "The SDK/CLI foundation can be useful before native readers or the final telemetry schema exist.",
+          "action": "Deliver one real shared configuration/diagnostic operation and prove both independent SDK consumption and CLI parity."
+        },
+        {
+          "impact": "High",
+          "finding": "Flowspace3 earns adapter traits only at real variation points and keeps core free of runtime IO, but its application services live in a daemon crate.",
+          "action": "Reuse pure/configuration/error/testing ideas; expose Unisphere application behavior directly through the library, not through a required daemon."
+        },
+        {
+          "impact": "High",
+          "finding": "Parallelism comes from agreed contracts and independent execution, not separate source files.",
+          "action": "Require service-level proof without CLI/sibling implementations, then a distinct assembled-behavior proof after PM composition."
+        }
+      ]
+    },
+    {
+      "name": "acceptance_coverage",
+      "value": []
+    },
+    {
+      "name": "risks",
+      "value": [
+        {
+          "risk": "An SDK-shaped crate merely forwards to the CLI/server, making embedded use and independent development impossible.",
+          "likelihood": "Medium",
+          "impact": "High",
+          "mitigation": "External Rust caller proof and service-only tests must succeed without a CLI subprocess/server; forbid reverse dependency edges."
+        },
+        {
+          "risk": "Copying Flowspace3 imports its database/ML dependencies, global configuration assumptions or product-specific policies.",
+          "likelihood": "High",
+          "impact": "High",
+          "mitigation": "Adapt a documented minimal reuse set, retain licences, review dependency boundaries and exclude server/indexing policies."
+        },
+        {
+          "risk": "A foundation implementation becomes only empty crates and help/version output.",
+          "likelihood": "Medium",
+          "impact": "High",
+          "mitigation": "Require the same real configuration-resolution/diagnostic operation through external SDK invocation and installed CLI success/error smoke."
+        },
+        {
+          "risk": "Undecided telemetry format or pending consumer preferences stall all component development.",
+          "likelihood": "Medium",
+          "impact": "Medium",
+          "mitigation": "Keep telemetry readers/format selection out of Plan001; specify foundation interfaces in the guide so independent services/CLI/tests can proceed and compose later."
+        },
+        {
+          "risk": "Tests or diagnostics read actual HOME, credentials or native sessions and pass only on one developer machine.",
+          "likelihood": "Medium",
+          "impact": "High",
+          "mitigation": "Explicit injected settings, sealed subprocess environments and temporary fixtures; verify the foundation leaves external state untouched."
+        },
+        {
+          "risk": "Builder-generated converter guide is mistaken for Unisphere architecture.",
+          "likelihood": "High",
+          "impact": "High",
+          "mitigation": "Known harness defect row 37: the populated teaching guide remains unapproved and must be replaced during the real guide stage, never used for dispatch."
+        }
+      ]
+    },
+    {
+      "name": "execution_guardrails",
+      "value": [
+        "Prime owns initial product intent; PM owns later implementation orchestration, peer packets and assembled delivery. Planning does not appoint a runtime prime or release implementation.",
+        "Use the reviewed guide to define contracts before fan-out; release independent components together where their true dependencies allow it. Services must not depend on a completed CLI or same-wave sibling implementation.",
+        "Use first-class harness Builder allocation/readiness/dispatch/composition operations and report dogfood problems to pij-varied-alpaca; never replace failed gates with assumptions or bypasses.",
+        "The permanent orphan governance branch remains separate; canonical product plan/guide/code/evidence stay on the product plan branch. Direct plan authoring does not mutate canonical flow state.",
+        "No generated task, plan AC, contract baseline, review or proof receipt is marked complete before actual applicable evidence exists.",
+        "Scratch native readers are separately authorized experiments, gitignored and not imported by shipping crates; promotion requires later accepted product scope and review."
+      ]
+    }
+  ]
+}

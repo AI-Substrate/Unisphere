@@ -1,0 +1,18 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "-p",
+    "unisphere-app",
+    "--bin",
+    "unisphere",
+    "--test",
+    "adapter_catalog"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "started": "2026-09-08T07:11:09.547Z",
+  "completed": "2026-09-08T07:11:19.157Z",
+  "exit_code": 0,
+  "stdout": "\nrunning 2 tests\ntest adapters::tests::another_adapter_needs_one_registration_and_no_core_or_claude_change ... ok\ntest adapters::tests::production_catalog_ids_match_exported_provenance ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s\n\n\nrunning 3 tests\ntest catalog_argument_errors_keep_the_catalog_label_and_hide_input ... ok\ntest catalog_does_not_resolve_inaccessible_store_roots ... ok\ntest catalog_json_is_static_under_hostile_environment ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.41s\n\n",
+  "stderr": "    Updating crates.io index\n     Locking 21 packages to latest Rust 1.95 compatible versions\n      Adding block-buffer v0.10.4\n      Adding cc v1.4.5\n      Adding cpufeatures v0.2.17\n      Adding crypto-common v0.1.7\n      Adding digest v0.10.7\n      Adding fallible-iterator v0.3.0\n      Adding fallible-streaming-iterator v0.1.9\n      Adding find-msvc-tools v0.1.12\n      Adding foldhash v0.1.5\n      Adding generic-array v0.14.7 (available: v0.14.9)\n      Adding hashbrown v0.15.5\n      Adding hashlink v0.10.0\n      Adding libsqlite3-sys v0.35.0\n      Adding pkg-config v0.3.34\n      Adding rusqlite v0.37.0 (available: v0.40.2)\n      Adding sha2 v0.10.9 (available: v0.11.0)\n      Adding shlex v2.0.1\n      Adding smallvec v1.16.0\n      Adding typenum v1.20.1\n      Adding vcpkg v0.2.15\n      Adding version_check v0.9.5\n   Compiling version_check v0.9.5\n   Compiling typenum v1.20.1\n   Compiling find-msvc-tools v0.1.12\n   Compiling shlex v2.0.1\n   Compiling pkg-config v0.3.34\n   Compiling vcpkg v0.2.15\n   Compiling foldhash v0.1.5\n   Compiling cpufeatures v0.2.17\n   Compiling errno v0.3.14\n   Compiling fallible-iterator v0.3.0\n   Compiling smallvec v1.16.0\n   Compiling fallible-streaming-iterator v0.1.9\n   Compiling getrandom v0.4.3\n   Compiling unisphere-adapter-cursor v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/adapter-cursor)\n   Compiling unisphere-adapter-copilot-cli v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/adapter-copilot-cli)\n   Compiling unisphere-adapter-vscode-copilot v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/adapter-vscode-copilot)\n   Compiling cc v1.4.5\n   Compiling hashbrown v0.15.5\n   Compiling rustix v1.1.4\n   Compiling generic-array v0.14.7\n   Compiling hashlink v0.10.0\n   Compiling libsqlite3-sys v0.35.0\n   Compiling tempfile v3.27.0\n   Compiling unisphere-testkit v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/testkit)\n   Compiling block-buffer v0.10.4\n   Compiling crypto-common v0.1.7\n   Compiling digest v0.10.7\n   Compiling sha2 v0.10.9\n   Compiling rusqlite v0.37.0\n   Compiling unisphere-loader-snapshot v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/loader-snapshot)\n   Compiling unisphere-app v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/app)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.35s\n     Running unittests src/main.rs (target/debug/deps/unisphere-35432cd2a29cbad8)\n     Running tests/adapter_catalog.rs (target/debug/deps/adapter_catalog-853cc3309d8fb80d)\n"
+}

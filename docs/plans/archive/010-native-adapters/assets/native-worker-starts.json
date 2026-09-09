@@ -1,0 +1,116 @@
+{
+  "at": "2026-09-08T06:34:39.226Z",
+  "native_bound_workers": [
+    {
+      "unit": "tk-0002",
+      "peer": "pij-ideological-koala",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-codex",
+      "branch": "builder/010-codex-mapper",
+      "session": "01a07fb8-9306-75ce-b529-8ca9f6ca7983",
+      "pid": 87435,
+      "packet": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-codex/.harness/temp/native-mapper-packet.json"
+    },
+    {
+      "unit": "tk-0003",
+      "peer": "pij-financial-elle",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-oh-my-pi",
+      "branch": "builder/010-oh-my-pi-mapper",
+      "session": "01a07fb8-932e-7260-9caa-4aaf218397d8",
+      "pid": 87478,
+      "packet": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-oh-my-pi/.harness/temp/native-mapper-packet.json"
+    },
+    {
+      "unit": "tk-0004",
+      "peer": "pij-remarkable-woodpecker",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-pi",
+      "branch": "builder/010-pi-mapper",
+      "session": "01a07fb8-932f-7788-b3d4-1cde81af477f",
+      "pid": 87521,
+      "packet": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-pi/.harness/temp/native-mapper-packet.json"
+    },
+    {
+      "unit": "tk-0005",
+      "peer": "pij-homeless-dudley",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-copilot-cli",
+      "branch": "builder/010-copilot-cli-mapper",
+      "session": "01a07fb8-9350-7612-a208-e03f31eb252e",
+      "pid": 87625,
+      "packet": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-copilot-cli/.harness/temp/native-mapper-packet.json"
+    },
+    {
+      "unit": "tk-0007",
+      "peer": "pij-mechanical-tsarina",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-cursor",
+      "branch": "builder/010-cursor-mapper",
+      "session": "01a07fb8-9304-7154-be26-39ff3c525b5b",
+      "pid": 87573,
+      "packet": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-cursor/.harness/temp/native-mapper-packet.json"
+    }
+  ],
+  "acknowledged_starts": [
+    {
+      "unit": "tk-0002",
+      "peer": "pij-ideological-koala",
+      "root": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-codex",
+      "source": "3a635c17110521a3ed93d03daf5eface57dc0bfd",
+      "pid": 87435,
+      "model": "github-copilot/gpt-6-astra",
+      "method": "Live native peer acknowledged root/source/packet and implementation start."
+    },
+    {
+      "unit": "tk-0003",
+      "peer": "pij-financial-elle",
+      "root": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-oh-my-pi",
+      "source": "3a635c17110521a3ed93d03daf5eface57dc0bfd",
+      "pid": 87478,
+      "model": "github-copilot/gpt-6-astra",
+      "method": "Live native peer acknowledged root/source/packet and implementation start."
+    },
+    {
+      "unit": "tk-0004",
+      "peer": "pij-remarkable-woodpecker",
+      "root": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-pi",
+      "source": "3a635c17110521a3ed93d03daf5eface57dc0bfd",
+      "pid": 87521,
+      "model": "github-copilot/gpt-6-astra",
+      "method": "Live native peer acknowledged root/source/packet and implementation start."
+    },
+    {
+      "unit": "tk-0005",
+      "peer": "pij-homeless-dudley",
+      "root": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-copilot-cli",
+      "source": "3a635c17110521a3ed93d03daf5eface57dc0bfd",
+      "pid": 87625,
+      "model": "github-copilot/gpt-6-astra",
+      "method": "Live native peer acknowledged root/source/packet and implementation start."
+    },
+    {
+      "unit": "tk-0007",
+      "peer": "pij-mechanical-tsarina",
+      "root": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-cursor",
+      "source": "3a635c17110521a3ed93d03daf5eface57dc0bfd",
+      "pid": 87573,
+      "model": "github-copilot/gpt-6-astra",
+      "method": "Live native peer acknowledged root/source/packet and implementation start."
+    },
+    {
+      "unit": "tk-0006",
+      "peer": "pij-adorable-bat",
+      "root": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-vscode-copilot",
+      "source": "3a635c17110521a3ed93d03daf5eface57dc0bfd",
+      "pid": 68452,
+      "model": "github-copilot/gpt-6-astra",
+      "method": "Builder observed native binding plus live peer acceptance/implementation-start message."
+    },
+    {
+      "unit": "tk-0008",
+      "peer": "pij-kind-turkey",
+      "root": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-snapshot-loader",
+      "source": "3a635c17110521a3ed93d03daf5eface57dc0bfd",
+      "pid": 68495,
+      "model": "github-copilot/gpt-6-astra",
+      "method": "Builder observed native binding plus live peer acceptance/implementation-start message."
+    }
+  ],
+  "remaining_status": "All seven native workers acknowledged implementation; snapshot halves explicitly released to existing Copilot/Cursor owners. No validation/delivery acceptance claimed."
+}

@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "target/debug/unisphere",
+    "adapters",
+    "--help",
+    "--json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog",
+  "at": "2026-09-08T04:17:05.007Z",
+  "exit_code": 0,
+  "stdout": "{\"ok\":true,\"command\":\"help\",\"v\":1,\"data\":{\"text\":\"Describe registered adapters and symbolic location hints; no source discovery\\n\\nUsage: unisphere adapters [OPTIONS] <COMMAND>\\n\\nCommands:\\n  list  List registered production adapters, not detected installations\\n\\nOptions:\\n      --json   Write one versioned JSON response\\n      --human  Write readable descriptions and symbolic location hints\\n  -h, --help   Print help\\n\"}}\n",
+  "stderr": ""
+}

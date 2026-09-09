@@ -1,0 +1,91 @@
+{
+  "dd": {
+    "schema": "builder/backpressure"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Backpressure survey",
+        "plan": "../plan.dd.json#meta",
+        "certainty": "Proven",
+        "basis_sha": "b5cfc5fb5d3d590589607010f963b522acd34b2c77154a08aabbebc0d24d68d8"
+      }
+    },
+    {
+      "name": "rows",
+      "value": [
+        {
+          "id": "bp-0001",
+          "criterion": "A successful adapters list --json emits one v1 machine-readable envelope containing only registered production adapters, with stable id, application name and concise description.",
+          "phase": "ph-14a2",
+          "mode": "EXTEND",
+          "tier": "computational",
+          "proof": "EXTEND→RUN: Machine-parse real CLI v1 catalog and assert registered Claude metadata.",
+          "state": "checked",
+          "probe": "Inspected existing app registry, injected CLI output, core serialization and collection proof; catalog is not implemented yet.",
+          "receipt": "execution-log.dd.json#entries/lg-0002"
+        },
+        {
+          "id": "bp-0002",
+          "criterion": "Each descriptor gives structured usual-location hints with platform, home base, relative path, session glob and storage format; hints never assert a local installation or existing store.",
+          "phase": "ph-14a2",
+          "mode": "EXTEND",
+          "tier": "computational",
+          "proof": "EXTEND→RUN: Inspect parsed location hints; repeat real command under hostile HOME/CLAUDE_CONFIG_DIR and compare bytes.",
+          "state": "checked",
+          "probe": "Inspected existing app registry, injected CLI output, core serialization and collection proof; catalog is not implemented yet.",
+          "receipt": "execution-log.dd.json#entries/lg-0002"
+        },
+        {
+          "id": "bp-0003",
+          "criterion": "Capabilities describe explicit export platforms/formats and a caller-owned SDK cursor with an append-only source assumption, separately from unsupported persisted CLI resume, delayed revision reconciliation and lossless archival.",
+          "phase": "ph-14a2",
+          "mode": "EXTEND",
+          "tier": "human-judgement",
+          "proof": "EXTEND→RUN: Assert named capabilities and limitations against existing collector/loader/export contracts and docs/fidelity.md.",
+          "state": "checked",
+          "probe": "Inspected existing app registry, injected CLI output, core serialization and collection proof; catalog is not implemented yet.",
+          "receipt": "execution-log.dd.json#entries/lg-0002"
+        },
+        {
+          "id": "bp-0004",
+          "criterion": "Catalog listing performs no source loading, private-store scan, home/config environment expansion or command execution; actual discovery remains explicit and caller-overridable.",
+          "phase": "ph-14a2",
+          "mode": "EXTEND",
+          "tier": "computational",
+          "proof": "EXTEND→RUN: Real catalog under inaccessible synthetic store roots; inspect no collector call through fixture registration test.",
+          "state": "checked",
+          "probe": "Inspected existing app registry, injected CLI output, core serialization and collection proof; catalog is not implemented yet.",
+          "receipt": "execution-log.dd.json#entries/lg-0002"
+        },
+        {
+          "id": "bp-0005",
+          "criterion": "Metadata and executable dispatch derive from one registration, and every production descriptor id equals emitted unisphere.source.adapter provenance. A fixture registration exposes its descriptor and runs its adapter, while the production catalog excludes fixtures and existing config/session behavior remains compatible.",
+          "phase": "ph-14a2",
+          "mode": "EXTEND",
+          "tier": "computational",
+          "proof": "EXTEND→RUN: Extend the existing second-registration behavioral test to observe both catalog and export through the same registry.",
+          "state": "checked",
+          "probe": "Inspected existing app registry, injected CLI output, core serialization and collection proof; catalog is not implemented yet.",
+          "receipt": "execution-log.dd.json#entries/lg-0002"
+        },
+        {
+          "id": "bp-0006",
+          "criterion": "Help, invalid arguments and output failures keep existing CLI exit/output safety conventions; no hostile argument content leaks into public errors.",
+          "phase": "ph-14a2",
+          "mode": "EXTEND",
+          "tier": "computational",
+          "proof": "EXTEND→RUN: Real help, invalid argument, human output and injected output failure scenarios; retain existing frontend regressions.",
+          "state": "checked",
+          "probe": "Inspected existing app registry, injected CLI output, core serialization and collection proof; catalog is not implemented yet.",
+          "receipt": "execution-log.dd.json#entries/lg-0002"
+        }
+      ]
+    },
+    {
+      "name": "sensors",
+      "value": []
+    }
+  ]
+}

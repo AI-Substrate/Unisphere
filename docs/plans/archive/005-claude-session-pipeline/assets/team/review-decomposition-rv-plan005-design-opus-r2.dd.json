@@ -1,0 +1,179 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "review",
+      "value": {
+        "record_type": "review",
+        "id": "rv-plan005-design-opus-r2",
+        "recorded_at": "2026-09-08T01:09:55.968318Z",
+        "scope": "decomposition",
+        "subject_sha": "006600d85a6ad5eb38c832dc950c022d5e58aa2d",
+        "plan": {
+          "path": "docs/plans/005-claude-session-pipeline/plan.dd.json",
+          "sha256": "0c28b557a2def3dc075c70403e6768959057c007c428dcb9a4ac23683ac7f830"
+        },
+        "guide": {
+          "path": "docs/plans/005-claude-session-pipeline/assets/impl-guide.dd.json",
+          "sha256": "5520d59344dc2f664af3121df3184c344f659a4c1acceca9432ce06abe242777"
+        },
+        "reviewer_id": "pij-huge-nigel",
+        "requested": {
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5",
+          "effort": "high",
+          "source": {
+            "harness": "guide",
+            "model": "guide",
+            "effort": "guide"
+          }
+        },
+        "observed": {
+          "peer_id": "pij-huge-nigel",
+          "root": "/Users/jordanknight/substrate/unisphere/unishpere-main",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5",
+          "effort": "high",
+          "native_session": "01a07e75-cb05-70b6-a10d-db61a6ed87d8",
+          "pid": 71450,
+          "argv": [
+            "omp",
+            "--auto-approve",
+            "--model",
+            "github-copilot/claude-opus-5",
+            "--thinking",
+            "high"
+          ],
+          "prior_review": {
+            "subject_sha": "21a9f98787ad8f3de4b00e0f8b715c8600db643e",
+            "report": "docs/plans/005-claude-session-pipeline/assets/reviews/design-opus-r1.md",
+            "receipt": ".harness/temp/plan005-design-review-r1.dd.json",
+            "modified_by_this_review": false
+          },
+          "evidence": [
+            "git rev-parse HEAD == 006600d85a6ad5eb38c832dc950c022d5e58aa2d with a clean working tree for all reviewed paths (only untracked .dd/schemas/builder/work-packet/).",
+            "Recomputed plan sha256 0c28b557... and guide sha256 5520d593... equal the packet values and assets/design-v2-validation.json#basis.",
+            "Delta from 21a9f987 is docs-only: 15 files, +2467/-54; assets/design-review-dispositions.json records source_changes:false; no crate source touched.",
+            "Structural section diff bounded the reread: guide meta/architecture/capabilities/units/checks changed; fan_out/baseline/isolation/roles/composition/review/risks unchanged; plan non_goals and acceptance_criteria changed.",
+            "Contracts C1,C2,C3,C5,C6,C8,C9,C10,C11,C12,C13 changed and were read in full; unchanged C0,C4,C7 were re-read as the surfaces the amendments land on.",
+            "Cross-checks against frozen surfaces: MappingDiagnosticCode already contains UnsupportedRecord/InvalidField/ContentOmitted; SessionAdapter::name() and map()->Result already exist in C4; CollectionApi is object-safe as written; arch-check cli allow-list (core|clap|serde_json) remains sufficient; unit paths confirm docs/telemetry-profile.md is owned solely by tk-0004.",
+            "Upstream pins verified by fetching the pinned bytes: opentelemetry-proto@bb8796bf logs.proto line 227 'string event_name = 12;' with '[Since v1.5.0]'; semantic-conventions-genai@94f432d7 model/gen-ai/gen-ai-input-messages.json resolves and carries role/parts/text/reasoning/tool_call/tool_call_response/arguments/response/id.",
+            "F13 precedent verified from repository history: Cargo.toml at 18ee516 declares unisphere-sdk/unisphere-cli path entries; git ls-tree 18ee516 crates/ lists only core and testkit; Cargo.lock at that commit names only unisphere-core and unisphere-testkit.",
+            "assets/design-v2-validation.json read: four checks all exit 0 - builder guide --check ok, plan validate 0 error/0 warn/0 contradictions/12 expected pre-task orphans, ddocs validate 0/0, ddocs build --check drift:false."
+          ],
+          "gaps": [
+            "No build, test, lint or formatter was executed; the packet excludes them, so nothing in this review is an execution claim.",
+            "vd-0001 through vd-0006 remain unexecuted; the dispositions record states proof_not_claimed for all new implementation checks.",
+            "F13's acceptance carries a live obligation rather than a proof: the actual vd-0001 baseline run must show workspace independence with crates/loader-jsonl, crates/adapter-claude and crates/output-otlp absent before seal.",
+            "No private Claude store was read; fixture and content-shape reasoning rests on the sanitized inputs and the pinned GenAI schema only.",
+            "Reviewer model and effort are the observed launch configuration and pij registry record, not a provider attestation.",
+            "Two single-owner implementation choices are recorded as guidance rather than findings because they sit inside tk-0005 and touch no frozen type: where --adapter is validated given run_sessions receives an already-constructed collector (exit 2 is the consistent reading under C11), and the fact that the adapter's non-UTF8 SessionRef rule is stated in loader contract C2 while binding tk-0003."
+          ]
+        },
+        "verdict": "approved",
+        "report": {
+          "path": "docs/plans/005-claude-session-pipeline/assets/reviews/design-opus-r2.md",
+          "sha256": "07d51bf6038d3cbb21553290225cb41f371d3102cb2422ba171dcb5b58ccdf16"
+        },
+        "findings": [
+          {
+            "id": "F1",
+            "severity": "high",
+            "disposition": "fixed",
+            "description": "Core-owned CollectionApi + CollectionBatch in C1, object-safe as written; SDK Collector<L,A,W> implements it (C10); CLI gains run_sessions(args,context,&dyn CollectionApi,stdout,stderr) while the existing run keeps its signature as a distinct operation (C11); FakeCollector lands in tk-0001-owned crates/testkit/src/collection.rs. CLI still imports core only, so arch-check's cli->core|clap|serde_json allow-list needs no weakening and no composition-time core edit is required.",
+            "evidence": "guide C1, C10, C11; units tk-0001 interface; crates/testkit/src/bin/unisphere-arch-check.rs:19-21"
+          },
+          {
+            "id": "F2",
+            "severity": "high",
+            "disposition": "fixed",
+            "description": "C3 returns RecordLimit at the record START offset with no batch and no next cursor; the caller retains its previous cursor and retrying the SAME cursor with larger max_record_bytes plus compatible max_batch_bytes recovers all data. The error precedes mapping and writing, so nothing was emitted and the retry cannot duplicate output. CLI remedy names --max-record-bytes/--max-batch-bytes and never skips the record; vd-0002 carries the retry-succeeds case and ac-0003 states the guarantee.",
+            "evidence": "guide C3; checks vd-0002; plan ac-0003"
+          },
+          {
+            "id": "F3",
+            "severity": "high",
+            "disposition": "fixed",
+            "description": "C2 makes the file loader explicitly Unix-only for this release with BOTH list_sessions and read_batch failing fast Unsupported before I/O and no misleading first-batch-only success; C5 has Unsupported explain that boundary without raw OS text. Pure mapper, writer and core do not inherit the restriction. A new plan non-goal names macOS/Linux and rejects implicit partial support; ac-0003 carries it; vd-0002 covers the non-Unix case.",
+            "evidence": "guide C2, C5; plan non_goals, ac-0003; checks vd-0002"
+          },
+          {
+            "id": "F4",
+            "severity": "medium",
+            "disposition": "fixed",
+            "description": "C13 specifies a two-layer proof: the metadata check plus a source scan over non-test production core and adapter-claude sources denying std::{fs,env,process,net,thread}, SystemTime/Instant::now, unsafe/extern FFI and include_str!/include_bytes!. Negative fixtures must exercise fully-qualified AND grouped imports, a clock call and include macros, and must fail, so the sensor is falsifiable. The false-negative bound is documented and independent source review is retained; no formal no-I/O proof is claimed from a regex. Core is explicitly permitted to name std::io::Write as a port type (without which the F1 fix would trip this check) and the scan must distinguish #[cfg(test)] modules.",
+            "evidence": "guide C13; checks vd-0006; crates/testkit/src/bin/unisphere-arch-check.rs"
+          },
+          {
+            "id": "F5",
+            "severity": "medium",
+            "disposition": "fixed",
+            "description": "C6 closes the required key/type registry including the unisphere.source.kind value domain (raw native type string, literal unknown otherwise, with InvalidField on missing/non-string type and UnsupportedRecord for unknown kinds); C8 closes usage to exactly four component keys copied from identically spelled native components plus unisphere.usage.scope=native_record_snapshot, with no other usage keys in v1. Every diagnostic code invoked already exists in C4's closed MappingDiagnosticCode enum and SessionAdapter::name() already exists, so no undeclared surface is introduced. docs/telemetry-profile.md is sole normative owner (tk-0004) and docs/claude-adapter.md (tk-0003) references it, so tk-0001 can write the wave-0 conformance helper against a frozen key set.",
+            "evidence": "guide C6, C8, C4; units tk-0003, tk-0004"
+          },
+          {
+            "id": "F6",
+            "severity": "medium",
+            "disposition": "fixed",
+            "description": "C9 pins opentelemetry-proto@bb8796bff67cf6e1c7f218e21de6eaec0841871e logs.proto. Independently fetched and read at that exact SHA: line 227 is 'string event_name = 12;' annotated '[Since v1.5.0]', confirming field number, version claim and C6's category-not-instance reading. The message-part reference semantic-conventions-genai@94f432d7126f5884d30a2cdde6f4e89908ebb6fd model/gen-ai/gen-ai-input-messages.json also resolves at that SHA and carries role/parts/text/reasoning/tool_call+arguments/tool_call_response+response/id, matching C7 term for term. C9 further documents the intentionally absent resource/schemaUrl/severity*/observedTimeUnixNano/flags/traceId/spanId and the absent-timestamp case, and frames the output as source-derived LogsData rather than an instrumented GenAI span.",
+            "evidence": "guide C9, C7; checks vd-0004; upstream bytes read at both pinned SHAs"
+          },
+          {
+            "id": "F7",
+            "severity": "medium",
+            "disposition": "fixed",
+            "description": "C5 splits Limit into RecordLimit/BatchLimit/ListingLimit/OutputLimit with codes UNI-LIMIT-RECORD/-BATCH/-LISTING/-OUTPUT and four distinct fixed remediations, and defines offset semantics per kind (record start; optional for batch/output; None for listing), which was the specific information loss r1 flagged. Errors never return a committed cursor; still no free-form text or source bytes in diagnostics.",
+            "evidence": "guide C5"
+          },
+          {
+            "id": "F8",
+            "severity": "low",
+            "disposition": "fixed",
+            "description": "C3 gives ReadLimits public fields plus validate()->Result<(),PipelineError>, called by FileSessionLoader and SDK collect_batch before any I/O or port invocation, with non-positive values or max_batch_bytes<max_record_bytes as InvalidInput; C2 defines SourceScope.max_sessions==0 as InvalidInput. Validation in both places is deliberate defence in depth for SDK callers bypassing the loader and stays deterministic because both call the same function. C3 also fixes byte accounting to physical LF/CR bytes with checked arithmetic.",
+            "evidence": "guide C2, C3"
+          },
+          {
+            "id": "F9",
+            "severity": "low",
+            "disposition": "fixed",
+            "description": "C2 has FileSessionLoader reject non-UTF8 root/session paths at listing and read boundaries with InvalidInput before opening or returning a bad path, and has pure adapters defensively reject a caller-supplied non-UTF8 SessionRef rather than coerce lossily. The defensive half has a channel because C4's map already returns Result<MappedBatch,PipelineError>.",
+            "evidence": "guide C2, C4"
+          },
+          {
+            "id": "F10",
+            "severity": "low",
+            "disposition": "fixed",
+            "description": "C9 exports MAX_OUTPUT_BATCH_BYTES=33_554_432 from core and requires serialization through a capped Write buffer that refuses growth past the cap, explicitly forbidding serialize-then-measure. A breach returns OutputLimit before touching the destination, so no partial bytes and no cursor advance, composing correctly with C10 checkpoint-only-on-success; the honest partial-write/no-rollback limit is retained. vd-0004 covers the cap.",
+            "evidence": "guide C9, C10; checks vd-0004"
+          },
+          {
+            "id": "F11",
+            "severity": "low",
+            "disposition": "fixed",
+            "description": "C2 and C11 put recursive:false and the explicit root in the versioned list response, require --help and docs to state the leaf project directory requirement, and require an explanatory stderr diagnostic on an empty or non-.jsonl leaf directory, with 'never claims recursive search' stated outright. vd-0002 covers the empty-leaf case; the non-recursive design choice is unchanged.",
+            "evidence": "guide C2, C11; checks vd-0002"
+          },
+          {
+            "id": "F12",
+            "severity": "low",
+            "disposition": "fixed",
+            "description": "ac-0001 proof is now vd-0003, vd-0005, vd-0006, so the traceability for the user's headline requirement cites the check that actually tests it.",
+            "evidence": "guide capabilities/ac-0001"
+          },
+          {
+            "id": "F13",
+            "severity": "low",
+            "disposition": "accepted",
+            "description": "PM accepted the flag on a Plan001 precedent, which I verified directly rather than took on assertion: at 18ee516 root Cargo.toml declared unisphere-sdk and unisphere-cli path entries while git ls-tree shows only crates/core and crates/testkit present, and that same commit carries a Cargo.lock naming exactly unisphere-core and unisphere-testkit - so cargo resolved the workspace with path declarations pointing at absent directories. members=[\"crates/*\"] is a glob, so absent directories never become members. C12 binds the acceptance to a live obligation: the actual vd-0001 baseline run must prove independence with all three future package directories absent before seal, and a failure is fixed by correcting root declarations, explicitly not by adding stubs and not by mutating a frozen root manifest in wave 2. vd-0001 was not executed here because the packet excludes execution.",
+            "evidence": "guide C12; Cargo.toml at 18ee516; git ls-tree 18ee516 crates/; Cargo.lock at 18ee516; Cargo.toml:2 at HEAD"
+          }
+        ]
+      }
+    }
+  ],
+  "references": []
+}

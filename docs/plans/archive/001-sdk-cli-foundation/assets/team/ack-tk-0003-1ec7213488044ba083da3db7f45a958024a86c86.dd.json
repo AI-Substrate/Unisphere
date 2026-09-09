@@ -1,0 +1,56 @@
+{
+  "dd": {
+    "schema": "builder/packet"
+  },
+  "sections": [
+    {
+      "name": "ack",
+      "value": {
+        "record_type": "ack",
+        "id": "ack-tk-0003-1ec7213488044ba083da3db7f45a958024a86c86",
+        "nonce": "9e5b4b55-68c0-4972-89e2-603f34f4dadc",
+        "recorded_at": "2026-09-07T07:17:35.623Z",
+        "unit_id": "tk-0003",
+        "peer_id": "pij-standard-impala",
+        "packet_sha256": "e99c81186cb4a1c7a58135199a418beb88c28ecd934ba6faaf01a98c75b2445f",
+        "baseline_sha": "1ec7213488044ba083da3db7f45a958024a86c86",
+        "native_root": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli",
+        "shell_cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli",
+        "canary_nonce": "3e538951-f8d5-49a5-81a1-b3a0f6fa3a5f",
+        "observed": {
+          "peer_id": "pij-standard-impala",
+          "root": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/gpt-6-astra",
+          "effort": "high",
+          "native_session": "01a07ab0-a224-7000-af38-3738da86dae6",
+          "pid": 38381,
+          "argv": [
+            "bun",
+            "/Users/jordanknight/.npm-global/bin/omp",
+            "--auto-approve",
+            "--model",
+            "github-copilot/gpt-6-astra",
+            "--thinking",
+            "high"
+          ],
+          "evidence": [
+            "Native relative read of packet and canary succeeded; packet SHA-256 independently computed.",
+            "git rev-parse HEAD matched baseline; pwd and native kernel cwd matched packet workspace.",
+            "pij state text view reported harness omp, parent pij-right-kotallo and expected cwd.",
+            "Process ancestry observed omp PID 38381, model and --thinking high; developer runtime context independently names model github-copilot/gpt-6-astra.",
+            "PI_SESSION_FILE supplies native session binding.",
+            "Fresh pre-work re-observation after PM local-exclude change: native relative packet/canary, HEAD, shell/native roots, pij state, PI_SESSION_FILE and live PID/argv unchanged.",
+            "Native session header at /Users/jordanknight/.omp/agent/sessions/-substrate-unisphere-unisphere-plan001-cli/2026-09-07T07-06-31-332Z_01a07ab0-a224-7000-af38-3738da86dae6.jsonl:2 supplies id 01a07ab0-a224-7000-af38-3738da86dae6; adjacent model_change/thinking_level_change record github-copilot/gpt-6-astra and high."
+          ],
+          "gaps": [
+            "Requested and process launch settings are not provider attestation.",
+            "pij state --json exited 4: schema projection refused because rs role differs from orchestrationRole and 14 further fields are absent."
+          ]
+        }
+      }
+    }
+  ],
+  "references": []
+}

@@ -1,0 +1,17 @@
+{
+  "argv": [
+    "cargo",
+    "run",
+    "--locked",
+    "-p",
+    "unisphere-testkit",
+    "--bin",
+    "unisphere-proof",
+    "--",
+    "sdk-consumer"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+  "exit_code": 0,
+  "stdout": "foundation proof sdk-consumer: passed (temporary isolated build and product runtime; no telemetry-reader claim)\n",
+  "stderr": "    Blocking waiting for file lock on package cache\n    Blocking waiting for file lock on package cache\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.14s\n     Running `target/debug/unisphere-proof sdk-consumer`\n"
+}

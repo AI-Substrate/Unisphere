@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "cargo",
+    "run",
+    "--locked",
+    "-p",
+    "unisphere-app",
+    "--",
+    "config",
+    "check",
+    "--json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+  "exit_code": 0,
+  "stdout": "{\"ok\":true,\"command\":\"config.check\",\"v\":1,\"data\":{\"configuration\":{\"source_roots\":[]}}}\n",
+  "stderr": "   Compiling proc-macro2 v1.0.107\n   Compiling quote v1.0.47\n   Compiling utf8parse v0.2.2\n   Compiling anstyle v1.0.14\n   Compiling colorchoice v1.0.5\n   Compiling is_terminal_polyfill v1.70.2\n   Compiling anstyle-query v1.1.5\n   Compiling strsim v0.11.1\n   Compiling heck v0.5.0\n   Compiling clap_lex v1.1.0\n   Compiling anstyle-parse v1.0.0\n   Compiling anstream v1.0.0\n   Compiling clap_builder v4.6.6\n   Compiling syn v3.0.5\n   Compiling serde_derive v1.0.229\n   Compiling clap_derive v4.6.4\n   Compiling clap v4.6.6\n   Compiling serde v1.0.229\n   Compiling unisphere-core v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/crates/core)\n   Compiling unisphere-cli v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/crates/cli)\n   Compiling unisphere-sdk v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/crates/sdk)\n   Compiling unisphere-app v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/crates/app)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.52s\n     Running `target/debug/unisphere config check --json`\n",
+  "data": {
+    "ok": true,
+    "command": "config.check",
+    "v": 1,
+    "data": {
+      "configuration": {
+        "source_roots": []
+      }
+    }
+  }
+}

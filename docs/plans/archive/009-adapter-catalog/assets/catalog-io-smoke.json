@@ -1,0 +1,21 @@
+{
+  "recorded_at": "2026-09-08T04:46:34.507Z",
+  "argv": [
+    "cargo",
+    "run",
+    "--quiet",
+    "--target-dir",
+    "target",
+    "--manifest-path",
+    ".harness/temp/catalog-io-smoke/Cargo.toml"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog",
+  "manifest": "[package]\nname = \"catalog-io-smoke\"\nversion = \"0.0.0\"\nedition = \"2024\"\n[workspace]\n[dependencies]\nunisphere-cli = { path = \"/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog/crates/cli\" }\n",
+  "consumer_source": "use std::io::{self, Write};\nuse unisphere_cli::{run_adapters, CliContext};\nstruct Faulty { fail_flush: bool, bytes: Vec<u8> }\nimpl Write for Faulty {\n fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {\n  if !self.fail_flush { return Err(io::Error::other(\"SYNTHETIC-PRIVATE-IO\")); }\n  self.bytes.extend_from_slice(bytes); Ok(bytes.len())\n }\n fn flush(&mut self) -> io::Result<()> { Err(io::Error::other(\"SYNTHETIC-PRIVATE-IO\")) }\n}\nfn main() {\n let context = CliContext { cwd: \"/unused\".into(), stdout_is_terminal: false, version: \"smoke\".into() };\n for fail_flush in [false, true] {\n  let mut output = Faulty { fail_flush, bytes: Vec::new() };\n  let mut errors = Vec::new();\n  let args = [\"unisphere\", \"adapters\", \"list\", \"--json\"].map(Into::into).to_vec();\n  assert_eq!(run_adapters(args, &context, &[], &mut output, &mut errors), 1);\n  assert!(!String::from_utf8(errors).unwrap().contains(\"SYNTHETIC-PRIVATE-IO\"));\n }\n println!(\"Actual embedded catalog: write and flush failures return exit 1; private I/O detail is not emitted.\");\n}\n",
+  "execution": {
+    "exit_code": 0,
+    "result": "Actual embedded catalog: write and flush failures return exit 1; private I/O detail is not emitted.\n",
+    "stderr": ""
+  },
+  "temporary_consumer_removed": true
+}

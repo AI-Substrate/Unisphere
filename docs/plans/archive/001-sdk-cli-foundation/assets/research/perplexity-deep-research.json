@@ -1,0 +1,153 @@
+{
+  "id": "ec60d860-0ea7-4895-9899-3a71ffa9646c",
+  "model": "sonar-deep-research",
+  "created": 1788748503,
+  "usage": {
+    "prompt_tokens": 232,
+    "completion_tokens": 16142,
+    "total_tokens": 16374,
+    "citation_tokens": 6812,
+    "num_search_queries": 45,
+    "reasoning_tokens": 69324,
+    "cost": {
+      "input_tokens_cost": 0.00046,
+      "output_tokens_cost": 0.12914,
+      "citation_tokens_cost": 0.01362,
+      "reasoning_tokens_cost": 0.20797,
+      "search_queries_cost": 0.225,
+      "total_cost": 0.5762
+    }
+  },
+  "citations": [
+    "https://opentelemetry.io/docs/specs/otel/protocol/file-exporter/",
+    "https://opentelemetry.io/docs/specs/otlp/",
+    "https://deepwiki.com/open-telemetry/semantic-conventions-genai",
+    "https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/",
+    "https://github.com/open-telemetry/semantic-conventions/blob/main/docs/gen-ai/README.md",
+    "https://github.com/open-telemetry/semantic-conventions-genai",
+    "https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-events.md",
+    "https://john-hodge.com/blog/opentelemetry-genai-semantic-conventions/",
+    "https://deepwiki.com/open-telemetry/opentelemetry-specification/5.1-otlp-exporters",
+    "https://opentelemetry-python.readthedocs.io/en/latest/exporter/otlp/otlp.html",
+    "https://opentelemetry.io/docs/specs/otel/common/",
+    "https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-agent-spans.md",
+    "https://aws-otel.github.io/docs/components/misc-exporters",
+    "https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/openai.md",
+    "https://greptime.com/blogs/2026-05-09-opentelemetry-genai-semantic-conventions",
+    "https://github.com/open-telemetry/opentelemetry-collector-contrib/discussions/33687",
+    "https://github.com/open-telemetry/opentelemetry-collector",
+    "https://open-telemetry-opentelemetry-rust.mintlify.app/examples/otlp-http"
+  ],
+  "search_results": [
+    {
+      "title": "OpenTelemetry Protocol File Exporter",
+      "url": "https://opentelemetry.io/docs/specs/otel/protocol/file-exporter/",
+      "snippet": "# OpenTelemetry Protocol File Exporter\n**Status**: Development\nThis document provides a placeholder for specifying an OTLP exporter capable of\nexporting to either a file or stdout.\nCurrently, it only describes the serialization of OpenTelemetry data to the OTLP JSON format.\n...\nThe metric exporter M...",
+      "source": "web"
+    },
+    {
+      "title": "OTLP Specification 1.11.0",
+      "url": "https://opentelemetry.io/docs/specs/otlp/",
+      "snippet": "**Status**:\n- Stable for the trace, metric and log signals.\n- Development for the profiles signal.\nThe OpenTelemetry Protocol (OTLP) specification describes the encoding, transport,\nand delivery mechanism of telemetry data between telemetry sources, intermediate\nnodes such as collectors and telemetr...",
+      "source": "web"
+    },
+    {
+      "title": "open-telemetry/semantic-conventions-genai | DeepWiki",
+      "url": "https://deepwiki.com/open-telemetry/semantic-conventions-genai",
+      "snippet": "The `semantic-conventions-genai` repository defines the standard OpenTelemetry Semantic Conventions for Generative AI systems.\nThis includes telemetry schemas for Large Language Model (LLM) inference, AI agents, vector database retrieval, tool execution, and the Model Context Protocol (MCP) README.m...",
+      "source": "web"
+    },
+    {
+      "title": "OTLP Exporter Configuration",
+      "url": "https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/",
+      "snippet": "A base endpoint URL for any signal type, with an optionally-specified port\nnumber.\nHelpful for when you\u2019re sending more than one signal to the same\n...\n**Default value:**\n- gRPC: `\"http://localhost:4317\"`\n- HTTP: `\"http://localhost:4318\"`\n**Example:**\n- gRPC: `export OTEL_EXPORTER_OTLP_ENDPOINT=\"htt...",
+      "source": "web"
+    },
+    {
+      "title": "semantic-conventions/docs/gen-ai/README.md at main \u00b7 open-telemetry/semantic-conventions",
+      "url": "https://github.com/open-telemetry/semantic-conventions/blob/main/docs/gen-ai/README.md",
+      "snippet": "open-telemetry / **\nsemantic-conventions ** Public\n##\n...\n# Semantic conventions for generative AI systems\n**Status**: Development\nWarning\n...\nSemantic conventions for Generative AI operations are defined for the following signals:\n- Events : Semantic Conventions for Generative AI inputs and outputs...",
+      "source": "web"
+    },
+    {
+      "title": "GitHub - open-telemetry/semantic-conventions-genai",
+      "url": "https://github.com/open-telemetry/semantic-conventions-genai",
+      "snippet": "open-telemetry / **\nsemantic-conventions-genai ** Public\n**6 ** Branches **0 ** Tags\n...\n# OpenTelemetry GenAI Semantic Conventions\nSemantic Conventions for Generative AI (GenAI), including spans, metrics,\nand events for GenAI clients, MCP (Model Context Protocol), and\nprovider-specific conventions ...",
+      "source": "web"
+    },
+    {
+      "title": "Semantic conventions for Generative AI events - GitHub",
+      "url": "https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-events.md",
+      "snippet": "open-telemetry / **\nsemantic-conventions-genai ** Public\n##\n...\n**Status**: Development\n- Event: `gen_ai.client.inference.operation.details`\n- Event: `gen_ai.evaluation.result`\n...\nDescribes the details of a GenAI completion request including chat history and parameters.\n...\n**Requirement level:** O...",
+      "source": "web"
+    },
+    {
+      "title": "The state of the OpenTelemetry GenAI semantic conventions ...",
+      "url": "https://john-hodge.com/blog/opentelemetry-genai-semantic-conventions/",
+      "snippet": "The conventions moved to a dedicated repository in 2026, every GenAI-specific surface remains in Development status, and the popular frameworks emit several different generations of the attributes at once.\n...\nThe GenAI conventions now live in their own repository,\nopen-telemetry/semantic-convention...",
+      "source": "web"
+    },
+    {
+      "title": "OTLP Exporters | open-telemetry/opentelemetry-specification | DeepWiki",
+      "url": "https://deepwiki.com/open-telemetry/opentelemetry-specification/5.1-otlp-exporters",
+      "snippet": "This document provides detailed technical documentation for the OpenTelemetry Protocol (OTLP) Exporters, which are responsible for transmitting telemetry data (traces, metrics, and logs) from OpenTelemetry SDK implementations to telemetry backends.\nIt covers configuration options, protocol specifica...",
+      "source": "web"
+    },
+    {
+      "title": "OpenTelemetry OTLP Exporters \u2014 OpenTelemetry Python documentation",
+      "url": "https://opentelemetry-python.readthedocs.io/en/latest/exporter/otlp/otlp.html",
+      "snippet": "This library allows to export tracing data to an OTLP collector.\n...\nThis library allows exporting OpenTelemetry telemetry to a file or stream\nin OTLP JSON (JSON Lines) format.\n...\nThe **OTLP JSON File Exporter** writes traces, metrics, and logs as compact JSON Lines to a file, an arbitrary `IO[str]...",
+      "source": "web"
+    },
+    {
+      "title": "Common specification concepts",
+      "url": "https://opentelemetry.io/docs/specs/otel/common/",
+      "snippet": "`AnyValue` is either:\n- a primitive type: string, boolean, double precision floating point\n(IEEE 754-1985), or signed 64 bit integer,\n- a homogeneous array of primitive type values.\nA homogeneous array MUST NOT\ncontain values of different types.\n- a byte array.\n- an array of `AnyValue`,\n- a `map<str...",
+      "source": "web"
+    },
+    {
+      "title": "Semantic Conventions for GenAI agent and framework spans",
+      "url": "https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-agent-spans.md",
+      "snippet": "**Status**: Development\n- Semantic Conventions for GenAI agent and framework spans - Spans - Create agent span\n- Invoke agent client span\n...\nThis document defines semantic conventions for GenAI agent calls that are defined by this whitepaper .\nIt MAY be applicable to agent operations that are perfo...",
+      "source": "web"
+    },
+    {
+      "title": "Logging and File Exporter",
+      "url": "https://aws-otel.github.io/docs/components/misc-exporters",
+      "snippet": "The logging exporter and file exporter are included as a part of the AWS Distro for OpenTelemetry(ADOT).\nAn exporter is a component in the\nOpenTelemetry Collector configured to send data to different systems/back-ends.\nAn exporter translates the OpenTelemetry protocol (OTLP) formatted data to a diff...",
+      "source": "web"
+    },
+    {
+      "title": "semantic-conventions-genai/docs/gen-ai/openai.md at main - GitHub",
+      "url": "https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/openai.md",
+      "snippet": "|Key|Stability|Requirement Level|Value Type|Description|Example Values|\n...\n|`gen_ai.conversation.id`| |`Conditionally Required` [4]|string|The unique identifier for a conversation (session, thread), used to store and correlate messages within this conversation.\n[5]|`conv_5j66UpCpwteGg4YSxUnt7lPY`|\n...",
+      "source": "web"
+    },
+    {
+      "title": "How OpenTelemetry Traces LLM Calls, Agent Reasoning, ...",
+      "url": "https://greptime.com/blogs/2026-05-09-opentelemetry-genai-semantic-conventions",
+      "snippet": "In April 2024, OpenTelemetry formed the GenAI Special Interest Group (GenAI SIG) under the Semantic Conventions SIG^[1]^.\nThe original scope was LLM client call tracing.\nSince then it has expanded to cover agent orchestration, MCP tool calling, content capture, and quality evaluation: six layers in ...",
+      "source": "web"
+    },
+    {
+      "title": "Export to file, receive from file - lossless? #33687",
+      "url": "https://github.com/open-telemetry/opentelemetry-collector-contrib/discussions/33687",
+      "snippet": "I got an answer on this from a very helpful Mastodon user, who linked the\n```\notlpjsonfile\n```\nreceiver..\nafter testing it I've found it works perfectly, pulling in all of my exported logs/metrics/traces that were output by the\n```\nfile\n```\nexporter.\nThis is what my rehydration side receivers look l...",
+      "source": "web"
+    },
+    {
+      "title": "open-telemetry/opentelemetry-collector",
+      "url": "https://github.com/open-telemetry/opentelemetry-collector",
+      "snippet": "```\n$ cosign verify \\\n--certificate-identity=https://github.com/open-telemetry/opentelemetry-collector-releases/.github/workflows/base-release.yaml@refs/tags/<RELEASE_TAG> \\\n--certificate-oidc-issuer=https://token.actions.githubusercontent.com \\\n<OTEL_COLLECTOR_IMAGE>\n```\nwhere:\n- `<RELEASE_TAG>`: i...",
+      "source": "web"
+    },
+    {
+      "title": "OTLP HTTP Exporter - OpenTelemetry Rust",
+      "url": "https://open-telemetry-opentelemetry-rust.mintlify.app/examples/otlp-http",
+      "snippet": "# OTLP HTTP Exporter\n> Export telemetry data via OTLP over HTTP to observability backends\n## Overview\nThe OTLP (OpenTelemetry Protocol) HTTP exporter allows you to send traces, metrics, and logs to any OpenTelemetry-compatible backend over HTTP.\nThis is the recommended protocol for production deploy...",
+      "source": "web"
+    }
+  ],
+  "capture_note": "Direct sonar-deep-research request completed successfully. The tool retained metadata and citations, but truncated the single JSON message.content line; this is not a complete answer capture. See otel-common-format.md for independently verified primary-source findings.",
+  "source_artifact": "artifact://116"
+}

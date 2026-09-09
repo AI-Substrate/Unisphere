@@ -1,0 +1,7 @@
+{"type":"metadata","metadata":{"overview":"SENSITIVE-OVERVIEW: inspect a synthetic project"}}
+
+{"role":"user","message":{"content":[{"type":"text","text":"SENSITIVE-PROMPT: explain λ\nwithout guessing"}]}}
+{"role":"assistant","message":{"content":[{"type":"text","text":"SENSITIVE-ANSWER\n\nSENSITIVE-NATIVE-MERGED-REASONING"},{"type":"tool_use","name":"read_file","input":{"path":"SENSITIVE-FILE","lines":[1,2],"options":{"exact":true,"fallback":null}}}]}}
+{"role":"assistant","message":{"content":[{"type":"text","text":"SENSITIVE-ANSWER\n\nSENSITIVE-NATIVE-MERGED-REASONING"},{"type":"tool_use","name":"read_file","input":{"path":"SENSITIVE-FILE","lines":[1,2],"options":{"exact":true,"fallback":null}}}]}}
+{"type":"turn_ended","status":"error","error":"SENSITIVE-ERROR"}
+{"type":"turn_ended","status":"success"}

@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "cargo",
+    "run",
+    "--locked",
+    "-p",
+    "unisphere-testkit",
+    "--bin",
+    "unisphere-proof",
+    "--",
+    "native"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "started": "2026-09-08T07:24:48.525Z",
+  "completed": "2026-09-08T07:25:12.788Z",
+  "exit_code": 0,
+  "stdout": "native proof: all registered dialects SDK/CLI/installed parity; changed/deleted/late sources; partial output without checkpoint\nproduct proof native: passed (temporary isolated build and product runtime; explicit native JSONL and revision snapshots; not lossless or final completeness)\n",
+  "stderr": "   Compiling unisphere-core v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/core)\n   Compiling unisphere-testkit v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/crates/testkit)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.69s\n     Running `target/debug/unisphere-proof native`\n"
+}

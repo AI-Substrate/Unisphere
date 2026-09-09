@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "harness",
+    "plan",
+    "validate",
+    "docs/plans/009-adapter-catalog/plan.dd.json",
+    "--json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog",
+  "at": "2026-09-08T03:20:37.222Z",
+  "exit_code": 0,
+  "stdout": "{\"command\":\"plan validate\",\"status\":\"ok\",\"timestamp\":\"2026-09-08T03:20:37.218Z\",\"data\":{\"path\":\"/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog/docs/plans/009-adapter-catalog/plan.dd.json\",\"depth\":3,\"mode\":\"summary\",\"counts\":{\"error\":0,\"warn\":0,\"semantic\":{\"items\":197,\"completable\":20,\"open\":20,\"contradictions\":0,\"orphans\":0,\"in_scope\":197}},\"issues\":[],\"findings\":[],\"summary\":\"20 of 20 completable item(s) are still open — run with --complete for the per-row list, or --address <address> to scope the read.\"},\"next_action\":\"20 of 20 completable item(s) are still open — run with --complete for the per-row list, or --address <address> to scope the read.\"}\n",
+  "stderr": ""
+}

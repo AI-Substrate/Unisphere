@@ -1,0 +1,17 @@
+{
+  "argv": [
+    "cargo",
+    "run",
+    "--locked",
+    "-p",
+    "unisphere-testkit",
+    "--bin",
+    "unisphere-proof",
+    "--",
+    "installed-cli"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+  "exit_code": 0,
+  "stdout": "foundation proof installed-cli: passed (temporary isolated build and product runtime; no telemetry-reader claim)\n",
+  "stderr": "    Blocking waiting for file lock on package cache\n    Blocking waiting for file lock on package cache\n    Blocking waiting for file lock on artifact directory\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.16s\n     Running `target/debug/unisphere-proof installed-cli`\n"
+}

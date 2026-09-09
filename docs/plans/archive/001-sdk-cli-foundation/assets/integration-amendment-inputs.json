@@ -1,0 +1,34 @@
+{
+  "candidate_sha": "560dbd2bf89b3ba030c2c8259c91e5b5f9417ecc",
+  "integration_sha": "83bb8e44fab6dc1feac53a525ee3c87ef3cabc67",
+  "delta_probe": {
+    "argv": [
+      "git",
+      "diff",
+      "--name-only",
+      "--no-renames",
+      "83bb8e44fab6dc1feac53a525ee3c87ef3cabc67",
+      "560dbd2bf89b3ba030c2c8259c91e5b5f9417ecc"
+    ],
+    "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+    "exit_code": 0,
+    "stdout": "AGENTS.md\nCargo.lock\nREADME.md\nTHIRD_PARTY_NOTICES.md\ncrates/app/Cargo.toml\ncrates/app/src/main.rs\ncrates/cli/src/args.rs\ncrates/cli/src/lib.rs\ncrates/cli/src/output.rs\ncrates/cli/tests/frontend.rs\ncrates/sdk/src/fs.rs\ncrates/sdk/src/service.rs\ncrates/sdk/tests/public_api.rs\ncrates/sdk/tests/service_in_isolation.rs\ncrates/testkit/src/bin/unisphere-arch-check.rs\ncrates/testkit/src/bin/unisphere-proof.rs\ndocs/plans/001-sdk-cli-foundation/assets/app-smoke-json.json\ndocs/plans/001-sdk-cli-foundation/assets/app-smoke-pty.json\ndocs/plans/001-sdk-cli-foundation/assets/assembled-composition-smoke.json\ndocs/plans/001-sdk-cli-foundation/assets/assembled-installed-cli-smoke.json\ndocs/plans/001-sdk-cli-foundation/assets/assembled-sdk-consumer-smoke.json\ndocs/plans/001-sdk-cli-foundation/assets/composed-quality-corrected.json\ndocs/plans/001-sdk-cli-foundation/assets/composed-quality-initial.json\ndocs/plans/001-sdk-cli-foundation/assets/composition-ownership-refusal.json\ndocs/plans/001-sdk-cli-foundation/assets/execution-log.dd.json\ndocs/plans/001-sdk-cli-foundation/assets/execution-log.dd.md\ndocs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.json\ndocs/plans/001-sdk-cli-foundation/assets/tasks/phase-1/tasks.dd.md\ndocs/plans/001-sdk-cli-foundation/assets/team/composition.dd.json\ndocs/plans/001-sdk-cli-foundation/assets/team/composition.dd.md\ndocs/plans/001-sdk-cli-foundation/assets/unit-import-command.json\n",
+    "stderr": ""
+  },
+  "exact_refused_paths": [
+    "AGENTS.md",
+    "crates/cli/src/args.rs",
+    "crates/cli/src/lib.rs",
+    "crates/cli/src/output.rs",
+    "crates/cli/tests/frontend.rs",
+    "crates/sdk/src/fs.rs",
+    "crates/sdk/src/service.rs",
+    "crates/sdk/tests/public_api.rs",
+    "crates/sdk/tests/service_in_isolation.rs",
+    "crates/testkit/src/bin/unisphere-arch-check.rs",
+    "crates/testkit/src/bin/unisphere-proof.rs"
+  ],
+  "reason": "PM final formatting required by existing guide prose; four equivalent proof-bin clippy corrections; stale AGENTS product facts updated with oversight approval. Frozen baseline bytes untouched. This is preparation, not an issued amendment or claimed acceptance.",
+  "pending_nonproduct_record": ".harness/records/retro/2026-09-07/005-plan001-composition-friction.md",
+  "future_gate": "Use only the supported installed amendment command after upstream release; bind its final exact candidate/digests then compose --verify and independent review evidence addendum."
+}

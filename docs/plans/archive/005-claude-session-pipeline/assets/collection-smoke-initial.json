@@ -1,0 +1,17 @@
+{
+  "argv": [
+    "cargo",
+    "run",
+    "--locked",
+    "-p",
+    "unisphere-testkit",
+    "--bin",
+    "unisphere-proof",
+    "--",
+    "collection"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline",
+  "exit_code": 0,
+  "stdout": "collection proof: pure adapter, SDK/CLI parity, metadata policy, partial tail, error isolation and installed runtime passed\nfoundation proof collection: passed (temporary isolated build and product runtime; no telemetry-reader claim)\n",
+  "stderr": "   Compiling unisphere-testkit v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline/crates/testkit)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.88s\n     Running `target/debug/unisphere-proof collection`\n"
+}

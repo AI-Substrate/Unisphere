@@ -1,0 +1,1043 @@
+{
+  "schema_version": "harnessability-assessment.v0.2",
+  "run": {
+    "timestamp_utc": "20260907T003141Z",
+    "repo_root": "/Users/jordanknight/substrate/unisphere/unishpere-main",
+    "repo_name": "Unisphere",
+    "branch": "main",
+    "commit": "a7747e04f0701b69ed5e6e21cc967277445d9095",
+    "mode": "static",
+    "commands_executed": [
+      "git status --short --branch",
+      "git rev-parse HEAD",
+      "git ls-files",
+      "date -u +%Y%m%dT%H%M%SZ"
+    ],
+    "commands_skipped": [
+      "All product build, run, test, lint, format, smoke, and validation commands (none supported by the baseline; execution prohibited for this assignment).",
+      "Dependency installation, service boot, cleanup, and all external calls.",
+      "Help/version probes (not needed; parent supplied ambient versions).",
+      "Deep history/dependency analysis (no product source)."
+    ],
+    "safety_notes": [
+      "Only .harness/reports/harnessability/** is written by this assessment.",
+      "No secret values, environment values, agent scratch contents, or transport logs were read.",
+      "No product or harness configuration was edited; no tests or validation commands were run.",
+      "Snapshot is the pre-product baseline before concurrent adoption; parent/sibling setup changes are unverified and excluded from scores.",
+      "Read-only metadata commands supply repository evidence, not product L1 proof."
+    ],
+    "workspace_status": "Dirty: untracked .harness/ and .serena/; no tracked modification in the initial snapshot.",
+    "assessment_scope": "Pre-product baseline; three tracked files; parent-owned onboarding is context only.",
+    "ambient_tooling_reported": {
+      "harness_cli": "0.14.0",
+      "node": "24.7.0",
+      "provenance": "human_supplied; not probed by this assessment"
+    },
+    "onboarding_update": "Parent reports checks/boot loaded with zero convention complaints and both real invocations returned unconfigured exit 2; five isolated harness-composition tests passed. Parent confirms no product source was added. These are parent-reported harness results, not verified by this assessment and not product proof; baseline scores remain unchanged."
+  },
+  "verdict": {
+    "operate_today_percent": 3.7,
+    "operate_today_grade": "F",
+    "adaptability_percent": 0.0,
+    "adaptability_grade": "F",
+    "harnessability_index_percent": 1.85,
+    "harnessability_index_grade": "F",
+    "final_grade": "F",
+    "readiness_level": "H2",
+    "highest_proof_level": "L0",
+    "target_proof_level": "L2",
+    "confidence": "low",
+    "operate_today_points": 1,
+    "operate_today_applicable_max": 27,
+    "adaptability_points": 0,
+    "adaptability_applicable_max": 9,
+    "index_weights": {
+      "operate_today": 0.5,
+      "adaptability": 0.5
+    },
+    "readiness_explanation": "H2 means structurally assessed by this report, not operable. Baseline had no reliable front door (H0); no H3 product path exists.",
+    "proof_scope": "L0 for product claims; Git/date output is metadata only, not a collector invocation.",
+    "confidence_explanation": "Low predictive confidence because no product is implemented; high confidence in directly observed baseline absences. Scores measure current proof affordances, not future architectural quality or engineering difficulty.",
+    "scoring_exclusions": "A3 and B1/B2/B3/B4/B6/B8/B9 excluded as genuinely inapplicable to absent implementation; no invented topology penalty."
+  },
+  "harness_surfaces": [
+    {
+      "name": "Product orientation",
+      "path": "README.md",
+      "kind": "prior",
+      "status": "present_minimal",
+      "notes": "Two-line product purpose, not an operating harness."
+    },
+    {
+      "name": "Canonical governance",
+      "path": ".harness/engineering-harness.md",
+      "kind": "none",
+      "status": "absent_at_baseline",
+      "notes": "Parent-owned adoption may add it; not reviewed or scored here."
+    },
+    {
+      "name": "Canonical CLI and command map",
+      "path": "harness/cli/commands.json",
+      "kind": "none",
+      "status": "absent_at_baseline",
+      "notes": "No harness/cli at baseline; no canonical product command is available."
+    },
+    {
+      "name": "Agent routing",
+      "path": "AGENTS.md",
+      "kind": "none",
+      "status": "absent_at_baseline",
+      "notes": "Parent owns creation; orientation is not deterministic product proof."
+    },
+    {
+      "name": "Local assistant metadata",
+      "path": ".serena/",
+      "kind": "generic",
+      "status": "present_untracked",
+      "notes": "Path inventory only; no contents inspected or operational claims made."
+    },
+    {
+      "name": "Local harness scratch",
+      "path": ".harness/temp/",
+      "kind": "generic",
+      "status": "present_untracked_uninspected",
+      "notes": "Not a product fixture, front door, or proof artifact; excluded from assessment evidence content."
+    }
+  ],
+  "topology": {
+    "primary_type": "pre-product repository",
+    "languages": [],
+    "runtimes": [],
+    "package_roots": [],
+    "service_types": [],
+    "frameworks": [],
+    "ci": [],
+    "is_monorepo": false,
+    "notes": "README promises a common-format telemetry collector; no implemented language, runtime, transport, adapter, package, service, storage, deployment, or test topology exists. Rust-oriented .gitignore is only a clue. Ambient Node and harness CLI belong to onboarding, not product topology."
+  },
+  "axis_a_operate_today": [
+    {
+      "id": "A1",
+      "name": "Cold-start orientation and repo map",
+      "band": "Weak",
+      "points": 1,
+      "evidence": [
+        "E01",
+        "E02"
+      ],
+      "notes": "Purpose is stated in two lines; there is no operating map or first-session product command.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "A2",
+      "name": "Setup and environment contract",
+      "band": "Absent",
+      "points": 0,
+      "evidence": [
+        "E02",
+        "E03",
+        "E06"
+      ],
+      "notes": "No product manifest, lockfile, runtime pin, setup instructions, or configuration contract. Ambient tooling is not a project requirement.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "A3",
+      "name": "Locality of infrastructure and external dependency exposure",
+      "band": "Not applicable",
+      "points": null,
+      "evidence": [
+        "E02",
+        "E08"
+      ],
+      "notes": "No implemented product dependencies to classify. Excluded rather than rewarding an empty repo as hermetic or inventing remote blockers.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "A4",
+      "name": "Harness front door and command discoverability",
+      "band": "Absent",
+      "points": 0,
+      "evidence": [
+        "E02",
+        "E05",
+        "E06"
+      ],
+      "notes": "No canonical front door at baseline; concurrent adoption is recorded but unverified and excluded from these scores.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "A5",
+      "name": "Boot and health/readiness path",
+      "band": "Absent",
+      "points": 0,
+      "evidence": [
+        "E02",
+        "E07"
+      ],
+      "notes": "No executable collector entrypoint or readiness output. This does not require a daemon or HTTP health endpoint; even a one-shot supported invocation is missing.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "A6",
+      "name": "Seed, fixture, reset, and cleanup state",
+      "band": "Absent",
+      "points": 0,
+      "evidence": [
+        "E01",
+        "E02"
+      ],
+      "notes": "No repeatable telemetry input/output fixture; no product state lifecycle is implemented. Database seeding is not presumed.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "A7",
+      "name": "Supported interaction surfaces",
+      "band": "Absent",
+      "points": 0,
+      "evidence": [
+        "E02",
+        "E07"
+      ],
+      "notes": "No product CLI, API, library, worker, or file-based interaction is implemented.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "A8",
+      "name": "Existing deterministic back-pressure sensors",
+      "band": "Absent",
+      "points": 0,
+      "evidence": [
+        "E02"
+      ],
+      "notes": "No product build, schema check, test, local gate, or CI check is present.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "A9",
+      "name": "Observability and evidence artifacts",
+      "band": "Absent",
+      "points": 0,
+      "evidence": [
+        "E02",
+        "E05"
+      ],
+      "notes": "No collector output or diagnostics are defined. Uninspected agent scratch and this assessment are not runtime product evidence.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "A10",
+      "name": "Compounding harness loop",
+      "band": "Absent",
+      "points": 0,
+      "evidence": [
+        "E02",
+        "E05",
+        "E06"
+      ],
+      "notes": "No baseline friction-to-check or proof-record workflow; this run starts assessment history only and does not prove a recurring improvement loop.",
+      "provenance": "evidence",
+      "confidence": "high"
+    }
+  ],
+  "axis_b_adaptability": [
+    {
+      "id": "B1",
+      "name": "Structural coupling and blast radius",
+      "band": "Not applicable",
+      "points": null,
+      "evidence": [
+        "E02"
+      ],
+      "notes": "No product modules or import graph exist. Empty topology is not evidence of a well-factored architecture.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "B2",
+      "name": "Temporal/change coupling",
+      "band": "Not applicable",
+      "points": null,
+      "evidence": [
+        "E02",
+        "E04"
+      ],
+      "notes": "No product source exists to analyze for co-change. History mining was unnecessary and outside this static assessment.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "B3",
+      "name": "Cohesion and locality of change",
+      "band": "Not applicable",
+      "points": null,
+      "evidence": [
+        "E01",
+        "E02"
+      ],
+      "notes": "No implemented behaviors or domain modules to assess.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "B4",
+      "name": "Seams, substitution, and dependency inversion",
+      "band": "Not applicable",
+      "points": null,
+      "evidence": [
+        "E02",
+        "E08"
+      ],
+      "notes": "No product dependency boundary or adapter implementation yet; do not prescribe interfaces before a real integration requires them.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "B5",
+      "name": "Hermetic, offline, and isolated testability",
+      "band": "Absent",
+      "points": 0,
+      "evidence": [
+        "E02"
+      ],
+      "notes": "No test lane, fixtures, or reusable deterministic test mechanism exists; lack of dependencies alone is not proof of offline testability.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "B6",
+      "name": "Side-effect isolation and external-effect sinks",
+      "band": "Not applicable",
+      "points": null,
+      "evidence": [
+        "E02",
+        "E08"
+      ],
+      "notes": "No implemented outgoing effect or external integration to isolate. Synthetic fixtures are recommended without assuming a database or remote sink.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "B7",
+      "name": "State evolution and consequence verification",
+      "band": "Absent",
+      "points": 0,
+      "evidence": [
+        "E01",
+        "E02"
+      ],
+      "notes": "The README names a common format but no schema, versioning/compatibility rule, fixtures, or consequence assertions exist.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "B8",
+      "name": "Architecture boundary enforceability",
+      "band": "Not applicable",
+      "points": null,
+      "evidence": [
+        "E02"
+      ],
+      "notes": "No architecture boundaries are defined; adding a boundary framework now would be speculative.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "B9",
+      "name": "Complexity, size, and navigability thresholds",
+      "band": "Not applicable",
+      "points": null,
+      "evidence": [
+        "E02"
+      ],
+      "notes": "Three tracked non-product files do not supply code complexity evidence. No penalty or high score for missing code.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "B10",
+      "name": "Inner-loop speed and repeatability",
+      "band": "Absent",
+      "points": 0,
+      "evidence": [
+        "E02",
+        "E07"
+      ],
+      "notes": "No edit-to-product-verdict command or timing/rerun evidence exists.",
+      "provenance": "evidence",
+      "confidence": "high"
+    }
+  ],
+  "backpressure_surfaces": [
+    {
+      "category": "static",
+      "name": "Product build, contract and test checks",
+      "command_or_check": null,
+      "scope": "product",
+      "local_available": false,
+      "ci_available": false,
+      "proof_level": "L0",
+      "status": "absent",
+      "evidence": "E02: no manifests, source, checks, or CI."
+    },
+    {
+      "category": "runtime",
+      "name": "Supported product interaction",
+      "command_or_check": null,
+      "scope": "product",
+      "local_available": false,
+      "ci_available": false,
+      "proof_level": "L0",
+      "status": "absent",
+      "evidence": "E02/E07: no product entrypoint."
+    },
+    {
+      "category": "consequence",
+      "name": "Telemetry output assertions",
+      "command_or_check": null,
+      "scope": "product",
+      "local_available": false,
+      "ci_available": false,
+      "proof_level": "L0",
+      "status": "absent",
+      "evidence": "E01/E02: purpose exists, output contract and fixtures do not."
+    },
+    {
+      "category": "external_effect",
+      "name": "Outgoing effects and local substitutes",
+      "command_or_check": null,
+      "scope": "product",
+      "local_available": "not_applicable",
+      "ci_available": "not_applicable",
+      "proof_level": "L0",
+      "status": "not_applicable_no_implemented_effects",
+      "evidence": "E02/E08: no integrated dependency or outgoing effect exists."
+    },
+    {
+      "category": "observability",
+      "name": "Runtime product evidence",
+      "command_or_check": null,
+      "scope": "product",
+      "local_available": false,
+      "ci_available": false,
+      "proof_level": "L0",
+      "status": "absent",
+      "evidence": "E02/E05: scratch is excluded; no collector diagnostics or output artifacts are defined."
+    },
+    {
+      "category": "human_inferential",
+      "name": "Purpose and this static assessment",
+      "command_or_check": null,
+      "scope": "orientation_only",
+      "local_available": true,
+      "ci_available": false,
+      "proof_level": "L0",
+      "status": "advisory",
+      "evidence": "E01 plus this report; neither can establish behavior."
+    },
+    {
+      "category": "production_customer",
+      "name": "Released collector outcomes",
+      "command_or_check": null,
+      "scope": "product",
+      "local_available": false,
+      "ci_available": false,
+      "proof_level": "L0",
+      "status": "not_detected",
+      "evidence": "E02/E08: no production/customer evidence was found or sought."
+    }
+  ],
+  "scenario_probes": [
+    {
+      "name": "Cold-start to first supported collector invocation",
+      "applicable": true,
+      "relevant_surfaces": [
+        "README.md:1-2",
+        "E02 baseline inventory"
+      ],
+      "likely_edit_target": "Not implemented; select the first product package and entrypoint in a separately approved product task.",
+      "required_setup": "Runtime and dependency requirements undefined; no services or secrets can be justified from current evidence.",
+      "supported_interaction": "None today; this is a proposed entrypoint-discovery probe, not an existing CLI claim.",
+      "expected_observable_consequence": "Proposed: deterministic exit status plus documented output for a synthetic input.",
+      "deterministic_verdict": "None today; first establish a real entrypoint and the smallest executable check supported by its chosen toolchain.",
+      "reset_cleanup_path": "No product state exists; future proof should use an isolated temporary output location.",
+      "local_substitute_available": "No product or substitute exists.",
+      "remote_or_secret_blockers": "None detected; lack of implementation is the blocker.",
+      "highest_plausible_proof_level": "L0",
+      "what_agent_would_infer": "Language/runtime, package layout, command syntax, and successful behavior.",
+      "highest_leverage_missing_sensor": "One real package/entrypoint with an executable fast check; only then map the actual command into the harness.",
+      "execution_status": "not_executed; static gap probe"
+    },
+    {
+      "name": "Common telemetry format contract change",
+      "applicable": true,
+      "relevant_surfaces": [
+        "README.md:2"
+      ],
+      "likely_edit_target": "No schema exists; a future contract artifact and synthetic accepted/rejected fixtures.",
+      "required_setup": "Agree the minimum common record semantics and supported version; implementation toolchain is not selected.",
+      "supported_interaction": "None today; proposed offline contract validation against synthetic records.",
+      "expected_observable_consequence": "Proposed: accepted/rejected records and deterministic, actionable validation failures.",
+      "deterministic_verdict": "No command exists; propose a schema/contract check that fails on a malformed record or incompatible contract change.",
+      "reset_cleanup_path": "Proposed read-only fixtures; no services, database reset, or real telemetry needed.",
+      "local_substitute_available": "No fixtures or validator exist.",
+      "remote_or_secret_blockers": "None detected; contract definition is missing, not remote access.",
+      "highest_plausible_proof_level": "L0",
+      "what_agent_would_infer": "Record fields, type constraints, versions, malformed-input policy, and compatibility expectations.",
+      "highest_leverage_missing_sensor": "Executable common-format contract plus synthetic valid and invalid fixtures, targeting L2.",
+      "execution_status": "not_executed; intent-derived proposal"
+    },
+    {
+      "name": "One harness source to common-format consequence",
+      "applicable": true,
+      "relevant_surfaces": [
+        "README.md:2"
+      ],
+      "likely_edit_target": "No adapter or output implementation exists; choose one source adapter only after source/format requirements are agreed.",
+      "required_setup": "One non-sensitive synthetic source fixture and expected canonical result; no live agent session or transport logs.",
+      "supported_interaction": "None today; proposed invocation through the eventual supported product boundary, not a private shortcut.",
+      "expected_observable_consequence": "Proposed: observable normalized record/artifact matching the agreed common-format contract.",
+      "deterministic_verdict": "No check exists; propose fixture replay through the real path with an assertion over emitted content, not merely process exit.",
+      "reset_cleanup_path": "Proposed isolated output directory and repeatable input; no deletion of ambient collector scratch.",
+      "local_substitute_available": "No fake, sink, adapter, fixture, or replay mechanism exists.",
+      "remote_or_secret_blockers": "None detected. Do not use live telemetry or request credentials to compensate for missing implementation.",
+      "highest_plausible_proof_level": "L0",
+      "what_agent_would_infer": "First supported harness format, mapping rules, error handling, output boundary, and privacy expectations.",
+      "highest_leverage_missing_sensor": "A synthetic input-to-output smoke path with captured consequence, targeting L4 once implementation exists; clean repeat targets L5 later.",
+      "execution_status": "not_executed; intent-derived proposal"
+    }
+  ],
+  "command_tiers": [],
+  "environment_variables": [],
+  "external_dependencies": [],
+  "gaps": [
+    {
+      "id": "G001",
+      "title": "No executable product or canonical product command",
+      "axis": "both",
+      "subsystem": "tools",
+      "loop_stage": "boot",
+      "backpressure_category": "runtime",
+      "scenario_impacted": "Cold-start to first supported collector invocation",
+      "target_layer": "product_code",
+      "encoding_type": "command",
+      "severity": "blocker",
+      "status": "absent",
+      "provenance": "evidence",
+      "confidence": "high",
+      "recommended_next_action": "Select the smallest product slice and its runtime, then create a real manifest/entrypoint with one executable fast check. Do not infer Cargo commands from .gitignore or count ambient Node/harness as the collector.",
+      "proof_level_unblocked": "L2",
+      "estimated_effort": "M",
+      "risk_tier": "medium",
+      "evidence": [
+        "E01",
+        "E02",
+        "E03",
+        "E07"
+      ],
+      "rank": 1
+    },
+    {
+      "id": "G002",
+      "title": "Common-format promise has no executable contract or fixture",
+      "axis": "both",
+      "subsystem": "feedback",
+      "loop_stage": "validate",
+      "backpressure_category": "static",
+      "scenario_impacted": "Common telemetry format contract change",
+      "target_layer": "product_code",
+      "encoding_type": "schema",
+      "severity": "high",
+      "status": "absent",
+      "provenance": "evidence",
+      "confidence": "high",
+      "recommended_next_action": "Agree a minimal common telemetry contract and encode it with synthetic accepted/rejected records and a deterministic contract check. Avoid choosing adapters or record fields from assumption.",
+      "proof_level_unblocked": "L2",
+      "estimated_effort": "M",
+      "risk_tier": "medium",
+      "evidence": [
+        "E01",
+        "E02",
+        "E09"
+      ],
+      "rank": 2
+    },
+    {
+      "id": "G003",
+      "title": "No real input-to-output proof or reusable test mechanism",
+      "axis": "both",
+      "subsystem": "tests",
+      "loop_stage": "observe",
+      "backpressure_category": "consequence",
+      "scenario_impacted": "One harness source to common-format consequence",
+      "target_layer": "test_code",
+      "encoding_type": "fixture",
+      "severity": "high",
+      "status": "absent",
+      "provenance": "evidence",
+      "confidence": "high",
+      "recommended_next_action": "After the first adapter exists, exercise its supported boundary with synthetic input and compare emitted content against the agreed contract in an isolated output location. Reuse that mechanism for the smoke lane rather than adding a parallel harness implementation.",
+      "proof_level_unblocked": "L4",
+      "estimated_effort": "M",
+      "risk_tier": "low",
+      "evidence": [
+        "E01",
+        "E02",
+        "E05",
+        "E09"
+      ],
+      "rank": 3
+    },
+    {
+      "id": "G004",
+      "title": "No baseline harness map; onboarding can be mistaken for product proof",
+      "axis": "operate_today",
+      "subsystem": "tools",
+      "loop_stage": "improve",
+      "backpressure_category": "human_inferential",
+      "scenario_impacted": "Cold-start to first supported collector invocation",
+      "target_layer": "harness",
+      "encoding_type": "diagnostic",
+      "severity": "high",
+      "status": "absent",
+      "provenance": "evidence",
+      "confidence": "high",
+      "recommended_next_action": "Complete the parent-owned adoption without duplicate scaffolding. Encode unsupported product lanes as unavailable with the actual missing prerequisite; map only commands backed by real product artifacts. Record future observed failures as specific checks.",
+      "proof_level_unblocked": "L1",
+      "estimated_effort": "S",
+      "risk_tier": "low",
+      "evidence": [
+        "E02",
+        "E05",
+        "E06",
+        "E07"
+      ],
+      "rank": 4
+    }
+  ],
+  "remediations": [
+    {
+      "id": "R001",
+      "title": "Establish the smallest real collector entrypoint and fast check",
+      "recommended_encoding": "A selected product manifest, actual entrypoint, and supported fast check; no command syntax is claimed yet.",
+      "target_layer": "product_code",
+      "proof_level_unblocked": "L2",
+      "estimated_effort": "M",
+      "risk_tier": "medium",
+      "addresses_gaps": [
+        "G001"
+      ],
+      "priority": 1,
+      "status": "proposed"
+    },
+    {
+      "id": "R002",
+      "title": "Make the common format an executable contract",
+      "recommended_encoding": "Machine-checkable agreed telemetry contract plus synthetic accepted/rejected fixtures and a deterministic validation command.",
+      "target_layer": "product_code",
+      "proof_level_unblocked": "L2",
+      "estimated_effort": "M",
+      "risk_tier": "medium",
+      "addresses_gaps": [
+        "G002"
+      ],
+      "priority": 2,
+      "status": "proposed"
+    },
+    {
+      "id": "R003",
+      "title": "Prove one source adapter by observable output",
+      "recommended_encoding": "Offline synthetic fixture replay through the real product path; assert canonical emitted records and capture failures in a run artifact.",
+      "target_layer": "test_code",
+      "proof_level_unblocked": "L4",
+      "estimated_effort": "M",
+      "risk_tier": "low",
+      "addresses_gaps": [
+        "G003"
+      ],
+      "priority": 3,
+      "status": "proposed",
+      "depends_on": [
+        "R001",
+        "R002"
+      ]
+    },
+    {
+      "id": "R004",
+      "title": "Finish parent-owned adoption with honest unavailable lanes",
+      "recommended_encoding": "A canonical command map and deterministic prerequisite diagnostic that cannot report a successful product lane without a real configured command.",
+      "target_layer": "harness",
+      "proof_level_unblocked": "L1",
+      "estimated_effort": "S",
+      "risk_tier": "low",
+      "addresses_gaps": [
+        "G004"
+      ],
+      "priority": 4,
+      "status": "proposed; parent-owned work unverified"
+    }
+  ],
+  "product_code_affordances": [
+    {
+      "id": "CBA001",
+      "title": "Minimal common-format contract and first executable collector slice",
+      "category": "schema",
+      "status": "proposed",
+      "risk_tier": "medium",
+      "target_layer": "product_code",
+      "environment_scope": [
+        "local",
+        "test",
+        "ci"
+      ],
+      "environments_where_it_must_not_apply": [
+        "production until the actual product contract and release path are reviewed"
+      ],
+      "safety_requirements": [
+        "Agree runtime, first source, output boundary, and minimal format semantics before implementation.",
+        "Use synthetic non-sensitive telemetry only; do not ingest existing local agent scratch or transport logs.",
+        "Do not add remote services, credentials, auth bypasses, or production side effects to obtain the first proof."
+      ],
+      "human_or_security_review_required": true,
+      "which_gap_it_addresses": "G001, G002",
+      "which_harness_command_or_proof_level_it_unblocks": "An actual fast/contract-check lane at L2; exact command is intentionally unspecified.",
+      "why_it_is_better_than_more_documentation": "An executable contract can reject invalid records; a README promise cannot."
+    },
+    {
+      "id": "CBA002",
+      "title": "Observable offline output boundary for the first real source adapter",
+      "category": "consequence",
+      "status": "proposed",
+      "risk_tier": "low",
+      "target_layer": "product_code",
+      "environment_scope": [
+        "local",
+        "test",
+        "ci"
+      ],
+      "environments_where_it_must_not_apply": [
+        "live telemetry capture or production export without separate approval"
+      ],
+      "safety_requirements": [
+        "Choose only the first agreed source and real output boundary; avoid a speculative plugin framework.",
+        "Expose emitted output so the same supported path can be exercised by a synthetic fixture.",
+        "Keep runs isolated and do not write to ambient collector scratch or remote endpoints."
+      ],
+      "human_or_security_review_required": true,
+      "which_gap_it_addresses": "G003",
+      "which_harness_command_or_proof_level_it_unblocks": "Fixture-backed runtime interaction and output verification at L4 after the collector exists.",
+      "why_it_is_better_than_more_documentation": "Captured output enables consequence assertions instead of trusting successful process exit or prose."
+    }
+  ],
+  "harness_recommendations": [
+    {
+      "id": "HR001",
+      "title": "Keep product absence explicit in parent-owned adoption",
+      "path": "harness/cli/commands.json",
+      "risk": "low",
+      "type": "proposed",
+      "summary": "Map only actual product commands and give unavailable lanes deterministic prerequisite diagnostics; do not count generic CLI help or setup docs as product proof.",
+      "rationale": "G001/G004; no product command exists to wrap yet. Parent already owns initialization, so do not create a second scaffold.",
+      "requires_human_review": false
+    },
+    {
+      "id": "HR002",
+      "title": "Wrap the first real fixture check rather than duplicating it",
+      "path": "harness/cli/commands.json",
+      "risk": "low",
+      "type": "proposed",
+      "summary": "Once implemented, expose the native contract check and fixture replay through the canonical map with output evidence and the same future CI command.",
+      "rationale": "G002/G003; there is no existing test mechanism to reuse today. Add only the smallest real one and reuse it thereafter.",
+      "requires_human_review": true
+    }
+  ],
+  "applied_patches": [],
+  "onboarding_consolidation": [
+    {
+      "item": "Product purpose",
+      "action": "keep",
+      "source_path": "README.md",
+      "notes": "Captured faithfully in this assessment. There are no existing run/test instructions to consolidate."
+    },
+    {
+      "item": "Concurrent harness adoption",
+      "action": "keep",
+      "source_path": "Parent assignment",
+      "notes": "Recorded as onboarding context only; parent owns all non-report changes and their verification. No duplicate setup docs or routes written."
+    },
+    {
+      "item": "Local assistant and collector scratch",
+      "action": "keep",
+      "source_path": ".serena/ and .harness/temp/",
+      "notes": "Left untouched and unread; not folded into product proof or fixtures."
+    }
+  ],
+  "first_safe_session_plan": [
+    "Read README.md and .harness/reports/harnessability/latest.json; retain the distinction between product absence and installed engineering tooling.",
+    "After parent-owned adoption finishes, inspect its actual governance and command map without assuming any generated lane implements the collector. Do not rerun initialization blindly.",
+    "Resolve the product decisions absent from the repo: first supported harness input, minimal common-format semantics, output boundary, and runtime. Use synthetic non-sensitive examples only.",
+    "In a separately approved product task, implement the smallest real entrypoint plus executable contract check. Record exact supported commands only once they exist.",
+    "Add one fixture-backed input-to-output consequence check and expose that same mechanism through the harness; future CI should run the same command. Record proof level and observed artifacts, not merely harness readiness."
+  ],
+  "human_questions": [
+    {
+      "id": "Q001",
+      "question": "Which one agent-harness input and common-format output should the first real collector slice support?",
+      "reason": "README states the general purpose but contains no concrete source format, record semantics, or output boundary.",
+      "answer_type": "Product decision with a synthetic input and expected output example; do not provide live logs."
+    },
+    {
+      "id": "Q002",
+      "question": "Is Rust the intended implementation runtime, or is the Rust .gitignore only a repository template?",
+      "reason": "No source, manifest, or runtime pin establishes a language choice. Ambient Node does not resolve this.",
+      "answer_type": "Runtime decision before a product implementation task."
+    }
+  ],
+  "evidence_log": [
+    {
+      "id": "E01",
+      "source": "README.md:1-2",
+      "claim": "The only product description is Unisphere, a common format telemetry collector for different agent harnesses; no setup, usage, contract, or validation instructions are given.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "E02",
+      "source": "git ls-files; read .; safe root path inventory",
+      "claim": "The baseline has exactly three tracked files: .gitignore, LICENSE, README.md. No source, manifest, lockfile, product entrypoint, test suite, fixtures, task runner, CI workflow, service definition, or environment example was present in the inspected pre-product snapshot.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "E03",
+      "source": ".gitignore:1-21",
+      "claim": "Cargo, rustfmt, cargo-mutants, and RustRover ignore comments indicate a Rust-oriented template, not an implemented Rust project or a supported Cargo command.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "E04",
+      "source": "git status --short --branch; git rev-parse HEAD",
+      "claim": "Baseline branch main tracks origin/main at a7747e04f0701b69ed5e6e21cc967277445d9095; workspace is not clean because .harness/ and .serena/ are untracked. No tracked modification appeared in this snapshot.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "E05",
+      "source": "read .; safe root path inventory",
+      "claim": "Local .serena metadata and .harness/temp scratch exist. Their contents were not inspected and they are not treated as implemented collector code, telemetry fixtures, or product proof. No prior assessment or canonical harness surface was present at the baseline.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "E06",
+      "source": "Parent assignment and onboarding context",
+      "claim": "Harness CLI 0.14.0 and Node 24.7.0 are ambient tooling reported by the parent. Parent owns harness initialization, extensions, AGENTS.md, skills installation, verification, and commit; concurrent setup documents may appear. This report neither verifies those changes nor credits them as product readiness.",
+      "provenance": "human_supplied",
+      "confidence": "high"
+    },
+    {
+      "id": "E07",
+      "source": "E01-E03 baseline survey",
+      "claim": "No canonical product build, run, test, smoke, proof, or health command can be named from repository evidence. A runtime/framework, transport, telemetry schema, or storage backend would have to be invented.",
+      "provenance": "inference",
+      "confidence": "high"
+    },
+    {
+      "id": "E08",
+      "source": "E02 baseline survey",
+      "claim": "No product environment variable names, external services, remote-only dependencies, secret-gated paths, or production/customer evidence were detected. This absence does not establish a future collector as offline or secret-free.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "E09",
+      "source": "README.md:2 and absent product artifacts (E02)",
+      "claim": "A versioned telemetry contract and a synthetic input-to-output fixture are relevant proposed first proof surfaces; specific adapter formats, fields, privacy rules, runtime, and command syntax remain product decisions.",
+      "provenance": "inference",
+      "confidence": "medium"
+    },
+    {
+      "id": "E10",
+      "source": "Assessment execution record",
+      "claim": "Only static file/path inspection and read-only Git metadata/date commands were performed. No product execution, help/version probe, tests, lint, build, validation command, dependency install, boot, external call, secret-value read, or cleanup occurred.",
+      "provenance": "evidence",
+      "confidence": "high"
+    },
+    {
+      "id": "E11",
+      "source": "Parent coordination message after baseline inspection",
+      "claim": "Parent reports checks/boot loaded with zero convention complaints and both real invocations returned unconfigured exit 2; five isolated harness-composition tests passed. Parent confirms no product source was added. These are parent-reported harness results, not verified by this assessment and not product proof; baseline scores remain unchanged.",
+      "provenance": "human_supplied",
+      "confidence": "high"
+    }
+  ],
+  "report_paths": {
+    "run_dir": ".harness/reports/harnessability/001-unisphere-pre-product",
+    "report_md": ".harness/reports/harnessability/001-unisphere-pre-product/report.md",
+    "report_json": ".harness/reports/harnessability/001-unisphere-pre-product/report.json",
+    "summary_md": ".harness/reports/harnessability/001-unisphere-pre-product/summary.md",
+    "evidence_jsonl": ".harness/reports/harnessability/001-unisphere-pre-product/evidence.jsonl",
+    "latest_md": ".harness/reports/harnessability/latest.md",
+    "latest_json": ".harness/reports/harnessability/latest.json",
+    "schema_json": ".harness/reports/harnessability/schema.json"
+  },
+  "assessment_matrix": [
+    {
+      "area": "Cold-start orientation",
+      "grade": "E",
+      "score_percent": 33.33,
+      "rationale": "A1 = 1/3: purpose only, no operating instructions.",
+      "evidence": [
+        "E01",
+        "E02"
+      ]
+    },
+    {
+      "area": "Setup, command surface, and operation",
+      "grade": "F",
+      "score_percent": 0,
+      "rationale": "A2/A4/A5/A7 = 0/12: no implemented entrypoint or supported product command.",
+      "evidence": [
+        "E02",
+        "E07"
+      ]
+    },
+    {
+      "area": "Fixtures, deterministic proof, and observability",
+      "grade": "F",
+      "score_percent": 0,
+      "rationale": "A6/A8/A9/B5/B7/B10 = 0/18: no contract, fixture, check, runtime consequence, or repeatable product lane.",
+      "evidence": [
+        "E01",
+        "E02",
+        "E05"
+      ]
+    },
+    {
+      "area": "Compounding engineering loop",
+      "grade": "F",
+      "score_percent": 0,
+      "rationale": "A10 = 0/3 at baseline; in-flight adoption is not credited.",
+      "evidence": [
+        "E02",
+        "E05",
+        "E06"
+      ]
+    }
+  ],
+  "engineering_flows": [
+    {
+      "name": "Parent-owned harness adoption",
+      "kind": "onboarding",
+      "commands": [],
+      "where_detected": "Parent assignment (E06)",
+      "canonical": "unknown",
+      "provenance": "human_supplied",
+      "notes": "In flight, not an established repo flow. No baseline build/test/release/review/CI/SDD flow was found."
+    }
+  ],
+  "pre_commit_gates": [
+    {
+      "name": "Repository-declared gates",
+      "mechanism": "none",
+      "checks": [],
+      "local_available": false,
+      "ci_equivalent": false,
+      "notes": "E02: no repository hook configuration, local check script, or CI workflow. Ambient/global Git hooks were not inspected and no claims are made about them."
+    }
+  ],
+  "ci_local_equivalence": [],
+  "existing_harness_concepts": [
+    {
+      "name": "Baseline operating harness",
+      "kind": "none",
+      "surfaces": [],
+      "coverage": "Absent",
+      "notes": "E02/E05: no canonical or diffuse operating command surface. Scratch and assistant metadata are not substitutes."
+    },
+    {
+      "name": "Ambient onboarding tools",
+      "kind": "generic",
+      "surfaces": [
+        "Parent-reported harness CLI 0.14.0",
+        "Parent-reported Node 24.7.0"
+      ],
+      "coverage": "Not applicable",
+      "notes": "E06: ambient tools not probed here; no product coverage credited."
+    }
+  ],
+  "deterministic_encoding_opportunities": [
+    {
+      "id": "DE001",
+      "title": "Turn the README common-format promise into a checkable contract",
+      "current_encoding": "doc",
+      "proposed_encoding": "Agreed telemetry contract plus synthetic accepted/rejected fixtures and deterministic validator.",
+      "proof_level": "L2",
+      "rationale": "G002; prose currently supplies no machine-checkable record semantics."
+    },
+    {
+      "id": "DE002",
+      "title": "Do not infer product readiness from onboarding completion",
+      "current_encoding": "none",
+      "proposed_encoding": "Explicit unavailable product lane and prerequisite diagnostic until an actual collector command is configured.",
+      "proof_level": "L1",
+      "rationale": "G001/G004; a configured engineering CLI cannot prove an absent product."
+    }
+  ],
+  "test_mechanisms": [
+    {
+      "name": "Baseline test mechanisms",
+      "type": "none",
+      "where_detected": "E02 complete baseline inventory",
+      "deterministic": "unknown",
+      "notes": "No unit/integration/E2E suite, mocks, fakes, sinks, contracts, fixtures, or lifecycle mechanism to reuse."
+    }
+  ],
+  "external_dependency_pressure": [],
+  "code_composition": [
+    {
+      "area": "Pre-product repository",
+      "kind": "other",
+      "coupling": "Not applicable: no product code or module graph.",
+      "test_seam": "unknown",
+      "notes": "Do not invent adapter layers, storage, plugin systems, services, or enforceable boundaries from a two-line README."
+    }
+  ],
+  "candidate_first_harness_surfaces": [
+    {
+      "surface": "Product-prerequisite diagnostic",
+      "rationale": "G001/G004: distinguish a configured operating harness from an absent product.",
+      "proof_level": "L1",
+      "already_exists": "no",
+      "priority": "high",
+      "notes": "Baseline absent; coordinate with the in-flight parent-owned adoption. This is a proposed capability, not existing command syntax."
+    },
+    {
+      "surface": "Common-format contract check",
+      "rationale": "G002: turn the only stated product promise into an executable accepted/rejected fixture verdict.",
+      "proof_level": "L2",
+      "already_exists": "no",
+      "priority": "high",
+      "notes": "Requires an agreed contract and selected toolchain; reuse its native validator rather than inventing a new framework."
+    },
+    {
+      "surface": "Single-source synthetic normalization smoke",
+      "rationale": "G003: observe real common-format output through the first implemented product boundary.",
+      "proof_level": "L4",
+      "already_exists": "no",
+      "priority": "high",
+      "notes": "Requires actual collector implementation and R002; use the same proof mechanism locally and in future CI."
+    }
+  ],
+  "manual_operation_signals": []
+}

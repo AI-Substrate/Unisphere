@@ -1,0 +1,201 @@
+{
+  "read_at": "2026-09-08T02:31:22.803579+00:00",
+  "buckets": [
+    {
+      "agent": "pij-right-kotallo-plan005",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline",
+      "read": {
+        "argv": [
+          "harness",
+          "observe",
+          "--list",
+          "--agent",
+          "pij-right-kotallo-plan005",
+          "--json"
+        ],
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline",
+        "exit_code": 0,
+        "stdout": "{\"command\":\"observe\",\"status\":\"ok\",\"timestamp\":\"2026-09-08T02:31:22.798Z\",\"data\":{\"observations\":[{\"id\":\"DL-001\",\"kind\":\"difficulty\",\"description\":\"Two exploratory task scouts failed immediately: No model selected; delegated task runner did not inherit an available model. No research result was produced. Continue bounded research inline and use explicit requested model selectors for native peers; do not change global credentials/config.\",\"severity\":\"degrading\",\"fp\":\"db25c945f784\",\"first_seen_at\":\"2026-09-08T00:40:25.771Z\",\"bucket\":\"pij-right-kotallo-plan005\"}],\"buckets_scanned\":[\"pij-right-kotallo-plan005\"],\"malformed_skipped\":0},\"next_action\":\"Drain: save what matters via `harness record retro`, then `harness observe --clear`.\"}\n",
+        "stderr": "",
+        "data": {
+          "command": "observe",
+          "status": "ok",
+          "timestamp": "2026-09-08T02:31:22.798Z",
+          "data": {
+            "observations": [
+              {
+                "id": "DL-001",
+                "kind": "difficulty",
+                "description": "Two exploratory task scouts failed immediately: No model selected; delegated task runner did not inherit an available model. No research result was produced. Continue bounded research inline and use explicit requested model selectors for native peers; do not change global credentials/config.",
+                "severity": "degrading",
+                "fp": "db25c945f784",
+                "first_seen_at": "2026-09-08T00:40:25.771Z",
+                "bucket": "pij-right-kotallo-plan005"
+              }
+            ],
+            "buckets_scanned": [
+              "pij-right-kotallo-plan005"
+            ],
+            "malformed_skipped": 0
+          },
+          "next_action": "Drain: save what matters via `harness record retro`, then `harness observe --clear`."
+        }
+      },
+      "cleared": false
+    },
+    {
+      "agent": "pij-young-tran",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-loader",
+      "read": {
+        "argv": [
+          "harness",
+          "observe",
+          "--list",
+          "--agent",
+          "pij-young-tran",
+          "--json"
+        ],
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-loader",
+        "exit_code": 0,
+        "stdout": "{\"command\":\"observe\",\"status\":\"ok\",\"timestamp\":\"2026-09-08T02:31:22.798Z\",\"data\":{\"observations\":[{\"id\":\"DL-001\",\"kind\":\"difficulty\",\"description\":\"Required pij list --prime --json refuses E-RS-UNPORTED; governance resolved via primary checkout worktree inventory, never inferred absent from clone.\",\"severity\":\"degrading\",\"fp\":\"cd9cda918dac\",\"first_seen_at\":\"2026-09-08T01:49:47.065Z\",\"bucket\":\"pij-young-tran\"},{\"id\":\"DL-002\",\"kind\":\"difficulty\",\"description\":\"Pre-work harness boot failed E_FOUNDATION_SMOKE installed-cli exit 101 after foundation checks passed; no native loader readiness claimed. PM owns composed validation; local loader runtime smoke remains separate.\",\"severity\":\"degrading\",\"fp\":\"93cfd2b4faa9\",\"first_seen_at\":\"2026-09-08T01:51:31.355Z\",\"bucket\":\"pij-young-tran\"},{\"id\":\"DL-003\",\"kind\":\"difficulty\",\"description\":\"Boot emitted single-line JSON whose nested installed-cli stderr was truncated by tool output; no durable artifact pointer was emitted, so original exit101 cause cannot be recovered without forbidden rerun. Offer full-result evidence persistence at harness boot boundary.\",\"severity\":\"degrading\",\"fp\":\"09727af347b0\",\"first_seen_at\":\"2026-09-08T01:55:14.706Z\",\"bucket\":\"pij-young-tran\"}],\"buckets_scanned\":[\"pij-young-tran\"],\"malformed_skipped\":0},\"next_action\":\"Drain: save what matters via `harness record retro`, then `harness observe --clear`.\"}\n",
+        "stderr": "",
+        "data": {
+          "command": "observe",
+          "status": "ok",
+          "timestamp": "2026-09-08T02:31:22.798Z",
+          "data": {
+            "observations": [
+              {
+                "id": "DL-001",
+                "kind": "difficulty",
+                "description": "Required pij list --prime --json refuses E-RS-UNPORTED; governance resolved via primary checkout worktree inventory, never inferred absent from clone.",
+                "severity": "degrading",
+                "fp": "cd9cda918dac",
+                "first_seen_at": "2026-09-08T01:49:47.065Z",
+                "bucket": "pij-young-tran"
+              },
+              {
+                "id": "DL-002",
+                "kind": "difficulty",
+                "description": "Pre-work harness boot failed E_FOUNDATION_SMOKE installed-cli exit 101 after foundation checks passed; no native loader readiness claimed. PM owns composed validation; local loader runtime smoke remains separate.",
+                "severity": "degrading",
+                "fp": "93cfd2b4faa9",
+                "first_seen_at": "2026-09-08T01:51:31.355Z",
+                "bucket": "pij-young-tran"
+              },
+              {
+                "id": "DL-003",
+                "kind": "difficulty",
+                "description": "Boot emitted single-line JSON whose nested installed-cli stderr was truncated by tool output; no durable artifact pointer was emitted, so original exit101 cause cannot be recovered without forbidden rerun. Offer full-result evidence persistence at harness boot boundary.",
+                "severity": "degrading",
+                "fp": "09727af347b0",
+                "first_seen_at": "2026-09-08T01:55:14.706Z",
+                "bucket": "pij-young-tran"
+              }
+            ],
+            "buckets_scanned": [
+              "pij-young-tran"
+            ],
+            "malformed_skipped": 0
+          },
+          "next_action": "Drain: save what matters via `harness record retro`, then `harness observe --clear`."
+        }
+      },
+      "cleared": false
+    },
+    {
+      "agent": "pij-living-anteater",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-claude",
+      "read": {
+        "argv": [
+          "harness",
+          "observe",
+          "--list",
+          "--agent",
+          "pij-living-anteater",
+          "--json"
+        ],
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-claude",
+        "exit_code": 0,
+        "stdout": "{\"command\":\"observe\",\"status\":\"ok\",\"timestamp\":\"2026-09-08T02:31:22.798Z\",\"data\":{\"observations\":[{\"id\":\"DL-001\",\"kind\":\"difficulty\",\"description\":\"Isolated clone registry lacks governance worktree; authoritative primary registry resolves it. AGENTS requires pij list --prime --json but installed rs refuses --prime with E-RS-UNPORTED.\",\"severity\":\"degrading\",\"fp\":\"0bf7b86b9f79\",\"first_seen_at\":\"2026-09-08T01:50:09.584Z\",\"bucket\":\"pij-living-anteater\"},{\"id\":\"DL-002\",\"kind\":\"difficulty\",\"description\":\"Preflight harness boot exceeded the 60-second call deadline with no readiness envelope; no product readiness claimed. PM owns all unit/build/test/format gates during fanout; scoped worker returns authored proof for PM execution.\",\"severity\":\"degrading\",\"fp\":\"4263aead2b19\",\"first_seen_at\":\"2026-09-08T01:52:33.446Z\",\"bucket\":\"pij-living-anteater\"}],\"buckets_scanned\":[\"pij-living-anteater\"],\"malformed_skipped\":0},\"next_action\":\"Drain: save what matters via `harness record retro`, then `harness observe --clear`.\"}\n",
+        "stderr": "",
+        "data": {
+          "command": "observe",
+          "status": "ok",
+          "timestamp": "2026-09-08T02:31:22.798Z",
+          "data": {
+            "observations": [
+              {
+                "id": "DL-001",
+                "kind": "difficulty",
+                "description": "Isolated clone registry lacks governance worktree; authoritative primary registry resolves it. AGENTS requires pij list --prime --json but installed rs refuses --prime with E-RS-UNPORTED.",
+                "severity": "degrading",
+                "fp": "0bf7b86b9f79",
+                "first_seen_at": "2026-09-08T01:50:09.584Z",
+                "bucket": "pij-living-anteater"
+              },
+              {
+                "id": "DL-002",
+                "kind": "difficulty",
+                "description": "Preflight harness boot exceeded the 60-second call deadline with no readiness envelope; no product readiness claimed. PM owns all unit/build/test/format gates during fanout; scoped worker returns authored proof for PM execution.",
+                "severity": "degrading",
+                "fp": "4263aead2b19",
+                "first_seen_at": "2026-09-08T01:52:33.446Z",
+                "bucket": "pij-living-anteater"
+              }
+            ],
+            "buckets_scanned": [
+              "pij-living-anteater"
+            ],
+            "malformed_skipped": 0
+          },
+          "next_action": "Drain: save what matters via `harness record retro`, then `harness observe --clear`."
+        }
+      },
+      "cleared": false
+    },
+    {
+      "agent": "pij-bad-butterfly",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-output",
+      "read": {
+        "argv": [
+          "harness",
+          "observe",
+          "--list",
+          "--agent",
+          "pij-bad-butterfly",
+          "--json"
+        ],
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan005-output",
+        "exit_code": 0,
+        "stdout": "{\"command\":\"observe\",\"status\":\"ok\",\"timestamp\":\"2026-09-08T02:31:22.798Z\",\"data\":{\"observations\":[{\"id\":\"DL-001\",\"kind\":\"difficulty\",\"description\":\"tk-0004: rust-analyzer reports new writer tests/examples as unlinked in the frozen worker checkout; PM centrally owns compilation and behavior proof. Preserve exact vd4 and example execution receipts on composed bytes so authored checks cannot be mistaken for executed proof.\",\"severity\":\"degrading\",\"fp\":\"5575d081d0fa\",\"first_seen_at\":\"2026-09-08T01:54:41.626Z\",\"bucket\":\"pij-bad-butterfly\"}],\"buckets_scanned\":[\"pij-bad-butterfly\"],\"malformed_skipped\":0},\"next_action\":\"Drain: save what matters via `harness record retro`, then `harness observe --clear`.\"}\n",
+        "stderr": "",
+        "data": {
+          "command": "observe",
+          "status": "ok",
+          "timestamp": "2026-09-08T02:31:22.798Z",
+          "data": {
+            "observations": [
+              {
+                "id": "DL-001",
+                "kind": "difficulty",
+                "description": "tk-0004: rust-analyzer reports new writer tests/examples as unlinked in the frozen worker checkout; PM centrally owns compilation and behavior proof. Preserve exact vd4 and example execution receipts on composed bytes so authored checks cannot be mistaken for executed proof.",
+                "severity": "degrading",
+                "fp": "5575d081d0fa",
+                "first_seen_at": "2026-09-08T01:54:41.626Z",
+                "bucket": "pij-bad-butterfly"
+              }
+            ],
+            "buckets_scanned": [
+              "pij-bad-butterfly"
+            ],
+            "malformed_skipped": 0
+          },
+          "next_action": "Drain: save what matters via `harness record retro`, then `harness observe --clear`."
+        }
+      },
+      "cleared": false
+    }
+  ],
+  "policy": "Actual harnessfriction, not progress; originalpeer observations retained, only ownbucket may be cleared after durable preservation."
+}

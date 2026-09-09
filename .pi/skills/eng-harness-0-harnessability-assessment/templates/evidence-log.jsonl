@@ -1,0 +1,2 @@
+{"source": "{{SOURCE_PATH_OR_COMMAND}}", "claim": "{{WHAT_THE_EVIDENCE_SHOWS}}", "provenance": "evidence", "confidence": "high"}
+{"source": "{{SOURCE_PATH_OR_COMMAND}}", "claim": "{{WHAT_WAS_INFERRED}}", "provenance": "inference", "confidence": "medium"}

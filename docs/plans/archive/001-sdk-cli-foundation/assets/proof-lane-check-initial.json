@@ -1,0 +1,27 @@
+[
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "-p",
+      "unisphere-testkit",
+      "--bins"
+    ],
+    "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-proof",
+    "exit_code": 0,
+    "stdout": "\nrunning 3 tests\ntest tests::malformed_or_incomplete_graphs_never_pass ... ok\ntest tests::accepts_only_declared_allowed_edges_in_a_partial_workspace ... ok\ntest tests::forbidden_graph_fixtures_are_rejected_with_the_edge_kind ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 3 tests\ntest tests::absent_targets_fail_before_any_build ... ok\ntest tests::child_failure_preserves_status_and_both_streams ... ok\ntest tests::rejects_nonmachine_output_and_wrong_discrimination ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s\n\n",
+    "stderr": "   Compiling proc-macro2 v1.0.107\n   Compiling unicode-ident v1.0.24\n   Compiling quote v1.0.47\n   Compiling libc v0.2.189\n   Compiling serde_core v1.0.229\n   Compiling rustix v1.1.4\n   Compiling serde v1.0.229\n   Compiling zmij v1.0.23\n   Compiling getrandom v0.4.3\n   Compiling bitflags v2.13.1\n   Compiling serde_json v1.0.151\n   Compiling cfg-if v1.0.4\n   Compiling memchr v2.8.3\n   Compiling itoa v1.0.18\n   Compiling once_cell v1.21.4\n   Compiling fastrand v2.5.0\n   Compiling syn v3.0.5\n   Compiling errno v0.3.14\n   Compiling serde_derive v1.0.229\n   Compiling tempfile v3.27.0\n   Compiling unisphere-core v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-plan001-proof/crates/core)\n   Compiling unisphere-testkit v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-plan001-proof/crates/testkit)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.23s\n     Running unittests src/bin/unisphere-arch-check.rs (target/debug/deps/unisphere_arch_check-0d73af9239852ac1)\n     Running unittests src/bin/unisphere-proof.rs (target/debug/deps/unisphere_proof-27c20f0b680687f0)\n"
+  },
+  {
+    "argv": [
+      "node",
+      "--test",
+      ".harness/extensions/checks/checks.test.mjs",
+      ".harness/extensions/boot/extension.test.mjs"
+    ],
+    "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-proof",
+    "exit_code": 0,
+    "stdout": "\u2714 missing, unconfigured, malformed and degraded gates cannot imply readiness (0.837ms)\n\u2714 failed product checks preserve exit/stdout/stderr and never start smoke (0.081083ms)\n\u2714 each required smoke failure prevents readiness and preserves failure evidence (0.125042ms)\n\u2714 only complete quality and assembled proofs establish foundation readiness (0.388084ms)\n\u2714 a real harness child failure is not laundered into readiness (880.391209ms)\n\u2714 release and commit identity ignore distribution wording and installation path (0.973083ms)\n\u2714 missing formatter commit metadata is named, not invented as a match (0.098667ms)\n\u2714 mixed or missing tool identity records all tools and prevents quality gates (0.248208ms)\n\u2714 unavailable formatter commit permits gates while retaining an explicit provenance gap (0.129042ms)\n\u2714 failing product check preserves child evidence and stops later gates (0.363792ms)\n\u2714 all gates run once after coherent observations without boot recursion (0.163625ms)\n\u2139 tests 11\n\u2139 suites 0\n\u2139 pass 11\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 924.55725\n",
+    "stderr": ""
+  }
+]

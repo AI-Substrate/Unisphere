@@ -1,0 +1,146 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "review",
+      "value": {
+        "record_type": "review",
+        "id": "review-decomposition-412842e-pij-xenacious-yarpen-r5",
+        "recorded_at": "2026-09-07T05:44:12Z",
+        "scope": "decomposition",
+        "subject_sha": "412842e36204b42d579553429a2e6a80f5feaecc",
+        "plan": {
+          "path": "docs/plans/001-sdk-cli-foundation/plan.dd.json",
+          "sha256": "bc208a54522fe9d5d26c87d25270806ad72b6b0a53d9155ae4cff1b2871fe3cc"
+        },
+        "guide": {
+          "path": "docs/plans/001-sdk-cli-foundation/assets/impl-guide.dd.json",
+          "sha256": "096ef3c06daff0c337a80768e2aa83c3bef2ca45803a2c0e152b91ff662b4191"
+        },
+        "reviewer_id": "pij-xenacious-yarpen",
+        "requested": {
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5",
+          "effort": "high",
+          "source": {
+            "harness": "guide",
+            "model": "guide",
+            "effort": "guide"
+          }
+        },
+        "observed": {
+          "peer_id": "pij-xenacious-yarpen",
+          "root": "/Users/jordanknight/substrate/unisphere/unishpere-main",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5",
+          "effort": "high",
+          "native_session": "01a07a3d-65bd-7000-94f8-ed07580732a7",
+          "pid": 76651,
+          "argv": [
+            "bun",
+            "/Users/jordanknight/.npm-global/bin/omp",
+            "--auto-approve",
+            "--model",
+            "github-copilot/claude-opus-5",
+            "--thinking",
+            "high"
+          ],
+          "evidence": [
+            "Subject verified at open and close: git rev-parse HEAD returned 412842e36204b42d579553429a2e6a80f5feaecc on builder/001-sdk-cli-foundation with a completely clean working tree both times. Guide recomputed from the committed blob as 096ef3c06daff0c337a80768e2aa83c3bef2ca45803a2c0e152b91ff662b4191 and plan as bc208a54522fe9d5d26c87d25270806ad72b6b0a53d9155ae4cff1b2871fe3cc, both equal to the packet.",
+            "The refusal being answered is real and preserved verbatim in assets/baseline-reseal-refusal.json: full argv naming my r4 receipt, cwd, exit code 1, and the complete E472 payload 'Existing baseline receipt is immutable and cannot be reused for this attempt' with details 'The requested review does not match the existing seal' and next_action 'Preserve any existing seal. Select a fresh guide.baseline.receipt identity before committing revised guide/inputs, obtaining their review and running contracts --seal.' Nothing sanitized.",
+            "The change is identity-only, verified by structural leaf comparison rather than diffstat: guide v5 to v6 yields exactly three changed leaves and no others, meta.version 5 to 6, meta.updated, and baseline.receipt team/baseline.dd.json to team/baseline-v6.dd.json. Architecture, fan_out, capabilities, units, isolation, roles, checks, composition, review and risks each compare equal object-for-object; within baseline the only differing key is receipt, files is list-identical at 18 entries, proof still resolves to impl-guide.dd.json#checks/vd-0001, contract count holds at 15 and no check argv moved.",
+            "No source change, verified by digest: the name-status diff 8b43aa9..412842e touches no path under crates/, no Cargo.toml, no Cargo.lock and no rust-toolchain.toml, and all 18 frozen files are byte-identical across that range, so the freeze set approved at r4 is the same bytes here.",
+            "The load-bearing check, because the failure mode E472 exists to prevent is exactly the tempting one here: assets/team/baseline.dd.json is byte-identical across 8b43aa9..412842e at a665d6971e0aaad60008a7cb9ba6fcbcdaf238f511e8175afdf0f59f459cff46, which is the digest lg-0003 cites, so that citation still resolves. It was preserved, not rewritten to match the requested review.",
+            "The new assets/baseline-history-8eafef5.json is a byte-identical copy of that seal and its own content digest IS a665d697..., so the 17-file seal now exists in two places, neither edited.",
+            "assets/team/baseline-v6.dd.json does NOT exist at this SHA. That is correct: it is a forward identity for Builder to write at seal time, not a hand-authored receipt. No composition evidence was fabricated to satisfy the refusal.",
+            "This settles my own r4 forward recommendation, and in the PM's favour: I flagged that a reseal might overwrite baseline.dd.json and strand lg-0003's digest citation. The installed runtime does not overwrite, it refuses, and the PM followed the refusal's own next_action rather than my speculative guardrail. The runtime's answer was better than my recommendation and the record says so plainly.",
+            "lg-0005 carries applicability by reasoning rather than restatement: it states that no 18-file seal and no new baseline-test execution is claimed, names the refusal asset, records the preserved seal digest, and observes that only receipt identity, version and timestamp changed from the approved v5, so lg-0004's source-digest applicability and lg-0002's executed 3+10 tests, scoped clippy and fmt results carry unchanged. It links lg-0004, lg-0002 and bp-0007 instead of copying them.",
+            "Task movement is minimal and honest: dw-0001/2/3 repoint from lg-0004 to lg-0005 as exactly three changed leaves with none added or removed, and dw-0004 and tk-0001 remain unchecked pending fresh review and actual seal.",
+            "Scope intact and counted at the subject: 5 units all unchecked, 20 done_when assertions with 3 checked and 17 unchecked, 11 plan acceptance criteria with the plan byte-identical to prior rounds, and 11 backpressure rows. Every prior evidence record is byte-identical across the range: baseline-review-dispositions.json, baseline-r2-final-checks.json, baseline-ready-refusal.json, baseline-path-diagnosis.json, baseline-proof-link-repair.json and backpressure.dd.json.",
+            "Prior-round fidelity: assets/reviews/baseline-opus-r4.md is imported byte-identical to my emission at 578ff9ab615fddb648941a3fb5814c03bc84227160d0b76c1cd59ac8a67cc519, the imported r4 team receipt is field-for-field identical to mine at 3c6e60f3879d4e20ad49243629d3ecb6965ea2b3e32f13b5f13904bc8b0d47e0, assets/team/basis-2bd056c9....json is a byte-identical snapshot of guide v5 whose content digest equals its own filename, and the r1, r2 and r3 reports are unchanged.",
+            "F-0001, F-0002, F-0005 and F-0007 remain fixed on bytes recomputed and found unchanged at this SHA, with the proof-link chain lg-0002 to lg-0004 to lg-0005 intact and no rerun claimed; F-0003, F-0004, F-0006 and F-0008 guardrails are preserved verbatim in assets/baseline-review-dispositions.json, unmodified by this commit and undischarged by this approval.",
+            "Read-only throughout: git rev-parse, status, log, diff --name-status, show, SHA256 recomputation from committed blobs, and in-process structural leaf comparison of the guide, tasks, plan and imported receipts. No build, test, linter, formatter, ddocs or harness verb was executed; no commit, push or coder launch; only the two r5-authorized paths were written, both new, with all r1 through r4 artifacts left untouched."
+          ],
+          "gaps": [
+            "This approval permits harness builder contracts --seal against guide v6 citing the r5 receipt, and a readiness re-attempt afterwards. It does NOT permit checking tk-0001 or dw-0004 without Builder actually re-executing vd-0001 at the seal, and it claims nothing about that future run.",
+            "Non-blocking observation, not a finding: between this commit and the seal, guide.baseline.receipt names team/baseline-v6.dd.json which does not yet exist, so the guide's own pointer is unresolvable in that interval. This is inherent to the prescribed next_action sequence, and lg-0005 plus baseline-history-8eafef5.json keep the superseded 17-file seal reachable by path and digest meanwhile. Confirm baseline-v6.dd.json is committed immediately after the seal so the pointer does not stay dangling.",
+            "No build, test, linter, formatter, ddocs or harness verb was executed by this reviewer at r5. The E472 payload, the earlier E471 payloads, the seal stdout and the r2 check results are read as committed records; what I verified independently is that their bound digests equal current committed bytes and that their conclusions reproduce from those bytes.",
+            "No product acceptance criterion is claimed. All eleven remain unchecked and vd-0002 through vd-000f are unjudged.",
+            "The ac-0008 judgement carried from r2 remains a dependency-and-source-surface inspection of committed baseline bytes, not an executed network-denial test or syscall trace, and the composition-review obligation dw-0011 is untouched.",
+            "Toolchain verification carried from r2 covers the two distributions installed on this host at r2 time; no toolchain probe was re-run because rust-toolchain.toml and the guide toolchain contract are byte-identical.",
+            "Requested role settings, observed launch argv and the pij-rs registry binding are configuration evidence, not provider-served model attestation.",
+            "Runtime collector seal probing for the commit remains PM responsibility and was not attempted."
+          ]
+        },
+        "verdict": "approved",
+        "report": {
+          "path": "docs/plans/001-sdk-cli-foundation/assets/reviews/baseline-opus-r5.md",
+          "sha256": "81f4d574abe85948aad01d6dcf1f0987e47434ca9910e7418364ecb3dc76b5fe"
+        },
+        "findings": [
+          {
+            "id": "F-0001",
+            "severity": "medium",
+            "disposition": "fixed",
+            "description": "Guide v4 contracts[13] replaces the stale toolchain prose and names the cause of the error rather than silently rewriting it: the earlier PATH-only probe missed an installed rustup toolchain, and current actual evidence is assets/toolchain-observation.json. The false 'no rustup, and newer clippy/rustfmt provenance' clause is gone. I re-probed this host and three of the four documented tuple elements verify identically against both installed distributions: rustc commit 59807616e1fa2540724bfbac14d7976d7e4a3860, cargo commit f2d3ce0bd7f24a49f8f72d9000448f8838c4e850, and clippy-driver reporting that same rustc commit. The fourth element is the subject of F-0008. Carried forward at 8eafef5 on bytes recomputed and found byte-identical to the r2-reviewed bytes.",
+            "evidence": "impl-guide.dd.json#architecture/contracts[13] at 633b9bf compared leaf-wise against v3 at 18ee5165; /opt/homebrew/bin/{rustc,cargo,clippy-driver,rustfmt} -vV and ~/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/{rustc,cargo,clippy-driver,rustfmt} -vV"
+          },
+          {
+            "id": "F-0002",
+            "severity": "low",
+            "disposition": "fixed",
+            "description": "Guide v4 contracts[13] now requires comparing releases and commit identities and explicitly forbids comparing installation paths, distribution labels or exact whole version strings, with resolved binary provenance recorded separately. The host demonstrates the need: the Homebrew and rustup suites differ in label, path and bundled LLVM (22.1.3 versus 22.1.2) while carrying identical upstream rustc and cargo commit identities, so a whole-string or path comparison would reject a correct toolchain. Carried forward at 8eafef5 on bytes recomputed and found byte-identical to the r2-reviewed bytes.",
+            "evidence": "impl-guide.dd.json#architecture/contracts[13] at 633b9bf; -vV output of both installed 1.95.0 suites"
+          },
+          {
+            "id": "F-0003",
+            "severity": "low",
+            "disposition": "accepted",
+            "description": "Root [workspace.dependencies] still pre-declares unisphere-sdk and unisphere-cli path entries for directories that do not exist; Cargo.toml and Cargo.lock are byte-identical to the r1-reviewed bytes and the lock still resolves 26 packages with neither entry nor clap, so the condition remains inert. baseline-review-dispositions.json records the accepted guardrail: the CLI guide interface already forbids SDK/app dependencies and an explicit tk-0003 dispatch supplement reinforces that the pre-declared dependency must not be inherited. This is a commitment about future dispatch, not a discharged claim.",
+            "evidence": "assets/baseline-review-dispositions.json#findings/F-0003; Cargo.toml and Cargo.lock unchanged across 18ee5165..633b9bf"
+          },
+          {
+            "id": "F-0004",
+            "severity": "low",
+            "disposition": "accepted",
+            "description": "Cargo.lock remains committed and not gitignored, so it dirties locally in any lane that adds a crate. baseline-review-dispositions.json records the accepted guardrail: scoped harness commit paths, a coder packet excluding Cargo.lock, and Builder import fence enforcement. This is a commitment about future dispatch and import, not a discharged claim.",
+            "evidence": "assets/baseline-review-dispositions.json#findings/F-0004; .gitignore and Cargo.lock at 633b9bf"
+          },
+          {
+            "id": "F-0005",
+            "severity": "medium",
+            "disposition": "fixed",
+            "description": "The shared negative surface now matches the documented validation rules, and source, contract, check description and tests moved together rather than one papering over the others. fixtures.rs adds NON_OBJECT, UNKNOWN_KEY, DUPLICATE_KEY, NON_STRING_ROOT and INVALID_UTF8 as shared constants appended to INVALID_DOCUMENTS so table iteration picks them up automatically, plus an on-demand oversized_document() producing MAX_CONFIG_BYTES+1 bytes of otherwise-valid JSON without committing a megabyte blob, which is better than the fixture I proposed because the oversize path is then rejected on size rather than incidentally on syntax. contracts[10] enumerates the same list and adds the all-lanes parity rule; vd-0004's description widens to the full twelve-input list. rk-0003's pre-existing claim of shared sensitive-marker malformed and invalid-UTF8 fixtures is now true without the row being edited, which is the better of the two repairs offered in r1. Two new tests defend behavior: the duplicate-key test asserts the byte stream because a Value collapses duplicates, and the oversize test asserts both length and parse result. Four of the five new constants are dischargeable by a single serde derive with deny_unknown_fields and the fifth by from_slice, so no lane is handed an unsatisfiable fixture. Carried forward at 8eafef5 on bytes recomputed and found byte-identical to the r2-reviewed bytes.",
+            "evidence": "crates/testkit/src/fixtures.rs at 633b9bf (sha256 aa915f1065888bf7e5061b37607430722e6c4a58e14d006f4943f2b420887e6c); impl-guide.dd.json#architecture/contracts[10] and #checks/vd-0004 at 633b9bf; assets/baseline-r2-final-checks.json recording 3+10 tests with clippy --lib --tests and cargo fmt --all --check all exit 0"
+          },
+          {
+            "id": "F-0006",
+            "severity": "low",
+            "disposition": "accepted",
+            "description": "Evidence assets still embed the operator's full PATH and absolute workspace paths. baseline-review-dispositions.json records the accepted restriction: host path provenance is intentionally retained locally, and publication requires separate approval and a path review. Legitimate provenance for an execution record and outside the ac-0009 prohibition, which targets product code and committed fixtures; the committed fixtures remain clean.",
+            "evidence": "assets/baseline-review-dispositions.json#findings/F-0006; assets/toolchain-observation.json selection.PATH; Cargo.toml workspace.package.repository"
+          },
+          {
+            "id": "F-0007",
+            "severity": "medium",
+            "disposition": "fixed",
+            "description": "Canonical proof-link repaired. lg-0002 now exists and dw-0001, dw-0002 and dw-0003 resolve to it; the entry names the current baseline source 633b9bf, cites assets/baseline-r2-final-checks.json, and records 3 core + 10 testkit tests, clippy --lib --tests and cargo fmt --all --check all exit 0, so every element wrong in the r2 record is now right and dw-0002's claim that all shared config fixtures are usable independently is backed by a run that executed the five new constants and the generator. The leaf diff of tasks.dd.json is exactly three proven_by addresses with nothing added or removed, so the repair is the requested one and nothing more. Three properties make it better than the minimum asked for: it binds by digest rather than commit, carrying fixtures SHA256 aa915f10... and guide SHA256 370eaee9... in its own text, which is why the entry remains sound at 8eafef5 despite naming 633b9bf; it supersedes without erasing, retaining lg-0001 verbatim; and it refuses to overclaim, stating that no fresh test execution is claimed with code_changed false and tests_rerun false recorded explicitly. The r2 E432 address-target-untracked warnings are removed as a consequence rather than separately patched. Carried forward correctly at 8b43aa9: dw-0001/2/3 now cite lg-0004, which re-binds the same unchanged source proof across the guide v5 change by explicit digest equality and again declines to claim a rerun.",
+            "evidence": "execution-log.dd.json#entries/lg-0005 at 412842e; tasks.dd.json#done_when/tk-0001 dw-0001/dw-0002/dw-0003 proven_by at 412842e; all 18 frozen digests recomputed identical 8b43aa9..412842e; team/baseline.dd.json byte-identical at a665d697..."
+          },
+          {
+            "id": "F-0008",
+            "severity": "low",
+            "disposition": "accepted",
+            "description": "Homebrew rustfmt emits no commit identity. contracts[13] names rustfmt 1.9.0-stable commit 59807616e1 as a tuple element and instructs comparison by releases and commit identities, but on this host the rustup binary reports 'rustfmt 1.9.0-stable (59807616e1 2026-04-14)' while the Homebrew binary reports only 'rustfmt 1.9.0' with no commit hash and no -stable suffix. That element is therefore unobtainable from the Homebrew binary's own output, in tension with the same paragraph's promise that both distributions may satisfy the same tuple: a tk-0005 check demanding commit identity for all four binaries would permanently fail on Homebrew rustfmt, while one silently skipping the element would weaken the gate without saying so. Accepted rather than open because it constrains a future unit's implementation and not the sealed baseline bytes, and the guide already requires resolved provenance to be recorded separately. Safeguard for tk-0005: require release match for all four, compare commit identity where the binary emits one, and record per-binary which elements were verifiable, so a Homebrew rustfmt is a named partial verification rather than a silent pass or an impossible failure. No guide edit is requested before seal.",
+            "evidence": "impl-guide.dd.json#architecture/contracts[13] at 633b9bf; /opt/homebrew/bin/rustfmt -vV versus ~/.rustup/toolchains/1.95.0-aarch64-apple-darwin/bin/rustfmt -vV"
+          }
+        ]
+      }
+    }
+  ],
+  "references": []
+}

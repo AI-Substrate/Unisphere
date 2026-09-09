@@ -1,0 +1,97 @@
+{
+  "at": "2026-09-08T08:01:50.038Z",
+  "bundles": [
+    {
+      "unit": "tk-0002",
+      "peer": "pij-ideological-koala",
+      "source_commit": "891ff3a8860ac5f1ab2e033c8464adbe6c87c8f3",
+      "branch": "builder/010-codex-mapper",
+      "path": "docs/plans/010-native-adapters/assets/original-deliveries/tk-0002.bundle",
+      "sha256": "cdcba15258dd30d68153d9fc9032313926495367d3fbc3877bfd62992cefdb5f",
+      "bytes": 14628,
+      "prerequisite": "3a635c17110521a3ed93d03daf5eface57dc0bfd",
+      "verified_exit": 0,
+      "attribution": "docs/plans/010-native-adapters/assets/original-deliveries/tk-0002-attribution.json",
+      "attribution_read_exit": 0
+    },
+    {
+      "unit": "tk-0003",
+      "peer": "pij-financial-elle",
+      "source_commit": "ec22339a50191fd782b5fb5559c1e71ac3b22294",
+      "branch": "builder/010-oh-my-pi-mapper",
+      "path": "docs/plans/010-native-adapters/assets/original-deliveries/tk-0003.bundle",
+      "sha256": "a03de4fc3f366f6093ee4e21a8ed311587587f3e861200bd8c2a03ab31d60bd8",
+      "bytes": 16503,
+      "prerequisite": "3a635c17110521a3ed93d03daf5eface57dc0bfd",
+      "verified_exit": 0,
+      "attribution": "docs/plans/010-native-adapters/assets/original-deliveries/tk-0003-attribution.json",
+      "attribution_read_exit": 0
+    },
+    {
+      "unit": "tk-0004",
+      "peer": "pij-remarkable-woodpecker",
+      "source_commit": "c3b2fb969e68c7b0abbb1c938407738e9ddfbf34",
+      "branch": "builder/010-pi-mapper",
+      "path": "docs/plans/010-native-adapters/assets/original-deliveries/tk-0004.bundle",
+      "sha256": "4cfb70ae22180c412037d6cbc8fc0cd6856a30e526c549373a5d11cb2798911d",
+      "bytes": 14581,
+      "prerequisite": "3a635c17110521a3ed93d03daf5eface57dc0bfd",
+      "verified_exit": 0,
+      "attribution": "docs/plans/010-native-adapters/assets/original-deliveries/tk-0004-attribution.json",
+      "attribution_read_exit": 0
+    },
+    {
+      "unit": "tk-0005",
+      "peer": "pij-homeless-dudley",
+      "source_commit": "3f86982c34f9d6a26a7b9bd1e90c414d4820546c",
+      "branch": "builder/010-copilot-cli-mapper",
+      "path": "docs/plans/010-native-adapters/assets/original-deliveries/tk-0005.bundle",
+      "sha256": "de67178dffa9558be9a8d5544d42e2d5410d76d5fc3a67f363a71cb8b83fd5dc",
+      "bytes": 25689,
+      "prerequisite": "3a635c17110521a3ed93d03daf5eface57dc0bfd",
+      "verified_exit": 0,
+      "attribution": "docs/plans/010-native-adapters/assets/original-deliveries/tk-0005-attribution.json",
+      "attribution_read_exit": 0
+    },
+    {
+      "unit": "tk-0006",
+      "peer": "pij-adorable-bat",
+      "source_commit": "58159df4729eb229fdcf5fd3ec8037e3314d7eb9",
+      "branch": "builder/012-native-adapters/tk-0006",
+      "path": "docs/plans/010-native-adapters/assets/original-deliveries/tk-0006.bundle",
+      "sha256": "3995f95102c37c795f696634d4590485016401ab824f9ff04c681071c2a9083c",
+      "bytes": 19635,
+      "prerequisite": "3a635c17110521a3ed93d03daf5eface57dc0bfd",
+      "verified_exit": 0,
+      "attribution": "docs/plans/010-native-adapters/assets/original-deliveries/tk-0006-attribution.json",
+      "attribution_read_exit": 0
+    },
+    {
+      "unit": "tk-0007",
+      "peer": "pij-mechanical-tsarina",
+      "source_commit": "0a72b5d461a9221047ce4243f3d1662762b42c77",
+      "branch": "builder/010-cursor-mapper",
+      "path": "docs/plans/010-native-adapters/assets/original-deliveries/tk-0007.bundle",
+      "sha256": "f0817e9d7774d4cf9f2cbc60862b8f8279af101bdee4a400a5b8ccd8de03dbc1",
+      "bytes": 22654,
+      "prerequisite": "3a635c17110521a3ed93d03daf5eface57dc0bfd",
+      "verified_exit": 0,
+      "attribution": "docs/plans/010-native-adapters/assets/original-deliveries/tk-0007-attribution.json",
+      "attribution_read_exit": 0
+    },
+    {
+      "unit": "tk-0008",
+      "peer": "pij-kind-turkey",
+      "source_commit": "3a33c79a268eedc2f44ed827418dde88d3625be7",
+      "branch": "builder/011-native-adapters/tk-0008",
+      "path": "docs/plans/010-native-adapters/assets/original-deliveries/tk-0008.bundle",
+      "sha256": "b3e39f2031bbf1ae2de79ae69e4b5c7705ea3071867724ba4182c57055d3ca58",
+      "bytes": 16880,
+      "prerequisite": "3a635c17110521a3ed93d03daf5eface57dc0bfd",
+      "verified_exit": 0,
+      "attribution": "docs/plans/010-native-adapters/assets/original-deliveries/tk-0008-attribution.json",
+      "attribution_read_exit": 0
+    }
+  ],
+  "scope": "Seven original unit histories preserved as verified Git bundles; common prerequisite remains in PM history. No native worker clone retired."
+}

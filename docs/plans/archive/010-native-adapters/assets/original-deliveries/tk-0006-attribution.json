@@ -1,0 +1,9 @@
+{
+  "source_commit": "58159df4729eb229fdcf5fd3ec8037e3314d7eb9",
+  "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-vscode-copilot",
+  "observed": {
+    "exit_code": 0,
+    "data": "crates/adapter-vscode-copilot/Cargo.toml\n  h_9e71e8b09f7cf2 1-11\ncrates/adapter-vscode-copilot/src/journal.rs\n  h_9e71e8b09f7cf2 1-166\ncrates/adapter-vscode-copilot/src/lib.rs\n  h_9e71e8b09f7cf2 1-452\ncrates/adapter-vscode-copilot/tests/fixtures/session-journal.jsonl\n  h_9e71e8b09f7cf2 1-10\ncrates/adapter-vscode-copilot/tests/fixtures/session-v1.json\n  h_9e71e8b09f7cf2 1-12\ncrates/adapter-vscode-copilot/tests/fixtures/session-v2.json\n  h_9e71e8b09f7cf2 1-16\ncrates/adapter-vscode-copilot/tests/fixtures/session-v3.json\n  h_9e71e8b09f7cf2 1-40\ncrates/adapter-vscode-copilot/tests/mapping.rs\n  h_9e71e8b09f7cf2 1-309\ndocs/vscode-copilot-adapter.md\n  h_9e71e8b09f7cf2 1-190\n---\n{\n  \"schema_version\": \"authorship/3.0.0\",\n  \"git_ai_version\": \"1.6.21\",\n  \"base_commit_sha\": \"58159df4729eb229fdcf5fd3ec8037e3314d7eb9\",\n  \"prompts\": {},\n  \"humans\": {\n    \"h_9e71e8b09f7cf2\": {\n      \"author\": \"Jordan Knight <jakkaj@gmail.com>\"\n    }\n  }\n}",
+    "stderr": ""
+  }
+}

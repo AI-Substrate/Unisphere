@@ -1,0 +1,338 @@
+{
+  "record": ".harness/records/retro/2026-09-07/005-plan001-composition-friction.md",
+  "result": {
+    "argv": [
+      "harness",
+      "retro",
+      "insights",
+      "--agent",
+      "pij-right-kotallo",
+      "--json"
+    ],
+    "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+    "exit_code": 0,
+    "stdout": "{\"command\":\"retro\",\"status\":\"ok\",\"timestamp\":\"2026-09-07T08:16:11.026Z\",\"data\":{\"schema_version\":\"harness.retro-insights/v1\",\"generated_at\":\"2026-09-07T08:16:11.021Z\",\"headline\":{\"records\":3,\"entries\":16,\"plans_touched\":[\"001-sdk-cli-foundation\"],\"agents\":[\"pij-right-kotallo\"],\"date_range\":{\"from\":\"2026-09-07T00:31:44.296Z\",\"to\":\"2026-09-07T04:52:59.172Z\"},\"status_counts\":{\"open\":4,\"suggested\":9,\"encoded\":3,\"wontfix\":0,\"stale\":0,\"other\":0},\"kind_counts\":{\"difficulty\":14,\"magic-wand\":0,\"gift\":1,\"insight\":0,\"coordination\":0,\"improvement-suggestion\":0,\"confusion\":0,\"win\":1,\"other\":0},\"disposition_counts\":{\"fixed-now\":3,\"task\":7,\"plan\":0,\"diffs\":0,\"command\":0,\"kept\":6,\"declined\":0,\"deferred\":0,\"unspecified\":0},\"open_to_encoded_ratio\":\"4:3\"},\"sections\":{\"totals\":{\"id\":\"totals\",\"title\":\"Retro totals\",\"available\":true,\"rows\":[{\"claim\":\"3 record(s), 16 entr(y/ies)\",\"measures_used\":[\"parsed committed retro records\"],\"n\":3,\"caveat\":\"Counts cover the records supplied to the engine after reader validation, deduplication, and scope filters.\",\"values\":{\"records\":3,\"entries\":16,\"plans\":1,\"agents\":1}},{\"claim\":\"suggested: 9\",\"measures_used\":[\"system.compound.status\"],\"n\":9,\"caveat\":\"Lifecycle status is read from committed retro entries; missing or unknown values are counted as other, never inferred.\",\"values\":{\"status\":\"suggested\",\"count\":9}},{\"claim\":\"other (2 row(s) each below n=5)\",\"measures_used\":[\"aggregated tail\"],\"n\":7,\"caveat\":\"Folded 2 row(s) each with n<5; shown as one aggregate so low-sample observations remain visible without overstating individual patterns.\",\"values\":{\"count\":7,\"folded_rows\":2}}],\"suppressed\":{\"rows\":2,\"reason\":\"n<5\"},\"note\":\"Exact status counts remain in headline.status_counts; low-n status rows are folded visibly.\"},\"top_clusters\":{\"id\":\"top_clusters\",\"title\":\"Open clusters\",\"available\":true,\"rows\":[{\"claim\":\"[difficulty/tooling] 2 open entr(y/ies)\",\"measures_used\":[\"kind\",\"target\",\"severity\",\"system.compound.first_seen_at\"],\"n\":2,\"caveat\":\"Cluster identity is the exact (kind,target) pair; descriptions are preserved as provenance and are not semantically merged.\",\"values\":{\"kind\":\"difficulty\",\"target\":\"tooling\",\"entries\":2,\"records\":1,\"agents\":1,\"severity\":\"annoying\",\"first_seen_at\":\"2026-09-07T00:31:57.151Z\"},\"kind\":\"difficulty\",\"target\":\"tooling\",\"severity\":\"annoying\",\"first_seen_at\":\"2026-09-07T00:31:57.151Z\",\"proof_gap\":false,\"repeatedly_deferred\":false,\"members\":[{\"record_path\":\".harness/records/retro/2026-09-07/001-harness-onboarding.md\",\"retro_id\":\"2026-09-07T00:38:03.219Z-pij-right-kotallo-e94c\",\"entry_id\":\"DL-002\",\"status\":\"open\"},{\"record_path\":\".harness/records/retro/2026-09-07/001-harness-onboarding.md\",\"retro_id\":\"2026-09-07T00:38:03.219Z-pij-right-kotallo-e94c\",\"entry_id\":\"DL-003\",\"status\":\"open\"}]},{\"claim\":\"[difficulty/product-sensor] 1 open entr(y/ies)\",\"measures_used\":[\"kind\",\"target\",\"severity\",\"system.compound.first_seen_at\"],\"n\":1,\"caveat\":\"Cluster identity is the exact (kind,target) pair; descriptions are preserved as provenance and are not semantically merged.\",\"values\":{\"kind\":\"difficulty\",\"target\":\"product-sensor\",\"entries\":1,\"records\":1,\"agents\":1,\"severity\":\"blocking\",\"first_seen_at\":\"2026-09-07T00:31:44.296Z\"},\"kind\":\"difficulty\",\"target\":\"product-sensor\",\"severity\":\"blocking\",\"first_seen_at\":\"2026-09-07T00:31:44.296Z\",\"proof_gap\":true,\"proof_gap_signal\":\"keyword\",\"repeatedly_deferred\":false,\"members\":[{\"record_path\":\".harness/records/retro/2026-09-07/001-harness-onboarding.md\",\"retro_id\":\"2026-09-07T00:38:03.219Z-pij-right-kotallo-e94c\",\"entry_id\":\"DL-001\",\"status\":\"open\"}]},{\"claim\":\"[win/engineering-harness] 1 open entr(y/ies)\",\"measures_used\":[\"kind\",\"target\",\"severity\",\"system.compound.first_seen_at\"],\"n\":1,\"caveat\":\"Cluster identity is the exact (kind,target) pair; descriptions are preserved as provenance and are not semantically merged.\",\"values\":{\"kind\":\"win\",\"target\":\"engineering-harness\",\"entries\":1,\"records\":1,\"agents\":1,\"severity\":null,\"first_seen_at\":\"2026-09-07T00:34:48.591Z\"},\"kind\":\"win\",\"target\":\"engineering-harness\",\"severity\":null,\"first_seen_at\":\"2026-09-07T00:34:48.591Z\",\"proof_gap\":false,\"repeatedly_deferred\":false,\"members\":[{\"record_path\":\".harness/records/retro/2026-09-07/001-harness-onboarding.md\",\"retro_id\":\"2026-09-07T00:38:03.219Z-pij-right-kotallo-e94c\",\"entry_id\":\"WIN-001\",\"status\":\"open\"}]}],\"note\":\"Top 10 open clusters, ranked by recurrence, severity, proof leverage, then oldest first-seen time.\"},\"stale\":{\"id\":\"stale\",\"title\":\"Stale lifecycle entries\",\"available\":false,\"rows\":[],\"note\":\"Flags only; the report is read-only.\"},\"disposition_mix_records\":{\"id\":\"disposition_mix_records\",\"title\":\"Disposition mix from records\",\"available\":true,\"rows\":[{\"claim\":\"task: 7\",\"measures_used\":[\"entry disposition\"],\"n\":7,\"caveat\":\"Drain-time dispositions are counted from committed records; unspecified means the older record carried no disposition field.\",\"values\":{\"disposition\":\"task\",\"count\":7,\"share\":0.438}},{\"claim\":\"kept: 6\",\"measures_used\":[\"entry disposition\"],\"n\":6,\"caveat\":\"Drain-time dispositions are counted from committed records; unspecified means the older record carried no disposition field.\",\"values\":{\"disposition\":\"kept\",\"count\":6,\"share\":0.375}},{\"claim\":\"other (1 row(s) each below n=5)\",\"measures_used\":[\"aggregated tail\"],\"n\":3,\"caveat\":\"Folded 1 row(s) each with n<5; shown as one aggregate so low-sample observations remain visible without overstating individual patterns.\",\"values\":{\"count\":3,\"share\":0.188,\"folded_rows\":1}}],\"suppressed\":{\"rows\":1,\"reason\":\"n<5\"},\"note\":\"Disposition fields observed across 16 committed entr(y/ies).\"}},\"scope\":{\"plans\":[],\"since\":null,\"kinds\":[],\"agents\":[\"pij-right-kotallo\"]},\"sources\":{\"canonical\":{\"scanned\":5,\"parsed\":5,\"included\":3,\"deduped\":0},\"agents\":{\"scanned\":0,\"parsed\":0,\"included\":0,\"deduped\":0},\"retros\":{\"scanned\":0,\"parsed\":0,\"included\":0,\"deduped\":0}},\"malformed_skipped\":0,\"unsupported_versions\":[],\"buffer_pending\":10,\"buffer_malformed_skipped\":0},\"evidence\":[{\"label\":\"retro insights report\",\"none\":true}],\"next_action\":\"The observe buffer has 10 pending entr(y/ies); drain it separately if those should join a future committed-record report.\"}\n",
+    "stderr": "",
+    "data": {
+      "command": "retro",
+      "status": "ok",
+      "timestamp": "2026-09-07T08:16:11.026Z",
+      "data": {
+        "schema_version": "harness.retro-insights/v1",
+        "generated_at": "2026-09-07T08:16:11.021Z",
+        "headline": {
+          "records": 3,
+          "entries": 16,
+          "plans_touched": [
+            "001-sdk-cli-foundation"
+          ],
+          "agents": [
+            "pij-right-kotallo"
+          ],
+          "date_range": {
+            "from": "2026-09-07T00:31:44.296Z",
+            "to": "2026-09-07T04:52:59.172Z"
+          },
+          "status_counts": {
+            "open": 4,
+            "suggested": 9,
+            "encoded": 3,
+            "wontfix": 0,
+            "stale": 0,
+            "other": 0
+          },
+          "kind_counts": {
+            "difficulty": 14,
+            "magic-wand": 0,
+            "gift": 1,
+            "insight": 0,
+            "coordination": 0,
+            "improvement-suggestion": 0,
+            "confusion": 0,
+            "win": 1,
+            "other": 0
+          },
+          "disposition_counts": {
+            "fixed-now": 3,
+            "task": 7,
+            "plan": 0,
+            "diffs": 0,
+            "command": 0,
+            "kept": 6,
+            "declined": 0,
+            "deferred": 0,
+            "unspecified": 0
+          },
+          "open_to_encoded_ratio": "4:3"
+        },
+        "sections": {
+          "totals": {
+            "id": "totals",
+            "title": "Retro totals",
+            "available": true,
+            "rows": [
+              {
+                "claim": "3 record(s), 16 entr(y/ies)",
+                "measures_used": [
+                  "parsed committed retro records"
+                ],
+                "n": 3,
+                "caveat": "Counts cover the records supplied to the engine after reader validation, deduplication, and scope filters.",
+                "values": {
+                  "records": 3,
+                  "entries": 16,
+                  "plans": 1,
+                  "agents": 1
+                }
+              },
+              {
+                "claim": "suggested: 9",
+                "measures_used": [
+                  "system.compound.status"
+                ],
+                "n": 9,
+                "caveat": "Lifecycle status is read from committed retro entries; missing or unknown values are counted as other, never inferred.",
+                "values": {
+                  "status": "suggested",
+                  "count": 9
+                }
+              },
+              {
+                "claim": "other (2 row(s) each below n=5)",
+                "measures_used": [
+                  "aggregated tail"
+                ],
+                "n": 7,
+                "caveat": "Folded 2 row(s) each with n<5; shown as one aggregate so low-sample observations remain visible without overstating individual patterns.",
+                "values": {
+                  "count": 7,
+                  "folded_rows": 2
+                }
+              }
+            ],
+            "suppressed": {
+              "rows": 2,
+              "reason": "n<5"
+            },
+            "note": "Exact status counts remain in headline.status_counts; low-n status rows are folded visibly."
+          },
+          "top_clusters": {
+            "id": "top_clusters",
+            "title": "Open clusters",
+            "available": true,
+            "rows": [
+              {
+                "claim": "[difficulty/tooling] 2 open entr(y/ies)",
+                "measures_used": [
+                  "kind",
+                  "target",
+                  "severity",
+                  "system.compound.first_seen_at"
+                ],
+                "n": 2,
+                "caveat": "Cluster identity is the exact (kind,target) pair; descriptions are preserved as provenance and are not semantically merged.",
+                "values": {
+                  "kind": "difficulty",
+                  "target": "tooling",
+                  "entries": 2,
+                  "records": 1,
+                  "agents": 1,
+                  "severity": "annoying",
+                  "first_seen_at": "2026-09-07T00:31:57.151Z"
+                },
+                "kind": "difficulty",
+                "target": "tooling",
+                "severity": "annoying",
+                "first_seen_at": "2026-09-07T00:31:57.151Z",
+                "proof_gap": false,
+                "repeatedly_deferred": false,
+                "members": [
+                  {
+                    "record_path": ".harness/records/retro/2026-09-07/001-harness-onboarding.md",
+                    "retro_id": "2026-09-07T00:38:03.219Z-pij-right-kotallo-e94c",
+                    "entry_id": "DL-002",
+                    "status": "open"
+                  },
+                  {
+                    "record_path": ".harness/records/retro/2026-09-07/001-harness-onboarding.md",
+                    "retro_id": "2026-09-07T00:38:03.219Z-pij-right-kotallo-e94c",
+                    "entry_id": "DL-003",
+                    "status": "open"
+                  }
+                ]
+              },
+              {
+                "claim": "[difficulty/product-sensor] 1 open entr(y/ies)",
+                "measures_used": [
+                  "kind",
+                  "target",
+                  "severity",
+                  "system.compound.first_seen_at"
+                ],
+                "n": 1,
+                "caveat": "Cluster identity is the exact (kind,target) pair; descriptions are preserved as provenance and are not semantically merged.",
+                "values": {
+                  "kind": "difficulty",
+                  "target": "product-sensor",
+                  "entries": 1,
+                  "records": 1,
+                  "agents": 1,
+                  "severity": "blocking",
+                  "first_seen_at": "2026-09-07T00:31:44.296Z"
+                },
+                "kind": "difficulty",
+                "target": "product-sensor",
+                "severity": "blocking",
+                "first_seen_at": "2026-09-07T00:31:44.296Z",
+                "proof_gap": true,
+                "proof_gap_signal": "keyword",
+                "repeatedly_deferred": false,
+                "members": [
+                  {
+                    "record_path": ".harness/records/retro/2026-09-07/001-harness-onboarding.md",
+                    "retro_id": "2026-09-07T00:38:03.219Z-pij-right-kotallo-e94c",
+                    "entry_id": "DL-001",
+                    "status": "open"
+                  }
+                ]
+              },
+              {
+                "claim": "[win/engineering-harness] 1 open entr(y/ies)",
+                "measures_used": [
+                  "kind",
+                  "target",
+                  "severity",
+                  "system.compound.first_seen_at"
+                ],
+                "n": 1,
+                "caveat": "Cluster identity is the exact (kind,target) pair; descriptions are preserved as provenance and are not semantically merged.",
+                "values": {
+                  "kind": "win",
+                  "target": "engineering-harness",
+                  "entries": 1,
+                  "records": 1,
+                  "agents": 1,
+                  "severity": null,
+                  "first_seen_at": "2026-09-07T00:34:48.591Z"
+                },
+                "kind": "win",
+                "target": "engineering-harness",
+                "severity": null,
+                "first_seen_at": "2026-09-07T00:34:48.591Z",
+                "proof_gap": false,
+                "repeatedly_deferred": false,
+                "members": [
+                  {
+                    "record_path": ".harness/records/retro/2026-09-07/001-harness-onboarding.md",
+                    "retro_id": "2026-09-07T00:38:03.219Z-pij-right-kotallo-e94c",
+                    "entry_id": "WIN-001",
+                    "status": "open"
+                  }
+                ]
+              }
+            ],
+            "note": "Top 10 open clusters, ranked by recurrence, severity, proof leverage, then oldest first-seen time."
+          },
+          "stale": {
+            "id": "stale",
+            "title": "Stale lifecycle entries",
+            "available": false,
+            "rows": [],
+            "note": "Flags only; the report is read-only."
+          },
+          "disposition_mix_records": {
+            "id": "disposition_mix_records",
+            "title": "Disposition mix from records",
+            "available": true,
+            "rows": [
+              {
+                "claim": "task: 7",
+                "measures_used": [
+                  "entry disposition"
+                ],
+                "n": 7,
+                "caveat": "Drain-time dispositions are counted from committed records; unspecified means the older record carried no disposition field.",
+                "values": {
+                  "disposition": "task",
+                  "count": 7,
+                  "share": 0.438
+                }
+              },
+              {
+                "claim": "kept: 6",
+                "measures_used": [
+                  "entry disposition"
+                ],
+                "n": 6,
+                "caveat": "Drain-time dispositions are counted from committed records; unspecified means the older record carried no disposition field.",
+                "values": {
+                  "disposition": "kept",
+                  "count": 6,
+                  "share": 0.375
+                }
+              },
+              {
+                "claim": "other (1 row(s) each below n=5)",
+                "measures_used": [
+                  "aggregated tail"
+                ],
+                "n": 3,
+                "caveat": "Folded 1 row(s) each with n<5; shown as one aggregate so low-sample observations remain visible without overstating individual patterns.",
+                "values": {
+                  "count": 3,
+                  "share": 0.188,
+                  "folded_rows": 1
+                }
+              }
+            ],
+            "suppressed": {
+              "rows": 1,
+              "reason": "n<5"
+            },
+            "note": "Disposition fields observed across 16 committed entr(y/ies)."
+          }
+        },
+        "scope": {
+          "plans": [],
+          "since": null,
+          "kinds": [],
+          "agents": [
+            "pij-right-kotallo"
+          ]
+        },
+        "sources": {
+          "canonical": {
+            "scanned": 5,
+            "parsed": 5,
+            "included": 3,
+            "deduped": 0
+          },
+          "agents": {
+            "scanned": 0,
+            "parsed": 0,
+            "included": 0,
+            "deduped": 0
+          },
+          "retros": {
+            "scanned": 0,
+            "parsed": 0,
+            "included": 0,
+            "deduped": 0
+          }
+        },
+        "malformed_skipped": 0,
+        "unsupported_versions": [],
+        "buffer_pending": 10,
+        "buffer_malformed_skipped": 0
+      },
+      "evidence": [
+        {
+          "label": "retro insights report",
+          "none": true
+        }
+      ],
+      "next_action": "The observe buffer has 10 pending entr(y/ies); drain it separately if those should join a future committed-record report."
+    }
+  },
+  "scope": "Parser discovery only, not product proof; no peer bucket cleared"
+}

@@ -1,0 +1,18 @@
+{
+  "sessionId": "legacy-session",
+  "startTime": "2026-01-02T03:04:05.123456789Z",
+  "chatMessages": [
+    {"role": "user", "content": "SENSITIVE-legacy-user"},
+    {"role": "assistant", "content": "SENSITIVE-legacy-assistant", "tool_calls": [
+      {"id": "call-1", "type": "function", "function": {"name": "read_file", "arguments": "{\"path\":\"/SENSITIVE-input\"}"}}
+    ]},
+    {"role": "tool", "content": "SENSITIVE-legacy-result", "tool_call_id": "call-1"}
+  ],
+  "timeline": [
+    {"id": "info-1", "type": "info", "timestamp": "2026-01-02T03:04:05Z", "text": "SENSITIVE-info"},
+    {"id": "user-1", "type": "user", "timestamp": "2026-01-02T03:04:06Z", "text": "SENSITIVE-legacy-user", "expandedText": "SENSITIVE-expanded", "mentions": [{"path": "/SENSITIVE-mention"}]},
+    {"id": "assistant-1", "type": "copilot", "timestamp": "2026-01-02T03:04:07Z", "text": "SENSITIVE-legacy-assistant"},
+    {"id": "tool-start", "type": "tool_call_requested", "timestamp": "2026-01-02T03:04:08Z", "callId": "call-1", "name": "read_file", "toolTitle": "SENSITIVE-tool-title", "intentionSummary": "SENSITIVE-intention", "arguments": {"path": "/SENSITIVE-input"}},
+    {"id": "tool-end", "type": "tool_call_completed", "timestamp": "2026-01-02T03:04:09Z", "callId": "call-1", "result": {"content": "SENSITIVE-legacy-result", "nested": {"count": 2, "ok": true}}}
+  ]
+}

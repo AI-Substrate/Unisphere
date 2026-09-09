@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pij-rs",
+    "spawn",
+    "--harness",
+    "omp",
+    "--model",
+    "github-copilot/gpt-6-astra",
+    "--effort",
+    "high",
+    "--cwd",
+    "/Users/jordanknight/substrate/unisphere/unisphere-plan010-pi",
+    "--parent",
+    "pij-right-kotallo",
+    "--name",
+    "p010-tk-0004",
+    "--json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters",
+  "started": "2026-09-08T06:33:16.638Z",
+  "completed": "2026-09-08T06:33:18.434Z",
+  "exit_code": 0,
+  "stdout": "{\"ok\":true,\"command\":\"pij spawn\",\"v\":2,\"data\":{\"id\":\"pij-remarkable-woodpecker\",\"harness\":\"omp\",\"session\":\"01a07fb8-932f-7788-b3d4-1cde81af477f\",\"pane\":\"%4413\",\"proc\":{\"pid\":87521,\"proc_start\":20260908163316},\"folder\":\"/Users/jordanknight/substrate/unisphere/unisphere-plan010-pi\",\"state\":\"idle\",\"semantic_state\":null,\"role\":null,\"parent\":\"pij-right-kotallo\",\"relay\":false,\"cross_session_inbound_accept\":false,\"native_extension_delivery\":false,\"spawn_id\":\"s-d2f625cbdf4828940dbf74286708f85f\",\"model\":\"github-copilot/gpt-6-astra\",\"effort\":\"high\",\"dispatched\":true,\"bound\":true,\"pid\":87521}}\n",
+  "stderr": ""
+}

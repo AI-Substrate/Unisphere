@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "harness",
+    "commit",
+    "docs(plan): define bounded registered-adapter catalog\n\nPij-Prime: pij-right-kotallo\nPij-Plan: 009-adapter-catalog",
+    "--",
+    "docs/plans/009-adapter-catalog"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog",
+  "at": "2026-09-08T03:20:37.069Z",
+  "exit_code": 0,
+  "stdout": "{\"command\":\"commit\",\"status\":\"ok\",\"timestamp\":\"2026-09-08T03:20:37.065Z\",\"data\":{\"mode\":\"direct-verified\",\"probe\":\"connected\",\"sha\":\"2e3109c1273c38df76c9db5fb2f082c28a48eb5b\",\"sha_unknown\":false,\"staged\":[\"docs/plans/009-adapter-catalog/assets/backpressure.dd.json\",\"docs/plans/009-adapter-catalog/assets/backpressure.dd.md\",\"docs/plans/009-adapter-catalog/assets/design-validation.json\",\"docs/plans/009-adapter-catalog/assets/execution-log.dd.json\",\"docs/plans/009-adapter-catalog/assets/execution-log.dd.md\",\"docs/plans/009-adapter-catalog/assets/impl-guide.dd.json\",\"docs/plans/009-adapter-catalog/assets/impl-guide.dd.md\",\"docs/plans/009-adapter-catalog/assets/tasks/phase-1/tasks.dd.json\",\"docs/plans/009-adapter-catalog/assets/tasks/phase-1/tasks.dd.md\",\"docs/plans/009-adapter-catalog/assets/team/coder-packet.template.md\",\"docs/plans/009-adapter-catalog/assets/team/model-settings.template.json\",\"docs/plans/009-adapter-catalog/assets/team/reviewer-packet.template.md\",\"docs/plans/009-adapter-catalog/plan.dd.json\",\"docs/plans/009-adapter-catalog/plan.dd.md\",\"docs/plans/009-adapter-catalog/the-flow.json\",\"docs/plans/009-adapter-catalog/the-flow.md\"],\"verify\":\"landed\",\"buffer\":null,\"detail\":\"committed 2e3109c1273c and VERIFIED: a refs/notes/ai entry landed, so the collector recorded this commit's authorship.\"},\"evidence\":[{\"label\":\"commit 2e3109c1273c\"}]}\n",
+  "stderr": ""
+}

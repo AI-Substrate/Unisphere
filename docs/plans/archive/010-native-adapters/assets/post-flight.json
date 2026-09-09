@@ -1,0 +1,124 @@
+{
+  "recorded_at": "2026-09-08T22:39:28.357Z",
+  "composed_sha": "6a38efaf4db192a6e35fafa903db7c06cdbe371e",
+  "composition": {
+    "path": "docs/plans/archive/010-native-adapters/assets/team/composition.dd.json",
+    "sha256": "70fee1b212963f7a26bcf0c52850637e5431dcb7fa2d447dba2b186d78a0a5ef"
+  },
+  "review": {
+    "path": "docs/plans/archive/010-native-adapters/assets/team/review-composition-rv-plan010-composition-opus-r2-binding.dd.json",
+    "sha256": "373d7d54fcba89e4fa565836b849b86cae765881188b76560b451687b0cdb893"
+  },
+  "flow": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/docs/plans/archive/010-native-adapters/the-flow.json",
+  "archive": "/Users/jordanknight/substrate/unisphere/unisphere-native-adapters/docs/plans/archive/010-native-adapters",
+  "survivor": "/Users/jordanknight/substrate/unisphere/unisphere-plan010-formal-preserved/8835aeda-6b69-407d-bc62-df3413a0153a",
+  "shipping_authorized": false,
+  "chores": [
+    {
+      "id": "backpressure",
+      "status": "done",
+      "comments": [
+        {
+          "at": "2026-09-08T22:33:59.315Z",
+          "text": "eng-harness-flow pre-coding followed inline on reconciliation: current canonical backpressure rows resolve to actual retained native/quality/boot evidence, not planned commands. Product intent unchanged; factual acceptance is Proven. basis_sha256:2160c94a738ec3cb49c482d8099c4a86ee5dfe36b545ffdaaedd106693eab3ac recorded:2026-09-08T22:33:59.180Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ]
+    },
+    {
+      "id": "boot-1",
+      "status": "done",
+      "comments": [
+        {
+          "at": "2026-09-08T22:33:59.904Z",
+          "text": "eng-harness-flow pre-flight reconciliation followed inline: original contract smoke and exact product boot results retained; first formal composition now records current artifact6a38efaf with native boot/checks success. This comment does not invent a new before-coding execution. recorded:2026-09-08T22:33:59.755Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ]
+    },
+    {
+      "id": "observe-1",
+      "status": "done",
+      "comments": [
+        {
+          "at": "2026-09-08T22:34:00.193Z",
+          "text": "Actual nine observations were retained in six durable retro records. Worker source/custody records and owner-only clear receipts remain in assets; no other peer bucket cleared by PM. recorded:2026-09-08T22:34:00.056Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ]
+    },
+    {
+      "id": "retro-1",
+      "status": "done",
+      "comments": [
+        {
+          "at": "2026-09-08T22:34:00.476Z",
+          "text": "eng-harness-flow post-coding followed inline: own bucket is empty after its committed retention; actual harvest returned6records/9entries/malformed0, saved in assets/formal-closeout-harvest.json. No repeated product proof needed for this drain. recorded:2026-09-08T22:34:00.340Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ]
+    },
+    {
+      "id": "retro-harvest",
+      "status": "done",
+      "comments": [
+        {
+          "at": "2026-09-08T22:38:15.438Z",
+          "text": "eng-harness-flow post-flight followed inline: actual formal-closeout harvest6records9entries/malformed0, own observation bucket empty, original worker custody retained. Upstream PR206/207 encode the observed native-binding/historical-integration lesson. Local telemetry lookup E100/ref_unavailable retained; no remote sync claim under HARNESS_NO_TELEMETRY_AUTOSYNC=1.",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "path": "docs/plans/archive/010-native-adapters/assets/worker-observation-custody.json",
+      "category": "observation"
+    },
+    {
+      "path": "docs/plans/archive/010-native-adapters/assets/formal-closeout-harvest.json",
+      "category": "observation"
+    },
+    {
+      "path": "docs/plans/archive/010-native-adapters/assets/formal-closeout-telemetry.json",
+      "category": "telemetry"
+    },
+    {
+      "path": ".harness/records/retro/2026-09-08/003-plan010-pij-ideological-koala.md",
+      "category": "observation"
+    },
+    {
+      "path": ".harness/records/retro/2026-09-08/004-plan010-pij-homeless-dudley.md",
+      "category": "observation"
+    },
+    {
+      "path": ".harness/records/retro/2026-09-08/005-plan010-pij-mechanical-tsarina.md",
+      "category": "observation"
+    },
+    {
+      "path": ".harness/records/retro/2026-09-08/006-plan010-pij-adorable-bat.md",
+      "category": "observation"
+    },
+    {
+      "path": ".harness/records/retro/2026-09-08/007-plan010-pij-kind-turkey.md",
+      "category": "observation"
+    },
+    {
+      "path": ".harness/records/retro/2026-09-08/008-plan010-pij-right-kotallo-plan010.md",
+      "category": "observation"
+    },
+    {
+      "path": ".harness/temp/plan010-composition-review-r2-binding.dd.json",
+      "category": "report"
+    },
+    {
+      "path": "docs/plans/archive/010-native-adapters/assets/formal-archive-completion.json",
+      "category": "report"
+    }
+  ]
+}

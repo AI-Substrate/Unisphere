@@ -1,0 +1,122 @@
+{
+  "at": "2026-09-08T06:44:46.159Z",
+  "scope": "Structural-only field/type projection of two existing inactive legacy history-session-state JSON snapshots under32KiB each. No message text, IDs, timestamps, tool names/arguments or metadata values copied.",
+  "sample_files": 2,
+  "field_types": {
+    "snapshot": [
+      "object"
+    ],
+    "snapshot.sessionId": [
+      "string"
+    ],
+    "snapshot.startTime": [
+      "string"
+    ],
+    "snapshot.chatMessages": [
+      "array"
+    ],
+    "snapshot.chatMessages[]": [
+      "object"
+    ],
+    "snapshot.chatMessages[].role": [
+      "string"
+    ],
+    "snapshot.chatMessages[].content": [
+      "string"
+    ],
+    "snapshot.chatMessages[].tool_calls": [
+      "array"
+    ],
+    "snapshot.chatMessages[].tool_calls[]": [
+      "object"
+    ],
+    "snapshot.chatMessages[].tool_calls[].function": [
+      "object"
+    ],
+    "snapshot.chatMessages[].tool_calls[].function.arguments": [
+      "string"
+    ],
+    "snapshot.chatMessages[].tool_calls[].function.name": [
+      "string"
+    ],
+    "snapshot.chatMessages[].tool_calls[].id": [
+      "string"
+    ],
+    "snapshot.chatMessages[].tool_calls[].type": [
+      "string"
+    ],
+    "snapshot.chatMessages[].tool_call_id": [
+      "string"
+    ],
+    "snapshot.timeline": [
+      "array"
+    ],
+    "snapshot.timeline[]": [
+      "object"
+    ],
+    "snapshot.timeline[].id": [
+      "string"
+    ],
+    "snapshot.timeline[].timestamp": [
+      "string"
+    ],
+    "snapshot.timeline[].type": [
+      "string"
+    ],
+    "snapshot.timeline[].text": [
+      "string"
+    ],
+    "snapshot.timeline[].mentions": [
+      "array"
+    ],
+    "snapshot.timeline[].expandedText": [
+      "string"
+    ],
+    "snapshot.timeline[].callId": [
+      "string"
+    ],
+    "snapshot.timeline[].name": [
+      "string"
+    ],
+    "snapshot.timeline[].toolTitle": [
+      "string"
+    ],
+    "snapshot.timeline[].intentionSummary": [
+      "string"
+    ],
+    "snapshot.timeline[].arguments": [
+      "object"
+    ],
+    "snapshot.timeline[].result": [
+      "object"
+    ]
+  },
+  "recognized_discriminants": {
+    "snapshot.chatMessages[].role": [
+      "user",
+      "assistant",
+      "tool"
+    ],
+    "snapshot.timeline[].type": [
+      "user"
+    ]
+  },
+  "limitations": "Bounded observations, not exhaustive legacy schema. Missing optional usage/content facts must not be synthesized.",
+  "native_discriminant_counts": {
+    "chat_roles": {
+      "user": 4,
+      "assistant": 7,
+      "tool": 3
+    },
+    "tool_call_types": {
+      "function": 4
+    },
+    "timeline_types": {
+      "info": 10,
+      "user": 4,
+      "copilot": 3,
+      "tool_call_completed": 3,
+      "tool_call_requested": 1
+    }
+  }
+}

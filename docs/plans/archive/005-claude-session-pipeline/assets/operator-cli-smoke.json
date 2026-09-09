@@ -1,0 +1,32 @@
+{
+  "build": {
+    "argv": [
+      "cargo",
+      "build",
+      "--locked",
+      "-p",
+      "unisphere-app"
+    ],
+    "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "   Compiling unisphere-app v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline/crates/app)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 9.12s\n"
+  },
+  "smoke": {
+    "argv": [
+      "target/debug/unisphere",
+      "sessions",
+      "export",
+      "--adapter",
+      "claude-code",
+      "--input",
+      "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline/crates/testkit/fixtures/collection/claude-basic.jsonl",
+      "--max-records",
+      "1"
+    ],
+    "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline",
+    "exit_code": 0,
+    "stdout": "{\"resourceLogs\":[{\"scopeLogs\":[{\"scope\":{\"name\":\"unisphere\",\"version\":\"0.1.0\"},\"logRecords\":[{\"eventName\":\"unisphere.session.record\",\"timeUnixNano\":\"1788825600000000000\",\"attributes\":[{\"key\":\"gen_ai.conversation.id\",\"value\":{\"stringValue\":\"fixture-session\"}},{\"key\":\"unisphere.content.omitted\",\"value\":{\"boolValue\":true}},{\"key\":\"unisphere.message.role\",\"value\":{\"stringValue\":\"user\"}},{\"key\":\"unisphere.profile.version\",\"value\":{\"intValue\":\"1\"}},{\"key\":\"unisphere.source.adapter\",\"value\":{\"stringValue\":\"claude-code\"}},{\"key\":\"unisphere.source.kind\",\"value\":{\"stringValue\":\"user\"}},{\"key\":\"unisphere.source.offset\",\"value\":{\"intValue\":\"0\"}},{\"key\":\"unisphere.source.path\",\"value\":{\"stringValue\":\"/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline/crates/testkit/fixtures/collection/claude-basic.jsonl\"}},{\"key\":\"unisphere.source.record.id\",\"value\":{\"stringValue\":\"record-user\"}}]}]}]}]}\n{\"resourceLogs\":[{\"scopeLogs\":[{\"scope\":{\"name\":\"unisphere\",\"version\":\"0.1.0\"},\"logRecords\":[{\"eventName\":\"unisphere.session.record\",\"timeUnixNano\":\"1788825601123456789\",\"attributes\":[{\"key\":\"gen_ai.conversation.id\",\"value\":{\"stringValue\":\"fixture-session\"}},{\"key\":\"gen_ai.response.model\",\"value\":{\"stringValue\":\"claude-fixture\"}},{\"key\":\"unisphere.content.omitted\",\"value\":{\"boolValue\":true}},{\"key\":\"unisphere.message.id\",\"value\":{\"stringValue\":\"response-shared\"}},{\"key\":\"unisphere.message.role\",\"value\":{\"stringValue\":\"assistant\"}},{\"key\":\"unisphere.profile.version\",\"value\":{\"intValue\":\"1\"}},{\"key\":\"unisphere.source.adapter\",\"value\":{\"stringValue\":\"claude-code\"}},{\"key\":\"unisphere.source.kind\",\"value\":{\"stringValue\":\"assistant\"}},{\"key\":\"unisphere.source.offset\",\"value\":{\"intValue\":\"181\"}},{\"key\":\"unisphere.source.parent.id\",\"value\":{\"stringValue\":\"record-user\"}},{\"key\":\"unisphere.source.path\",\"value\":{\"stringValue\":\"/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline/crates/testkit/fixtures/collection/claude-basic.jsonl\"}},{\"key\":\"unisphere.source.record.id\",\"value\":{\"stringValue\":\"record-answer-1\"}},{\"key\":\"unisphere.usage.cache_creation_input_tokens\",\"value\":{\"intValue\":\"1\"}},{\"key\":\"unisphere.usage.cache_read_input_tokens\",\"value\":{\"intValue\":\"4\"}},{\"key\":\"unisphere.usage.input_tokens\",\"value\":{\"intValue\":\"10\"}},{\"key\":\"unisphere.usage.output_tokens\",\"value\":{\"intValue\":\"2\"}},{\"key\":\"unisphere.usage.scope\",\"value\":{\"stringValue\":\"native_record_snapshot\"}}]}]}]}]}\n{\"resourceLogs\":[{\"scopeLogs\":[{\"scope\":{\"name\":\"unisphere\",\"version\":\"0.1.0\"},\"logRecords\":[{\"eventName\":\"unisphere.session.record\",\"timeUnixNano\":\"1788825602000000000\",\"attributes\":[{\"key\":\"gen_ai.conversation.id\",\"value\":{\"stringValue\":\"fixture-session\"}},{\"key\":\"gen_ai.response.model\",\"value\":{\"stringValue\":\"claude-fixture\"}},{\"key\":\"unisphere.content.omitted\",\"value\":{\"boolValue\":true}},{\"key\":\"unisphere.message.id\",\"value\":{\"stringValue\":\"response-shared\"}},{\"key\":\"unisphere.message.role\",\"value\":{\"stringValue\":\"assistant\"}},{\"key\":\"unisphere.profile.version\",\"value\":{\"intValue\":\"1\"}},{\"key\":\"unisphere.source.adapter\",\"value\":{\"stringValue\":\"claude-code\"}},{\"key\":\"unisphere.source.kind\",\"value\":{\"stringValue\":\"assistant\"}},{\"key\":\"unisphere.source.offset\",\"value\":{\"intValue\":\"572\"}},{\"key\":\"unisphere.source.parent.id\",\"value\":{\"stringValue\":\"record-answer-1\"}},{\"key\":\"unisphere.source.path\",\"value\":{\"stringValue\":\"/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline/crates/testkit/fixtures/collection/claude-basic.jsonl\"}},{\"key\":\"unisphere.source.record.id\",\"value\":{\"stringValue\":\"record-answer-2\"}},{\"key\":\"unisphere.usage.input_tokens\",\"value\":{\"intValue\":\"10\"}},{\"key\":\"unisphere.usage.output_tokens\",\"value\":{\"intValue\":\"3\"}},{\"key\":\"unisphere.usage.scope\",\"value\":{\"stringValue\":\"native_record_snapshot\"}}]}]}]}]}\n",
+    "stderr": "{\"command\":\"sessions.export\",\"data\":{\"adapter\":\"claude-code\",\"batches\":3,\"diagnostics\":3,\"incomplete_tail\":false,\"offset\":897,\"output\":null,\"records\":3},\"ok\":true,\"v\":1}\n"
+  }
+}

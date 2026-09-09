@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "harness",
+    "builder",
+    "review",
+    "docs/plans/005-claude-session-pipeline/plan.dd.json",
+    "--receipt",
+    ".harness/temp/plan005-composition-review-r2.dd.json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline",
+  "started": "2026-09-08T03:04:54.760Z",
+  "completed": "2026-09-08T03:04:54.993Z",
+  "exit_code": 1,
+  "stdout": "{\"command\":\"builder review\",\"status\":\"error\",\"timestamp\":\"2026-09-08T03:04:54.989Z\",\"error\":{\"code\":\"E475\",\"message\":\"Code changed after composition proof.\"},\"next_action\":\"Verify and independently review the new committed artifact.\"}\n",
+  "stderr": ""
+}

@@ -1,0 +1,76 @@
+{
+  "subject_review": "21a9f98787ad8f3de4b00e0f8b715c8600db643e",
+  "findings": [
+    {
+      "id": "F1",
+      "pm_disposition": "fixed",
+      "resolution": "Core CollectionApi/CollectionBatch and testkit FakeCollector give CLI a legal injected path; SDKCollector implements coreport."
+    },
+    {
+      "id": "F2",
+      "pm_disposition": "fixed",
+      "resolution": "RecordLimit at physicalrecordstart, no returnedcursor; samecursor largerlimit recovery and CLIremedy are required."
+    },
+    {
+      "id": "F3",
+      "pm_disposition": "fixed",
+      "resolution": "Initial fileloader explicitly Unix-only, failfast bothmethods elsewhere; puremapper/writer remain portable."
+    },
+    {
+      "id": "F4",
+      "pm_disposition": "fixed",
+      "resolution": "Enumerated production source-denychecks/negativefixtures and false-negativebound plus independent judgement, not metadataonlypurity."
+    },
+    {
+      "id": "F5",
+      "pm_disposition": "fixed",
+      "resolution": "Closed sourcekind/usagekey/type registry frozen; normative outputprofiledoc has oneowner, native mappingdoc references it."
+    },
+    {
+      "id": "F6",
+      "pm_disposition": "fixed",
+      "resolution": "Exact OTLPproto and GenAIschema commits pinned/read, optional omitted fields/defaultmeanings named; legalkeyset check."
+    },
+    {
+      "id": "F7",
+      "pm_disposition": "fixed",
+      "resolution": "Distinct RecordLimit/BatchLimit/ListingLimit/OutputLimit types/codes and fixedremedies, no raw diagnostics."
+    },
+    {
+      "id": "F8",
+      "pm_disposition": "fixed",
+      "resolution": "Public ReadLimits validate called byloader andSDK beforeI/O; max_sessions0 rejected."
+    },
+    {
+      "id": "F9",
+      "pm_disposition": "fixed",
+      "resolution": "Loader rejects nonUTF8paths; puremapper also defensively rejects bypassedinvalidSessionRef without lossyconversion."
+    },
+    {
+      "id": "F10",
+      "pm_disposition": "fixed",
+      "resolution": "Explicit32MiB cappedserialization writer before destination mutation; encodedsize overflow isOutputLimit."
+    },
+    {
+      "id": "F11",
+      "pm_disposition": "fixed",
+      "resolution": "CLI list recursive:false and leaf-directory help plus empty-result diagnostic; no implicitrecursivediscovery."
+    },
+    {
+      "id": "F12",
+      "pm_disposition": "fixed",
+      "resolution": "ac0001 capability nowlinks vd0006 alongside deterministicmappingchecks."
+    },
+    {
+      "id": "F13",
+      "pm_disposition": "accepted",
+      "resolution": "Retain uninherited internalpath workspace declarations atbaseline, same inertpattern actuallyproven byPlan001; newvd1 will prove futurepackageabsence beforeseal. Do not adopt suggested laterfrozenroot edit or source stubs."
+    }
+  ],
+  "source_changes": false,
+  "spec_pins": {
+    "opentelemetry-proto": "bb8796bff67cf6e1c7f218e21de6eaec0841871e",
+    "semantic-conventions-genai": "94f432d7126f5884d30a2cdde6f4e89908ebb6fd"
+  },
+  "proof_not_claimed": "All new implementation checks remain unexecuted; source-free design corrections only."
+}

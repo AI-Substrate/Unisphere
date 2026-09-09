@@ -1,0 +1,132 @@
+{
+  "release_head": "4a907d6e2832f3907c6538809b4e07e7d2c7a724",
+  "product_identity": {
+    "exit_code": 0,
+    "data": "",
+    "stderr": ""
+  },
+  "archives": [
+    {
+      "path": "docs/plans/archive/005-claude-session-pipeline/plan.dd.json",
+      "result": {
+        "exit_code": 0,
+        "data": {
+          "command": "plan validate",
+          "status": "ok",
+          "timestamp": "2026-09-08T23:00:29.035Z",
+          "data": {
+            "path": "/Users/jordanknight/substrate/unisphere/unisphere-native-session-release/docs/plans/archive/005-claude-session-pipeline/plan.dd.json",
+            "depth": 3,
+            "mode": "complete",
+            "counts": {
+              "error": 0,
+              "warn": 0,
+              "semantic": {
+                "items": 457,
+                "completable": 43,
+                "open": 0,
+                "contradictions": 0,
+                "orphans": 0,
+                "in_scope": 457
+              }
+            },
+            "issues": [],
+            "findings": []
+          },
+          "next_action": "Nothing open, nothing unclaimed, nothing contradictory — this plan is complete by its own documents."
+        },
+        "stderr": ""
+      }
+    },
+    {
+      "path": "docs/plans/archive/009-adapter-catalog/plan.dd.json",
+      "result": {
+        "exit_code": 0,
+        "data": {
+          "command": "plan validate",
+          "status": "ok",
+          "timestamp": "2026-09-08T23:00:29.025Z",
+          "data": {
+            "path": "/Users/jordanknight/substrate/unisphere/unisphere-native-session-release/docs/plans/archive/009-adapter-catalog/plan.dd.json",
+            "depth": 3,
+            "mode": "complete",
+            "counts": {
+              "error": 0,
+              "warn": 0,
+              "semantic": {
+                "items": 231,
+                "completable": 20,
+                "open": 0,
+                "contradictions": 0,
+                "orphans": 0,
+                "in_scope": 231
+              }
+            },
+            "issues": [],
+            "findings": []
+          },
+          "next_action": "Nothing open, nothing unclaimed, nothing contradictory — this plan is complete by its own documents."
+        },
+        "stderr": ""
+      }
+    },
+    {
+      "path": "docs/plans/archive/010-native-adapters/plan.dd.json",
+      "result": {
+        "exit_code": 0,
+        "data": {
+          "command": "plan validate",
+          "status": "ok",
+          "timestamp": "2026-09-08T23:00:29.036Z",
+          "data": {
+            "path": "/Users/jordanknight/substrate/unisphere/unisphere-native-session-release/docs/plans/archive/010-native-adapters/plan.dd.json",
+            "depth": 3,
+            "mode": "complete",
+            "counts": {
+              "error": 0,
+              "warn": 0,
+              "semantic": {
+                "items": 418,
+                "completable": 39,
+                "open": 0,
+                "contradictions": 0,
+                "orphans": 0,
+                "in_scope": 418
+              }
+            },
+            "issues": [],
+            "findings": []
+          },
+          "next_action": "Nothing open, nothing unclaimed, nothing contradictory — this plan is complete by its own documents."
+        },
+        "stderr": ""
+      }
+    }
+  ],
+  "ancestors": [
+    {
+      "sha": "452e0f3cbf4c045a9d5bb10f16f5dc96134a8e98",
+      "exit_code": 0,
+      "data": "",
+      "stderr": ""
+    },
+    {
+      "sha": "830240d1ad5a55cbd81901908cefaf4a49c30c8d",
+      "exit_code": 0,
+      "data": "",
+      "stderr": ""
+    },
+    {
+      "sha": "a87e8182e0e2a100b2155270fadafa0e1a1c5428",
+      "exit_code": 0,
+      "data": "",
+      "stderr": ""
+    },
+    {
+      "sha": "c6f3636b394f0e17445eb2e143f6ac2c6d1ec998",
+      "exit_code": 0,
+      "data": "",
+      "stderr": ""
+    }
+  ]
+}

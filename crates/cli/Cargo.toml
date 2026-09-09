@@ -1,0 +1,17 @@
+[package]
+name = "unisphere-cli"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Explicit-context command-line frontend for Unisphere configuration inspection"
+
+[dependencies]
+unisphere-core.workspace = true
+clap.workspace = true
+serde_json.workspace = true
+
+[dev-dependencies]
+unisphere-testkit.workspace = true
+tempfile.workspace = true

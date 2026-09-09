@@ -1,0 +1,112 @@
+{
+  "dd": {
+    "schema": "builder/packet"
+  },
+  "sections": [
+    {
+      "name": "packet",
+      "value": {
+        "record_type": "packet",
+        "id": "packet-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86",
+        "recorded_at": "2026-09-07T07:06:32.431Z",
+        "nonce": "7ae4d03c-a61d-4bde-92e3-fdea4c8a8374",
+        "unit": {
+          "id": "tk-0002",
+          "name": "Coder A SDK and configuration service",
+          "role": "coder",
+          "responsibility": "Implement unisphere-sdk: pure JSON configuration parsing/resolution, Inspector<R> orchestration over core ports, bounded StdConfigReader and public facade/rustdoc. Own focused SDK tests and documentation.",
+          "paths": [
+            "crates/sdk/**",
+            "docs/sdk.md"
+          ],
+          "reads": [
+            {
+              "owner": "tk-0001",
+              "paths": [
+                "Cargo.toml",
+                "crates/core/**",
+                "crates/testkit/Cargo.toml",
+                "crates/testkit/src/lib.rs",
+                "crates/testkit/src/fakes.rs",
+                "crates/testkit/src/sealed.rs",
+                "crates/testkit/src/fixtures.rs",
+                "crates/testkit/fixtures/config/**"
+              ]
+            }
+          ],
+          "interface": "Inspector<R> implements InspectionApi; public inspect delegates through StdConfigReader; re-export core types. service.rs imports core contracts and serde_json only, not fs adapter/facade/CLI; tests/service_in_isolation.rs compiles the actual service module without fs/wiring modules and exercises it with FakeReader. The fs adapter and default facade are distinct modules; no hidden global reads. For the #[path]-based independent service compilation, service.rs must be self-contained: use absolute unisphere_core::/serde_json:: dependency paths and no crate::/super:: references to facade or sibling modules.",
+          "depends_on": [
+            "tk-0001"
+          ],
+          "wave": 1,
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0001",
+            "../plan.dd.json#acceptance_criteria/ac-0002",
+            "../plan.dd.json#acceptance_criteria/ac-0003",
+            "../plan.dd.json#acceptance_criteria/ac-0006",
+            "../plan.dd.json#acceptance_criteria/ac-0007",
+            "../plan.dd.json#acceptance_criteria/ac-0008",
+            "../plan.dd.json#acceptance_criteria/ac-000b"
+          ],
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002"
+          ],
+          "notes": "No reading/importing the CLI or proof-lane implementation. SDK-local tests must run in a clone containing only baseline plus this delivery. Do not copy Flowspace TOML/env/database/model settings wholesale; use only the needed pure patterns and preserve licence provenance."
+        },
+        "plan": {
+          "path": "docs/plans/001-sdk-cli-foundation/plan.dd.json",
+          "sha256": "bc208a54522fe9d5d26c87d25270806ad72b6b0a53d9155ae4cff1b2871fe3cc"
+        },
+        "guide": {
+          "path": "docs/plans/001-sdk-cli-foundation/assets/impl-guide.dd.json",
+          "sha256": "9a2977c85b3c025eafb434ef1306fc71bf3c35fcaa3bc39fd7784a97a868899d"
+        },
+        "baseline": {
+          "path": "docs/plans/001-sdk-cli-foundation/assets/team/baseline-v7.dd.json",
+          "sha256": "c9fabdbdb8f7ccc0093f178cf5111d175f12e7cc310196a47372d5aa9da0c92c"
+        },
+        "allocation": {
+          "path": "/Users/jordanknight/substrate/unisphere/unishpere-main/.git/builder/allocations/allocation-al-003-78486968-1418-4921-8f53-f956bd367280.dd.json",
+          "sha256": "e7b6e91113dda1f3848204fc1dd800e85ebece80d112626f069b6e50bed9b9d7"
+        },
+        "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-sdk",
+        "parent": "pij-right-kotallo",
+        "requested": {
+          "role": "coder",
+          "harness": "omp",
+          "model": "github-copilot/gpt-6-astra",
+          "effort": "high",
+          "source": {
+            "harness": "override",
+            "model": "override",
+            "effort": "override"
+          }
+        },
+        "forbidden": [
+          ".the-flow-state.json",
+          "the-flow.json",
+          "the-flow.md",
+          "docs/plans/001-sdk-cli-foundation/plan.dd.json",
+          "docs/plans/001-sdk-cli-foundation/assets/impl-guide.dd.json",
+          "docs/plans/001-sdk-cli-foundation/assets/team",
+          ".harness/government/",
+          "All source paths outside unit.paths; sibling implementations; global settings and deployed skills.",
+          "Pushes, merges, canonical lifecycle mutations and nested peers without PM approval."
+        ],
+        "canary": {
+          "path": "docs/plans/001-sdk-cli-foundation/assets/team/canary-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86.txt"
+        },
+        "instructions": [
+          "ACKNOWLEDGEMENT ONLY. Read this packet and the canary through native repository-relative file tools, not shell cwd or absolute-path substitution.",
+          "Confirm HEAD 1ec7213488044ba083da3db7f45a958024a86c86, native root /Users/jordanknight/substrate/unisphere/unisphere-plan001-sdk, peer/session/PID and observed runtime configuration. Requested launch settings are not provider attestation; omit unspecified effort and name observation gaps.",
+          "Before work, write a raw AckReceipt JSON with record_type ack, id ack-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86, nonce equal to packet.nonce, recorded_at, unit_id, peer_id, packet_sha256, baseline_sha (full Git SHA), native_root, shell_cwd, canary_nonce and observed. RuntimeObservation includes peer_id, root, ready, evidence, gaps and only actually observed harness/model/effort/native_session/pid/argv.",
+          "Send its path and SHA-256 to pij-right-kotallo for ingestion through builder ack <plan> --receipt <path>. Do not edit source until an IMPLEMENTATION RELEASE names your peer, unit, nonce and exact packet digest. Queued transport is not observed receipt.",
+          "Only after observing that exact release, natively re-read this packet and canary and create a NEW raw AckReceipt with id ack-tk-0002-1ec7213488044ba083da3db7f45a958024a86c86-release. Keep the same unit/peer/packet/baseline/root/canary and freshly observed runtime bindings; set nonce to the already-issued release.message_id, independently of packet.nonce. Use your actual receipt creation time as recorded_at: it must not precede release.recorded_at minus 5000 ms or exceed PM ingestion time plus 5000 ms. Never reuse or overwrite the pre-work receipt.",
+          "Send the new post-release receipt path and SHA-256 to pij-right-kotallo for the SAME builder ack <plan> --receipt <path> command before import. This confirms an existing grant; it never requests or sends a second grant. Continue the already-authorized scoped work without waiting for another release.",
+          "After release, implement the complete unit responsibility/interface/acceptance within unit.paths; consume frozen reads rather than sibling implementation code. Already-working descendants can confirm their retained release without replaying work. Report scoped committed delivery and evidence to the PM."
+        ]
+      }
+    }
+  ],
+  "references": []
+}

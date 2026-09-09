@@ -1,0 +1,54 @@
+{
+  "at": "2026-09-08T06:38:01.669Z",
+  "scope": "Bounded structural-only projection of two inactive synthetic/probe Cursor transcript files; maximum256KiB/32lines each. No private text, IDs, timestamps, function names or argument keys/values copied.",
+  "sample_files": 2,
+  "complete_records": 43,
+  "malformed": 0,
+  "field_types": {
+    "record": [
+      "object"
+    ],
+    "record.role": [
+      "string"
+    ],
+    "record.message": [
+      "object"
+    ],
+    "record.message.content": [
+      "array"
+    ],
+    "record.message.content[]": [
+      "object"
+    ],
+    "record.message.content[].type": [
+      "string"
+    ],
+    "record.message.content[].text": [
+      "string"
+    ],
+    "record.message.content[].name": [
+      "string"
+    ],
+    "record.message.content[].input": [
+      "object",
+      "string"
+    ],
+    "record.type": [
+      "string"
+    ],
+    "record.status": [
+      "string"
+    ]
+  },
+  "recognized_discriminants": {
+    "record.role": [
+      "user",
+      "assistant"
+    ],
+    "record.message.content[].type": [
+      "text",
+      "tool_use"
+    ]
+  },
+  "caveat": "Observed sample shape, not complete dialect coverage. No inferred timestamp/usage/identity fields."
+}

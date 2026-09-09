@@ -1,0 +1,177 @@
+{
+  "receipt": {
+    "dd": {
+      "schema": "builder/team"
+    },
+    "sections": [
+      {
+        "name": "review",
+        "value": {
+          "record_type": "review",
+          "id": "rv-plan005-baseline-opus-r1",
+          "recorded_at": "2026-09-08T01:27:47.711071Z",
+          "scope": "decomposition",
+          "subject_sha": "3df2450324873eedb77aba645edfaa9472de3a56",
+          "plan": {
+            "path": "docs/plans/005-claude-session-pipeline/plan.dd.json",
+            "sha256": "0c28b557a2def3dc075c70403e6768959057c007c428dcb9a4ac23683ac7f830"
+          },
+          "guide": {
+            "path": "docs/plans/005-claude-session-pipeline/assets/impl-guide.dd.json",
+            "sha256": "5520d59344dc2f664af3121df3184c344f659a4c1acceca9432ce06abe242777"
+          },
+          "reviewer_id": "pij-huge-nigel",
+          "requested": {
+            "role": "reviewer",
+            "harness": "omp",
+            "model": "github-copilot/claude-opus-5",
+            "effort": "high",
+            "source": {
+              "harness": "guide",
+              "model": "guide",
+              "effort": "guide"
+            }
+          },
+          "observed": {
+            "peer_id": "pij-huge-nigel",
+            "root": "/Users/jordanknight/substrate/unisphere/unishpere-main",
+            "ready": true,
+            "harness": "omp",
+            "model": "github-copilot/claude-opus-5",
+            "effort": "high",
+            "reviewed_files": [
+              {
+                "path": "Cargo.toml",
+                "sha256": "3eb376b649974e88cb6308bd98cef90f3b5a7e1198efece32b1beea00cd06d40",
+                "digest_verified": true
+              },
+              {
+                "path": "crates/core/Cargo.toml",
+                "sha256": "298a2002cea077f9ac1b338f9baddc811cf8c2d00a5bfa1658fbc84dcf93ef28",
+                "digest_verified": true
+              },
+              {
+                "path": "crates/core/src/lib.rs",
+                "sha256": "e4b506483be5c98e2af6437edd4c69fba37ef620a13924feaa989217c51cc657",
+                "digest_verified": true
+              },
+              {
+                "path": "crates/core/src/collection.rs",
+                "sha256": "7d8062a3ae40a0257422427d5a2bd99b20a93b2ee5e97a25867373a175fd5f53",
+                "digest_verified": true
+              },
+              {
+                "path": "crates/testkit/src/lib.rs",
+                "sha256": "0198340f306816fd4ee2d9a3c84bdd82d937a5ce8fbcceadb27f0e01e8089db5",
+                "digest_verified": true
+              },
+              {
+                "path": "crates/testkit/src/collection.rs",
+                "sha256": "8ce28bb35e29efd626c75b83ce4c75a52f61904fc8a1ae51176d61fa103571e0",
+                "digest_verified": true
+              },
+              {
+                "path": "crates/testkit/fixtures/collection/claude-basic.jsonl",
+                "sha256": "3b4b1444f9a54782da17a260735a701ef1e83ef0a71a21810e1ec5deb2609ce2",
+                "digest_verified": true
+              },
+              {
+                "path": "crates/testkit/fixtures/collection/claude-parts.jsonl",
+                "sha256": "c18cbab69f7afbd9cad2cfcfdd6af1fcf47407cba6474332072b3793faf316b1",
+                "digest_verified": true
+              }
+            ],
+            "evidence": [
+              "git rev-parse HEAD == 3df2450324873eedb77aba645edfaa9472de3a56; all eight baseline-source-manifest.json digests recomputed and matching.",
+              "PM began uncommitted SDK work (crates/sdk/src/collection.rs untracked, crates/sdk/src/lib.rs modified) mid-review; re-ran git diff of all eight baseline paths against the commit afterwards - all unchanged - and read nothing from the WIP.",
+              "Future package directories absent from both git ls-tree HEAD crates/ (app, cli, core, sdk, testkit only) and the working tree.",
+              "C1 conformance: SourceScope/SessionRef/SourceIdentity/ReadCursor/ReadLimits (128/1048576/4194304)/NativeRecord/LoadedBatch/CollectionBatch{mapped,next_cursor,more,incomplete_tail}/CollectionApi all present with exact field names and types; FakeCollector, FakeSessionLoader and FakeRecordWriter present with call recorders.",
+              "C3 conformance: ReadLimits::validate rejects zeros and max_batch_bytes<max_record_bytes as InvalidInput; SourceScope::validate rejects max_sessions==0; NativeRecord.bytes excludes LF and retains CR per the CRLF test; LoadedBatch::validate additionally re-checks limits at the service boundary for injected loaders, binds next_cursor.source to source.path, rejects overlapping or past-cursor offsets, and uses checked_add plus u64::try_from throughout.",
+              "C4 conformance: TelemetryRecord, MappingOptions with include_content defaulting false, MappingDiagnostic, all five MappingDiagnosticCode variants, MappedBatch, SessionAdapter::name/map->Result.",
+              "C5 conformance: all ten PipelineErrorKind variants, new/kind/offset/code/message/fix accessors, all ten UNI-* codes spelled exactly as specified, Display and Error, private fields, every message/fix a fixed &'static str with no OS/serde/source bytes, and four genuinely distinct limit remedies including RecordLimit's 'no record was skipped'.",
+              "C9 constant: MAX_OUTPUT_BATCH_BYTES = 32*1024*1024 exported from core with the OutputLimit remedy quoting 33554432, pinned by limit_failures_identify_the_remedy_without_content.",
+              "Fixtures are adversarial and useful: shared assistant message.id, isSidechain, thinking+signature, tool_use/tool_result with nested null and boolean content and is_error, unknown part type, unknown record type, records with and without timestamp, and toolUseResult.persistedOutputPath = /do/not/open/private-spill.",
+              "No stubs: git grep at the commit over crates/core and crates/testkit finds no todo!, unimplemented! or TODO; TextFixtureAdapter is a functional second adapter.",
+              "Test count: 6 core plus 14 testkit #[test] functions = the 20 the PM reports (baseline-check-initial.json's 13 testkit is the earlier run).",
+              "F13 obligation discharged by real evidence: baseline-proof.json records cargo test and scoped clippy at exit 0 with all three future package directories listed absent, so the uninherited root path declarations for unisphere-loader-jsonl/adapter-claude/output-otlp are confirmed inert on real Cargo rather than by Plan001 analogy; time and libc declared once at root per C12.",
+              "Core purity pre-scan for the C13 denylist across the five committed core production sources returned zero hits outside crates/core/src/lib.rs:4's #![forbid(unsafe_code)]."
+            ],
+            "gaps": [
+              "No build, tests, clippy or formatters were run; PM vd-0001 (20 tests, scoped clippy) is reported as the PM's recorded runtime evidence, not reproduced here.",
+              "B1 is derived statically from the allow-list, core manifest and the gate's argv - certain by construction but not executed; running the architecture gate confirms it directly.",
+              "Loader, adapter and writer behaviour is unimplemented and out of scope; C2, C6, C7, C8, C10 and C11 could not be checked against code at this baseline.",
+              "The PM's uncommitted SDK collection work was deliberately not read, so nothing here speaks to the final SDK composition.",
+              "No design contract was reopened and no profile question revisited; the approved plan and guide are treated as fixed."
+            ]
+          },
+          "verdict": "changes-requested",
+          "report": {
+            "path": "docs/plans/005-claude-session-pipeline/assets/reviews/baseline-opus-r1.md",
+            "sha256": "3df410b27f4358a78f638090cda4e90938c5ffa66fd5a8042104445d4b37aee8"
+          },
+          "findings": [
+            {
+              "id": "B1",
+              "severity": "high",
+              "disposition": "open",
+              "description": "The sealed baseline turns the repository architecture gate red. crates/core/Cargo.toml adds serde_json (correct and required by C4's BTreeMap<String,serde_json::Value> and named by C12), but crates/testkit/src/bin/unisphere-arch-check.rs:15 still allows only 'serde' for unisphere-core, so against real cargo metadata the binary errors 'forbidden normal dependency: unisphere-core -> serde_json' and exits FAILURE. .harness/extensions/checks/checks.mjs:85 runs that exact binary with no --metadata as the 'architecture' gate, so harness checks is red at 3df24503. C12 explicitly required dependency checks to be updated to the actual approved graph in this same change. The recorded proof missed it because vd-0001 ran only 'cargo test -p unisphere-core -p unisphere-testkit --lib' plus scoped clippy, and the binary's own unit tests read fixtures/architecture/allowed.json whose unisphere-core package also lists only serde - sensor and fixture drifted together. Ownership makes it worse: crates/testkit/src/bin/** and fixtures/architecture/** belong to tk-0005 (pm, wave 2), and tk-0002/tk-0003/tk-0004 list them in neither paths nor reads, so all three wave-1 lanes would inherit a red gate on a file none of them may edit. Fix before seal: allow matches!(dependency, \"serde\" | \"serde_json\") for core, add the edge to allowed.json and bump the expected count 7->8, then run the architecture gate itself rather than the scoped --lib tests. Separately for wave-1 planning, check() also rejects workspace members outside its hardcoded five-name list at lines 54-61, so the same wave-2 file must gain the three new package names and their C12 edges the moment those crates appear.",
+              "evidence": "crates/core/Cargo.toml; crates/testkit/src/bin/unisphere-arch-check.rs:15,29,54-61,87-92,145-152; .harness/extensions/checks/checks.mjs:85; crates/testkit/fixtures/architecture/allowed.json; assets/baseline-proof.json; guide C12; units tk-0005 paths"
+            },
+            {
+              "id": "B2",
+              "severity": "medium",
+              "disposition": "open",
+              "description": "The frozen conformance helper asserts three of the four properties C13 names. assert_adapter_conformance (crates/testkit/src/collection.rs:252-316) covers determinism, source-provenance and content policy well, but nothing about outputbounds, and MAX_OUTPUT_BATCH_BYTES appears nowhere in testkit. Because the helper is frozen at wave 0 and tk-0003/tk-0004 list crates/testkit/src/collection.rs under reads rather than paths, no lane can add the assertion later without breaching the fence, so every adapter that 'passes conformance' will have passed a check silent about the bound the writer must enforce. Implementable now with what the crate already has: TelemetryRecord is Serialize and testkit already depends on serde_json. Related decision worth making explicit rather than leaving implicit: the fixtures carry SENSITIVE-* markers precisely so leakage is mechanically detectable, yet the shared helper never scans a metadata-only mapping for them; leaving that to each lane's own tests is defensible but should be stated.",
+              "evidence": "crates/testkit/src/collection.rs:252-316; guide C13; guide C9 MAX_OUTPUT_BATCH_BYTES; units tk-0003/tk-0004 reads"
+            },
+            {
+              "id": "B3",
+              "severity": "low",
+              "disposition": "open",
+              "description": "'Blank line' is defined twice and not identically. C3 says blank lines consume budget and cursor but are omitted from returned records; fixture_records at crates/testkit/src/collection.rs:23 implements blank as line.iter().all(u8::is_ascii_whitespace), and fixture_framing_preserves_physical_offsets_across_blanks_and_crlf pins that reading with a space-only first line. A tk-0002 author could just as reasonably implement blank as an empty physical line, after which the real loader returns a whitespace-only NativeRecord the fixture path never produces - adapter tests stay green while the live pipeline emits diagnostics for a record shape never exercised. Pin the definition in C3 or the helper doc comment before the lanes diverge.",
+              "evidence": "crates/testkit/src/collection.rs:14-32,372-388; guide C3"
+            },
+            {
+              "id": "B4",
+              "severity": "low",
+              "disposition": "open",
+              "description": "CollectionApi object safety is claimed in C1 and consumed as &dyn CollectionApi by C11, but never exercised through dyn at baseline; the FakeCollector test calls through the concrete type. Verified dyn-compatible by inspection (both methods take &self, neither is generic, neither returns Self, Send+Sync supertraits are fine), so risk is low - but SessionAdapter is compile-proven because assert_adapter_conformance takes &dyn SessionAdapter, and CollectionApi deserves the same. Adding 'let _: &dyn CollectionApi = &fake;' to the existing test converts a stated property into a compile-time one at wave 0 inside a file tk-0001 already owns, rather than first testing it in wave 2 when the CLI depends on it.",
+              "evidence": "crates/core/src/collection.rs:228-239; crates/testkit/src/collection.rs:220-248,390-432,252-256; guide C1, C11"
+            },
+            {
+              "id": "B5",
+              "severity": "low",
+              "disposition": "open",
+              "description": "Two pre-seeded false positives for the C13 source scan, recorded so tk-0005 does not build a sensor that fails on correct code: crates/core/src/lib.rs:4 is #![forbid(unsafe_code)], so a naive 'unsafe' denylist term flags the exact attribute that establishes the property; and crates/testkit/src/collection.rs:10-11 legitimately uses include_bytes! for fixtures, so the enumerated production file list must exclude testkit rather than sweeping the repo. A denylist scan of the five committed core production sources for std::{fs,env,process,net,thread}, SystemTime/Instant::now, unsafe, extern \" and include_str!/include_bytes! returned zero hits outside that one forbid attribute - core is clean.",
+              "evidence": "crates/core/src/lib.rs:4; crates/testkit/src/collection.rs:10-11; guide C13"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "command": {
+    "argv": [
+      "harness",
+      "builder",
+      "review",
+      "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline/docs/plans/005-claude-session-pipeline/plan.dd.json",
+      "--receipt",
+      "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline/.harness/temp/plan005-baseline-review-r1.dd.json"
+    ],
+    "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-claude-session-pipeline",
+    "exit_code": 1,
+    "stdout": "{\"command\":\"builder review\",\"status\":\"error\",\"timestamp\":\"2026-09-08T01:35:24.151Z\",\"error\":{\"code\":\"E473\",\"message\":\"Reviewer configuration or native binding is unverified.\"},\"next_action\":\"Provide the independently observed reviewer identity/configuration and its actual evidence.\"}\n",
+    "stderr": "",
+    "data": {
+      "command": "builder review",
+      "status": "error",
+      "timestamp": "2026-09-08T01:35:24.151Z",
+      "error": {
+        "code": "E473",
+        "message": "Reviewer configuration or native binding is unverified."
+      },
+      "next_action": "Provide the independently observed reviewer identity/configuration and its actual evidence."
+    }
+  }
+}

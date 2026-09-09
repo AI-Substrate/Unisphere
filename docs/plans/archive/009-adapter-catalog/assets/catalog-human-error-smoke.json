@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "target/debug/unisphere",
+    "adapters",
+    "list",
+    "--human",
+    "--SYNTHETIC-PRIVATE-ARGUMENT"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-adapter-catalog",
+  "at": "2026-09-08T04:17:05.009Z",
+  "exit_code": 2,
+  "stdout": "",
+  "stderr": "UNI-ARGS-INVALID: The command arguments are invalid.\nFix: Use --help for accepted arguments; do not combine conflicting options.\n"
+}

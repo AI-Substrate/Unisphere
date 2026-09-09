@@ -1,0 +1,65 @@
+{
+  "argv": [
+    "harness",
+    "builder",
+    "compose",
+    "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/docs/plans/001-sdk-cli-foundation/plan.dd.json",
+    "--import",
+    "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation/.harness/temp/import-all-units.json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-sdk-cli-foundation",
+  "exit_code": 0,
+  "stdout": "{\"command\":\"builder compose\",\"status\":\"ok\",\"timestamp\":\"2026-09-07T07:41:18.401Z\",\"data\":{\"composition\":{\"ref\":{\"path\":\"docs/plans/001-sdk-cli-foundation/assets/team/composition.dd.json\",\"sha256\":\"61381256b578e133bf56e3e923fbb505883476914bc0a69df02403b6c193d0a0\"},\"value\":{\"record_type\":\"composition\",\"id\":\"0ed5c673-c78e-47f9-b2ed-8e6a8ec2cdca\",\"recorded_at\":\"2026-09-07T07:41:18.399Z\",\"baseline\":{\"path\":\"docs/plans/001-sdk-cli-foundation/assets/team/baseline-v7.dd.json\",\"sha256\":\"c9fabdbdb8f7ccc0093f178cf5111d175f12e7cc310196a47372d5aa9da0c92c\"},\"units\":[{\"unit_id\":\"tk-0002\",\"peer_id\":\"pij-partial-koi\",\"workspace\":\"/Users/jordanknight/substrate/unisphere/unisphere-plan001-sdk\",\"commit_sha\":\"cdcb1d69aae65f1f8a593e728cd8a1587ceca0bb\",\"packet_sha256\":\"bfdec9cb0c85a41ded97158f3b74871332adef3c058fa40d716e8f7832b52190\",\"baseline_sha\":\"1ec7213488044ba083da3db7f45a958024a86c86\"},{\"unit_id\":\"tk-0003\",\"peer_id\":\"pij-standard-impala\",\"workspace\":\"/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli\",\"commit_sha\":\"49654b0a0e32dc3fcf3b736c7a8ed29de9f57f61\",\"packet_sha256\":\"e99c81186cb4a1c7a58135199a418beb88c28ecd934ba6faaf01a98c75b2445f\",\"baseline_sha\":\"1ec7213488044ba083da3db7f45a958024a86c86\"},{\"unit_id\":\"tk-0005\",\"peer_id\":\"pij-brave-cahir\",\"workspace\":\"/Users/jordanknight/substrate/unisphere/unisphere-plan001-proof\",\"commit_sha\":\"d5d9a25188693ad563a1b5962ff3889d5bdfd18a\",\"packet_sha256\":\"be2787f8dbc5ee82738de1c4555a78dd991cd36c9b956ef6f0e414261721e7cf\",\"baseline_sha\":\"1ec7213488044ba083da3db7f45a958024a86c86\"}],\"integration_sha\":\"83bb8e44fab6dc1feac53a525ee3c87ef3cabc67\",\"files\":[],\"checks\":[]}}}}\n",
+  "stderr": "",
+  "data": {
+    "command": "builder compose",
+    "status": "ok",
+    "timestamp": "2026-09-07T07:41:18.401Z",
+    "data": {
+      "composition": {
+        "ref": {
+          "path": "docs/plans/001-sdk-cli-foundation/assets/team/composition.dd.json",
+          "sha256": "61381256b578e133bf56e3e923fbb505883476914bc0a69df02403b6c193d0a0"
+        },
+        "value": {
+          "record_type": "composition",
+          "id": "0ed5c673-c78e-47f9-b2ed-8e6a8ec2cdca",
+          "recorded_at": "2026-09-07T07:41:18.399Z",
+          "baseline": {
+            "path": "docs/plans/001-sdk-cli-foundation/assets/team/baseline-v7.dd.json",
+            "sha256": "c9fabdbdb8f7ccc0093f178cf5111d175f12e7cc310196a47372d5aa9da0c92c"
+          },
+          "units": [
+            {
+              "unit_id": "tk-0002",
+              "peer_id": "pij-partial-koi",
+              "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-sdk",
+              "commit_sha": "cdcb1d69aae65f1f8a593e728cd8a1587ceca0bb",
+              "packet_sha256": "bfdec9cb0c85a41ded97158f3b74871332adef3c058fa40d716e8f7832b52190",
+              "baseline_sha": "1ec7213488044ba083da3db7f45a958024a86c86"
+            },
+            {
+              "unit_id": "tk-0003",
+              "peer_id": "pij-standard-impala",
+              "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-cli",
+              "commit_sha": "49654b0a0e32dc3fcf3b736c7a8ed29de9f57f61",
+              "packet_sha256": "e99c81186cb4a1c7a58135199a418beb88c28ecd934ba6faaf01a98c75b2445f",
+              "baseline_sha": "1ec7213488044ba083da3db7f45a958024a86c86"
+            },
+            {
+              "unit_id": "tk-0005",
+              "peer_id": "pij-brave-cahir",
+              "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-plan001-proof",
+              "commit_sha": "d5d9a25188693ad563a1b5962ff3889d5bdfd18a",
+              "packet_sha256": "be2787f8dbc5ee82738de1c4555a78dd991cd36c9b956ef6f0e414261721e7cf",
+              "baseline_sha": "1ec7213488044ba083da3db7f45a958024a86c86"
+            }
+          ],
+          "integration_sha": "83bb8e44fab6dc1feac53a525ee3c87ef3cabc67",
+          "files": [],
+          "checks": []
+        }
+      }
+    }
+  }
+}

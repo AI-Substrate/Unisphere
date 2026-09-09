@@ -1,0 +1,166 @@
+{
+  "dd": {
+    "schema": "builder/plan"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Discover registered adapters without scanning private stores",
+        "slug": "adapter-catalog",
+        "ordinal": 9,
+        "status": "ready",
+        "summary": "Versioned registered-adapter metadata and usual storage hints, without implicit source discovery.",
+        "backpressure": "assets/backpressure.dd.json#rows",
+        "mode": "Full",
+        "complexity": "CS-2"
+      }
+    },
+    {
+      "name": "summary",
+      "value": "Versioned registered-adapter metadata and usual storage hints, without implicit source discovery."
+    },
+    {
+      "name": "goals",
+      "value": [
+        "Programs can discover supported adapters and choose explicit source locations from structured hints."
+      ]
+    },
+    {
+      "name": "non_goals",
+      "value": [
+        "No additional source adapters, private-store scanning, automatic location expansion or plugin loader.",
+        "No persisted CLI resume, revision reconciliation or lossless archival."
+      ]
+    },
+    {
+      "name": "acceptance_criteria",
+      "value": [
+        {
+          "id": "ac-0001",
+          "claim": "A successful adapters list --json emits one v1 machine-readable envelope containing only registered production adapters, with stable id, application name and concise description.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0001",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0002"
+        },
+        {
+          "id": "ac-0002",
+          "claim": "Each descriptor gives structured usual-location hints with platform, home base, relative path, session glob and storage format; hints never assert a local installation or existing store.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0002",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0002"
+        },
+        {
+          "id": "ac-0003",
+          "claim": "Capabilities describe explicit export platforms/formats and a caller-owned SDK cursor with an append-only source assumption, separately from unsupported persisted CLI resume, delayed revision reconciliation and lossless archival.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0003",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0002"
+        },
+        {
+          "id": "ac-0004",
+          "claim": "Catalog listing performs no source loading, private-store scan, home/config environment expansion or command execution; actual discovery remains explicit and caller-overridable.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0004",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0002"
+        },
+        {
+          "id": "ac-0005",
+          "claim": "Metadata and executable dispatch derive from one registration, and every production descriptor id equals emitted unisphere.source.adapter provenance. A fixture registration exposes its descriptor and runs its adapter, while the production catalog excludes fixtures and existing config/session behavior remains compatible.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0005",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0002"
+        },
+        {
+          "id": "ac-0006",
+          "claim": "Help, invalid arguments and output failures keep existing CLI exit/output safety conventions; no hostile argument content leaks into public errors.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0006",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0002"
+        }
+      ]
+    },
+    {
+      "name": "phases",
+      "value": [
+        {
+          "id": "ph-14a2",
+          "title": "Expose a versioned adapter metadata catalog",
+          "brief": "",
+          "state": "checked",
+          "tasks": "assets/tasks/phase-1/tasks.dd.json#tasks"
+        }
+      ]
+    },
+    {
+      "name": "tasks",
+      "value": []
+    },
+    {
+      "name": "done_when",
+      "value": {}
+    },
+    {
+      "name": "research_context",
+      "value": "Existing production registry is crates/app/src/adapters.rs (name plus runner); current only Claude Code implementation. Main supplied the explicit catalog request and home/.claude/projects with */*.jsonl as a usual-location hint. Plan005 tested candidate remains unchanged in its own workspace."
+    },
+    {
+      "name": "testing_strategy",
+      "value": {
+        "approach": "Lightweight",
+        "notes": "Run real CLI JSON/human/help/error scenarios and existing registry extension regression; reuse the shipped quality and collection proof lanes."
+      }
+    },
+    {
+      "name": "documentation_strategy",
+      "value": {
+        "approach": "Existing docs only",
+        "notes": "Update docs/cli.md and docs/adapters.md; preserve docs/fidelity.md factual gaps."
+      }
+    },
+    {
+      "name": "risks_assumptions",
+      "value": ""
+    },
+    {
+      "name": "open_questions",
+      "value": []
+    },
+    {
+      "name": "workshop_opportunities",
+      "value": []
+    },
+    {
+      "name": "clarifications",
+      "value": []
+    },
+    {
+      "name": "planning_seam",
+      "value": []
+    },
+    {
+      "name": "gate_matrix",
+      "value": []
+    },
+    {
+      "name": "implementation_summary",
+      "value": ""
+    },
+    {
+      "name": "key_findings",
+      "value": []
+    },
+    {
+      "name": "acceptance_coverage",
+      "value": []
+    },
+    {
+      "name": "risks",
+      "value": []
+    },
+    {
+      "name": "execution_guardrails",
+      "value": []
+    }
+  ]
+}

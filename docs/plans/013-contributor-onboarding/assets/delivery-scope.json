@@ -1,0 +1,22 @@
+{
+  "recorded_at": "2026-09-09T01:07:52.430Z",
+  "scope": "Bounded public documentation and thin checkout-install recipe follow-up; existing product APIs reused, no new architecture/coder fan-out.",
+  "consumer_review": "assets/consumer-review.json",
+  "proof": "assets/onboarding-runtime-proof.json",
+  "product_files_unchanged": [
+    "crates/**",
+    "Cargo.toml",
+    "Cargo.lock",
+    ".github/**",
+    ".harness/extensions/**"
+  ],
+  "changed_public_files": [
+    "README.md",
+    "CONTRIBUTING.md",
+    "AGENTS.md",
+    "justfile"
+  ],
+  "temporary_proof_prefix_removed": true,
+  "operator_installation_touched": false,
+  "formal_team_receipt_claimed": false
+}

@@ -1,0 +1,146 @@
+{
+  "at": "2026-09-09T01:03:42.031Z",
+  "local": [
+    {
+      "from": "README.md",
+      "target": "docs/cli.md",
+      "exists": true
+    },
+    {
+      "from": "README.md",
+      "target": "docs/fidelity.md",
+      "exists": true
+    },
+    {
+      "from": "README.md",
+      "target": "docs/sdk.md",
+      "exists": true
+    },
+    {
+      "from": "README.md",
+      "target": "docs/telemetry-profile.md",
+      "exists": true
+    },
+    {
+      "from": "README.md",
+      "target": "docs/fidelity.md",
+      "exists": true
+    },
+    {
+      "from": "README.md",
+      "target": "CONTRIBUTING.md",
+      "exists": true
+    },
+    {
+      "from": "README.md",
+      "target": "docs/sdk.md",
+      "exists": true
+    },
+    {
+      "from": "README.md",
+      "target": "docs/cli.md",
+      "exists": true
+    },
+    {
+      "from": "README.md",
+      "target": "docs/telemetry-profile.md",
+      "exists": true
+    },
+    {
+      "from": "README.md",
+      "target": "docs/fidelity.md",
+      "exists": true
+    },
+    {
+      "from": "README.md",
+      "target": "docs/adapters.md",
+      "exists": true
+    },
+    {
+      "from": "README.md",
+      "target": "docs/session-loader.md",
+      "exists": true
+    },
+    {
+      "from": "README.md",
+      "target": "docs/snapshot-loader.md",
+      "exists": true
+    },
+    {
+      "from": "README.md",
+      "target": "docs/development.md",
+      "exists": true
+    },
+    {
+      "from": "README.md",
+      "target": "LICENSE",
+      "exists": true
+    },
+    {
+      "from": "README.md",
+      "target": "THIRD_PARTY_NOTICES.md",
+      "exists": true
+    },
+    {
+      "from": "CONTRIBUTING.md",
+      "target": "AGENTS.md#engineering-harness",
+      "exists": true
+    },
+    {
+      "from": "CONTRIBUTING.md",
+      "target": "docs/development.md",
+      "exists": true
+    },
+    {
+      "from": "CONTRIBUTING.md",
+      "target": "docs/adapters.md",
+      "exists": true
+    },
+    {
+      "from": "CONTRIBUTING.md",
+      "target": "docs/telemetry-profile.md",
+      "exists": true
+    },
+    {
+      "from": "CONTRIBUTING.md",
+      "target": "docs/session-loader.md",
+      "exists": true
+    },
+    {
+      "from": "CONTRIBUTING.md",
+      "target": "docs/snapshot-loader.md",
+      "exists": true
+    },
+    {
+      "from": "CONTRIBUTING.md",
+      "target": "docs/sdk.md",
+      "exists": true
+    },
+    {
+      "from": "CONTRIBUTING.md",
+      "target": "docs/telemetry-profile.md",
+      "exists": true
+    },
+    {
+      "from": "CONTRIBUTING.md",
+      "target": "AGENTS.md",
+      "exists": true
+    },
+    {
+      "from": "CONTRIBUTING.md",
+      "target": "docs/development.md",
+      "exists": true
+    },
+    {
+      "from": "CONTRIBUTING.md",
+      "target": "docs/fidelity.md",
+      "exists": true
+    }
+  ],
+  "external": [
+    "https://just.systems/man/en/installation.html",
+    "https://github.com/AI-Substrate/harness-engineering/blob/main/AGENTS_README.md"
+  ],
+  "exact_setup_url_conditional": true,
+  "upstream_setup_guide_executed": false
+}

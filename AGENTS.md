@@ -28,7 +28,7 @@ Builder can create plan worktrees, but the inspected installed dispatcher curren
 
 Read `.harness/engineering-harness.md` before non-trivial work. At session start:
 
-1. `harness --version` — the CLI is an ambient global tool, not a repository dependency. If missing: `npm install -g @ai-substrate/engineering-harness` (Node >=22).
+1. `harness --version` — the CLI is an ambient global tool, not a repository dependency. Reuse the existing installation when available. **Only if the engineering harness is not installed or is unavailable**, follow the [upstream setup guide](https://github.com/AI-Substrate/harness-engineering/blob/main/AGENTS_README.md) (Node >=22); do not re-run setup for an already available harness.
 2. `harness instructions` — read the agent briefing; `harness help --json` discovers the command map.
 3. `harness doctor --json` — inspect extension loading, convention complaints, and machine-attribution warnings separately.
 4. `harness instructions boot` then `harness boot --json` — attempt readiness before changing product code.

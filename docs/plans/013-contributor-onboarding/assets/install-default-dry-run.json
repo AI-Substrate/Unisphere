@@ -1,0 +1,12 @@
+{
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-contributor-onboarding",
+  "args": [
+    "just",
+    "--dry-run",
+    "install"
+  ],
+  "at": "2026-09-09T00:59:43.331Z",
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "cargo install --locked --path crates/app --root \"$1\" --force\n\"$1/bin/unisphere\" --version --json\n\"$1/bin/unisphere\" adapters list --json\n"
+}

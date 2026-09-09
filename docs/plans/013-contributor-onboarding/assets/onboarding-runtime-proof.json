@@ -1,0 +1,33 @@
+{
+  "at": "2026-09-09T01:02:34.616Z",
+  "operator_install_touched": false,
+  "first_exit": 0,
+  "second_exit": 0,
+  "explicit_prefix": "/tmp/unisphere-onboarding-proof-5etg9u/prefix with spaces ' $(touch UNISPHERE_PREFIX_INJECTION)",
+  "source_metadata": {
+    "installs": {
+      "unisphere-app 0.1.0 (path+file:///Users/jordanknight/substrate/unisphere/unisphere-contributor-onboarding/crates/app)": {
+        "version_req": null,
+        "bins": [
+          "unisphere"
+        ],
+        "features": [],
+        "all_features": false,
+        "no_default_features": false,
+        "profile": "release",
+        "target": "aarch64-apple-darwin",
+        "rustc": "rustc 1.95.0 (59807616e 2026-04-14)\nbinary: rustc\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\ncommit-date: 2026-04-14\nhost: aarch64-apple-darwin\nrelease: 1.95.0\nLLVM version: 22.1.2\n"
+      }
+    }
+  },
+  "first_binary_sha256": "8736b6cc13668571579b93af06fb29b96cba7c3d7b76b76332f8e627dc38acc2",
+  "second_binary_sha256": "8736b6cc13668571579b93af06fb29b96cba7c3d7b76b76332f8e627dc38acc2",
+  "real_file_not_symlink": true,
+  "unrelated_file_preserved": true,
+  "shell_injection_absent": true,
+  "sdk_records": 129,
+  "sdk_batches": 2,
+  "cli_sdk_byte_identical": true,
+  "content_file_protected": true,
+  "partial_tail_notice": true
+}

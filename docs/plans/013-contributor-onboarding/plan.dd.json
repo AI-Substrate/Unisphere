@@ -1,0 +1,161 @@
+{
+  "dd": {
+    "schema": "builder/plan"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Explain Unisphere purpose installation and SDK integration",
+        "slug": "contributor-onboarding",
+        "ordinal": 13,
+        "status": "ready",
+        "summary": "Explain Unisphere purpose, install/reinstall and telemetry SDK usage; add practical contribution guidance without product semantics changes.",
+        "backpressure": "assets/backpressure.dd.json#rows",
+        "mode": "Full",
+        "complexity": "CS-2"
+      }
+    },
+    {
+      "name": "summary",
+      "value": "Public onboarding for the landed Rust SDK/CLI, a safely quoted checkout-based just install recipe, and conditional missing-harness setup guidance."
+    },
+    {
+      "name": "goals",
+      "value": [
+        "Readers understand standard native telemetry projection and caller-owned integration/reporting.",
+        "Users install/reinstall from the checkout and execute real CLI/SDK examples."
+      ]
+    },
+    {
+      "name": "non_goals",
+      "value": [
+        "No new telemetry/discovery/resume/retention semantics.",
+        "No operator binary overwrite during validation, global setup change or workspace retirement."
+      ]
+    },
+    {
+      "name": "acceptance_criteria",
+      "value": [
+        {
+          "id": "ac-0001",
+          "claim": "README explains purpose, common OTLP output, supported native dialects and actual fidelity/privacy/rerun boundaries without claiming universal coverage or a central service.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0001",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0001"
+        },
+        {
+          "id": "ac-0002",
+          "claim": "The documented external SDK telemetry example compiles and runs with all four exact path dependencies, caller-owned output and full bounded-batch cursor handling.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0002",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0001"
+        },
+        {
+          "id": "ac-0003",
+          "claim": "The documented CLI examples execute on synthetic explicit input with metadata/content/output/error streams matching the shipped contract.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0003",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0001"
+        },
+        {
+          "id": "ac-0004",
+          "claim": "just install rebuilds and reinstalls the checkout CLI into a safely quoted prefix, defaults to ~/.local, succeeds twice in a temporary prefix and runs installed version/catalog smoke without global setup or unrelated file changes.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0004",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0001"
+        },
+        {
+          "id": "ac-0005",
+          "claim": "CONTRIBUTING gives practical architecture, adapter/loader/output, privacy/testing and contribution guidance; AGENTS links the exact upstream setup guide only if harness is unavailable, preserving existing governance/commit rules.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0005",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0001"
+        },
+        {
+          "id": "ac-0006",
+          "claim": "All documentation links resolve; no shipped Rust product code, dependencies, lockfile or existing operator installation changes.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0006",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0001"
+        }
+      ]
+    },
+    {
+      "name": "phases",
+      "value": [
+        {
+          "id": "ph-9c7c",
+          "title": "Document and prove public onboarding",
+          "brief": "",
+          "state": "checked",
+          "tasks": "assets/tasks/phase-1/tasks.dd.json#tasks"
+        }
+      ]
+    },
+    {
+      "name": "tasks",
+      "value": []
+    },
+    {
+      "name": "done_when",
+      "value": {}
+    },
+    {
+      "name": "research_context",
+      "value": ""
+    },
+    {
+      "name": "testing_strategy",
+      "value": {}
+    },
+    {
+      "name": "documentation_strategy",
+      "value": {}
+    },
+    {
+      "name": "risks_assumptions",
+      "value": ""
+    },
+    {
+      "name": "open_questions",
+      "value": []
+    },
+    {
+      "name": "workshop_opportunities",
+      "value": []
+    },
+    {
+      "name": "clarifications",
+      "value": []
+    },
+    {
+      "name": "planning_seam",
+      "value": []
+    },
+    {
+      "name": "gate_matrix",
+      "value": []
+    },
+    {
+      "name": "implementation_summary",
+      "value": "Four requested public onboarding files completed; real README SDK/CLI examples and twice-run prefix-safe just install proved. Main consumer review found no material issue. No Rust product semantics, dependency, operator install or global setup change. Scoped PR/CI/landing remains next."
+    },
+    {
+      "name": "key_findings",
+      "value": []
+    },
+    {
+      "name": "acceptance_coverage",
+      "value": []
+    },
+    {
+      "name": "risks",
+      "value": []
+    },
+    {
+      "name": "execution_guardrails",
+      "value": []
+    }
+  ]
+}

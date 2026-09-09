@@ -1,0 +1,18 @@
+{
+  "text": "URL: https://just.systems/man/en/installation.html\nContent-Type: text/html\nMethod: trafilatura\n\n---\n\n## Installation\n\nJust can be installed using your favorite package manager, by\ndownloading pre-built binaries, or building from source\nwith `cargo install just`.\n\nPress `←` or `→` to navigate between chapters\n\nPress `S` or `/` to search in the book\n\nPress `?` to show this help\n\nPress `Esc` to hide this help",
+  "details": {
+    "kind": "url",
+    "url": "https://just.systems/man/en/installation.html",
+    "finalUrl": "https://just.systems/man/en/installation.html",
+    "contentType": "text/html",
+    "method": "trafilatura",
+    "truncated": false,
+    "notes": [],
+    "meta": {
+      "source": {
+        "type": "url",
+        "value": "https://just.systems/man/en/installation.html"
+      }
+    }
+  }
+}

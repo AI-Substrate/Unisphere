@@ -1,0 +1,14 @@
+{
+  "cwd": "/tmp/unisphere-onboarding-proof-5etg9u/export-session",
+  "args": [
+    "cargo",
+    "run",
+    "--quiet",
+    "--",
+    "/tmp/unisphere-onboarding-proof-5etg9u/partial.jsonl"
+  ],
+  "at": "2026-09-09T01:02:33.667Z",
+  "exit_code": 0,
+  "stdout": "{\"resourceLogs\":[{\"scopeLogs\":[{\"scope\":{\"name\":\"unisphere\",\"version\":\"0.1.0\"},\"logRecords\":[{\"eventName\":\"unisphere.session.record\",\"timeUnixNano\":\"1767225600000000000\",\"attributes\":[{\"key\":\"gen_ai.conversation.id\",\"value\":{\"stringValue\":\"synthetic-session\"}},{\"key\":\"unisphere.content.omitted\",\"value\":{\"boolValue\":true}},{\"key\":\"unisphere.message.role\",\"value\":{\"stringValue\":\"user\"}},{\"key\":\"unisphere.profile.version\",\"value\":{\"intValue\":\"1\"}},{\"key\":\"unisphere.source.adapter\",\"value\":{\"stringValue\":\"claude-code\"}},{\"key\":\"unisphere.source.kind\",\"value\":{\"stringValue\":\"user\"}},{\"key\":\"unisphere.source.offset\",\"value\":{\"intValue\":\"0\"}},{\"key\":\"unisphere.source.path\",\"value\":{\"stringValue\":\"/tmp/unisphere-onboarding-proof-5etg9u/partial.jsonl\"}},{\"key\":\"unisphere.source.record.id\",\"value\":{\"stringValue\":\"synthetic-user\"}}]}]}]}]}\n",
+  "stderr": "Incomplete final record deferred; the source may append more data.\n"
+}

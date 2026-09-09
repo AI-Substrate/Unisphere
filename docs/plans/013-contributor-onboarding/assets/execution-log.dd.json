@@ -1,0 +1,32 @@
+{
+  "dd": {
+    "schema": "builder/execution-log"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Observed onboarding documentation proof",
+        "plan": "../plan.dd.json#meta"
+      }
+    },
+    {
+      "name": "entries",
+      "value": [
+        {
+          "id": "lg-0001",
+          "at": "2026-09-09T01:06:22.964Z",
+          "text": "Main consumer review found no material issue in README/CONTRIBUTING/conditionalAGENTS/justfile. Actual exact README TOML+Rust fences executed in external Cargo application against129synthetic records, yielding2batches and complete metadata-only output identical to installedCLI; partial-tail warning verified. Actual just install twice into a temporary prefix with spaces/apostrophe/command-substitution text exited0 both times, produced a real executable from this checkout, preserved unrelated sentinel and did not execute prefix text. Operator ~/.local installation never targeted. Installed version/catalog/config/list/JSONL/content-output collision/VSCodejournal/real CursorSQLite examples passed.27relative links and2external links verified; product crate/manifest/lock/workflow bytes unchanged. Evidence onboarding-runtime-proof.json, install-first.json, install-second.json, readme-sdk-execution.json, readme-cli-*.json, documentation-link-proof.json and consumer-review.json. No permanent plumbing-only test or new product semantics added.",
+          "links": [
+            "../plan.dd.json#acceptance_criteria/ac-0001",
+            "../plan.dd.json#acceptance_criteria/ac-0002",
+            "../plan.dd.json#acceptance_criteria/ac-0003",
+            "../plan.dd.json#acceptance_criteria/ac-0004",
+            "../plan.dd.json#acceptance_criteria/ac-0005",
+            "../plan.dd.json#acceptance_criteria/ac-0006"
+          ]
+        }
+      ]
+    }
+  ]
+}

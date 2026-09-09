@@ -1,0 +1,164 @@
+{
+  "dd": {
+    "schema": "builder/plan"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Document and prove public onboarding",
+        "slug": "phase-1",
+        "status": "draft",
+        "summary": "",
+        "log": "../../execution-log.dd.json#entries"
+      }
+    },
+    {
+      "name": "summary",
+      "value": ""
+    },
+    {
+      "name": "tasks",
+      "value": [
+        {
+          "id": "tk-0001",
+          "title": "Public documentation and safe checkout installer",
+          "phase": "ph-9c7c",
+          "state": "checked",
+          "success": "Deliver the four-file onboarding update and actual external SDK/CLI/reinstall/link evidence.",
+          "satisfies": [
+            "../../../plan.dd.json#acceptance_criteria/ac-0001",
+            "../../../plan.dd.json#acceptance_criteria/ac-0002",
+            "../../../plan.dd.json#acceptance_criteria/ac-0003",
+            "../../../plan.dd.json#acceptance_criteria/ac-0004",
+            "../../../plan.dd.json#acceptance_criteria/ac-0005",
+            "../../../plan.dd.json#acceptance_criteria/ac-0006"
+          ],
+          "done": "tasks.dd.json#done_when/tk-0001",
+          "receipt": "../../execution-log.dd.json#entries/lg-0001"
+        }
+      ]
+    },
+    {
+      "name": "done_when",
+      "value": {
+        "tk-0001": [
+          {
+            "id": "dw-0001",
+            "assertion": "README explains purpose, common OTLP output, supported native dialects and actual fidelity/privacy/rerun boundaries without claiming universal coverage or a central service.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0001",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0001"
+          },
+          {
+            "id": "dw-0002",
+            "assertion": "The documented external SDK telemetry example compiles and runs with all four exact path dependencies, caller-owned output and full bounded-batch cursor handling.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0002",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0001"
+          },
+          {
+            "id": "dw-0003",
+            "assertion": "The documented CLI examples execute on synthetic explicit input with metadata/content/output/error streams matching the shipped contract.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0003",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0001"
+          },
+          {
+            "id": "dw-0004",
+            "assertion": "just install rebuilds and reinstalls the checkout CLI into a safely quoted prefix, defaults to ~/.local, succeeds twice in a temporary prefix and runs installed version/catalog smoke without global setup or unrelated file changes.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0004",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0001"
+          },
+          {
+            "id": "dw-0005",
+            "assertion": "CONTRIBUTING gives practical architecture, adapter/loader/output, privacy/testing and contribution guidance; AGENTS links the exact upstream setup guide only if harness is unavailable, preserving existing governance/commit rules.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0005",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0001"
+          },
+          {
+            "id": "dw-0006",
+            "assertion": "All documentation links resolve; no shipped Rust product code, dependencies, lockfile or existing operator installation changes.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0006",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0001"
+          }
+        ]
+      }
+    },
+    {
+      "name": "goals",
+      "value": []
+    },
+    {
+      "name": "non_goals",
+      "value": []
+    },
+    {
+      "name": "acceptance_criteria",
+      "value": []
+    },
+    {
+      "name": "phases",
+      "value": []
+    },
+    {
+      "name": "research_context",
+      "value": ""
+    },
+    {
+      "name": "testing_strategy",
+      "value": {}
+    },
+    {
+      "name": "documentation_strategy",
+      "value": {}
+    },
+    {
+      "name": "risks_assumptions",
+      "value": ""
+    },
+    {
+      "name": "open_questions",
+      "value": []
+    },
+    {
+      "name": "workshop_opportunities",
+      "value": []
+    },
+    {
+      "name": "clarifications",
+      "value": []
+    },
+    {
+      "name": "planning_seam",
+      "value": []
+    },
+    {
+      "name": "gate_matrix",
+      "value": []
+    },
+    {
+      "name": "implementation_summary",
+      "value": ""
+    },
+    {
+      "name": "key_findings",
+      "value": []
+    },
+    {
+      "name": "acceptance_coverage",
+      "value": []
+    },
+    {
+      "name": "risks",
+      "value": []
+    },
+    {
+      "name": "execution_guardrails",
+      "value": []
+    }
+  ]
+}

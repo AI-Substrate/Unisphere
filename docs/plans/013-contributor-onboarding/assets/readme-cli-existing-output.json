@@ -1,0 +1,19 @@
+{
+  "cwd": "/tmp/unisphere-onboarding-proof-5etg9u",
+  "args": [
+    "/tmp/unisphere-onboarding-proof-5etg9u/prefix with spaces ' $(touch UNISPHERE_PREFIX_INJECTION)/bin/unisphere",
+    "sessions",
+    "export",
+    "--adapter",
+    "claude-code",
+    "--input",
+    "/tmp/unisphere-onboarding-proof-5etg9u/session.jsonl",
+    "--include-content",
+    "--output",
+    "/tmp/unisphere-onboarding-proof-5etg9u/new-export.jsonl"
+  ],
+  "at": "2026-09-09T01:02:33.664Z",
+  "exit_code": 1,
+  "stdout": "",
+  "stderr": "{\"command\":\"sessions\",\"error\":{\"code\":\"UNI-WRITE\",\"fix\":\"Check the destination and handle any partial output before retrying; the checkpoint was not accepted.\",\"kind\":\"write\",\"message\":\"The destination did not accept the output batch.\",\"offset\":null},\"ok\":false,\"v\":1}\n"
+}

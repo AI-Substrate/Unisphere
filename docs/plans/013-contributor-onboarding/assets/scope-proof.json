@@ -1,0 +1,22 @@
+{
+  "at": "2026-09-09T01:06:26.550Z",
+  "product_diff_empty": true,
+  "requested_files": [
+    "README.md",
+    "CONTRIBUTING.md",
+    "AGENTS.md",
+    "justfile"
+  ],
+  "agent_rule_change": "One conditional setup-link line only",
+  "operator_install_touched": false,
+  "external_links": [
+    {
+      "url": "https://just.systems/man/en/installation.html",
+      "read": "success"
+    },
+    {
+      "url": "https://github.com/AI-Substrate/harness-engineering/blob/main/AGENTS_README.md",
+      "read": "success; setup not executed"
+    }
+  ]
+}

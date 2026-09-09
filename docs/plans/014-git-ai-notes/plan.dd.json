@@ -1,0 +1,171 @@
+{
+  "dd": {
+    "schema": "builder/plan"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Git-ai Git Notes ingestion through Unisphere",
+        "slug": "git-ai-notes",
+        "ordinal": 14,
+        "status": "ready",
+        "summary": "Read explicitly selected local Git-ai authorship notes as a Unisphere-supported source through the Rust SDK and thin CLI, producing source-faithful OTLP LogsData without requiring Git AI itself. Keep note attribution distinct from conversations, tool timings and retired harness telemetry.",
+        "backpressure": "assets/backpressure.dd.json#rows"
+      }
+    },
+    {
+      "name": "summary",
+      "value": "Read explicitly selected local Git-ai authorship notes as a Unisphere-supported source through the Rust SDK and thin CLI, producing source-faithful OTLP LogsData without requiring Git AI itself. Keep note attribution distinct from conversations, tool timings and retired harness telemetry."
+    },
+    {
+      "name": "goals",
+      "value": [
+        "Consume Git-ai-format notes using standard read-only Git operations and independently implemented parsing.",
+        "Expose commit/file/line attribution, declared agent/session identity and original provenance through existing Unisphere composition patterns.",
+        "Make local note selection, metadata privacy, failure states and coverage limits observable through the SDK and CLI."
+      ]
+    },
+    {
+      "name": "non_goals",
+      "value": [
+        "No dependency on the git-ai executable, installation, library/crate, imported implementation code, daemon, HTTP backend or private cache. Git-ai is an input format only.",
+        "No refs/harness-telemetry support, retired segment/rollup ingestion, compatibility bridge, migration or second legacy telemetry path.",
+        "No broad repository session discovery/query/filter/extraction CLI; that is a separate plan.",
+        "No fetch, push, sync, note mutation, hooks/config mutation, checkout/index mutation or source repository writes.",
+        "No invented turns, token usage, duration, event timestamps, spans, authorship certainty or full-session completeness."
+      ]
+    },
+    {
+      "name": "acceptance_criteria",
+      "value": [
+        {
+          "id": "ac-0001",
+          "claim": "An external Rust SDK consumer can list and read explicitly selected local Git Notes attached to commits, retaining repository, notes-ref, pinned ref tip, target commit and note-blob provenance. Bare repositories and linked worktrees resolve Git storage correctly.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0002",
+          "claim": "The registered CLI Git-ai ingestion path calls the SDK and produces the same source-derived OTLP LogsData for the same repository, note selection and content policy; existing native session commands remain working.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0003",
+          "claim": "Independent parsing preserves supported authorship/3.0.0 file paths, inclusive line ranges, attestation keys and declared prompts/sessions/humans, including mixed maps and their agent identities. Missing data is not synthesized; unsupported variants or schema versions are explicit.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0004",
+          "claim": "Git AI can be absent: no git-ai invocation, imported implementation, crate/library dependency, daemon, HTTP service or private git-ai cache is used. Standard read-only Git is the only Git-side runtime prerequisite.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0005",
+          "claim": "Ingestion does not modify source refs, notes, index, worktree, configuration or hooks and performs no fetch/push/network access. Git arguments are passed without shell interpolation; external Git behaviour that could execute hooks/filters or fetch missing objects is controlled or refused.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0006",
+          "claim": "Missing notes and empty selections are distinguishable from invalid refs, missing Git, malformed/oversized note data and object-read failures. Explicit input/output bounds, output failures and partial-result policy are observable; no silent successful truncation.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0007",
+          "claim": "Metadata-first output preserves source identifiers without emitting human-author strings, free-form custom attributes or legacy message content unless the declared content policy explicitly permits them. Missing timestamps/counts remain unknown, not zero or invented timing.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0008",
+          "claim": "Existing tracking refs do not silently duplicate canonical-note observations; selection and ref revisions are explicit. Note attribution is not presented as a complete conversation, token ledger, tool-duration stream or lossless archive.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0009",
+          "claim": "No retired refs/harness-telemetry reader, old segment/rollup import, migration, compatibility shim or parallel telemetry path is introduced.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-000a",
+          "claim": "Synthetic real-Git fixtures and exercised external SDK/CLI paths prove ordinary, mixed legacy/current/human, empty, malformed, bounded, bare/worktree and Git-AI-absent behavior without committing real private note payloads. Documentation names commands, provenance and limitations.",
+          "state": "unchecked"
+        }
+      ]
+    },
+    {
+      "name": "phases",
+      "value": [
+        {
+          "id": "ph-7688",
+          "title": "Git Notes SDK and CLI integration",
+          "brief": "Deliver one end-to-end Git-ai notes ingestion path through SDK, registered CLI composition and OTLP output, with independent parsing, source fidelity, explicit limits and absence/error proof.",
+          "state": "unchecked",
+          "tasks": "assets/tasks/phase-1/tasks.dd.json#tasks"
+        }
+      ]
+    },
+    {
+      "name": "tasks",
+      "value": []
+    },
+    {
+      "name": "done_when",
+      "value": {}
+    },
+    {
+      "name": "research_context",
+      "value": "Main inspected the Git-ai format specification, parser/record definitions and actual local note blobs. Format authorship/3.0.0 has file/range attestations followed by a standalone --- divider and JSON metadata; legacy prompts, current sessions and humans can coexist. Reconnaissance and example object IDs are in assets/git-ai-reconnaissance.json. Our retired harness telemetry corpus is intentionally excluded. This is read-only evidence, not implementation approval."
+    },
+    {
+      "name": "testing_strategy",
+      "value": {}
+    },
+    {
+      "name": "documentation_strategy",
+      "value": {}
+    },
+    {
+      "name": "risks_assumptions",
+      "value": "Git must be available or fail clearly; Git AI must not be required. Notes may be absent, malformed, oversized, changed between observations, attached to commits outside the selected history, or duplicated in tracking refs. Old and new metadata variants can share a schema version. Native checkpoint trace IDs are not OTel span IDs; note/commit timestamps are not tool execution times. Workspace handoff is explicit-path/cwd, not native-root rebinding or formal Builder dispatch."
+    },
+    {
+      "name": "open_questions",
+      "value": []
+    },
+    {
+      "name": "workshop_opportunities",
+      "value": []
+    },
+    {
+      "name": "clarifications",
+      "value": []
+    },
+    {
+      "name": "planning_seam",
+      "value": []
+    },
+    {
+      "name": "gate_matrix",
+      "value": []
+    },
+    {
+      "name": "implementation_summary",
+      "value": ""
+    },
+    {
+      "name": "key_findings",
+      "value": []
+    },
+    {
+      "name": "acceptance_coverage",
+      "value": []
+    },
+    {
+      "name": "risks",
+      "value": []
+    },
+    {
+      "name": "execution_guardrails",
+      "value": []
+    }
+  ]
+}

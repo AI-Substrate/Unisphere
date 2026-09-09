@@ -1,0 +1,272 @@
+{
+  "dd": {
+    "schema": "builder/plan"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "SDK query upgrade and user-led session exploration CLI",
+        "slug": "session-query-cli",
+        "ordinal": 15,
+        "status": "draft",
+        "summary": "Substantial Rust SDK query/extraction upgrade with a thin coherent CLI and first-class offline docs; draft handed to nominated PM pij-empirical-tiger for user preamble before implementation.",
+        "backpressure": "assets/backpressure.dd.json#rows"
+      }
+    },
+    {
+      "name": "summary",
+      "value": "Make Unisphere a coherent, SDK-first session exploration and query tool: discover repository-associated work, inspect sessions/turns/messages/tools/events, filter the intended evidence, extract useful context, and compute honest observed statistics. Every command is motivated by a user question, demonstrated with synthetic expected results, and taught by version-matched offline documentation. This is a product plan for nominated PM pij-empirical-tiger, not an implementation release. This is a substantial SDK upgrade, not a CLI-only wrapper. The SDK owns repository/source discovery, evidence-qualified session/turn/message/tool/event views, identity/lineage, filtering/time semantics, query-view freshness, context extraction, privacy-aware projection and observed aggregation through injectable public Rust APIs. The CLI parses arguments, composes providers and renders results; other SDK consumers receive the same behavior without invoking the CLI. Jordan will add more preamble directly with the PM; one context sentence and one question sentence per clarification turn, no implementation/fan-out until direction and guide review settle."
+    },
+    {
+      "name": "goals",
+      "value": [
+        "A user can find the right repository sessions without knowing each harness store layout, while seeing discovery and association gaps.",
+        "A user can move from session identity to turns, messages, tool invocations and source events without contradictory counts or fabricated relationships.",
+        "Shared identity/filter/time/privacy/output semantics make pipelines and SDK consumers predictable across commands and harnesses.",
+        "Context-preserving extraction and tool timing/failure analysis answer practical review/debugging questions with explicit uncertainty.",
+        "The installed binary teaches the workflows offline through docs list/get, schema discovery and tested examples; documentation is part of feature delivery.",
+        "A future PM can decompose independent work against reviewed shared contracts, potentially across ten or more agents, without fragmenting the user experience.",
+        "This is a substantial SDK upgrade, not a CLI-only wrapper. The SDK owns repository/source discovery, evidence-qualified session/turn/message/tool/event views, identity/lineage, filtering/time semantics, query-view freshness, context extraction, privacy-aware projection and observed aggregation through injectable public Rust APIs. The CLI parses arguments, composes providers and renders results; other SDK consumers receive the same behavior without invoking the CLI."
+      ]
+    },
+    {
+      "name": "non_goals",
+      "value": [
+        "No product implementation/fan-out before the nominated PM pij-empirical-tiger completes Jordan's preamble and the reviewed guide boundaries; this workspace currently contains planning only.",
+        "No duplicate implementation of plan014 Git-ai notes ingestion; integrate its actual contract without making all CLI work wait for that adapter.",
+        "No retired harness telemetry reader, migration or compatibility path.",
+        "No mandatory daemon, network collector, hosted database, model service or persistent index. A cache/index needs evidence and separate explicit design.",
+        "No agent command execution/replay, source mutation/deletion/repair, annotation database, automatic prompt rewriting or model-generated summaries.",
+        "No lossless/full-history/exactly-once claim, fabricated token cost, missing-duration zeroes, or causal cross-model performance ranking.",
+        "No custom SQL/filter programming language; use typed flags, SDK APIs and structured output to existing tools."
+      ]
+    },
+    {
+      "name": "acceptance_criteria",
+      "value": [
+        {
+          "id": "ac-0001",
+          "claim": "Users discover repository-associated supported sources and sessions without knowing native storage layouts; exact/tree/worktree scope is component-safe and unreadable, absent, unsupported and unassociated sources are distinguishable.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0002",
+          "claim": "Source representations are distinct from logical sessions; scoped identities, proven copies, subagents, forks and unresolved conflicts produce consistent list/tree/extract/statistics behavior without synthesising absent native conversation IDs.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0003",
+          "claim": "Sessions, turns, messages, tools and events share a documented versioned schema, typed availability and traceable source revisions/watermarks; source-only fragments are not invented higher-level entities.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0004",
+          "claim": "The full command catalogue has implemented list/show/tree/stats/extract behavior where declared, and existing config/catalog/native OTLP export invocations continue to work without a second application registry.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0005",
+          "claim": "Identity, harness/adapter/model/name/role/text filters have consistent AND/OR/case/regex semantics, reject unsupported fields and preserve explicit content-inspection versus content-output permissions.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0006",
+          "claim": "Time filtering uses documented fields, inclusive since/exclusive until, UTC date boundaries and explicit undated handling; session creation, first observed event, tool time and file modification are never conflated.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0007",
+          "claim": "Sorting and pagination are deterministic with ID tie-breaks and unknowns last; continuation is bound to the query/source view and rejects stale evidence rather than silently skipping or duplicating records.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0008",
+          "claim": "Turn reconstruction follows versioned source-supported boundaries, preserving branches/compaction and stable ordinals; tool-result or injected-context records do not become extra initiating user requests.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0009",
+          "claim": "Tool invocations pair start/result/progress by scoped native evidence, preserve original names and normalised families, and expose retries, incomplete/unknown outcomes and duration basis without adjacency or text guessing.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-000a",
+          "claim": "Statistics use the same logical matched records as extraction; missing durations are excluded from measured averages but counted explicitly, percentile method/units/denominators are named, and cumulative/replayed usage is not double-counted.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-000b",
+          "claim": "Context extraction expands only within the selected session/branch after matching, merges overlapping windows and distinguishes matched from context rows including dates outside the original filter.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-000c",
+          "claim": "Default outputs and diagnostics omit names/titles, messages, command arguments/results, reasoning and free-form identity content; explicit content opt-in is enforced consistently across formats, errors, examples and any temporary state.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-000d",
+          "claim": "JSON, JSONL, CSV, text and Markdown expose documented shapes where supported; JSONL remains clean row data, CSV has explicit spreadsheet-safety/null rules, and query output is never mislabelled as OTLP.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-000e",
+          "claim": "Output files are create-new and source stores are untouched; partial read/write results and bounded-resource refusals cannot be reported as complete successful output or accepted checkpoints.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-000f",
+          "claim": "Offline query input never triggers hidden live enrichment; missing required projected fields, malformed envelopes and unsupported versions fail with actionable availability/schema errors.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0010",
+          "claim": "External Rust SDK consumers obtain the same selection/projection/error semantics as the CLI through injected ports; there is no mandatory CLI subprocess, daemon, hosted store, model service or persistent index.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0011",
+          "claim": "The installed CLI provides offline docs list/get and discoverable schema output before source/config/Git/Git-AI access; unknown topics/fields name valid alternatives and recovery actions.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0012",
+          "claim": "Every documented command includes its motivating question, prerequisites, example, expected interpretation, limits and recovery; all seven end-to-end workflows are demonstrated against shared synthetic fixtures.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0013",
+          "claim": "Documentation ships inside the package/binary and normal CI checks full nested command/option examples, installed offline behavior, SDK examples, topic links and privacy/output semantics rather than only pinning prose.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0014",
+          "claim": "Plan014 Git-ai notes integrate through their reviewed registered contract without blocking unrelated CLI lanes or fabricating transcript/timing fields; retired harness telemetry remains unsupported with no compatibility bridge.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0015",
+          "claim": "The future PM supplies reviewed shared contracts, explicit ownership/fakes, bounded proof and genuinely independent work packets before dispatch; no coder fleet or implementation approval is inferred from this product plan.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0016",
+          "claim": "Public-release documentation/examples use synthetic or authorised content, retain required provenance/licenses, and make no universal completeness, secret-free, cost-estimate or unprecedented-product claim.",
+          "state": "unchecked"
+        }
+      ]
+    },
+    {
+      "name": "phases",
+      "value": [
+        {
+          "id": "ph-0375",
+          "title": "Shared query contract and repository discovery",
+          "brief": "Upgrade the SDK query/source/identity/filter/privacy contracts and prove public external-consumer seams, then demonstrate repository discovery and truthful coverage. This is not a parser-only CLI phase.",
+          "state": "unchecked",
+          "tasks": "assets/tasks/phase-1/tasks.dd.json#tasks"
+        },
+        {
+          "id": "ph-1372",
+          "title": "Session turn message tool and event workflows",
+          "brief": "Implement the five coherent datasets and their list/show/stats/extract workflows against shared contracts, with independent owners and fake consumers where appropriate.",
+          "state": "unchecked",
+          "depends_on": [
+            "ph-0375"
+          ],
+          "tasks": "assets/tasks/phase-2/tasks.dd.json#tasks"
+        },
+        {
+          "id": "ph-20c3",
+          "title": "Composition proof and operator documentation",
+          "brief": "Compose SDK/CLI, offline docs, schemas and executable examples; demonstrate complete user workflows and publication-safe operator guidance on the actual installed artifact.",
+          "state": "unchecked",
+          "depends_on": [
+            "ph-1372"
+          ],
+          "tasks": "assets/tasks/phase-3/tasks.dd.json#tasks"
+        }
+      ]
+    },
+    {
+      "name": "tasks",
+      "value": []
+    },
+    {
+      "name": "done_when",
+      "value": {}
+    },
+    {
+      "name": "research_context",
+      "value": "Current CLI lists immediate JSONL files under an explicit leaf root and exports supported sources. A read-only local POC exercised native metadata discovery, a real external SDK listing bridge and filters: physical source rows exceeded distinct harness/native-ID pairs, metadata-only entries existed, and some sources could not be associated. This motivates explicit identity, coverage and time semantics, not promotion of the POC code. Public OpenTrace and Recensa READMEs were inspected for discovery/query design context; their claimed capabilities are not source-format authority or reused code. Flowspace3 docs runtime, indexed docs tests and static topic implementation were inspected; see assets/documentation-design.md. Internal ISE findings are not included."
+    },
+    {
+      "name": "testing_strategy",
+      "value": {
+        "approach": "Future implementation proof: real external SDK and installed CLI over synthetic multi-source repositories; contract edge fixtures; executable doc examples; focused parser/privacy/identity/time/pairing/output regressions; normal composed quality lane.",
+        "current_evidence": "Planning-only: native discovery POC, public-reference/source inspection, structured example arithmetic/ID consistency and DD schema validation. No proposed CLI command is claimed implemented.",
+        "proof_matrix": "assets/query-contract.md and assets/documentation-design.md define falsifiable behavior; future PM maps each AC into reviewed guide/backpressure records."
+      }
+    },
+    {
+      "name": "documentation_strategy",
+      "value": {
+        "approach": "First-class offline docs list/get bundled with CLI, source/schema-driven command facts and maintained synthetic workflow cases. Dedicated docs owner; every command owner supplies motivation, examples, interpretation and failures.",
+        "artifacts": [
+          "assets/workflows-and-command-reference.md",
+          "assets/command-catalog.json",
+          "assets/synthetic-query-fixture.json",
+          "assets/documentation-design.md",
+          "assets/query-contract.md",
+          "assets/pm-handoff.md"
+        ],
+        "proof": "Package/install offline execution, nested parser/option checks, real SDK/CLI examples, topic-link coherence and privacy sentinels."
+      }
+    },
+    {
+      "name": "risks_assumptions",
+      "value": "Source formats/identities/timestamps and turn/call boundaries vary and can be partial; copies/forks/cumulative counters can inflate aggregates; cross-store atomicity is not assumed. Resource bounds and view freshness need concrete guide mechanisms. CSV defaults to spreadsheet-safe encoding with explicit raw opt-in; output-mode selectors are mutually exclusive. Product direction is prepared; PM nomination, reviewed architecture, exact Rust/schema/ID shapes and implementation proof remain future work."
+    },
+    {
+      "name": "open_questions",
+      "value": []
+    },
+    {
+      "name": "workshop_opportunities",
+      "value": []
+    },
+    {
+      "name": "clarifications",
+      "value": []
+    },
+    {
+      "name": "planning_seam",
+      "value": []
+    },
+    {
+      "name": "gate_matrix",
+      "value": []
+    },
+    {
+      "name": "implementation_summary",
+      "value": ""
+    },
+    {
+      "name": "key_findings",
+      "value": []
+    },
+    {
+      "name": "acceptance_coverage",
+      "value": []
+    },
+    {
+      "name": "risks",
+      "value": []
+    },
+    {
+      "name": "execution_guardrails",
+      "value": []
+    }
+  ]
+}

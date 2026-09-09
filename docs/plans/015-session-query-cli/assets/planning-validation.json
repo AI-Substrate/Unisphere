@@ -1,0 +1,23 @@
+{
+  "scope": "Planning artifact consistency only; no proposed query CLI execution claimed.",
+  "commands": 27,
+  "workflows": 7,
+  "acceptance_criteria": 22,
+  "fixture_links_and_counts": true,
+  "example_argv_roundtrip": true,
+  "jq_tool_analysis": {
+    "calls": 3,
+    "measured": 2,
+    "missing": 1,
+    "mean_ms": 1000
+  },
+  "canonical_flow_phases": 3,
+  "canonical_phase_reviews": 3,
+  "phase_harness_chores": 9,
+  "dd_validation": "0 errors; pre-commit untracked-link warnings; future ACs remain unchecked",
+  "flow_render_drift": false,
+  "limits": [
+    "No new CLI or SDK query feature implemented/executed.",
+    "This is a product draft for the nominated PM and user preamble, not an approved implementation guide."
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "dd": {
+    "schema": "builder/impl-guide"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "UNAUTHORED implementation guide — CLI product planning only",
+        "plan": "../plan.dd.json#meta",
+        "version": 1
+      }
+    },
+    {
+      "name": "architecture",
+      "value": {
+        "principles": "Product semantics are in assets/query-contract.md and documentation-design.md. The future operator-nominated PM must author and obtain review of the actual architecture before code. No teaching-example contract is authority.",
+        "composition_root": "Not selected; explicit app composition over SDK and inward core contracts is required.",
+        "contracts": []
+      }
+    },
+    {
+      "name": "fan_out",
+      "value": {
+        "decision": "solo-pm",
+        "rationale": "Product planning with nominated PM pij-empirical-tiger; no coder fleet released. Candidate slices in pm-handoff.md are not dispatch records."
+      }
+    },
+    {
+      "name": "capabilities",
+      "value": []
+    },
+    {
+      "name": "units",
+      "value": []
+    },
+    {
+      "name": "baseline",
+      "value": {
+        "files": [],
+        "proof": [],
+        "receipt": ""
+      }
+    },
+    {
+      "name": "isolation",
+      "value": {
+        "mode": "solo",
+        "allocation_owner": "harness",
+        "note": "This is the isolated product-planning worktree, not a code dispatch or native-root binding."
+      }
+    },
+    {
+      "name": "roles",
+      "value": []
+    },
+    {
+      "name": "checks",
+      "value": []
+    },
+    {
+      "name": "composition",
+      "value": {
+        "owner": "pij-empirical-tiger",
+        "order": [],
+        "steps": [],
+        "proof": []
+      }
+    },
+    {
+      "name": "review",
+      "value": {
+        "when": "After operator PM nomination and real guide authoring; no approval or execution proof exists.",
+        "inputs": [
+          "../plan.dd.json"
+        ],
+        "proof": []
+      }
+    },
+    {
+      "name": "risks",
+      "value": []
+    }
+  ]
+}

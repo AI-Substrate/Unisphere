@@ -1,0 +1,55 @@
+{
+  "goal": "Update public onboarding documentation for the shipped Unisphere CLI and Rust SDK; no new product features.",
+  "basis": "PR1 is already merged on main7b9a398e. Do not undo that merge; use an isolated follow-up branch/workspace from landed main.",
+  "ownership": "Kotallo owns implementation and the scoped follow-up PR/CI/landing; Main owns the proposed outline and consumer-facing review. No duplicate edits.",
+  "files": ["README.md", "CONTRIBUTING.md", "AGENTS.md", "justfile"],
+  "readme": {
+    "lead": "Unisphere standardises telemetry from agent harnesses into a common format, making integrations and reporting easier. It is both a Rust SDK and a CLI, with adapters for supported native formats and an extension path for other harnesses.",
+    "truth_boundary": "Any-harness extensibility is the purpose, not a claim that every harness/version or full-fidelity retention already works. A common format is not an implemented central database, hosted service or automatic collector.",
+    "sections": [
+      "What Unisphere is and why it exists: one integration surface instead of separate native parsers.",
+      "How it fits: native stores -> loaders -> pure adapters -> common OTLP JSONL -> caller-owned integrations/reporting, with a small ASCII diagram.",
+      "Installation: a first-class just install command that rebuilds and installs the CLI from this checkout, supported Unix execution and PATH setup, plus no-install cargo run and equivalent Cargo fallback. Do not advertise an unpublished crates.io package or nonexistent release binaries. Node/DD/Builder are not product runtime dependencies.",
+      "CLI quick start: list adapter descriptions/location hints, list explicit JSONL files, export a source, opt into supported content and write a new output file; diagnostics stay on stderr.",
+      "Supported harnesses: concise actual application/dialect table for Claude, Codex, OMP, Pi, Copilot CLI+legacy, VSCode snapshots+journals, Cursor transcripts+IDE; location hints are not detected installations.",
+      "Embed the Rust SDK: real telemetry-export example with all required path dependencies and exact public types; do not use configuration inspection as the headline SDK example.",
+      "Common output and integration: OTLP LogsData JSONL with documented native extensions; point to the profile and explain that the caller owns transport/storage/reporting.",
+      "Privacy, fidelity and reruns: metadata default/content opt-in, metadata is not anonymity, JSONL reruns start over, snapshots replace current projection, no persistent CLI resume/raw archive/exactly-once/finality guarantee; link detailed fidelity report.",
+      "Contributing, deeper docs and licence: link CONTRIBUTING.md, docs/sdk.md, docs/cli.md, docs/telemetry-profile.md and docs/fidelity.md. Move deep configuration/development detail out of the README narrative rather than deleting its linked documentation."
+    ],
+    "sdk_example": "Use actual Collector + FileSessionLoader + one native adapter (Codex or Claude) + OtlpJsonlWriter through CollectionApi. Show the four concrete Cargo path dependencies. Use an explicit source path and caller-owned destination, handle more/next_cursor if demonstrating a full export, and state that persistence/destination acceptance is caller-owned. Compile AND run the documented example in a throwaway external Cargo package with a synthetic session; no private stores.",
+    "install_example": "Main has now installed and verified the operator copy at ~/.local/bin/unisphere; do not duplicate that installation. Make just install the documented rebuild/reinstall path, defaulting to ~/.local and accepting an explicit prefix for tests/custom installs. Keep a direct Cargo fallback and explain the matching bin directory on PATH."
+  },
+  "contributing": {
+    "sections": [
+      "Development prerequisites and checkout/build/run commands; engineering harness is development tooling, not a runtime dependency.",
+      "Repository/architecture map: core contracts, SDK orchestration, loaders, pure adapters, output writer, thin CLI/application registry and testkit.",
+      "Adding or extending an adapter: implementation and descriptor, native/synthetic fixtures, shared conformance, one real app registration, dependency policy and fidelity documentation; no mapper filesystem/environment/network/clock access.",
+      "Changing loaders/output: bounded reads, read-only SQLite, representation-appropriate identity/cursors, output/checkpoint failure semantics; no invented offsets or telemetry facts.",
+      "Testing and fixture privacy: behavioral checks, real SDK/CLI smoke, unknown/invalid/partial/revision cases; do not commit private prompts, credentials or artifacts without explicit sanitization/provenance review.",
+      "Contribution workflow and done criteria: focused isolated branches/plans, existing commit guidance, docs and capability updates, actual test/CI evidence, disclose supported versions/platforms and limitations, preserve licence/provenance. Link existing governance/agent rules rather than inventing a second policy.",
+      "Reporting bugs safely: version, adapter ID, reproduction, diagnostics and sanitized structural samples rather than private session dumps."
+    ],
+    "style": "Practical guidance for humans and agents, not a copy of internal Builder ceremonies; reuse existing project conventions and link detailed rules."
+  },
+  "agents_change": {
+    "exact_url": "https://github.com/AI-Substrate/harness-engineering/blob/main/AGENTS_README.md",
+    "requested_condition": "If the engineering harness is not installed/available, follow that upstream guide to set it up; otherwise use the existing installation.",
+    "placement": "Current Engineering harness section, alongside harness --version and the missing-install instruction.",
+    "preserve": "Governance, ownership, commit-attribution and existing operating guidance; do not auto-run adoption, install skills or change global configuration as part of editing this link. Harness is not design authority over Unisphere."
+  },
+  "first_class_install": {
+    "user_request": "make sure that this is first class tooling that rebuilds and installs the cli... justfile or harness.",
+    "decision": "Use a small justfile recipe rather than introducing another JavaScript/harness installation layer; just is already available locally, and the user explicitly offered this surface.",
+    "behavior": "just install rebuilds from current checkout and reinstalls unisphere-app with Cargo --locked --path crates/app into ~/.local by default; an explicit prefix argument permits isolated validation. Use standard Cargo reinstall semantics, not a stale copied binary or a symlink back to a disposable worktree.",
+    "boundaries": "No sudo, PATH/profile edits, operator toolchain changes, or unrelated binary removal. Quote user-supplied paths safely. Report failures rather than hide them; use the installed binary for a short version/catalog smoke.",
+    "proof": "Exercise the actual recipe into a temporary prefix, invoke its installed binary and repeat installation successfully; validate that the recipe points at this checkout and not the published registry or a preexisting binary. No permanent plumbing-only test required."
+  },
+  "verification": [
+    "Run the README's CLI quick start on synthetic explicit input and verify metadata/content/stdout-stderr behavior as relevant.",
+    "Compile and execute the README's telemetry SDK example as an external consumer; fix the prose/example, not the shipped API to fit invented code.",
+    "Run the actual just install recipe twice with a temporary prefix, verify its installed version/catalog command, and check the matching PATH instructions; do not duplicate Main's completed operator installation.",
+    "Check relative documentation links and the exact conditional upstream AGENTS link; preserve actual Unix/Ubuntu/macOS CI evidence and do not imply Windows execution is verified.",
+    "Use a scoped documentation follow-up PR, run appropriate CI, and land under the existing bias-for-action authorization without another routine permission loop; no force push, retirement, unrelated changes or private-data publication."
+  ]
+}

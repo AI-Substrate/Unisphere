@@ -1,0 +1,13 @@
+{
+  "cwd": "/tmp/unisphere-onboarding-proof-5etg9u",
+  "args": [
+    "/tmp/unisphere-onboarding-proof-5etg9u/prefix with spaces ' $(touch UNISPHERE_PREFIX_INJECTION)/bin/unisphere",
+    "config",
+    "check",
+    "--json"
+  ],
+  "at": "2026-09-09T01:03:42.023Z",
+  "exit_code": 0,
+  "stdout": "{\"ok\":true,\"command\":\"config.check\",\"v\":1,\"data\":{\"configuration\":{\"source_roots\":[]}}}\n",
+  "stderr": ""
+}

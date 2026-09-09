@@ -1,0 +1,90 @@
+{
+  "dd": {
+    "schema": "builder/backpressure"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Backpressure survey",
+        "plan": "../plan.dd.json#meta",
+        "certainty": "Proven"
+      }
+    },
+    {
+      "name": "rows",
+      "value": [
+        {
+          "id": "bp-0001",
+          "criterion": "README explains purpose, common OTLP output, supported native dialects and actual fidelity/privacy/rerun boundaries without claiming universal coverage or a central service.",
+          "phase": "ph-9c7c",
+          "mode": "EXISTS",
+          "tier": "human-judgement",
+          "state": "checked",
+          "proof": "Main consumer review against the bounded outline and landed source facts.",
+          "probe": "Existing public SDK/CLI source, landed docs and just1.42.4 positional-arguments contract read; no new product API invented.",
+          "receipt": "execution-log.dd.json#entries/lg-0001"
+        },
+        {
+          "id": "bp-0002",
+          "criterion": "The documented external SDK telemetry example compiles and runs with all four exact path dependencies, caller-owned output and full bounded-batch cursor handling.",
+          "phase": "ph-9c7c",
+          "mode": "EXISTS",
+          "tier": "computational",
+          "state": "checked",
+          "proof": "Actual throwaway external Cargo application executing the exact README Rust/TOML fences.",
+          "probe": "Existing public SDK/CLI source, landed docs and just1.42.4 positional-arguments contract read; no new product API invented.",
+          "receipt": "execution-log.dd.json#entries/lg-0001"
+        },
+        {
+          "id": "bp-0003",
+          "criterion": "The documented CLI examples execute on synthetic explicit input with metadata/content/output/error streams matching the shipped contract.",
+          "phase": "ph-9c7c",
+          "mode": "EXISTS",
+          "tier": "computational",
+          "state": "checked",
+          "proof": "Actual installed temporary-prefix CLI on synthetic session data; check output and stderr.",
+          "probe": "Existing public SDK/CLI source, landed docs and just1.42.4 positional-arguments contract read; no new product API invented.",
+          "receipt": "execution-log.dd.json#entries/lg-0001"
+        },
+        {
+          "id": "bp-0004",
+          "criterion": "just install rebuilds and reinstalls the checkout CLI into a safely quoted prefix, defaults to ~/.local, succeeds twice in a temporary prefix and runs installed version/catalog smoke without global setup or unrelated file changes.",
+          "phase": "ph-9c7c",
+          "mode": "EXISTS",
+          "tier": "computational",
+          "state": "checked",
+          "proof": "Run actual just install twice into a fresh hostile-named temporary prefix; check installation metadata, binary/catalog and sentinel preservation.",
+          "probe": "Existing public SDK/CLI source, landed docs and just1.42.4 positional-arguments contract read; no new product API invented.",
+          "receipt": "execution-log.dd.json#entries/lg-0001"
+        },
+        {
+          "id": "bp-0005",
+          "criterion": "CONTRIBUTING gives practical architecture, adapter/loader/output, privacy/testing and contribution guidance; AGENTS links the exact upstream setup guide only if harness is unavailable, preserving existing governance/commit rules.",
+          "phase": "ph-9c7c",
+          "mode": "EXISTS",
+          "tier": "human-judgement",
+          "state": "checked",
+          "proof": "Main consumer review plus exact AGENTS conditional diff and existing source/docs.",
+          "probe": "Existing public SDK/CLI source, landed docs and just1.42.4 positional-arguments contract read; no new product API invented.",
+          "receipt": "execution-log.dd.json#entries/lg-0001"
+        },
+        {
+          "id": "bp-0006",
+          "criterion": "All documentation links resolve; no shipped Rust product code, dependencies, lockfile or existing operator installation changes.",
+          "phase": "ph-9c7c",
+          "mode": "EXISTS",
+          "tier": "computational",
+          "state": "checked",
+          "proof": "Resolve local/external links and compare unchanged product trees against main.",
+          "probe": "Existing public SDK/CLI source, landed docs and just1.42.4 positional-arguments contract read; no new product API invented.",
+          "receipt": "execution-log.dd.json#entries/lg-0001"
+        }
+      ]
+    },
+    {
+      "name": "sensors",
+      "value": []
+    }
+  ]
+}

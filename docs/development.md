@@ -45,13 +45,20 @@ See [SDK usage](sdk.md) and [CLI reference](cli.md) for public contracts and con
 
 ## One quality gate, one foundation smoke lane
 
-The engineering harness is optional development tooling, installed globally rather than as a product dependency. Use Node >=22 and `@ai-substrate/engineering-harness` 0.14.0 or a compatible later CLI:
+The engineering harness is development tooling, not a product dependency. CI pins the published `@ai-substrate/engineering-harness` 0.13.0 runtime for the `checks` and `boot` extension APIs; those exact commands were exercised successfully with that package on Node 24:
 
 ```sh
-npm install -g @ai-substrate/engineering-harness@0.14.0
+npm install -g @ai-substrate/engineering-harness@0.13.0
 harness checks --json
 harness boot --json
 ```
+
+This CI/runtime pin is not the local Builder/DD tooling requirement. Managed
+plan allocation, receipts and shipping use a separate Builder-capable installed
+CLI; inspect its live command capabilities before use. CI invokes no Builder or
+DD command, and does not require an unpublished harness version merely because
+release bookkeeping used one. Do not downgrade an operator's local Builder
+installation to match CI.
 
 With rustup, a command-local `RUSTUP_TOOLCHAIN=1.95.0` selects that toolchain only when the executable resolves through rustup. Ensure PATH selects the intended distribution; inspect the emitted provenance instead of assuming the override worked.
 

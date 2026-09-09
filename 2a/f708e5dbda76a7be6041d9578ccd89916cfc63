@@ -1,0 +1,41 @@
+docs/plans/015-session-query-cli/assets/backpressure.dd.json
+  s_a65e862cd32096::t_a5d051aa16bebc 1-24
+docs/plans/015-session-query-cli/assets/backpressure.dd.md
+  s_a65e862cd32096::t_1d8f13401d00c8 1-27
+docs/plans/015-session-query-cli/assets/synthetic-query-fixture.json
+  s_a65e862cd32096::t_7a16ac85e5a29d 1-294
+docs/plans/015-session-query-cli/assets/tasks/phase-1/tasks.dd.json
+  s_a65e862cd32096::t_fad3e15edea675 1-101
+docs/plans/015-session-query-cli/assets/tasks/phase-1/tasks.dd.md
+  s_a65e862cd32096::t_18413ae9be3cc3 1-159
+docs/plans/015-session-query-cli/assets/tasks/phase-2/tasks.dd.json
+  s_a65e862cd32096::t_19c7e03602940f 1-101
+docs/plans/015-session-query-cli/assets/tasks/phase-2/tasks.dd.md
+  s_a65e862cd32096::t_374e44a1137f9d 1-159
+docs/plans/015-session-query-cli/assets/tasks/phase-3/tasks.dd.json
+  s_a65e862cd32096::t_a5f7ffdb0926b4 1-101
+docs/plans/015-session-query-cli/assets/tasks/phase-3/tasks.dd.md
+  s_a65e862cd32096::t_8cfcf9ad269244 1-159
+docs/plans/015-session-query-cli/assets/team/coder-packet.template.md
+  s_a65e862cd32096::t_58af074e322544 1-59
+docs/plans/015-session-query-cli/assets/team/model-settings.template.json
+  s_a65e862cd32096::t_4305f87a4bbf39 1-10
+docs/plans/015-session-query-cli/assets/team/reviewer-packet.template.md
+  s_a65e862cd32096::t_46f81f6b8e9d29 1-50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "2af708e5dbda76a7be6041d9578ccd89916cfc63",
+  "prompts": {},
+  "sessions": {
+    "s_a65e862cd32096": {
+      "agent_id": {
+        "tool": "github-copilot-cli",
+        "id": "13595129-3a68-4ea4-9ea3-a7e8de8379f9",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

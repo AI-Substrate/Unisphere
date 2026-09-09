@@ -1,0 +1,19 @@
+docs/plans/archive/010-native-adapters/assets/ship/2026-09-09/published-harness-compatibility.json
+  s_f1a7ee9f435ed3::t_865c15d2f92787 1-14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "eb2fcb7c07f551cec67a4cb77cebe99b3090dd81",
+  "prompts": {},
+  "sessions": {
+    "s_f1a7ee9f435ed3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6616ca6a-61c0-4a92-b9be-3512605a2826",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

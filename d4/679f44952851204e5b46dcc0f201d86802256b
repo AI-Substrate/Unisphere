@@ -1,0 +1,29 @@
+docs/plans/013-contributor-onboarding/assets/impl-guide.dd.json
+  s_61dfe47e9838df::t_95dce0ba7d127a 1-329
+docs/plans/013-contributor-onboarding/assets/impl-guide.dd.md
+  s_61dfe47e9838df::t_e6477493611678 1-125
+docs/plans/013-contributor-onboarding/assets/readme-cli-vscode-copilot.json
+  s_61dfe47e9838df::t_ef333997ff25a6 1-18
+docs/plans/013-contributor-onboarding/assets/readme-sdk-execution.json
+  s_61dfe47e9838df::t_00a8aa351a1954 1-14
+docs/plans/013-contributor-onboarding/the-flow.json
+  s_61dfe47e9838df::t_34997b37db5ad6 1-278
+docs/plans/013-contributor-onboarding/the-flow.md
+  s_61dfe47e9838df::t_7634cb5e801ab0 1-40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "d4679f44952851204e5b46dcc0f201d86802256b",
+  "prompts": {},
+  "sessions": {
+    "s_61dfe47e9838df": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cbe08128-4097-4473-9f99-71e9415824f6",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

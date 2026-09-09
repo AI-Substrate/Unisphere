@@ -1,0 +1,57 @@
+{
+  "dd": {
+    "schema": "builder/backpressure"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Backpressure survey",
+        "plan": "../plan.dd.json#meta",
+        "certainty": "Partial",
+        "basis_sha": "cb77882113cd525b9a1b3922cf0eddd7cbef66f499a82ef3d070d75b32b756ae"
+      }
+    },
+    {
+      "name": "rows",
+      "value": [
+        {
+          "id": "bp-0001",
+          "criterion": "Weekly bounded version-update policy covers exactly the real Cargo and GitHub Actions ecosystems.",
+          "phase": "ph-868e",
+          "mode": "ABSENT",
+          "tier": "human-judgement",
+          "proof": "Source judgement against GitHub Dependabot version-2 documentation. Main should parse the YAML and check ecosystem, root, interval and limits; no repository-specific Dependabot policy sensor is claimed.",
+          "state": "unchecked",
+          "probe": "Read root Cargo.toml, repository directory listing and .github/workflows/rust.yml; the assigned repository inventory confirms no tracked npm manifest.",
+          "note": "Configuration source is prepared; no validator or hosted bot job has run."
+        },
+        {
+          "id": "bp-0002",
+          "criterion": "Dependency PRs retain the existing read-only pull_request CI path without actor exclusions.",
+          "phase": "ph-868e",
+          "mode": "ABSENT",
+          "tier": "human-judgement",
+          "proof": "Source judgement of .github/workflows/rust.yml:3-32. The pull_request trigger has no branch/path/actor filters; no job or step if guard and no secret references occur. Hosted bot-PR execution remains unobserved.",
+          "state": "unchecked",
+          "probe": "Read the complete 32-line rust.yml workflow; it invokes harness boot --json for ubuntu-latest and macos-latest."
+        },
+        {
+          "id": "bp-0003",
+          "criterion": "The handoff distinguishes local source readiness from remote activation and excludes unauthorized automation or publication.",
+          "phase": "ph-868e",
+          "mode": "ABSENT",
+          "tier": "human-judgement",
+          "proof": "Review the plan/evidence note and GitHub default-branch activation requirements. No local command can prove an unrun GitHub schedule or a nonexistent bot PR.",
+          "state": "unchecked",
+          "probe": "Read GitHub configuring-version-updates and Dependabot options reference; this task authorizes source edits only.",
+          "note": "Post-merge hosted inspection requires a separate authorized integration; no push, PR, merge or visibility change is implied."
+        }
+      ]
+    },
+    {
+      "name": "sensors",
+      "value": []
+    }
+  ]
+}

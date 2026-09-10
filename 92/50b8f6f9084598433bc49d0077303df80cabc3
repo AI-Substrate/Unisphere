@@ -1,0 +1,63 @@
+.harness/engineering-harness.md
+  s_61dfe47e9838df::t_edeb39c3b77815 7,15,23,30
+.harness/extensions/boot/boot.mjs
+  s_61dfe47e9838df::t_6dbab10028ab52 26,29,40-41
+.harness/extensions/boot/extension.test.mjs
+  s_61dfe47e9838df::t_966d51083ef41b 47-59
+.harness/extensions/boot/extension.ts
+  s_61dfe47e9838df::t_cb55359c11371c 9
+.harness/extensions/boot/instructions.md
+  s_61dfe47e9838df::t_a35cf8b3f3bb70 5,11,15
+AGENTS.md
+  s_61dfe47e9838df::t_c153acd24024cf 3,36
+crates/adapter-git-ai/tests/format.rs
+  s_a65e862cd32096::t_36edd6f4b1a223 1-193
+crates/app/src/adapters.rs
+  s_a65e862cd32096::t_5b8c06294ceef4 17,28,187-208,222-258,272,420-429,452,458-462,468-475
+crates/cli/src/git_notes.rs
+  s_a65e862cd32096::t_0aebd7e2171037 1-238
+crates/core/src/git_notes.rs
+  s_a65e862cd32096::t_c231a359499735 1-422
+crates/loader-git/tests/storage.rs
+  s_a65e862cd32096::t_85ddde7f8f5bf8 1-265
+crates/sdk/src/git_notes.rs
+  s_a65e862cd32096::t_cf88534bbd80f1 1-138
+crates/sdk/src/lib.rs
+  s_a65e862cd32096::t_048bac229129f9 45,49,52
+crates/testkit/fixtures/consumer/git-notes-main.rs
+  s_a65e862cd32096::t_eb66fdba27677e 1-126
+crates/testkit/src/bin/proof/git_notes.rs
+  s_a65e862cd32096::t_b68ea0031d1d93 1-869
+crates/testkit/src/bin/unisphere-arch-check.rs
+  s_a65e862cd32096::t_6ffabe3be67da9 36-37,44-47,84-86,131-132
+crates/testkit/src/bin/unisphere-proof.rs
+  s_a65e862cd32096::t_fbae56299438c9 15-16,562,587,592-594
+crates/testkit/src/git_notes.rs
+  s_a65e862cd32096::t_9b503dda65e34e 1-122
+docs/development.md
+  s_61dfe47e9838df::t_e2be2237e78528 3,65,79,91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "9250b8f6f9084598433bc49d0077303df80cabc3",
+  "prompts": {},
+  "sessions": {
+    "s_61dfe47e9838df": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cbe08128-4097-4473-9f99-71e9415824f6",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    },
+    "s_a65e862cd32096": {
+      "agent_id": {
+        "tool": "github-copilot-cli",
+        "id": "13595129-3a68-4ea4-9ea3-a7e8de8379f9",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

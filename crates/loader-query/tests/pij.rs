@@ -13,7 +13,7 @@ use unisphere_loader_query::pij::{
 };
 
 const ID: &str = "pij-test-seat";
-const SCRIPT: &str = "#!/bin/sh\nif [ \"$1\" != state ] || [ \"$2\" != pij-test-seat ] || [ \"$3\" != --json ] || [ \"$#\" != 3 ]; then exit 90; fi\ncat \"$0.response\"\nexit \"$(cat \"$0.status\")\"\n";
+const SCRIPT: &str = "#!/bin/sh\nif [ \"$1\" != state ] || [ \"$2\" != pij-test-seat ] || [ \"$3\" != --json ] || [ \"$#\" != 3 ]; then exit 90; fi\nIFS= read -r response < \"$0.response\"\nprintf '%s' \"$response\"\nIFS= read -r status < \"$0.status\"\nexit \"$status\"\n";
 
 fn sidecar(executable: &Path, suffix: &str) -> PathBuf {
     let mut path = OsString::from(executable.as_os_str());
@@ -157,23 +157,32 @@ fn missing_executable_and_lookup_transport_failure_are_distinct() {
 
 #[test]
 fn output_and_elapsed_time_are_bounded() {
-    let (_temporary, executable) = program(
-        r#"{"v":2,"ok":true,"data":{"id":"pij-test-seat","harness":"omp","session":"native"}}"#,
-        0,
+    let response =
+        r#"{"v":2,"ok":true,"data":{"id":"pij-test-seat","harness":"omp","session":"native"}}"#;
+    let (_temporary, executable) = program(response, 0);
+    let limits = PijLookupLimits {
+        max_output_bytes: response.len(),
+        timeout: Duration::from_secs(10),
+    };
+    assert_eq!(
+        resolve_pij(Some(&executable), ID, limits)
+            .unwrap()
+            .native_session_id,
+        "native"
     );
     assert_eq!(
         resolve_pij(
             Some(&executable),
             ID,
             PijLookupLimits {
-                max_output_bytes: 16,
-                timeout: Duration::from_secs(1),
+                max_output_bytes: response.len() - 1,
+                ..limits
             }
         ),
         Err(PijLookupError::OutputLimitExceeded)
     );
 
-    fs::write(&executable, "#!/bin/sh\nexec sleep 1\n").unwrap();
+    fs::write(&executable, "#!/bin/sh\nexec sleep 30\n").unwrap();
     let started = Instant::now();
     assert_eq!(
         resolve_pij(
@@ -181,12 +190,12 @@ fn output_and_elapsed_time_are_bounded() {
             ID,
             PijLookupLimits {
                 max_output_bytes: 1024,
-                timeout: Duration::from_millis(20),
+                timeout: Duration::from_millis(50),
             }
         ),
         Err(PijLookupError::Timeout)
     );
-    assert!(started.elapsed() < Duration::from_millis(500));
+    assert!(started.elapsed() < Duration::from_secs(5));
 }
 
 #[test]

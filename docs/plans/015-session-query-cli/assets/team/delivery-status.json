@@ -1,24 +1,52 @@
 {
-  "recorded_at": "2026-09-10T05:15:07.712Z",
-  "candidate_count": 7,
-  "accepted_unit_deliveries": [],
-  "revision_requested": [
-    "tk-0009: preserve raw CSV and bound intermediate rendering",
-    "tk-000a: remove source/prose-pinning tests"
+  "recorded_at": "2026-09-10T06:54:40.008Z",
+  "candidate_count": 9,
+  "integrated_source": "5ee631b46142b88dea2a2742c9cb8087642c4d25",
+  "product_verification": {
+    "workspace_tests": 327,
+    "boot_ready": true,
+    "boot_scope": "configuration-and-native-session-projections",
+    "architecture_edges": 86,
+    "purity_source_files": 29,
+    "external_real_sdk_query": true,
+    "external_sdk_recipe_bins": 2
+  },
+  "independent_review": {
+    "peer": "pij-armed-cow",
+    "status": "pending",
+    "packet": "first-wave-review-packet.json"
+  },
+  "official_builder_composition": false,
+  "cli": {
+    "unit": "tk-000b",
+    "allocated": false,
+    "reason": "Confirmed installed Builder staged dependency/composition cycle; manual product-only helper decision requested from Jordan"
+  },
+  "historical_revision_requests": [
+    "Cursor query reconstruction from telemetry replaced with shared native classification",
+    "SDK branch forests, lifetimes, ID filtering and cycle detection corrected",
+    "Writer raw CSV bytes and bounded intermediate rendering corrected",
+    "Docs source/prose pins removed; SDK recipe invokes real QueryService"
   ],
-  "pending_initial_delivery": [
-    "tk-0004",
-    "tk-0008"
+  "pm_corrections": [
+    "Projection metadata/metrics and effective context labels",
+    "Mechanical compile/lint repairs without warning suppression",
+    "Source selector binding preserved while physical source identity remains canonical"
   ],
-  "core_amendment": "IsContext and supported metric projection declarations; original baseline remains immutable and amendment requires review/binding before final acceptance",
   "attribution": {
-    "tk-000a": "Commit note landed, but coder observed human-attributed ranges and empty prompts; no AI-attribution confirmation claimed; no buffer to nudge."
+    "tk-000a": {
+      "commits": [
+        "1dd6f3d53f1d6b965fcb45511ce62e32e0f76215",
+        "9018de93afda4fea3df0c6850ffa17623a2ffcc3"
+      ],
+      "observation": "Landed notes with human-attributed ranges and empty prompts; not AI-attribution confirmation. No buffer/nudge path."
+    }
   },
   "startup_boot": {
     "tk-0009": "Attempted before fleet rule; already failed at rustdoc when cancellation was attempted, not packet proof",
-    "tk-000a": "Attempted before fleet rule; late ready:true scope configuration-and-native-session-projections, not docs proof",
+    "tk-000a": "Attempted before fleet rule; late ready:true existing-native scope, not docs proof",
     "tk-0004": "Cancelled after fleet rule",
     "tk-0005": "Cancelled before completion after fleet rule"
   },
-  "validation": "All packet-specific proof unrun by coders; PM composition pending"
+  "acceptance_note": "These are proved first-wave product inputs, not complete CLI/plan acceptance or a repaired Builder receipt cycle."
 }

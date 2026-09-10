@@ -10,13 +10,13 @@
         "slug": "session-query-cli",
         "ordinal": 15,
         "status": "draft",
-        "summary": "Substantial Rust SDK query/extraction upgrade with a thin coherent CLI and first-class offline docs; draft handed to nominated PM pij-empirical-tiger for user preamble before implementation.",
+        "summary": "Implementation in progress: independently reviewed non-Git CLI/Pij path proved at1d24e0c4; Git Notes convergence remains explicitly blocked.",
         "backpressure": "assets/backpressure.dd.json#rows"
       }
     },
     {
       "name": "summary",
-      "value": "Make Unisphere a coherent, SDK-first session exploration and query tool: discover repository-associated work, inspect sessions/turns/messages/tools/events, filter the intended evidence, extract useful context, and compute honest observed statistics. Every command is motivated by a user question, demonstrated with synthetic expected results, and taught by version-matched offline documentation. This is a product plan for nominated PM pij-empirical-tiger, not an implementation release. This is a substantial SDK upgrade, not a CLI-only wrapper. The SDK owns repository/source discovery, evidence-qualified session/turn/message/tool/event views, identity/lineage, filtering/time semantics, query-view freshness, context extraction, privacy-aware projection and observed aggregation through injectable public Rust APIs. The CLI parses arguments, composes providers and renders results; other SDK consumers receive the same behavior without invoking the CLI. Jordan will add more preamble directly with the PM; one context sentence and one question sentence per clarification turn, no implementation/fan-out until direction and guide review settle."
+      "value": "Make Unisphere a coherent, SDK-first session exploration and query tool: discover repository-associated work, inspect sessions/turns/messages/tools/events, filter the intended evidence, extract useful context, and compute honest observed statistics. Every command is motivated by a user question, demonstrated with synthetic expected results, and taught by version-matched offline documentation. This is a product plan for nominated PM pij-empirical-tiger, not an implementation release. This is a substantial SDK upgrade, not a CLI-only wrapper. The SDK owns repository/source discovery, evidence-qualified session/turn/message/tool/event views, identity/lineage, filtering/time semantics, query-view freshness, context extraction, privacy-aware projection and observed aggregation through injectable public Rust APIs. The CLI parses arguments, composes providers and renders results; other SDK consumers receive the same behavior without invoking the CLI. Current implementation: non-Git query/native CLI plus the separately authorised optional Pij selector are composed and independently reviewed. Exact source1d24e0c4b2b624e128cd773a8d29d7382cb30a6c passed363 tests and full boot, including built/installed query workflows. Git Notes runtime and the seventh recipe remain blocked on the approved plan014 history merge requiring Jordan's typed PROCEED; no overall plan or Builder composition acceptance is claimed. Continue from assets/team/continuation-status.json and assets/compaction-handoff.md."
     },
     {
       "name": "goals",
@@ -120,8 +120,9 @@
         {
           "id": "ac-000d",
           "claim": "JSON, JSONL, CSV, text and Markdown expose documented shapes where supported; JSONL remains clean row data, CSV has explicit spreadsheet-safety/null rules, and query output is never mislabelled as OTLP.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-000d"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000d",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0001"
         },
         {
           "id": "ac-000e",
@@ -132,8 +133,9 @@
         {
           "id": "ac-000f",
           "claim": "Offline query input never triggers hidden live enrichment; missing required projected fields, malformed envelopes and unsupported versions fail with actionable availability/schema errors.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-000f"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000f",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0001"
         },
         {
           "id": "ac-0010",
@@ -144,8 +146,9 @@
         {
           "id": "ac-0011",
           "claim": "The installed CLI provides offline docs list/get and discoverable schema output before source/config/Git/Git-AI access; unknown topics/fields name valid alternatives and recovery actions.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-0011"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0011",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0001"
         },
         {
           "id": "ac-0012",

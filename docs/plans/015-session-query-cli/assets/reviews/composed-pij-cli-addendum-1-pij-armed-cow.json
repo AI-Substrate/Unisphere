@@ -1,0 +1,36 @@
+{
+  "record_type": "review-addendum",
+  "id": "rv-plan015-composed-pij-cli-addendum-1-pij-armed-cow",
+  "sequence": 1,
+  "supersedes_finding": "M1",
+  "amends": "composed-pij-cli-review-pij-armed-cow.json (sha256 53cb9f36e8b7a7247abaa647cb06b56a38ee04e3d4c1abf0b5c1ffdf387c10d3)",
+  "code_subject": {
+    "commit": "f818e2f5e6c4e5fb34ab8a00c34cc9928dc0d283",
+    "note": "Product bytes unchanged at descendants d4205177, 3cb4404d and 07112e58; I verified the seven reviewed app/CLI/loader/output blobs are byte-identical at 07112e58, and that the 07112e58 delta touches only crates/loader-query/tests/pij.rs, the testkit proof driver, and evidence/contract JSON."
+  },
+  "recorded_at": "2026-09-10T09:58:49Z\n",
+  "recorded_at_local": "2026-09-10T19:58:49+1000\n",
+  "reviewer": {
+    "seat": "pij-armed-cow",
+    "role": "independent read-only reviewer"
+  },
+  "adjudication": "M1 IS WITHDRAWN. The premise is false and the PM is right. I withdraw it on my own re-derivation from committed bytes rather than on the strength of the fixture run, which is the stronger basis and the one that matters if the fixture is ever wrong.",
+  "what_i_asserted": "That --pij forces QueryScope::Repository{cwd, tree}, that repository_roots therefore reduces to [canonicalize(cwd)], and that this is what associates discovered transcripts with the requested tree \u2014 so a correct seat with a readable local transcript would report UNI-PIJ-TRANSCRIPT-MISSING merely because the shell was in a different directory.",
+  "why_it_is_false": [
+    "Discovery is not directory-scoped. loader-query/lib.rs:797-800 calls discover_repository(&admitted, limits), which walks registered adapter LOCATION HINTS under the platform bases (lib.rs:308-344) and never consults the roots. The roots are computed alongside it and passed onward as metadata.",
+    "load_candidates does not filter by them. It carries repository_roots straight into NativeQueryView (lib.rs:761-766) and drops no observation on their account. The observation set app::pij receives is the full admitted-harness set, not a cwd subset.",
+    "Root-based selection lives in QueryView, not in load. observation_selected and association_selected (sdk/query/view.rs:1485-1517) both return true immediately unless the admitted scope is QueryScope::Repository.",
+    "And app::pij never builds a QueryView from that first load. It reads discovered.observations directly (app/src/pij.rs:68-78), matching only on session.native_id, then drops the whole view at line 92 and replaces the scope with QueryScope::Source{Id} at 94-96 before QueryService::open_view. The SourceSelector::Id arm calls load_candidates(candidates, Vec::new(), ...) at lib.rs:811-819 \u2014 empty roots, non-Repository scope, so association filtering is doubly inapplicable.",
+    "The cwd-derived scope therefore reaches exactly one place that matters: nothing. It satisfies the load signature and is discarded."
+  ],
+  "my_mechanical_error": "I traced repository_roots forward from where it is BUILT and assumed the consumer, instead of tracing the value from where it is CONSUMED back to the caller. Two facts were sitting in code I had already read and did not connect: that app::pij drops the discovered view at line 92, and that association filtering is a QueryView concern that a Source-scoped request cannot enter. Both were visible in my own notes on this commit. The finding was an inference dressed as a trace.",
+  "the_more_serious_half": "My suggested change was worse than the finding. I proposed naming the seat's recorded directory in the recovery text. That directory is untrusted text arriving from the Pij wire \u2014 precisely the material the R2/R8 documentation on loader-query/src/pij.rs marks as untrusted, and precisely what emit_pij_resolution is careful to withhold under C19. Acting on my advice would have piped attacker-influencable text into a terminal diagnostic to fix a failure mode that does not exist. The PM's refusal to add directory advice is correct on both counts, and the existing behaviour of holding the cwd hint without acting on it is correct for the reason the code comment already gives.",
+  "boundary_that_remains_true": "Root-based association filtering is real and does apply to ordinary repo-scoped query and sessions forms, which are QueryScope::Repository end to end. What is not true is that the --pij path inherits it. The distinction is the drop at app/src/pij.rs:92.",
+  "evidence_note": "The PM cites plan015/assets/extensions/pij-session-resolution/m1-directory-disproof.json. That path is not present in the tree at 07112e58; I did not read it and did not rely on it. My withdrawal rests on the source trace above.",
+  "status_of_other_findings": "L1 (uniform exit 1 with a discarded write result), L2 (relative PATH entries resolved against cwd) and L3 (C20 ParsedCommand list omits PijQuery) are untouched by this correction and stand as written. The static APPROVE of the source stands, and now stands more strongly: the one medium finding against it was mine and was wrong.",
+  "unchanged_exclusions": [
+    "No Builder or plan015 composition acceptance.",
+    "No build, test, lint, formatter or boot result is claimed or anticipated; the boot capture remains unobserved by me.",
+    "Nothing is claimed about Git Notes native or query runtime."
+  ]
+}

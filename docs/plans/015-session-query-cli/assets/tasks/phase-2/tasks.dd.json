@@ -23,7 +23,7 @@
           "id": "tk-0001",
           "title": "Reusable query output adapters",
           "phase": "ph-1372",
-          "state": "unchecked",
+          "state": "checked",
           "success": "Implement QueryWriter over validated projected rows for JSON, JSONL, CSV, text and Markdown; enforce byte limits, CSV safety/encoding, terminal and Markdown controls, and truthful partial-write errors. This is serialization, not matching/privacy authorization or source access.",
           "notes": "Guide unit: tk-0009; wave 1; owner role coder. Exact paths/reads/interfaces/dependencies: ../../impl-guide.dd.json#units/tk-0009. Approved decomposition receipt: ../../team/review-decomposition-approved.dd.json. New crate manifest owned here; PM owns workspace registration/architecture. No SDK or CLI dependency; test against core projected fixtures. Skip validation while concurrent. PM quality acceptance is mandatory: candidate code is inspected for correctness, maintainability and needless allocations/duplication, exercised through applicable composed behavior and independently reviewed. A compile or coder completion claim is not acceptance.",
           "satisfies_toward": [
@@ -33,7 +33,8 @@
             "../../../plan.dd.json#acceptance_criteria/ac-0017",
             "../../../plan.dd.json#acceptance_criteria/ac-0018"
           ],
-          "done": "tasks.dd.json#done_when/tk-0001"
+          "done": "tasks.dd.json#done_when/tk-0001",
+          "receipt": "../../execution-log.dd.json#entries/lg-0001"
         },
         {
           "id": "tk-0002",
@@ -50,7 +51,8 @@
             "../../../plan.dd.json#acceptance_criteria/ac-0017",
             "../../../plan.dd.json#acceptance_criteria/ac-0018"
           ],
-          "done": "tasks.dd.json#done_when/tk-0002"
+          "done": "tasks.dd.json#done_when/tk-0002",
+          "receipt": "../../execution-log.dd.json#entries/lg-0001"
         },
         {
           "id": "tk-0003",
@@ -71,7 +73,8 @@
             "../../../plan.dd.json#acceptance_criteria/ac-0017",
             "../../../plan.dd.json#acceptance_criteria/ac-0018"
           ],
-          "done": "tasks.dd.json#done_when/tk-0003"
+          "done": "tasks.dd.json#done_when/tk-0003",
+          "receipt": "../../execution-log.dd.json#entries"
         }
       ]
     },
@@ -82,31 +85,31 @@
           {
             "id": "dw-0001",
             "assertion": "All declared formats expose the documented shapes and units; JSONL remains row-only and OTLP is never represented as query JSON.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-000d"
           },
           {
             "id": "dw-0002",
             "assertion": "CSV escaping, terminal/Markdown controls and nested projections do not bypass content consent or serialize hidden raw data.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-000c"
           },
           {
             "id": "dw-0003",
             "assertion": "Counted writes, flush/broken-pipe failures and partial destinations cannot produce a completed result/checkpoint.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-000e"
           },
           {
             "id": "dw-0004",
             "assertion": "Raw data streams contain no next-action banners or fake summary rows.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0017"
           },
           {
             "id": "dw-0005",
             "assertion": "CSV format capabilities and diagnostics explicitly name absent/null/empty losses and guide exact-availability consumers to JSON/JSONL.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-000d"
           }
         ],
@@ -114,7 +117,7 @@
           {
             "id": "dw-0006",
             "assertion": "Bundled topic/schema discovery works without runtime config, source stores, Git or network.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0011"
           },
           {
@@ -152,13 +155,13 @@
           {
             "id": "dw-000c",
             "assertion": "Output-mode conflicts are rejected; row selection does not change with TTY and raw data channels stay clean.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-000d"
           },
           {
             "id": "dw-000d",
             "assertion": "Output files are staged/create-new and failures leave existing destinations/source stores intact.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-000e"
           },
           {
@@ -176,7 +179,7 @@
           {
             "id": "dw-0010",
             "assertion": "Cursor mismatch reasons remain machine-visible and generate cause-specific safe next actions, not a generic source-changed message.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0018"
           }
         ]

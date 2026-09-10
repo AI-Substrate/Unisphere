@@ -8,8 +8,8 @@
       "value": {
         "title": "Query/recipe/actionable-output proof selection",
         "plan": "../plan.dd.json#meta",
-        "basis_sha": "23e11ee7ec867315349aab8df11282da08bf211a6c86e27a3782292ba5bcecef",
-        "certainty": "Confident"
+        "basis_sha": "90fa96e4b3402865fb5257c241931ce1cd5a26ae045d6f2683303c059037913c",
+        "certainty": "Partial"
       }
     },
     {
@@ -23,7 +23,7 @@
           "tier": "computational",
           "proof": "BUILD→RUN: Build bounded registered-source query discovery and component-safe association fixtures; then run the local discovery target plus composed repo workflows. Command: cargo test --locked -p unisphere-loader-query --test discovery",
           "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-0001 owns source path and accountable unit.",
+          "note": "Initial proof selection, not criterion acceptance. Current scoped execution is recorded in execution-log.dd.json; unchecked claims are not promoted from general passing tests. Guide capability ac-0001 owns source path and accountable unit.",
           "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-0007"
         },
         {
@@ -34,7 +34,7 @@
           "tier": "computational",
           "proof": "BUILD→RUN: Build proven-copy/participant/fork/conflict and stable-identity cases over one SDK QueryView; compare the same entities across commands. Command: cargo test --locked -p unisphere-sdk --test query",
           "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-0002 owns source path and accountable unit.",
+          "note": "Initial proof selection, not criterion acceptance. Current scoped execution is recorded in execution-log.dd.json; unchecked claims are not promoted from general passing tests. Guide capability ac-0002 owns source path and accountable unit.",
           "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-0008"
         },
         {
@@ -45,7 +45,7 @@
           "tier": "computational",
           "proof": "BUILD→RUN: Typed query schemas/availability/source references and executable typed native fixture; current OTLP types alone do not cover query rows. Baseline command: cargo test --locked -p unisphere-core -p unisphere-testkit --lib --tests. Includes R1 selection/digest/saved-input/provenance regression cases; no passing result assumed before composed execution.",
           "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-0003 owns source path and accountable unit.",
+          "note": "Initial proof selection, not criterion acceptance. Current scoped execution is recorded in execution-log.dd.json; unchecked claims are not promoted from general passing tests. Guide capability ac-0003 owns source path and accountable unit.",
           "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-0001"
         },
         {
@@ -54,9 +54,9 @@
           "phase": "ph-20c3",
           "mode": "EXTEND",
           "tier": "computational",
-          "proof": "EXTEND→RUN: Extend the existing external/installed proof dispatcher for all query leaves while retaining legacy config/catalog/root-list/native export invocations. Command: cargo run --locked -p unisphere-testkit --bin unisphere-proof -- query",
+          "proof": "EXTEND→RUN: Extend the existing external/installed proof dispatcher for all query leaves while retaining legacy config/catalog/root-list/native export invocations. Command: cargo run --locked -p unisphere-testkit --bin unisphere-proof -- native The implemented native proof now includes built/installed query workflows; its explicit scenario scope is not every unresolved criterion.",
           "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-0004 owns source path and accountable unit. Required routing cases: one typed root parser, legacy --root/native --adapter forms, query --source-adapter forms, native Git --repo versus query association scope, and rejected mixed selectors; remove default raw-argv preselection.",
+          "note": "Initial proof selection, not criterion acceptance. Current scoped execution is recorded in execution-log.dd.json; unchecked claims are not promoted from general passing tests. Guide capability ac-0004 owns source path and accountable unit. Required routing cases: one typed root parser, legacy --root/native --adapter forms, query --source-adapter forms, native Git --repo versus query association scope, and rejected mixed selectors; remove default raw-argv preselection.",
           "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-000c"
         },
         {
@@ -67,7 +67,7 @@
           "tier": "computational",
           "proof": "BUILD→RUN: Build typed filter/AND-OR/null/invalid-pattern/capability/content-consent cases; a parser-only test cannot prove row selection. Command: cargo test --locked -p unisphere-sdk --test query",
           "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-0005 owns source path and accountable unit. SourceSelection must prune excluded adapter/harness registrations before any glob/read/decode; an excluded unreadable or oversized store cannot force a partial query.",
+          "note": "Initial proof selection, not criterion acceptance. Current scoped execution is recorded in execution-log.dd.json; unchecked claims are not promoted from general passing tests. Guide capability ac-0005 owns source path and accountable unit. SourceSelection must prune excluded adapter/harness registrations before any glob/read/decode; an excluded unreadable or oversized store cannot force a partial query.",
           "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-0008"
         },
         {
@@ -78,7 +78,7 @@
           "tier": "computational",
           "proof": "BUILD→RUN: Build half-open UTC/offset precision/undated/event-time versus session-time selection cases. Command: cargo test --locked -p unisphere-sdk --test query",
           "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-0006 owns source path and accountable unit.",
+          "note": "Initial proof selection, not criterion acceptance. Current scoped execution is recorded in execution-log.dd.json; unchecked claims are not promoted from general passing tests. Guide capability ac-0006 owns source path and accountable unit.",
           "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-0008"
         },
         {
@@ -89,7 +89,7 @@
           "tier": "computational",
           "proof": "BUILD→RUN: Build deterministic unknown-last order, source-revision fingerprints and stale/malformed/query-mismatched continuation cases. Command: cargo test --locked -p unisphere-sdk --test query",
           "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-0007 owns source path and accountable unit. C25 proof checks closed nonrecursive ViewDigestBasis: response universe/actions/cursors and available page/column changes cannot alter view identity; admitted source selection/revisions/retained capability must alter it. Query mismatch remains distinct from source change.",
+          "note": "Initial proof selection, not criterion acceptance. Current scoped execution is recorded in execution-log.dd.json; unchecked claims are not promoted from general passing tests. Guide capability ac-0007 owns source path and accountable unit. C25 proof checks closed nonrecursive ViewDigestBasis: response universe/actions/cursors and available page/column changes cannot alter view identity; admitted source selection/revisions/retained capability must alter it. Query mismatch remains distinct from source change.",
           "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-0008"
         },
         {
@@ -100,7 +100,7 @@
           "tier": "computational",
           "proof": "BUILD→RUN: Build source-qualified request-boundary/tree/compaction/replay fixtures; compare stable logical turn IDs and branch-qualified membership. Command: cargo test --locked -p unisphere-sdk --test query",
           "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-0008 owns source path and accountable unit.",
+          "note": "Initial proof selection, not criterion acceptance. Current scoped execution is recorded in execution-log.dd.json; unchecked claims are not promoted from general passing tests. Guide capability ac-0008 owns source path and accountable unit.",
           "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-0008"
         },
         {
@@ -111,7 +111,7 @@
           "tier": "computational",
           "proof": "BUILD→RUN: Build native-ID pairing, interleaving/retry/duplicate/orphan/progress/outcome/clock-reversal fixtures across supported representations. Command: cargo test --locked -p unisphere-sdk --test query",
           "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-0009 owns source path and accountable unit.",
+          "note": "Initial proof selection, not criterion acceptance. Current scoped execution is recorded in execution-log.dd.json; unchecked claims are not promoted from general passing tests. Guide capability ac-0009 owns source path and accountable unit.",
           "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-0008"
         },
         {
@@ -122,7 +122,7 @@
           "tier": "computational",
           "proof": "BUILD→RUN: Build null-aware measured statistics, exact nearest rank, named cancellation/timeout denominator membership and replay/cumulative usage cases; compare exported rows. Command: cargo test --locked -p unisphere-sdk --test query",
           "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-000a owns source path and accountable unit.",
+          "note": "Initial proof selection, not criterion acceptance. Current scoped execution is recorded in execution-log.dd.json; unchecked claims are not promoted from general passing tests. Guide capability ac-000a owns source path and accountable unit.",
           "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-0008"
         },
         {
@@ -133,7 +133,7 @@
           "tier": "computational",
           "proof": "BUILD→RUN: Build overlapping same-branch context windows with stable ordinals and explicit out-of-time-window context labels. Command: cargo test --locked -p unisphere-sdk --test query",
           "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-000b owns source path and accountable unit. Include repository-wide matches in multiple unambiguous session/branch groups; only range is globally single-group, and context never widens repository/source/participant authority.",
+          "note": "Initial proof selection, not criterion acceptance. Current scoped execution is recorded in execution-log.dd.json; unchecked claims are not promoted from general passing tests. Guide capability ac-000b owns source path and accountable unit. Include repository-wide matches in multiple unambiguous session/branch groups; only range is globally single-group, and context never widens repository/source/participant authority.",
           "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-0008"
         },
         {
@@ -142,21 +142,22 @@
           "phase": "ph-20c3",
           "mode": "EXTEND",
           "tier": "computational",
-          "proof": "EXTEND→RUN: Extend existing privacy proof to every query format, error/action/cursor/default column and nested extraction path with synthetic sentinel content. Command: cargo run --locked -p unisphere-testkit --bin unisphere-proof -- query",
+          "proof": "EXTEND→RUN: Extend existing privacy proof to every query format, error/action/cursor/default column and nested extraction path with synthetic sentinel content. Command: cargo run --locked -p unisphere-testkit --bin unisphere-proof -- native The implemented native proof now includes built/installed query workflows; its explicit scenario scope is not every unresolved criterion.",
           "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-000c owns source path and accountable unit.",
+          "note": "Initial proof selection, not criterion acceptance. Current scoped execution is recorded in execution-log.dd.json; unchecked claims are not promoted from general passing tests. Guide capability ac-000c owns source path and accountable unit.",
           "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-000c"
         },
         {
           "id": "bp-000d",
           "criterion": "ac-000d: JSON, JSONL, CSV, text and Markdown expose documented shapes where supported; JSONL remains clean row data, CSV has explicit spreadsheet-safety/null rules, and query output is never mislabelled as OTLP.",
           "phase": "ph-1372",
-          "mode": "BUILD",
+          "mode": "EXISTS",
           "tier": "computational",
           "proof": "BUILD→RUN: Build versioned query JSON/row-only JSONL, CSV safety/null/compound and escaped text/Markdown output behavior; keep OTLP distinct. Command: cargo test --locked -p unisphere-output-query",
-          "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-000d owns source path and accountable unit. Expose CSV format losses in schema and diagnostics; absent/null/empty distinctions require JSON/JSONL rather than a claimed CSV round trip.",
-          "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-0009"
+          "state": "checked",
+          "note": "Observed exact-source proof at1d24e0c4: verification/boot-1d24e0c4.json. Bound completed shared-format, offline-input or static-docs behavior only; not Git Notes or whole-plan acceptance.",
+          "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-0009",
+          "receipt": "execution-log.dd.json#entries/lg-0001"
         },
         {
           "id": "bp-000e",
@@ -164,21 +165,22 @@
           "phase": "ph-20c3",
           "mode": "EXTEND",
           "tier": "computational",
-          "proof": "EXTEND→RUN: Extend source/output failure proof with query bounds, create-new staging, late writes, broken pipes and no completed summary/checkpoint after failure. Command: cargo run --locked -p unisphere-testkit --bin unisphere-proof -- query",
+          "proof": "EXTEND→RUN: Extend source/output failure proof with query bounds, create-new staging, late writes, broken pipes and no completed summary/checkpoint after failure. Command: cargo run --locked -p unisphere-testkit --bin unisphere-proof -- native The implemented native proof now includes built/installed query workflows; its explicit scenario scope is not every unresolved criterion.",
           "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-000e owns source path and accountable unit.",
+          "note": "Initial proof selection, not criterion acceptance. Current scoped execution is recorded in execution-log.dd.json; unchecked claims are not promoted from general passing tests. Guide capability ac-000e owns source path and accountable unit.",
           "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-000c"
         },
         {
           "id": "bp-000f",
           "criterion": "ac-000f: Offline query input never triggers hidden live enrichment; missing required projected fields, malformed envelopes and unsupported versions fail with actionable availability/schema errors.",
           "phase": "ph-1372",
-          "mode": "BUILD",
+          "mode": "EXISTS",
           "tier": "computational",
           "proof": "BUILD→RUN: Build saved-input version/projection/availability refusal and no-live-enrichment cases with hostile fake live sources. Command: cargo test --locked -p unisphere-sdk --test query",
-          "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-000f owns source path and accountable unit. Exercise truncated/column-reduced/paginated JSON and standalone JSONL universes: input-bounded statistics remain labeled, incomplete offline context/reconstruction refuses, and execute_view cannot widen scope.",
-          "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-0008"
+          "state": "checked",
+          "note": "Observed exact-source proof at1d24e0c4: verification/boot-1d24e0c4.json. Bound completed shared-format, offline-input or static-docs behavior only; not Git Notes or whole-plan acceptance.",
+          "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-0008",
+          "receipt": "execution-log.dd.json#entries/lg-0001"
         },
         {
           "id": "bp-0010",
@@ -186,21 +188,22 @@
           "phase": "ph-20c3",
           "mode": "EXTEND",
           "tier": "computational",
-          "proof": "EXTEND→RUN: Extend real standalone public SDK consumer and installed CLI parity for selection/projection/error/coverage, not a CLI subprocess wrapper. Command: cargo run --locked -p unisphere-testkit --bin unisphere-proof -- query",
+          "proof": "EXTEND→RUN: Extend real standalone public SDK consumer and installed CLI parity for selection/projection/error/coverage, not a CLI subprocess wrapper. Command: cargo run --locked -p unisphere-testkit --bin unisphere-proof -- native The implemented native proof now includes built/installed query workflows; its explicit scenario scope is not every unresolved criterion.",
           "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-0010 owns source path and accountable unit.",
+          "note": "Initial proof selection, not criterion acceptance. Current scoped execution is recorded in execution-log.dd.json; unchecked claims are not promoted from general passing tests. Guide capability ac-0010 owns source path and accountable unit.",
           "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-000c"
         },
         {
           "id": "bp-0011",
           "criterion": "ac-0011: The installed CLI provides offline docs list/get and discoverable schema output before source/config/Git/Git-AI access; unknown topics/fields name valid alternatives and recovery actions.",
           "phase": "ph-20c3",
-          "mode": "BUILD",
+          "mode": "EXISTS",
           "tier": "computational",
           "proof": "BUILD→RUN: Build packaged offline docs/schema behavior with malformed runtime config, empty HOME/PATH, absent Git/stores and recoverable topic/field errors. Command: cargo run --locked -p unisphere-testkit --bin unisphere-proof -- docs",
-          "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-0011 owns source path and accountable unit.",
-          "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-000d"
+          "state": "checked",
+          "note": "Observed exact-source proof at1d24e0c4: verification/boot-1d24e0c4.json. Bound completed shared-format, offline-input or static-docs behavior only; not Git Notes or whole-plan acceptance.",
+          "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-000d",
+          "receipt": "execution-log.dd.json#entries/lg-0001"
         },
         {
           "id": "bp-0012",
@@ -210,7 +213,7 @@
           "tier": "computational",
           "proof": "BUILD→RUN: Build executable synthetic recipe cases for all seven workflows and per-command motivation, limits, next actions and interpretation. Command: cargo run --locked -p unisphere-testkit --bin unisphere-proof -- docs",
           "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-0012 owns source path and accountable unit.",
+          "note": "Initial proof selection, not criterion acceptance. Current scoped execution is recorded in execution-log.dd.json; unchecked claims are not promoted from general passing tests. Guide capability ac-0012 owns source path and accountable unit.",
           "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-000d"
         },
         {
@@ -221,7 +224,7 @@
           "tier": "computational",
           "proof": "EXTEND→RUN: Extend normal boot/CI with installed docs, full nested parser examples, related-topic integrity and external SDK example execution. Command: cargo run --locked -p unisphere-testkit --bin unisphere-proof -- docs",
           "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-0013 owns source path and accountable unit.",
+          "note": "Initial proof selection, not criterion acceptance. Current scoped execution is recorded in execution-log.dd.json; unchecked claims are not promoted from general passing tests. Guide capability ac-0013 owns source path and accountable unit.",
           "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-000d"
         },
         {
@@ -232,7 +235,7 @@
           "tier": "computational",
           "proof": "EXTEND→RUN: Integrate reviewed committed plan014 source through actual ports, then extend Git-note/query parity without invented transcript/timing or retired telemetry paths. Command: cargo run --locked -p unisphere-testkit --bin unisphere-proof -- git-notes",
           "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-0014 owns source path and accountable unit.",
+          "note": "Initial proof selection, not criterion acceptance. Current scoped execution is recorded in execution-log.dd.json; unchecked claims are not promoted from general passing tests. Guide capability ac-0014 owns source path and accountable unit.",
           "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-0010"
         },
         {
@@ -254,7 +257,7 @@
           "tier": "human-judgement",
           "proof": "BUILD→RUN: Inspect publication-safe synthetic recipe/source attribution and executable examples; human judgement checks scope/claims, no code reuse or universal-fidelity claim assumed. Command: cargo test --locked -p unisphere-cli --test docs_bundle",
           "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-0016 owns source path and accountable unit.",
+          "note": "Initial proof selection, not criterion acceptance. Current scoped execution is recorded in execution-log.dd.json; unchecked claims are not promoted from general passing tests. Guide capability ac-0016 owns source path and accountable unit.",
           "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-000a"
         },
         {
@@ -265,7 +268,7 @@
           "tier": "computational",
           "proof": "BUILD→RUN: Build all-leaf/help/version/success/empty/partial/export next-action cases, parser-check emitted argv and execute representative follow-on steps with clean data channels. Command: cargo run --locked -p unisphere-testkit --bin unisphere-proof -- docs",
           "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-0017 owns source path and accountable unit.",
+          "note": "Initial proof selection, not criterion acceptance. Current scoped execution is recorded in execution-log.dd.json; unchecked claims are not promoted from general passing tests. Guide capability ac-0017 owns source path and accountable unit.",
           "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-000d"
         },
         {
@@ -274,9 +277,9 @@
           "phase": "ph-20c3",
           "mode": "EXTEND",
           "tier": "computational",
-          "proof": "EXTEND→RUN: Extend existing safe failures to all new error categories with cause-specific alternatives, required input/retry policy and healthy-diagnostic/failed-diagnostic behavior. Command: cargo run --locked -p unisphere-testkit --bin unisphere-proof -- query",
+          "proof": "EXTEND→RUN: Extend existing safe failures to all new error categories with cause-specific alternatives, required input/retry policy and healthy-diagnostic/failed-diagnostic behavior. Command: cargo run --locked -p unisphere-testkit --bin unisphere-proof -- native The implemented native proof now includes built/installed query workflows; its explicit scenario scope is not every unresolved criterion.",
           "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-0018 owns source path and accountable unit.",
+          "note": "Initial proof selection, not criterion acceptance. Current scoped execution is recorded in execution-log.dd.json; unchecked claims are not promoted from general passing tests. Guide capability ac-0018 owns source path and accountable unit.",
           "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-000c"
         }
       ]

@@ -1,0 +1,13 @@
+{
+  "recorded_at": "2026-09-10T09:59:42.738Z",
+  "product_subject": "f818e2f5e6c4e5fb34ab8a00c34cc9928dc0d283",
+  "verdict": "approved statically, non-Git/Pij scope only",
+  "reviews": [
+    "composed-pij-cli-review-pij-armed-cow.json",
+    "composed-pij-cli-addendum-1-pij-armed-cow.json"
+  ],
+  "M1": "Withdrawn by independent re-derivation; actual runtime disproof additionally preserved at ../extensions/pij-session-resolution/m1-directory-disproof.json",
+  "low_dispositions": "../extensions/pij-session-resolution/composition-binding.json",
+  "execution": "Exact1d24e0c4b2b624e128cd773a8d29d7382cb30a6c full boot exited0, ready:true,363 workspace tests; full receipt at ../verification/boot-1d24e0c4.json. Product code approved at f818 is unchanged; later changes are proof/tests/docs.",
+  "not_accepted": "No Git Notes query/runtime integration, seventh recipe or Builder composition/whole-plan acceptance."
+}

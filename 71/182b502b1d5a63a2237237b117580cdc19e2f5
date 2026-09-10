@@ -1,0 +1,19 @@
+docs/plans/015-session-query-cli/assets/team/continuation-status.json
+  s_86fcc201cc985c::t_56501e72cc9a7b 2-4,8,41-47,50-52,66-67
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "71182b502b1d5a63a2237237b117580cdc19e2f5",
+  "prompts": {},
+  "sessions": {
+    "s_86fcc201cc985c": {
+      "agent_id": {
+        "tool": "github-copilot-cli",
+        "id": "3ca048e4-9f2f-486c-a652-b85e60726922",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

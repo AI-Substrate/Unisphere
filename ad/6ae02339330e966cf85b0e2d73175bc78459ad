@@ -1,0 +1,162 @@
+.harness/engineering-harness.md
+  h_9e71e8b09f7cf2 7,23,31
+.harness/extensions/boot/boot.mjs
+  h_9e71e8b09f7cf2 26,29,40-41
+.harness/extensions/boot/extension.test.mjs
+  h_9e71e8b09f7cf2 47-59
+.harness/extensions/boot/extension.ts
+  h_9e71e8b09f7cf2 9
+.harness/extensions/boot/instructions.md
+  h_9e71e8b09f7cf2 5,11,15
+.harness/records/retro/2026-09-10/001-014-git-ai-notes.md
+  h_9e71e8b09f7cf2 1-60
+AGENTS.md
+  h_9e71e8b09f7cf2 3,36
+Cargo.lock
+  h_9e71e8b09f7cf2 619-628,668,673,705-714
+Cargo.toml
+  h_9e71e8b09f7cf2 29-30
+README.md
+  h_9e71e8b09f7cf2 5-7,111-121,139
+THIRD_PARTY_NOTICES.md
+  h_9e71e8b09f7cf2 10-14
+crates/adapter-git-ai/Cargo.toml
+  h_9e71e8b09f7cf2 1-15
+crates/adapter-git-ai/fixtures/mixed.notes
+  h_9e71e8b09f7cf2 1-10
+crates/adapter-git-ai/src/lib.rs
+  h_9e71e8b09f7cf2 1-517
+crates/adapter-git-ai/tests/format.rs
+  h_9e71e8b09f7cf2 1-193
+crates/app/Cargo.toml
+  h_9e71e8b09f7cf2 28-29
+crates/app/src/adapters.rs
+  h_9e71e8b09f7cf2 23,38,269-290,357-393,407,588-597,620,626-630,636-643
+crates/app/tests/adapter_catalog.rs
+  h_9e71e8b09f7cf2 45
+crates/cli/src/git_notes.rs
+  h_9e71e8b09f7cf2 1-238
+crates/cli/src/lib.rs
+  h_9e71e8b09f7cf2 15,33
+crates/core/src/git_notes.rs
+  h_9e71e8b09f7cf2 1-422
+crates/core/src/lib.rs
+  h_9e71e8b09f7cf2 10,17
+crates/loader-git/Cargo.toml
+  h_9e71e8b09f7cf2 1-17
+crates/loader-git/src/lib.rs
+  h_9e71e8b09f7cf2 1-586
+crates/loader-git/tests/storage.rs
+  h_9e71e8b09f7cf2 1-265
+crates/sdk/src/git_notes.rs
+  h_9e71e8b09f7cf2 1-138
+crates/sdk/src/lib.rs
+  h_9e71e8b09f7cf2 50-51,54
+crates/testkit/fixtures/consumer/git-notes-Cargo.toml.template
+  h_9e71e8b09f7cf2 1-13
+crates/testkit/fixtures/consumer/git-notes-main.rs
+  h_9e71e8b09f7cf2 1-126
+crates/testkit/src/bin/proof/git_notes.rs
+  h_9e71e8b09f7cf2 1-869
+crates/testkit/src/bin/proof/native.rs
+  h_9e71e8b09f7cf2 545-547
+crates/testkit/src/bin/unisphere-arch-check.rs
+  h_9e71e8b09f7cf2 43-44,66-69,111-113,160-161
+crates/testkit/src/bin/unisphere-proof.rs
+  h_9e71e8b09f7cf2 15-16,583,608,613-615
+crates/testkit/src/git_notes.rs
+  h_9e71e8b09f7cf2 1-122
+crates/testkit/src/lib.rs
+  h_9e71e8b09f7cf2 8-9
+docs/adapters.md
+  h_9e71e8b09f7cf2 109-125
+docs/cli.md
+  h_9e71e8b09f7cf2 226-297
+docs/development.md
+  h_9e71e8b09f7cf2 3,65,79,91
+docs/fidelity.md
+  h_9e71e8b09f7cf2 3-6,31,60-76
+docs/plans/014-git-ai-notes/assets/backpressure.dd.json
+  h_9e71e8b09f7cf2 1-135
+docs/plans/014-git-ai-notes/assets/backpressure.dd.md
+  h_9e71e8b09f7cf2 1-38
+docs/plans/014-git-ai-notes/assets/execution-log.dd.json
+  h_9e71e8b09f7cf2 1-87
+docs/plans/014-git-ai-notes/assets/execution-log.dd.md
+  h_9e71e8b09f7cf2 1-28
+docs/plans/014-git-ai-notes/assets/git-ai-reconnaissance.json
+  h_9e71e8b09f7cf2 1-317
+docs/plans/014-git-ai-notes/assets/impl-guide.dd.json
+  h_9e71e8b09f7cf2 1-467
+docs/plans/014-git-ai-notes/assets/impl-guide.dd.md
+  h_9e71e8b09f7cf2 1-133
+docs/plans/014-git-ai-notes/assets/implementation-brief.md
+  h_9e71e8b09f7cf2 1-76
+docs/plans/014-git-ai-notes/assets/reviews/guide-r1-adjudication.json
+  h_9e71e8b09f7cf2 1-46
+docs/plans/014-git-ai-notes/assets/reviews/guide-r1-dispositions.json
+  h_9e71e8b09f7cf2 1-70
+docs/plans/014-git-ai-notes/assets/reviews/guide-r1-pij-armed-cow.md
+  h_9e71e8b09f7cf2 1-112
+docs/plans/014-git-ai-notes/assets/reviews/guide-r2-pij-armed-cow.md
+  h_9e71e8b09f7cf2 1-145
+docs/plans/014-git-ai-notes/assets/reviews/implementation-r1-pij-armed-cow.md
+  h_9e71e8b09f7cf2 1-60
+docs/plans/014-git-ai-notes/assets/reviews/implementation-r1-resolution.json
+  h_9e71e8b09f7cf2 1-31
+docs/plans/014-git-ai-notes/assets/reviews/main-acceptance-9250b8f6.json
+  h_9e71e8b09f7cf2 1-21
+docs/plans/014-git-ai-notes/assets/tasks/phase-1/context-brief.md
+  h_9e71e8b09f7cf2 1-13
+docs/plans/014-git-ai-notes/assets/tasks/phase-1/tasks.dd.json
+  h_9e71e8b09f7cf2 1-266
+docs/plans/014-git-ai-notes/assets/tasks/phase-1/tasks.dd.md
+  h_9e71e8b09f7cf2 1-194
+docs/plans/014-git-ai-notes/assets/team/coder-packet.template.md
+  h_9e71e8b09f7cf2 1-59
+docs/plans/014-git-ai-notes/assets/team/model-settings.template.json
+  h_9e71e8b09f7cf2 1-10
+docs/plans/014-git-ai-notes/assets/team/reviewer-packet.template.md
+  h_9e71e8b09f7cf2 1-50
+docs/plans/014-git-ai-notes/assets/verification/api-checkpoint.json
+  h_9e71e8b09f7cf2 1-154
+docs/plans/014-git-ai-notes/assets/verification/boot-attempt-1.json
+  h_9e71e8b09f7cf2 1-62
+docs/plans/014-git-ai-notes/assets/verification/boot-attempt-2.json
+  h_9e71e8b09f7cf2 1-370
+docs/plans/014-git-ai-notes/assets/verification/documentary-runtime-binding-9250b8f6.json
+  h_9e71e8b09f7cf2 1-252
+docs/plans/014-git-ai-notes/assets/verification/main-bindings-9250b8f6.json
+  h_9e71e8b09f7cf2 1-53
+docs/plans/014-git-ai-notes/assets/verification/sha256-cli-smoke.json
+  h_9e71e8b09f7cf2 1-47
+docs/plans/014-git-ai-notes/assets/verification/summary.json
+  h_9e71e8b09f7cf2 1-167
+docs/plans/014-git-ai-notes/original-ask.md
+  h_9e71e8b09f7cf2 1-11
+docs/plans/014-git-ai-notes/plan.dd.json
+  h_9e71e8b09f7cf2 1-191
+docs/plans/014-git-ai-notes/plan.dd.md
+  h_9e71e8b09f7cf2 1-178
+docs/plans/014-git-ai-notes/the-flow.json
+  h_9e71e8b09f7cf2 1-278
+docs/plans/014-git-ai-notes/the-flow.md
+  h_9e71e8b09f7cf2 1-40
+docs/plans/015-session-query-cli/assets/team/git-notes-merge-plan.json
+  h_9e71e8b09f7cf2 1-39
+docs/sdk.md
+  h_9e71e8b09f7cf2 394-463
+docs/telemetry-profile.md
+  h_9e71e8b09f7cf2 106-107,141-197
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "ad6ae02339330e966cf85b0e2d73175bc78459ad",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

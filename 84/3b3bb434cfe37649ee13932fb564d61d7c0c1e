@@ -1,0 +1,142 @@
+crates/adapter-claude/src/lib.rs
+  h_9e71e8b09f7cf2 8,15-23,26-28,56,70-537
+crates/adapter-claude/tests/query.rs
+  h_9e71e8b09f7cf2 1-167
+crates/adapter-codex/src/lib.rs
+  h_9e71e8b09f7cf2 3-4,7,15-23,49-51,74,95-736
+crates/adapter-codex/tests/query.rs
+  h_9e71e8b09f7cf2 1-178
+crates/adapter-copilot-cli/src/lib.rs
+  h_9e71e8b09f7cf2 15,19-27,73,99-120
+crates/adapter-copilot-cli/src/query.rs
+  h_9e71e8b09f7cf2 1-1241
+crates/adapter-copilot-cli/src/snapshot.rs
+  h_9e71e8b09f7cf2 3,56-57
+crates/adapter-copilot-cli/tests/query.rs
+  h_9e71e8b09f7cf2 1-309
+crates/adapter-cursor/src/lib.rs
+  h_9e71e8b09f7cf2 8
+crates/adapter-cursor/src/query.rs
+  h_9e71e8b09f7cf2 1-923
+crates/adapter-cursor/tests/query.rs
+  h_9e71e8b09f7cf2 1-380
+crates/adapter-omp/src/lib.rs
+  h_9e71e8b09f7cf2 4,61,85-88
+crates/adapter-omp/src/query.rs
+  h_9e71e8b09f7cf2 1-891
+crates/adapter-omp/tests/query.rs
+  h_9e71e8b09f7cf2 1-183
+crates/adapter-pi/src/lib.rs
+  h_9e71e8b09f7cf2 4,61,81-84
+crates/adapter-pi/src/query.rs
+  h_9e71e8b09f7cf2 1-861
+crates/adapter-pi/tests/query.rs
+  h_9e71e8b09f7cf2 1-184
+crates/adapter-vscode-copilot/src/lib.rs
+  h_9e71e8b09f7cf2 8,15-23,668-1628
+crates/adapter-vscode-copilot/tests/query.rs
+  h_9e71e8b09f7cf2 1-379
+crates/cli/docs/agents.md
+  h_9e71e8b09f7cf2 1-35
+crates/cli/docs/extract-context.md
+  h_9e71e8b09f7cf2 1-34
+crates/cli/docs/filter-time-and-text.md
+  h_9e71e8b09f7cf2 1-37
+crates/cli/docs/find-sessions.md
+  h_9e71e8b09f7cf2 1-37
+crates/cli/docs/git-ai.md
+  h_9e71e8b09f7cf2 1-35
+crates/cli/docs/inspect-conversations.md
+  h_9e71e8b09f7cf2 1-37
+crates/cli/docs/output-and-schema.md
+  h_9e71e8b09f7cf2 1-34
+crates/cli/docs/privacy-and-coverage.md
+  h_9e71e8b09f7cf2 1-43
+crates/cli/docs/sdk.md
+  h_9e71e8b09f7cf2 1-36
+crates/cli/docs/start.md
+  h_9e71e8b09f7cf2 1-50
+crates/cli/docs/tool-analysis.md
+  h_9e71e8b09f7cf2 1-34
+crates/cli/docs/troubleshooting.md
+  h_9e71e8b09f7cf2 1-35
+crates/cli/src/docs.rs
+  h_9e71e8b09f7cf2 1-105
+crates/cli/tests/docs_bundle.rs
+  h_9e71e8b09f7cf2 1-83
+crates/loader-jsonl/Cargo.toml
+  h_9e71e8b09f7cf2 11
+crates/loader-jsonl/src/lib.rs
+  h_9e71e8b09f7cf2 6,9,22-56,150-186,252-254,271-273,275-276,283-285,293-295
+crates/loader-jsonl/tests/query_snapshot.rs
+  h_9e71e8b09f7cf2 1-55
+crates/loader-query/Cargo.toml
+  h_9e71e8b09f7cf2 1-19
+crates/loader-query/src/lib.rs
+  h_9e71e8b09f7cf2 1-1204
+crates/loader-query/tests/discovery.rs
+  h_9e71e8b09f7cf2 1-272
+crates/output-query/Cargo.toml
+  h_9e71e8b09f7cf2 1-12
+crates/output-query/src/lib.rs
+  h_9e71e8b09f7cf2 1-540
+crates/output-query/tests/query_writer.rs
+  h_9e71e8b09f7cf2 1-309
+crates/sdk/src/lib.rs
+  h_9e71e8b09f7cf2 44,51
+crates/sdk/src/query/cursor.rs
+  h_9e71e8b09f7cf2 1-77
+crates/sdk/src/query/engine.rs
+  h_9e71e8b09f7cf2 1-1037
+crates/sdk/src/query/mod.rs
+  h_9e71e8b09f7cf2 1-19
+crates/sdk/src/query/rows.rs
+  h_9e71e8b09f7cf2 1-475
+crates/sdk/src/query/saved.rs
+  h_9e71e8b09f7cf2 1-246
+crates/sdk/src/query/service.rs
+  h_9e71e8b09f7cf2 1-50
+crates/sdk/src/query/view.rs
+  h_9e71e8b09f7cf2 1-1705
+crates/sdk/tests/query.rs
+  h_9e71e8b09f7cf2 1-714
+crates/testkit/fixtures/query-docs/Cargo.toml.template
+  h_9e71e8b09f7cf2 1-19
+crates/testkit/fixtures/query-docs/example-cases.json
+  h_9e71e8b09f7cf2 1-133
+crates/testkit/fixtures/query-docs/sdk-query.rs
+  h_9e71e8b09f7cf2 1-60
+crates/testkit/fixtures/query-docs/sdk-schema.rs
+  h_9e71e8b09f7cf2 1-35
+docs/claude-adapter.md
+  h_9e71e8b09f7cf2 14-41
+docs/codex-adapter.md
+  h_9e71e8b09f7cf2 11-45
+docs/copilot-cli-adapter.md
+  h_9e71e8b09f7cf2 46-97,234-251
+docs/cursor-adapter.md
+  h_9e71e8b09f7cf2 195-248,256-257
+docs/oh-my-pi-adapter.md
+  h_9e71e8b09f7cf2 3-5,54-86,166-171,176
+docs/pi-adapter.md
+  h_9e71e8b09f7cf2 3-4,29-59,160-167
+docs/sdk.md
+  h_9e71e8b09f7cf2 259-384
+docs/session-loader.md
+  h_9e71e8b09f7cf2 106-130
+docs/snapshot-loader.md
+  h_9e71e8b09f7cf2 108-150
+docs/vscode-copilot-adapter.md
+  h_9e71e8b09f7cf2 3-6,12-63,238-247
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "843b3bb434cfe37649ee13932fb564d61d7c0c1e",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

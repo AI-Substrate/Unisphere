@@ -1,0 +1,32 @@
+crates/output-query/src/lib.rs
+  h_9e71e8b09f7cf2 489-495
+crates/output-query/tests/query_writer.rs
+  h_9e71e8b09f7cf2 197-219
+crates/sdk/src/query/engine.rs
+  h_9e71e8b09f7cf2 11,996,999,1107-1108,1116-1120,1122-1124
+docs/plans/015-session-query-cli/assets/compaction-handoff.md
+  h_9e71e8b09f7cf2 1-53
+docs/plans/015-session-query-cli/assets/pm-handoff.md
+  h_9e71e8b09f7cf2 5,7
+docs/plans/015-session-query-cli/assets/reviews/first-wave-pij-armed-cow.json
+  h_9e71e8b09f7cf2 1-262
+docs/plans/015-session-query-cli/assets/team/manual-cli-allocation.json
+  h_9e71e8b09f7cf2 1-177
+docs/plans/015-session-query-cli/assets/team/manual-cli-packet.json
+  h_9e71e8b09f7cf2 1-139
+docs/plans/015-session-query-cli/plan.dd.json
+  h_9e71e8b09f7cf2 287
+docs/plans/015-session-query-cli/plan.dd.md
+  h_9e71e8b09f7cf2 181
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "1ed489d1bfec87d6948b35c26e176a609711379b",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

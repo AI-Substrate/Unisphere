@@ -1,0 +1,33 @@
+docs/plans/014-git-ai-notes/assets/backpressure.dd.json
+  s_61dfe47e9838df::t_4cae00764ed75d 11-12
+docs/plans/014-git-ai-notes/assets/backpressure.dd.md
+  s_61dfe47e9838df::t_e4431deefa1871 14-15
+docs/plans/014-git-ai-notes/assets/execution-log.dd.json
+  s_61dfe47e9838df::t_5c9eaffd7edfeb 74-82
+docs/plans/014-git-ai-notes/assets/execution-log.dd.md
+  s_61dfe47e9838df::t_2ce3a07148b2d8 28
+docs/plans/014-git-ai-notes/assets/tasks/phase-1/tasks.dd.json
+  s_61dfe47e9838df::t_e6d437d9de36b5 247
+docs/plans/014-git-ai-notes/assets/tasks/phase-1/tasks.dd.md
+  s_61dfe47e9838df::t_588fb7113ba0e0 170
+docs/plans/014-git-ai-notes/plan.dd.json
+  s_61dfe47e9838df::t_d9fbc3ae661fcc 172
+docs/plans/014-git-ai-notes/plan.dd.md
+  s_61dfe47e9838df::t_c65188eb39c1df 154
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "cf4931ed084d892050d43ed98cfcbb62b0c2fe7e",
+  "prompts": {},
+  "sessions": {
+    "s_61dfe47e9838df": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cbe08128-4097-4473-9f99-71e9415824f6",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

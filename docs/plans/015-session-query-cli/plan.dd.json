@@ -10,13 +10,13 @@
         "slug": "session-query-cli",
         "ordinal": 15,
         "status": "draft",
-        "summary": "Implementation in progress: independently reviewed non-Git CLI/Pij path proved at1d24e0c4; Git Notes convergence remains explicitly blocked.",
+        "summary": "Native/query/Pij/Git convergence implemented and proved at71182b50;391tests/all6boot modes and independent review. Shipping and final whole-plan closure remain separate.",
         "backpressure": "assets/backpressure.dd.json#rows"
       }
     },
     {
       "name": "summary",
-      "value": "Make Unisphere a coherent, SDK-first session exploration and query tool: discover repository-associated work, inspect sessions/turns/messages/tools/events, filter the intended evidence, extract useful context, and compute honest observed statistics. Every command is motivated by a user question, demonstrated with synthetic expected results, and taught by version-matched offline documentation. This is a product plan for nominated PM pij-empirical-tiger, not an implementation release. This is a substantial SDK upgrade, not a CLI-only wrapper. The SDK owns repository/source discovery, evidence-qualified session/turn/message/tool/event views, identity/lineage, filtering/time semantics, query-view freshness, context extraction, privacy-aware projection and observed aggregation through injectable public Rust APIs. The CLI parses arguments, composes providers and renders results; other SDK consumers receive the same behavior without invoking the CLI. Current implementation: non-Git query/native CLI plus the separately authorised optional Pij selector are composed and independently reviewed. Exact source1d24e0c4b2b624e128cd773a8d29d7382cb30a6c passed363 tests and full boot, including built/installed query workflows. Git Notes runtime and the seventh recipe remain blocked on the approved plan014 history merge requiring Jordan's typed PROCEED; no overall plan or Builder composition acceptance is claimed. Continue from assets/team/continuation-status.json and assets/compaction-handoff.md."
+      "value": "Make Unisphere a coherent, SDK-first session exploration and query tool: discover repository-associated work, inspect sessions/turns/messages/tools/events, filter the intended evidence, extract useful context, and compute honest observed statistics. Every command is motivated by a user question, demonstrated with synthetic expected results, and taught by version-matched offline documentation. This is a product plan for nominated PM pij-empirical-tiger, not an implementation release. This is a substantial SDK upgrade, not a CLI-only wrapper. The SDK owns repository/source discovery, evidence-qualified session/turn/message/tool/event views, identity/lineage, filtering/time semantics, query-view freshness, context extraction, privacy-aware projection and observed aggregation through injectable public Rust APIs. The CLI parses arguments, composes providers and renders results; other SDK consumers receive the same behavior without invoking the CLI. Current implementation: the approved plan014 Git Notes source was merged without rewriting history. Native/query/Pij composition at71182b502b1d5a63a2237237b117580cdc19e2f5 passed391tests and all six boot proof modes, including installed Git recipe7, and received independent source approval. Git convergence is no longer blocked. Remaining whole-plan criterion grading, formal Builder receipt reconciliation and shipping remain separate; no push or PR is authorised by this merge. Current evidence is assets/verification/boot-71182b50.json; continuation is assets/team/continuation-status.json."
     },
     {
       "name": "goals",
@@ -165,8 +165,9 @@
         {
           "id": "ac-0014",
           "claim": "Plan014 Git-ai notes integrate through their reviewed registered contract without blocking unrelated CLI lanes or fabricating transcript/timing fields; retired harness telemetry remains unsupported with no compatibility bridge.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-0014"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0014",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0003"
         },
         {
           "id": "ac-0015",

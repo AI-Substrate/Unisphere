@@ -33,6 +33,16 @@
           "links": [
             "tasks/phase-2/tasks.dd.json#done_when/tk-0003/dw-0010"
           ]
+        },
+        {
+          "id": "lg-0003",
+          "at": "2026-09-10T22:13:02.660Z",
+          "text": "Jordan PROCEED authorised normal history mergead6ae02339330e966cf85b0e2d73175bc78459ad with parentsc87e00cf and acceptedcf4931ed. Exact final merged source71182b502b1d5a63a2237237b117580cdc19e2f5 passed harness boot --json (cwd product checkout, exit0, ready:true):391workspace tests plus format/clippy/rustdoc/architecture/purity and all6proof modes. Git Notes mode proves real standard-Git external SDK/installed native parity and installed query recipe7, pinned source/session/event provenance, no conversation/timing invention, content consent and offline projection. Real linked-worktree output matrix protects admitted Git stores while permitting checkout/nonGit output. Full receipt verification/boot-71182b50.json; independent exact-source APPROVE reviews/git-convergence-final-pij-armed-cow.json. No push/PR/global changes or formal Builder composition receipt is inferred.",
+          "links": [
+            "../plan.dd.json#acceptance_criteria/ac-0014",
+            "backpressure.dd.json#rows/bp-0014",
+            "tasks/phase-3/tasks.dd.json#tasks/tk-0001"
+          ]
         }
       ]
     }

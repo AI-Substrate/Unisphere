@@ -1,36 +1,37 @@
-# HOVR/2 — plan015 continuation
+# HOVR/2 — plan015 after approved Git convergence
 
-## Identity and scope
-PM `pij-empirical-tiger`; Main `pij-female-varl`. Product root `/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli`, branch `builder/015-session-query-cli`. Native PM cwd remains `unishpere-main`; use explicit product cwd and absolute writes.
+## Identity and workspace
+PM `pij-empirical-tiger`; Main `pij-female-varl`. Product root `/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli`, branch `builder/015-session-query-cli`. Native PM cwd is still `unishpere-main`; use explicit product cwd and absolute writes.
 
-Jordan's `continue` lifted the prior pause. Non-Git query/native CLI and the separately authorised optional Pij selector are now implemented, exercised and independently reviewed. **Whole plan is not accepted:** Git Notes runtime and the seventh recipe still require convergence. Current state: `assets/team/continuation-status.json`.
+## Current deliverable
+Jordan typed **PROCEED**. The accepted plan014 source was merged into plan015 through normal two-parent commit **`ad6ae02339330e966cf85b0e2d73175bc78459ad`**, preserving parents `c87e00cf8b976cfacb01d8c88b0d6465011d5157` and **`cf4931ed084d892050d43ed98cfcbb62b0c2fe7e`**. Plan014/main/worker source histories were not rewritten; nothing was pushed.
 
-## Proven source and review
-- Exact source **`1d24e0c4b2b624e128cd773a8d29d7382cb30a6c`** passed full `harness boot --json`: **363 workspace tests**, formatting/clippy/rustdoc/architecture/purity, configuration composition, external SDK, installed CLI, collection and native proof.
-- Native proof now also exercises built/installed query lineage, time/text privacy, context, statistics, decimal duration, saved-input identity and all bundled docs/schema. It explicitly excludes Git Notes queries.
-- Complete command/cwd/exit/stdout/stderr/before-after evidence: `assets/verification/boot-1d24e0c4.json`. Boot started clean; only new review/retro documents appeared before completion. Earlier failed attempts remain separate.
-- Product code reviewed at `f818e2f5e6c4e5fb34ab8a00c34cc9928dc0d283`; later source commits change proof/tests/docs, not reviewed app/CLI/resolver behavior. Read `assets/reviews/composed-pij-cli-review-pij-armed-cow.json` **with its addendum1** and `composed-review-disposition.json`.
-- P1 exact-source external proof closed. A5 resolved by `schema-binding-addendum.json`, no guide changes. P4/P6/P7 closed. P5 null-grouping finding withdrawn: tagged FieldValue serialization already distinguishes absence/null/literal null; original group IDs retained. M1 Pij-cwd finding also withdrawn: native metadata discovery is followed by explicit SourceId scope before SDK reconstruction.
+The exact final code/proof subject is **`71182b502b1d5a63a2237237b117580cdc19e2f5`**. Full `harness boot --json` exited0, ready:true: **391 workspace tests**, formatting/clippy/rustdoc/architecture/purity, and all six actual proof modes (composition, external SDK, installed CLI, collection, native, Git Notes). Native mode covers built/installed query workflows; Git Notes mode now additionally executes installed recipe7 and an offline saved attribution view. Full stdout/stderr/source binding: `assets/verification/boot-71182b50.json`. Only review/retro documents appeared during the run; tracked source and HEAD did not change.
 
-## Delivered coder histories
-- CLI peer `pij-unfortunate-rat`, OMP Sol Fast/high; clone `/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-000b-manual`, branch `work/015-manual-cli`. Original candidate `10e72f900e744fe6c83ba7601ba0e3570c12a27a`, Pij/correction follow-on `073d321752221398a9097cca3c3a999a0f5a40f5`; both applied. Receipts: `assets/team/manual-cli-delivery.json` and `assets/extensions/pij-session-resolution/cli-delivery.json`.
-- Resolver peer `pij-bold-parrotfish`, OMP Sol Fast/high; clone `/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/pij-session-resolution`, branch `work/015-pij-session-resolution`, baseline `771f94a6d478dd50d74b661b2592d67bd0eeaa1a`, candidate `ae809f3cd2c49d42f01814e4db91ae5bd6853f7c`; applied with reviewed strict-v2 correction. Packet/allocation/delivery and actual start acknowledgment live under `assets/extensions/pij-session-resolution/`.
-- Both coders delivered and were compacted; no pending assignment. Reuse, do not allocate duplicates. Spawn/canary metadata is locally observed configuration, not provider attestation; the initial canary deadline and later acknowledgment remain explicitly recorded.
-- Eleven earlier completed coder seats/windows remain retired. All coder clones, refs and source work were preserved; only owned throwaway proof scratch is eligible for cleanup.
+Independent Opus5/high exact-source review **APPROVE**, no material code issue open: `assets/reviews/git-convergence-final-pij-armed-cow.json`. Review is static; runtime is the separately observed PM receipt. Earlier failures and withdrawn hypotheses remain in their original records. Current status: `assets/team/continuation-status.json`; architecture/proof details: `assets/git-query-integration.json`.
 
-## Pij extension invariant
-One optional `pij state ID --json` lookup; numeric envelope v2; current mapping only. `PijQueryCommand`/`PijTarget` defer native identity binding to app. Registered native decoders verify the identity, then the SDK executes an immutable source/session-pinned view. No PID/pane lookup, history/cache, daemon repair, remote transcript fetch or new telemetry adapter. Raw stdout stays data-only; provenance/errors use stderr and withhold native ID/cwd. Ordinary selectors require no Pij. Eight resolver tests and five actual CLI scenarios cover live/retired, changed mappings, pinned continuation, cause-specific failures and ordinary no-Pij behavior.
+## What converged
+- Single typed CLI parser/native dispatch and one app registry now compose accepted Git Notes native list/export plus SDK query facts.
+- `GitAiAdapter` shares native authorship/3.0.0 classification with its pure `QueryAdapter`; no TelemetryRecord/OTLP query intermediate or second note parser.
+- App `git_query.rs` composes injected GitNoteLoader with LocalQuerySource, applies source selection before reads, pins common repository/ref tip/target/blob provenance and accounts combined budgets.
+- Declared note sessions are attribution rows with transcript_available=false. Legacy/human/unresolved references remain source/event-only. No transcript, message, turn, tool invocation, clock or cross-adapter identity join is invented. Attribution event details are consent-gated Parts.
+- Native Git output keeps full canonical repository/common/per-worktree exclusion. Query output may live in a checkout but never admitted common/per-worktree Git stores. Two named pure core policies share one predicate. Unknown admitted source boundaries fail closed, including Git-less/partial/SourceId paths; excluded Git sources impose no guard. Query staging waits for source validation; noncreating preflight rejects existing/dangling destinations and invalid parents without claiming partial bytes or transience.
 
-## Remaining authorised convergence — blocked on operator token
-Main approved **`cf4931ed084d892050d43ed98cfcbb62b0c2fe7e`**, branch `builder/014-git-ai-notes`, from `/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes`; accepted upstream runtime `9250b8f6f9084598433bc49d0077303df80cabc3`. Main granted Tiger a normal history-preserving merge into plan015 only. **Builder requires Jordan's typed `PROCEED`; not received, no merge performed.**
+## Preserved worker evidence
+Both existing Sol Fast/high peers were reused, not duplicated, and are now delivered/compacted.
+- `pij-unfortunate-rat`: native Git Notes CLI candidate `8c25da3e19edb7ba4ceb9d2cb8a0c58cc085711d`, branch `work/015-git-notes-cli`, clone `/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-000b-manual`. Receipt `assets/team/git-notes-cli-delivery.json`.
+- `pij-bold-parrotfish`: pure query candidate `98c8f2553358913fdd1e276ee0cc19f78986a5ce`, branch `work/015-git-notes-query`, clone `/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/pij-session-resolution`. Receipt `assets/team/git-notes-query-delivery.json`.
+- Both started from exact merge `ad6ae023`; packets `assets/team/git-convergence-packets.json`. PM corrected candidate lifetime/import issues, bounded classifier expansion before copies while preserving native error semantics, validated GitNoteRef, and applied output-store safeguards.
+- Earlier CLI candidates `10e72f9`/`073d321` and resolver `ae809f3` remain in preserved refs/receipts. Eleven first-wave seats remain retired; all coder clones and refs retained.
 
-After that token:
-1. Preserve a clean checkpoint, fetch/merge the exact accepted source without rewriting plan014/main/worker clones or pushing.
-2. Resolve shared manifests/lock, core/SDK/CLI exports, app registry/root dispatch/Git bridge and harness/docs. Preserve reviewed Git Notes loader/mapper behavior; escalate material contract changes. Keep native `--adapter git-ai` separate from query `--source-adapter git-ai`; do not infer transcripts, turns or timings from attribution.
-3. Prove the actual merged native/Git Notes/query/installed paths, including recipe7, then independent review. Earlier upstream or non-Git proof does not prove the merge.
-4. Complete remaining assertions/ACs only from matching evidence. Selected writer/static-doc/offline/format claims are linked through the canonical `assets/execution-log.dd.json`; other claims remain unchecked, not silently accepted.
+## Existing Pij feature
+Optional one-shot `pij state ID --json`, strict numeric v2 envelope, current mapping only. Native decoded identity is verified, then source/session-pinned SDK view used. No cache/history/PID/pane lookup, daemon repair, remote fetch or fake Pij telemetry adapter. Provenance/errors use stderr and withhold native ID/cwd; ordinary selectors work without Pij. Five actual CLI scenarios plus eight resolver process tests remain in the full suite. New Git convergence did not change those semantics.
 
-## Immutable and operating boundaries
-Sealed baseline `72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9`, guide SHA256 `5caed35ffa6f28570c16b6bc42baf47ce4403012069e429eeeaeb4e02f04c88f`, and historical receipts remain unchanged. Installed Builder staged dependency/composition cycle remains unresolved; CLI and Pij helpers are explicitly manual/external, not fabricated official allocations or promised automatic reconciliation. Canonical PM records only; no government/global edits, push/merge, command replay or compaction without their separate authority.
+## Next authority boundary
+The requested merge and associated implementation/proof/review are complete. **No further PROCEED is needed for this already executed merge.** Main owns eventual main/PR landing. Push and PR creation require their separate authority; do not infer it from PROCEED.
 
-Retrospective: `.harness/records/retro/2026-09-10/002-plan015-query-cli-pij.md`. The installed query proof now deterministically covers the SDK/CLI numeric mismatch that parser-only tests missed. Durable proof-output spooling remains a concrete harness improvement candidate.
+Whole-plan administrative post-flight, remaining broad criterion grading and formal Builder composition receipts are not silently completed by this scoped merge. The installed Builder staged dependency/composition cycle remains an explicit gap; all manual/external helper records remain separate, with no fabricated official dispatch or promised automatic reconciliation. Canonical DD execution entry `lg-0003` binds the Git criterion/task only to matching proof.
+
+Sealed baseline `72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9`, frozen guide SHA256 `5caed35ffa6f28570c16b6bc42baf47ce4403012069e429eeeaeb4e02f04c88f`, and earlier receipts remain unchanged. P1/P2/P3/P4/P6/P7 resolved; P5 and reviewer M1/S1/native-parity premises were withdrawn rather than patched into needless behavior. A5 is bound by interpretation, no rebaseline.
+
+Retrospective `.harness/records/retro/2026-09-10/003-plan015-git-convergence.md` preserves the source-output lesson. Only PM-owned proof scratch and the preserved PM observation bucket are cleaned; never delete coder clones, another seat's evidence or source workspaces.

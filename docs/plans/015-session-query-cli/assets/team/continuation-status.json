@@ -1,11 +1,11 @@
 {
-  "recorded_at": "2026-09-10T22:03:12.314Z",
+  "recorded_at": "2026-09-10T22:14:38.711Z",
   "authorization": "Jordan: PROCEED",
-  "source_sha": "63cc530528867338c3acce2ef1a172cdbf0e3fa3",
+  "source_sha": "71182b502b1d5a63a2237237b117580cdc19e2f5",
   "previous_pause_lifted": true,
   "cli_peer": "pij-unfortunate-rat",
   "cli_checkpoint": "10e72f900e744fe6c83ba7601ba0e3570c12a27a",
-  "status": "History merge and Git/native/query implementation complete; guarded exact-source proof and final source review running",
+  "status": "Approved Git Notes history convergence complete; exact merged source verified and independently approved",
   "review_dispositions": {
     "P1": "closed by independent exact-source review",
     "A5": "resolved by schema-binding-addendum; frozen guide unchanged",
@@ -14,7 +14,7 @@
     "P6": "Closed in source at771f94a6; package proof and observed ready boot",
     "P7": "Closed in source at771f94a6; package proof and observed ready boot",
     "P2": "Closed by actual built/installed docs under isolated runtime",
-    "P3": "Seven examples parse; six non-Git workflows run. Seventh Git runtime remains blocked."
+    "P3": "Closed: all7examples parse and all7workflows have actual built/installed runtime proof, including Git Notes recipe7 at final merged source."
   },
   "interrupted_proof": {
     "command": [
@@ -44,28 +44,33 @@
       "cf4931ed084d892050d43ed98cfcbb62b0c2fe7e"
     ],
     "approved_by": "Jordan PROCEED and Main convergence grant",
-    "status": "merged without rewriting histories; no push"
+    "status": "Completed normal two-parent merge; native Git/query composition verified, no push/main/source-owner writes"
   },
   "current_followups": [
-    "Finish exact guarded Git/native/query/installed proof and review",
-    "Preserve final reviewed source/proof and grade matching Git acceptance claims",
-    "Keep formal Builder receipt gap and shipping authority separate"
+    "Main owns eventual PR/main landing; no push/PR authority was granted by PROCEED",
+    "Retain formal Builder staging/receipt gap; do not fabricate successful official dispatch/composition",
+    "Whole-plan post-flight and remaining criterion grading use exact receipts; historical records remain immutable"
   ],
   "proof": {
-    "path": "assets/verification/boot-1d24e0c4.json",
+    "path": "assets/verification/boot-71182b50.json",
+    "source_sha": "71182b502b1d5a63a2237237b117580cdc19e2f5",
     "ready": true,
     "exit": 0,
-    "workspace_tests": 363,
+    "workspace_tests": 391,
     "proof_modes": [
       "composition",
       "sdk-consumer",
       "installed-cli",
       "collection",
-      "native"
+      "native",
+      "git-notes"
     ],
-    "native_mode_includes": "Built/installed query lineage, time/text privacy, context, stats, decimal duration, saved-input identity, docs/schema",
-    "status": "Historical nonGit source only; current merged proof pending"
+    "scope": "Exact merged native/Git Notes/query/Pij controlled scenarios; no universal fidelity/finality claim"
   },
   "cli_follow_on": "073d321752221398a9097cca3c3a999a0f5a40f5",
-  "review": "assets/reviews/composed-review-disposition.json"
+  "review": "assets/reviews/git-convergence-final-pij-armed-cow.json",
+  "git_convergence_candidates": {
+    "native_cli": "8c25da3e19edb7ba4ceb9d2cb8a0c58cc085711d",
+    "pure_query": "98c8f2553358913fdd1e276ee0cc19f78986a5ce"
+  }
 }

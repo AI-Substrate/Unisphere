@@ -8,7 +8,7 @@
       "value": {
         "title": "Query/recipe/actionable-output proof selection",
         "plan": "../plan.dd.json#meta",
-        "basis_sha": "90fa96e4b3402865fb5257c241931ce1cd5a26ae045d6f2683303c059037913c",
+        "basis_sha": "541301b851bfe21faebd0e9567812f4815c817f917b392050793a6fc1b8ec62e",
         "certainty": "Partial"
       }
     },
@@ -231,12 +231,13 @@
           "id": "bp-0014",
           "criterion": "ac-0014: Plan014 Git-ai notes integrate through their reviewed registered contract without blocking unrelated CLI lanes or fabricating transcript/timing fields; retired harness telemetry remains unsupported with no compatibility bridge.",
           "phase": "ph-20c3",
-          "mode": "EXTEND",
+          "mode": "EXISTS",
           "tier": "computational",
           "proof": "EXTEND→RUN: Integrate reviewed committed plan014 source through actual ports, then extend Git-note/query parity without invented transcript/timing or retired telemetry paths. Command: cargo run --locked -p unisphere-testkit --bin unisphere-proof -- git-notes",
-          "state": "unchecked",
-          "note": "Initial proof selection, not criterion acceptance. Current scoped execution is recorded in execution-log.dd.json; unchecked claims are not promoted from general passing tests. Guide capability ac-0014 owns source path and accountable unit.",
-          "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-0010"
+          "state": "checked",
+          "note": "Exact merged source71182b50 validated and independently reviewed; all6modes include installed Git query recipe7 and upstream native/Git parity. Prior sources retain their historical bindings.",
+          "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-0010",
+          "receipt": "execution-log.dd.json#entries/lg-0003"
         },
         {
           "id": "bp-0015",

@@ -1,0 +1,401 @@
+{
+  "recorded_at": "2026-09-10T07:51:33.537Z",
+  "authorization": "Jordan requested cleanup of obsolete tmux windows and coders",
+  "status": "completed",
+  "protected": [
+    "pij-empirical-tiger",
+    "pij-female-varl",
+    "pij-unfortunate-rat",
+    "pij-armed-cow",
+    "unrelated sessions/panes"
+  ],
+  "retirements": [
+    {
+      "peer": "pij-closed-barracuda",
+      "parent": "pij-empirical-tiger",
+      "state": "idle",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0009",
+      "head": "673b62e4dd56cbae3b2ace71ad876fcca9fa687e",
+      "worktree_status": "?? docs/plans/015-session-query-cli/assets/team/baseline.dd.json\n?? docs/plans/015-session-query-cli/assets/team/baseline.dd.md\n?? docs/plans/015-session-query-cli/assets/team/packet-tk-0009-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.json\n?? docs/plans/015-session-query-cli/assets/team/packet-tk-0009-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.md\n?? docs/plans/015-session-query-cli/assets/team/review-baseline-approved.dd.json\n",
+      "pane": {
+        "pane": "%4641",
+        "window": "@4541",
+        "name": "pij-closed-barracuda",
+        "session": "$2970",
+        "pid": 75886,
+        "command": "pij-rs",
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0009",
+        "dead": "0"
+      },
+      "agent_process": {
+        "pid": 75913,
+        "ppid": 75886,
+        "stat": "S+",
+        "rss_kib": 211392,
+        "command": "omp"
+      },
+      "completed_delivery_preserved": true,
+      "action": "Retire seat and close exact pane; retain all files/clones/refs",
+      "retired": true,
+      "retirement_seq": 29701,
+      "pane_result": {
+        "exit": 0,
+        "stderr": ""
+      }
+    },
+    {
+      "peer": "pij-exact-partridge",
+      "parent": "pij-empirical-tiger",
+      "state": "idle",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0007",
+      "head": "31b024ee1d7a2eec0e8d7ee8cb7ffcc46e14af62",
+      "worktree_status": "?? docs/plans/015-session-query-cli/assets/team/baseline.dd.json\n?? docs/plans/015-session-query-cli/assets/team/baseline.dd.md\n?? docs/plans/015-session-query-cli/assets/team/packet-tk-0007-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.json\n?? docs/plans/015-session-query-cli/assets/team/packet-tk-0007-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.md\n?? docs/plans/015-session-query-cli/assets/team/review-baseline-approved.dd.json\n",
+      "pane": {
+        "pane": "%4642",
+        "window": "@4542",
+        "name": "pij-exact-partridge",
+        "session": "$2970",
+        "pid": 75937,
+        "command": "pij-rs",
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0007",
+        "dead": "0"
+      },
+      "agent_process": {
+        "pid": 75951,
+        "ppid": 75937,
+        "stat": "S+",
+        "rss_kib": 218768,
+        "command": "omp"
+      },
+      "completed_delivery_preserved": true,
+      "action": "Retire seat and close exact pane; retain all files/clones/refs",
+      "retired": true,
+      "retirement_seq": 29714,
+      "pane_result": {
+        "exit": 0,
+        "stderr": ""
+      }
+    },
+    {
+      "peer": "pij-fiscal-millicent",
+      "parent": "pij-empirical-tiger",
+      "state": "idle",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0002",
+      "head": "7570eccd6f7bf7caeb80d4c684dd2961c0c7b6df",
+      "worktree_status": "?? docs/plans/015-session-query-cli/assets/team/baseline.dd.json\n?? docs/plans/015-session-query-cli/assets/team/baseline.dd.md\n?? docs/plans/015-session-query-cli/assets/team/packet-tk-0002-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.json\n?? docs/plans/015-session-query-cli/assets/team/packet-tk-0002-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.md\n?? docs/plans/015-session-query-cli/assets/team/review-baseline-approved.dd.json\n",
+      "pane": {
+        "pane": "%4643",
+        "window": "@4543",
+        "name": "pij-fiscal-millicent",
+        "session": "$2970",
+        "pid": 75986,
+        "command": "pij-rs",
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0002",
+        "dead": "0"
+      },
+      "agent_process": {
+        "pid": 76018,
+        "ppid": 75986,
+        "stat": "S+",
+        "rss_kib": 211568,
+        "command": "omp"
+      },
+      "completed_delivery_preserved": true,
+      "action": "Retire seat and close exact pane; retain all files/clones/refs",
+      "retired": true,
+      "retirement_seq": 29707,
+      "pane_result": {
+        "exit": 0,
+        "stderr": ""
+      }
+    },
+    {
+      "peer": "pij-forward-jerren",
+      "parent": "pij-empirical-tiger",
+      "state": "idle",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0008",
+      "head": "45a48477f53bc97a6379e3e439740bd4ce954b99",
+      "worktree_status": "?? docs/plans/015-session-query-cli/assets/team/baseline.dd.json\n?? docs/plans/015-session-query-cli/assets/team/baseline.dd.md\n?? docs/plans/015-session-query-cli/assets/team/packet-tk-0008-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.json\n?? docs/plans/015-session-query-cli/assets/team/packet-tk-0008-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.md\n?? docs/plans/015-session-query-cli/assets/team/review-baseline-approved.dd.json\n",
+      "pane": {
+        "pane": "%4645",
+        "window": "@4545",
+        "name": "pij-forward-jerren",
+        "session": "$2970",
+        "pid": 76108,
+        "command": "pij-rs",
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0008",
+        "dead": "0"
+      },
+      "agent_process": {
+        "pid": 76126,
+        "ppid": 76108,
+        "stat": "S+",
+        "rss_kib": 233600,
+        "command": "omp"
+      },
+      "completed_delivery_preserved": true,
+      "action": "Retire seat and close exact pane; retain all files/clones/refs",
+      "retired": true,
+      "retirement_seq": 29713,
+      "pane_result": {
+        "exit": 0,
+        "stderr": ""
+      }
+    },
+    {
+      "peer": "pij-generous-godfrey",
+      "parent": "pij-empirical-tiger",
+      "state": "idle",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/baseline-coders/contracts",
+      "head": "d78ceaeee762fddbfbf912fe9b476d86231b2f34",
+      "worktree_status": "",
+      "pane": {
+        "pane": "%4633",
+        "window": "@4537",
+        "name": "plan015-baseline-contracts",
+        "session": "$2970",
+        "pid": 90723,
+        "command": "pij-rs",
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/baseline-coders/contracts",
+        "dead": "0"
+      },
+      "agent_process": {
+        "pid": 90738,
+        "ppid": 90723,
+        "stat": "S+",
+        "rss_kib": 227024,
+        "command": "omp"
+      },
+      "completed_delivery_preserved": true,
+      "action": "Retire seat and close exact pane; retain all files/clones/refs",
+      "retired": true,
+      "retirement_seq": 29715,
+      "pane_result": {
+        "exit": 0,
+        "stderr": ""
+      }
+    },
+    {
+      "peer": "pij-glorious-galliform",
+      "parent": "pij-empirical-tiger",
+      "state": "idle",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/baseline-coders/proof",
+      "head": "26c48d67be011ef7ed61cc7c2f7f6570665bd6be",
+      "worktree_status": "",
+      "pane": {
+        "pane": "%4634",
+        "window": "@4538",
+        "name": "plan015-baseline-proof",
+        "session": "$2970",
+        "pid": 90765,
+        "command": "pij-rs",
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/baseline-coders/proof",
+        "dead": "0"
+      },
+      "agent_process": {
+        "pid": 90780,
+        "ppid": 90765,
+        "stat": "S+",
+        "rss_kib": 228368,
+        "command": "omp"
+      },
+      "completed_delivery_preserved": true,
+      "action": "Retire seat and close exact pane; retain all files/clones/refs",
+      "retired": true,
+      "retirement_seq": 29708,
+      "pane_result": {
+        "exit": 0,
+        "stderr": ""
+      }
+    },
+    {
+      "peer": "pij-outstanding-whale",
+      "parent": "pij-empirical-tiger",
+      "state": "idle",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0005",
+      "head": "5493660cdb1b9d528387c7ac6f743c898d3f246a",
+      "worktree_status": "?? docs/plans/015-session-query-cli/assets/team/baseline.dd.json\n?? docs/plans/015-session-query-cli/assets/team/baseline.dd.md\n?? docs/plans/015-session-query-cli/assets/team/packet-tk-0005-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.json\n?? docs/plans/015-session-query-cli/assets/team/packet-tk-0005-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.md\n?? docs/plans/015-session-query-cli/assets/team/review-baseline-approved.dd.json\n",
+      "pane": {
+        "pane": "%4648",
+        "window": "@4548",
+        "name": "pij-outstanding-whale",
+        "session": "$2970",
+        "pid": 18296,
+        "command": "pij-rs",
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0005",
+        "dead": "0"
+      },
+      "agent_process": {
+        "pid": 18319,
+        "ppid": 18296,
+        "stat": "S+",
+        "rss_kib": 207264,
+        "command": "omp"
+      },
+      "completed_delivery_preserved": true,
+      "action": "Retire seat and close exact pane; retain all files/clones/refs",
+      "retired": true,
+      "retirement_seq": 29710,
+      "pane_result": {
+        "exit": 0,
+        "stderr": ""
+      }
+    },
+    {
+      "peer": "pij-planned-thrush",
+      "parent": "pij-empirical-tiger",
+      "state": "idle",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0004",
+      "head": "8411890c968d5cd24660a955bdcbe7a44516f17b",
+      "worktree_status": "?? docs/plans/015-session-query-cli/assets/team/baseline.dd.json\n?? docs/plans/015-session-query-cli/assets/team/baseline.dd.md\n?? docs/plans/015-session-query-cli/assets/team/packet-tk-0004-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.json\n?? docs/plans/015-session-query-cli/assets/team/packet-tk-0004-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.md\n?? docs/plans/015-session-query-cli/assets/team/review-baseline-approved.dd.json\n",
+      "pane": {
+        "pane": "%4647",
+        "window": "@4547",
+        "name": "pij-planned-thrush",
+        "session": "$2970",
+        "pid": 8352,
+        "command": "pij-rs",
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0004",
+        "dead": "0"
+      },
+      "agent_process": {
+        "pid": 8379,
+        "ppid": 8352,
+        "stat": "S+",
+        "rss_kib": 217792,
+        "command": "omp"
+      },
+      "completed_delivery_preserved": true,
+      "action": "Retire seat and close exact pane; retain all files/clones/refs",
+      "retired": true,
+      "retirement_seq": 29709,
+      "pane_result": {
+        "exit": 0,
+        "stderr": ""
+      }
+    },
+    {
+      "peer": "pij-subtle-sole",
+      "parent": "pij-empirical-tiger",
+      "state": "idle",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-000a",
+      "head": "9018de93afda4fea3df0c6850ffa17623a2ffcc3",
+      "worktree_status": "?? docs/plans/015-session-query-cli/assets/team/baseline.dd.json\n?? docs/plans/015-session-query-cli/assets/team/baseline.dd.md\n?? docs/plans/015-session-query-cli/assets/team/packet-tk-000a-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.json\n?? docs/plans/015-session-query-cli/assets/team/packet-tk-000a-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.md\n?? docs/plans/015-session-query-cli/assets/team/review-baseline-approved.dd.json\n",
+      "pane": {
+        "pane": "%4644",
+        "window": "@4544",
+        "name": "pij-subtle-sole",
+        "session": "$2970",
+        "pid": 76052,
+        "command": "pij-rs",
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-000a",
+        "dead": "0"
+      },
+      "agent_process": {
+        "pid": 76079,
+        "ppid": 76052,
+        "stat": "S+",
+        "rss_kib": 211600,
+        "command": "omp"
+      },
+      "completed_delivery_preserved": true,
+      "action": "Retire seat and close exact pane; retain all files/clones/refs",
+      "retired": true,
+      "retirement_seq": 29712,
+      "pane_result": {
+        "exit": 0,
+        "stderr": ""
+      }
+    },
+    {
+      "peer": "pij-total-heron",
+      "parent": "pij-empirical-tiger",
+      "state": "idle",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0006",
+      "head": "44be9b91c26621ad309b9703c2a1a0e2367a43c9",
+      "worktree_status": "?? docs/plans/015-session-query-cli/assets/team/baseline.dd.json\n?? docs/plans/015-session-query-cli/assets/team/baseline.dd.md\n?? docs/plans/015-session-query-cli/assets/team/packet-tk-0006-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.json\n?? docs/plans/015-session-query-cli/assets/team/packet-tk-0006-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.md\n?? docs/plans/015-session-query-cli/assets/team/review-baseline-approved.dd.json\n",
+      "pane": {
+        "pane": "%4649",
+        "window": "@4549",
+        "name": "pij-total-heron",
+        "session": "$2970",
+        "pid": 33277,
+        "command": "pij-rs",
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0006",
+        "dead": "0"
+      },
+      "agent_process": {
+        "pid": 33305,
+        "ppid": 33277,
+        "stat": "S+",
+        "rss_kib": 219584,
+        "command": "omp"
+      },
+      "completed_delivery_preserved": true,
+      "action": "Retire seat and close exact pane; retain all files/clones/refs",
+      "retired": true,
+      "retirement_seq": 29706,
+      "pane_result": {
+        "exit": 0,
+        "stderr": ""
+      }
+    },
+    {
+      "peer": "pij-variable-inigo",
+      "parent": "pij-empirical-tiger",
+      "state": "idle",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0003",
+      "head": "01f1e4ef9cba19c4b584458922b0bda84f501880",
+      "worktree_status": "?? docs/plans/015-session-query-cli/assets/team/baseline.dd.json\n?? docs/plans/015-session-query-cli/assets/team/baseline.dd.md\n?? docs/plans/015-session-query-cli/assets/team/packet-tk-0003-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.json\n?? docs/plans/015-session-query-cli/assets/team/packet-tk-0003-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.md\n?? docs/plans/015-session-query-cli/assets/team/review-baseline-approved.dd.json\n",
+      "pane": {
+        "pane": "%4646",
+        "window": "@4546",
+        "name": "pij-variable-inigo",
+        "session": "$2970",
+        "pid": 98260,
+        "command": "pij-rs",
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0003",
+        "dead": "0"
+      },
+      "agent_process": {
+        "pid": 98286,
+        "ppid": 98260,
+        "stat": "S+",
+        "rss_kib": 218656,
+        "command": "omp"
+      },
+      "completed_delivery_preserved": true,
+      "action": "Retire seat and close exact pane; retain all files/clones/refs",
+      "retired": true,
+      "retirement_seq": 29711,
+      "pane_result": {
+        "exit": 0,
+        "stderr": ""
+      }
+    }
+  ],
+  "verification": {
+    "closed_targets": 11,
+    "remaining_target_panes": [],
+    "remaining_target_windows": [],
+    "remaining_agent_processes": [],
+    "remaining_owned_descendants": [],
+    "pm_preserved": true,
+    "manual_cli_preserved": true,
+    "before_total_panes": 133,
+    "after_total_panes": 121
+  },
+  "main_side": {
+    "reported_by": "pij-female-varl",
+    "peer": "pij-forthcoming-araminta",
+    "pane": "%4574",
+    "window": "@4482",
+    "pid": 87955,
+    "result": "Self-tombstoned after clean checkpoint; Main closed verified pane and verified process absent",
+    "receipt": "/tmp/unisphere-worker-cleanup-3kSogq/main-side-cleanup-araminta.json",
+    "source_preserved": true
+  },
+  "reconciled_total_windows_closed": 12,
+  "preservation": "All workspaces, refs, on-disk WIP/seed records and checkpoints retained; no source/clone deletion",
+  "tooling_note": "xd://pij_close returned E-NOID against a live rs seat; supported native pij close succeeded, followed by exact authorized tmux pane termination."
+}

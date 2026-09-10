@@ -89,5 +89,24 @@
     "review": "pending R2"
   },
   "updated_at": "2026-09-10T04:38:52.906Z",
-  "initial_source_sha": "b652810b7134348da45929079b723daeae30123a"
+  "initial_source_sha": "b652810b7134348da45929079b723daeae30123a",
+  "terminal_lifecycle": {
+    "recorded_at": "2026-09-10T07:51:33.537Z",
+    "completed_peers_retired": [
+      "pij-closed-barracuda",
+      "pij-exact-partridge",
+      "pij-fiscal-millicent",
+      "pij-forward-jerren",
+      "pij-generous-godfrey",
+      "pij-glorious-galliform",
+      "pij-outstanding-whale",
+      "pij-planned-thrush",
+      "pij-subtle-sole",
+      "pij-total-heron",
+      "pij-variable-inigo"
+    ],
+    "retained_live_worker": "pij-unfortunate-rat",
+    "clones_and_refs_preserved": true,
+    "evidence": "terminal-cleanup.json"
+  }
 }

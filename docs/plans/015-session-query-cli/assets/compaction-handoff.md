@@ -49,5 +49,8 @@ CLI task file: `/Users/jordanknight/substrate/unisphere/unisphere-session-query-
 Command: `/builder 6 implement --plan "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/plan.dd.json"`.
 
 ## Refs
-Plan `assets/team/{unit-deliveries,implementation-fleet,delivery-status}.json`; `assets/verification/{first-wave-proof-5ee631b4,builder-staging-gap}.json`; `verification/c25-*`.
+Plan `assets/team/{unit-deliveries,implementation-fleet,delivery-status}.json`; `assets/verification/{first-wave-proof-5ee631b4,builder-staging-gap}.json`; `assets/verification/c25-*`.
 Retro `.harness/records/retro/2026-09-10/001-plan015-first-wave.md` saved ten observations; only Tiger’s bucket cleared. Old smoke scratch removed; coder clones retained.
+
+## Terminal cleanup
+Eleven completed plan015 coder seats/windows were retired; their processes and descendants are gone. Main also retired plan014 Araminta. All clones/refs remain. Only held `pij-unfortunate-rat` remains under Tiger; keep PM/Main/reviewer sessions. Do not send work to retired coders without explicit revival. Details: plan `assets/team/terminal-cleanup.json`.

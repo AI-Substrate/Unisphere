@@ -415,5 +415,24 @@
     "reason": "CLI integration depends on SDK/writer/docs-parser delivery"
   },
   "allocation_recovery": "Initial nested-root attempts refused E477 without launch. Separate sibling clones used. Four E472 shared reservation-lock refusals then retried serially; nine actual launches succeeded.",
-  "validation_owner": "PM only after deliveries; candidate commits are not accepted product proof"
+  "validation_owner": "PM only after deliveries; candidate commits are not accepted product proof",
+  "terminal_lifecycle": {
+    "recorded_at": "2026-09-10T07:51:33.537Z",
+    "completed_peers_retired": [
+      "pij-closed-barracuda",
+      "pij-exact-partridge",
+      "pij-fiscal-millicent",
+      "pij-forward-jerren",
+      "pij-generous-godfrey",
+      "pij-glorious-galliform",
+      "pij-outstanding-whale",
+      "pij-planned-thrush",
+      "pij-subtle-sole",
+      "pij-total-heron",
+      "pij-variable-inigo"
+    ],
+    "retained_live_worker": "pij-unfortunate-rat",
+    "clones_and_refs_preserved": true,
+    "evidence": "terminal-cleanup.json"
+  }
 }

@@ -1,0 +1,57 @@
+{
+  "recorded_at": "2026-09-10T08:47:36.661Z",
+  "status": "received-and-started",
+  "kind": "manual-external-follow-on",
+  "extension_id": "plan015-pij-session-resolution",
+  "source_sha": "771f94a6d478dd50d74b661b2592d67bd0eeaa1a",
+  "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/pij-session-resolution",
+  "branch": "work/015-pij-session-resolution",
+  "packet": "packet.json",
+  "peer_id": "pij-bold-parrotfish",
+  "parent": "pij-empirical-tiger",
+  "native_session": "01a08a7f-acd2-7549-8f4b-7f9d01c8464d",
+  "pane": "%4655",
+  "pid": 20425,
+  "proc_start": 20260910184656,
+  "spawn_id": "s-182be7490bae1e84f95859bc2066d1fd",
+  "observed": {
+    "harness": "omp",
+    "model": "github-copilot/gpt-5.6-sol-fast",
+    "effort": "high",
+    "folder": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/pij-session-resolution",
+    "bound": true
+  },
+  "separate_from_sealed_plan015_roster": true,
+  "provider_attestation": false,
+  "acknowledged_at": "2026-09-10T08:51:48.380Z",
+  "received_started": {
+    "nonce": "pij-resolver-771f94a6",
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/pij-session-resolution",
+    "branch": "work/015-pij-session-resolution",
+    "head": "771f94a6d478dd50d74b661b2592d67bd0eeaa1a",
+    "runtime_model": "github-copilot/gpt-5.6-sol-fast",
+    "effort": "high observed in native spawn; worker reports effort not independently exposed in env",
+    "worker_report": "Implementing only agreed resolver/test/export paths; all validation skipped"
+  },
+  "canary": {
+    "dispatch": "dispatch-7fd81add18eaee986644f98178f44537",
+    "nonce": "nonce-c0dc60981f50871bfde504a8c7a335d5",
+    "formal_result": "E-RS-CANARY-PENDING",
+    "exit": 4,
+    "wall_seconds": 5.29,
+    "late_worker_report": "Read nonce and acknowledged dispatch after initial deadline; no formal canary success claimed",
+    "worker_reported_packet_sha256": "0170d45e8a4977dc5eac74e26287decab0f55aa419e8c4197b47d76980b84f2a"
+  },
+  "owned_paths": [
+    "crates/loader-query/src/pij.rs",
+    "crates/loader-query/tests/pij.rs",
+    "crates/loader-query/src/lib.rs: module export only",
+    "crates/loader-query/Cargo.toml: add existing workspace serde_json under dependencies only"
+  ],
+  "dependency_authorization": {
+    "recorded_at": "2026-09-10T08:52:28.029Z",
+    "message_id": "5935987f-589e-4169-89bb-52624a7091e9",
+    "change": "serde_json.workspace = true under [dependencies] in crates/loader-query/Cargo.toml",
+    "no_new_package": true
+  }
+}

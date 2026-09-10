@@ -1,0 +1,42 @@
+{
+  "authority": "Jordan: yep brief it and get a coder on it.",
+  "status": "Implementation of this bounded feature is now authorised; this supersedes the research-only status in the earlier requirements report, not any other scope boundary.",
+  "pm": "pij-empirical-tiger",
+  "coder_request": {"count":1,"harness":"omp","model":"github-copilot/gpt-5.6-sol-fast","effort":"high","isolation":"separate non-hardlinked clone from an explicitly selected committed dependency baseline; record actual peer/root/head"},
+  "goal": "Accept one Pij ID as an alternative session selector, look up its native harness/session identity, then use the existing Unisphere SDK/source/query path. Do not build a second collector or lookup framework.",
+  "requirements": "/tmp/unisphere-worker-cleanup-3kSogq/pij-session-resolution-requirements.json",
+  "observed_evidence": "/tmp/unisphere-worker-cleanup-3kSogq/pij-session-lookup-observations.json",
+  "canonical_operation": {"argv":["pij","state","<pij-id>","--json"],"required_success_fields":["ok:true","data.id","data.harness","data.session"],"hints":["data.cwd","data.machine"],"retired":"tombstonedAt is not a reason to reject an existing native transcript","latest":"Resolve each new query against the latest recorded native session; pin the result through the operation/continuation"},
+  "implementation_direction": [
+    "Reuse the existing session-resolution/source-location boundary. Add one shared optional selector such as --pij ID, not a separate per-command parser or Pij telemetry adapter.",
+    "Use one bounded argv-only read of the installed Pij CLI when that selector is explicitly requested. Let Pij own its supported daemon/address/authentication mechanics; no direct HTTP client or private-store scraping is needed.",
+    "Consume only typed identity/hint fields. Translate Pij's claude/copilot/codex/omp/pi vocabulary using existing Unisphere harness mapping wherever available, then continue through the existing native locator and SDK operations.",
+    "Keep the native harness/session as the actual source identity and retain Pij ID only as resolution provenance. Do not overwrite gen_ai.conversation.id with a seat ID or add Pij as a fake native harness.",
+    "Keep optionality real: ordinary native selectors and SDK operation work without Pij. Put external process access in the outer/injected integration layer, not pure core/query mapping. Reuse existing execution/resolution seams rather than adding speculative abstractions.",
+    "No persistent alias cache, PID/pane-based resolution, roster fallback, history union, daemon auto-start, install, revive, federation or remote transcript transport."
+  ],
+  "failure_contract": [
+    "Missing Pij executable: optional integration unavailable; suggest native selector or separately installing Pij.",
+    "Daemon/auth/transport failure: lookup unavailable, not unknown session; no lifecycle repair side effect.",
+    "ok:false,error:not_found: unknown Pij ID in the selected daemon's store; no federated roster fallback.",
+    "ok:true,session:null: known seat but native session ID not recorded; never mislabel it as unknown ID or no historical session.",
+    "Unsupported harness or resolved native transcript missing locally: describe the actual source/host availability failure; no guessing or remote fetch.",
+    "Malformed/unsupported response or contradictory selectors: typed actionable failure, no raw response/status text dump and no silent fallback to another session."
+  ],
+  "proof": [
+    "Use controlled Pij command responses plus a synthetic native session fixture to prove the resolved identity reaches the existing SDK/query route.",
+    "Cover live and tombstoned success; unknown seat; successful null-session observation; missing executable/daemon; missing local transcript; supported harness translation; changed mapping between queries and pinned identity within a query.",
+    "Prove ordinary native operation does not invoke/require Pij, and resolution never starts/revives anything or mutates stores.",
+    "Keep JSONL/CSV/OTLP stdout clean; cause-specific errors/next actions follow the shared plan015 output boundary.",
+    "Add the optional selector and edge cases to the actual bundled session-discovery docs/examples; no private local IDs, paths or payloads from the observation file become fixtures.",
+    "PM verifies the composed CLI/SDK path and independent review; do not duplicate project-wide validation while other owners are editing."
+  ],
+  "ownership_and_staging": [
+    "Tiger owns PM coordination and final app/root-parser/selector convergence. The existing CLI coder keeps its current grammar ownership unless Tiger explicitly transfers a narrow path.",
+    "The new coder initially owns the isolated resolver/adapter unit and focused fixtures/checks; freeze the small interface with Tiger before same-file integration. Do not concurrently edit the existing CLI worker's parser.",
+    "Use a separate small Builder follow-on allocation/record for this newly authorised scope, or another explicit supported arrangement that preserves the sealed plan015 roster/baseline. Do not silently append a fake eleventh delivery or rewrite prior receipt/baseline identities.",
+    "The installed staged-Builder dependency/proof cycle remains real. If a native/manual helper allocation is used, label it explicitly as such and preserve source/packet/ownership evidence; do not claim formal Builder dispatch/adoption or automatic future reconciliation.",
+    "No main/source-owner worktree edits, pushes, merges, global tooling changes, lifecycle controls or source-store mutations are authorised by this packet. Normal operator merge/review boundaries remain."
+  ],
+  "handoff_required": "Return exact allocated plan/workspace/branch/source commit, actual coder peer/model/effort where observable, owned paths/interface, packet pointer and a received/started acknowledgment. A queued message is not work-start proof."
+}

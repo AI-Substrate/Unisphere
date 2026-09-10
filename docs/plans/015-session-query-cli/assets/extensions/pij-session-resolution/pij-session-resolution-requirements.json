@@ -1,0 +1,30 @@
+{
+  "status": "Requirements and approach only; no Unisphere or Pij product implementation authorised by this report.",
+  "goal": "Let a user select a session by one Pij ID instead of providing the native harness plus session ID, then reuse Unisphere's normal session/source/query pipeline.",
+  "canonical_lookup": {"argv":["pij","state","<pij-id>","--json"],"source":"Confirmed directly by pij-minor-unicorn; Main exercised live, retired and standalone-caller cases.","consume":["data.id","data.harness","data.session","data.cwd","data.machine","data.tombstonedAt"],"ignore_for_resolution":["pid","procStart","pane","liveness","role","status text"],"success":"ok:true plus a supported harness and non-null native data.session","scope":"The CLI-selected daemon's registry, not federated lookup. Normal Pij CLI owns its address/authentication mechanics."},
+  "approach": [
+    "Add one shared Pij-ID selector/resolution hook at the existing Unisphere session-resolution boundary, not a new collector, storage backend or per-command parser.",
+    "When that selector is used, invoke the installed Pij CLI once through bounded argv-only process execution; consume only the required typed metadata.",
+    "Translate the Pij harness vocabulary into the existing Unisphere harness/adapter identity, then pass native session ID and location hints into the normal source locator. Verify the native header identity where the format supports it.",
+    "Use existing SDK operations for list/show/filter/extract/stats; preserve the Pij ID only as resolution provenance, not as a fabricated native conversation ID or new harness type.",
+    "Keep Pij optional. Ordinary native selectors and SDK consumers work without it; make the optional lookup injectable at the existing outer boundary, with no direct database/registry/spine reads."
+  ],
+  "selector_proposal": {"syntax":"One common --pij <id> selector, exact integration with the evolving CLI to be agreed with its owner; examples below are proposed, not installed commands.","examples":["unisphere sessions show --pij pij-empirical-tiger","unisphere tools extract --pij pij-empirical-tiger --tool-family shell --format jsonl"],"conflict_policy":"Do not combine contradictory Pij/native session selectors or silently fall back to a different identity on lookup failure."},
+  "identity_semantics": [
+    "A Pij ID is a stable seat alias; data.session is its latest recorded native session, including the retained value on a tombstoned seat.",
+    "A new registration/incarnation can change the mapping. Resolve for each new query; pin Pij ID+harness+native session for that operation/continuation rather than mixing sessions mid-query.",
+    "No persistent alias cache or silent union of prior incarnations. Seat-history reconstruction is explicitly out of scope.",
+    "Retired/dead process state is not a reason to reject an existing transcript; PID and pane are not transcript identifiers."
+  ],
+  "errors": [
+    {"condition":"Pij executable absent","meaning":"Optional integration unavailable","action":"Use native selectors or install Pij separately; no automatic installation."},
+    {"condition":"Daemon/auth/transport unavailable","meaning":"Lookup could not run, not an unknown session","action":"Resolve Pij availability or use native selectors; no auto-start/revive/control-plane mutation."},
+    {"condition":"ok:false,error:not_found","meaning":"Unknown Pij ID in the selected store","action":"Check the ID/Pij instance; do not fall back to a federated roster."},
+    {"condition":"ok:true,session:null","meaning":"Seat exists but its native session ID is not recorded","action":"Report native-ID-unavailable, not no-session or a typo; do not guess from PID/pane."},
+    {"condition":"Valid mapping, unsupported harness or missing local source","meaning":"Lookup succeeded but Unisphere cannot read that native source","action":"Name harness/machine/source availability and supported explicit input options; no remote transcript fetch."},
+    {"condition":"Malformed/unsupported response","meaning":"Pij contract/capability mismatch","action":"Preserve cause and suggest a compatible Pij version or native selector; no payload dump or fabricated fields."}
+  ],
+  "evidence": {"main_observations":"/tmp/unisphere-worker-cleanup-3kSogq/pij-session-lookup-observations.json","live_and_retired_lookup":"Both returned native session+harness via state.","standalone":"Retired lookup succeeded from /tmp with Pij/Tmux seat identity variables removed.","native_source":"Resolved retired OMP session file was found; bounded session header ID matched. No conversation content exported.","unknown_id":"Main observed exit4,ok:false,error:not_found.","prime_confirmed":"Null-session is ok:true; state is latest-only and non-federated; no CLI auto-start; list/sessions exclude tombstones and transcriptPath is unpopulated.","correction":"Prime initially inferred missing state.session from truncated output, then corrected that claim after complete parsing. No duplicate endpoint is needed."},
+  "proof_to_keep_when_implemented": ["Existing native operation works without Pij installed.","One lookup resolves a live and a retired seat into the same native SDK path.","Unknown ID, null native ID and missing transcript have distinct cause-specific errors/next actions.","Mapping changes are re-resolved between queries but not mixed within one operation.","No lifecycle/source mutation and no contamination of JSONL/CSV/OTLP stdout.","Published docs show the optional selector and availability limits; source settings do not imply privacy guarantees."],
+  "non_goals": ["New Pij telemetry adapter","Registry/SQLite/private-file scraping","Spine/history reconstruction","Persistent alias cache","Daemon installation/startup or seat revival","Federated discovery/remote transcript transport","Changing the currently frozen plan015 implementation during this interview"]
+}

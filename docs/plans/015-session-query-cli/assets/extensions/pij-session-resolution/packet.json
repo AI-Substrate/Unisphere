@@ -1,0 +1,68 @@
+{
+  "allocation_kind": "manual-external-follow-on",
+  "extension_id": "plan015-pij-session-resolution",
+  "recorded_at": "2026-09-10T08:46:26.657Z",
+  "authority": "Jordan: yep brief it and get a coder on it. Relayed by Main.",
+  "source_sha": "771f94a6d478dd50d74b661b2592d67bd0eeaa1a",
+  "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/pij-session-resolution",
+  "branch": "work/015-pij-session-resolution",
+  "requested": {
+    "harness": "omp",
+    "model": "github-copilot/gpt-5.6-sol-fast",
+    "effort": "high"
+  },
+  "goal": "Implement only a bounded optional Pij state identity resolver, consumed later by PM through existing source/query handling.",
+  "owned_paths": [
+    "crates/loader-query/src/pij.rs",
+    "crates/loader-query/tests/pij.rs",
+    "crates/loader-query/src/lib.rs: module export only",
+    "crates/loader-query/Cargo.toml: add existing workspace serde_json under dependencies only"
+  ],
+  "interface": {
+    "module": "unisphere_loader_query::pij",
+    "function": "pub fn resolve_pij(executable: Option<&std::path::Path>, id: &str, limits: PijLookupLimits) -> Result<ResolvedPijSession, PijLookupError>",
+    "limits": "PijLookupLimits { pub max_output_bytes: usize, pub timeout: std::time::Duration }; bounded defaults and invalid-limit rejection",
+    "success": "ResolvedPijSession { pub pij_id: String, pub harness: unisphere_core::query::HarnessId, pub native_session_id: String, pub cwd: Option<std::path::PathBuf>, pub machine: Option<String> }",
+    "failure": "A payload-free typed PijLookupError distinguishes missing executable, lookup unavailable/daemon failure, unknown seat, known seat with no native session, unsupported harness/platform, invalid response/input, output limit, and timeout. Static safe Display/code methods if useful; never raw stdout/stderr/path text in errors.",
+    "mapping": {
+      "claude": "claude-code",
+      "copilot": "copilot-cli",
+      "codex": "codex",
+      "omp": "oh-my-pi",
+      "pi": "pi"
+    }
+  },
+  "requirements": [
+    "Read copied Main implementation/requirements briefs before coding. C10 wire discipline.",
+    "Call only the explicitly supplied executable with argv state <id> --json; no shell, lookup retries, list/history fallback, daemon start/revive/install, private-store/registry reads, remote fetch, or cache. Preserve ordinary Pij CLI address/auth mechanics.",
+    "Validate required typed fields, exact returned data.id binding, and nonempty native session. Ignore lifecycle/PID/pane/status for identity; tombstones are usable. Keep cwd/machine as hints, never turn them into automatic source reads.",
+    "Bound execution time and retained output; discard private diagnostic payloads. Retain crate forbid(unsafe_code). Prefer existing std/dependencies; report any genuinely necessary dependency before adding it.",
+    "Each call reads current mapping anew; returned object is the operation snapshot. PM owns pinning through actual query/cursor and native transcript resolution.",
+    "Keep focused tests for real process execution: live/tombstoned success, changed mapping, unknown/null/malformed identity, required field mismatch, missing/unavailable executable/daemon, output/time bounds, supported harness mapping. Synthetic IDs only. Native transcript/ordinary no-Pij/CLI stream proof are PM integration scope.",
+    "Export the module through lib.rs; no test-only #[path] mounting. Do not alter any other lib.rs body.",
+    "SKIP ALL startup boot/build/test/lint/formatters while concurrent owners edit. PM validates the composition once.",
+    "Commit candidate through harness commit with native pij commit trailers; preserve actual attribution outcome. Return source/commit(s), paths, interface, unrun checks and limits."
+  ],
+  "forbidden": [
+    ".the-flow-state.json",
+    "the-flow.json",
+    "the-flow.md",
+    "canonical plan/guide/tasks/team/receipts",
+    "crates/cli/**",
+    "crates/app/**",
+    "root Cargo.toml/Cargo.lock/architecture policy",
+    "core/SDK/other loaders or adapters",
+    "other worker/source-owner workspaces",
+    "global tools/settings",
+    "push/merge",
+    "peer transport logs"
+  ],
+  "first_action": "After reading your native packet and observing actual cwd/branch/head and exposed model/effort, send PM a received/started acknowledgment. Then implement the granted resolver scope without another permission loop. Do not fabricate provider attestation or Builder receipts.",
+  "delivery": "Write .harness/temp/pij-resolver-delivery.json as ProductOnlyDelivery with unit_id=plan015-pij-session-resolution; explicitly not a sealed plan015 roster delivery or formal Builder allocation.",
+  "dependency_authorization": {
+    "recorded_at": "2026-09-10T08:52:28.029Z",
+    "message_id": "5935987f-589e-4169-89bb-52624a7091e9",
+    "change": "serde_json.workspace = true under [dependencies] in crates/loader-query/Cargo.toml",
+    "no_new_package": true
+  }
+}

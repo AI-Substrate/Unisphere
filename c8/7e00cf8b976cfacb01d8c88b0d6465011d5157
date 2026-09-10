@@ -1,0 +1,46 @@
+.harness/records/retro/2026-09-10/002-plan015-query-cli-pij.md
+  h_9e71e8b09f7cf2 1-43
+docs/plans/015-session-query-cli/assets/backpressure.dd.json
+  h_9e71e8b09f7cf2 11-12,26,37,48,57,59,70,81,92,103,114,125,136,145,147,154,157-160,168,170,177,180-183,191,193,200,203-206,216,227,238,260,271,280,282
+docs/plans/015-session-query-cli/assets/backpressure.dd.md
+  h_9e71e8b09f7cf2 14-15,23-42,44-46
+docs/plans/015-session-query-cli/assets/compaction-handoff.md
+  h_9e71e8b09f7cf2 1-36
+docs/plans/015-session-query-cli/assets/execution-log.dd.json
+  h_9e71e8b09f7cf2 1-40
+docs/plans/015-session-query-cli/assets/execution-log.dd.md
+  h_9e71e8b09f7cf2 1-23
+docs/plans/015-session-query-cli/assets/reviews/composed-pij-cli-addendum-1-pij-armed-cow.json
+  h_9e71e8b09f7cf2 1-36
+docs/plans/015-session-query-cli/assets/reviews/composed-pij-cli-review-pij-armed-cow.json
+  h_9e71e8b09f7cf2 1-104
+docs/plans/015-session-query-cli/assets/reviews/composed-review-disposition.json
+  h_9e71e8b09f7cf2 1-13
+docs/plans/015-session-query-cli/assets/tasks/phase-2/tasks.dd.json
+  h_9e71e8b09f7cf2 26,36-37,54-55,76-77,88,94,100,106,112,120,158,164,182
+docs/plans/015-session-query-cli/assets/tasks/phase-2/tasks.dd.md
+  h_9e71e8b09f7cf2 38-40,50-54,60,71-72,75
+docs/plans/015-session-query-cli/assets/team/continuation-status.json
+  h_9e71e8b09f7cf2 2,4,8,16-17,35,45-65
+docs/plans/015-session-query-cli/assets/verification/boot-1d24e0c4.json
+  h_9e71e8b09f7cf2 1-64
+docs/plans/015-session-query-cli/assets/verification/cursor-cli-working.json
+  h_9e71e8b09f7cf2 1-65
+docs/plans/015-session-query-cli/assets/verification/owned-scratch-cleanup.json
+  h_9e71e8b09f7cf2 1-57
+docs/plans/015-session-query-cli/plan.dd.json
+  h_9e71e8b09f7cf2 13,19,123-125,136-138,149-151
+docs/plans/015-session-query-cli/plan.dd.md
+  h_9e71e8b09f7cf2 17,30,74,76,78
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "c87e00cf8b976cfacb01d8c88b0d6465011d5157",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

@@ -5,7 +5,7 @@
   "previous_pause_lifted": true,
   "cli_peer": "pij-unfortunate-rat",
   "cli_checkpoint": "f4c8b3570a851f9008183fff3f045d8f30a6307b",
-  "status": "Exact-source boot running; CLI remains held until validation completes",
+  "status": "CLI released; corrected source boot reported ready, full stdout truncated",
   "review_dispositions": {
     "P1": "closed by independent exact-source review",
     "A5": "resolved by schema-binding-addendum; frozen guide unchanged",

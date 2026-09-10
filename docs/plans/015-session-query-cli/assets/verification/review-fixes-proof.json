@@ -1,0 +1,36 @@
+{
+  "recorded_at": "2026-09-10T08:14:29.456Z",
+  "command": [
+    "harness",
+    "boot",
+    "--json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+  "source_sha": "771f94a6d478dd50d74b661b2592d67bd0eeaa1a",
+  "documentation_head": "14f35786950292953734a1fb071deb41792bc7bd",
+  "source_identity": {
+    "argv": [
+      "git",
+      "rev-parse",
+      "771f94a6d478dd50d74b661b2592d67bd0eeaa1a:crates",
+      "14f35786950292953734a1fb071deb41792bc7bd:crates"
+    ],
+    "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+    "stdout": "97d644b0c56143675e08c82f181f955b1d9ca144\n97d644b0c56143675e08c82f181f955b1d9ca144\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "job": "bg_2",
+  "observed_result": {
+    "command": "boot",
+    "status": "ok",
+    "timestamp": "2026-09-10T08:11:52.090Z",
+    "ready": true,
+    "scope": "configuration-and-native-session-projections",
+    "checks_status": "ok",
+    "checks_scope": "configuration-and-claude-jsonl",
+    "wall_seconds": 248.51
+  },
+  "capture_limit": "Tool delivered a truncated single-line envelope. Complete stdout is not recoverable from the settled job. No exact test count or full-output receipt is claimed; final composed proof will stream into durable capture files.",
+  "not_proven": "Query CLI and Git Notes convergence remain unimplemented here."
+}

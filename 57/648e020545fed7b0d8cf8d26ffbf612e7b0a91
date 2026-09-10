@@ -1,0 +1,46 @@
+.harness/records/retro/2026-09-10/003-plan015-git-convergence.md
+  h_9e71e8b09f7cf2 1-30
+docs/plans/015-session-query-cli/assets/backpressure.dd.json
+  h_9e71e8b09f7cf2 11,234,237-240
+docs/plans/015-session-query-cli/assets/backpressure.dd.md
+  h_9e71e8b09f7cf2 14,42
+docs/plans/015-session-query-cli/assets/compaction-handoff.md
+  h_9e71e8b09f7cf2 1,3-4,6-7,9,11,13-18,20-25,27-28,30-31,33-37
+docs/plans/015-session-query-cli/assets/execution-log.dd.json
+  h_9e71e8b09f7cf2 36-45
+docs/plans/015-session-query-cli/assets/execution-log.dd.md
+  h_9e71e8b09f7cf2 24
+docs/plans/015-session-query-cli/assets/git-convergence-acceptance.json
+  h_9e71e8b09f7cf2 1-18
+docs/plans/015-session-query-cli/assets/git-query-integration.json
+  h_9e71e8b09f7cf2 2,11-12
+docs/plans/015-session-query-cli/assets/reviews/git-composition-source-output-pij-armed-cow.json
+  h_9e71e8b09f7cf2 1-83
+docs/plans/015-session-query-cli/assets/reviews/git-convergence-final-pij-armed-cow.json
+  h_9e71e8b09f7cf2 1-112
+docs/plans/015-session-query-cli/assets/tasks/phase-3/tasks.dd.json
+  h_9e71e8b09f7cf2 26,38-39,85,91,97
+docs/plans/015-session-query-cli/assets/tasks/phase-3/tasks.dd.md
+  h_9e71e8b09f7cf2 38,49-51
+docs/plans/015-session-query-cli/assets/team/continuation-status.json
+  h_9e71e8b09f7cf2 2,4,8,17,47,50-52,55-56,59,65-66,68,71-75
+docs/plans/015-session-query-cli/assets/verification/boot-71182b50.json
+  h_9e71e8b09f7cf2 1-65
+docs/plans/015-session-query-cli/assets/verification/git-convergence-cleanup.json
+  h_9e71e8b09f7cf2 1-36
+docs/plans/015-session-query-cli/plan.dd.json
+  h_9e71e8b09f7cf2 13,19,168-170
+docs/plans/015-session-query-cli/plan.dd.md
+  h_9e71e8b09f7cf2 17,30,81
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "57648e020545fed7b0d8cf8d26ffbf612e7b0a91",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

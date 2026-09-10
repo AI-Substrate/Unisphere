@@ -8,6 +8,7 @@ mod ide;
 mod query;
 
 pub use ide::{CursorIdeAdapter, IDE_DESCRIPTOR};
+pub use query::{IDE_POLICY, TRANSCRIPT_POLICY};
 
 use std::collections::BTreeMap;
 

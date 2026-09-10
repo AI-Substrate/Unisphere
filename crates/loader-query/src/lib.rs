@@ -511,6 +511,19 @@ impl LocalQuerySource {
                 fallback.push((*index, adapter.clone()));
             }
         }
+        // An explicitly named adapter can expose several native framings. Outside
+        // its discovery roots, use only a literal extension declared by its hints.
+        if matching.is_empty() && fallback.len() > 1 {
+            fallback.retain(|(index, _)| {
+                let registration = &self.registrations[*index];
+                registration.descriptor.locations.iter().any(|hint| {
+                    hint.storage_format == registration.representation.storage_format()
+                        && Path::new(hint.session_glob).extension().is_some_and(|extension| {
+                            path.extension() == Some(extension)
+                        })
+                })
+            });
+        }
         if matching.is_empty() && fallback.len() == 1 {
             matching = fallback;
         }

@@ -2,6 +2,7 @@
 //! Content is opt-in; extension state, opaque signatures and sidecars are omitted.
 #![forbid(unsafe_code)]
 mod query;
+pub use query::POLICY_VERSION;
 
 use std::collections::BTreeMap;
 

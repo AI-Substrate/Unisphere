@@ -16,8 +16,10 @@ use unisphere_core::{
 
 use crate::{CursorAdapter, CursorIdeAdapter, DESCRIPTOR, IDE_DESCRIPTOR};
 
-const TRANSCRIPT_POLICY: &str = "cursor-transcript-query-v1";
-const IDE_POLICY: &str = "cursor-ide-query-v1";
+/// Reconstruction policy applied to supplied Cursor transcript records.
+pub const TRANSCRIPT_POLICY: &str = "cursor-transcript-query-v1";
+/// Reconstruction policy applied to supplied Cursor IDE snapshots.
+pub const IDE_POLICY: &str = "cursor-ide-query-v1";
 const TRANSCRIPT_PARTITION: &[u8] = b"cursor-transcript-source-only";
 const IDE_SOURCE_ONLY_PARTITION: &[u8] = b"cursor-ide-source-only";
 

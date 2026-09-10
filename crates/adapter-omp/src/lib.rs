@@ -2,6 +2,7 @@
 //! No source, sidecar, environment, clock, or output access occurs here.
 #![forbid(unsafe_code)]
 mod query;
+pub use query::POLICY_VERSION;
 
 use std::collections::BTreeMap;
 

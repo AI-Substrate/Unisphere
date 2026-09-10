@@ -16,7 +16,8 @@ use unisphere_core::query::{
 
 use crate::{PiAdapter, decode};
 
-const POLICY_VERSION: &str = "pi-v3-query-v1";
+/// Reconstruction policy applied to supplied Pi records.
+pub const POLICY_VERSION: &str = "pi-v3-query-v1";
 const NAMESPACE: &str = "pi-v3";
 
 impl QueryAdapter for PiAdapter {

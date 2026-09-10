@@ -16,7 +16,8 @@ use unisphere_core::query::{
 
 use crate::{OmpAdapter, decode};
 
-const POLICY_VERSION: &str = "oh-my-pi-v3-query-v1";
+/// Reconstruction policy applied to supplied Oh My Pi records.
+pub const POLICY_VERSION: &str = "oh-my-pi-v3-query-v1";
 const NAMESPACE: &str = "oh-my-pi-v3";
 
 impl QueryAdapter for OmpAdapter {

@@ -85,9 +85,12 @@ fn allowed(package: &str, dependency: &str, kind: &str) -> bool {
                 "unisphere-testkit" | "tempfile" | "serde_json" | "rusqlite"
             )
         }
+        ("unisphere-cli", "dev") => matches!(
+            dependency,
+            "unisphere-testkit" | "unisphere-output-query" | "tempfile" | "serde_json"
+        ),
         (
             "unisphere-sdk"
-            | "unisphere-cli"
             | "unisphere-loader-jsonl"
             | "unisphere-adapter-claude"
             | "unisphere-adapter-codex"

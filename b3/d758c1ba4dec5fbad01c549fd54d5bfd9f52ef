@@ -1,0 +1,23 @@
+docs/plans/015-session-query-cli/assets/command-catalog.json
+  s_61dfe47e9838df::t_043862e3676d2e 109-110
+docs/plans/015-session-query-cli/assets/query-contract.md
+  s_61dfe47e9838df::t_05d92dca9bce4d 70-71,90,106
+docs/plans/015-session-query-cli/assets/workflows-and-command-reference.md
+  s_61dfe47e9838df::t_1457df3c06083e 191
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "b3d758c1ba4dec5fbad01c549fd54d5bfd9f52ef",
+  "prompts": {},
+  "sessions": {
+    "s_61dfe47e9838df": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cbe08128-4097-4473-9f99-71e9415824f6",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

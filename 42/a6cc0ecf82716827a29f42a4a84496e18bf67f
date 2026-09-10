@@ -1,0 +1,21 @@
+docs/plans/015-session-query-cli/assets/reviews/guide-r1-pij-armed-cow-receipt.json
+  s_9204b10d9a5844::t_0da2ac045d9aef 1-121
+docs/plans/015-session-query-cli/assets/reviews/guide-r1-pij-armed-cow.md
+  s_9204b10d9a5844::t_803e169b5f277d 1-120
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "42a6cc0ecf82716827a29f42a4a84496e18bf67f",
+  "prompts": {},
+  "sessions": {
+    "s_9204b10d9a5844": {
+      "agent_id": {
+        "tool": "github-copilot-cli",
+        "id": "1fecebd4-f922-4acf-aa37-0e8d06df572b",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

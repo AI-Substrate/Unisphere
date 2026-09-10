@@ -322,9 +322,7 @@ fn parity_case(
         .as_object_mut()
         .and_then(|value| value.remove("next_action"))
         .ok_or("configuration CLI lacks next action")?;
-    if !action["summary"]
-        .as_str()
-        .is_some_and(|summary| !summary.is_empty())
+    if action["summary"].as_str().is_none_or(str::is_empty)
         || !action["argv"].is_array()
         || !action["required_inputs"].is_array()
     {

@@ -1,0 +1,22 @@
+docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/allocation.json
+  h_9e71e8b09f7cf2 1-57
+docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/packet.json
+  h_9e71e8b09f7cf2 1-68
+docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/pij-session-resolution-implementation.json
+  h_9e71e8b09f7cf2 1-42
+docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/pij-session-resolution-requirements.json
+  h_9e71e8b09f7cf2 1-30
+docs/plans/015-session-query-cli/assets/team/manual-cli-delivery.json
+  h_9e71e8b09f7cf2 1-92
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "048a32d990dd8bb879912fd6675f4bb150f35423",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

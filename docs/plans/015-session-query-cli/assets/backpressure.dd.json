@@ -89,7 +89,7 @@
           "tier": "computational",
           "proof": "BUILD→RUN: Build deterministic unknown-last order, source-revision fingerprints and stale/malformed/query-mismatched continuation cases. Command: cargo test --locked -p unisphere-sdk --test query",
           "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-0007 owns source path and accountable unit.",
+          "note": "Selected proof only; new query behavior not executed. Guide capability ac-0007 owns source path and accountable unit. C25 proof checks closed nonrecursive ViewDigestBasis: response universe/actions/cursors and available page/column changes cannot alter view identity; admitted source selection/revisions/retained capability must alter it. Query mismatch remains distinct from source change.",
           "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-0008"
         },
         {

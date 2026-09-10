@@ -188,7 +188,7 @@ unisphere sources check --source src-demo-1 --format json
 **Why:** Find prior work by user-facing metadata rather than filename archaeology.
 
 ```sh
-unisphere sessions list --repo . --name '*Airspace*' --harness claude-code --include-content --format json
+unisphere sessions list --repo . --name '*Airspace*' --harness claude-code --source-adapter claude-code --include-content --format json
 ```
 
 **Expected result projection (synthetic):**

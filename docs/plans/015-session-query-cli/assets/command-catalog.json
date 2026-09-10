@@ -106,6 +106,8 @@
         "*Airspace*",
         "--harness",
         "claude-code",
+        "--source-adapter",
+        "claude-code",
         "--include-content",
         "--format",
         "json"

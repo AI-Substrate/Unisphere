@@ -67,6 +67,8 @@ A duration is either source-reported or derived from a valid matched start/end p
 
 List defaults to 50 rows in every output format, not a TTY-dependent change of meaning. `--limit 0` means all rows subject to explicit safety bounds. Pagination continuation is tied to query options and source revisions/watermarks; changed evidence must reject a stale token or require a new query, never silently skip/duplicate rows. The implementation guide must choose the exact token mechanism without requiring a daemon. Stats scan the full matched set before limiting output groups; extract defaults to all matched rows within its declared resource bounds.
 
+The immutable view digest hashes only the closed view-input basis: schema/reconstruction versions, admitted scope/repository roots, source selection, sorted source IDs/revisions/policy versions, selected associations, source-read facts and retained-field capability, plus immutable saved-input origin facts when applicable. It never hashes result-universe metadata, row-filter/pagination/projection options, cursors or next actions. Those request options have a separate digest; changing a page size or available output columns is not a source change. View hashing happens before result construction, so no digest can enter its own preimage.
+
 ## Extraction and content privacy
 
 `list` browses a projected dataset; `show` expands one selected entity; `extract` emits reusable selected data/content; `stats` reduces the same semantic dataset. Existing `sessions export --input FILE` remains native-source to OTLP LogsData, not an alias for Markdown extraction.
@@ -85,6 +87,7 @@ The schema explicitly marks CSV as lossy for projected absence, null and empty s
 
 - Human tables are presentation, not a machine parser contract. Data goes to stdout; warnings/progress/coverage summaries to stderr.
 - JSON query output uses the existing command envelope style: `ok`, `command`, `v: 1`, `data` containing `schema_version: 1`, `dataset`, `query`, `rows`, `coverage`, `universe`, `matched`, `emitted` and `next_cursor` where applicable, plus top-level `next_action`.
+- `coverage` contains source-read/mapping/admission facts only. Per-response `universe` occurs exactly once as `data.universe`, beside `data.coverage`; there is no `data.coverage.universe`.
 - JSONL is one versioned typed row per line, suitable for `jq`/DuckDB; no interleaved banners. Common reserved fields are `schema_version`, `dataset`, `id`, and source provenance. Declared data fields such as `duration_ms` are directly addressable. Summary/coverage goes to stderr or an explicitly requested separate manifest, not a fake data row.
 - CSV is a flat UTF-8 RFC4180 projection with a header, the null/compound encoding and safety modes above, and explicit time-unit column names. Text/Markdown are supported by session/turn/message extraction, and payload-focused tool extraction, not arbitrary metrics serialization.
 - `schema show DATASET` exposes fields, types, nullability, units, content sensitivity, valid filters, default time/sort rules, capability limits and format losses. It is the discoverable contract used by humans and agents.
@@ -100,7 +103,7 @@ Saved JSON records source-view, selection and column digests, projected columns,
 
 Standalone query JSONL has no completeness proof merely because it ends at a newline. Treat it as provided rows with unknown universe completeness unless an explicit validated completeness record is supplied; never add a fake data row or implicitly open a sidecar. Filtering/list/show can operate on the available rows. Statistics over incomplete saved inputs are explicitly bounded by those provided rows, not exact totals for the original query or source. Offline context/reconstruction requires complete needed partitions and order/membership fields; otherwise return actionable input-availability failure instead of silently shortening context. Recover with a complete versioned JSON extraction, never hidden live enrichment.
 
-An in-process query view also retains its admitted scope, source selection, fields and universe. A subsequent query may narrow that view; widening it or requiring unavailable fields must request a new view/input rather than return a misleading empty result.
+An in-process query view retains its admitted scope, source selection, retained-field capability and immutable input-origin completeness, not a per-response result universe. A subsequent query may narrow that view; widening it or requiring unavailable fields must request a new view/input rather than return a misleading empty result. Each response creates its own universe after the view digest is computed.
 
 ### Next actions and actionable errors
 

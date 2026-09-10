@@ -79,7 +79,10 @@ fn evidence(snapshot: &NativeSnapshot) -> SourceEvidence {
     }
 }
 
-fn inspect(snapshot: &NativeSnapshot, emit_content: bool) -> unisphere_core::query::InspectedSource {
+fn inspect(
+    snapshot: &NativeSnapshot,
+    emit_content: bool,
+) -> unisphere_core::query::InspectedSource {
     let source = evidence(snapshot);
     VsCodeCopilotAdapter
         .inspect(
@@ -107,7 +110,10 @@ fn all_document_versions_use_native_request_containment_and_revision_provenance(
         let inspected = inspect(&snapshot, true);
         assert_eq!(inspected.partitions.len(), 1);
         let partition = &inspected.partitions[0];
-        assert_eq!(partition.native_session_id.as_deref(), Some(expected_session));
+        assert_eq!(
+            partition.native_session_id.as_deref(),
+            Some(expected_session)
+        );
         assert!(partition.view == SourceViewKind::Conversation);
         assert!(partition.membership == MembershipPolicy::NativeContainment);
 
@@ -115,15 +121,18 @@ fn all_document_versions_use_native_request_containment_and_revision_provenance(
             .observations
             .iter()
             .flat_map(|observation| {
-                observation.facets.iter().filter_map(move |facet| match facet {
-                    ObservationFacet::Message {
-                        role,
-                        request_marker,
-                        turn_id,
-                        ..
-                    } => Some((observation, role, request_marker, turn_id)),
-                    _ => None,
-                })
+                observation
+                    .facets
+                    .iter()
+                    .filter_map(move |facet| match facet {
+                        ObservationFacet::Message {
+                            role,
+                            request_marker,
+                            turn_id,
+                            ..
+                        } => Some((observation, role, request_marker, turn_id)),
+                        _ => None,
+                    })
             })
             .collect();
         assert_eq!(messages.len(), 2);
@@ -133,9 +142,15 @@ fn all_document_versions_use_native_request_containment_and_revision_provenance(
         assert_eq!(messages[0].3, messages[1].3);
         for (observation, _, _, _) in messages {
             assert_eq!(observation.source_ref.revision, snapshot.revision);
-            assert!(matches!(&observation.source_ref.locator, unisphere_core::query::NativeLocator::Snapshot { .. }));
+            assert!(matches!(
+                &observation.source_ref.locator,
+                unisphere_core::query::NativeLocator::Snapshot { .. }
+            ));
             assert_eq!(observation.sequence.version, 1);
-            let session = observation.session.as_ref().expect("native session containment");
+            let session = observation
+                .session
+                .as_ref()
+                .expect("native session containment");
             assert_eq!(session.namespace, "vscode-chat-session");
             assert_eq!(session.native_id, expected_session);
             assert!(session.membership_basis == MembershipPolicy::NativeContainment);
@@ -149,7 +164,10 @@ fn reduced_journal_exposes_only_the_current_revision() {
     let inspected = inspect(&snapshot, true);
     assert!(inspected.observations.iter().all(|observation| {
         observation.source_ref.revision == "journal-r9"
-            && observation.source_ref.subrecord.starts_with("journal:reduced")
+            && observation
+                .source_ref
+                .subrecord
+                .starts_with("journal:reduced")
             && observation.native_record_id.as_deref() != Some("removed-request")
     }));
     let text: Vec<_> = inspected
@@ -228,11 +246,12 @@ fn serialized_tool_status_is_not_execution_success() {
             exit_code,
             reported_duration_ms,
             ..
-        } => native_call_id == "tool-call-v3"
-            && outcome == &Outcome::Unknown
-            && exit_code.is_none()
-            && reported_duration_ms.is_none()
-            && matches!(output.as_slice(), [ObservationPart::Structured(value)]
+        } =>
+            native_call_id == "tool-call-v3"
+                && outcome == &Outcome::Unknown
+                && exit_code.is_none()
+                && reported_duration_ms.is_none()
+                && matches!(output.as_slice(), [ObservationPart::Structured(value)]
                 if value["output"] == "SENSITIVE-NATIVE-OUTPUT-DISPLAY"),
         _ => false,
     }));
@@ -279,11 +298,17 @@ fn only_native_or_verified_workspace_metadata_creates_associations() {
         "requests": []
     }));
     let inspected = inspect(&with_native_cwd, false);
-    assert!(inspected.partitions[0].associations.iter().any(|association| {
-        association.basis == AssociationBasis::NativeCwd
-            && association.path.as_deref() == Some(std::path::Path::new("/Users/example/repo one"))
-            && matches!(&association.applies_to, AssociationExtent::Partition)
-    }));
+    assert!(
+        inspected.partitions[0]
+            .associations
+            .iter()
+            .any(|association| {
+                association.basis == AssociationBasis::NativeCwd
+                    && association.path.as_deref()
+                        == Some(std::path::Path::new("/Users/example/repo one"))
+                    && matches!(&association.applies_to, AssociationExtent::Partition)
+            })
+    );
 
     let hash_only = native(json!({
         "version": 3,
@@ -294,8 +319,7 @@ fn only_native_or_verified_workspace_metadata_creates_associations() {
     let unassociated = inspect(&hash_only, false);
     assert!(unassociated.partitions[0].associations.is_empty());
     assert!(unassociated.issues.iter().any(|issue| {
-        issue.code == AvailabilityCode::Unassociated
-            && issue.field == Some(FieldId::ProjectPath)
+        issue.code == AvailabilityCode::Unassociated && issue.field == Some(FieldId::ProjectPath)
     }));
 
     let snapshot = native(json!({
@@ -339,24 +363,32 @@ fn system_initiated_request_is_not_an_initiating_user_turn() {
         })),
         false,
     );
-    assert!(inspected.observations.iter().flat_map(|observation| observation.facets.iter()).any(
-        |facet| matches!(
-            facet,
-            ObservationFacet::Message {
-                request_marker: RequestMarker::Injected,
-                ..
-            }
-        )
-    ));
-    assert!(!inspected.observations.iter().flat_map(|observation| observation.facets.iter()).any(
-        |facet| matches!(
-            facet,
-            ObservationFacet::Message {
-                request_marker: RequestMarker::Initiating,
-                ..
-            }
-        )
-    ));
+    assert!(
+        inspected
+            .observations
+            .iter()
+            .flat_map(|observation| observation.facets.iter())
+            .any(|facet| matches!(
+                facet,
+                ObservationFacet::Message {
+                    request_marker: RequestMarker::Injected,
+                    ..
+                }
+            ))
+    );
+    assert!(
+        !inspected
+            .observations
+            .iter()
+            .flat_map(|observation| observation.facets.iter())
+            .any(|facet| matches!(
+                facet,
+                ObservationFacet::Message {
+                    request_marker: RequestMarker::Initiating,
+                    ..
+                }
+            ))
+    );
 }
 
 #[test]
@@ -372,8 +404,10 @@ fn unknown_session_schema_stays_source_only_and_unsupported() {
     assert!(inspected.source.read_status == SourceReadStatus::Unsupported);
     assert!(inspected.partitions.is_empty());
     assert!(inspected.observations.is_empty());
-    assert!(inspected
-        .issues
-        .iter()
-        .any(|issue| issue.code == AvailabilityCode::NotSupported));
+    assert!(
+        inspected
+            .issues
+            .iter()
+            .any(|issue| issue.code == AvailabilityCode::NotSupported)
+    );
 }

@@ -1,6 +1,9 @@
-use std::{collections::{BTreeMap, BTreeSet}, sync::Arc};
+use std::{
+    collections::{BTreeMap, BTreeSet},
+    sync::Arc,
+};
 
-use unisphere_sdk::*;
+use unisphere_sdk::query::*;
 use unisphere_testkit::query::{FakeQuerySource, shared_query_fixture};
 
 fn request(dataset: Dataset, operation: Operation) -> QueryRequest {
@@ -61,7 +64,10 @@ fn source_ref(view: &NativeQueryView, offset: u64, subrecord: &str) -> SourceRef
 }
 
 fn session_key(view: &NativeQueryView) -> SessionEvidenceKey {
-    view.observations[0].session.clone().expect("fixture session")
+    view.observations[0]
+        .session
+        .clone()
+        .expect("fixture session")
 }
 
 fn partition(view: &NativeQueryView) -> PartitionId {
@@ -154,10 +160,41 @@ fn tool_observations(view: &NativeQueryView, outcome: Outcome) -> [Observation; 
     ]
 }
 
+fn tree_observation(
+    view: &NativeQueryView,
+    offset: u64,
+    native_id: &str,
+    parent: Option<&str>,
+    facet: ObservationFacet,
+) -> Observation {
+    Observation {
+        source_ref: source_ref(view, offset, native_id),
+        native_record_id: Some(native_id.into()),
+        session: Some(session_key(view)),
+        branch: BranchEvidence::Node {
+            partition: partition(view),
+            native_id: native_id.into(),
+            parent: parent.map(str::to_owned),
+            declared_branch: None,
+            links: Vec::new(),
+        },
+        parent_ids: parent.into_iter().map(str::to_owned).collect(),
+        sequence: NativeSequence {
+            version: 1,
+            key: offset.to_be_bytes().to_vec(),
+        },
+        timestamp: None,
+        facets: vec![facet],
+        diagnostics: Vec::new(),
+    }
+}
+
 #[test]
 fn service_extracts_source_selection_before_io_and_reconstructs_all_datasets() {
     let mut native = native_view();
-    native.observations.extend(tool_observations(&native, Outcome::Succeeded));
+    native
+        .observations
+        .extend(tool_observations(&native, Outcome::Succeeded));
     let source = FakeQuerySource::new(Ok(QueryInput::Native(native)));
     let service = QueryService::new(source);
     let mut sessions = request(Dataset::Sessions, Operation::List);
@@ -171,10 +208,12 @@ fn service_extracts_source_selection_before_io_and_reconstructs_all_datasets() {
     assert_eq!(response.matched, 1);
     let calls = service.source().calls();
     assert_eq!(calls.len(), 1);
-    assert!(calls[0]
-        .selection
-        .include_adapters
-        .contains(&AdapterId::new("claude-jsonl").unwrap()));
+    assert!(
+        calls[0]
+            .selection
+            .include_adapters
+            .contains(&AdapterId::new("claude-jsonl").unwrap())
+    );
 
     let view = service.open_view(&sessions).expect("open retained view");
     assert_eq!(view.sources().len(), 1);
@@ -184,12 +223,17 @@ fn service_extracts_source_selection_before_io_and_reconstructs_all_datasets() {
     assert_eq!(view.tools().len(), 1);
     assert_eq!(view.events().len(), 4);
     assert_eq!(view.tools()[0].duration_ms, Some(1000.0));
-    assert_eq!(view.tools()[0].duration_basis, Some(DurationBasis::PairedClock));
+    assert_eq!(
+        view.tools()[0].duration_basis,
+        Some(DurationBasis::PairedClock)
+    );
     assert_eq!(view.tools()[0].status, Outcome::Succeeded);
     assert_eq!(view.turns()[0].ordinal, 1);
     assert!(view.messages().iter().all(|message| matches!(
         message.parts.as_slice(),
-        [ObservationPart::Unavailable(AvailabilityCode::SensitiveOmitted)]
+        [ObservationPart::Unavailable(
+            AvailabilityCode::SensitiveOmitted
+        )]
     )));
     for (dataset, expected) in [
         (Dataset::Sources, 1),
@@ -213,22 +257,79 @@ fn service_extracts_source_selection_before_io_and_reconstructs_all_datasets() {
 }
 
 #[test]
+fn query_api_rejects_stats_only_columns_and_sorts_before_loading() {
+    let service = QueryService::new(FakeQuerySource::new(Ok(QueryInput::Native(native_view()))));
+    let metric_fields = [
+        FieldId::Count,
+        FieldId::MeasuredCount,
+        FieldId::MissingDurationCount,
+        FieldId::Succeeded,
+        FieldId::Failures,
+        FieldId::Cancelled,
+        FieldId::Incomplete,
+        FieldId::Unknown,
+        FieldId::FailureRate,
+        FieldId::MeanMs,
+        FieldId::MinMs,
+        FieldId::MaxMs,
+        FieldId::P50Ms,
+        FieldId::P95Ms,
+        FieldId::InputTokens,
+        FieldId::OutputTokens,
+        FieldId::CacheReadTokens,
+        FieldId::CacheWriteTokens,
+    ];
+
+    for field in metric_fields {
+        let mut columns = request(Dataset::Tools, Operation::List);
+        columns.columns = Some(vec![field]);
+        let error = QueryApi::execute(&service, &columns)
+            .err()
+            .expect("stats-only column must be rejected");
+        assert_eq!(error.kind(), QueryFailureCode::UnsupportedOperation);
+
+        let mut sort = request(Dataset::Tools, Operation::List);
+        sort.sort.push(SortKey {
+            field,
+            direction: SortDirection::Ascending,
+        });
+        let error = QueryApi::execute(&service, &sort)
+            .err()
+            .expect("stats-only sort must be rejected");
+        assert_eq!(error.kind(), QueryFailureCode::UnsupportedOperation);
+    }
+
+    assert!(service.source().calls().is_empty());
+
+    let mut duration = request(Dataset::Tools, Operation::List);
+    duration.columns = Some(vec![FieldId::DurationMs]);
+    QueryApi::execute(&service, &duration).expect("per-call duration remains a row projection");
+    assert_eq!(service.source().calls().len(), 1);
+}
+
+#[test]
 fn tool_responses_do_not_create_extra_turns_and_ambiguous_calls_are_not_guessed() {
     let mut native = native_view();
     native.observations[1].facets = vec![ObservationFacet::Message {
         native_id: Some("message-tool-response".into()),
         role: MessageRole::User,
-        parts: vec![ObservationPart::Structured(serde_json::json!({"status":"ok"}))],
+        parts: vec![ObservationPart::Structured(
+            serde_json::json!({"status":"ok"}),
+        )],
         request_marker: RequestMarker::ToolResponse,
         turn_id: None,
     }];
     let mut duplicate = tool_observations(&native, Outcome::Failed)[0].clone();
     duplicate.source_ref = source_ref(&native, 300, "tool-call-retry");
     duplicate.sequence.key = 300_u64.to_be_bytes().to_vec();
-    native.observations.push(tool_observations(&native, Outcome::Failed)[0].clone());
+    native
+        .observations
+        .push(tool_observations(&native, Outcome::Failed)[0].clone());
     native.observations.push(duplicate);
 
-    native.observations.push(tool_observations(&native, Outcome::Failed)[1].clone());
+    native
+        .observations
+        .push(tool_observations(&native, Outcome::Failed)[1].clone());
 
     let view = QueryView::from_input_for(
         QueryInput::Native(native),
@@ -241,8 +342,7 @@ fn tool_responses_do_not_create_extra_turns_and_ambiguous_calls_are_not_guessed(
     assert_eq!(view.turns().len(), 1);
     assert_eq!(view.tools().len(), 3);
     assert!(view.tools().iter().all(|tool| {
-        tool.status_reason == Some(AvailabilityCode::Ambiguous)
-            || tool.status == Outcome::Unknown
+        tool.status_reason == Some(AvailabilityCode::Ambiguous) || tool.status == Outcome::Unknown
     }));
 }
 #[test]
@@ -276,9 +376,33 @@ fn invalid_limits_refuse_before_source_io() {
 fn filters_time_order_and_continuation_share_one_deterministic_selection() {
     let mut native = native_view();
     let observations = [
-        message_observation(&native, 10, "m1", "Alpha first", "t1", RequestMarker::Initiating, "2026-09-01T12:00:00Z"),
-        message_observation(&native, 20, "m2", "beta second", "t2", RequestMarker::Initiating, "2026-09-01T12:01:00Z"),
-        message_observation(&native, 30, "m3", "BETA third", "t3", RequestMarker::Initiating, "2026-09-01T12:02:00Z"),
+        message_observation(
+            &native,
+            10,
+            "m1",
+            "Alpha first",
+            "t1",
+            RequestMarker::Initiating,
+            "2026-09-01T12:00:00Z",
+        ),
+        message_observation(
+            &native,
+            20,
+            "m2",
+            "beta second",
+            "t2",
+            RequestMarker::Initiating,
+            "2026-09-01T12:01:00Z",
+        ),
+        message_observation(
+            &native,
+            30,
+            "m3",
+            "BETA third",
+            "t3",
+            RequestMarker::Initiating,
+            "2026-09-01T12:02:00Z",
+        ),
     ];
     native.observations = observations.into();
     let service = QueryService::new(FakeQuerySource::new(Ok(QueryInput::Native(native))));
@@ -286,7 +410,10 @@ fn filters_time_order_and_continuation_share_one_deterministic_selection() {
     query.filters.push(Filter {
         field: FieldId::Text,
         predicate: Predicate::Contains,
-        values: vec![FieldValue::String("beta".into()), FieldValue::String("third".into())],
+        values: vec![
+            FieldValue::String("beta".into()),
+            FieldValue::String("third".into()),
+        ],
         ignore_case: true,
     });
     query.time.since = Some(timestamp("2026-09-01T12:01:00Z"));
@@ -323,7 +450,10 @@ fn content_search_does_not_authorize_content_projection() {
         ignore_case: false,
     });
     query.columns = Some(vec![FieldId::Text]);
-    let error = service.execute(&query).err().expect("content consent required");
+    let error = service
+        .execute(&query)
+        .err()
+        .expect("content consent required");
     assert_eq!(error.kind(), QueryFailureCode::ContentConsentRequired);
     assert!(matches!(
         error.recovery(),
@@ -331,7 +461,9 @@ fn content_search_does_not_authorize_content_projection() {
     ));
 
     query.include_content = true;
-    let response = service.execute(&query).expect("explicit content projection");
+    let response = service
+        .execute(&query)
+        .expect("explicit content projection");
     assert!(matches!(
 
         response.rows[0].field(FieldId::Text),
@@ -369,8 +501,12 @@ fn usage_observation(view: &NativeQueryView, offset: u64, input_tokens: u64) -> 
 #[test]
 fn cumulative_usage_statistics_take_latest_native_snapshot() {
     let mut native = native_view();
-    native.observations.push(usage_observation(&native, 500, 10));
-    native.observations.push(usage_observation(&native, 600, 15));
+    native
+        .observations
+        .push(usage_observation(&native, 500, 10));
+    native
+        .observations
+        .push(usage_observation(&native, 600, 15));
     let service = QueryService::new(FakeQuerySource::new(Ok(QueryInput::Native(native))));
     let query = request(
         Dataset::Sessions,
@@ -390,9 +526,33 @@ fn cumulative_usage_statistics_take_latest_native_snapshot() {
 fn context_expands_within_each_session_branch_after_matching() {
     let mut native = native_view();
     let observations = [
-        message_observation(&native, 10, "m1", "before", "t1", RequestMarker::Initiating, "2026-08-31T23:59:00Z"),
-        message_observation(&native, 20, "m2", "needle", "t2", RequestMarker::Initiating, "2026-09-01T12:00:00Z"),
-        message_observation(&native, 30, "m3", "after", "t3", RequestMarker::Initiating, "2026-09-02T00:01:00Z"),
+        message_observation(
+            &native,
+            10,
+            "m1",
+            "before",
+            "t1",
+            RequestMarker::Initiating,
+            "2026-08-31T23:59:00Z",
+        ),
+        message_observation(
+            &native,
+            20,
+            "m2",
+            "needle",
+            "t2",
+            RequestMarker::Initiating,
+            "2026-09-01T12:00:00Z",
+        ),
+        message_observation(
+            &native,
+            30,
+            "m3",
+            "after",
+            "t3",
+            RequestMarker::Initiating,
+            "2026-09-02T00:01:00Z",
+        ),
     ];
     native.observations = observations.into();
     let mut second_session = native.observations.clone();
@@ -418,9 +578,14 @@ fn context_expands_within_each_session_branch_after_matching() {
     });
     query.time.since = Some(timestamp("2026-09-01"));
     query.time.until = Some(timestamp("2026-09-02"));
-    query.context = ContextWindow { before: 1, after: 1 };
+    query.context = ContextWindow {
+        before: 1,
+        after: 1,
+    };
     query.columns = Some(vec![FieldId::Role]);
-    let response = service.execute(&query).expect("context extraction");
+    let view = service.open_view(&query).expect("open context view");
+    let source_view_digest = view.digest();
+    let response = execute_view(&view, &query).expect("context extraction");
     assert_eq!(response.matched, 2);
     assert_eq!(response.emitted, 6);
     let matched_rows = response
@@ -435,7 +600,307 @@ fn context_expands_within_each_session_branch_after_matching() {
         .count();
     assert_eq!(matched_rows, 2);
     assert_eq!(context_rows, 4);
-    assert!(response.universe.columns.contains(&FieldId::IsContext));
+    let effective_columns = vec![
+        FieldId::Id,
+        FieldId::SourceRefs,
+        FieldId::Role,
+        FieldId::IsContext,
+    ];
+    let columns_digest = Digest::framed(
+        b"unisphere/query-columns/v1",
+        effective_columns
+            .iter()
+            .map(|field| field.as_str().as_bytes()),
+    );
+    assert_eq!(response.universe.columns, effective_columns);
+    assert_eq!(response.universe.columns_digest, columns_digest);
+    assert_eq!(
+        response.universe.source_view_digest,
+        Some(source_view_digest)
+    );
+    assert_eq!(view.digest(), source_view_digest);
+
+    let mut turns = request(Dataset::Turns, Operation::Extract);
+    turns.filters.push(Filter {
+        field: FieldId::Ordinal,
+        predicate: Predicate::Equal,
+        values: vec![FieldValue::Unsigned(2)],
+        ignore_case: false,
+    });
+    turns.context = ContextWindow {
+        before: 1,
+        after: 1,
+    };
+    turns.columns = Some(vec![FieldId::SessionId]);
+    let turn_response = execute_view(&view, &turns).expect("turn context extraction");
+    assert_eq!(turn_response.matched, 2);
+    assert_eq!(turn_response.emitted, 6);
+    assert_eq!(
+        turn_response
+            .rows
+            .iter()
+            .filter(|row| matches!(row.field(FieldId::IsContext), Some(FieldValue::Bool(false))))
+            .count(),
+        2
+    );
+    assert_eq!(
+        turn_response
+            .rows
+            .iter()
+            .filter(|row| matches!(row.field(FieldId::IsContext), Some(FieldValue::Bool(true))))
+            .count(),
+        4
+    );
+    assert_eq!(
+        turn_response.universe.columns,
+        vec![
+            FieldId::Id,
+            FieldId::SourceRefs,
+            FieldId::SessionId,
+            FieldId::IsContext,
+        ]
+    );
+}
+
+#[test]
+fn parent_tree_preserves_shared_prefix_and_fork_scopes() {
+    let mut native = native_view();
+    native.observations = vec![
+        tree_observation(
+            &native,
+            10,
+            "root-user",
+            None,
+            ObservationFacet::Message {
+                native_id: Some("root-user".into()),
+                role: MessageRole::User,
+                parts: Vec::new(),
+                request_marker: RequestMarker::Initiating,
+                turn_id: None,
+            },
+        ),
+        tree_observation(
+            &native,
+            20,
+            "a-user",
+            Some("root-user"),
+            ObservationFacet::Message {
+                native_id: Some("a-user".into()),
+                role: MessageRole::User,
+                parts: Vec::new(),
+                request_marker: RequestMarker::Initiating,
+                turn_id: None,
+            },
+        ),
+        tree_observation(
+            &native,
+            21,
+            "a-call",
+            Some("a-user"),
+            ObservationFacet::ToolCall {
+                native_call_id: "same-call".into(),
+                native_name: "Bash".into(),
+                family: Some("shell".into()),
+                input: Vec::new(),
+                turn_id: None,
+            },
+        ),
+        tree_observation(
+            &native,
+            22,
+            "a-result",
+            Some("a-call"),
+            ObservationFacet::ToolResult {
+                native_call_id: "same-call".into(),
+                native_name: Some("Bash".into()),
+                output: Vec::new(),
+                outcome: Outcome::Succeeded,
+                exit_code: Some(0),
+                reported_duration_ms: None,
+                turn_id: None,
+            },
+        ),
+        tree_observation(
+            &native,
+            30,
+            "b-user",
+            Some("root-user"),
+            ObservationFacet::Message {
+                native_id: Some("b-user".into()),
+                role: MessageRole::User,
+                parts: Vec::new(),
+                request_marker: RequestMarker::Initiating,
+                turn_id: None,
+            },
+        ),
+        tree_observation(
+            &native,
+            31,
+            "b-call",
+            Some("b-user"),
+            ObservationFacet::ToolCall {
+                native_call_id: "same-call".into(),
+                native_name: "Bash".into(),
+                family: Some("shell".into()),
+                input: Vec::new(),
+                turn_id: None,
+            },
+        ),
+        tree_observation(
+            &native,
+            32,
+            "b-result",
+            Some("b-call"),
+            ObservationFacet::ToolResult {
+                native_call_id: "same-call".into(),
+                native_name: Some("Bash".into()),
+                output: Vec::new(),
+                outcome: Outcome::Failed,
+                exit_code: Some(1),
+                reported_duration_ms: None,
+                turn_id: None,
+            },
+        ),
+    ];
+    let view = QueryView::from_input_for(
+        QueryInput::Native(native),
+        request(Dataset::Messages, Operation::List).scope,
+        SourceSelection::default(),
+        ContentAccess::default(),
+        &QueryLimits::default(),
+    )
+    .expect("validated fork reconstructs");
+
+    let root = view
+        .messages()
+        .iter()
+        .find(|row| row.native_id.as_deref() == Some("root-user"))
+        .expect("shared root message");
+    let branch_a = view
+        .messages()
+        .iter()
+        .find(|row| row.native_id.as_deref() == Some("a-user"))
+        .expect("branch A message");
+    let branch_b = view
+        .messages()
+        .iter()
+        .find(|row| row.native_id.as_deref() == Some("b-user"))
+        .expect("branch B message");
+    assert_eq!(view.sessions()[0].branch_ids.len(), 2);
+    assert_eq!(root.branch_ids.len(), 2);
+    assert_eq!(branch_a.branch_ids.len(), 1);
+    assert_eq!(branch_b.branch_ids.len(), 1);
+    assert_ne!(branch_a.branch_ids, branch_b.branch_ids);
+    assert!(root.branch_ids.contains(&branch_a.branch_ids[0]));
+    assert!(root.branch_ids.contains(&branch_b.branch_ids[0]));
+
+    let root_turn = view
+        .turns()
+        .iter()
+        .find(|row| row.message_ids.contains(&root.id))
+        .expect("shared-prefix turn");
+    let turn_a = view
+        .turns()
+        .iter()
+        .find(|row| row.message_ids.contains(&branch_a.id))
+        .expect("branch A turn");
+    let turn_b = view
+        .turns()
+        .iter()
+        .find(|row| row.message_ids.contains(&branch_b.id))
+        .expect("branch B turn");
+    assert_eq!(root_turn.branch_ids.len(), 2);
+    assert_eq!(root_turn.ordinal, 1);
+    assert_eq!(turn_a.ordinal, 2);
+    assert_eq!(turn_b.ordinal, 2);
+    assert_ne!(turn_a.id, turn_b.id);
+
+    assert_eq!(view.tools().len(), 2);
+    assert_ne!(view.tools()[0].id, view.tools()[1].id);
+    assert_ne!(view.tools()[0].branch_ids, view.tools()[1].branch_ids);
+    for tool in view.tools() {
+        let expected_turn = if tool.branch_ids == branch_a.branch_ids {
+            turn_a.id
+        } else {
+            turn_b.id
+        };
+        assert_eq!(tool.turn_id, Some(expected_turn));
+    }
+    assert!(
+        view.tools()
+            .iter()
+            .any(|row| row.status == Outcome::Succeeded)
+    );
+    assert!(view.tools().iter().any(|row| row.status == Outcome::Failed));
+
+    let mut context = request(Dataset::Messages, Operation::Extract);
+    context.filters.push(Filter {
+        field: FieldId::Id,
+        predicate: Predicate::Equal,
+        values: vec![FieldValue::Id(branch_a.id)],
+        ignore_case: false,
+    });
+    context.context.before = 1;
+    context.branch = Some(branch_a.branch_ids[0]);
+    let response = execute_view(&view, &context).expect("branch-local context");
+    assert_eq!(response.matched, 1);
+    assert_eq!(response.emitted, 2);
+    assert_eq!(
+        response
+            .rows
+            .iter()
+            .map(|row| row.id())
+            .collect::<BTreeSet<_>>(),
+        BTreeSet::from([root.id, branch_a.id])
+    );
+}
+
+#[test]
+fn cyclic_and_dangling_parent_paths_keep_rows_without_inventing_branches() {
+    for (nodes, expected) in [
+        (
+            vec![("a", Some("b")), ("b", Some("a"))],
+            AvailabilityCode::Conflict,
+        ),
+        (vec![("a", Some("missing"))], AvailabilityCode::NotCaptured),
+    ] {
+        let mut native = native_view();
+        native.observations = nodes
+            .iter()
+            .enumerate()
+            .map(|(index, (id, parent))| {
+                tree_observation(
+                    &native,
+                    index as u64 + 1,
+                    id,
+                    *parent,
+                    ObservationFacet::Message {
+                        native_id: Some((*id).into()),
+                        role: MessageRole::User,
+                        parts: Vec::new(),
+                        request_marker: RequestMarker::Initiating,
+                        turn_id: None,
+                    },
+                )
+            })
+            .collect();
+        let view = QueryView::from_input_for(
+            QueryInput::Native(native),
+            request(Dataset::Messages, Operation::List).scope,
+            SourceSelection::default(),
+            ContentAccess::default(),
+            &QueryLimits::default(),
+        )
+        .expect("unresolved topology still retains supplied rows");
+        assert_eq!(view.messages().len(), nodes.len());
+        assert!(view.messages().iter().all(|row| row.branch_ids.is_empty()));
+        assert!(
+            view.messages()
+                .iter()
+                .any(|row| row.availability.contains(&expected))
+        );
+        assert!(view.sessions().iter().all(|row| row.branch_ids.is_empty()));
+    }
 }
 
 #[test]
@@ -464,9 +929,11 @@ fn conflicting_branch_evidence_remains_explicit_and_blocks_exact_statistics() {
         &QueryLimits::default(),
     )
     .expect("conflicting evidence remains queryable");
-    assert!(view.sessions()[0]
-        .availability
-        .contains(&AvailabilityCode::Conflict));
+    assert!(
+        view.sessions()[0]
+            .availability
+            .contains(&AvailabilityCode::Conflict)
+    );
 
     let query = request(
         Dataset::Sessions,
@@ -484,7 +951,9 @@ fn conflicting_branch_evidence_remains_explicit_and_blocks_exact_statistics() {
 #[test]
 fn tool_statistics_use_measured_values_and_named_terminal_denominator() {
     let mut native = native_view();
-    native.observations.extend(tool_observations(&native, Outcome::Failed));
+    native
+        .observations
+        .extend(tool_observations(&native, Outcome::Failed));
     let service = QueryService::new(FakeQuerySource::new(Ok(QueryInput::Native(native))));
     let query = request(
         Dataset::Tools,
@@ -505,13 +974,31 @@ fn tool_statistics_use_measured_values_and_named_terminal_denominator() {
     assert_eq!(response.matched, 1);
     assert_eq!(response.rows.len(), 1);
     let row = &response.rows[0];
-    assert!(matches!(row.field(FieldId::Count), Some(FieldValue::Unsigned(1))));
-    assert!(matches!(row.field(FieldId::MeasuredCount), Some(FieldValue::Unsigned(1))));
-    assert!(matches!(row.field(FieldId::MissingDurationCount), Some(FieldValue::Unsigned(0))));
-    assert!(matches!(row.field(FieldId::Failures), Some(FieldValue::Unsigned(1))));
-    assert!(matches!(row.field(FieldId::FailureRate), Some(FieldValue::Float(value)) if *value == 1.0));
-    assert!(matches!(row.field(FieldId::MeanMs), Some(FieldValue::Float(value)) if *value == 1000.0));
-    assert!(matches!(row.field(FieldId::P95Ms), Some(FieldValue::Float(value)) if *value == 1000.0));
+    assert!(matches!(
+        row.field(FieldId::Count),
+        Some(FieldValue::Unsigned(1))
+    ));
+    assert!(matches!(
+        row.field(FieldId::MeasuredCount),
+        Some(FieldValue::Unsigned(1))
+    ));
+    assert!(matches!(
+        row.field(FieldId::MissingDurationCount),
+        Some(FieldValue::Unsigned(0))
+    ));
+    assert!(matches!(
+        row.field(FieldId::Failures),
+        Some(FieldValue::Unsigned(1))
+    ));
+    assert!(
+        matches!(row.field(FieldId::FailureRate), Some(FieldValue::Float(value)) if *value == 1.0)
+    );
+    assert!(
+        matches!(row.field(FieldId::MeanMs), Some(FieldValue::Float(value)) if *value == 1000.0)
+    );
+    assert!(
+        matches!(row.field(FieldId::P95Ms), Some(FieldValue::Float(value)) if *value == 1000.0)
+    );
 }
 
 #[test]
@@ -538,7 +1025,10 @@ fn c25_view_digest_excludes_response_and_request_options_but_binds_view_inputs()
     assert_eq!(base.digest(), digest);
     assert_eq!(first.universe.source_view_digest, Some(digest));
     assert_eq!(second.universe.source_view_digest, Some(digest));
-    assert_ne!(first.universe.selection_digest, second.universe.selection_digest);
+    assert_ne!(
+        first.universe.selection_digest,
+        second.universe.selection_digest
+    );
     let _response_only_state = (
         first.universe,
         first.next_action,
@@ -610,7 +1100,10 @@ fn source_statuses_remain_distinct_and_strict_session_queries_refuse_partial_rea
     source_status.insert(SourceReadStatus::Partial, 1);
     let native = NativeQueryView {
         sources: fixture.iter().map(|source| source.source.clone()).collect(),
-        observations: fixture.iter().flat_map(|source| source.observations.clone()).collect(),
+        observations: fixture
+            .iter()
+            .flat_map(|source| source.observations.clone())
+            .collect(),
         repository_roots: vec!["/fixtures/project".into()],
         coverage: Coverage {
             discovered_sources: 2,
@@ -623,30 +1116,48 @@ fn source_statuses_remain_distinct_and_strict_session_queries_refuse_partial_rea
             ]),
             excluded_adapters: Vec::new(),
             source_read_complete: false,
-            issues: fixture.iter().flat_map(|source| source.issues.clone()).collect(),
+            issues: fixture
+                .iter()
+                .flat_map(|source| source.issues.clone())
+                .collect(),
         },
     };
     let service = QueryService::new(FakeQuerySource::new(Ok(QueryInput::Native(native))));
-    let sources = service.execute(&request(Dataset::Sources, Operation::List)).expect("source diagnosis succeeds");
+    let sources = service
+        .execute(&request(Dataset::Sources, Operation::List))
+        .expect("source diagnosis succeeds");
     assert_eq!(sources.matched, 2);
     let statuses = sources
         .rows
         .iter()
         .filter_map(|row| row.field(FieldId::ReadStatus))
         .collect::<Vec<_>>();
-    assert!(statuses.iter().any(|value| matches!(value, FieldValue::String(status) if status == "readable")));
-    assert!(statuses.iter().any(|value| matches!(value, FieldValue::String(status) if status == "partial")));
+    assert!(
+        statuses
+            .iter()
+            .any(|value| matches!(value, FieldValue::String(status) if status == "readable"))
+    );
+    assert!(
+        statuses
+            .iter()
+            .any(|value| matches!(value, FieldValue::String(status) if status == "partial"))
+    );
 
     let mut sessions = request(Dataset::Sessions, Operation::List);
     sessions.allow_partial = false;
-    let failure = service.execute(&sessions).err().expect("partial read refused");
+    let failure = service
+        .execute(&sessions)
+        .err()
+        .expect("partial read refused");
     assert_eq!(failure.kind(), QueryFailureCode::UnreadableSource);
 }
 
 #[test]
 fn offline_saved_input_is_bounded_and_never_reaches_a_live_enrichment_path() {
     let live = QueryService::new(FakeQuerySource::new(Ok(QueryInput::Native(native_view()))));
-    let response = live.execute(&request(Dataset::Messages, Operation::List)).expect("live response");
+    let response = live
+        .execute(&request(Dataset::Messages, Operation::List))
+        .expect("live response");
     let bytes: Arc<[u8]> = serde_json::to_vec(&serde_json::json!({
         "ok": true,
         "command": "sessions list",
@@ -668,7 +1179,10 @@ fn offline_saved_input_is_bounded_and_never_reaches_a_live_enrichment_path() {
     let result = offline.execute(&query).expect("offline filtering");
     assert_eq!(result.matched, 2);
     assert_eq!(offline.source().calls().len(), 1);
-    assert!(matches!(offline.source().calls()[0].scope, QueryScope::Offline { .. }));
+    assert!(matches!(
+        offline.source().calls()[0].scope,
+        QueryScope::Offline { .. }
+    ));
     assert!(result.universe.source_view_digest.is_some());
 }
 
@@ -688,13 +1202,18 @@ fn malformed_saved_envelope_fails_with_schema_recovery() {
         .err()
         .expect("malformed input refused");
     assert_eq!(failure.kind(), QueryFailureCode::UnsupportedSchema);
-    assert!(matches!(failure.recovery(), RecoveryAction::UseCompleteInput));
+    assert!(matches!(
+        failure.recovery(),
+        RecoveryAction::UseCompleteInput
+    ));
 }
 
 #[test]
 fn standalone_jsonl_refuses_context_without_partition_completeness() {
     let live = QueryService::new(FakeQuerySource::new(Ok(QueryInput::Native(native_view()))));
-    let response = live.execute(&request(Dataset::Messages, Operation::List)).expect("live response");
+    let response = live
+        .execute(&request(Dataset::Messages, Operation::List))
+        .expect("live response");
     let bytes: Arc<[u8]> = serde_json::to_vec(&response.rows[0])
         .expect("serialize row")
         .into();
@@ -708,7 +1227,13 @@ fn standalone_jsonl_refuses_context_without_partition_completeness() {
         input: OfflineRef::Stdin,
     };
     query.context.before = 1;
-    let failure = service.execute(&query).err().expect("incomplete context refused");
+    let failure = service
+        .execute(&query)
+        .err()
+        .expect("incomplete context refused");
     assert_eq!(failure.kind(), QueryFailureCode::InputSubset);
-    assert!(matches!(failure.recovery(), RecoveryAction::UseCompleteInput));
+    assert!(matches!(
+        failure.recovery(),
+        RecoveryAction::UseCompleteInput
+    ));
 }

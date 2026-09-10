@@ -6,10 +6,7 @@ use unisphere_core::query::{
 
 const VERSION: &str = "q1";
 
-pub(crate) fn encode(
-    binding: CursorBinding,
-    next_index: usize,
-) -> Result<String, QueryFailure> {
+pub(crate) fn encode(binding: CursorBinding, next_index: usize) -> Result<String, QueryFailure> {
     let index = next_index.to_string();
     let checksum = checksum(binding, index.as_bytes());
     Ok(format!(

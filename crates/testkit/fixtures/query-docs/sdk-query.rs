@@ -2,18 +2,23 @@
 
 use std::path::PathBuf;
 use unisphere_sdk::query::{
-    ContextWindow, Dataset, Operation, QueryApi, QueryFailure, QueryFailureCode, QueryLimits,
-    QueryRequest, QueryResponse, QueryScope, RecoveryAction, RepoScope, TimeWindow,
-    UnresolvedPolicy,
+    ContentAccess, ContextWindow, Dataset, Operation, QueryApi, QueryFailure, QueryFailureCode,
+    QueryInput, QueryLimits, QueryRequest, QueryScope, QueryService, QuerySource, RecoveryAction,
+    RepoScope, SourceSelection, TimeWindow, UnresolvedPolicy,
 };
 
-// An application injects a real QueryService here. This fixture uses a deterministic
-// boundary double so it remains executable without filesystem or network access.
+// A real QueryService receives an explicitly unavailable source. The example
+// exercises SDK validation and typed recovery without touching machine data.
 struct NoSource;
 
-impl QueryApi for NoSource {
-    fn execute(&self, request: &QueryRequest) -> Result<QueryResponse, QueryFailure> {
-        request.validate()?;
+impl QuerySource for NoSource {
+    fn load(
+        &self,
+        _scope: &QueryScope,
+        _selection: &SourceSelection,
+        _limits: &QueryLimits,
+        _access: ContentAccess,
+    ) -> Result<QueryInput, QueryFailure> {
         Err(QueryFailure::new(
             QueryFailureCode::MissingSource,
             RecoveryAction::FixSource {
@@ -47,7 +52,7 @@ fn main() {
         limits: QueryLimits::default(),
     };
 
-    let failure = match NoSource.execute(&request) {
+    let failure = match QueryService::new(NoSource).execute(&request) {
         Err(failure) => failure,
         Ok(_) => panic!("fixture has no source"),
     };

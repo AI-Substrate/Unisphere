@@ -161,7 +161,7 @@ pub(crate) enum RowRef<'a> {
     Saved(&'a SavedRow),
 }
 
-impl RowRef<'_> {
+impl<'a> RowRef<'a> {
     pub(crate) fn dataset(self) -> Dataset {
         match self {
             Self::Source(_) => Dataset::Sources,
@@ -203,6 +203,9 @@ impl RowRef<'_> {
     }
 
     pub(crate) fn field(self, field: FieldId) -> Option<FieldValue> {
+        if field == FieldId::Id {
+            return Some(FieldValue::Id(self.id()));
+        }
         match self {
             Self::Source(row) => source_field(row, field),
             Self::Session(row) => session_field(row, field),
@@ -214,7 +217,7 @@ impl RowRef<'_> {
         }
     }
 
-    pub(crate) fn branch_ids(self) -> &[EntityId] {
+    pub(crate) fn branch_ids(self) -> &'a [EntityId] {
         match self {
             Self::Session(row) => &row.branch_ids,
             Self::Turn(row) => &row.branch_ids,
@@ -233,14 +236,17 @@ impl RowRef<'_> {
             Self::Tool(row) => Some(row.session_id),
             Self::Event(row) => row.session_id,
             Self::Source(_) => None,
-            Self::Saved(row) => row.row.field(FieldId::SessionId).and_then(|value| match value {
-                FieldValue::Id(id) => Some(*id),
-                _ => None,
-            }),
+            Self::Saved(row) => row
+                .row
+                .field(FieldId::SessionId)
+                .and_then(|value| match value {
+                    FieldValue::Id(id) => Some(*id),
+                    _ => None,
+                }),
         }
     }
 
-    pub(crate) fn native_order(self) -> Option<&NativeSequence> {
+    pub(crate) fn native_order(self) -> Option<&'a NativeSequence> {
         match self {
             Self::Turn(row) => Some(&row.sequence),
             Self::Message(row) => Some(&row.sequence),
@@ -256,16 +262,24 @@ impl RowRef<'_> {
         access: &ContentAccess,
         is_context: Option<bool>,
     ) -> Result<ProjectedRow, QueryFailure> {
+        let reserved = unisphere_core::query::schema(self.dataset()).reserved_fields;
         let mut fields = columns
             .iter()
+            .filter(|field| !reserved.contains(field))
             .filter_map(|field| self.field(*field).map(|value| (*field, value)))
             .collect::<BTreeMap<_, _>>();
-        if matches!(self.dataset(), Dataset::Turns | Dataset::Messages) {
-            if let Some(is_context) = is_context {
-                fields.insert(FieldId::IsContext, FieldValue::Bool(is_context));
-            }
+        if matches!(self.dataset(), Dataset::Turns | Dataset::Messages)
+            && let Some(is_context) = is_context
+        {
+            fields.insert(FieldId::IsContext, FieldValue::Bool(is_context));
         }
-        ProjectedRow::new(self.dataset(), self.id(), self.source_refs()?, fields, access)
+        ProjectedRow::new(
+            self.dataset(),
+            self.id(),
+            self.source_refs()?,
+            fields,
+            access,
+        )
     }
 }
 
@@ -278,7 +292,12 @@ fn project_source_refs(refs: &[SourceRef]) -> Result<Vec<ProjectedSourceRef>, Qu
             NativeLocator::Snapshot { .. } => (ProjectedLocatorKind::Snapshot, None),
             NativeLocator::GitNote { .. } => (ProjectedLocatorKind::GitNote, None),
         };
-        let key = (reference.source_id, reference.revision.clone(), kind, offset);
+        let key = (
+            reference.source_id,
+            reference.revision.clone(),
+            kind,
+            offset,
+        );
         if seen.insert(key.clone()) {
             projected.push(ProjectedSourceRef::new(key.0, key.1, key.2, key.3)?);
         }

@@ -1,14 +1,17 @@
-use std::{collections::{BTreeMap, BTreeSet}, path::PathBuf};
+use std::{
+    collections::{BTreeMap, BTreeSet},
+    path::PathBuf,
+};
 
 use serde_json::{Map, Value, json};
 use unisphere_core::query::{
     AssociationBasis, AssociationExtent, AssociationObservation, AvailabilityCode,
     AvailabilityIssue, BranchEvidence, BranchLink, ContentAccess, ControlKind, FieldId,
-    InspectedSource, LineageKind, MembershipPolicy, MessageRole, NativeLocator,
-    NativeQueryInput, NativeSequence, Observation, ObservationFacet, ObservationPart, Outcome,
-    PartitionId, QueryAdapter, QueryErrorLocation, QueryFailure, QueryFailureCode, QueryLimits,
-    RecoveryAction, RequestMarker, SessionEvidenceKey, SourcePartition, SourceProblem, SourceRef,
-    SourceViewKind, Timestamp, TimestampBasis, UsageCounters, UsageScope,
+    InspectedSource, LineageKind, MembershipPolicy, MessageRole, NativeLocator, NativeQueryInput,
+    NativeSequence, Observation, ObservationFacet, ObservationPart, Outcome, PartitionId,
+    QueryAdapter, QueryErrorLocation, QueryFailure, QueryFailureCode, QueryLimits, RecoveryAction,
+    RequestMarker, SessionEvidenceKey, SourcePartition, SourceProblem, SourceRef, SourceViewKind,
+    Timestamp, TimestampBasis, UsageCounters, UsageScope,
 };
 
 use crate::{OmpAdapter, decode};
@@ -29,9 +32,9 @@ impl QueryAdapter for OmpAdapter {
         };
         source.validate()?;
         let input_bytes = records.iter().try_fold(0_usize, |total, record| {
-            total.checked_add(record.bytes.len()).ok_or_else(|| {
-                QueryFailure::limit(unisphere_core::query::LimitKind::SourceBytes)
-            })
+            total
+                .checked_add(record.bytes.len())
+                .ok_or_else(|| QueryFailure::limit(unisphere_core::query::LimitKind::SourceBytes))
         })?;
         if input_bytes > limits.max_source_bytes {
             return Err(QueryFailure::limit(
@@ -83,7 +86,7 @@ impl QueryAdapter for OmpAdapter {
         let mut partitions = Vec::new();
         let mut partition_associations: BTreeMap<PartitionId, Vec<AssociationObservation>> =
             BTreeMap::new();
-        let mut observations = Vec::with_capacity(records.len());
+        let mut observations: Vec<Observation> = Vec::with_capacity(records.len());
         let mut issues = Vec::new();
         let mut current_session = default_session;
         let mut seen_ids: BTreeMap<String, usize> = BTreeMap::new();
@@ -120,11 +123,13 @@ impl QueryAdapter for OmpAdapter {
                 .map(str::to_owned);
             let mut diagnostics = Vec::new();
             let timestamp = native_timestamp(
-                object.and_then(|object| object.get(if kind == "title" {
-                    "updatedAt"
-                } else {
-                    "timestamp"
-                })),
+                object.and_then(|object| {
+                    object.get(if kind == "title" {
+                        "updatedAt"
+                    } else {
+                        "timestamp"
+                    })
+                }),
                 source.id,
                 *offset,
                 &mut diagnostics,
@@ -180,17 +185,17 @@ impl QueryAdapter for OmpAdapter {
             }
 
             let index = observations.len();
-            if let Some(id) = &native_id {
-                if let Some(previous) = seen_ids.insert(id.clone(), index) {
-                    let conflict = issue(
-                        AvailabilityCode::Conflict,
-                        Some(FieldId::NativeId),
-                        source.id,
-                        *offset,
-                    );
-                    diagnostics.push(conflict.clone());
-                    observations[previous].diagnostics.push(conflict.clone());
-                }
+            if let Some(id) = &native_id
+                && let Some(previous) = seen_ids.insert(id.clone(), index)
+            {
+                let conflict = issue(
+                    AvailabilityCode::Conflict,
+                    Some(FieldId::NativeId),
+                    source.id,
+                    *offset,
+                );
+                diagnostics.push(conflict.clone());
+                observations[previous].diagnostics.push(conflict.clone());
             }
             issues.extend(diagnostics.iter().cloned());
             observations.push(Observation {
@@ -299,6 +304,7 @@ fn inspect_record(
     facets: &mut Vec<ObservationFacet>,
     diagnostics: &mut Vec<AvailabilityIssue>,
     links: &[BranchLink],
+    associations: &mut BTreeMap<PartitionId, Vec<AssociationObservation>>,
     source_id: unisphere_core::query::SourceId,
     offset: u64,
 ) {
@@ -313,15 +319,16 @@ fn inspect_record(
                 ));
                 return;
             };
-            let association = object
-                .get("cwd")
-                .and_then(Value::as_str)
-                .map(|cwd| AssociationObservation {
-                    basis: AssociationBasis::NativeCwd,
-                    path: Some(PathBuf::from(cwd)),
-                    partition,
-                    applies_to: AssociationExtent::Partition,
-                });
+            let association =
+                object
+                    .get("cwd")
+                    .and_then(Value::as_str)
+                    .map(|cwd| AssociationObservation {
+                        basis: AssociationBasis::NativeCwd,
+                        path: Some(PathBuf::from(cwd)),
+                        partition,
+                        applies_to: AssociationExtent::Partition,
+                    });
             if let Some(association) = association.clone() {
                 associations.entry(partition).or_default().push(association);
             }
@@ -369,8 +376,7 @@ fn inspect_record(
             access,
             facets,
             diagnostics,
-            source_id,
-            offset,
+            (source_id, offset),
         ),
         "model_change" => {
             if let (Some(native_id), Some(model)) =
@@ -455,8 +461,7 @@ fn inspect_message(
     access: &ContentAccess,
     facets: &mut Vec<ObservationFacet>,
     diagnostics: &mut Vec<AvailabilityIssue>,
-    source_id: unisphere_core::query::SourceId,
-    offset: u64,
+    (source_id, offset): (unisphere_core::query::SourceId, u64),
 ) {
     let Some(message) = value.and_then(Value::as_object) else {
         diagnostics.push(issue(
@@ -467,8 +472,14 @@ fn inspect_message(
         ));
         return;
     };
-    let role = message.get("role").and_then(Value::as_str).unwrap_or("unknown");
-    if message.get("timestamp").is_some_and(|value| epoch_millis(value).is_none()) {
+    let role = message
+        .get("role")
+        .and_then(Value::as_str)
+        .unwrap_or("unknown");
+    if message
+        .get("timestamp")
+        .is_some_and(|value| epoch_millis(value).is_none())
+    {
         diagnostics.push(issue(
             AvailabilityCode::InvalidClock,
             Some(FieldId::Timestamp),
@@ -685,9 +696,7 @@ fn content_parts(
                         ObservationPart::Unavailable(AvailabilityCode::SensitiveOmitted)
                     }),
                     Some("thinking") => Some(if permitted {
-                        ObservationPart::Reasoning(
-                            object.get("thinking")?.as_str()?.to_owned(),
-                        )
+                        ObservationPart::Reasoning(object.get("thinking")?.as_str()?.to_owned())
                     } else {
                         ObservationPart::Unavailable(AvailabilityCode::SensitiveOmitted)
                     }),
@@ -748,7 +757,9 @@ fn session_key(id: &str) -> SessionEvidenceKey {
 }
 
 fn control_links(object: Option<&Map<String, Value>>, kind: &str) -> Vec<BranchLink> {
-    let Some(object) = object else { return Vec::new() };
+    let Some(object) = object else {
+        return Vec::new();
+    };
     let mut links = Vec::new();
     if let Some(target) = object.get("firstKeptEntryId").and_then(Value::as_str) {
         links.push(BranchLink {
@@ -775,7 +786,7 @@ fn native_timestamp(
     offset: u64,
     diagnostics: &mut Vec<AvailabilityIssue>,
 ) -> Option<Timestamp> {
-    let Some(value) = value else { return None };
+    let value = value?;
     let timestamp = value
         .as_str()
         .and_then(|value| Timestamp::parse(value, TimestampBasis::Native).ok());

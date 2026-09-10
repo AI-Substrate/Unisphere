@@ -1,0 +1,29 @@
+{
+  "recorded_at": "2026-09-10T05:05:57.199Z",
+  "source": "99ea782e86fc1ebc4ea09bf8d4e7624dc87dc3bc",
+  "reporter": "pij-forward-jerren",
+  "scope": "PM-owned correction of two already-required context/statistics projection contracts; no narrowed SDK behavior",
+  "contracts": {
+    "context": "Add FieldId::IsContext with wire is_context. Turns and Messages declare metadata Bool, non-null, computed/required where existing schema supports that vocabulary; no allowed predicates (selection labels cannot be filters that decide their own selection). SDK emits false for matched rows and true for context rows and retains it for context output even under explicit --columns. No port or ProjectedRow constructor signature change.",
+    "statistics": "For every dataset declaring Metric values, expose the corresponding existing metric FieldIds through its actual DatasetSchema.fields and ProjectedRow validation: Sessions/Turns count+usage, Tools all declared metrics. Count/outcome counters use U64; duration aggregates and failure_rate finite F64 with correct units and nullable empty-denominator/unmeasured states; missing usage counters remain nullable. Sources/Messages/Events gain no unsupported statistics capability."
+  },
+  "forbidden": [
+    "port/constructor signature changes",
+    "arbitrary-field validation bypass",
+    "packing metrics into unrelated fields",
+    "dropping per-row context labels",
+    "canonical plan/guide/team/flow writes",
+    "other-owner files",
+    "build/test/lint/formatters",
+    "push/merge"
+  ],
+  "validation": "PM will review the additive amendment and prove composed contracts; current nine lanes continue independent work. Do not claim the original frozen baseline includes these new fields.",
+  "start": "Fetch exact source commit from /Users/jordanknight/substrate/unisphere/unisphere-session-query-cli and create new branch work/015-projection-amendment in your existing clean clone; preserve earlier branches. Do not reset/replay completed work.",
+  "delivery": "Commit only owned paths with harness commit, then send exact SHA and .harness/temp/projection-amendment-delivery.json. No validation.",
+  "owner": "proof",
+  "root": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/baseline-coders/proof",
+  "write_paths": [
+    "crates/core/tests/query_contract.rs"
+  ],
+  "work": "Add regression tests that fail on the reported gaps: real ProjectedRow stats projection for each supported dataset/metric, meaningful nullability/units boundaries, IsContext metadata projection/round-trip and no circular filtering. No source-string or mock-echo assertions. Coordinate exact enum with contracts coder; do not edit core implementation."
+}

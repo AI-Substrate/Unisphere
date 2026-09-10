@@ -176,12 +176,8 @@ impl QueryAdapter for CodexAdapter {
             let kind = codex_string(object, "type").unwrap_or("unknown");
             let payload = object.get("payload").and_then(Value::as_object);
             let subtype = payload.and_then(|payload| codex_string(payload, "type"));
-            let timestamp = codex_timestamp(
-                object.get("timestamp"),
-                source.id,
-                offset,
-                &mut diagnostics,
-            );
+            let timestamp =
+                codex_timestamp(object.get("timestamp"), source.id, offset, &mut diagnostics);
 
             let mut header_associations = Vec::new();
             if kind == "session_meta" {
@@ -189,7 +185,8 @@ impl QueryAdapter for CodexAdapter {
                 current_session = payload.and_then(|payload| {
                     let native_id = codex_string(payload, "id")?;
                     let partition = PartitionId::derive(source.id, &codex_partition_key(native_id));
-                    let parent_native_id = codex_string(payload, "parent_thread_id").map(str::to_owned);
+                    let parent_native_id =
+                        codex_string(payload, "parent_thread_id").map(str::to_owned);
                     let fork_native_id = codex_string(payload, "forked_from_id").map(str::to_owned);
                     let key = SessionEvidenceKey {
                         namespace: "codex/thread".into(),
@@ -221,7 +218,9 @@ impl QueryAdapter for CodexAdapter {
                             partition,
                             applies_to: AssociationExtent::Partition,
                         };
-                        inspected.partitions[index].associations.push(association.clone());
+                        inspected.partitions[index]
+                            .associations
+                            .push(association.clone());
                         inspected.source.associations.push(association.clone());
                         header_associations.push(association);
                     }
@@ -235,7 +234,7 @@ impl QueryAdapter for CodexAdapter {
             }
 
             let session = current_session.as_ref().map(|session| session.key.clone());
-            let (partition, branch) = if let Some(session) = current_session.as_ref() {
+            let (_, branch) = if let Some(session) = current_session.as_ref() {
                 (
                     session.partition,
                     BranchEvidence::Linear {
@@ -256,7 +255,9 @@ impl QueryAdapter for CodexAdapter {
                 .and_then(|payload| codex_string(payload, "turn_id"))
                 .or_else(|| {
                     payload
-                        .and_then(|payload| payload.get("internal_chat_message_metadata_passthrough"))
+                        .and_then(|payload| {
+                            payload.get("internal_chat_message_metadata_passthrough")
+                        })
                         .and_then(Value::as_object)
                         .and_then(|metadata| codex_string(metadata, "turn_id"))
                 })
@@ -318,8 +319,7 @@ impl QueryAdapter for CodexAdapter {
                     subtype,
                     turn_id.as_deref(),
                     &access,
-                    source.id,
-                    offset,
+                    (source.id, offset),
                     &mut facets,
                     &mut diagnostics,
                 ),
@@ -330,7 +330,9 @@ impl QueryAdapter for CodexAdapter {
                     &access,
                     source.id,
                     offset,
-                    current_session.as_ref().map(|session| session.key.native_id.as_str()),
+                    current_session
+                        .as_ref()
+                        .map(|session| session.key.native_id.as_str()),
                     &mut facets,
                     &mut diagnostics,
                 ),
@@ -392,13 +394,17 @@ fn inspect_codex_response(
     subtype: Option<&str>,
     turn_id: Option<&str>,
     access: &ContentAccess,
-    source: unisphere_core::query::SourceId,
-    offset: Option<u64>,
+    (source, offset): (unisphere_core::query::SourceId, Option<u64>),
     facets: &mut Vec<ObservationFacet>,
     diagnostics: &mut Vec<AvailabilityIssue>,
 ) {
     let Some(payload) = payload else {
-        diagnostics.push(codex_issue(source, offset, None, AvailabilityCode::NotCaptured));
+        diagnostics.push(codex_issue(
+            source,
+            offset,
+            None,
+            AvailabilityCode::NotCaptured,
+        ));
         return;
     };
     match subtype {
@@ -426,7 +432,10 @@ fn inspect_codex_response(
         Some("reasoning") => {
             let mut parts = codex_reasoning_parts(payload.get("summary"), access);
             parts.extend(codex_reasoning_parts(payload.get("content"), access));
-            if payload.get("encrypted_content").is_some_and(|value| !value.is_null()) {
+            if payload
+                .get("encrypted_content")
+                .is_some_and(|value| !value.is_null())
+            {
                 parts.push(ObservationPart::Unavailable(AvailabilityCode::NotSupported));
             }
             facets.push(ObservationFacet::Message {
@@ -439,17 +448,35 @@ fn inspect_codex_response(
         }
         Some("function_call" | "custom_tool_call") => {
             let Some(call_id) = codex_string(payload, "call_id") else {
-                diagnostics.push(codex_issue(source, offset, Some(FieldId::CallId), AvailabilityCode::NotCaptured));
+                diagnostics.push(codex_issue(
+                    source,
+                    offset,
+                    Some(FieldId::CallId),
+                    AvailabilityCode::NotCaptured,
+                ));
                 return;
             };
             let Some(name) = codex_string(payload, "name") else {
-                diagnostics.push(codex_issue(source, offset, Some(FieldId::ToolName), AvailabilityCode::NotCaptured));
+                diagnostics.push(codex_issue(
+                    source,
+                    offset,
+                    Some(FieldId::ToolName),
+                    AvailabilityCode::NotCaptured,
+                ));
                 return;
             };
-            let key = if subtype == Some("function_call") { "arguments" } else { "input" };
+            let key = if subtype == Some("function_call") {
+                "arguments"
+            } else {
+                "input"
+            };
             let input = payload.get(key).map_or_else(
                 || vec![ObservationPart::Unavailable(AvailabilityCode::NotCaptured)],
-                |value| vec![codex_retained(access, FieldId::Input, || ObservationPart::Structured(value.clone()))],
+                |value| {
+                    vec![codex_retained(access, FieldId::Input, || {
+                        ObservationPart::Structured(value.clone())
+                    })]
+                },
             );
             facets.push(ObservationFacet::ToolCall {
                 native_call_id: call_id.into(),
@@ -461,12 +488,21 @@ fn inspect_codex_response(
         }
         Some("function_call_output" | "custom_tool_call_output") => {
             let Some(call_id) = codex_string(payload, "call_id") else {
-                diagnostics.push(codex_issue(source, offset, Some(FieldId::CallId), AvailabilityCode::NotCaptured));
+                diagnostics.push(codex_issue(
+                    source,
+                    offset,
+                    Some(FieldId::CallId),
+                    AvailabilityCode::NotCaptured,
+                ));
                 return;
             };
             let output = payload.get("output").map_or_else(
                 || vec![ObservationPart::Unavailable(AvailabilityCode::NotCaptured)],
-                |value| vec![codex_retained(access, FieldId::Output, || ObservationPart::Structured(value.clone()))],
+                |value| {
+                    vec![codex_retained(access, FieldId::Output, || {
+                        ObservationPart::Structured(value.clone())
+                    })]
+                },
             );
             facets.push(ObservationFacet::ToolResult {
                 native_call_id: call_id.into(),
@@ -506,7 +542,12 @@ fn inspect_codex_event(
     diagnostics: &mut Vec<AvailabilityIssue>,
 ) {
     let Some(payload) = payload else {
-        diagnostics.push(codex_issue(source, offset, None, AvailabilityCode::NotCaptured));
+        diagnostics.push(codex_issue(
+            source,
+            offset,
+            None,
+            AvailabilityCode::NotCaptured,
+        ));
         return;
     };
     match subtype {
@@ -519,7 +560,9 @@ fn inspect_codex_event(
             facets,
             diagnostics,
         ),
-        Some("user_message" | "agent_message" | "agent_reasoning" | "agent_reasoning_raw_content") => {
+        Some(
+            "user_message" | "agent_message" | "agent_reasoning" | "agent_reasoning_raw_content",
+        ) => {
             facets.push(ObservationFacet::Control {
                 kind: ControlKind::Summary,
                 links: Vec::new(),
@@ -529,7 +572,9 @@ fn inspect_codex_event(
             kind: ControlKind::Compaction,
             links: Vec::new(),
         }),
-        Some("turn_started" | "task_started" | "turn_complete" | "task_complete" | "turn_aborted") => {
+        Some(
+            "turn_started" | "task_started" | "turn_complete" | "task_complete" | "turn_aborted",
+        ) => {
             facets.push(ObservationFacet::Control {
                 kind: ControlKind::Other,
                 links: Vec::new(),
@@ -549,10 +594,11 @@ fn inspect_codex_event(
                 facets.push(ObservationFacet::ToolResult {
                     native_call_id: call_id.into(),
                     native_name: None,
-                    output: payload.get("aggregated_output").map_or_else(
-                        Vec::new,
-                        |_| vec![codex_retained(access, FieldId::Output, || ObservationPart::Unavailable(AvailabilityCode::NotSupported))],
-                    ),
+                    output: payload.get("aggregated_output").map_or_else(Vec::new, |_| {
+                        vec![codex_retained(access, FieldId::Output, || {
+                            ObservationPart::Unavailable(AvailabilityCode::NotSupported)
+                        })]
+                    }),
                     outcome: match exit_code {
                         Some(0) => Outcome::Succeeded,
                         Some(_) => Outcome::Failed,
@@ -582,17 +628,33 @@ fn inspect_codex_usage(
     facets: &mut Vec<ObservationFacet>,
     diagnostics: &mut Vec<AvailabilityIssue>,
 ) {
-    let Some(info) = info.and_then(Value::as_object) else { return };
+    let Some(info) = info.and_then(Value::as_object) else {
+        return;
+    };
     for (field, scope, owner) in [
         ("last_token_usage", UsageScope::Turn, turn_id),
-        ("total_token_usage", UsageScope::CumulativeSnapshot, session_id),
+        (
+            "total_token_usage",
+            UsageScope::CumulativeSnapshot,
+            session_id,
+        ),
     ] {
-        let Some(usage) = info.get(field).and_then(Value::as_object) else { continue };
+        let Some(usage) = info.get(field).and_then(Value::as_object) else {
+            continue;
+        };
         let mut count = |native: &str, query_field: FieldId| {
             usage.get(native).and_then(|value| {
-                let valid = value.as_i64().filter(|value| *value >= 0).map(|value| value as u64);
+                let valid = value
+                    .as_i64()
+                    .filter(|value| *value >= 0)
+                    .map(|value| value as u64);
                 if valid.is_none() {
-                    diagnostics.push(codex_issue(source, offset, Some(query_field), AvailabilityCode::ProjectionMissing));
+                    diagnostics.push(codex_issue(
+                        source,
+                        offset,
+                        Some(query_field),
+                        AvailabilityCode::ProjectionMissing,
+                    ));
                 }
                 valid
             })
@@ -617,16 +679,18 @@ fn inspect_codex_usage(
     }
 }
 
-fn codex_parts(value: Option<&Value>, access: &ContentAccess, field: FieldId) -> Vec<ObservationPart> {
+fn codex_parts(
+    value: Option<&Value>,
+    access: &ContentAccess,
+    field: FieldId,
+) -> Vec<ObservationPart> {
     let Some(parts) = value.and_then(Value::as_array) else {
         return vec![ObservationPart::Unavailable(AvailabilityCode::NotCaptured)];
     };
     parts
         .iter()
         .map(|part| {
-            let text = part
-                .as_object()
-                .and_then(|part| codex_string(part, "text"));
+            let text = part.as_object().and_then(|part| codex_string(part, "text"));
             match text {
                 Some(text) => codex_retained(access, field, || ObservationPart::Text(text.into())),
                 None => ObservationPart::Unavailable(AvailabilityCode::NotSupported),
@@ -636,15 +700,17 @@ fn codex_parts(value: Option<&Value>, access: &ContentAccess, field: FieldId) ->
 }
 
 fn codex_reasoning_parts(value: Option<&Value>, access: &ContentAccess) -> Vec<ObservationPart> {
-    let Some(parts) = value.and_then(Value::as_array) else { return Vec::new() };
+    let Some(parts) = value.and_then(Value::as_array) else {
+        return Vec::new();
+    };
     parts
         .iter()
         .map(|part| {
-            let text = part
-                .as_object()
-                .and_then(|part| codex_string(part, "text"));
+            let text = part.as_object().and_then(|part| codex_string(part, "text"));
             match text {
-                Some(text) => codex_retained(access, FieldId::Parts, || ObservationPart::Reasoning(text.into())),
+                Some(text) => codex_retained(access, FieldId::Parts, || {
+                    ObservationPart::Reasoning(text.into())
+                }),
                 None => ObservationPart::Unavailable(AvailabilityCode::NotSupported),
             }
         })
@@ -677,12 +743,17 @@ fn codex_timestamp(
     offset: Option<u64>,
     diagnostics: &mut Vec<AvailabilityIssue>,
 ) -> Option<Timestamp> {
-    let Some(value) = value else { return None };
+    let value = value?;
     let parsed = value
         .as_str()
         .and_then(|value| Timestamp::parse(value, TimestampBasis::Native).ok());
     if parsed.is_none() {
-        diagnostics.push(codex_issue(source, offset, Some(FieldId::Timestamp), AvailabilityCode::InvalidClock));
+        diagnostics.push(codex_issue(
+            source,
+            offset,
+            Some(FieldId::Timestamp),
+            AvailabilityCode::InvalidClock,
+        ));
     }
     parsed
 }

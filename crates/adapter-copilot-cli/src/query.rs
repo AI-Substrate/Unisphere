@@ -1,16 +1,19 @@
-use std::{collections::{BTreeMap, BTreeSet}, path::PathBuf};
+use std::{
+    collections::{BTreeMap, BTreeSet},
+    path::PathBuf,
+};
 
 use serde_json::{Map, Value};
-use unisphere_core::{NativeSnapshot, SnapshotFormat};
 use unisphere_core::query::{
     AdapterId, AssociationBasis, AssociationExtent, AssociationObservation, AvailabilityCode,
     AvailabilityIssue, BranchEvidence, BranchLink, ContentAccess, ControlKind, FieldId,
-    InspectedSource, LineageKind, MembershipPolicy, MessageRole, NativeLocator,
-    NativeQueryInput, NativeSequence, Observation, ObservationFacet, ObservationPart, Outcome,
-    PartitionId, QueryFailure, QueryFailureCode, QueryLimits, RecoveryAction, RequestMarker,
-    SessionEvidenceKey, SourceEvidence, SourcePartition, SourceRef, SourceViewKind, Timestamp,
-    TimestampBasis, UsageCounters, UsageScope,
+    InspectedSource, LineageKind, MembershipPolicy, MessageRole, NativeLocator, NativeQueryInput,
+    NativeSequence, Observation, ObservationFacet, ObservationPart, Outcome, PartitionId,
+    QueryFailure, QueryFailureCode, QueryLimits, RecoveryAction, RequestMarker, SessionEvidenceKey,
+    SourceEvidence, SourcePartition, SourceRef, SourceViewKind, Timestamp, TimestampBasis,
+    UsageCounters, UsageScope,
 };
+use unisphere_core::{NativeSnapshot, SnapshotFormat};
 
 use super::{
     CURRENT_QUERY_POLICY_VERSION, DESCRIPTOR, LEGACY_QUERY_POLICY_VERSION, SNAPSHOT_DESCRIPTOR,
@@ -79,15 +82,17 @@ pub(super) fn inspect_current(
             })
         })?;
         let data = event.get("data").and_then(Value::as_object);
-        let kind = event.get("type").and_then(Value::as_str).unwrap_or("unknown");
+        let kind = event
+            .get("type")
+            .and_then(Value::as_str)
+            .unwrap_or("unknown");
         let event_id = nonempty_string(event, "id");
         let participant = nonempty_string(event, "agentId");
 
         if matches!(kind, "session.start" | "session.resume") {
             active_session = data.and_then(|data| nonempty_string(data, "sessionId"));
-            active_parent_session = data.and_then(|data| {
-                nonempty_string(data, "detachedFromSpawningParentSessionId")
-            });
+            active_parent_session =
+                data.and_then(|data| nonempty_string(data, "detachedFromSpawningParentSessionId"));
         }
         let membership = if active_session.is_some() {
             MembershipPolicy::ValidatedHeader
@@ -244,9 +249,11 @@ pub(super) fn inspect_legacy(
         limits,
         access.emit_content || !access.inspect_fields.is_empty(),
     )?;
-    let document = decode_json(&snapshot.records[0].bytes)
-        .map_err(|()| QueryFailure::invalid_data())?;
-    let document = document.as_object().ok_or_else(QueryFailure::invalid_data)?;
+    let document =
+        decode_json(&snapshot.records[0].bytes).map_err(|()| QueryFailure::invalid_data())?;
+    let document = document
+        .as_object()
+        .ok_or_else(QueryFailure::invalid_data)?;
     let native_session_id = document
         .get("sessionId")
         .and_then(Value::as_str)
@@ -262,20 +269,40 @@ pub(super) fn inspect_legacy(
     } else {
         MembershipPolicy::Unavailable
     };
-    let header_partition = legacy_partition(source.id, b"legacy-header", SourceViewKind::SourceOnly, native_session_id.as_deref(), membership);
-    let chat_partition = legacy_partition(source.id, b"legacy-chat", SourceViewKind::LegacyChat, native_session_id.as_deref(), membership);
-    let timeline_partition = legacy_partition(source.id, b"legacy-timeline", SourceViewKind::LegacyTimeline, native_session_id.as_deref(), membership);
+    let header_partition = legacy_partition(
+        source.id,
+        b"legacy-header",
+        SourceViewKind::SourceOnly,
+        native_session_id.as_deref(),
+        membership,
+    );
+    let chat_partition = legacy_partition(
+        source.id,
+        b"legacy-chat",
+        SourceViewKind::LegacyChat,
+        native_session_id.as_deref(),
+        membership,
+    );
+    let timeline_partition = legacy_partition(
+        source.id,
+        b"legacy-timeline",
+        SourceViewKind::LegacyTimeline,
+        native_session_id.as_deref(),
+        membership,
+    );
     let mut partitions = vec![header_partition.clone()];
     let mut observations = Vec::new();
     let mut issues = Vec::new();
-    let session = native_session_id.as_ref().map(|native_id| SessionEvidenceKey {
-        namespace: LEGACY_NAMESPACE.into(),
-        native_id: native_id.clone(),
-        participant_id: None,
-        parent_native_id: None,
-        fork_native_id: None,
-        membership_basis: MembershipPolicy::ValidatedHeader,
-    });
+    let session = native_session_id
+        .as_ref()
+        .map(|native_id| SessionEvidenceKey {
+            namespace: LEGACY_NAMESPACE.into(),
+            native_id: native_id.clone(),
+            participant_id: None,
+            parent_native_id: None,
+            fork_native_id: None,
+            membership_basis: MembershipPolicy::ValidatedHeader,
+        });
 
     let mut header_issues = Vec::new();
     let created_at = optional_timestamp(
@@ -300,7 +327,9 @@ pub(super) fn inspect_legacy(
         source_ref: snapshot_ref(&source, "document", "session"),
         native_record_id: None,
         session: session.clone(),
-        branch: BranchEvidence::Linear { partition: header_partition.id },
+        branch: BranchEvidence::Linear {
+            partition: header_partition.id,
+        },
         parent_ids: Vec::new(),
         sequence: snapshot_sequence("document"),
         timestamp: created_at,
@@ -375,10 +404,15 @@ fn current_facets(
                     ));
                 }
                 let created_at = (kind == "session.start")
-                    .then(|| optional_timestamp(data.get("startTime"), source_id, Some(offset), issues))
+                    .then(|| {
+                        optional_timestamp(data.get("startTime"), source_id, Some(offset), issues)
+                    })
                     .flatten();
                 let lineage = nonempty_string(data, "detachedFromSpawningParentSessionId")
-                    .map(|target| BranchLink { kind: LineageKind::Parent, target })
+                    .map(|target| BranchLink {
+                        kind: LineageKind::Parent,
+                        target,
+                    })
                     .into_iter()
                     .collect();
                 facets.push(ObservationFacet::SessionMetadata {
@@ -422,9 +456,15 @@ fn current_facets(
         }
         "session.title_changed" => {
             if let Some(native_id) = session_id {
-                let name = nonempty_string(data, "title").filter(|_| access.permits_payload(FieldId::Name));
+                let name = nonempty_string(data, "title")
+                    .filter(|_| access.permits_payload(FieldId::Name));
                 if data.contains_key("title") && name.is_none() {
-                    issues.push(issue(source_id, Some(FieldId::Name), Some(offset), AvailabilityCode::SensitiveOmitted));
+                    issues.push(issue(
+                        source_id,
+                        Some(FieldId::Name),
+                        Some(offset),
+                        AvailabilityCode::SensitiveOmitted,
+                    ));
                 }
                 facets.push(ObservationFacet::SessionMetadata {
                     native_id: native_id.into(),
@@ -436,12 +476,17 @@ fn current_facets(
                 });
             }
         }
-        "user.message" | "assistant.message" | "assistant.reasoning"
-        | "assistant.message_delta" | "assistant.reasoning_delta" | "system.message" => {
+        "user.message"
+        | "assistant.message"
+        | "assistant.reasoning"
+        | "assistant.message_delta"
+        | "assistant.reasoning_delta"
+        | "system.message" => {
             let role = current_role(kind, data);
             let parts = message_parts(kind, data, access, source_id, offset, issues);
             facets.push(ObservationFacet::Message {
-                native_id: nonempty_string(data, "messageId").or_else(|| event_id.map(str::to_owned)),
+                native_id: nonempty_string(data, "messageId")
+                    .or_else(|| event_id.map(str::to_owned)),
                 role,
                 parts,
                 request_marker: if kind == "user.message" {
@@ -458,13 +503,19 @@ fn current_facets(
             {
                 for request in requests {
                     if let Some(request) = request.as_object() {
-                        push_tool_call(request, "name", access, source_id, offset, turn_id.clone(), facets, issues);
+                        push_tool_call(
+                            request,
+                            "name",
+                            access,
+                            (source_id, offset),
+                            turn_id.clone(),
+                            facets,
+                            issues,
+                        );
                     }
                 }
             }
-            if kind == "assistant.message"
-                && data.get("outputTokens").is_some()
-            {
+            if kind == "assistant.message" && data.get("outputTokens").is_some() {
                 facets.push(ObservationFacet::Usage {
                     owner: nonempty_string(data, "messageId").or_else(|| turn_id.clone()),
                     scope: UsageScope::Invocation,
@@ -478,7 +529,15 @@ fn current_facets(
             }
         }
         "tool.execution_start" => {
-            push_tool_call(data, "toolName", access, source_id, offset, turn_id, facets, issues);
+            push_tool_call(
+                data,
+                "toolName",
+                access,
+                (source_id, offset),
+                turn_id,
+                facets,
+                issues,
+            );
         }
         "tool.execution_complete" => {
             if let Some(native_call_id) = nonempty_string(data, "toolCallId") {
@@ -492,25 +551,42 @@ fn current_facets(
                     turn_id,
                 });
             } else {
-                issues.push(issue(source_id, Some(FieldId::CallId), Some(offset), AvailabilityCode::NotCaptured));
+                issues.push(issue(
+                    source_id,
+                    Some(FieldId::CallId),
+                    Some(offset),
+                    AvailabilityCode::NotCaptured,
+                ));
             }
         }
-        "tool.execution_partial_result" | "tool.execution_progress" | "assistant.tool_call_delta" => {
+        "tool.execution_partial_result"
+        | "tool.execution_progress"
+        | "assistant.tool_call_delta" => {
             if let Some(native_call_id) = nonempty_string(data, "toolCallId") {
-                let field = if kind == "assistant.tool_call_delta" { FieldId::Input } else { FieldId::Output };
+                let field = if kind == "assistant.tool_call_delta" {
+                    FieldId::Input
+                } else {
+                    FieldId::Output
+                };
                 facets.push(ObservationFacet::ToolProgress {
                     native_call_id,
                     parts: progress_parts(data, access, field, source_id, offset, issues),
                 });
             } else {
-                issues.push(issue(source_id, Some(FieldId::CallId), Some(offset), AvailabilityCode::NotCaptured));
+                issues.push(issue(
+                    source_id,
+                    Some(FieldId::CallId),
+                    Some(offset),
+                    AvailabilityCode::NotCaptured,
+                ));
             }
         }
         "assistant.usage" => {
             let counters = usage_counters(data, source_id, offset, issues);
             if has_usage(&counters) {
                 facets.push(ObservationFacet::Usage {
-                    owner: nonempty_string(data, "providerCallId").or_else(|| nonempty_string(data, "apiCallId")),
+                    owner: nonempty_string(data, "providerCallId")
+                        .or_else(|| nonempty_string(data, "apiCallId")),
                     scope: UsageScope::Invocation,
                     counters,
                 });
@@ -545,7 +621,10 @@ fn current_facets(
         "session.context_changed" => facets.push(ObservationFacet::Control {
             kind: ControlKind::ContextChange,
             links: nonempty_string(data, "branch")
-                .map(|target| BranchLink { kind: LineageKind::Branch, target })
+                .map(|target| BranchLink {
+                    kind: LineageKind::NativeLink,
+                    target,
+                })
                 .into_iter()
                 .collect(),
         }),
@@ -554,22 +633,40 @@ fn current_facets(
             facets.push(ObservationFacet::Control {
                 kind: ControlKind::Other,
                 links: target
-                    .map(|target| BranchLink { kind: LineageKind::NativeLink, target })
+                    .map(|target| BranchLink {
+                        kind: LineageKind::NativeLink,
+                        target,
+                    })
                     .into_iter()
                     .collect(),
             });
         }
         kind if kind.starts_with("subagent.") => {
             let mut links = Vec::new();
-            if let Some(target) = participant.map(str::to_owned).or_else(|| nonempty_string(data, "agentId")) {
-                links.push(BranchLink { kind: LineageKind::Subagent, target });
+            if let Some(target) = participant
+                .map(str::to_owned)
+                .or_else(|| nonempty_string(data, "agentId"))
+            {
+                links.push(BranchLink {
+                    kind: LineageKind::Subagent,
+                    target,
+                });
             }
             if let Some(target) = nonempty_string(data, "parentId") {
-                links.push(BranchLink { kind: LineageKind::Parent, target });
+                links.push(BranchLink {
+                    kind: LineageKind::Parent,
+                    target,
+                });
             }
-            facets.push(ObservationFacet::Control { kind: ControlKind::Branch, links });
+            facets.push(ObservationFacet::Control {
+                kind: ControlKind::Branch,
+                links,
+            });
         }
-        "abort" => facets.push(ObservationFacet::Control { kind: ControlKind::Other, links: Vec::new() }),
+        "abort" => facets.push(ObservationFacet::Control {
+            kind: ControlKind::Other,
+            links: Vec::new(),
+        }),
         _ => {}
     }
 }
@@ -587,12 +684,19 @@ fn inspect_legacy_array(
     issues: &mut Vec<AvailabilityIssue>,
 ) -> Result<(), QueryFailure> {
     let Some(items) = value.as_array() else {
-        issues.push(issue(source.id, Some(FieldId::Parts), None, AvailabilityCode::ProjectionMissing));
+        issues.push(issue(
+            source.id,
+            Some(FieldId::Parts),
+            None,
+            AvailabilityCode::ProjectionMissing,
+        ));
         return Ok(());
     };
     for (index, item) in items.iter().enumerate() {
         if observations.len() >= limits.max_observations_and_rows {
-            return Err(QueryFailure::limit(unisphere_core::query::LimitKind::ObservationsAndRows));
+            return Err(QueryFailure::limit(
+                unisphere_core::query::LimitKind::ObservationsAndRows,
+            ));
         }
         let key = format!("document#/{view}/{index}");
         let mut observation_issues = Vec::new();
@@ -600,26 +704,55 @@ fn inspect_legacy_array(
         let data = item.as_object();
         let native_id = data.and_then(|data| nonempty_string(data, "id"));
         let timestamp = if view == "timeline" {
-            event_timestamp(data.and_then(|data| data.get("timestamp")), source.id, None, &mut observation_issues)
+            event_timestamp(
+                data.and_then(|data| data.get("timestamp")),
+                source.id,
+                None,
+                &mut observation_issues,
+            )
         } else {
-            observation_issues.push(issue(source.id, Some(FieldId::Timestamp), None, AvailabilityCode::NotCaptured));
+            observation_issues.push(issue(
+                source.id,
+                Some(FieldId::Timestamp),
+                None,
+                AvailabilityCode::NotCaptured,
+            ));
             None
         };
         if let Some(data) = data {
             if view == "chatMessages" {
-                legacy_chat_facets(data, access, source.id, &mut facets, &mut observation_issues);
+                legacy_chat_facets(
+                    data,
+                    access,
+                    source.id,
+                    &mut facets,
+                    &mut observation_issues,
+                );
             } else {
-                legacy_timeline_facets(data, access, source.id, &mut facets, &mut observation_issues);
+                legacy_timeline_facets(
+                    data,
+                    access,
+                    source.id,
+                    &mut facets,
+                    &mut observation_issues,
+                );
             }
         } else {
-            observation_issues.push(issue(source.id, Some(FieldId::Parts), None, AvailabilityCode::ProjectionMissing));
+            observation_issues.push(issue(
+                source.id,
+                Some(FieldId::Parts),
+                None,
+                AvailabilityCode::ProjectionMissing,
+            ));
         }
         issues.extend(observation_issues.iter().cloned());
         observations.push(Observation {
             source_ref: snapshot_ref(source, &key, view),
             native_record_id: native_id,
             session: session.clone(),
-            branch: BranchEvidence::Linear { partition: partition.id },
+            branch: BranchEvidence::Linear {
+                partition: partition.id,
+            },
             parent_ids: Vec::new(),
             sequence: snapshot_sequence(&key),
             timestamp,
@@ -644,7 +777,18 @@ fn legacy_chat_facets(
         _ => MessageRole::Unknown,
     };
     let call_id = nonempty_string(data, "tool_call_id");
-    let parts = legacy_text_parts(data, "content", access, if role == MessageRole::Tool { FieldId::Output } else { FieldId::Text }, source_id, issues);
+    let parts = legacy_text_parts(
+        data,
+        "content",
+        access,
+        if role == MessageRole::Tool {
+            FieldId::Output
+        } else {
+            FieldId::Text
+        },
+        source_id,
+        issues,
+    );
     facets.push(ObservationFacet::Message {
         native_id: None,
         role,
@@ -673,15 +817,31 @@ fn legacy_chat_facets(
     } else if let Some(calls) = data.get("tool_calls").and_then(Value::as_array) {
         for call in calls.iter().filter_map(Value::as_object) {
             if call.get("type").and_then(Value::as_str) != Some("function") {
-                issues.push(issue(source_id, Some(FieldId::Input), None, AvailabilityCode::NotSupported));
+                issues.push(issue(
+                    source_id,
+                    Some(FieldId::Input),
+                    None,
+                    AvailabilityCode::NotSupported,
+                ));
                 continue;
             }
-            let Some(function) = call.get("function").and_then(Value::as_object) else { continue };
+            let Some(function) = call.get("function").and_then(Value::as_object) else {
+                continue;
+            };
             let (Some(native_call_id), Some(native_name)) = (
                 nonempty_string(call, "id"),
                 nonempty_string(function, "name"),
-            ) else { continue };
-            let input = gated_value(function.get("arguments"), access, FieldId::Input, source_id, None, issues);
+            ) else {
+                continue;
+            };
+            let input = gated_value(
+                function.get("arguments"),
+                access,
+                FieldId::Input,
+                source_id,
+                None,
+                issues,
+            );
             facets.push(ObservationFacet::ToolCall {
                 native_call_id,
                 family: tool_family(&native_name).map(str::to_owned),
@@ -700,40 +860,79 @@ fn legacy_timeline_facets(
     facets: &mut Vec<ObservationFacet>,
     issues: &mut Vec<AvailabilityIssue>,
 ) {
-    let kind = data.get("type").and_then(Value::as_str).unwrap_or("unknown");
+    let kind = data
+        .get("type")
+        .and_then(Value::as_str)
+        .unwrap_or("unknown");
     match kind {
         "user" | "copilot" => facets.push(ObservationFacet::Message {
             native_id: nonempty_string(data, "id"),
-            role: if kind == "user" { MessageRole::User } else { MessageRole::Assistant },
+            role: if kind == "user" {
+                MessageRole::User
+            } else {
+                MessageRole::Assistant
+            },
             parts: legacy_timeline_parts(data, access, source_id, issues),
-            request_marker: if kind == "user" { RequestMarker::Initiating } else { RequestMarker::Unknown },
+            request_marker: if kind == "user" {
+                RequestMarker::Initiating
+            } else {
+                RequestMarker::Unknown
+            },
             turn_id: None,
         }),
         "tool_call_requested" => {
-            let Some(native_call_id) = nonempty_string(data, "callId") else { return };
-            let Some(native_name) = nonempty_string(data, "name") else { return };
+            let Some(native_call_id) = nonempty_string(data, "callId") else {
+                return;
+            };
+            let Some(native_name) = nonempty_string(data, "name") else {
+                return;
+            };
             facets.push(ObservationFacet::ToolCall {
                 family: tool_family(&native_name).map(str::to_owned),
                 native_call_id,
                 native_name,
-                input: gated_value(data.get("arguments"), access, FieldId::Input, source_id, None, issues),
+                input: gated_value(
+                    data.get("arguments"),
+                    access,
+                    FieldId::Input,
+                    source_id,
+                    None,
+                    issues,
+                ),
                 turn_id: None,
             });
         }
         "tool_call_completed" => {
-            let Some(native_call_id) = nonempty_string(data, "callId") else { return };
+            let Some(native_call_id) = nonempty_string(data, "callId") else {
+                return;
+            };
             facets.push(ObservationFacet::ToolResult {
                 native_call_id,
                 native_name: nonempty_string(data, "name"),
-                output: gated_value(data.get("result"), access, FieldId::Output, source_id, None, issues),
+                output: gated_value(
+                    data.get("result"),
+                    access,
+                    FieldId::Output,
+                    source_id,
+                    None,
+                    issues,
+                ),
                 outcome: Outcome::Unknown,
                 exit_code: None,
                 reported_duration_ms: None,
                 turn_id: None,
             });
         }
-        "info" => facets.push(ObservationFacet::Control { kind: ControlKind::Other, links: Vec::new() }),
-        _ => issues.push(issue(source_id, Some(FieldId::Kind), None, AvailabilityCode::NotSupported)),
+        "info" => facets.push(ObservationFacet::Control {
+            kind: ControlKind::Other,
+            links: Vec::new(),
+        }),
+        _ => issues.push(issue(
+            source_id,
+            Some(FieldId::Kind),
+            None,
+            AvailabilityCode::NotSupported,
+        )),
     }
 }
 
@@ -777,13 +976,19 @@ fn check_input_bytes(
     retains_payload: bool,
 ) -> Result<(), QueryFailure> {
     if bytes > limits.max_source_bytes {
-        return Err(QueryFailure::limit(unisphere_core::query::LimitKind::SourceBytes));
+        return Err(QueryFailure::limit(
+            unisphere_core::query::LimitKind::SourceBytes,
+        ));
     }
     if bytes > limits.max_total_input_bytes {
-        return Err(QueryFailure::limit(unisphere_core::query::LimitKind::TotalInputBytes));
+        return Err(QueryFailure::limit(
+            unisphere_core::query::LimitKind::TotalInputBytes,
+        ));
     }
     if retains_payload && bytes > limits.max_retained_bytes {
-        return Err(QueryFailure::limit(unisphere_core::query::LimitKind::RetainedBytes));
+        return Err(QueryFailure::limit(
+            unisphere_core::query::LimitKind::RetainedBytes,
+        ));
     }
     Ok(())
 }
@@ -806,11 +1011,18 @@ fn ensure_partition(
     view: SourceViewKind,
     membership: MembershipPolicy,
 ) -> PartitionId {
-    let key = (session_id.map(str::to_owned), participant.map(str::to_owned));
+    let key = (
+        session_id.map(str::to_owned),
+        participant.map(str::to_owned),
+    );
     if let Some(index) = indices.get(&key) {
         return partitions[*index].id;
     }
-    let native_key = format!("current\0{}\0{}", session_id.unwrap_or(""), participant.unwrap_or(""));
+    let native_key = format!(
+        "current\0{}\0{}",
+        session_id.unwrap_or(""),
+        participant.unwrap_or("")
+    );
     let id = PartitionId::derive(source_id, native_key.as_bytes());
     indices.insert(key, partitions.len());
     partitions.push(SourcePartition {
@@ -849,9 +1061,16 @@ struct ContextPoint {
     branch: Option<String>,
 }
 
-fn context_point(partition: PartitionId, start: NativeSequence, data: &Map<String, Value>) -> ContextPoint {
+fn context_point(
+    partition: PartitionId,
+    start: NativeSequence,
+    data: &Map<String, Value>,
+) -> ContextPoint {
     let mut paths = Vec::new();
-    for (field, basis) in [("cwd", AssociationBasis::NativeCwd), ("gitRoot", AssociationBasis::NativeGitRoot)] {
+    for (field, basis) in [
+        ("cwd", AssociationBasis::NativeCwd),
+        ("gitRoot", AssociationBasis::NativeGitRoot),
+    ] {
         if let Some(path) = nonempty_string(data, field).map(PathBuf::from)
             && path.is_absolute()
         {
@@ -871,15 +1090,27 @@ fn apply_context_intervals(
     points: &BTreeMap<PartitionId, Vec<ContextPoint>>,
 ) {
     for partition in partitions {
-        let Some(points) = points.get(&partition.id) else { continue };
+        let Some(points) = points.get(&partition.id) else {
+            continue;
+        };
         for (index, point) in points.iter().enumerate() {
             let until = points.get(index + 1).map(|next| next.start.clone());
-            partition.associations.extend(point.paths.iter().map(|(basis, path)| AssociationObservation {
-                basis: *basis,
-                path: Some(path.clone()),
-                partition: point.partition,
-                applies_to: AssociationExtent::From { start: point.start.clone(), until: until.clone() },
-            }));
+            partition
+                .associations
+                .extend(
+                    point
+                        .paths
+                        .iter()
+                        .map(|(basis, path)| AssociationObservation {
+                            basis: *basis,
+                            path: Some(path.clone()),
+                            partition: point.partition,
+                            applies_to: AssociationExtent::From {
+                                start: point.start.clone(),
+                                until: until.clone(),
+                            },
+                        }),
+                );
         }
     }
 }
@@ -922,7 +1153,9 @@ fn message_parts(
                 if reasoning {
                     parts.push(ObservationPart::Reasoning(text.into()));
                 } else if *field == "transformedContent" {
-                    parts.push(ObservationPart::Structured(serde_json::json!({"transformed_text": text})));
+                    parts.push(ObservationPart::Structured(
+                        serde_json::json!({"transformed_text": text}),
+                    ));
                 } else {
                     parts.push(ObservationPart::Text(text.into()));
                 }
@@ -932,12 +1165,27 @@ fn message_parts(
         }
     }
     if omitted {
-        parts.push(ObservationPart::Unavailable(AvailabilityCode::SensitiveOmitted));
-        issues.push(issue(source_id, Some(FieldId::Parts), Some(offset), AvailabilityCode::SensitiveOmitted));
+        parts.push(ObservationPart::Unavailable(
+            AvailabilityCode::SensitiveOmitted,
+        ));
+        issues.push(issue(
+            source_id,
+            Some(FieldId::Parts),
+            Some(offset),
+            AvailabilityCode::SensitiveOmitted,
+        ));
     }
-    if data.get("attachments").is_some_and(|value| !value.is_null()) {
+    if data
+        .get("attachments")
+        .is_some_and(|value| !value.is_null())
+    {
         parts.push(ObservationPart::Unavailable(AvailabilityCode::NotSupported));
-        issues.push(issue(source_id, Some(FieldId::Parts), Some(offset), AvailabilityCode::NotSupported));
+        issues.push(issue(
+            source_id,
+            Some(FieldId::Parts),
+            Some(offset),
+            AvailabilityCode::NotSupported,
+        ));
     }
     parts
 }
@@ -946,25 +1194,41 @@ fn push_tool_call(
     data: &Map<String, Value>,
     name_field: &str,
     access: &ContentAccess,
-    source_id: unisphere_core::query::SourceId,
-    offset: u64,
+    (source_id, offset): (unisphere_core::query::SourceId, u64),
     turn_id: Option<String>,
     facets: &mut Vec<ObservationFacet>,
     issues: &mut Vec<AvailabilityIssue>,
 ) {
     let Some(native_call_id) = nonempty_string(data, "toolCallId") else {
-        issues.push(issue(source_id, Some(FieldId::CallId), Some(offset), AvailabilityCode::NotCaptured));
+        issues.push(issue(
+            source_id,
+            Some(FieldId::CallId),
+            Some(offset),
+            AvailabilityCode::NotCaptured,
+        ));
         return;
     };
     let Some(native_name) = nonempty_string(data, name_field) else {
-        issues.push(issue(source_id, Some(FieldId::ToolName), Some(offset), AvailabilityCode::NotCaptured));
+        issues.push(issue(
+            source_id,
+            Some(FieldId::ToolName),
+            Some(offset),
+            AvailabilityCode::NotCaptured,
+        ));
         return;
     };
     facets.push(ObservationFacet::ToolCall {
         family: tool_family(&native_name).map(str::to_owned),
         native_call_id,
         native_name,
-        input: gated_value(data.get("arguments"), access, FieldId::Input, source_id, Some(offset), issues),
+        input: gated_value(
+            data.get("arguments"),
+            access,
+            FieldId::Input,
+            source_id,
+            Some(offset),
+            issues,
+        ),
         turn_id,
     });
 }
@@ -976,9 +1240,23 @@ fn tool_output(
     offset: u64,
     issues: &mut Vec<AvailabilityIssue>,
 ) -> Vec<ObservationPart> {
-    let mut output = gated_value(data.get("result"), access, FieldId::Output, source_id, Some(offset), issues);
+    let mut output = gated_value(
+        data.get("result"),
+        access,
+        FieldId::Output,
+        source_id,
+        Some(offset),
+        issues,
+    );
     if let Some(error) = data.get("error") {
-        output.extend(gated_value(Some(error), access, FieldId::Output, source_id, Some(offset), issues));
+        output.extend(gated_value(
+            Some(error),
+            access,
+            FieldId::Output,
+            source_id,
+            Some(offset),
+            issues,
+        ));
     }
     output
 }
@@ -1007,8 +1285,15 @@ fn progress_parts(
         }
     }
     if found && !allowed {
-        parts.push(ObservationPart::Unavailable(AvailabilityCode::SensitiveOmitted));
-        issues.push(issue(source_id, Some(field), Some(offset), AvailabilityCode::SensitiveOmitted));
+        parts.push(ObservationPart::Unavailable(
+            AvailabilityCode::SensitiveOmitted,
+        ));
+        issues.push(issue(
+            source_id,
+            Some(field),
+            Some(offset),
+            AvailabilityCode::SensitiveOmitted,
+        ));
     }
     parts
 }
@@ -1021,10 +1306,19 @@ fn gated_value(
     offset: Option<u64>,
     issues: &mut Vec<AvailabilityIssue>,
 ) -> Vec<ObservationPart> {
-    let Some(value) = value else { return Vec::new() };
+    let Some(value) = value else {
+        return Vec::new();
+    };
     if !access.permits_payload(field) {
-        issues.push(issue(source_id, Some(field), offset, AvailabilityCode::SensitiveOmitted));
-        return vec![ObservationPart::Unavailable(AvailabilityCode::SensitiveOmitted)];
+        issues.push(issue(
+            source_id,
+            Some(field),
+            offset,
+            AvailabilityCode::SensitiveOmitted,
+        ));
+        return vec![ObservationPart::Unavailable(
+            AvailabilityCode::SensitiveOmitted,
+        )];
     }
     vec![match value {
         Value::String(text) => ObservationPart::Text(text.clone()),
@@ -1040,7 +1334,14 @@ fn legacy_text_parts(
     source_id: unisphere_core::query::SourceId,
     issues: &mut Vec<AvailabilityIssue>,
 ) -> Vec<ObservationPart> {
-    gated_value(data.get(field), access, query_field, source_id, None, issues)
+    gated_value(
+        data.get(field),
+        access,
+        query_field,
+        source_id,
+        None,
+        issues,
+    )
 }
 
 fn legacy_timeline_parts(
@@ -1056,7 +1357,9 @@ fn legacy_timeline_parts(
                 serde_json::json!({"transformed_text": expanded}),
             ));
         } else {
-            parts.push(ObservationPart::Unavailable(AvailabilityCode::SensitiveOmitted));
+            parts.push(ObservationPart::Unavailable(
+                AvailabilityCode::SensitiveOmitted,
+            ));
             issues.push(issue(
                 source_id,
                 Some(FieldId::Text),
@@ -1093,14 +1396,23 @@ fn event_links(kind: &str, data: Option<&Map<String, Value>>) -> Vec<BranchLink>
     let Some(data) = data else { return Vec::new() };
     let mut links = Vec::new();
     if let Some(target) = nonempty_string(data, "detachedFromSpawningParentSessionId") {
-        links.push(BranchLink { kind: LineageKind::Parent, target });
+        links.push(BranchLink {
+            kind: LineageKind::Parent,
+            target,
+        });
     }
     if kind.starts_with("subagent.") {
         if let Some(target) = nonempty_string(data, "parentId") {
-            links.push(BranchLink { kind: LineageKind::Parent, target });
+            links.push(BranchLink {
+                kind: LineageKind::Parent,
+                target,
+            });
         }
         if let Some(target) = nonempty_string(data, "agentId") {
-            links.push(BranchLink { kind: LineageKind::Subagent, target });
+            links.push(BranchLink {
+                kind: LineageKind::Subagent,
+                target,
+            });
         }
     }
     links
@@ -1137,7 +1449,12 @@ fn token(
     let value = data.get(field)?;
     let token = value.as_u64();
     if token.is_none() {
-        issues.push(issue(source_id, Some(token_field(field)), Some(offset), AvailabilityCode::ProjectionMissing));
+        issues.push(issue(
+            source_id,
+            Some(token_field(field)),
+            Some(offset),
+            AvailabilityCode::ProjectionMissing,
+        ));
     }
     token
 }
@@ -1158,7 +1475,12 @@ fn event_timestamp(
     issues: &mut Vec<AvailabilityIssue>,
 ) -> Option<Timestamp> {
     if value.is_none() {
-        issues.push(issue(source_id, Some(FieldId::Timestamp), offset, AvailabilityCode::NotCaptured));
+        issues.push(issue(
+            source_id,
+            Some(FieldId::Timestamp),
+            offset,
+            AvailabilityCode::NotCaptured,
+        ));
         return None;
     }
     optional_timestamp(value, source_id, offset, issues)
@@ -1175,7 +1497,12 @@ fn optional_timestamp(
         .as_str()
         .and_then(|value| Timestamp::parse(value, TimestampBasis::Native).ok());
     if parsed.is_none() {
-        issues.push(issue(source_id, Some(FieldId::Timestamp), offset, AvailabilityCode::InvalidClock));
+        issues.push(issue(
+            source_id,
+            Some(FieldId::Timestamp),
+            offset,
+            AvailabilityCode::InvalidClock,
+        ));
     }
     parsed
 }
@@ -1190,7 +1517,10 @@ fn snapshot_ref(source: &SourceEvidence, key: &str, subrecord: &str) -> SourceRe
 }
 
 fn snapshot_sequence(key: &str) -> NativeSequence {
-    NativeSequence { version: 1, key: key.as_bytes().to_vec() }
+    NativeSequence {
+        version: 1,
+        key: key.as_bytes().to_vec(),
+    }
 }
 
 fn issue(
@@ -1199,7 +1529,13 @@ fn issue(
     offset: Option<u64>,
     code: AvailabilityCode,
 ) -> AvailabilityIssue {
-    AvailabilityIssue { code, field, source: Some(source), entity: None, offset }
+    AvailabilityIssue {
+        code,
+        field,
+        source: Some(source),
+        entity: None,
+        offset,
+    }
 }
 
 fn nonempty_string(data: &Map<String, Value>, field: &str) -> Option<String> {
@@ -1214,22 +1550,49 @@ fn permits_model(access: &ContentAccess) -> bool {
 
 fn common_fields() -> BTreeSet<FieldId> {
     BTreeSet::from([
-        FieldId::Id, FieldId::SourceRefs, FieldId::NativeId, FieldId::Harness,
-        FieldId::Adapter, FieldId::Availability, FieldId::Format, FieldId::ReadStatus,
-        FieldId::Revision, FieldId::Association, FieldId::SessionId, FieldId::BranchIds,
-        FieldId::Kind, FieldId::Timestamp, FieldId::Role, FieldId::Text, FieldId::Parts,
-        FieldId::ToolName, FieldId::ToolFamily, FieldId::Input, FieldId::Output,
-        FieldId::Status, FieldId::StatusReason, FieldId::CallId,
-        FieldId::MessageId, FieldId::TurnId, FieldId::InputTokens, FieldId::OutputTokens,
-        FieldId::CacheReadTokens, FieldId::CacheWriteTokens,
+        FieldId::Id,
+        FieldId::SourceRefs,
+        FieldId::NativeId,
+        FieldId::Harness,
+        FieldId::Adapter,
+        FieldId::Availability,
+        FieldId::Format,
+        FieldId::ReadStatus,
+        FieldId::Revision,
+        FieldId::Association,
+        FieldId::SessionId,
+        FieldId::BranchIds,
+        FieldId::Kind,
+        FieldId::Timestamp,
+        FieldId::Role,
+        FieldId::Text,
+        FieldId::Parts,
+        FieldId::ToolName,
+        FieldId::ToolFamily,
+        FieldId::Input,
+        FieldId::Output,
+        FieldId::Status,
+        FieldId::StatusReason,
+        FieldId::CallId,
+        FieldId::MessageId,
+        FieldId::TurnId,
+        FieldId::InputTokens,
+        FieldId::OutputTokens,
+        FieldId::CacheReadTokens,
+        FieldId::CacheWriteTokens,
     ])
 }
 
 fn current_fields() -> BTreeSet<FieldId> {
     let mut fields = common_fields();
     fields.extend([
-        FieldId::Name, FieldId::Models, FieldId::Model, FieldId::ProjectPath,
-        FieldId::StartedAt, FieldId::FirstEventAt, FieldId::ParentIds,
+        FieldId::Name,
+        FieldId::Models,
+        FieldId::Model,
+        FieldId::ProjectPath,
+        FieldId::StartedAt,
+        FieldId::FirstEventAt,
+        FieldId::ParentIds,
     ]);
     fields
 }

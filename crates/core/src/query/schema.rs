@@ -144,6 +144,7 @@ const ORDERED: &[Predicate] = &[
     Predicate::Has,
 ];
 const HAS: &[Predicate] = &[Predicate::Has];
+const NO_PREDICATES: &[Predicate] = &[];
 
 macro_rules! field {
     ($id:ident, $ty:ident, $nullable:expr, $sensitivity:ident, $availability:ident, $predicates:expr) => {
@@ -240,6 +241,51 @@ const SESSION_FIELDS: &[FieldSchema] = &[
         ORDERED
     ),
     field!(TranscriptAvailable, Bool, false, Metadata, Required, EQ),
+    field!(
+        Count,
+        U64,
+        false,
+        Count,
+        Metadata,
+        ProjectedOptional,
+        NO_PREDICATES
+    ),
+    field!(
+        InputTokens,
+        U64,
+        true,
+        Tokens,
+        Metadata,
+        SourceQualified,
+        NO_PREDICATES
+    ),
+    field!(
+        OutputTokens,
+        U64,
+        true,
+        Tokens,
+        Metadata,
+        SourceQualified,
+        NO_PREDICATES
+    ),
+    field!(
+        CacheReadTokens,
+        U64,
+        true,
+        Tokens,
+        Metadata,
+        SourceQualified,
+        NO_PREDICATES
+    ),
+    field!(
+        CacheWriteTokens,
+        U64,
+        true,
+        Tokens,
+        Metadata,
+        SourceQualified,
+        NO_PREDICATES
+    ),
 ];
 const TURN_FIELDS: &[FieldSchema] = &[
     field!(Id, EntityId, false, Metadata, Required, EQ),
@@ -248,6 +294,14 @@ const TURN_FIELDS: &[FieldSchema] = &[
     field!(Harness, String, false, Metadata, Required, EQ),
     field!(Adapter, String, false, Metadata, Required, EQ),
     field!(Availability, EnumList, false, Metadata, Required, HAS),
+    field!(
+        IsContext,
+        Bool,
+        false,
+        Metadata,
+        ProjectedOptional,
+        NO_PREDICATES
+    ),
     field!(SessionId, EntityId, false, Metadata, Required, EQ),
     field!(BranchIds, IdList, false, Metadata, SourceQualified, HAS),
     field!(Ordinal, U64, false, Count, Metadata, Required, ORDERED),
@@ -275,6 +329,51 @@ const TURN_FIELDS: &[FieldSchema] = &[
         ORDERED
     ),
     field!(BoundaryBasis, String, false, Metadata, SourceQualified, EQ),
+    field!(
+        Count,
+        U64,
+        false,
+        Count,
+        Metadata,
+        ProjectedOptional,
+        NO_PREDICATES
+    ),
+    field!(
+        InputTokens,
+        U64,
+        true,
+        Tokens,
+        Metadata,
+        SourceQualified,
+        NO_PREDICATES
+    ),
+    field!(
+        OutputTokens,
+        U64,
+        true,
+        Tokens,
+        Metadata,
+        SourceQualified,
+        NO_PREDICATES
+    ),
+    field!(
+        CacheReadTokens,
+        U64,
+        true,
+        Tokens,
+        Metadata,
+        SourceQualified,
+        NO_PREDICATES
+    ),
+    field!(
+        CacheWriteTokens,
+        U64,
+        true,
+        Tokens,
+        Metadata,
+        SourceQualified,
+        NO_PREDICATES
+    ),
 ];
 const MESSAGE_FIELDS: &[FieldSchema] = &[
     field!(Id, EntityId, false, Metadata, Required, EQ),
@@ -283,6 +382,14 @@ const MESSAGE_FIELDS: &[FieldSchema] = &[
     field!(Harness, String, false, Metadata, Required, EQ),
     field!(Adapter, String, false, Metadata, Required, EQ),
     field!(Availability, EnumList, false, Metadata, Required, HAS),
+    field!(
+        IsContext,
+        Bool,
+        false,
+        Metadata,
+        ProjectedOptional,
+        NO_PREDICATES
+    ),
     field!(SessionId, EntityId, false, Metadata, Required, EQ),
     field!(BranchIds, IdList, false, Metadata, SourceQualified, HAS),
     field!(TurnId, EntityId, true, Metadata, SourceQualified, EQ),
@@ -337,6 +444,168 @@ const TOOL_FIELDS: &[FieldSchema] = &[
     field!(Input, Structured, true, Sensitive, ProjectedOptional, HAS),
     field!(Output, Structured, true, Sensitive, ProjectedOptional, HAS),
     field!(Model, String, true, Sensitive, SourceQualified, TEXT),
+    field!(
+        Count,
+        U64,
+        false,
+        Count,
+        Metadata,
+        ProjectedOptional,
+        NO_PREDICATES
+    ),
+    field!(
+        MeasuredCount,
+        U64,
+        false,
+        Count,
+        Metadata,
+        ProjectedOptional,
+        NO_PREDICATES
+    ),
+    field!(
+        MissingDurationCount,
+        U64,
+        false,
+        Count,
+        Metadata,
+        ProjectedOptional,
+        NO_PREDICATES
+    ),
+    field!(
+        Succeeded,
+        U64,
+        false,
+        Count,
+        Metadata,
+        ProjectedOptional,
+        NO_PREDICATES
+    ),
+    field!(
+        Failures,
+        U64,
+        false,
+        Count,
+        Metadata,
+        ProjectedOptional,
+        NO_PREDICATES
+    ),
+    field!(
+        Cancelled,
+        U64,
+        false,
+        Count,
+        Metadata,
+        ProjectedOptional,
+        NO_PREDICATES
+    ),
+    field!(
+        Incomplete,
+        U64,
+        false,
+        Count,
+        Metadata,
+        ProjectedOptional,
+        NO_PREDICATES
+    ),
+    field!(
+        Unknown,
+        U64,
+        false,
+        Count,
+        Metadata,
+        ProjectedOptional,
+        NO_PREDICATES
+    ),
+    field!(
+        FailureRate,
+        FiniteF64,
+        true,
+        Ratio,
+        Metadata,
+        ProjectedOptional,
+        NO_PREDICATES
+    ),
+    field!(
+        MeanMs,
+        FiniteF64,
+        true,
+        Milliseconds,
+        Metadata,
+        ProjectedOptional,
+        NO_PREDICATES
+    ),
+    field!(
+        MinMs,
+        FiniteF64,
+        true,
+        Milliseconds,
+        Metadata,
+        ProjectedOptional,
+        NO_PREDICATES
+    ),
+    field!(
+        MaxMs,
+        FiniteF64,
+        true,
+        Milliseconds,
+        Metadata,
+        ProjectedOptional,
+        NO_PREDICATES
+    ),
+    field!(
+        P50Ms,
+        FiniteF64,
+        true,
+        Milliseconds,
+        Metadata,
+        ProjectedOptional,
+        NO_PREDICATES
+    ),
+    field!(
+        P95Ms,
+        FiniteF64,
+        true,
+        Milliseconds,
+        Metadata,
+        ProjectedOptional,
+        NO_PREDICATES
+    ),
+    field!(
+        InputTokens,
+        U64,
+        true,
+        Tokens,
+        Metadata,
+        SourceQualified,
+        NO_PREDICATES
+    ),
+    field!(
+        OutputTokens,
+        U64,
+        true,
+        Tokens,
+        Metadata,
+        SourceQualified,
+        NO_PREDICATES
+    ),
+    field!(
+        CacheReadTokens,
+        U64,
+        true,
+        Tokens,
+        Metadata,
+        SourceQualified,
+        NO_PREDICATES
+    ),
+    field!(
+        CacheWriteTokens,
+        U64,
+        true,
+        Tokens,
+        Metadata,
+        SourceQualified,
+        NO_PREDICATES
+    ),
 ];
 const EVENT_FIELDS: &[FieldSchema] = &[
     field!(Id, EntityId, false, Metadata, Required, EQ),

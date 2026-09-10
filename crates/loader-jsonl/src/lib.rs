@@ -23,7 +23,7 @@ impl FileSessionLoader {
 ///
 /// Unlike [`ReadCursor`], `revision` identifies every observed physical byte,
 /// including blank records and LF framing. It is not an append checkpoint.
-#[derive(Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq)]
 pub struct QueryJsonlSnapshot {
     pub source: SessionRef,
     pub revision: String,
@@ -101,7 +101,7 @@ mod unix {
     };
 
     use super::*;
-    use unisphere_core::{NativeRecord, PipelineErrorKind, SourceIdentity};
+    use unisphere_core::{PipelineErrorKind, SourceIdentity};
 
     fn error(kind: PipelineErrorKind, offset: Option<u64>) -> PipelineError {
         PipelineError::new(kind, offset)

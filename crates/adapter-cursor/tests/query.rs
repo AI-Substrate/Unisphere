@@ -93,7 +93,10 @@ fn transcript_keeps_native_absence_and_source_only_membership_explicit() {
         )
         .unwrap();
 
-    assert_eq!(inspected.source.query_policy_version, "cursor-transcript-query-v1");
+    assert_eq!(
+        inspected.source.query_policy_version,
+        "cursor-transcript-query-v1"
+    );
     assert_eq!(inspected.partitions.len(), 1);
     assert_eq!(inspected.partitions[0].view, SourceViewKind::SourceOnly);
     assert_eq!(
@@ -128,12 +131,22 @@ fn transcript_keeps_native_absence_and_source_only_membership_explicit() {
             _ => None,
         })
         .unwrap();
-    assert!(matches!(assistant.as_slice(), [ObservationPart::Unavailable(_)]));
-    assert!(inspected.observations.iter().all(|observation| {
-        observation
-            .facets
+    assert!(assistant.iter().any(|part| matches!(
+        part,
+        ObservationPart::Unavailable(AvailabilityCode::SensitiveOmitted)
+    )));
+    assert!(
+        assistant
             .iter()
-            .all(|facet| !matches!(facet, ObservationFacet::ToolCall { .. } | ObservationFacet::ToolResult { .. }))
+            .all(|part| matches!(part, ObservationPart::Unavailable(_)))
+    );
+    assert!(inspected.observations.iter().all(|observation| {
+        observation.facets.iter().all(|facet| {
+            !matches!(
+                facet,
+                ObservationFacet::ToolCall { .. } | ObservationFacet::ToolResult { .. }
+            )
+        })
     }));
 }
 
@@ -177,10 +190,12 @@ fn transcript_content_opt_in_does_not_invent_call_or_result_identity() {
         matches!(part, ObservationPart::Structured(value) if value["type"] == "tool_call" && value.get("id").is_none())
     }));
     assert!(inspected.observations.iter().all(|observation| {
-        observation
-            .facets
-            .iter()
-            .all(|facet| !matches!(facet, ObservationFacet::ToolCall { .. } | ObservationFacet::ToolResult { .. }))
+        observation.facets.iter().all(|facet| {
+            !matches!(
+                facet,
+                ObservationFacet::ToolCall { .. } | ObservationFacet::ToolResult { .. }
+            )
+        })
     }));
 }
 
@@ -234,7 +249,10 @@ fn ide_uses_validated_main_spine_order_and_surfaces_mixed_store_fragments() {
             .find(|observation| snapshot_key(observation) == key)
             .unwrap();
         assert!(observation.session.is_none());
-        assert!(matches!(&observation.branch, BranchEvidence::Unavailable { .. }));
+        assert!(matches!(
+            &observation.branch,
+            BranchEvidence::Unavailable { .. }
+        ));
     }
     assert!(inspected.issues.iter().any(|issue| {
         issue.code == AvailabilityCode::Unassociated
@@ -283,7 +301,9 @@ fn ide_pairs_only_native_call_ids_and_does_not_guess_success_or_duration() {
     assert_eq!(call_id, "call-a");
     assert_eq!(name, "read_file");
     assert_eq!(family.as_deref(), Some("file-read"));
-    assert!(matches!(input.as_slice(), [ObservationPart::Structured(value)] if value["path"] == "SENSITIVE-PATH"));
+    assert!(
+        matches!(input.as_slice(), [ObservationPart::Structured(value)] if value["path"] == "SENSITIVE-PATH")
+    );
     assert!(turn_id.is_none());
 
     let result = assistant.facets.iter().find_map(|facet| match facet {
@@ -300,7 +320,9 @@ fn ide_pairs_only_native_call_ids_and_does_not_guess_success_or_duration() {
     assert_eq!(result_id, "call-a");
     assert_eq!(*outcome, Outcome::Unknown);
     assert!(duration.is_none());
-    assert!(matches!(output.as_slice(), [ObservationPart::Structured(value)] if value["contents"] == "SENSITIVE-RESULT"));
+    assert!(
+        matches!(output.as_slice(), [ObservationPart::Structured(value)] if value["contents"] == "SENSITIVE-RESULT")
+    );
 }
 
 #[test]
@@ -349,15 +371,26 @@ fn ide_orphans_missing_rows_and_duplicates_are_not_repaired() {
         .find(|observation| snapshot_key(observation) == "bubbleId:alpha:alternate")
         .unwrap();
     assert!(alternate.session.is_none());
-    assert!(matches!(&alternate.branch, BranchEvidence::Unavailable { .. }));
-    assert!(inspected.issues.iter().any(|issue| issue.code == AvailabilityCode::Absent));
+    assert!(matches!(
+        &alternate.branch,
+        BranchEvidence::Unavailable { .. }
+    ));
+    assert!(
+        inspected
+            .issues
+            .iter()
+            .any(|issue| issue.code == AvailabilityCode::Absent)
+    );
     let idless_tool = inspected
         .observations
         .iter()
         .find(|observation| snapshot_key(observation) == "bubbleId:alpha:a")
         .unwrap();
     assert!(idless_tool.facets.iter().all(|facet| {
-        !matches!(facet, ObservationFacet::ToolCall { .. } | ObservationFacet::ToolResult { .. })
+        !matches!(
+            facet,
+            ObservationFacet::ToolCall { .. } | ObservationFacet::ToolResult { .. }
+        )
     }));
     assert!(idless_tool.diagnostics.iter().any(|issue| {
         issue.code == AvailabilityCode::NotCaptured

@@ -60,9 +60,10 @@ fn validate(response: &QueryResponse, options: &QueryOutputOptions) -> Result<()
     if response.schema_version != 1
         || response.query.dataset != response.dataset
         || response.emitted != response.rows.len() as u64
-        || response.rows.iter().any(|row| {
-            row.schema_version() != 1 || row.dataset() != response.dataset
-        })
+        || response
+            .rows
+            .iter()
+            .any(|row| row.schema_version() != 1 || row.dataset() != response.dataset)
     {
         return Err(QueryFailure::invalid_data());
     }
@@ -364,13 +365,7 @@ fn encode_text(response: &QueryResponse, output: &mut dyn Write) -> io::Result<(
         if index != 0 {
             output.write_all(b"\n")?;
         }
-        writeln!(
-            output,
-            "Row {}: {} {}",
-            index + 1,
-            row.dataset(),
-            row.id()
-        )?;
+        writeln!(output, "Row {}: {} {}", index + 1, row.dataset(), row.id())?;
         if !row.source_refs().is_empty() {
             output.write_all(b"source_refs: ")?;
             write_human_json(output, row.source_refs(), EscapeStyle::Text)?;
@@ -488,8 +483,8 @@ struct EscapingWriter<'a> {
 
 impl Write for EscapingWriter<'_> {
     fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {
-        let value = std::str::from_utf8(bytes)
-            .map_err(|_| io::Error::from(io::ErrorKind::InvalidData))?;
+        let value =
+            std::str::from_utf8(bytes).map_err(|_| io::Error::from(io::ErrorKind::InvalidData))?;
         for character in value.chars() {
             if character.is_control() {
                 if matches!(self.style, EscapeStyle::Markdown) {
@@ -509,8 +504,11 @@ impl Write for EscapingWriter<'_> {
                 (EscapeStyle::Markdown, '&') => self.output.write_all(b"&amp;")?,
                 (EscapeStyle::Markdown, '<') => self.output.write_all(b"&lt;")?,
                 (EscapeStyle::Markdown, '>') => self.output.write_all(b"&gt;")?,
-                (EscapeStyle::Markdown, '\\' | '`' | '*' | '_' | '{' | '}' | '[' | ']'
-                    | '(' | ')' | '#' | '+' | '-' | '.' | '!' | '|') => {
+                (
+                    EscapeStyle::Markdown,
+                    '\\' | '`' | '*' | '_' | '{' | '}' | '[' | ']' | '(' | ')' | '#' | '+' | '-'
+                    | '.' | '!' | '|',
+                ) => {
                     self.output.write_all(b"\\")?;
                     let mut encoded = [0; 4];
                     self.output

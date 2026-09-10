@@ -1,8 +1,6 @@
-use unisphere_core::query::{
-    QueryApi, QueryFailure, QueryRequest, QueryResponse, QuerySource,
-};
+use unisphere_core::query::{QueryApi, QueryFailure, QueryRequest, QueryResponse, QuerySource};
 
-use super::{engine, QueryView};
+use super::{QueryView, engine};
 
 /// Injected query application service. It acquires one bounded source view per
 /// [`QueryApi::execute`] call and has no ambient filesystem or process access.
@@ -26,12 +24,9 @@ impl<S: QuerySource> QueryService<S> {
         request.validate()?;
         let selection = engine::source_selection(request)?;
         let access = request.content_access()?;
-        let input = self.source.load(
-            &request.scope,
-            &selection,
-            &request.limits,
-            access.clone(),
-        )?;
+        let input =
+            self.source
+                .load(&request.scope, &selection, &request.limits, access.clone())?;
         QueryView::from_input_for(
             input,
             request.scope.clone(),

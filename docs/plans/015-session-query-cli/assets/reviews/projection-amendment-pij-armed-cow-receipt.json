@@ -1,0 +1,145 @@
+{
+  "record_type": "review",
+  "id": "rv-plan015-projection-amendment-pij-armed-cow",
+  "kind": "compatibility-delta-review",
+  "scope": "decomposition",
+  "scope_note": "Compatibility and actual delta only; not an acceptance and not a seal. The sealed wave0 baseline records stay immutable.",
+  "plan": "docs/plans/015-session-query-cli/plan.dd.json",
+  "plan_sha256": "23e11ee7ec867315349aab8df11282da08bf211a6c86e27a3782292ba5bcecef",
+  "guide": "docs/plans/015-session-query-cli/assets/impl-guide.dd.json",
+  "guide_sha256": "5caed35ffa6f28570c16b6bc42baf47ce4403012069e429eeeaeb4e02f04c88f",
+  "guide_version": 6,
+  "subject_sha": "99ea782e86fc1ebc4ea09bf8d4e7624dc87dc3bc",
+  "subject_role": "sealed parent of both deltas",
+  "delta_shas": {
+    "contracts": "4752f95c41d70cdf868d9ea3f3ca20a1083d54fe",
+    "proof": "cb1fded942e986816a6a58ffeab7f8c826e1327a"
+  },
+  "report": "docs/plans/015-session-query-cli/assets/reviews/projection-amendment-pij-armed-cow.json",
+  "report_sha256": "b8fe424e3acf9c9b10d65250edb30dc86b31fe75d5b14a91dc9ea5f7cb30ede7",
+  "reviewer": "pij-armed-cow",
+  "reviewer_runtime": {
+    "harness": "omp",
+    "model_id_exposed": "github-copilot/claude-opus-5",
+    "effort_exposed": "high",
+    "settings_source": "guide",
+    "native_session": "01a08872-82bb-7641-b1dc-3964616e3e0a",
+    "attestation": "locally observed configuration strings only; no provider attestation"
+  },
+  "recorded_at": "2026-09-10T05:30:00Z",
+  "verdict": "changes-requested",
+  "requires_rebaseline": false,
+  "rebaseline_answer": "PM-owned implementation correction. C8 and C18 already mandate both behaviours, and the sealed baseline could not construct a stats row at all. Only one additive C18 text repair is needed (A5), of the same class as the accepted N1 repair to C21.",
+  "acceptance": "none granted; PM proof of the composed contracts is the gate",
+  "findings": [
+    {
+      "id": "A1",
+      "severity": "medium",
+      "disposition": "open",
+      "summary": "The four token buckets are declared Availability::Required on Sessions, Turns and Tools, contradicting C11's explicit 'source-qualified token buckets' and C22's 'Field/capability availability remains source-qualified after loading'.",
+      "evidence": [
+        "schema.rs SESSION_FIELDS/TURN_FIELDS/TOOL_FIELDS: field!(InputTokens, U64, true, Tokens, Metadata, Required, NO_PREDICATES) and the same shape for OutputTokens, CacheReadTokens, CacheWriteTokens.",
+        "Guide C21-frozen availability vocabulary is Availability { Required, SourceQualified, ProjectedOptional } at schema.rs:9.",
+        "C11 (guide v6, unchanged by this delta): 'Stats metrics are a closed typed set: ... and source-qualified token buckets.'",
+        "C22: 'Field/capability availability remains source-qualified after loading.'",
+        "Baseline precedent for the identical shape: field!(TurnCount, U64, true, Count, Metadata, SourceQualified, ORDERED), likewise MessageCount and ToolCallCount. Nullable U64 counters that depend on what the native source captured are SourceQualified everywhere else in the frozen registry.",
+        "C18: 'projected absence is distinct from a present null and documented in availability.' Required plus nullable declares always-projected-may-be-null, which is exactly the absence/null collapse C18 separates and the same defect class as sealed finding F5.",
+        "Recommended correction: Availability::SourceQualified for the four token buckets on all three datasets. No struct, port or constructor change."
+      ],
+      "requires_rebaseline": false,
+      "classification": "PM-owned implementation correction inside the amendment"
+    },
+    {
+      "id": "A2",
+      "severity": "medium",
+      "disposition": "open",
+      "summary": "The computed aggregates are declared Availability::Required for the whole dataset, but C18 says stats rows carry requested metric fields; list and show rows never carry them.",
+      "evidence": [
+        "schema.rs: Count, MeasuredCount, MissingDurationCount, Succeeded, Failures, Cancelled, Incomplete, Unknown, FailureRate, MeanMs, MinMs, MaxMs, P50Ms, P95Ms all declared with availability Required.",
+        "C18: 'Stats rows contain requested group fields and declared Metric fields with a stable group ID.' Requested implies optional projection, not unconditional presence.",
+        "FieldSchema carries no per-operation dimension, so Required is asserted across List, Show, Tree, Extract and Stats alike for that dataset.",
+        "Existing vocabulary for present-only-when-explicitly-projected already exists and is used: field!(Command, String, true, Sensitive, ProjectedOptional, TEXT), likewise Input and Output on TOOL_FIELDS.",
+        "Recommended correction: Availability::ProjectedOptional for the fourteen computed aggregates. This stays inside the C21/C18 frozen vocabulary and needs no shape change."
+      ],
+      "requires_rebaseline": false,
+      "classification": "PM-owned implementation correction inside the amendment"
+    },
+    {
+      "id": "A3",
+      "severity": "medium",
+      "disposition": "open",
+      "summary": "Because DatasetSchema has no per-operation field partition, exposing metric FieldIds dataset-wide also makes them accepted in --columns and --sort for non-stats operations, where they have no defined semantics.",
+      "evidence": [
+        "model.rs QueryRequest::validate, columns branch: a column is accepted if unique and schema.field(*id).is_some(), then validate_projection only screens Sensitivity::Sensitive. Metric fields are Sensitivity::Metadata, so they pass.",
+        "model.rs QueryRequest::validate, sort branch: sort only requires schema.field(sort.field) to exist; it performs no allowed_predicates check, so NO_PREDICATES does not restrain sorting.",
+        "Consequence at this delta: list sessions --columns count --sort count validates successfully. At the sealed parent 99ea782e the same request failed with QueryFailureCode::InvalidField, so this is an observable widening of the accepted request surface.",
+        "Filters are not affected: Filter validation calls schema.validate_field(field, predicate), and NO_PREDICATES yields UnsupportedOperation with ConsultSchema{dataset}. Only projection and sort widen.",
+        "Choosing ProjectedOptional per A2 does not by itself close this, since validate does not consult availability. Either the SDK lane must reject stats-only fields for non-stats operations under an owned task, or the schema must express operation scope.",
+        "[INFERENCE] Expressing operation scope by adding a member to FieldSchema or DatasetSchema would change the struct shape that C18 freezes and would therefore require a guide amendment to C18's DatasetSchema sentence; that path is the one that could force a rebaseline. Not executed, argued from the C18 text and the struct definition at schema.rs."
+      ],
+      "requires_rebaseline": false,
+      "classification": "Open design decision; the recommended resolution avoids rebaseline"
+    },
+    {
+      "id": "A4",
+      "severity": "medium",
+      "disposition": "open",
+      "summary": "is_context has no schema anchor that makes it appear at all, so the assignment's 'retains it for context output even under explicit --columns' is currently unimplementable without an SDK special case.",
+      "evidence": [
+        "TURN_SCHEMA default_columns is [Id, SessionId, Ordinal, StartedAt] and MESSAGE_SCHEMA default_columns is [Id, SessionId, Role, Timestamp]; neither was changed by this delta and neither contains IsContext.",
+        "RESERVED is unchanged at [FieldId::Id, FieldId::SourceRefs], and reserved_fields is a rejection list inside ProjectedRow::new, not a retention list, so it cannot express forced retention.",
+        "The new test actively pins the omission: assert!(!dataset_schema.default_columns.contains(&FieldId::IsContext)).",
+        "C8 requires the label: 'union overlapping windows, mark match/context, retain dates outside the filter window and report matched versus emitted.'",
+        "C23 tie: ResultUniverse carries columns:Vec<FieldId> and columns_digest. If the SDK force-retains is_context outside the declared projection, universe.columns must include it or the universe misdescribes the projection that produced the rows.",
+        "Two clean resolutions, both inside contracts-lane write paths and neither a shape change: add IsContext to Turns and Messages default_columns, or record forced retention as an SDK obligation with the matching C23 columns behaviour bound to a task."
+      ],
+      "requires_rebaseline": false,
+      "classification": "PM-owned implementation correction plus one SDK-lane obligation to bind"
+    },
+    {
+      "id": "A5",
+      "severity": "low",
+      "disposition": "open",
+      "summary": "C18's per-dataset field enumeration does not list is_context or the metric fields, so the frozen guide text needs one additive clarification. This is the only frozen-text change the delta requires, and it changes no semantics.",
+      "evidence": [
+        "C18 enumerates exhaustively: 'turns add session_id,branch_ids,ordinal,started_at,message_ids,call_ids,roles,tool_names,tool_families,has_errors,tool_call_count,boundary_basis; messages add session_id,branch_ids,turn_id,role,timestamp,text,parts,model'. is_context appears in neither list.",
+        "The same enumeration for sessions and tools does not list count, the token buckets, or the tool outcome and duration aggregates.",
+        "C18 nevertheless already mandates the capability: 'Stats rows contain requested group fields and declared Metric fields with a stable group ID.'",
+        "C8 already mandates the marker: 'mark match/context'.",
+        "This is the same class as the accepted N1 repair, which added the single token |TimestampBasis to C21 so the frozen text matched the frozen code. Recommended wording is additive only: list is_context under turns and messages, and state that a dataset's declared Metric fields are also registered in its field registry so stats rows can be constructed."
+      ],
+      "requires_rebaseline": false,
+      "classification": "Additive guide text repair, not a contract semantics change"
+    },
+    {
+      "id": "A6",
+      "severity": "low",
+      "disposition": "open",
+      "summary": "Proof gaps: the new tests pin the availability values that A1 and A2 dispute, one test name claims coverage it does not have, and the widening in A3 is neither proven nor excluded.",
+      "evidence": [
+        "query_contract.rs new test declared_statistics_are_real_projectable_fields_with_units_and_null_boundaries asserts field.availability == Availability::Required for every declared metric, and the context test asserts marker.availability == Availability::Required. If A1 or A2 is accepted the proof must move with the schema.",
+        "context_marker_is_non_filterable_metadata_and_round_trips_with_explicit_columns sets request.columns = Some(vec![explicit_column]) and then only asserts request.validate().unwrap(). It never asserts that is_context survives an explicit column list, so the retention half of the name is untested. Retention is SDK behaviour and is not bindable in core.",
+        "No assertion that Sources, Messages and Events acquired no metric fields in their registries. non_stats_datasets_declare_no_grouping_fields covers grouping_fields, metrics and Stats rejection, not field-registry membership. The property currently holds by inspection but is unpinned.",
+        "No test covers the A3 acceptance change, in either direction, for --columns or --sort on a non-stats operation.",
+        "Strengths worth recording: the statistics test drives from dataset_schema.metrics so it self-maintains, it builds real ProjectedRow values through the public constructor, and it proves genuine boundaries, namely null rejected for non-nullable counters with InvalidData and f64::NAN rejected for FailureRate with InvalidData. The context test performs a real serde round trip through UntrustedProjectedRow and asserts the wire key is_context. No source-string or mock-echo assertions are present."
+      ],
+      "requires_rebaseline": false,
+      "classification": "Proof-lane correction"
+    }
+  ],
+  "conditions_before_acceptance": [
+    "Resolve A1 and A2 by choosing availability values, or record an explicit reasoned rejection of the C11 source-qualified wording and the C18 absence/null rule.",
+    "Decide A3 and bind the chosen resolution to an owning task, since neither the schema nor the SDK currently rejects a stats-only field in a non-stats projection or sort.",
+    "Decide A4 and bind the C23 columns consequence if forced retention is chosen.",
+    "Apply the A5 additive C18 text repair so the guide and the code agree on the frozen schema shape.",
+    "Move the proof with whatever A1, A2, A3 and A4 resolve to, and close the A6 gaps."
+  ],
+  "verified_no_conflict_count": 14,
+  "reviewer_gaps": [
+    "Read-only. No compilation, test run or proof command was executed; compile-compatibility statements are static reasoning over committed bytes and are labelled where inferential.",
+    "The two deltas were reviewed as an intended composition; no composed tree exists at review time.",
+    "No judgement is offered on runtime statistics computation, which is not in this delta; C11's denominator, percentile and cumulative-snapshot rules remain unproven and belong to the SDK lane.",
+    "The sealed wave0 baseline records remain immutable and are not reopened, amended or re-graded by this record."
+  ],
+  "immutability": "Sealed records baseline-r2 (fb59ed36/aafdd629), baseline-r2-n1 (5da35ec4/a8a541d3) and the evidence addendum (0331bc95/c9441e7a) are untouched by this record."
+}

@@ -29,7 +29,7 @@ query_enum! {
     /// Closed registry shared by schemas, filters, projections, availability, and grouping.
     pub enum FieldId {
         Id => "id", SourceRefs => "source_refs", NativeId => "native_id", Harness => "harness", Adapter => "adapter",
-        Availability => "availability", Format => "format", ReadStatus => "read_status", Association => "association",
+        Availability => "availability", IsContext => "is_context", Format => "format", ReadStatus => "read_status", Association => "association",
         Revision => "revision", ProjectPath => "project_path", SourcePath => "source_path", Name => "name", Models => "models",
         StartedAt => "started_at", FirstEventAt => "first_event_at", SourceIds => "source_ids", ParentIds => "parent_ids",
         BranchIds => "branch_ids", TurnCount => "turn_count", MessageCount => "message_count", ToolCallCount => "tool_call_count",

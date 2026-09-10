@@ -4,14 +4,13 @@ use std::{
 };
 
 use unisphere_core::query::{
-    AssociationBasis, AssociationExtent, AssociationObservation, AvailabilityCode,
-    AvailabilityIssue, BranchEvidence,
-    BranchLink, Completeness, ContentAccess, ControlKind, Dataset, Digest, DurationBasis, EntityId,
-    EntityKind, FieldId, HarnessId, AdapterId, LineageKind, MembershipPolicy, MessageRole,
-    NativeQueryView, NativeSequence, Observation, ObservationFacet, ObservationPart, Outcome,
-    PartitionId, QueryFailure, QueryInput, QueryLimits, QueryScope, RepoScope, RetainedCapability,
-    SourceEvidence, SourceId, SourceReadFacts, SourceReadStatus, SourceRef, SourceSelection,
-    SourceSelector, Timestamp, UsageScope, ViewDigestBasis, ViewInputBasis, ViewSourceBinding,
+    AdapterId, AssociationBasis, AssociationExtent, AssociationObservation, AvailabilityCode,
+    BranchEvidence, BranchLink, Completeness, ContentAccess, ControlKind, Dataset, Digest,
+    DurationBasis, EntityId, EntityKind, FieldId, HarnessId, LineageKind, MembershipPolicy,
+    MessageRole, NativeQueryView, NativeSequence, Observation, ObservationFacet, ObservationPart,
+    Outcome, PartitionId, QueryFailure, QueryInput, QueryLimits, QueryScope, RepoScope,
+    RetainedCapability, SourceEvidence, SourceId, SourceReadFacts, SourceReadStatus, SourceRef,
+    SourceSelection, SourceSelector, Timestamp, ViewDigestBasis, ViewInputBasis, ViewSourceBinding,
 };
 
 use super::{
@@ -20,7 +19,7 @@ use super::{
 };
 
 const VIEW_SCHEMA_VERSION: u16 = 1;
-const RECONSTRUCTION_VERSION: u16 = 1;
+const RECONSTRUCTION_VERSION: u16 = 2;
 
 /// Immutable, bounded logical reconstruction over one retained source view.
 ///
@@ -154,9 +153,7 @@ impl QueryView {
         &self.available_fields
     }
 
-    pub(crate) fn saved_universe_basis(
-        &self,
-    ) -> Option<unisphere_core::query::UniverseBasis> {
+    pub(crate) fn saved_universe_basis(&self) -> Option<unisphere_core::query::UniverseBasis> {
         self.saved_universe_basis
     }
 
@@ -345,7 +342,7 @@ impl QueryView {
         let mut active_turn = BTreeMap::<(EntityId, Option<EntityId>), EntityId>::new();
         let mut pending_calls = BTreeMap::<CallKey, Vec<usize>>::new();
         let mut selected_associations = Vec::new();
-        let branch_issues = branch_issues(&native.observations);
+        let branch_analysis = analyze_branches(&native.observations, limits)?;
         let mut session_keys = BTreeMap::<EntityId, SessionIdentity>::new();
 
         for observation in observations {
@@ -359,33 +356,49 @@ impl QueryView {
                 &admitted_scope,
                 &native.repository_roots,
             );
-            if !admitted && !matches!(admitted_scope, QueryScope::Source { .. } | QueryScope::Offline { .. }) {
+            if !admitted
+                && !matches!(
+                    admitted_scope,
+                    QueryScope::Source { .. } | QueryScope::Offline { .. }
+                )
+            {
                 continue;
             }
             let session_identity = observation_session_identity(observation, source);
             let session_id = session_identity.as_ref().map(session_id);
+            let branch_ids = observation_branch_ids(observation, &branch_analysis.memberships);
             if let (Some(id), Some(identity)) = (session_id, session_identity.clone()) {
                 session_keys.entry(id).or_insert(identity.clone());
                 let builder = session_builders.entry(id).or_insert_with(|| {
-                    SessionBuilder::new(id, identity, source.adapter.clone(), source.harness.clone())
+                    SessionBuilder::new(
+                        id,
+                        identity,
+                        source.adapter.clone(),
+                        source.harness.clone(),
+                    )
                 });
                 if let Some(issues) = observation_branch_key(observation)
-                    .and_then(|key| branch_issues.get(&key))
+                    .and_then(|key| branch_analysis.issues.get(&key))
                 {
                     builder.availability.extend(issues.iter().copied());
                 }
-                builder.observe(observation, source, &access);
+                builder.observe(observation, source, &access, &branch_ids);
             }
-            let branch_id = branch_id(&observation.branch);
             let mut diagnostics = observation
                 .diagnostics
                 .iter()
                 .map(|issue| issue.code)
                 .collect::<Vec<_>>();
-            if let Some(issues) = observation_branch_key(observation)
-                .and_then(|key| branch_issues.get(&key))
+            if let Some(issues) =
+                observation_branch_key(observation).and_then(|key| branch_analysis.issues.get(&key))
             {
                 diagnostics.extend(issues.iter().copied());
+            }
+            if branch_ids.is_empty() {
+                diagnostics.push(match &observation.branch {
+                    BranchEvidence::Unavailable { reason, .. } => *reason,
+                    _ => AvailabilityCode::Ambiguous,
+                });
             }
 
             for (facet_index, facet) in observation.facets.iter().enumerate() {
@@ -411,14 +424,14 @@ impl QueryView {
                                 })
                                 .cloned(),
                         );
-                        if let (Some(id), Some(created_at)) = (session_id, created_at) {
-                            if let Some(builder) = session_builders.get_mut(&id) {
-                                builder.started_at = merge_timestamp(
-                                    builder.started_at.take(),
-                                    Some(created_at.clone()),
-                                    &mut builder.availability,
-                                );
-                            }
+                        if let (Some(id), Some(created_at)) = (session_id, created_at)
+                            && let Some(builder) = session_builders.get_mut(&id)
+                        {
+                            builder.started_at = merge_timestamp(
+                                builder.started_at.take(),
+                                Some(created_at.clone()),
+                                &mut builder.availability,
+                            );
                         }
                         "session_metadata"
                     }
@@ -439,7 +452,7 @@ impl QueryView {
                             );
                             let turn_id = resolve_turn(
                                 session_id,
-                                branch_id,
+                                &branch_ids,
                                 native_turn_id.as_deref(),
                                 *request_marker,
                                 id,
@@ -500,16 +513,12 @@ impl QueryView {
                             let turn_id = native_turn_id
                                 .as_deref()
                                 .map(|value| explicit_turn_id(session_id, value))
-                                .or_else(|| active_turn.get(&(session_id, branch_id)).copied());
+                                .or_else(|| active_turn_for(session_id, &branch_ids, &active_turn));
                             let occurrence = pending_calls
-                                .get(&CallKey::new(session_id, branch_id, native_call_id))
+                                .get(&CallKey::new(session_id, &branch_ids, native_call_id))
                                 .map_or(0, Vec::len);
-                            let id = tool_id_for(
-                                session_id,
-                                branch_id,
-                                native_call_id,
-                                occurrence,
-                            );
+                            let id =
+                                tool_id_for(session_id, &branch_ids, native_call_id, occurrence);
                             let row = ToolRow {
                                 id,
                                 source_refs: vec![observation.source_ref.clone()],
@@ -541,7 +550,7 @@ impl QueryView {
                             let index = tools.len();
                             tools.push(row);
                             pending_calls
-                                .entry(CallKey::new(session_id, branch_id, native_call_id))
+                                .entry(CallKey::new(session_id, &branch_ids, native_call_id))
                                 .or_default()
                                 .push(index);
                             if let Some(turn_id) = turn_id {
@@ -576,7 +585,7 @@ impl QueryView {
                     } => {
                         event_parts = retain_payload(output, FieldId::Parts, &access);
                         if let Some(session_id) = session_id {
-                            let key = CallKey::new(session_id, branch_id, native_call_id);
+                            let key = CallKey::new(session_id, &branch_ids, native_call_id);
                             let all_candidates = pending_calls
                                 .get(&key)
                                 .into_iter()
@@ -612,7 +621,7 @@ impl QueryView {
                                 }
                                 let id = tool_id_for(
                                     session_id,
-                                    branch_id,
+                                    &branch_ids,
                                     native_call_id,
                                     all_candidates.len().saturating_add(1),
                                 );
@@ -661,7 +670,7 @@ impl QueryView {
                     } => {
                         event_parts = retain_payload(parts, FieldId::Parts, &access);
                         if let Some(session_id) = session_id {
-                            let key = CallKey::new(session_id, branch_id, native_call_id);
+                            let key = CallKey::new(session_id, &branch_ids, native_call_id);
                             let candidates = pending_calls
                                 .get(&key)
                                 .into_iter()
@@ -670,9 +679,11 @@ impl QueryView {
                                 .filter(|index| tools[*index].ended_at.is_none())
                                 .collect::<Vec<_>>();
                             if candidates.len() == 1 {
-                                tools[candidates[0]].progress.extend(
-                                    retain_payload(parts, FieldId::Output, &access),
-                                );
+                                tools[candidates[0]].progress.extend(retain_payload(
+                                    parts,
+                                    FieldId::Output,
+                                    &access,
+                                ));
                                 call_id = Some(tools[candidates[0]].id);
                                 facet_turn = tools[candidates[0]].turn_id;
                             }
@@ -732,16 +743,14 @@ impl QueryView {
                 .associations
                 .iter()
                 .filter(|association| {
-                    association_selected(
-                        association,
-                        &admitted_scope,
-                        &native.repository_roots,
-                    )
+                    association_selected(association, &admitted_scope, &native.repository_roots)
                 })
                 .cloned()
         }));
         for tool in &tools {
-            let Some(turn_id) = tool.turn_id else { continue };
+            let Some(turn_id) = tool.turn_id else {
+                continue;
+            };
             turns
                 .entry(turn_id)
                 .or_insert_with(|| {
@@ -758,16 +767,47 @@ impl QueryView {
                 .finalize_tool(tool);
         }
 
-
-        let mut turns = turns.into_values().map(TurnBuilder::finish).collect::<Vec<_>>();
+        let mut turns = turns
+            .into_values()
+            .map(TurnBuilder::finish)
+            .collect::<Vec<_>>();
         turns.sort_by(|left, right| {
-            (left.session_id, &left.sequence, left.id).cmp(&(right.session_id, &right.sequence, right.id))
+            (left.session_id, &left.sequence, left.id).cmp(&(
+                right.session_id,
+                &right.sequence,
+                right.id,
+            ))
         });
-        let mut ordinal_by_session = BTreeMap::<EntityId, u64>::new();
+        let mut ordinal_by_branch = BTreeMap::<(EntityId, Option<EntityId>), u64>::new();
         for turn in &mut turns {
-            let ordinal = ordinal_by_session.entry(turn.session_id).or_default();
-            *ordinal += 1;
-            turn.ordinal = *ordinal;
+            let mut ordinal = None;
+            let mut inconsistent = false;
+            if turn.branch_ids.is_empty() {
+                let value = ordinal_by_branch
+                    .entry((turn.session_id, None))
+                    .or_default();
+                *value = value
+                    .checked_add(1)
+                    .ok_or_else(QueryFailure::invalid_data)?;
+                ordinal = Some(*value);
+            } else {
+                for branch_id in &turn.branch_ids {
+                    let value = ordinal_by_branch
+                        .entry((turn.session_id, Some(*branch_id)))
+                        .or_default();
+                    *value = value
+                        .checked_add(1)
+                        .ok_or_else(QueryFailure::invalid_data)?;
+                    if ordinal.is_some_and(|ordinal| ordinal != *value) {
+                        inconsistent = true;
+                    }
+                    ordinal = Some(ordinal.map_or(*value, |ordinal| ordinal.min(*value)));
+                }
+            }
+            turn.ordinal = ordinal.ok_or_else(QueryFailure::invalid_data)?;
+            if inconsistent && !turn.availability.contains(&AvailabilityCode::Ambiguous) {
+                turn.availability.push(AvailabilityCode::Ambiguous);
+            }
         }
 
         resolve_session_lineage(&mut session_builders, &session_keys);
@@ -891,7 +931,12 @@ struct SessionBuilder {
 }
 
 impl SessionBuilder {
-    fn new(id: EntityId, identity: SessionIdentity, adapter: AdapterId, harness: HarnessId) -> Self {
+    fn new(
+        id: EntityId,
+        identity: SessionIdentity,
+        adapter: AdapterId,
+        harness: HarnessId,
+    ) -> Self {
         Self {
             id,
             identity,
@@ -915,12 +960,12 @@ impl SessionBuilder {
         observation: &Observation,
         source: &SourceEvidence,
         access: &ContentAccess,
+        branch_ids: &[EntityId],
     ) {
         push_source_ref(&mut self.source_refs, &observation.source_ref);
         self.source_ids.insert(source.id.entity());
-        if let Some(branch) = branch_id(&observation.branch) {
-            self.branch_ids.insert(branch);
-        } else {
+        self.branch_ids.extend(branch_ids.iter().copied());
+        if branch_ids.is_empty() {
             self.availability.push(AvailabilityCode::Ambiguous);
         }
         self.first_event_at = earliest(self.first_event_at.take(), observation.timestamp.clone());
@@ -962,7 +1007,10 @@ impl SessionBuilder {
 
     fn finish(self, turns: &[TurnRow], messages: &[MessageRow], tools: &[ToolRow]) -> SessionRow {
         let turn_count = turns.iter().filter(|row| row.session_id == self.id).count() as u64;
-        let message_count = messages.iter().filter(|row| row.session_id == self.id).count() as u64;
+        let message_count = messages
+            .iter()
+            .filter(|row| row.session_id == self.id)
+            .count() as u64;
         let tool_call_count = tools.iter().filter(|row| row.session_id == self.id).count() as u64;
         SessionRow {
             id: self.id,
@@ -1078,7 +1126,6 @@ impl TurnBuilder {
         }
     }
 
-
     fn finish(self) -> TurnRow {
         TurnRow {
             id: self.id,
@@ -1106,15 +1153,15 @@ impl TurnBuilder {
 #[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
 struct CallKey {
     session: EntityId,
-    branch: Option<EntityId>,
+    branch_scope: Digest,
     native_id: String,
 }
 
 impl CallKey {
-    fn new(session: EntityId, branch: Option<EntityId>, native_id: &str) -> Self {
+    fn new(session: EntityId, branch_ids: &[EntityId], native_id: &str) -> Self {
         Self {
             session,
-            branch,
+            branch_scope: branch_scope_digest(branch_ids),
             native_id: native_id.to_owned(),
         }
     }
@@ -1165,26 +1212,6 @@ fn session_id(identity: &SessionIdentity) -> EntityId {
     )
 }
 
-fn branch_id(evidence: &BranchEvidence) -> Option<EntityId> {
-    let partition = evidence.partition().entity();
-    match evidence {
-        BranchEvidence::Linear { .. } => Some(EntityId::derive(
-            EntityKind::Branch,
-            [partition.digest().bytes().as_slice(), b"linear"],
-        )),
-        BranchEvidence::Node {
-            declared_branch, ..
-        } => Some(EntityId::derive(
-            EntityKind::Branch,
-            [
-                partition.digest().bytes().as_slice(),
-                declared_branch.as_deref().unwrap_or("native-tree").as_bytes(),
-            ],
-        )),
-        BranchEvidence::Unavailable { .. } => None,
-    }
-}
-
 fn message_id_for(
     session_id: EntityId,
     observation: &Observation,
@@ -1214,7 +1241,7 @@ fn explicit_turn_id(session_id: EntityId, native_id: &str) -> EntityId {
 #[allow(clippy::too_many_arguments)]
 fn resolve_turn(
     session_id: EntityId,
-    branch_id: Option<EntityId>,
+    branch_ids: &[EntityId],
     native_turn_id: Option<&str>,
     marker: unisphere_core::query::RequestMarker,
     message_id: EntityId,
@@ -1223,7 +1250,7 @@ fn resolve_turn(
 ) -> Option<EntityId> {
     if let Some(native_id) = native_turn_id {
         let id = explicit_turn_id(session_id, native_id);
-        active_turn.insert((session_id, branch_id), id);
+        set_active_turn(session_id, branch_ids, id, active_turn);
         return Some(id);
     }
     if marker == unisphere_core::query::RequestMarker::Initiating {
@@ -1235,28 +1262,76 @@ fn resolve_turn(
                 observation.sequence.key.as_slice(),
             ],
         );
-        active_turn.insert((session_id, branch_id), id);
+        set_active_turn(session_id, branch_ids, id, active_turn);
         return Some(id);
     }
-    active_turn.get(&(session_id, branch_id)).copied()
+    active_turn_for(session_id, branch_ids, active_turn)
+}
+
+fn set_active_turn(
+    session_id: EntityId,
+    branch_ids: &[EntityId],
+    turn_id: EntityId,
+    active_turn: &mut BTreeMap<(EntityId, Option<EntityId>), EntityId>,
+) {
+    if branch_ids.is_empty() {
+        active_turn.insert((session_id, None), turn_id);
+    } else {
+        for branch_id in branch_ids {
+            active_turn.insert((session_id, Some(*branch_id)), turn_id);
+        }
+    }
+}
+
+fn active_turn_for(
+    session_id: EntityId,
+    branch_ids: &[EntityId],
+    active_turn: &BTreeMap<(EntityId, Option<EntityId>), EntityId>,
+) -> Option<EntityId> {
+    if branch_ids.is_empty() {
+        return active_turn.get(&(session_id, None)).copied();
+    }
+    let mut resolved = None;
+    for branch_id in branch_ids {
+        let candidate = active_turn.get(&(session_id, Some(*branch_id))).copied()?;
+        if resolved.is_some_and(|resolved| resolved != candidate) {
+            return None;
+        }
+        resolved = Some(candidate);
+    }
+    resolved
+}
+
+fn branch_scope_digest(branch_ids: &[EntityId]) -> Digest {
+    match branch_ids {
+        [] => Digest::of_bytes(b"unavailable-branch"),
+        [branch_id] => branch_id.digest(),
+        branch_ids => {
+            let digests = branch_ids
+                .iter()
+                .map(|branch_id| branch_id.digest())
+                .collect::<Vec<_>>();
+            Digest::framed(
+                b"unisphere/query-branch-scope/v1",
+                digests.iter().map(|digest| digest.bytes().as_slice()),
+            )
+        }
+    }
 }
 
 fn tool_id_for(
     session_id: EntityId,
-    branch_id: Option<EntityId>,
+    branch_ids: &[EntityId],
     native_id: &str,
     occurrence: usize,
 ) -> EntityId {
     let occurrence = occurrence.to_le_bytes();
+    let branch_scope = branch_scope_digest(branch_ids);
     EntityId::derive(
         EntityKind::Tool,
         [
             session_id.digest().bytes().as_slice(),
-            branch_id
-                .map(EntityId::digest)
-                .unwrap_or_else(|| Digest::of_bytes(b"unavailable-branch"))
-                .bytes()
-                .as_slice(),
+            branch_scope.bytes().as_slice(),
             native_id.as_bytes(),
             occurrence.as_slice(),
         ],
@@ -1286,9 +1361,9 @@ fn source_ref_identity(reference: &SourceRef, facet_index: usize) -> String {
             notes_tip,
             target_commit,
             note_blob,
-        } => format!(
-            "git-note:{repository_id}:{notes_ref}:{notes_tip}:{target_commit}:{note_blob}"
-        ),
+        } => {
+            format!("git-note:{repository_id}:{notes_ref}:{notes_tip}:{target_commit}:{note_blob}")
+        }
     };
     format!("{locator}:{}:{facet_index}", reference.subrecord)
 }
@@ -1399,7 +1474,9 @@ fn sensitive(field: FieldId) -> bool {
     Dataset::ALL.iter().copied().any(|dataset| {
         unisphere_core::query::schema(dataset)
             .field(field)
-            .is_some_and(|schema| schema.sensitivity == unisphere_core::query::Sensitivity::Sensitive)
+            .is_some_and(|schema| {
+                schema.sensitivity == unisphere_core::query::Sensitivity::Sensitive
+            })
     })
 }
 
@@ -1468,10 +1545,30 @@ fn association_matches(
 }
 
 fn component_descendant(path: &Path, root: &Path) -> bool {
-    path == root || path.strip_prefix(root).is_ok_and(|suffix| !suffix.as_os_str().is_empty())
+    path == root
+        || path
+            .strip_prefix(root)
+            .is_ok_and(|suffix| !suffix.as_os_str().is_empty())
 }
 
 type BranchNodeKey = (SourceId, PartitionId, String);
+
+struct BranchAnalysis {
+    issues: BTreeMap<BranchNodeKey, Vec<AvailabilityCode>>,
+    memberships: BTreeMap<BranchNodeKey, Vec<EntityId>>,
+}
+
+#[derive(Clone, PartialEq, Eq)]
+struct BranchNodeSignature {
+    parent: Option<String>,
+    declared_branch: Option<String>,
+    links: Vec<BranchLink>,
+}
+
+struct BranchCandidate {
+    path: Vec<BranchNodeKey>,
+    declared_branch: Option<String>,
+}
 
 fn observation_branch_key(observation: &Observation) -> Option<BranchNodeKey> {
     match &observation.branch {
@@ -1479,13 +1576,34 @@ fn observation_branch_key(observation: &Observation) -> Option<BranchNodeKey> {
             partition,
             native_id,
             ..
-        } => Some((observation.source_ref.source_id, *partition, native_id.clone())),
+        } => Some((
+            observation.source_ref.source_id,
+            *partition,
+            native_id.clone(),
+        )),
         _ => None,
     }
 }
 
-fn branch_issues(observations: &[Observation]) -> BTreeMap<BranchNodeKey, Vec<AvailabilityCode>> {
-    let mut signatures = BTreeMap::<BranchNodeKey, (Option<String>, Option<String>)>::new();
+fn observation_branch_ids(
+    observation: &Observation,
+    memberships: &BTreeMap<BranchNodeKey, Vec<EntityId>>,
+) -> Vec<EntityId> {
+    match &observation.branch {
+        BranchEvidence::Linear { partition } => vec![declared_branch_id(*partition, "linear")],
+        BranchEvidence::Node { .. } => observation_branch_key(observation)
+            .and_then(|key| memberships.get(&key))
+            .cloned()
+            .unwrap_or_default(),
+        BranchEvidence::Unavailable { .. } => Vec::new(),
+    }
+}
+
+fn analyze_branches(
+    observations: &[Observation],
+    limits: &QueryLimits,
+) -> Result<BranchAnalysis, QueryFailure> {
+    let mut signatures = BTreeMap::<BranchNodeKey, BranchNodeSignature>::new();
     let mut issues = BTreeMap::<BranchNodeKey, Vec<AvailabilityCode>>::new();
     for observation in observations {
         let BranchEvidence::Node {
@@ -1493,7 +1611,7 @@ fn branch_issues(observations: &[Observation]) -> BTreeMap<BranchNodeKey, Vec<Av
             native_id,
             parent,
             declared_branch,
-            ..
+            links,
         } = &observation.branch
         else {
             continue;
@@ -1503,52 +1621,198 @@ fn branch_issues(observations: &[Observation]) -> BTreeMap<BranchNodeKey, Vec<Av
             *partition,
             native_id.clone(),
         );
-        let signature = (parent.clone(), declared_branch.clone());
+        let signature = BranchNodeSignature {
+            parent: parent.clone(),
+            declared_branch: declared_branch.clone(),
+            links: links.clone(),
+        };
         if signatures
-            .insert(key.clone(), signature.clone())
-            .is_some_and(|previous| previous != signature)
+            .get(&key)
+            .is_some_and(|previous| previous != &signature)
         {
-            issues.entry(key.clone()).or_default().push(AvailabilityCode::Conflict);
-        }
-        if parent.as_deref() == Some(native_id) {
-            issues.entry(key).or_default().push(AvailabilityCode::Conflict);
-        }
-    }
-    for (key, (parent, _)) in &signatures {
-        let Some(parent) = parent else { continue };
-        let parent_key = (key.0, key.1, parent.clone());
-        if !signatures.contains_key(&parent_key) {
             issues
                 .entry(key.clone())
                 .or_default()
-                .push(AvailabilityCode::NotCaptured);
+                .push(AvailabilityCode::Conflict);
+        } else {
+            signatures.entry(key.clone()).or_insert(signature);
+        }
+        if parent.as_deref() == Some(native_id) {
+            issues
+                .entry(key)
+                .or_default()
+                .push(AvailabilityCode::Conflict);
+        }
+    }
+
+    let mut analyzed = BTreeSet::new();
+    for key in signatures.keys() {
+        if analyzed.contains(key) {
             continue;
         }
         let mut path = BTreeSet::new();
-        let mut current = key.clone();
-        while path.insert(current.clone()) {
-            let Some(Some(parent)) = signatures.get(&current).map(|value| value.0.clone()) else {
-                break;
-            };
-            current = (current.0, current.1, parent);
-            if !signatures.contains_key(&current) {
+        let mut current = key;
+        loop {
+            if analyzed.contains(current) {
                 break;
             }
-        }
-        if path.contains(&current) {
-            for member in path {
+            if !path.insert(current) {
+                for member in path.iter().copied() {
+                    issues
+                        .entry((*member).clone())
+                        .or_default()
+                        .push(AvailabilityCode::Conflict);
+                }
+                break;
+            }
+            let Some(parent) = signatures
+                .get(current)
+                .and_then(|signature| signature.parent.as_ref())
+            else {
+                break;
+            };
+            let parent_key = (current.0, current.1, parent.clone());
+            let Some((parent_key, _)) = signatures.get_key_value(&parent_key) else {
                 issues
-                    .entry(member)
+                    .entry(current.clone())
                     .or_default()
-                    .push(AvailabilityCode::Conflict);
+                    .push(AvailabilityCode::NotCaptured);
+                break;
+            };
+            current = parent_key;
+        }
+        analyzed.extend(path);
+    }
+
+    let mut parents = BTreeSet::new();
+    for (key, signature) in &signatures {
+        if let Some(parent) = &signature.parent {
+            parents.insert((key.0, key.1, parent.clone()));
+        }
+    }
+    let mut candidates = Vec::new();
+    let mut candidate_memberships = 0usize;
+    for leaf in signatures.keys().filter(|key| !parents.contains(*key)) {
+        let mut current = leaf.clone();
+        let mut seen = BTreeSet::new();
+        let mut path = Vec::new();
+        let mut valid = true;
+        loop {
+            if !seen.insert(current.clone())
+                || issues.get(&current).is_some_and(|values| {
+                    values.contains(&AvailabilityCode::Conflict)
+                        || values.contains(&AvailabilityCode::NotCaptured)
+                })
+            {
+                valid = false;
+                break;
+            }
+            path.push(current.clone());
+            let Some(parent) = signatures
+                .get(&current)
+                .and_then(|value| value.parent.as_ref())
+            else {
+                break;
+            };
+            current = (current.0, current.1, parent.clone());
+        }
+        if valid {
+            candidate_memberships =
+                candidate_memberships
+                    .checked_add(path.len())
+                    .ok_or_else(|| {
+                        QueryFailure::limit(unisphere_core::query::LimitKind::BranchMemberships)
+                    })?;
+            if candidate_memberships > limits.max_branch_memberships {
+                return Err(QueryFailure::limit(
+                    unisphere_core::query::LimitKind::BranchMemberships,
+                ));
+            }
+            let declared_branch = path.iter().find_map(|key| {
+                signatures
+                    .get(key)
+                    .and_then(|signature| signature.declared_branch.clone())
+            });
+            candidates.push(BranchCandidate {
+                path,
+                declared_branch,
+            });
+        }
+    }
+
+    let mut declared_counts = BTreeMap::<(SourceId, PartitionId, String), usize>::new();
+    for candidate in &candidates {
+        if let Some(declared) = &candidate.declared_branch {
+            let leaf = &candidate.path[0];
+            *declared_counts
+                .entry((leaf.0, leaf.1, declared.clone()))
+                .or_default() += 1;
+        }
+    }
+
+    let mut memberships = BTreeMap::<BranchNodeKey, BTreeSet<EntityId>>::new();
+    let mut membership_count = 0usize;
+    for candidate in candidates {
+        let leaf = &candidate.path[0];
+        let branch = candidate
+            .declared_branch
+            .as_ref()
+            .filter(|declared| {
+                declared_counts
+                    .get(&(leaf.0, leaf.1, (*declared).clone()))
+                    .copied()
+                    == Some(1)
+            })
+            .map_or_else(
+                || native_tree_branch_id(leaf.1, &leaf.2),
+                |declared| declared_branch_id(leaf.1, declared),
+            );
+        for member in candidate.path {
+            if memberships.entry(member).or_default().insert(branch) {
+                membership_count = membership_count.checked_add(1).ok_or_else(|| {
+                    QueryFailure::limit(unisphere_core::query::LimitKind::BranchMemberships)
+                })?;
+                if membership_count > limits.max_branch_memberships {
+                    return Err(QueryFailure::limit(
+                        unisphere_core::query::LimitKind::BranchMemberships,
+                    ));
+                }
             }
         }
     }
+
     for values in issues.values_mut() {
         values.sort();
         values.dedup();
     }
-    issues
+    Ok(BranchAnalysis {
+        issues,
+        memberships: memberships
+            .into_iter()
+            .map(|(key, values)| (key, values.into_iter().collect()))
+            .collect(),
+    })
+}
+
+fn declared_branch_id(partition: PartitionId, declared: &str) -> EntityId {
+    EntityId::derive(
+        EntityKind::Branch,
+        [
+            partition.entity().digest().bytes().as_slice(),
+            declared.as_bytes(),
+        ],
+    )
+}
+
+fn native_tree_branch_id(partition: PartitionId, leaf_native_id: &str) -> EntityId {
+    EntityId::derive(
+        EntityKind::Branch,
+        [
+            partition.entity().digest().bytes().as_slice(),
+            b"native-tree",
+            leaf_native_id.as_bytes(),
+        ],
+    )
 }
 fn merge_timestamp(
     current: Option<Timestamp>,
@@ -1563,7 +1827,6 @@ fn merge_timestamp(
         (None, candidate) => candidate,
         (current, None) => current,
         (current, Some(_)) => current,
-
     }
 }
 
@@ -1638,7 +1901,11 @@ fn observation_weight(observation: &Observation) -> usize {
     let mut bytes = observation.source_ref.revision.len()
         + observation.source_ref.subrecord.len()
         + observation.native_record_id.as_deref().map_or(0, str::len)
-        + observation.parent_ids.iter().map(String::len).sum::<usize>()
+        + observation
+            .parent_ids
+            .iter()
+            .map(String::len)
+            .sum::<usize>()
         + observation.sequence.key.len();
     for facet in &observation.facets {
         bytes = bytes.saturating_add(match facet {
@@ -1646,11 +1913,12 @@ fn observation_weight(observation: &Observation) -> usize {
                 native_id,
                 name,
                 models,
-
                 ..
-            } => native_id.len()
-                + name.as_deref().map_or(0, str::len)
-                + models.iter().map(String::len).sum::<usize>(),
+            } => {
+                native_id.len()
+                    + name.as_deref().map_or(0, str::len)
+                    + models.iter().map(String::len).sum::<usize>()
+            }
             ObservationFacet::Message {
                 native_id, parts, ..
             } => native_id.as_deref().map_or(0, str::len) + parts_weight(parts),
@@ -1660,18 +1928,22 @@ fn observation_weight(observation: &Observation) -> usize {
                 family,
                 input,
                 ..
-            } => native_call_id.len()
-                + native_name.len()
-                + family.as_deref().map_or(0, str::len)
-                + parts_weight(input),
+            } => {
+                native_call_id.len()
+                    + native_name.len()
+                    + family.as_deref().map_or(0, str::len)
+                    + parts_weight(input)
+            }
             ObservationFacet::ToolResult {
                 native_call_id,
                 native_name,
                 output,
                 ..
-            } => native_call_id.len()
-                + native_name.as_deref().map_or(0, str::len)
-                + parts_weight(output),
+            } => {
+                native_call_id.len()
+                    + native_name.as_deref().map_or(0, str::len)
+                    + parts_weight(output)
+            }
             ObservationFacet::ToolProgress {
                 native_call_id,
                 parts,
@@ -1684,10 +1956,12 @@ fn observation_weight(observation: &Observation) -> usize {
                 target_commit,
                 ranges,
                 ..
-            } => native_key.len()
-                + declared_agent.as_deref().map_or(0, str::len)
-                + target_commit.as_deref().map_or(0, str::len)
-                + ranges.iter().map(String::len).sum::<usize>(),
+            } => {
+                native_key.len()
+                    + declared_agent.as_deref().map_or(0, str::len)
+                    + target_commit.as_deref().map_or(0, str::len)
+                    + ranges.iter().map(String::len).sum::<usize>()
+            }
         });
     }
     bytes

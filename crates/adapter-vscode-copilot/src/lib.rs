@@ -5,7 +5,10 @@
 
 mod journal;
 
-use std::{collections::{BTreeMap, BTreeSet}, path::{Path, PathBuf}};
+use std::{
+    collections::{BTreeMap, BTreeSet},
+    path::{Path, PathBuf},
+};
 
 use serde_json::{Map, Value, json};
 use unisphere_core::{
@@ -723,7 +726,7 @@ impl QueryAdapter for VsCodeCopilotAdapter {
                 return Err(unsupported_query_source(Some(source.id)));
             }
         };
-        let mut mapping = QueryMapping {
+        let mapping = QueryMapping {
             source: source.clone(),
             access: &access,
             limits,
@@ -773,7 +776,11 @@ impl QueryMapping<'_> {
         let session = value.as_object().ok_or_else(QueryFailure::invalid_data)?;
         let version = match session.get("version") {
             None => 1,
-            Some(value) if value.as_u64().is_some_and(|version| matches!(version, 2 | 3)) => {
+            Some(value)
+                if value
+                    .as_u64()
+                    .is_some_and(|version| matches!(version, 2 | 3)) =>
+            {
                 value.as_u64().unwrap_or(1)
             }
             _ => {
@@ -846,12 +853,13 @@ impl QueryMapping<'_> {
                 FieldId::StartedAt,
                 &mut diagnostics,
             );
-            let title_field = if version == 2 { "computedTitle" } else { "customTitle" };
-            let name = self.sensitive_string(
-                session.get(title_field),
-                FieldId::Name,
-                &mut diagnostics,
-            );
+            let title_field = if version == 2 {
+                "computedTitle"
+            } else {
+                "customTitle"
+            };
+            let name =
+                self.sensitive_string(session.get(title_field), FieldId::Name, &mut diagnostics);
             let models = session
                 .get("requests")
                 .and_then(Value::as_array)
@@ -907,9 +915,19 @@ impl QueryMapping<'_> {
         if has_unknown_fields(
             session,
             &[
-                "version", "sessionId", "creationDate", "responderUsername", "customTitle",
-                "computedTitle", "requests", "initialLocation", "hasPendingEdits", "inputState",
-                "repoData", "pendingRequests", "workingDirectory",
+                "version",
+                "sessionId",
+                "creationDate",
+                "responderUsername",
+                "customTitle",
+                "computedTitle",
+                "requests",
+                "initialLocation",
+                "hasPendingEdits",
+                "inputState",
+                "repoData",
+                "pendingRequests",
+                "workingDirectory",
             ],
         ) {
             self.add_issue(AvailabilityCode::NotSupported, None);
@@ -967,26 +985,45 @@ impl QueryMapping<'_> {
             diagnostics,
         })?;
 
-        if request.get("response").is_some_and(|response| !response.is_null()) {
-            self.response(
-                request,
-                index,
-                partition,
-                session,
-                request_id,
-                turn_id,
-            )?;
+        if request
+            .get("response")
+            .is_some_and(|response| !response.is_null())
+        {
+            self.response(request, index, partition, session, request_id, turn_id)?;
         }
         if has_any_fields(
             request,
             &[
-                "agent", "isHidden", "hiddenFromTranscript", "shouldBeRemovedOnSend",
-                "isCanceled", "modelState", "promptTokens", "completionTokens", "modelTotals",
-                "copilotCredits", "sessionCopilotCredits", "variableData", "result",
-                "responseMarkdownInfo", "followups", "vote", "slashCommand", "usedContext",
-                "contentReferences", "codeCitations", "timeSpentWaiting", "outputBuffer",
-                "promptTokenDetails", "elapsedMs", "modeInfo", "systemInitiatedLabel",
-                "terminalExecutionId", "origin", "confirmation", "editedFileEvents",
+                "agent",
+                "isHidden",
+                "hiddenFromTranscript",
+                "shouldBeRemovedOnSend",
+                "isCanceled",
+                "modelState",
+                "promptTokens",
+                "completionTokens",
+                "modelTotals",
+                "copilotCredits",
+                "sessionCopilotCredits",
+                "variableData",
+                "result",
+                "responseMarkdownInfo",
+                "followups",
+                "vote",
+                "slashCommand",
+                "usedContext",
+                "contentReferences",
+                "codeCitations",
+                "timeSpentWaiting",
+                "outputBuffer",
+                "promptTokenDetails",
+                "elapsedMs",
+                "modeInfo",
+                "systemInitiatedLabel",
+                "terminalExecutionId",
+                "origin",
+                "confirmation",
+                "editedFileEvents",
             ],
         ) {
             self.add_issue(AvailabilityCode::NotSupported, None);
@@ -994,15 +1031,44 @@ impl QueryMapping<'_> {
         if has_unknown_fields(
             request,
             &[
-                "requestId", "message", "timestamp", "modelId", "response", "responseId",
-                "responseTimestamp", "agent", "isHidden", "hiddenFromTranscript",
-                "shouldBeRemovedOnSend", "isSystemInitiated", "isCanceled", "modelState",
-                "promptTokens", "completionTokens", "modelTotals", "copilotCredits",
-                "sessionCopilotCredits", "variableData", "result", "responseMarkdownInfo",
-                "followups", "vote", "slashCommand", "usedContext", "contentReferences",
-                "codeCitations", "timeSpentWaiting", "outputBuffer", "promptTokenDetails",
-                "elapsedMs", "modeInfo", "systemInitiatedLabel", "terminalExecutionId", "origin",
-                "confirmation", "editedFileEvents",
+                "requestId",
+                "message",
+                "timestamp",
+                "modelId",
+                "response",
+                "responseId",
+                "responseTimestamp",
+                "agent",
+                "isHidden",
+                "hiddenFromTranscript",
+                "shouldBeRemovedOnSend",
+                "isSystemInitiated",
+                "isCanceled",
+                "modelState",
+                "promptTokens",
+                "completionTokens",
+                "modelTotals",
+                "copilotCredits",
+                "sessionCopilotCredits",
+                "variableData",
+                "result",
+                "responseMarkdownInfo",
+                "followups",
+                "vote",
+                "slashCommand",
+                "usedContext",
+                "contentReferences",
+                "codeCitations",
+                "timeSpentWaiting",
+                "outputBuffer",
+                "promptTokenDetails",
+                "elapsedMs",
+                "modeInfo",
+                "systemInitiatedLabel",
+                "terminalExecutionId",
+                "origin",
+                "confirmation",
+                "editedFileEvents",
             ],
         ) {
             self.add_issue(AvailabilityCode::NotSupported, None);
@@ -1050,13 +1116,11 @@ impl QueryMapping<'_> {
                         );
                         continue;
                     };
-                    if part.get("kind").and_then(Value::as_str)
-                        == Some("toolInvocationSerialized")
+                    if part.get("kind").and_then(Value::as_str) == Some("toolInvocationSerialized")
                     {
                         self.tool(
                             part,
-                            request_index,
-                            part_index,
+                            (request_index, part_index),
                             partition,
                             session.clone(),
                             response_id.as_ref().or(request_id.as_ref()).cloned(),
@@ -1095,8 +1159,7 @@ impl QueryMapping<'_> {
     fn tool(
         &mut self,
         part: &Map<String, Value>,
-        request_index: usize,
-        part_index: usize,
+        (request_index, part_index): (usize, usize),
         partition: PartitionId,
         session: Option<SessionEvidenceKey>,
         parent_id: Option<String>,
@@ -1181,7 +1244,9 @@ impl QueryMapping<'_> {
                     AvailabilityCode::SensitiveOmitted,
                     Some(FieldId::Output),
                 );
-                vec![ObservationPart::Unavailable(AvailabilityCode::SensitiveOmitted)]
+                vec![ObservationPart::Unavailable(
+                    AvailabilityCode::SensitiveOmitted,
+                )]
             };
             facets.push(ObservationFacet::ToolResult {
                 native_call_id: call_id.into(),
@@ -1232,9 +1297,17 @@ impl QueryMapping<'_> {
         if has_unknown_fields(
             part,
             &[
-                "kind", "toolId", "toolCallId", "subAgentInvocationId", "isComplete",
-                "isConfirmed", "invocationMessage", "originMessage", "pastTenseMessage",
-                "resultDetails", "toolSpecificData",
+                "kind",
+                "toolId",
+                "toolCallId",
+                "subAgentInvocationId",
+                "isComplete",
+                "isConfirmed",
+                "invocationMessage",
+                "originMessage",
+                "pastTenseMessage",
+                "resultDetails",
+                "toolSpecificData",
             ],
         ) {
             self.issue_into(
@@ -1249,12 +1322,7 @@ impl QueryMapping<'_> {
             session,
             branch: BranchEvidence::Linear { partition },
             parent_ids: parent_id.into_iter().collect(),
-            sequence: native_sequence(&[
-                1,
-                request_index as u64,
-                2,
-                part_index as u64,
-            ]),
+            sequence: native_sequence(&[1, request_index as u64, 2, part_index as u64]),
             timestamp: None,
             facets,
             diagnostics,
@@ -1267,7 +1335,7 @@ impl QueryMapping<'_> {
         diagnostics: &mut Vec<AvailabilityIssue>,
     ) -> Vec<ObservationPart> {
         let text = match value {
-            Some(Value::String(text)) => Some(text),
+            Some(Value::String(text)) => Some(text.as_str()),
             Some(Value::Object(message)) => message.get("text").and_then(Value::as_str),
             _ => None,
         };
@@ -1370,11 +1438,7 @@ impl QueryMapping<'_> {
         if self.access.permits_payload(field) || self.access.permits_payload(FieldId::Parts) {
             part
         } else {
-            self.issue_into(
-                diagnostics,
-                AvailabilityCode::SensitiveOmitted,
-                Some(field),
-            );
+            self.issue_into(diagnostics, AvailabilityCode::SensitiveOmitted, Some(field));
             ObservationPart::Unavailable(AvailabilityCode::SensitiveOmitted)
         }
     }
@@ -1389,19 +1453,11 @@ impl QueryMapping<'_> {
         match value {
             Some(value) if self.access.permits_payload(field) => Some(value.into()),
             Some(_) => {
-                self.issue_into(
-                    diagnostics,
-                    AvailabilityCode::SensitiveOmitted,
-                    Some(field),
-                );
+                self.issue_into(diagnostics, AvailabilityCode::SensitiveOmitted, Some(field));
                 None
             }
             None => {
-                self.issue_into(
-                    diagnostics,
-                    AvailabilityCode::NotCaptured,
-                    Some(field),
-                );
+                self.issue_into(diagnostics, AvailabilityCode::NotCaptured, Some(field));
                 None
             }
         }
@@ -1419,11 +1475,7 @@ impl QueryMapping<'_> {
             .and_then(|millis| i128::from(millis).checked_mul(1_000_000))
             .and_then(|nanos| Timestamp::new(nanos, TimestampBasis::Native).ok());
         if timestamp.is_none() {
-            self.issue_into(
-                diagnostics,
-                AvailabilityCode::InvalidClock,
-                Some(field),
-            );
+            self.issue_into(diagnostics, AvailabilityCode::InvalidClock, Some(field));
         }
         timestamp
     }
@@ -1447,19 +1499,12 @@ impl QueryMapping<'_> {
                         associations.push(association);
                     }
                 }
-                None => self.add_issue(
-                    AvailabilityCode::NotSupported,
-                    Some(FieldId::ProjectPath),
-                ),
+                None => self.add_issue(AvailabilityCode::NotSupported, Some(FieldId::ProjectPath)),
             },
-            Some(_) => self.add_issue(
-                AvailabilityCode::NotSupported,
-                Some(FieldId::ProjectPath),
-            ),
-            None if session.contains_key("repoData") && associations.is_empty() => self.add_issue(
-                AvailabilityCode::Unassociated,
-                Some(FieldId::ProjectPath),
-            ),
+            Some(_) => self.add_issue(AvailabilityCode::NotSupported, Some(FieldId::ProjectPath)),
+            None if session.contains_key("repoData") && associations.is_empty() => {
+                self.add_issue(AvailabilityCode::Unassociated, Some(FieldId::ProjectPath))
+            }
             None => {}
         }
     }
@@ -1564,7 +1609,7 @@ impl QueryMapping<'_> {
 }
 
 fn native_sequence(parts: &[u64]) -> NativeSequence {
-    let mut key = Vec::with_capacity(parts.len() * std::mem::size_of::<u64>());
+    let mut key = Vec::with_capacity(std::mem::size_of_val(parts));
     for part in parts {
         key.extend_from_slice(&part.to_be_bytes());
     }

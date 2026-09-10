@@ -23,7 +23,7 @@
           "id": "tk-0001",
           "title": "PM query contract baseline and shared-file ownership",
           "phase": "ph-0375",
-          "state": "unchecked",
+          "state": "checked",
           "success": "Implement the real minimal core DTO/port/schema/error/action/limit contracts and fixture/fakes before coder release. Own shared manifests, lockfile and architecture policy throughout convergence; freeze and review exported signatures, not a stub query implementation.",
           "notes": "Guide unit: tk-0001; wave 0; owner role pm. Exact paths/reads/interfaces/dependencies: ../../impl-guide.dd.json#units/tk-0001. Approved decomposition receipt: ../../team/review-decomposition-approved.dd.json. Phase1 baseline; no future implementation SHA is required for guide approval. Workers receive committed contracts/fakes through live Builder map-first packets after review and baseline proof. Canonical plan/guide/flow/receipt files are PM-only. Mandatory R3 wave0 followups: ../../baseline-followups.json; implement the closed CursorMismatchReason and inspect C21/C22/C23/C25 before sealing. Guide approval is not baseline approval. Scoped decomposition approval is recorded; the explicit operator role amendment is in ../../team/operator-role-amendment.json. No coder dispatch is issued by this dossier. PM quality acceptance is mandatory: candidate code is inspected for correctness, maintainability and needless allocations/duplication, exercised through applicable composed behavior and independently reviewed. A compile or coder completion claim is not acceptance.",
           "satisfies_toward": [
@@ -35,7 +35,8 @@
             "../../../plan.dd.json#acceptance_criteria/ac-0017",
             "../../../plan.dd.json#acceptance_criteria/ac-0018"
           ],
-          "done": "tasks.dd.json#done_when/tk-0001"
+          "done": "tasks.dd.json#done_when/tk-0001",
+          "receipt": "../../team/baseline.dd.json; ../../team/review-baseline-approved.dd.json; ../../verification/baseline-proof-4c3c665f.json"
         },
         {
           "id": "tk-0002",
@@ -176,37 +177,37 @@
           {
             "id": "dw-0001",
             "assertion": "The complete C21-C23 DTO/schema/fake freeze set distinguishes typed source facts, available/null/absent fields, source selection, recovery and saved-universe completeness, and is independently reviewed at its actual committed baseline before wave1.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0003"
           },
           {
             "id": "dw-0002",
             "assertion": "The shared field registry and projection contract identify sensitive payloads, including recursively nested fields; raw observation types are not an output serialization path.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-000c"
           },
           {
             "id": "dw-0003",
             "assertion": "Invalid or overflowing limits and incompatible request combinations fail before source/output calls.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-000e"
           },
           {
             "id": "dw-0004",
             "assertion": "Semantic next actions and typed recoveries can represent success, zero matches, partial data and every declared error without embedding raw private input.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0017"
           },
           {
             "id": "dw-0005",
             "assertion": "The actual committed core contract/fixture/fake baseline passes its declared checks and has an independent exact-basis review before coder release.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0015"
           },
           {
             "id": "dw-0006",
             "assertion": "StaleCursor exposes a closed QueryOptionsChanged versus SourceViewChanged reason to SDK/CLI consumers; query binding is compared before view binding and malformed tokens are not mislabeled source changes.",
-            "state": "unchecked",
+            "state": "checked",
             "pressure": "../../backpressure.dd.json#rows/bp-0007"
           }
         ],

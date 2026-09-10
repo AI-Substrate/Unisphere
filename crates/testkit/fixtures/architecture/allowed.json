@@ -83,6 +83,10 @@
         {
           "name": "libc",
           "kind": null
+        },
+        {
+          "name": "globset",
+          "kind": null
         }
       ]
     },
@@ -97,6 +101,10 @@
         },
         {
           "name": "serde_json",
+          "kind": null
+        },
+        {
+          "name": "serde",
           "kind": null
         }
       ]

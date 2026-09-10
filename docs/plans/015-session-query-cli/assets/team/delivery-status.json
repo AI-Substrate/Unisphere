@@ -1,0 +1,24 @@
+{
+  "recorded_at": "2026-09-10T05:15:07.712Z",
+  "candidate_count": 7,
+  "accepted_unit_deliveries": [],
+  "revision_requested": [
+    "tk-0009: preserve raw CSV and bound intermediate rendering",
+    "tk-000a: remove source/prose-pinning tests"
+  ],
+  "pending_initial_delivery": [
+    "tk-0004",
+    "tk-0008"
+  ],
+  "core_amendment": "IsContext and supported metric projection declarations; original baseline remains immutable and amendment requires review/binding before final acceptance",
+  "attribution": {
+    "tk-000a": "Commit note landed, but coder observed human-attributed ranges and empty prompts; no AI-attribution confirmation claimed; no buffer to nudge."
+  },
+  "startup_boot": {
+    "tk-0009": "Attempted before fleet rule; already failed at rustdoc when cancellation was attempted, not packet proof",
+    "tk-000a": "Attempted before fleet rule; late ready:true scope configuration-and-native-session-projections, not docs proof",
+    "tk-0004": "Cancelled after fleet rule",
+    "tk-0005": "Cancelled before completion after fleet rule"
+  },
+  "validation": "All packet-specific proof unrun by coders; PM composition pending"
+}

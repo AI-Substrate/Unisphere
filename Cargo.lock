@@ -692,9 +692,22 @@ name = "unisphere-loader-jsonl"
 version = "0.1.0"
 dependencies = [
  "libc",
+ "sha2",
  "tempfile",
  "unisphere-core",
  "unisphere-testkit",
+]
+
+[[package]]
+name = "unisphere-loader-query"
+version = "0.1.0"
+dependencies = [
+ "globset",
+ "libc",
+ "tempfile",
+ "unisphere-core",
+ "unisphere-loader-jsonl",
+ "unisphere-loader-snapshot",
 ]
 
 [[package]]
@@ -717,6 +730,15 @@ dependencies = [
  "serde_json",
  "unisphere-core",
  "unisphere-testkit",
+]
+
+[[package]]
+name = "unisphere-output-query"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+ "unisphere-core",
 ]
 
 [[package]]

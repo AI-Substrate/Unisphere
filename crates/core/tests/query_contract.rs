@@ -891,6 +891,351 @@ fn every_dataset_projects_common_metadata_and_protects_native_ids() {
 }
 
 #[test]
+fn context_marker_is_non_filterable_metadata_and_round_trips() {
+    for (dataset, kind) in [
+        (Dataset::Turns, EntityKind::Turn),
+        (Dataset::Messages, EntityKind::Message),
+    ] {
+        let dataset_schema = schema(dataset);
+        let marker = dataset_schema.field(FieldId::IsContext).unwrap();
+        assert_eq!(marker.field_type, FieldType::Bool);
+        assert!(!marker.nullable);
+        assert_eq!(marker.unit, None);
+        assert_eq!(marker.sensitivity, Sensitivity::Metadata);
+        assert_eq!(marker.availability, Availability::ProjectedOptional);
+        assert!(marker.allowed_predicates.is_empty());
+        assert!(!dataset_schema.default_columns.contains(&FieldId::IsContext));
+
+        let mut circular_filter = base_request();
+        circular_filter.dataset = dataset;
+        circular_filter.filters = vec![Filter {
+            field: FieldId::IsContext,
+            predicate: Predicate::Equal,
+            values: vec![FieldValue::Bool(true)],
+            ignore_case: false,
+        }];
+        let error = circular_filter.validate().unwrap_err();
+        assert_eq!(error.kind(), QueryFailureCode::UnsupportedOperation);
+        assert_eq!(error.recovery(), &RecoveryAction::ConsultSchema { dataset });
+
+        for is_context in [false, true] {
+            let row = ProjectedRow::new(
+                dataset,
+                EntityId::derive(kind, [dataset.as_str().as_bytes(), &[u8::from(is_context)]]),
+                Vec::new(),
+                BTreeMap::from([(FieldId::IsContext, FieldValue::Bool(is_context))]),
+                &ContentAccess::default(),
+            )
+            .unwrap();
+            let wire = serde_json::to_value(&row).unwrap();
+            assert_eq!(wire["fields"]["is_context"], is_context);
+
+            let untrusted: UntrustedProjectedRow = serde_json::from_value(wire).unwrap();
+            let restored =
+                ProjectedRow::from_untrusted(untrusted, &ContentAccess::default()).unwrap();
+            assert!(matches!(
+                restored.field(FieldId::IsContext),
+                Some(FieldValue::Bool(value)) if *value == is_context
+            ));
+        }
+    }
+
+    for dataset in [
+        Dataset::Sources,
+        Dataset::Sessions,
+        Dataset::Tools,
+        Dataset::Events,
+    ] {
+        assert!(schema(dataset).field(FieldId::IsContext).is_none());
+    }
+}
+
+#[test]
+fn declared_statistics_are_real_projectable_fields_with_units_and_null_boundaries() {
+    struct MetricContract {
+        metric: Metric,
+        field: FieldId,
+        field_type: FieldType,
+        nullable: bool,
+        unit: FieldUnit,
+        sample: FieldValue,
+    }
+
+    let contracts = [
+        MetricContract {
+            metric: Metric::Count,
+            field: FieldId::Count,
+            field_type: FieldType::U64,
+            nullable: false,
+            unit: FieldUnit::Count,
+            sample: FieldValue::Unsigned(3),
+        },
+        MetricContract {
+            metric: Metric::MeasuredCount,
+            field: FieldId::MeasuredCount,
+            field_type: FieldType::U64,
+            nullable: false,
+            unit: FieldUnit::Count,
+            sample: FieldValue::Unsigned(2),
+        },
+        MetricContract {
+            metric: Metric::MissingDurationCount,
+            field: FieldId::MissingDurationCount,
+            field_type: FieldType::U64,
+            nullable: false,
+            unit: FieldUnit::Count,
+            sample: FieldValue::Unsigned(1),
+        },
+        MetricContract {
+            metric: Metric::Succeeded,
+            field: FieldId::Succeeded,
+            field_type: FieldType::U64,
+            nullable: false,
+            unit: FieldUnit::Count,
+            sample: FieldValue::Unsigned(1),
+        },
+        MetricContract {
+            metric: Metric::Failures,
+            field: FieldId::Failures,
+            field_type: FieldType::U64,
+            nullable: false,
+            unit: FieldUnit::Count,
+            sample: FieldValue::Unsigned(1),
+        },
+        MetricContract {
+            metric: Metric::Cancelled,
+            field: FieldId::Cancelled,
+            field_type: FieldType::U64,
+            nullable: false,
+            unit: FieldUnit::Count,
+            sample: FieldValue::Unsigned(0),
+        },
+        MetricContract {
+            metric: Metric::Incomplete,
+            field: FieldId::Incomplete,
+            field_type: FieldType::U64,
+            nullable: false,
+            unit: FieldUnit::Count,
+            sample: FieldValue::Unsigned(0),
+        },
+        MetricContract {
+            metric: Metric::Unknown,
+            field: FieldId::Unknown,
+            field_type: FieldType::U64,
+            nullable: false,
+            unit: FieldUnit::Count,
+            sample: FieldValue::Unsigned(1),
+        },
+        MetricContract {
+            metric: Metric::FailureRate,
+            field: FieldId::FailureRate,
+            field_type: FieldType::FiniteF64,
+            nullable: true,
+            unit: FieldUnit::Ratio,
+            sample: FieldValue::Float(0.5),
+        },
+        MetricContract {
+            metric: Metric::MeanMs,
+            field: FieldId::MeanMs,
+            field_type: FieldType::FiniteF64,
+            nullable: true,
+            unit: FieldUnit::Milliseconds,
+            sample: FieldValue::Float(10.0),
+        },
+        MetricContract {
+            metric: Metric::MinMs,
+            field: FieldId::MinMs,
+            field_type: FieldType::FiniteF64,
+            nullable: true,
+            unit: FieldUnit::Milliseconds,
+            sample: FieldValue::Float(5.0),
+        },
+        MetricContract {
+            metric: Metric::MaxMs,
+            field: FieldId::MaxMs,
+            field_type: FieldType::FiniteF64,
+            nullable: true,
+            unit: FieldUnit::Milliseconds,
+            sample: FieldValue::Float(15.0),
+        },
+        MetricContract {
+            metric: Metric::P50Ms,
+            field: FieldId::P50Ms,
+            field_type: FieldType::FiniteF64,
+            nullable: true,
+            unit: FieldUnit::Milliseconds,
+            sample: FieldValue::Float(10.0),
+        },
+        MetricContract {
+            metric: Metric::P95Ms,
+            field: FieldId::P95Ms,
+            field_type: FieldType::FiniteF64,
+            nullable: true,
+            unit: FieldUnit::Milliseconds,
+            sample: FieldValue::Float(14.0),
+        },
+        MetricContract {
+            metric: Metric::InputTokens,
+            field: FieldId::InputTokens,
+            field_type: FieldType::U64,
+            nullable: true,
+            unit: FieldUnit::Tokens,
+            sample: FieldValue::Unsigned(100),
+        },
+        MetricContract {
+            metric: Metric::OutputTokens,
+            field: FieldId::OutputTokens,
+            field_type: FieldType::U64,
+            nullable: true,
+            unit: FieldUnit::Tokens,
+            sample: FieldValue::Unsigned(50),
+        },
+        MetricContract {
+            metric: Metric::CacheReadTokens,
+            field: FieldId::CacheReadTokens,
+            field_type: FieldType::U64,
+            nullable: true,
+            unit: FieldUnit::Tokens,
+            sample: FieldValue::Unsigned(25),
+        },
+        MetricContract {
+            metric: Metric::CacheWriteTokens,
+            field: FieldId::CacheWriteTokens,
+            field_type: FieldType::U64,
+            nullable: true,
+            unit: FieldUnit::Tokens,
+            sample: FieldValue::Unsigned(10),
+        },
+    ];
+
+    for dataset in [Dataset::Sessions, Dataset::Turns, Dataset::Tools] {
+        let dataset_schema = schema(dataset);
+        let mut projected = BTreeMap::new();
+        for &metric in dataset_schema.metrics {
+            let contract = contracts
+                .iter()
+                .find(|contract| contract.metric == metric)
+                .unwrap();
+            let field = dataset_schema.field(contract.field).unwrap();
+            assert_eq!(field.field_type, contract.field_type);
+            assert_eq!(field.nullable, contract.nullable);
+            assert_eq!(field.unit, Some(contract.unit));
+            assert_eq!(field.sensitivity, Sensitivity::Metadata);
+            let availability = match contract.metric {
+                Metric::InputTokens
+                | Metric::OutputTokens
+                | Metric::CacheReadTokens
+                | Metric::CacheWriteTokens => Availability::SourceQualified,
+                _ => Availability::ProjectedOptional,
+            };
+            assert_eq!(field.availability, availability);
+            assert!(field.allowed_predicates.is_empty());
+            projected.insert(contract.field, contract.sample.clone());
+        }
+
+        let group_id = EntityId::derive(EntityKind::Group, [dataset.as_str().as_bytes()]);
+        let row = ProjectedRow::new(
+            dataset,
+            group_id,
+            Vec::new(),
+            projected,
+            &ContentAccess::default(),
+        )
+        .unwrap();
+        for &metric in dataset_schema.metrics {
+            let contract = contracts
+                .iter()
+                .find(|contract| contract.metric == metric)
+                .unwrap();
+            assert!(row.field(contract.field) == Some(&contract.sample));
+        }
+
+        let nullable = contracts
+            .iter()
+            .filter(|contract| {
+                contract.nullable && dataset_schema.metrics.contains(&contract.metric)
+            })
+            .map(|contract| (contract.field, FieldValue::Null))
+            .collect();
+        let nullable_row = ProjectedRow::new(
+            dataset,
+            group_id,
+            Vec::new(),
+            nullable,
+            &ContentAccess::default(),
+        )
+        .unwrap();
+        for contract in contracts.iter().filter(|contract| {
+            contract.nullable && dataset_schema.metrics.contains(&contract.metric)
+        }) {
+            assert!(matches!(
+                nullable_row.field(contract.field),
+                Some(FieldValue::Null)
+            ));
+        }
+
+        for contract in contracts.iter().filter(|contract| {
+            !contract.nullable && dataset_schema.metrics.contains(&contract.metric)
+        }) {
+            let error = match ProjectedRow::new(
+                dataset,
+                group_id,
+                Vec::new(),
+                BTreeMap::from([(contract.field, FieldValue::Null)]),
+                &ContentAccess::default(),
+            ) {
+                Ok(_) => panic!("non-null statistic accepted null for {}", contract.field),
+                Err(error) => error,
+            };
+            assert_eq!(error.kind(), QueryFailureCode::InvalidData);
+        }
+    }
+
+    let non_finite = match ProjectedRow::new(
+        Dataset::Tools,
+        EntityId::derive(EntityKind::Group, [&b"non-finite"[..]]),
+        Vec::new(),
+        BTreeMap::from([(FieldId::FailureRate, FieldValue::Float(f64::NAN))]),
+        &ContentAccess::default(),
+    ) {
+        Ok(_) => panic!("non-finite failure rate entered a projected statistics row"),
+        Err(error) => error,
+    };
+    assert_eq!(non_finite.kind(), QueryFailureCode::InvalidData);
+
+    for (dataset, kind) in [
+        (Dataset::Sources, EntityKind::Source),
+        (Dataset::Messages, EntityKind::Message),
+        (Dataset::Events, EntityKind::Event),
+    ] {
+        let dataset_schema = schema(dataset);
+        for contract in &contracts {
+            assert!(dataset_schema.field(contract.field).is_none());
+            let error = match ProjectedRow::new(
+                dataset,
+                EntityId::derive(
+                    kind,
+                    [
+                        dataset.as_str().as_bytes(),
+                        contract.field.as_str().as_bytes(),
+                    ],
+                ),
+                Vec::new(),
+                BTreeMap::from([(contract.field, contract.sample.clone())]),
+                &ContentAccess::default(),
+            ) {
+                Ok(_) => panic!(
+                    "non-statistics dataset {dataset} accepted statistic field {}",
+                    contract.field
+                ),
+                Err(error) => error,
+            };
+            assert_eq!(error.kind(), QueryFailureCode::InvalidField);
+        }
+    }
+}
+
+#[test]
 fn non_stats_datasets_declare_no_grouping_fields() {
     for dataset in [Dataset::Sources, Dataset::Messages, Dataset::Events] {
         let dataset_schema = schema(dataset);

@@ -19,10 +19,10 @@ use unisphere_core::{
     AdapterDescriptor, PipelineError, PipelineErrorKind, ReadLimits, SessionRef, SnapshotFormat,
     SnapshotLimits, SnapshotLoader, SnapshotRef,
     query::{
-        AdapterId, AssociationStatus, AvailabilityCode, AvailabilityIssue, ContentAccess,
-        Coverage, HarnessId, InspectedSource, LimitKind, NativeQueryInput, NativeQueryView,
-        OfflineRef, QueryAdapter, QueryFailure, QueryFailureCode, QueryInput, QueryLimits,
-        QueryScope, QuerySource, RecoveryAction, RepoScope, SavedFormat, SourceEvidence, SourceId,
+        AdapterId, AssociationStatus, AvailabilityCode, AvailabilityIssue, ContentAccess, Coverage,
+        HarnessId, InspectedSource, LimitKind, NativeQueryInput, NativeQueryView, OfflineRef,
+        QueryAdapter, QueryFailure, QueryFailureCode, QueryInput, QueryLimits, QueryScope,
+        QuerySource, RecoveryAction, RepoScope, SavedFormat, SourceEvidence, SourceId,
         SourceLocator, SourceProblem, SourceReadStatus, SourceSelection, SourceSelector,
     },
 };
@@ -144,6 +144,8 @@ impl LocalQueryContext {
     }
 }
 
+type RegisteredAdapter = (usize, AdapterId);
+
 /// Imperative local provider; all association, reconciliation and row selection
 /// remains in the SDK query service.
 pub struct LocalQuerySource {
@@ -166,7 +168,7 @@ impl LocalQuerySource {
     fn admitted_registrations(
         &self,
         selection: &SourceSelection,
-    ) -> Result<(Vec<(usize, AdapterId)>, Vec<AdapterId>), QueryFailure> {
+    ) -> Result<(Vec<RegisteredAdapter>, Vec<AdapterId>), QueryFailure> {
         selection.validate()?;
         let mut admitted = Vec::new();
         let mut excluded = BTreeSet::new();
@@ -203,7 +205,10 @@ impl LocalQuerySource {
             OfflineRef::Stdin => self.context.stdin.clone().ok_or_else(missing_source)?,
             OfflineRef::File(path) => ProvidedInput {
                 bytes: read_saved_file(path, limits.max_source_bytes)?.into(),
-                format: if path.extension().is_some_and(|extension| extension == "jsonl") {
+                format: if path
+                    .extension()
+                    .is_some_and(|extension| extension == "jsonl")
+                {
                     SavedFormat::QueryJsonlV1
                 } else {
                     SavedFormat::QueryJsonV1
@@ -231,7 +236,11 @@ impl LocalQuerySource {
         if scope != RepoScope::Worktrees {
             return Ok(vec![root]);
         }
-        let git = self.context.git_executable.as_ref().ok_or_else(git_unavailable)?;
+        let git = self
+            .context
+            .git_executable
+            .as_ref()
+            .ok_or_else(git_unavailable)?;
         if !git.is_absolute()
             || !fs::symlink_metadata(git)
                 .is_ok_and(|metadata| metadata.is_file() && !metadata.file_type().is_symlink())
@@ -507,20 +516,26 @@ impl LocalQuerySource {
         }
         if matching.len() != 1 {
             let allowed = if matching.is_empty() {
-                admitted.iter().map(|(_, adapter)| adapter.clone()).collect()
+                admitted
+                    .iter()
+                    .map(|(_, adapter)| adapter.clone())
+                    .collect()
             } else {
-                matching.iter().map(|(_, adapter)| adapter.clone()).collect()
+                matching
+                    .iter()
+                    .map(|(_, adapter)| adapter.clone())
+                    .collect()
             };
             return Err(unsupported_source(allowed));
         }
-        let (path, status) = normalize_explicit_path(path);
+        let (physical_path, status) = normalize_explicit_path(path);
         Ok(matching
             .into_iter()
             .map(|(registration, adapter)| Candidate {
                 registration,
                 adapter,
-                locator: SourceLocator::LocalPath(path.clone()),
-                path: Some(path.clone()),
+                locator: SourceLocator::LocalPath(path.to_path_buf()),
+                path: Some(physical_path.clone()),
                 status,
             })
             .collect())
@@ -572,7 +587,10 @@ impl LocalQuerySource {
             }
             let registration = &self.registrations[candidate.registration];
             let seed = seed_identity(&candidate, registration);
-            let path = candidate.path.as_ref().ok_or_else(QueryFailure::invalid_data)?;
+            let path = candidate
+                .path
+                .as_ref()
+                .ok_or_else(QueryFailure::invalid_data)?;
             let (inspected, expected) = match &registration.representation {
                 NativeRepresentation::Jsonl => {
                     let native = self.jsonl.read_query_snapshot(
@@ -672,7 +690,9 @@ impl LocalQuerySource {
             match inspected {
                 Ok(inspected) => {
                     validate_inspected(&expected, &inspected, limits)?;
-                    if observations.len().saturating_add(inspected.observations.len())
+                    if observations
+                        .len()
+                        .saturating_add(inspected.observations.len())
                         > limits.max_observations_and_rows
                     {
                         return Err(QueryFailure::limit(LimitKind::ObservationsAndRows));
@@ -681,7 +701,10 @@ impl LocalQuerySource {
                     coverage.selected_sources = coverage.selected_sources.saturating_add(1);
                     increment(&mut coverage.source_status, SourceReadStatus::Readable);
                     if inspected.source.associations.is_empty() {
-                        increment(&mut coverage.association_status, AssociationStatus::Unassociated);
+                        increment(
+                            &mut coverage.association_status,
+                            AssociationStatus::Unassociated,
+                        );
                         coverage.issues.push(AvailabilityIssue {
                             code: AvailabilityCode::Unassociated,
                             field: None,
@@ -704,7 +727,8 @@ impl LocalQuerySource {
                     } else {
                         SourceReadStatus::Unreadable
                     };
-                    source.revision = format!("{UNAVAILABLE_REVISION_PREFIX}{}", source.read_status);
+                    source.revision =
+                        format!("{UNAVAILABLE_REVISION_PREFIX}{}", source.read_status);
                     record_unavailable(&mut coverage, &source);
                     coverage.issues.push(AvailabilityIssue {
                         code: failure_availability(&failure),
@@ -761,8 +785,7 @@ impl QuerySource for LocalQuerySource {
             QueryScope::Source {
                 selector: SourceSelector::Path { path, adapter },
             } => {
-                let candidates =
-                    self.discover_explicit_path(path, adapter.as_ref(), &admitted)?;
+                let candidates = self.discover_explicit_path(path, adapter.as_ref(), &admitted)?;
                 self.load_candidates(candidates, Vec::new(), limits, access, excluded)
             }
             QueryScope::Source {
@@ -866,7 +889,8 @@ fn compile_glob(pattern: &str) -> Result<GlobMatcher, globset::Error> {
 
 fn platform_matches(platforms: &[&str], platform: &str) -> bool {
     platforms.iter().any(|candidate| {
-        *candidate == platform || (*candidate == "unix" && matches!(platform, "macos" | "linux" | "unix"))
+        *candidate == platform
+            || (*candidate == "unix" && matches!(platform, "macos" | "linux" | "unix"))
     })
 }
 
@@ -904,11 +928,18 @@ fn locator_bytes(locator: &SourceLocator) -> &[u8] {
 
 fn source_id(candidate: &Candidate, registration: &QueryRegistration) -> SourceId {
     let representation = registration.representation.name();
+    // The selector remains the authorization boundary; identity uses the
+    // normalized physical path so aliases do not create duplicate sources.
+    let identity = candidate
+        .path
+        .as_deref()
+        .map(|path| path.as_os_str().as_encoded_bytes())
+        .unwrap_or_else(|| locator_bytes(&candidate.locator));
     SourceId::derive([
         candidate.adapter.as_str().as_bytes(),
         registration.harness.as_str().as_bytes(),
         representation.as_bytes(),
-        locator_bytes(&candidate.locator),
+        identity,
     ])
 }
 
@@ -927,8 +958,10 @@ fn seed_identity(candidate: &Candidate, registration: &QueryRegistration) -> Sou
     }
 }
 
-
-fn pipeline_failure_evidence(mut source: SourceEvidence, failure: &PipelineError) -> SourceEvidence {
+fn pipeline_failure_evidence(
+    mut source: SourceEvidence,
+    failure: &PipelineError,
+) -> SourceEvidence {
     source.read_status = match failure.kind() {
         PipelineErrorKind::Unsupported => SourceReadStatus::Unsupported,
         _ => SourceReadStatus::Unreadable,
@@ -1125,8 +1158,7 @@ fn read_saved_file(path: &Path, maximum: usize) -> Result<Vec<u8>, QueryFailure>
         .map_err(|_| unreadable_source(SourceProblem::ChangedDuringRead))?;
     let final_path = fs::symlink_metadata(path)
         .map_err(|_| unreadable_source(SourceProblem::ChangedDuringRead))?;
-    if !same_file_generation(&opened, &final_opened)
-        || !same_file_generation(&opened, &final_path)
+    if !same_file_generation(&opened, &final_opened) || !same_file_generation(&opened, &final_path)
     {
         return Err(unreadable_source(SourceProblem::ChangedDuringRead));
     }

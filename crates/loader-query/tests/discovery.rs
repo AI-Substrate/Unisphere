@@ -41,14 +41,11 @@ macro_rules! descriptor {
 }
 
 const VALID: AdapterDescriptor = descriptor!("valid", "stores/valid", &["macos", "linux"]);
-const BLOCKED: AdapterDescriptor =
-    descriptor!("blocked", "stores/blocked", &["macos", "linux"]);
-const ABSENT: AdapterDescriptor =
-    descriptor!("absent", "stores/absent", &["macos", "linux"]);
+const BLOCKED: AdapterDescriptor = descriptor!("blocked", "stores/blocked", &["macos", "linux"]);
+const ABSENT: AdapterDescriptor = descriptor!("absent", "stores/absent", &["macos", "linux"]);
 const UNREADABLE: AdapterDescriptor =
     descriptor!("unreadable", "stores/unreadable", &["macos", "linux"]);
-const UNSUPPORTED: AdapterDescriptor =
-    descriptor!("unsupported", "stores/windows", &["windows"]);
+const UNSUPPORTED: AdapterDescriptor = descriptor!("unsupported", "stores/windows", &["windows"]);
 
 struct EchoAdapter;
 
@@ -97,6 +94,47 @@ fn native(input: QueryInput) -> unisphere_core::query::NativeQueryView {
 }
 
 #[test]
+fn explicit_source_aliases_preserve_identity_and_authorized_selector() {
+    let temporary = tempdir().unwrap();
+    let directory = temporary.path().join("stores/valid");
+    fs::create_dir_all(directory.join("nested")).unwrap();
+    fs::write(directory.join("session.jsonl"), b"{}\n").unwrap();
+    fs::write(directory.join("other.jsonl"), b"{}\n").unwrap();
+    let canonical = fs::canonicalize(directory.join("session.jsonl")).unwrap();
+    let alias = directory.join("nested/../session.jsonl");
+    let source = LocalQuerySource::new(vec![registration(VALID)], context(temporary.path()));
+    let load = |path: &std::path::Path| {
+        native(
+            source
+                .load(
+                    &QueryScope::Source {
+                        selector: unisphere_core::query::SourceSelector::Path {
+                            path: path.to_path_buf(),
+                            adapter: Some(AdapterId::new("valid").unwrap()),
+                        },
+                    },
+                    &SourceSelection::default(),
+                    &QueryLimits::default(),
+                    ContentAccess::default(),
+                )
+                .unwrap(),
+        )
+    };
+    let direct = load(&canonical);
+    let aliased = load(&alias);
+    assert_eq!(direct.sources[0].id, aliased.sources[0].id);
+    assert_eq!(direct.sources[0].revision, aliased.sources[0].revision);
+    assert!(matches!(
+        &aliased.sources[0].locator,
+        unisphere_core::query::SourceLocator::LocalPath(path) if path == &alias
+    ));
+    assert_ne!(
+        aliased.sources[0].id,
+        load(&directory.join("other.jsonl")).sources[0].id
+    );
+}
+
+#[test]
 fn source_selection_precedes_discovery_and_io() {
     let temporary = tempdir().unwrap();
     let repository = temporary.path().join("repo");
@@ -116,9 +154,11 @@ fn source_selection_precedes_discovery_and_io() {
     selection
         .include_adapters
         .insert(AdapterId::new("valid").unwrap());
-    let mut limits = QueryLimits::default();
-    limits.max_source_bytes = 64;
-    limits.max_total_input_bytes = 128;
+    let limits = QueryLimits {
+        max_source_bytes: 64,
+        max_total_input_bytes: 128,
+        ..QueryLimits::default()
+    };
 
     let view = native(
         source
@@ -153,7 +193,11 @@ fn discovery_keeps_absent_unreadable_unsupported_and_unassociated_distinct() {
     fs::create_dir_all(&valid).unwrap();
     fs::create_dir_all(temporary.path().join("stores")).unwrap();
     fs::write(valid.join("session.jsonl"), b"{}\n").unwrap();
-    fs::write(temporary.path().join("stores/unreadable"), b"not a directory").unwrap();
+    fs::write(
+        temporary.path().join("stores/unreadable"),
+        b"not a directory",
+    )
+    .unwrap();
 
     let source = LocalQuerySource::new(
         vec![
@@ -188,10 +232,11 @@ fn discovery_keeps_absent_unreadable_unsupported_and_unassociated_distinct() {
     assert_eq!(statuses["unreadable"], SourceReadStatus::Unreadable);
     assert_eq!(statuses["unsupported"], SourceReadStatus::Unsupported);
     assert!(!view.coverage.source_read_complete);
-    assert!(view
-        .coverage
-        .association_status
-        .contains_key(&unisphere_core::query::AssociationStatus::Unassociated));
+    assert!(
+        view.coverage
+            .association_status
+            .contains_key(&unisphere_core::query::AssociationStatus::Unassociated)
+    );
 }
 
 #[test]

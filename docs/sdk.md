@@ -267,15 +267,15 @@ immutable `QueryView` and call `execute_view` repeatedly without another source
 read:
 
 ```rust
-use unisphere_sdk::{
-    Dataset, Operation, QueryApi, QueryRequest, QueryService, QuerySource,
-    execute_view,
+use unisphere_sdk::{QueryService, execute_view};
+use unisphere_sdk::query::{
+    Dataset, Operation, QueryApi, QueryFailure, QueryRequest, QuerySource,
 };
 
 fn inspect<S: QuerySource>(
     service: &QueryService<S>,
     request: &QueryRequest,
-) -> Result<(), unisphere_sdk::QueryFailure> {
+) -> Result<(), QueryFailure> {
     let response = service.execute(request)?;
     assert_eq!(response.dataset, Dataset::Sessions);
 
@@ -287,9 +287,10 @@ fn inspect<S: QuerySource>(
 # let _ = inspect::<unisphere_testkit::query::FakeQuerySource>;
 ```
 
-The public facade re-exports the core query vocabulary. `QuerySource::load`
-accepts only the explicit `QueryScope`, pre-I/O `SourceSelection`, `QueryLimits`
-and derived `ContentAccess`, and returns either a supplied `NativeQueryView` or
+The `unisphere_sdk::query` facade re-exports the core query vocabulary.
+`QuerySource::load` accepts only the explicit `QueryScope`, pre-I/O
+`SourceSelection`, `QueryLimits` and derived `ContentAccess`, and returns either
+a supplied `NativeQueryView` or
 bounded versioned saved input. Concrete discovery/loaders remain separate
 adapters composed by the application.
 
@@ -308,6 +309,10 @@ summary records do not. Calls pair with results/progress only by a supported
 native call ID inside the same session/branch. Missing, duplicate or reversed
 evidence remains explicitly incomplete, ambiguous or invalid-clock rather than
 being paired by adjacency or text.
+Validated native parent trees derive one branch per terminal path. Shared-prefix
+rows carry every descendant branch membership; the SDK never selects an active
+leaf. Turn continuation, tool pairing and context expansion use those exact
+memberships, so sibling branches cannot collapse into one transcript.
 
 Every view exposes `digest()`, `admitted_scope()`, `source_selection()`,
 `retained_capability()` and `input_basis()`. The digest binds schema and
@@ -375,6 +380,10 @@ nearest-rank `ceil(p*n)`. Failure-rate denominator is
 and incomplete/unknown calls are excluded. Cumulative usage snapshots contribute
 only the latest compatible native-owned value instead of being summed as replayed
 usage.
+Derived aggregate and usage metric fields are valid only for statistics. Using
+one as a column or sort key on a row operation returns
+`UnsupportedOperation` before `QuerySource::load`; source-qualified row fields
+such as a tool call's `duration_ms` remain available to regular operations.
 
 `QueryLimits` bound source/input bytes, observations and rows, retained payload,
 patterns and scanned text, context neighbours, branch memberships, cursor size

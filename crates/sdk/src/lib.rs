@@ -41,14 +41,14 @@
 #![forbid(unsafe_code)]
 
 pub mod collection;
-pub mod query;
 mod fs;
+pub mod query;
 mod service;
 pub mod snapshot;
 pub use collection::{Collector, collect_batch};
+pub use query::{QueryService, QueryView, execute_view};
 pub use snapshot::SnapshotCollector;
 pub use unisphere_core::collection::*;
-pub use query::*;
 pub use unisphere_core::{
     MappedSnapshot, NativeSnapshot, SnapshotAdapter, SnapshotCheckpoint, SnapshotCollection,
     SnapshotCollectionApi, SnapshotDiagnostic, SnapshotFormat, SnapshotLimits, SnapshotLoader,

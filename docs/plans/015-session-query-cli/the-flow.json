@@ -3,7 +3,7 @@
   "kind": "flight-plan",
   "slug": "session-query-cli",
   "nav": {
-    "now": "impl-guide",
+    "now": "phase-1",
     "next": null,
     "bag": {
       "pm": "pij-empirical-tiger",
@@ -247,6 +247,38 @@
         "from": "plan",
         "to": "impl-guide"
       }
+    },
+    {
+      "id": "CUR-003",
+      "kind": "cursor-moved",
+      "origin": "engine",
+      "fired_at": "2026-09-10T05:13:54.882Z",
+      "details": {
+        "from": "impl-guide",
+        "to": "phase-1"
+      }
+    },
+    {
+      "id": "STA-004",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-10T05:13:55.182Z",
+      "details": {
+        "node": "impl-guide",
+        "from": "known",
+        "to": "done"
+      }
+    },
+    {
+      "id": "STA-005",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-10T05:52:23.435Z",
+      "details": {
+        "node": "phase-1",
+        "from": "known",
+        "to": "in_progress"
+      }
     }
   ],
   "nodes": [
@@ -290,7 +322,7 @@
       "id": "impl-guide",
       "type": "impl-guide",
       "label": "Implementation guide",
-      "status": "known",
+      "status": "done",
       "zone": "preflight",
       "command": "/builder 4 guide",
       "next": [
@@ -302,14 +334,16 @@
         "Run harness builder guide <plan> --check and obtain independent decomposition review. Ownership-only findings are visible warnings, not guide invalidity or readiness vetoes. Real malformed data, ambiguous identities and invalid executable checks remain errors. Structural validity is not architectural judgement; do not claim unavailable cross-model review ran.",
         "Exit after guide/decomposition approval, not after the future code baseline. The PM implements, commits and seals the shared contract baseline during implementation before any dispatch.",
         "Use the canonical assets/backpressure.dd.json recipe: actual RUN/EXTEND/BUILD/ABSENT selection, AC and assertion pressure links, observed proven_by links; certainty Partial|Confident|Proven."
-      ]
+      ],
+      "modified_at": "2026-09-10T05:13:55.182Z",
+      "ran_at": "2026-09-10T05:13:55.182Z"
     },
     {
       "id": "phase-1",
       "type": "phase",
       "phase": 1,
       "label": "P1: Shared query contract and repository discovery",
-      "status": "known",
+      "status": "in_progress",
       "command": "/builder 6 implement",
       "next": [
         "review-1"
@@ -335,7 +369,7 @@
         "Match model tier to work: chores -> cheap subagent, analysis -> Opus-class, judgement -> lead; context may override (§ Shared conventions).",
         "Environment friction is work, not an apology: fix small things, otherwise `harness observe` it — is this environment working for us? (builder SKILL.md invariant #14)"
       ],
-      "modified_at": "2026-09-09T23:30:54.584Z"
+      "modified_at": "2026-09-10T05:52:23.435Z"
     },
     {
       "id": "review-1",

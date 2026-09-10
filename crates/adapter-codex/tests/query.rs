@@ -67,8 +67,14 @@ fn query_uses_header_turn_boundaries_and_keeps_event_summaries_distinct() {
         .unwrap();
 
     assert_eq!(inspected.partitions.len(), 1);
-    assert_eq!(inspected.partitions[0].native_session_id.as_deref(), Some("thread-1"));
-    assert_eq!(inspected.partitions[0].membership, MembershipPolicy::ValidatedHeader);
+    assert_eq!(
+        inspected.partitions[0].native_session_id.as_deref(),
+        Some("thread-1")
+    );
+    assert_eq!(
+        inspected.partitions[0].membership,
+        MembershipPolicy::ValidatedHeader
+    );
     assert!(inspected.source.associations.iter().any(|association| {
         association.basis == AssociationBasis::NativeCwd
             && association.path.as_deref() == Some(std::path::Path::new("/repo"))
@@ -84,11 +90,24 @@ fn query_uses_header_turn_boundaries_and_keeps_event_summaries_distinct() {
         } if turn_id == "turn-1"
             && matches!(parts.as_slice(), [ObservationPart::Unavailable(AvailabilityCode::SensitiveOmitted)])
     ));
-    assert!(inspected.observations[3].facets.iter().all(|facet| !matches!(facet, ObservationFacet::Message { .. })));
-    assert!(inspected.observations[3].facets.iter().any(|facet| matches!(
-        facet,
-        ObservationFacet::Control { kind: ControlKind::Summary, .. }
-    )));
+    assert!(
+        inspected.observations[3]
+            .facets
+            .iter()
+            .all(|facet| !matches!(facet, ObservationFacet::Message { .. }))
+    );
+    assert!(
+        inspected.observations[3]
+            .facets
+            .iter()
+            .any(|facet| matches!(
+                facet,
+                ObservationFacet::Control {
+                    kind: ControlKind::Summary,
+                    ..
+                }
+            ))
+    );
     assert!(inspected.observations[4].facets.iter().any(|facet| matches!(
         facet,
         ObservationFacet::ToolCall { native_call_id, native_name, family, turn_id, input }
@@ -97,11 +116,16 @@ fn query_uses_header_turn_boundaries_and_keeps_event_summaries_distinct() {
                 && turn_id.as_deref() == Some("turn-1")
                 && matches!(input.as_slice(), [ObservationPart::Unavailable(AvailabilityCode::SensitiveOmitted)])
     )));
-    assert!(inspected.observations[5].facets.iter().any(|facet| matches!(
-        facet,
-        ObservationFacet::ToolResult { native_call_id, outcome: Outcome::Unknown, .. }
-            if native_call_id == "call-1"
-    )));
+    assert!(
+        inspected.observations[5]
+            .facets
+            .iter()
+            .any(|facet| matches!(
+                facet,
+                ObservationFacet::ToolResult { native_call_id, outcome: Outcome::Unknown, .. }
+                    if native_call_id == "call-1"
+            ))
+    );
     assert!(inspected.observations[6].facets.iter().any(|facet| matches!(
         facet,
         ObservationFacet::ToolResult { native_call_id, outcome: Outcome::Succeeded, exit_code: Some(0), .. }
@@ -115,10 +139,18 @@ fn query_uses_header_turn_boundaries_and_keeps_event_summaries_distinct() {
         facet,
         ObservationFacet::Usage { scope: UsageScope::CumulativeSnapshot, owner: Some(owner), .. } if owner == "thread-1"
     )));
-    assert!(inspected.observations[8].facets.iter().any(|facet| matches!(
-        facet,
-        ObservationFacet::Control { kind: ControlKind::Compaction, .. }
-    )));
+    assert!(
+        inspected.observations[8]
+            .facets
+            .iter()
+            .any(|facet| matches!(
+                facet,
+                ObservationFacet::Control {
+                    kind: ControlKind::Compaction,
+                    ..
+                }
+            ))
+    );
 }
 
 #[test]

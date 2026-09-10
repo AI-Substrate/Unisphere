@@ -63,191 +63,210 @@ impl SessionAdapter for CursorAdapter {
             .ok_or_else(|| PipelineError::new(PipelineErrorKind::InvalidInput, None))?;
         let mut batch = MappedBatch::default();
         for native in records {
-            let value = serde_json::from_slice(&native.bytes).map_err(|_| {
-                PipelineError::new(PipelineErrorKind::InvalidData, Some(native.offset))
-            })?;
-            let mut mapping = Mapping {
-                offset: native.offset,
-                include_content: options.include_content,
-                diagnostics: &mut batch.diagnostics,
-            };
-            batch.records.push(mapping.record(value, path));
+            let classified = classify_transcript(&native.bytes, native.offset)?;
+            batch
+                .diagnostics
+                .extend(classified.diagnostics.iter().map(|code| MappingDiagnostic {
+                    offset: native.offset,
+                    code: *code,
+                }));
+            let mut attributes = BTreeMap::from([
+                ("unisphere.profile.version".into(), json!(1)),
+                ("unisphere.source.adapter".into(), json!(DESCRIPTOR.id)),
+                ("unisphere.source.path".into(), json!(path)),
+                ("unisphere.source.offset".into(), json!(native.offset)),
+                (
+                    "unisphere.source.kind".into(),
+                    Value::String(classified.kind.clone()),
+                ),
+            ]);
+            if let Some(role) = &classified.role {
+                attributes.insert("unisphere.message.role".into(), json!(role));
+            }
+            if let Some(status) = &classified.turn_status {
+                attributes.insert(
+                    "unisphere.cursor.turn.status".into(),
+                    Value::String(status.clone()),
+                );
+            }
+            if classified.sensitive_content && !options.include_content {
+                attributes.insert("unisphere.content.omitted".into(), json!(true));
+                batch.diagnostics.push(MappingDiagnostic {
+                    offset: native.offset,
+                    code: MappingDiagnosticCode::ContentOmitted,
+                });
+            }
+            batch.records.push(TelemetryRecord {
+                event_name: "unisphere.session.record".into(),
+                timestamp_unix_nano: None,
+                attributes,
+                body: options.include_content.then_some(classified.body).flatten(),
+            });
         }
         Ok(batch)
     }
 }
 
-struct Mapping<'a> {
-    offset: u64,
-    include_content: bool,
-    diagnostics: &'a mut Vec<MappingDiagnostic>,
+pub(crate) struct ClassifiedTranscript {
+    pub(crate) kind: String,
+    pub(crate) role: Option<String>,
+    pub(crate) body: Option<Value>,
+    pub(crate) turn_status: Option<String>,
+    pub(crate) sensitive_content: bool,
+    pub(crate) diagnostics: Vec<MappingDiagnosticCode>,
 }
 
-impl Mapping<'_> {
-    fn diagnostic(&mut self, code: MappingDiagnosticCode) {
-        self.diagnostics.push(MappingDiagnostic {
-            offset: self.offset,
-            code,
-        });
-    }
-
-    fn omitted(&mut self, attributes: &mut BTreeMap<String, Value>) {
-        if !self.include_content {
-            attributes.insert("unisphere.content.omitted".into(), json!(true));
-            self.diagnostic(MappingDiagnosticCode::ContentOmitted);
+pub(crate) fn classify_transcript(
+    bytes: &[u8],
+    offset: u64,
+) -> Result<ClassifiedTranscript, PipelineError> {
+    let value = serde_json::from_slice(bytes)
+        .map_err(|_| PipelineError::new(PipelineErrorKind::InvalidData, Some(offset)))?;
+    let mut classifier = TranscriptClassifier::default();
+    let mut object = match value {
+        Value::Object(object) => object,
+        _ => {
+            classifier
+                .diagnostics
+                .push(MappingDiagnosticCode::InvalidField);
+            Map::new()
         }
-    }
-
-    fn record(&mut self, value: Value, path: &str) -> TelemetryRecord {
-        let mut attributes = BTreeMap::from([
-            ("unisphere.profile.version".into(), json!(1)),
-            ("unisphere.source.adapter".into(), json!(DESCRIPTOR.id)),
-            ("unisphere.source.path".into(), json!(path)),
-            ("unisphere.source.offset".into(), json!(self.offset)),
-        ]);
-        let mut object = match value {
-            Value::Object(object) => object,
-            _ => {
-                self.diagnostic(MappingDiagnosticCode::InvalidField);
-                Map::new()
-            }
-        };
-        // A native control record must never become a turn just because it also
-        // carries a role/message-looking payload. Cursor messages have no type.
-        let control = object.contains_key("type");
-        let kind = match object.remove(if control { "type" } else { "role" }) {
-            Some(Value::String(kind)) => kind,
-            _ => {
-                self.diagnostic(MappingDiagnosticCode::InvalidField);
-                "unknown".into()
-            }
-        };
-        let body = match (control, kind.as_str()) {
-            (false, "user" | "assistant" | "tool") => {
-                attributes.insert("unisphere.message.role".into(), json!(kind));
-                self.message(object.remove("message"), &kind, &mut attributes)
-            }
-            (true, "metadata") => self.overview(object.remove("metadata"), &mut attributes),
-            (true, "turn_ended") => self.turn_ended(object, &mut attributes),
-            _ => {
-                self.diagnostic(MappingDiagnosticCode::UnsupportedRecord);
-                None
-            }
-        };
-        attributes.insert("unisphere.source.kind".into(), Value::String(kind));
-        TelemetryRecord {
-            event_name: "unisphere.session.record".into(),
-            timestamp_unix_nano: None,
-            attributes,
-            body,
+    };
+    // A native control record must never become a turn just because it also
+    // carries a role/message-looking payload. Cursor messages have no type.
+    let control = object.contains_key("type");
+    let kind = match object.remove(if control { "type" } else { "role" }) {
+        Some(Value::String(kind)) => kind,
+        _ => {
+            classifier
+                .diagnostics
+                .push(MappingDiagnosticCode::InvalidField);
+            "unknown".into()
         }
-    }
+    };
+    let mut role = None;
+    let mut turn_status = None;
+    let body = match (control, kind.as_str()) {
+        (false, "user" | "assistant" | "tool") => {
+            role = Some(kind.clone());
+            classifier.message(object.remove("message"), &kind)
+        }
+        (true, "metadata") => classifier.overview(object.remove("metadata")),
+        (true, "turn_ended") => {
+            turn_status = match object.remove("status") {
+                Some(Value::String(status))
+                    if matches!(status.as_str(), "success" | "error" | "aborted") =>
+                {
+                    Some(status)
+                }
+                _ => {
+                    classifier
+                        .diagnostics
+                        .push(MappingDiagnosticCode::InvalidField);
+                    None
+                }
+            };
+            classifier.turn_ended(object)
+        }
+        _ => {
+            classifier
+                .diagnostics
+                .push(MappingDiagnosticCode::UnsupportedRecord);
+            None
+        }
+    };
+    Ok(ClassifiedTranscript {
+        kind,
+        role,
+        body,
+        turn_status,
+        sensitive_content: classifier.sensitive_content,
+        diagnostics: classifier.diagnostics,
+    })
+}
 
-    fn message(
-        &mut self,
-        value: Option<Value>,
-        role: &str,
-        attributes: &mut BTreeMap<String, Value>,
-    ) -> Option<Value> {
+#[derive(Default)]
+struct TranscriptClassifier {
+    sensitive_content: bool,
+    diagnostics: Vec<MappingDiagnosticCode>,
+}
+
+impl TranscriptClassifier {
+    fn message(&mut self, value: Option<Value>, role: &str) -> Option<Value> {
         let Some(Value::Object(mut message)) = value else {
-            self.diagnostic(MappingDiagnosticCode::InvalidField);
+            self.diagnostics.push(MappingDiagnosticCode::InvalidField);
             return None;
         };
         let content = message.remove("content");
-        if content.is_some() {
-            self.omitted(attributes);
-        }
+        self.sensitive_content |= content.is_some();
         let Some(Value::Array(content)) = content else {
-            self.diagnostic(MappingDiagnosticCode::InvalidField);
+            self.diagnostics.push(MappingDiagnosticCode::InvalidField);
             return None;
         };
         let parts: Vec<_> = content
             .into_iter()
             .filter_map(|part| self.part(part))
             .collect();
-        self.include_content
-            .then(|| json!({"role": role, "parts": parts}))
+        Some(json!({"role": role, "parts": parts}))
     }
 
     fn part(&mut self, value: Value) -> Option<Value> {
         let Value::Object(mut part) = value else {
-            self.diagnostic(MappingDiagnosticCode::InvalidField);
+            self.diagnostics.push(MappingDiagnosticCode::InvalidField);
             return None;
         };
         let Some(Value::String(kind)) = part.remove("type") else {
-            self.diagnostic(MappingDiagnosticCode::InvalidField);
+            self.diagnostics.push(MappingDiagnosticCode::InvalidField);
             return None;
         };
         match kind.as_str() {
             "text" => {
                 let Some(Value::String(content)) = part.remove("text") else {
-                    self.diagnostic(MappingDiagnosticCode::InvalidField);
+                    self.diagnostics.push(MappingDiagnosticCode::InvalidField);
                     return None;
                 };
-                self.include_content
-                    .then(|| json!({"type": "text", "content": content}))
+                Some(json!({"type": "text", "content": content}))
             }
             "tool_use" => {
                 let Some(Value::String(name)) = part.remove("name") else {
-                    self.diagnostic(MappingDiagnosticCode::InvalidField);
+                    self.diagnostics.push(MappingDiagnosticCode::InvalidField);
                     return None;
                 };
                 let Some(arguments) = part.remove("input") else {
-                    self.diagnostic(MappingDiagnosticCode::InvalidField);
+                    self.diagnostics.push(MappingDiagnosticCode::InvalidField);
                     return None;
                 };
-                self.include_content
-                    .then(|| json!({"type": "tool_call", "name": name, "arguments": arguments}))
+                Some(json!({"type": "tool_call", "name": name, "arguments": arguments}))
             }
             _ => {
-                self.diagnostic(MappingDiagnosticCode::UnsupportedPart);
-                self.include_content
-                    .then(|| json!({"type": "unisphere.unknown", "native_type": kind}))
+                self.diagnostics
+                    .push(MappingDiagnosticCode::UnsupportedPart);
+                Some(json!({"type": "unisphere.unknown", "native_type": kind}))
             }
         }
     }
 
-    fn overview(
-        &mut self,
-        value: Option<Value>,
-        attributes: &mut BTreeMap<String, Value>,
-    ) -> Option<Value> {
+    fn overview(&mut self, value: Option<Value>) -> Option<Value> {
         let Some(Value::Object(mut metadata)) = value else {
-            self.diagnostic(MappingDiagnosticCode::InvalidField);
+            self.diagnostics.push(MappingDiagnosticCode::InvalidField);
             return None;
         };
         let overview = metadata.remove("overview");
-        if overview.is_some() {
-            self.omitted(attributes);
-        }
+        self.sensitive_content |= overview.is_some();
         let Some(Value::String(overview)) = overview else {
-            self.diagnostic(MappingDiagnosticCode::InvalidField);
+            self.diagnostics.push(MappingDiagnosticCode::InvalidField);
             return None;
         };
-        self.include_content
-            .then(|| json!({"type": "unisphere.cursor.metadata", "overview": overview}))
+        Some(json!({"type": "unisphere.cursor.metadata", "overview": overview}))
     }
 
-    fn turn_ended(
-        &mut self,
-        mut object: Map<String, Value>,
-        attributes: &mut BTreeMap<String, Value>,
-    ) -> Option<Value> {
-        match object.remove("status") {
-            Some(Value::String(status))
-                if matches!(status.as_str(), "success" | "error" | "aborted") =>
-            {
-                attributes.insert("unisphere.cursor.turn.status".into(), Value::String(status));
-            }
-            _ => self.diagnostic(MappingDiagnosticCode::InvalidField),
-        }
+    fn turn_ended(&mut self, mut object: Map<String, Value>) -> Option<Value> {
         let error = object.remove("error")?;
-        self.omitted(attributes);
+        self.sensitive_content = true;
         let Value::String(error) = error else {
-            self.diagnostic(MappingDiagnosticCode::InvalidField);
+            self.diagnostics.push(MappingDiagnosticCode::InvalidField);
             return None;
         };
-        self.include_content
-            .then(|| json!({"type": "unisphere.cursor.turn_ended", "error": error}))
+        Some(json!({"type": "unisphere.cursor.turn_ended", "error": error}))
     }
 }

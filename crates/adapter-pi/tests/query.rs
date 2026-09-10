@@ -71,8 +71,7 @@ fn query_inspection_preserves_header_tree_conflicts_controls_calls_and_usage_sco
     assert_eq!(partition.membership, MembershipPolicy::ValidatedHeader);
     assert!(partition.associations.iter().any(|association| {
         association.basis == AssociationBasis::NativeCwd
-            && association.path.as_deref()
-                == Some(std::path::Path::new("/SENSITIVE-project"))
+            && association.path.as_deref() == Some(std::path::Path::new("/SENSITIVE-project"))
     }));
 
     let user = inspected
@@ -96,7 +95,10 @@ fn query_inspection_preserves_header_tree_conflicts_controls_calls_and_usage_sco
         .iter()
         .find(|observation| {
             observation.native_record_id.as_deref() == Some("assistant-a")
-                && observation.facets.iter().any(|facet| matches!(facet, ObservationFacet::ToolCall { .. }))
+                && observation
+                    .facets
+                    .iter()
+                    .any(|facet| matches!(facet, ObservationFacet::ToolCall { .. }))
         })
         .unwrap();
     assert!(matches!(
@@ -121,7 +123,11 @@ fn query_inspection_preserves_header_tree_conflicts_controls_calls_and_usage_sco
         .unwrap();
     assert!(result.facets.iter().any(|facet| matches!(
         facet,
-        ObservationFacet::Message { role: MessageRole::Tool, request_marker: RequestMarker::ToolResponse, .. }
+        ObservationFacet::Message {
+            role: MessageRole::Tool,
+            request_marker: RequestMarker::ToolResponse,
+            ..
+        }
     )));
     assert!(result.facets.iter().any(|facet| matches!(
         facet,
@@ -147,14 +153,22 @@ fn query_inspection_preserves_header_tree_conflicts_controls_calls_and_usage_sco
             .observations
             .iter()
             .flat_map(|observation| observation.facets.iter())
-            .filter(|facet| matches!(facet, ObservationFacet::Message { request_marker: RequestMarker::Initiating, .. }))
+            .filter(|facet| matches!(
+                facet,
+                ObservationFacet::Message {
+                    request_marker: RequestMarker::Initiating,
+                    ..
+                }
+            ))
             .count(),
         1
     );
-    assert!(inspected
-        .observations
-        .iter()
-        .any(|observation| observation.source_ref.subrecord.ends_with(":message-clock")));
+    assert!(
+        inspected
+            .observations
+            .iter()
+            .any(|observation| observation.source_ref.subrecord.ends_with(":message-clock"))
+    );
 }
 
 #[test]

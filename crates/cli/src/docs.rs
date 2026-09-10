@@ -43,21 +43,33 @@ static TOPICS: &[DocTopic] = &[
         title: "Filter by time, metadata, and text",
         summary: "Apply typed filters without confusing unknown evidence with a match.",
         text: include_str!("../docs/filter-time-and-text.md"),
-        related: &["output-and-schema", "extract-context", "privacy-and-coverage"],
+        related: &[
+            "output-and-schema",
+            "extract-context",
+            "privacy-and-coverage",
+        ],
     },
     DocTopic {
         id: "extract-context",
         title: "Extract review context",
         summary: "Emit bounded, branch-qualified context with explicit content consent.",
         text: include_str!("../docs/extract-context.md"),
-        related: &["inspect-conversations", "filter-time-and-text", "output-and-schema"],
+        related: &[
+            "inspect-conversations",
+            "filter-time-and-text",
+            "output-and-schema",
+        ],
     },
     DocTopic {
         id: "tool-analysis",
         title: "Analyse tool outcomes and durations",
         summary: "Separate observed failures, incomplete calls, and measured timing.",
         text: include_str!("../docs/tool-analysis.md"),
-        related: &["inspect-conversations", "filter-time-and-text", "privacy-and-coverage"],
+        related: &[
+            "inspect-conversations",
+            "filter-time-and-text",
+            "privacy-and-coverage",
+        ],
     },
     DocTopic {
         id: "output-and-schema",
@@ -92,7 +104,11 @@ static TOPICS: &[DocTopic] = &[
         title: "Git-AI attribution evidence",
         summary: "Relate registered Git note attribution to sessions without inventing transcripts.",
         text: include_str!("../docs/git-ai.md"),
-        related: &["find-sessions", "inspect-conversations", "privacy-and-coverage"],
+        related: &[
+            "find-sessions",
+            "inspect-conversations",
+            "privacy-and-coverage",
+        ],
     },
 ];
 

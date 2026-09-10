@@ -2,8 +2,7 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use serde_json::{Map, Value};
 use unisphere_core::{
-    MappingDiagnosticCode, MappingOptions, NativeSnapshot, PipelineError, PipelineErrorKind,
-    SessionAdapter, SessionRef, SnapshotAdapter,
+    MappingDiagnosticCode, NativeSnapshot, PipelineError, PipelineErrorKind,
     query::{
         AdapterId, AssociationObservation, AvailabilityCode, AvailabilityIssue, BranchEvidence,
         ContentAccess, ControlKind, FieldId, InspectedSource, LimitKind, MembershipPolicy,
@@ -34,15 +33,16 @@ impl QueryAdapter for CursorAdapter {
             return Err(unsupported_source(None, DESCRIPTOR.id));
         };
         require_adapter(source, DESCRIPTOR.id)?;
-        let path = match &source.locator {
-            unisphere_core::query::SourceLocator::LocalPath(path) => path.clone(),
-            unisphere_core::query::SourceLocator::Provided(_) => {
-                return Err(unsupported_source(Some(source.id), DESCRIPTOR.id));
-            }
-        };
+        if !matches!(
+            &source.locator,
+            unisphere_core::query::SourceLocator::LocalPath(_)
+        ) {
+            return Err(unsupported_source(Some(source.id), DESCRIPTOR.id));
+        }
+
         let mut total = 0_usize;
-        let mut native = Vec::with_capacity(records.len());
         let mut prior_offset = None;
+        let mut classified = Vec::with_capacity(records.len());
         for record in records {
             let NativeLocator::Jsonl { offset } = &record.locator else {
                 return Err(invalid_data(source.id, None));
@@ -57,28 +57,15 @@ impl QueryAdapter for CursorAdapter {
             if total > limits.max_source_bytes {
                 return Err(QueryFailure::limit(LimitKind::SourceBytes));
             }
-            native.push(unisphere_core::NativeRecord {
-                offset: *offset,
-                bytes: record.bytes.clone(),
-            });
+            classified.push((
+                *offset,
+                crate::classify_transcript(&record.bytes, *offset)
+                    .map_err(|error| map_pipeline_error(error, source.id, DESCRIPTOR.id))?,
+            ));
         }
-        if native.len() > limits.max_observations_and_rows {
+        if classified.len() > limits.max_observations_and_rows {
             return Err(QueryFailure::limit(LimitKind::ObservationsAndRows));
         }
-
-        let retain_content = retains_any(
-            &access,
-            &[FieldId::Text, FieldId::Parts, FieldId::ToolName, FieldId::Input],
-        );
-        let mapped = self
-            .map(
-                &SessionRef { path },
-                &native,
-                MappingOptions {
-                    include_content: retain_content,
-                },
-            )
-            .map_err(|error| map_pipeline_error(error, source.id, DESCRIPTOR.id))?;
 
         let mut inspected_source = source.clone();
         inspected_source.query_policy_version = TRANSCRIPT_POLICY.into();
@@ -93,24 +80,31 @@ impl QueryAdapter for CursorAdapter {
             membership: MembershipPolicy::Unavailable,
             associations: associations_for(source, partition_id),
         };
-        let diagnostic_map = transcript_diagnostics(source, &mapped.diagnostics);
-        let mut observations = Vec::with_capacity(mapped.records.len());
-        for (record, telemetry) in records.iter().zip(mapped.records) {
-            let offset = match &record.locator {
-                NativeLocator::Jsonl { offset } => *offset,
-                _ => unreachable!("record locators were validated"),
-            };
-            let role = telemetry
-                .attributes
-                .get("unisphere.message.role")
-                .and_then(Value::as_str)
-                .and_then(message_role);
-            let kind = telemetry
-                .attributes
-                .get("unisphere.source.kind")
-                .and_then(Value::as_str)
-                .unwrap_or("unknown");
-            let mut diagnostics = diagnostic_map.get(&offset).cloned().unwrap_or_default();
+        let retain_content = retains_any(
+            &access,
+            &[
+                FieldId::Text,
+                FieldId::Parts,
+                FieldId::ToolName,
+                FieldId::Input,
+            ],
+        );
+        let mut observations = Vec::with_capacity(classified.len());
+        for (record, (offset, native)) in records.iter().zip(classified) {
+            let mut diagnostics: Vec<_> = native
+                .diagnostics
+                .into_iter()
+                .map(|code| mapping_issue(source.id, code, Some(offset), None))
+                .collect();
+            if native.sensitive_content && !retain_content {
+                diagnostics.push(mapping_issue(
+                    source.id,
+                    MappingDiagnosticCode::ContentOmitted,
+                    Some(offset),
+                    None,
+                ));
+            }
+            let role = native.role.as_deref().and_then(message_role);
             let facets = if let Some(role) = role {
                 diagnostics.extend([
                     unavailable(source.id, FieldId::NativeId, Some(offset)),
@@ -120,7 +114,7 @@ impl QueryAdapter for CursorAdapter {
                 vec![ObservationFacet::Message {
                     native_id: None,
                     role,
-                    parts: message_parts(telemetry.body.as_ref(), &access),
+                    parts: message_parts(native.body.as_ref(), &access),
                     request_marker: if role == MessageRole::User {
                         RequestMarker::Initiating
                     } else {
@@ -130,7 +124,7 @@ impl QueryAdapter for CursorAdapter {
                 }]
             } else {
                 vec![ObservationFacet::Control {
-                    kind: if kind == "metadata" {
+                    kind: if native.kind == "metadata" {
                         ControlKind::Summary
                     } else {
                         ControlKind::Other
@@ -156,12 +150,17 @@ impl QueryAdapter for CursorAdapter {
                     version: 1,
                     key: offset.to_be_bytes().to_vec(),
                 },
+                timestamp: None,
                 facets,
                 diagnostics,
             });
         }
         let mut issues = transcript_source_issues(source.id);
-        issues.extend(diagnostic_map.values().flatten().cloned());
+        issues.extend(
+            observations
+                .iter()
+                .flat_map(|observation| observation.diagnostics.iter().cloned()),
+        );
         let inspected = InspectedSource {
             source: inspected_source,
             partitions: vec![partition],
@@ -186,165 +185,180 @@ impl QueryAdapter for CursorIdeAdapter {
         };
         require_adapter(source, IDE_DESCRIPTOR.id)?;
         validate_snapshot_binding(source, snapshot, limits)?;
-        let retain_content = retains_any(
-            &access,
-            &[
-                FieldId::Text,
-                FieldId::Parts,
-                FieldId::ToolName,
-                FieldId::Input,
-                FieldId::Output,
-            ],
-        );
-        let mapped = self
-            .map_snapshot(
-                snapshot,
-                MappingOptions {
-                    include_content: retain_content,
-                },
-            )
+        let rows = crate::ide::index_snapshot(snapshot)
             .map_err(|error| map_pipeline_error(error, source.id, IDE_DESCRIPTOR.id))?;
 
         let mut inspected_source = source.clone();
         inspected_source.query_policy_version = IDE_POLICY.into();
         inspected_source.available_fields = ide_fields();
-
         let mut partitions = Vec::new();
-        let mut partition_by_session = BTreeMap::new();
-        for record in &mapped.records {
-            if record
-                .attributes
-                .get("unisphere.source.kind")
-                .and_then(Value::as_str)
-                != Some("composerData")
-            {
-                continue;
-            }
-            let Some(session) = record
-                .attributes
-                .get("unisphere.source.session.id")
-                .and_then(Value::as_str)
-            else {
+        let mut observations = Vec::with_capacity(snapshot.records.len());
+        let mut diagnostics: BTreeMap<String, Vec<AvailabilityIssue>> = BTreeMap::new();
+        let mut used = BTreeSet::new();
+        let mut referenced = BTreeSet::new();
+        let selected = snapshot.source.session_id.as_deref();
+        let mut found = false;
+        let mut ordinal = 0_u64;
+
+        for (&key, &row) in &rows {
+            let Some(session_id) = key.strip_prefix("composerData:") else {
                 continue;
             };
-            let partition_id = PartitionId::derive(source.id, session.as_bytes());
-            partition_by_session.insert(session.to_owned(), partition_id);
+            if selected.is_some_and(|selected| selected != session_id) {
+                continue;
+            }
+            found = true;
+            let (object, headers) = match crate::ide::classify_composer(row, session_id) {
+                Ok(classified) => classified,
+                Err(code) => {
+                    add_ide_issue(&mut diagnostics, source.id, key, code, None);
+                    continue;
+                }
+            };
+            let partition_id = PartitionId::derive(source.id, session_id.as_bytes());
+            let associations = associations_for(source, partition_id);
             partitions.push(SourcePartition {
                 id: partition_id,
-                native_session_id: Some(session.to_owned()),
+                native_session_id: Some(session_id.to_owned()),
                 participant_id: None,
                 view: SourceViewKind::MainSpine,
                 membership: MembershipPolicy::ValidatedHeader,
-                associations: associations_for(source, partition_id),
+                associations: associations.clone(),
             });
-        }
-
-        let diagnostic_map = ide_diagnostics(source, snapshot, &mapped.diagnostics, &partition_by_session);
-        let mut observations = Vec::with_capacity(snapshot.records.len());
-        let mut mapped_keys = BTreeSet::new();
-        let native_rows: BTreeMap<_, _> = snapshot
-            .records
-            .iter()
-            .map(|record| (record.key.as_str(), record))
-            .collect();
-        for (ordinal, telemetry) in mapped.records.into_iter().enumerate() {
-            let key = telemetry
-                .attributes
-                .get("unisphere.source.key")
-                .and_then(Value::as_str)
-                .ok_or_else(QueryFailure::invalid_data)?
-                .to_owned();
-            let native_value: Value = serde_json::from_slice(
-                &native_rows
-                    .get(key.as_str())
-                    .ok_or_else(QueryFailure::invalid_data)?
-                    .bytes,
-            )
-            .map_err(|_| QueryFailure::invalid_data())?;
-            let native_object = native_value
-                .as_object()
-                .ok_or_else(QueryFailure::invalid_data)?;
-            mapped_keys.insert(key.clone());
-            let session_id = telemetry
-                .attributes
-                .get("unisphere.source.session.id")
-                .and_then(Value::as_str)
-                .ok_or_else(QueryFailure::invalid_data)?
-                .to_owned();
-            let partition_id = *partition_by_session
-                .get(&session_id)
-                .ok_or_else(QueryFailure::invalid_data)?;
-            let kind = telemetry
-                .attributes
-                .get("unisphere.source.kind")
-                .and_then(Value::as_str)
-                .unwrap_or("unknown");
-            let native_record_id = if kind == "composerData" {
-                session_id.clone()
-            } else {
-                telemetry
-                    .attributes
-                    .get("unisphere.message.id")
-                    .and_then(Value::as_str)
-                    .unwrap_or(&key)
-                    .to_owned()
-            };
-            let timestamp = telemetry
-                .timestamp_unix_nano
-                .map(|value| Timestamp::new(i128::from(value), TimestampBasis::Native))
-                .transpose()?;
-            let session = SessionEvidenceKey {
-                namespace: "cursor-ide-composer".into(),
-                native_id: session_id.clone(),
-                participant_id: None,
-                parent_native_id: None,
-                fork_native_id: None,
-                membership_basis: MembershipPolicy::ValidatedHeader,
-            };
-            let mut diagnostics = diagnostic_map.get(&key).cloned().unwrap_or_default();
-            diagnostics.extend(ide_tool_issues(source.id, native_object));
-            let session_associations = associations_for(source, partition_id);
-            let facets = ide_facets(
-                &telemetry,
-                native_object,
-                kind,
-                &session_id,
-                timestamp.clone(),
+            used.insert(key.to_owned());
+            observations.push(ide_native_observation(
+                source,
+                key,
+                &object,
+                session_id,
+                session_id,
+                partition_id,
+                ordinal,
+                true,
                 &access,
-                &session_associations,
-            );
-            observations.push(Observation {
-                source_ref: SourceRef {
-                    source_id: source.id,
-                    revision: source.revision.clone(),
-                    locator: NativeLocator::Snapshot { key: key.clone() },
-                    subrecord: "record".into(),
-                },
-                native_record_id: Some(native_record_id),
-                session: Some(session),
-                branch: BranchEvidence::Linear {
-                    partition: partition_id,
-                },
-                parent_ids: Vec::new(),
-                sequence: NativeSequence {
-                    version: 1,
-                    key: u64::try_from(ordinal)
-                        .map_err(|_| QueryFailure::limit(LimitKind::ObservationsAndRows))?
-                        .to_be_bytes()
-                        .to_vec(),
-                },
-                timestamp,
-                facets,
-                diagnostics,
-            });
+                &associations,
+            )?);
+            ordinal = ordinal
+                .checked_add(1)
+                .ok_or_else(|| QueryFailure::limit(LimitKind::ObservationsAndRows))?;
+
+            for header in headers {
+                let Value::Object(header) = header else {
+                    add_ide_issue(
+                        &mut diagnostics,
+                        source.id,
+                        key,
+                        MappingDiagnosticCode::InvalidField,
+                        Some(partition_id),
+                    );
+                    continue;
+                };
+                let Some(bubble_id) = header
+                    .get("bubbleId")
+                    .and_then(Value::as_str)
+                    .filter(|id| !id.is_empty())
+                else {
+                    add_ide_issue(
+                        &mut diagnostics,
+                        source.id,
+                        key,
+                        MappingDiagnosticCode::InvalidField,
+                        Some(partition_id),
+                    );
+                    continue;
+                };
+                let bubble_key = format!("bubbleId:{session_id}:{bubble_id}");
+                if !referenced.insert(bubble_key.clone()) {
+                    add_ide_issue(
+                        &mut diagnostics,
+                        source.id,
+                        key,
+                        MappingDiagnosticCode::InvalidField,
+                        Some(partition_id),
+                    );
+                    continue;
+                }
+                let Some(bubble_row) = rows.get(bubble_key.as_str()) else {
+                    diagnostics
+                        .entry(bubble_key)
+                        .or_default()
+                        .push(AvailabilityIssue {
+                            code: AvailabilityCode::Absent,
+                            field: None,
+                            source: Some(source.id),
+                            entity: Some(partition_id.entity()),
+                            offset: None,
+                        });
+                    continue;
+                };
+                let (bubble, _) = match crate::ide::classify_bubble(
+                    bubble_row,
+                    bubble_id,
+                    header.get("type").and_then(Value::as_i64),
+                ) {
+                    Ok(classified) => classified,
+                    Err(code) => {
+                        add_ide_issue(
+                            &mut diagnostics,
+                            source.id,
+                            &bubble_key,
+                            code,
+                            Some(partition_id),
+                        );
+                        continue;
+                    }
+                };
+                used.insert(bubble_key.clone());
+                observations.push(ide_native_observation(
+                    source,
+                    &bubble_key,
+                    &bubble,
+                    session_id,
+                    bubble_id,
+                    partition_id,
+                    ordinal,
+                    false,
+                    &access,
+                    &associations,
+                )?);
+                ordinal = ordinal
+                    .checked_add(1)
+                    .ok_or_else(|| QueryFailure::limit(LimitKind::ObservationsAndRows))?;
+            }
         }
 
-        let mut unused: Vec<_> = snapshot
-            .records
+        if !found && let Some(selected) = selected {
+            add_ide_issue(
+                &mut diagnostics,
+                source.id,
+                &format!("composerData:{selected}"),
+                MappingDiagnosticCode::UnsupportedRecord,
+                None,
+            );
+        }
+        let selected_prefix = selected.map(|id| format!("bubbleId:{id}:"));
+        for &key in rows.keys() {
+            if key.starts_with("bubbleId:")
+                && selected_prefix
+                    .as_ref()
+                    .is_none_or(|prefix| key.starts_with(prefix))
+                && !referenced.contains(key)
+            {
+                add_ide_issue(
+                    &mut diagnostics,
+                    source.id,
+                    key,
+                    MappingDiagnosticCode::UnsupportedRecord,
+                    None,
+                );
+            }
+        }
+
+        let unused: Vec<_> = rows
             .iter()
-            .filter(|record| !mapped_keys.contains(&record.key))
+            .filter(|(key, _)| !used.contains(**key))
+            .map(|(_, row)| *row)
             .collect();
-        unused.sort_by(|left, right| left.key.cmp(&right.key));
         if !unused.is_empty() {
             let partition_id = PartitionId::derive(source.id, IDE_SOURCE_ONLY_PARTITION);
             partitions.push(SourcePartition {
@@ -356,11 +370,11 @@ impl QueryAdapter for CursorIdeAdapter {
                 associations: Vec::new(),
             });
             for record in unused {
-                let issue = diagnostic_map
+                let issue = diagnostics
                     .get(&record.key)
                     .and_then(|issues| issues.first())
                     .cloned()
-                    .unwrap_or_else(|| AvailabilityIssue {
+                    .unwrap_or(AvailabilityIssue {
                         code: AvailabilityCode::Ambiguous,
                         field: Some(FieldId::TurnId),
                         source: Some(source.id),
@@ -397,17 +411,17 @@ impl QueryAdapter for CursorIdeAdapter {
             }
         }
 
-        let mut issues: Vec<_> = diagnostic_map.values().flatten().cloned().collect();
-        issues.extend(
-            observations
+        let mut issues: Vec<_> = diagnostics.values().flatten().cloned().collect();
+        issues.extend(observations.iter().flat_map(|observation| {
+            observation
+                .diagnostics
                 .iter()
-                .flat_map(|observation| observation.diagnostics.iter())
                 .filter(|issue| {
                     issue.code == AvailabilityCode::NotCaptured
                         && issue.field == Some(FieldId::CallId)
                 })
-                .cloned(),
-        );
+                .cloned()
+        }));
         issues.extend([
             unavailable(source.id, FieldId::TurnId, None),
             unavailable(source.id, FieldId::DurationMs, None),
@@ -471,7 +485,100 @@ fn validate_snapshot_binding(
     Ok(())
 }
 
-fn unsupported_source(source: Option<unisphere_core::query::SourceId>, adapter: &str) -> QueryFailure {
+fn add_ide_issue(
+    diagnostics: &mut BTreeMap<String, Vec<AvailabilityIssue>>,
+    source: unisphere_core::query::SourceId,
+    key: &str,
+    code: MappingDiagnosticCode,
+    partition: Option<PartitionId>,
+) {
+    diagnostics
+        .entry(key.to_owned())
+        .or_default()
+        .push(mapping_issue(
+            source,
+            code,
+            None,
+            partition.map(|partition| partition.entity()),
+        ));
+}
+
+#[allow(clippy::too_many_arguments)]
+fn ide_native_observation(
+    source: &SourceEvidence,
+    key: &str,
+    native: &Map<String, Value>,
+    session_id: &str,
+    native_id: &str,
+    partition_id: PartitionId,
+    ordinal: u64,
+    composer: bool,
+    access: &ContentAccess,
+    associations: &[AssociationObservation],
+) -> Result<Observation, QueryFailure> {
+    let native_timestamp = if composer {
+        crate::ide::composer_timestamp(native)
+    } else {
+        crate::ide::bubble_timestamp(native)
+    };
+    let mut diagnostics = ide_tool_issues(source.id, native);
+    let timestamp = match native_timestamp {
+        Ok(Some(value)) => Some(Timestamp::new(i128::from(value), TimestampBasis::Native)?),
+        Ok(None) => None,
+        Err(code) => {
+            diagnostics.push(mapping_issue(
+                source.id,
+                code,
+                None,
+                Some(partition_id.entity()),
+            ));
+            None
+        }
+    };
+    let facets = ide_facets(
+        native,
+        composer,
+        native_id,
+        timestamp.clone(),
+        access,
+        associations,
+    );
+    Ok(Observation {
+        source_ref: SourceRef {
+            source_id: source.id,
+            revision: source.revision.clone(),
+            locator: NativeLocator::Snapshot {
+                key: key.to_owned(),
+            },
+            subrecord: "record".into(),
+        },
+        native_record_id: Some(native_id.to_owned()),
+        session: Some(SessionEvidenceKey {
+            namespace: "cursor-ide-composer".into(),
+            native_id: session_id.to_owned(),
+            participant_id: None,
+            parent_native_id: None,
+            fork_native_id: None,
+            membership_basis: MembershipPolicy::ValidatedHeader,
+        }),
+        branch: BranchEvidence::Linear {
+            partition: partition_id,
+        },
+        parent_ids: Vec::new(),
+        sequence: NativeSequence {
+            version: 1,
+            key: ordinal.to_be_bytes().to_vec(),
+        },
+        timestamp,
+        facets,
+        diagnostics,
+    })
+}
+
+fn unsupported_source(
+    source: Option<unisphere_core::query::SourceId>,
+    adapter: &str,
+) -> QueryFailure {
     QueryFailure::new(
         QueryFailureCode::UnsupportedSource,
         RecoveryAction::ChooseAdapter {
@@ -533,7 +640,10 @@ fn map_pipeline_error(
     }
 }
 
-fn associations_for(source: &SourceEvidence, partition: PartitionId) -> Vec<AssociationObservation> {
+fn associations_for(
+    source: &SourceEvidence,
+    partition: PartitionId,
+) -> Vec<AssociationObservation> {
     source
         .associations
         .iter()
@@ -548,11 +658,16 @@ fn single_association_partition(source: &SourceEvidence) -> Option<PartitionId> 
         .iter()
         .map(|association| association.partition);
     let first = partitions.next()?;
-    partitions.all(|partition| partition == first).then_some(first)
+    partitions
+        .all(|partition| partition == first)
+        .then_some(first)
 }
 
 fn retains_any(access: &ContentAccess, fields: &[FieldId]) -> bool {
-    access.emit_content || fields.iter().any(|field| access.inspect_fields.contains(field))
+    access.emit_content
+        || fields
+            .iter()
+            .any(|field| access.inspect_fields.contains(field))
 }
 
 fn message_role(value: &str) -> Option<MessageRole> {
@@ -569,11 +684,16 @@ fn message_parts(body: Option<&Value>, access: &ContentAccess) -> Vec<Observatio
         .and_then(|body| body.get("parts"))
         .and_then(Value::as_array)
     else {
-        return vec![ObservationPart::Unavailable(AvailabilityCode::SensitiveOmitted)];
+        return vec![ObservationPart::Unavailable(
+            AvailabilityCode::SensitiveOmitted,
+        )];
     };
     let mut output = Vec::new();
     for part in parts {
-        let kind = part.get("type").and_then(Value::as_str).unwrap_or("unknown");
+        let kind = part
+            .get("type")
+            .and_then(Value::as_str)
+            .unwrap_or("unknown");
         match kind {
             "text" if retains_any(access, &[FieldId::Text, FieldId::Parts]) => {
                 if let Some(text) = part.get("content").and_then(Value::as_str) {
@@ -581,10 +701,7 @@ fn message_parts(body: Option<&Value>, access: &ContentAccess) -> Vec<Observatio
                 }
             }
             "tool_call"
-                if retains_any(
-                    access,
-                    &[FieldId::Parts, FieldId::ToolName, FieldId::Input],
-                ) =>
+                if retains_any(access, &[FieldId::Parts, FieldId::ToolName, FieldId::Input]) =>
             {
                 let mut retained = Map::new();
                 retained.insert("type".into(), Value::String("tool_call".into()));
@@ -603,7 +720,9 @@ fn message_parts(body: Option<&Value>, access: &ContentAccess) -> Vec<Observatio
             _ if access.emit_content || access.inspect_fields.contains(&FieldId::Parts) => {
                 output.push(ObservationPart::Structured(part.clone()));
             }
-            _ => output.push(ObservationPart::Unavailable(AvailabilityCode::SensitiveOmitted)),
+            _ => output.push(ObservationPart::Unavailable(
+                AvailabilityCode::SensitiveOmitted,
+            )),
         }
     }
     output
@@ -636,52 +755,6 @@ fn unavailable(
         entity: None,
         offset,
     }
-}
-
-fn transcript_diagnostics(
-    source: &SourceEvidence,
-    diagnostics: &[unisphere_core::MappingDiagnostic],
-) -> BTreeMap<u64, Vec<AvailabilityIssue>> {
-    let mut by_offset = BTreeMap::new();
-    for diagnostic in diagnostics {
-        by_offset
-            .entry(diagnostic.offset)
-            .or_insert_with(Vec::new)
-            .push(mapping_issue(source.id, diagnostic.code, Some(diagnostic.offset), None));
-    }
-    by_offset
-}
-
-fn ide_diagnostics(
-    source: &SourceEvidence,
-    snapshot: &NativeSnapshot,
-    diagnostics: &[unisphere_core::SnapshotDiagnostic],
-    partitions: &BTreeMap<String, PartitionId>,
-) -> BTreeMap<String, Vec<AvailabilityIssue>> {
-    let keys: BTreeSet<_> = snapshot.records.iter().map(|record| record.key.as_str()).collect();
-    let mut by_key = BTreeMap::new();
-    for diagnostic in diagnostics {
-        let entity = diagnostic
-            .key
-            .strip_prefix("composerData:")
-            .or_else(|| {
-                diagnostic
-                    .key
-                    .strip_prefix("bubbleId:")
-                    .and_then(|suffix| suffix.split_once(':').map(|(session, _)| session))
-            })
-            .and_then(|session| partitions.get(session))
-            .map(|partition| partition.entity());
-        let mut issue = mapping_issue(source.id, diagnostic.code, None, entity);
-        if !keys.contains(diagnostic.key.as_str()) {
-            issue.code = AvailabilityCode::Absent;
-        }
-        by_key
-            .entry(diagnostic.key.clone())
-            .or_insert_with(Vec::new)
-            .push(issue);
-    }
-    by_key
 }
 
 fn mapping_issue(
@@ -737,17 +810,16 @@ fn ide_tool_issues(
 }
 
 fn ide_facets(
-    telemetry: &unisphere_core::TelemetryRecord,
     native: &Map<String, Value>,
-    kind: &str,
-    session_id: &str,
+    composer: bool,
+    native_id: &str,
     timestamp: Option<Timestamp>,
     access: &ContentAccess,
     associations: &[AssociationObservation],
 ) -> Vec<ObservationFacet> {
-    if kind == "composerData" {
+    if composer {
         return vec![ObservationFacet::SessionMetadata {
-            native_id: session_id.to_owned(),
+            native_id: native_id.to_owned(),
             name: None,
             models: Vec::new(),
             created_at: timestamp,
@@ -755,45 +827,46 @@ fn ide_facets(
             lineage: Vec::new(),
         }];
     }
-    let role = telemetry
-        .attributes
-        .get("unisphere.message.role")
-        .and_then(Value::as_str)
-        .and_then(message_role);
-    let body_parts = telemetry
-        .body
-        .as_ref()
-        .and_then(|body| body.get("parts"))
-        .and_then(Value::as_array);
-    let native_id = telemetry
-        .attributes
-        .get("unisphere.message.id")
-        .and_then(Value::as_str)
-        .map(str::to_owned);
+    let kind = native.get("type").and_then(Value::as_i64);
+    let control = native.get("capabilityType").and_then(Value::as_i64) == Some(22)
+        || native.get("isSimulatedMsg").and_then(Value::as_bool) == Some(true);
+    let role = (!control)
+        .then_some(kind)
+        .flatten()
+        .and_then(|kind| match kind {
+            1 => Some(MessageRole::User),
+            2 => Some(MessageRole::Assistant),
+            _ => None,
+        });
     let mut facets = Vec::new();
     if let Some(role) = role {
         let mut parts = Vec::new();
-        if let Some(body_parts) = body_parts {
-            for part in body_parts {
-                match part.get("type").and_then(Value::as_str) {
-                    Some("text") if retains_any(access, &[FieldId::Text, FieldId::Parts]) => {
-                        if let Some(text) = part.get("content").and_then(Value::as_str) {
-                            parts.push(ObservationPart::Text(text.to_owned()));
-                        }
-                    }
-                    Some("reasoning") if access.emit_content || access.inspect_fields.contains(&FieldId::Parts) => {
-                        if let Some(text) = part.get("content").and_then(Value::as_str) {
-                            parts.push(ObservationPart::Reasoning(text.to_owned()));
-                        }
-                    }
-                    _ => {}
-                }
+        let mut sensitive_omitted = false;
+        if let Some(value) = native.get("text")
+            && let Some(text) = value.as_str()
+        {
+            if retains_any(access, &[FieldId::Text, FieldId::Parts]) {
+                parts.push(ObservationPart::Text(text.to_owned()));
+            } else {
+                sensitive_omitted = true;
             }
-        } else if telemetry.attributes.contains_key("unisphere.content.omitted") {
-            parts.push(ObservationPart::Unavailable(AvailabilityCode::SensitiveOmitted));
+        }
+        if let Some(thinking) = native.get("thinking").and_then(Value::as_object)
+            && let Some(text) = thinking.get("text").and_then(Value::as_str)
+        {
+            if access.emit_content || access.inspect_fields.contains(&FieldId::Parts) {
+                parts.push(ObservationPart::Reasoning(text.to_owned()));
+            } else {
+                sensitive_omitted = true;
+            }
+        }
+        if sensitive_omitted {
+            parts.push(ObservationPart::Unavailable(
+                AvailabilityCode::SensitiveOmitted,
+            ));
         }
         facets.push(ObservationFacet::Message {
-            native_id: native_id.clone(),
+            native_id: Some(native_id.to_owned()),
             role,
             parts,
             request_marker: if role == MessageRole::User {
@@ -805,12 +878,7 @@ fn ide_facets(
         });
     } else {
         facets.push(ObservationFacet::Control {
-            kind: if telemetry
-                .attributes
-                .get("unisphere.cursor.capability_type")
-                .and_then(Value::as_i64)
-                == Some(22)
-            {
+            kind: if native.get("capabilityType").and_then(Value::as_i64) == Some(22) {
                 ControlKind::Summary
             } else {
                 ControlKind::Other
@@ -843,7 +911,9 @@ fn ide_facets(
             });
         }
         for (field, outcome) in [("result", Outcome::Unknown), ("error", Outcome::Failed)] {
-            let Some(value) = tool.get(field) else { continue };
+            let Some(value) = tool.get(field) else {
+                continue;
+            };
             let output = if retains_any(access, &[FieldId::Output, FieldId::Parts]) {
                 vec![ObservationPart::Structured(value.clone())]
             } else {

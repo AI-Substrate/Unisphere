@@ -178,7 +178,7 @@ _No entries._
 
 ## Implementation Summary
 
-R1/F8 corrections are composed from contracts35b714bf and proof7fbd36d1 with PM-owned workspace/architecture/guide changes. Focused baseline suite passed57 tests, including28 query-contract tests, typed fixture validation and inward/outward dependency fixtures. Timestamp scalar round trips mark supplied provenance unknown and schema declares that loss; equal instants compare independently of basis. Rejected819fc30a remains preserved. Fresh exact-source full boot/external consumer and independent delta review precede seal and normal coder release.
+Baseline72d9d0cf remains independently approved/sealed. All nine first-wave Sol lanes delivered and their exact source union is preserved at843b3bb4. PM integration now passes327 workspace tests, clippy, rustdoc, and the actual17-crate architecture scan (86 edges;29 core/adapter source files). A real external SDK program exercised LocalQuerySource + ClaudeCodeAdapter + QueryService + ProjectedQueryWriter over temporary native JSONL, including measured tool statistics and private-payload omission; both SDK recipe binaries also execute. Corrections include context/statistics schema availability, branch forests, reserved ID filtering, native Cursor classification without telemetry intermediates, raw CSV preservation, bounded rendering, and explicit-path alias scope binding. First-wave full committed boot/review is being recorded; this is not new CLI acceptance. The tenth CLI lane remains formally unallocated due to a confirmed installed Builder dependency/composition cycle. A product-only manual helper has been offered to Jordan and is not assumed authorized.
 
 <a id="key-findings"></a>
 

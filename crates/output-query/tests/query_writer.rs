@@ -1,4 +1,7 @@
-use std::{collections::BTreeMap, io::{self, Write}};
+use std::{
+    collections::BTreeMap,
+    io::{self, Write},
+};
 
 use serde_json::{Value, json};
 use unisphere_core::query::{
@@ -35,7 +38,12 @@ fn response(fields: BTreeMap<FieldId, FieldValue>) -> QueryResponse {
             source_view_digest: None,
             selection_digest: Digest::of_bytes(b"selection"),
             columns_digest: Digest::of_bytes(b"columns"),
-            columns: vec![FieldId::Id, FieldId::SourceRefs, FieldId::Text, FieldId::Parts],
+            columns: vec![
+                FieldId::Id,
+                FieldId::SourceRefs,
+                FieldId::Text,
+                FieldId::Parts,
+            ],
             applied_limit: None,
             rows_complete_for_selection: Completeness::Complete,
             partitions_complete: Completeness::Complete,
@@ -75,7 +83,10 @@ fn write(response: &QueryResponse, options: &QueryOutputOptions) -> Vec<u8> {
 
 #[test]
 fn json_is_a_query_envelope_with_rendered_guidance_not_otlp() {
-    let response = response(BTreeMap::from([(FieldId::Role, FieldValue::String("user".into()))]));
+    let response = response(BTreeMap::from([(
+        FieldId::Role,
+        FieldValue::String("user".into()),
+    )]));
     let output = write(&response, &options(OutputFormat::Json));
     let value: Value = serde_json::from_slice(&output).unwrap();
 
@@ -85,10 +96,17 @@ fn json_is_a_query_envelope_with_rendered_guidance_not_otlp() {
     assert_eq!(value["data"]["schema_version"], 1);
     assert_eq!(value["data"]["dataset"], "messages");
     assert_eq!(value["data"]["rows"][0]["fields"]["role"], "user");
-    assert_eq!(value["next_action"]["summary"], "Inspect the selected message");
+    assert_eq!(
+        value["next_action"]["summary"],
+        "Inspect the selected message"
+    );
     assert!(value.get("resourceLogs").is_none());
     assert!(value["data"].get("next_action").is_none());
-    assert!(!String::from_utf8(output).unwrap().contains("SENSITIVE-SEMANTIC-SENTINEL"));
+    assert!(
+        !String::from_utf8(output)
+            .unwrap()
+            .contains("SENSITIVE-SEMANTIC-SENTINEL")
+    );
 }
 
 #[test]
@@ -159,7 +177,10 @@ fn raw_csv_round_trips_multiline_tabs_controls_and_quotes() {
 #[test]
 fn text_and_markdown_escape_controls_and_hostile_markup_without_guidance() {
     let sentinel = "line\n\u{1b}[31m<script>*bold*";
-    let response = response(BTreeMap::from([(FieldId::Text, FieldValue::String(sentinel.into()))]));
+    let response = response(BTreeMap::from([(
+        FieldId::Text,
+        FieldValue::String(sentinel.into()),
+    )]));
 
     let text = String::from_utf8(write(&response, &options(OutputFormat::Text))).unwrap();
     assert!(text.contains("line\\n\\u001b[31m<script>*bold*"));
@@ -193,8 +214,14 @@ fn bound_refusal_happens_before_the_destination_is_touched() {
 
 #[test]
 fn late_destination_failure_reports_truthful_partial_output_recovery() {
-    let response = response(BTreeMap::from([(FieldId::Role, FieldValue::String("user".into()))]));
-    let mut destination = FailsAfter { remaining: 12, bytes: Vec::new() };
+    let response = response(BTreeMap::from([(
+        FieldId::Role,
+        FieldValue::String("user".into()),
+    )]));
+    let mut destination = FailsAfter {
+        remaining: 12,
+        bytes: Vec::new(),
+    };
 
     let error = ProjectedQueryWriter
         .write(&response, &options(OutputFormat::Json), &mut destination)
@@ -204,7 +231,9 @@ fn late_destination_failure_reports_truthful_partial_output_recovery() {
     assert!(error.message().contains("partial bytes"));
     assert_eq!(
         error.recovery(),
-        &RecoveryAction::ChooseNewOutput { discard_partial: true }
+        &RecoveryAction::ChooseNewOutput {
+            discard_partial: true
+        }
     );
     assert!(error.retryable());
     assert!(!destination.bytes.is_empty());

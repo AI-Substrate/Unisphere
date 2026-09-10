@@ -3,9 +3,9 @@ use std::collections::BTreeSet;
 use unisphere_adapter_omp::OmpAdapter;
 use unisphere_core::query::{
     AdapterId, AssociationBasis, AvailabilityCode, BranchEvidence, ContentAccess, ControlKind,
-    HarnessId, LineageKind, MembershipPolicy, MessageRole, NativeLocator,
-    NativeQueryInput, ObservationFacet, ObservationPart, QueryAdapter, QueryLimits, RequestMarker,
-    SourceEvidence, SourceId, SourceLocator, SourceReadStatus, SourceViewKind, UsageScope,
+    HarnessId, LineageKind, MembershipPolicy, MessageRole, NativeLocator, NativeQueryInput,
+    ObservationFacet, ObservationPart, QueryAdapter, QueryLimits, RequestMarker, SourceEvidence,
+    SourceId, SourceLocator, SourceReadStatus, SourceViewKind, UsageScope,
 };
 
 const FIXTURE: &[u8] = include_bytes!("fixtures/native.jsonl");
@@ -63,7 +63,10 @@ fn inspect(access: ContentAccess) -> unisphere_core::query::InspectedSource {
 fn query_inspection_preserves_header_tree_control_calls_and_native_facts() {
     let inspected = inspect(ContentAccess::default());
     inspected.validate(&QueryLimits::default()).unwrap();
-    assert_eq!(inspected.source.query_policy_version, "oh-my-pi-v3-query-v1");
+    assert_eq!(
+        inspected.source.query_policy_version,
+        "oh-my-pi-v3-query-v1"
+    );
     assert_eq!(inspected.partitions.len(), 1);
     let partition = &inspected.partitions[0];
     assert_eq!(partition.native_session_id.as_deref(), Some("session-1"));
@@ -71,8 +74,7 @@ fn query_inspection_preserves_header_tree_control_calls_and_native_facts() {
     assert_eq!(partition.membership, MembershipPolicy::ValidatedHeader);
     assert!(partition.associations.iter().any(|association| {
         association.basis == AssociationBasis::NativeCwd
-            && association.path.as_deref()
-                == Some(std::path::Path::new("/SENSITIVE-project"))
+            && association.path.as_deref() == Some(std::path::Path::new("/SENSITIVE-project"))
     }));
 
     let user = inspected
@@ -141,16 +143,24 @@ fn query_inspection_preserves_header_tree_control_calls_and_native_facts() {
         ObservationFacet::Control { kind: ControlKind::Compaction, links }
             if links.iter().any(|link| link.kind == LineageKind::FirstKept && link.target == "a1")
     )));
-    assert!(inspected
-        .observations
-        .iter()
-        .any(|observation| observation.source_ref.subrecord.ends_with(":message-clock")));
+    assert!(
+        inspected
+            .observations
+            .iter()
+            .any(|observation| observation.source_ref.subrecord.ends_with(":message-clock"))
+    );
     assert_eq!(
         inspected
             .observations
             .iter()
             .flat_map(|observation| observation.facets.iter())
-            .filter(|facet| matches!(facet, ObservationFacet::Message { request_marker: RequestMarker::Initiating, .. }))
+            .filter(|facet| matches!(
+                facet,
+                ObservationFacet::Message {
+                    request_marker: RequestMarker::Initiating,
+                    ..
+                }
+            ))
             .count(),
         1
     );
@@ -177,7 +187,17 @@ fn content_opt_in_retains_supported_payloads_without_turning_response_timing_int
         ObservationFacet::ToolCall { input, .. }
             if matches!(input.as_slice(), [ObservationPart::Structured(value)] if value["path"] == "/SENSITIVE-input")
     )));
-    assert!(inspected.observations.iter().flat_map(|observation| observation.facets.iter()).all(
-        |facet| !matches!(facet, ObservationFacet::ToolResult { reported_duration_ms: Some(_), .. })
-    ));
+    assert!(
+        inspected
+            .observations
+            .iter()
+            .flat_map(|observation| observation.facets.iter())
+            .all(|facet| !matches!(
+                facet,
+                ObservationFacet::ToolResult {
+                    reported_duration_ms: Some(_),
+                    ..
+                }
+            ))
+    );
 }

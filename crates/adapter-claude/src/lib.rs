@@ -115,7 +115,12 @@ impl QueryAdapter for ClaudeCodeAdapter {
             })?;
             let mut diagnostics = Vec::new();
             let Some(object) = value.as_object() else {
-                diagnostics.push(query_issue(source.id, offset, None, AvailabilityCode::NotSupported));
+                diagnostics.push(query_issue(
+                    source.id,
+                    offset,
+                    None,
+                    AvailabilityCode::NotSupported,
+                ));
                 inspected.observations.push(Observation {
                     source_ref: SourceRef {
                         source_id: source.id,
@@ -213,15 +218,21 @@ impl QueryAdapter for ClaudeCodeAdapter {
                     applies_to: AssociationExtent::Record(sequence.clone()),
                 };
                 if let Some(index) = partitions
-                    .get(&(session_id.clone().unwrap_or_default(), participant_id.clone()))
+                    .get(&(
+                        session_id.clone().unwrap_or_default(),
+                        participant_id.clone(),
+                    ))
                     .copied()
                 {
-                    inspected.partitions[index].associations.push(association.clone());
+                    inspected.partitions[index]
+                        .associations
+                        .push(association.clone());
                 }
                 inspected.source.associations.push(association);
             }
 
-            let timestamp = parse_query_timestamp(object.get("timestamp"), source.id, offset, &mut diagnostics);
+            let timestamp =
+                parse_query_timestamp(object.get("timestamp"), source.id, offset, &mut diagnostics);
             let mut facets = Vec::new();
             match kind {
                 Some("user" | "assistant") => inspect_claude_message(
@@ -297,7 +308,12 @@ fn inspect_claude_message(
     diagnostics: &mut Vec<AvailabilityIssue>,
 ) {
     let Some(message) = object.get("message").and_then(Value::as_object) else {
-        diagnostics.push(query_issue(source_id, offset, Some(FieldId::Parts), AvailabilityCode::NotCaptured));
+        diagnostics.push(query_issue(
+            source_id,
+            offset,
+            Some(FieldId::Parts),
+            AvailabilityCode::NotCaptured,
+        ));
         return;
     };
     let role = match string_field(message, "role") {
@@ -312,38 +328,63 @@ fn inspect_claude_message(
     match message.get("content") {
         Some(Value::String(text)) => {
             has_text = true;
-            parts.push(retained_part(access, FieldId::Text, || ObservationPart::Text(text.clone())));
+            parts.push(retained_part(access, FieldId::Text, || {
+                ObservationPart::Text(text.clone())
+            }));
         }
         Some(Value::Array(native_parts)) => {
             for part in native_parts {
                 let Some(part) = part.as_object() else {
-                    diagnostics.push(query_issue(source_id, offset, Some(FieldId::Parts), AvailabilityCode::NotSupported));
+                    diagnostics.push(query_issue(
+                        source_id,
+                        offset,
+                        Some(FieldId::Parts),
+                        AvailabilityCode::NotSupported,
+                    ));
                     continue;
                 };
                 match string_field(part, "type") {
                     Some("text") => {
                         if let Some(text) = string_field(part, "text") {
                             has_text = true;
-                            parts.push(retained_part(access, FieldId::Text, || ObservationPart::Text(text.into())));
+                            parts.push(retained_part(access, FieldId::Text, || {
+                                ObservationPart::Text(text.into())
+                            }));
                         }
                     }
                     Some("thinking") => {
                         if let Some(text) = string_field(part, "thinking") {
-                            parts.push(retained_part(access, FieldId::Parts, || ObservationPart::Reasoning(text.into())));
+                            parts.push(retained_part(access, FieldId::Parts, || {
+                                ObservationPart::Reasoning(text.into())
+                            }));
                         }
                     }
                     Some("tool_use") => {
                         let Some(call_id) = string_field(part, "id") else {
-                            diagnostics.push(query_issue(source_id, offset, Some(FieldId::CallId), AvailabilityCode::NotCaptured));
+                            diagnostics.push(query_issue(
+                                source_id,
+                                offset,
+                                Some(FieldId::CallId),
+                                AvailabilityCode::NotCaptured,
+                            ));
                             continue;
                         };
                         let Some(name) = string_field(part, "name") else {
-                            diagnostics.push(query_issue(source_id, offset, Some(FieldId::ToolName), AvailabilityCode::NotCaptured));
+                            diagnostics.push(query_issue(
+                                source_id,
+                                offset,
+                                Some(FieldId::ToolName),
+                                AvailabilityCode::NotCaptured,
+                            ));
                             continue;
                         };
                         let input = part.get("input").map_or_else(
                             || vec![ObservationPart::Unavailable(AvailabilityCode::NotCaptured)],
-                            |value| vec![retained_part(access, FieldId::Input, || ObservationPart::Structured(value.clone()))],
+                            |value| {
+                                vec![retained_part(access, FieldId::Input, || {
+                                    ObservationPart::Structured(value.clone())
+                                })]
+                            },
                         );
                         facets.push(ObservationFacet::ToolCall {
                             native_call_id: call_id.into(),
@@ -356,12 +397,21 @@ fn inspect_claude_message(
                     Some("tool_result") => {
                         has_tool_result = true;
                         let Some(call_id) = string_field(part, "tool_use_id") else {
-                            diagnostics.push(query_issue(source_id, offset, Some(FieldId::CallId), AvailabilityCode::NotCaptured));
+                            diagnostics.push(query_issue(
+                                source_id,
+                                offset,
+                                Some(FieldId::CallId),
+                                AvailabilityCode::NotCaptured,
+                            ));
                             continue;
                         };
                         let output = part.get("content").map_or_else(
                             || vec![ObservationPart::Unavailable(AvailabilityCode::NotCaptured)],
-                            |value| vec![retained_part(access, FieldId::Output, || ObservationPart::Structured(value.clone()))],
+                            |value| {
+                                vec![retained_part(access, FieldId::Output, || {
+                                    ObservationPart::Structured(value.clone())
+                                })]
+                            },
                         );
                         let outcome = match part.get("is_error").and_then(Value::as_bool) {
                             Some(true) => Outcome::Failed,
@@ -378,11 +428,18 @@ fn inspect_claude_message(
                             turn_id: None,
                         });
                     }
-                    Some(_) | None => parts.push(ObservationPart::Unavailable(AvailabilityCode::NotSupported)),
+                    Some(_) | None => {
+                        parts.push(ObservationPart::Unavailable(AvailabilityCode::NotSupported))
+                    }
                 }
             }
         }
-        _ => diagnostics.push(query_issue(source_id, offset, Some(FieldId::Parts), AvailabilityCode::NotCaptured)),
+        _ => diagnostics.push(query_issue(
+            source_id,
+            offset,
+            Some(FieldId::Parts),
+            AvailabilityCode::NotCaptured,
+        )),
     }
     let marker = if object.get("isCompactSummary").and_then(Value::as_bool) == Some(true) {
         RequestMarker::Summary
@@ -404,7 +461,12 @@ fn inspect_claude_message(
     });
     inspect_claude_usage(message, message_id, source_id, offset, facets, diagnostics);
     if outer_kind != role_name(role) {
-        diagnostics.push(query_issue(source_id, offset, Some(FieldId::Role), AvailabilityCode::Conflict));
+        diagnostics.push(query_issue(
+            source_id,
+            offset,
+            Some(FieldId::Role),
+            AvailabilityCode::Conflict,
+        ));
     }
 }
 
@@ -416,12 +478,22 @@ fn inspect_claude_usage(
     facets: &mut Vec<ObservationFacet>,
     diagnostics: &mut Vec<AvailabilityIssue>,
 ) {
-    let Some(usage) = message.get("usage").and_then(Value::as_object) else { return };
+    let Some(usage) = message.get("usage").and_then(Value::as_object) else {
+        return;
+    };
     let mut count = |field: &str, query_field: FieldId| {
         usage.get(field).and_then(|value| {
-            let valid = value.as_i64().filter(|value| *value >= 0).map(|value| value as u64);
+            let valid = value
+                .as_i64()
+                .filter(|value| *value >= 0)
+                .map(|value| value as u64);
             if valid.is_none() {
-                diagnostics.push(query_issue(source_id, offset, Some(query_field), AvailabilityCode::ProjectionMissing));
+                diagnostics.push(query_issue(
+                    source_id,
+                    offset,
+                    Some(query_field),
+                    AvailabilityCode::ProjectionMissing,
+                ));
             }
             valid
         })
@@ -467,12 +539,17 @@ fn parse_query_timestamp(
     offset: Option<u64>,
     diagnostics: &mut Vec<AvailabilityIssue>,
 ) -> Option<Timestamp> {
-    let Some(value) = value else { return None };
+    let value = value?;
     let parsed = value
         .as_str()
         .and_then(|value| Timestamp::parse(value, TimestampBasis::Native).ok());
     if parsed.is_none() {
-        diagnostics.push(query_issue(source, offset, Some(FieldId::Timestamp), AvailabilityCode::InvalidClock));
+        diagnostics.push(query_issue(
+            source,
+            offset,
+            Some(FieldId::Timestamp),
+            AvailabilityCode::InvalidClock,
+        ));
     }
     parsed
 }

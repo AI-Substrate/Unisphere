@@ -63,14 +63,20 @@ fn query_preserves_native_membership_markers_calls_and_content_consent() {
         .unwrap();
 
     assert_eq!(inspected.partitions.len(), 1);
-    assert_eq!(inspected.partitions[0].native_session_id.as_deref(), Some("s1"));
-    assert_eq!(inspected.partitions[0].membership, MembershipPolicy::NativeContainment);
+    assert_eq!(
+        inspected.partitions[0].native_session_id.as_deref(),
+        Some("s1")
+    );
+    assert_eq!(
+        inspected.partitions[0].membership,
+        MembershipPolicy::NativeContainment
+    );
     assert!(inspected.source.associations.iter().any(|association| {
         association.basis == AssociationBasis::NativeCwd
             && association.path.as_deref() == Some(std::path::Path::new("/repo"))
     }));
 
-    let message = |index| {
+    let message = |index: usize| {
         inspected.observations[index]
             .facets
             .iter()
@@ -90,7 +96,12 @@ fn query_preserves_native_membership_markers_calls_and_content_consent() {
     assert_eq!(message(2).2, RequestMarker::ToolResponse);
     assert_eq!(message(3).2, RequestMarker::Injected);
     assert_eq!(message(4).2, RequestMarker::Summary);
-    assert!(matches!(message(0).1.as_slice(), [ObservationPart::Unavailable(AvailabilityCode::SensitiveOmitted)]));
+    assert!(matches!(
+        message(0).1.as_slice(),
+        [ObservationPart::Unavailable(
+            AvailabilityCode::SensitiveOmitted
+        )]
+    ));
 
     assert!(inspected.observations[1].facets.iter().any(|facet| matches!(
         facet,
@@ -99,15 +110,28 @@ fn query_preserves_native_membership_markers_calls_and_content_consent() {
                 && family.as_deref() == Some("file-read")
                 && matches!(input.as_slice(), [ObservationPart::Unavailable(AvailabilityCode::SensitiveOmitted)])
     )));
-    assert!(inspected.observations[2].facets.iter().any(|facet| matches!(
-        facet,
-        ObservationFacet::ToolResult { native_call_id, outcome, .. }
-            if native_call_id == "call-1" && *outcome == Outcome::Succeeded
-    )));
-    assert!(inspected.observations[1].facets.iter().any(|facet| matches!(
-        facet,
-        ObservationFacet::Usage { scope: UsageScope::Invocation, .. }
-    )));
+    assert!(
+        inspected.observations[2]
+            .facets
+            .iter()
+            .any(|facet| matches!(
+                facet,
+                ObservationFacet::ToolResult { native_call_id, outcome, .. }
+                    if native_call_id == "call-1" && *outcome == Outcome::Succeeded
+            ))
+    );
+    assert!(
+        inspected.observations[1]
+            .facets
+            .iter()
+            .any(|facet| matches!(
+                facet,
+                ObservationFacet::Usage {
+                    scope: UsageScope::Invocation,
+                    ..
+                }
+            ))
+    );
 
     let content = adapter
         .inspect(

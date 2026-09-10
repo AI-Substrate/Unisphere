@@ -4,7 +4,7 @@ use serde::Deserialize;
 use unisphere_core::query::{
     Completeness, ContentAccess, Coverage, Dataset, Digest, FieldId, QueryFailure,
     QueryFailureCode, QueryInput, QueryLimits, RecoveryAction, ResultUniverse, SavedFormat,
-    Sensitivity, SourceId, UntrustedProjectedRow, UniverseBasis, ViewInputBasis,
+    Sensitivity, SourceId, UniverseBasis, UntrustedProjectedRow, ViewInputBasis,
 };
 
 use super::rows::SavedRow;
@@ -84,12 +84,15 @@ fn parse_json(
     if data.schema_version != 1
         || data.rows.len() > limits.max_observations_and_rows
         || data.rows.len() as u64 != data.emitted
-        || data.next_cursor.as_ref().is_some_and(|cursor| cursor.len() > limits.max_cursor_bytes)
         || data
-            .universe
-            .columns
-            .iter()
-            .any(|field| unisphere_core::query::schema(data.dataset).field(*field).is_none())
+            .next_cursor
+            .as_ref()
+            .is_some_and(|cursor| cursor.len() > limits.max_cursor_bytes)
+        || data.universe.columns.iter().any(|field| {
+            unisphere_core::query::schema(data.dataset)
+                .field(*field)
+                .is_none()
+        })
     {
         return Err(unsupported());
     }

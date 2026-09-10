@@ -1,0 +1,12 @@
+{
+  "purpose": "SDK-owned source/query semantics exposed by a thin CLI, plus explicitly optional Pij seat-to-native-session lookup.",
+  "promise": "Non-Git queries and native exports retain safe streams, explicit consent, actionable outcomes and reproducible native identity; Pij selects but never replaces the native source identity.",
+  "subject_sha": "f818e2f5e6c4e5fb34ab8a00c34cc9928dc0d283",
+  "proof_target": "Integration and validated evidence, scoped to non-Git query/native behavior and the optional Pij extension.",
+  "proof_required": ["Exact-source boot including existing native SDK/CLI parity and newly reused installed query workflows", "Real CLI fixture regressions for duration, partial CSV, Pij live/retired/current mapping/pinned continuation/optional failure paths", "Independent static composed review"],
+  "upstream": ["plan.dd.json", "assets/impl-guide.dd.json C19/C20 and source/query contracts", "assets/extensions/pij-session-resolution/pij-session-resolution-implementation.json"],
+  "consumers": ["crates/app typed composition root", "public SDK query consumers", "CLI agents consuming JSON/JSONL/CSV and diagnostics", "native-only callers with no Pij installed"],
+  "position": "Core query ports and frozen guide remain unchanged; separate CLI PijTarget and outer resolver defer native identity binding, then execute a retained SDK view.",
+  "constraints": ["No global tooling or source-store mutation", "No cache/history/federation/daemon repair", "No fake Builder delivery/composition receipts", "Git Notes runtime and seventh recipe remain blocked on separately approved history merge requiring typed PROCEED"],
+  "history": {"authoritative": ["assets/reviews/p1-a5-supplemental-pij-armed-cow.json", "assets/reviews/p4p6p7-corrections-pij-armed-cow.json"], "applicable": ["assets/extensions/pij-session-resolution/review-pij-armed-cow.json"], "superseded_findings": ["Original P5 null grouping collision was disproved and withdrawn"], "partial_proof": ["assets/verification/pij-cli-working-checks.json", "assets/verification/query-recipes-working.json"]}
+}

@@ -317,7 +317,20 @@ fn parity_case(
         &config_args(path, mode, false),
     )?;
     let sdk_value = machine(&sdk_output, code, "config.check")?;
-    let cli_value = machine(&cli_output, code, "config.check")?;
+    let mut cli_value = machine(&cli_output, code, "config.check")?;
+    let action = cli_value
+        .as_object_mut()
+        .and_then(|value| value.remove("next_action"))
+        .ok_or("configuration CLI lacks next action")?;
+    if !action["summary"]
+        .as_str()
+        .is_some_and(|summary| !summary.is_empty())
+        || !action["argv"].is_array()
+        || !action["required_inputs"].is_array()
+    {
+        return Err("configuration CLI action lacks actionable shape".into());
+    }
+    // Guidance belongs to the CLI envelope, not the SDK configuration semantics.
     if sdk_value != cli_value {
         return Err(format!(
             "{name}: SDK/CLI semantic mismatch\nSDK: {sdk_value}\nCLI: {cli_value}"

@@ -1,0 +1,20 @@
+docs/plans/015-session-query-cli/assets/compaction-handoff.md
+  h_9e71e8b09f7cf2 52,54-56
+docs/plans/015-session-query-cli/assets/team/baseline-assistants.json
+  h_9e71e8b09f7cf2 92-111
+docs/plans/015-session-query-cli/assets/team/implementation-fleet.json
+  h_9e71e8b09f7cf2 418-437
+docs/plans/015-session-query-cli/assets/team/terminal-cleanup.json
+  h_9e71e8b09f7cf2 1-401
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "01d28da1b9e53cc0df6bb185c33d202c8ced87e6",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

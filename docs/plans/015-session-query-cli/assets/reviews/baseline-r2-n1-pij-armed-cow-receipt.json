@@ -1,0 +1,64 @@
+{
+  "record_type": "review",
+  "id": "rv-plan015-baseline-r2-n1-pij-armed-cow",
+  "kind": "addendum",
+  "not_a_new_review": "Closes N1 and rebinds the existing R2 approval to the doc-only subject; performs no new assessment.",
+  "applies_to": "rv-plan015-baseline-r2-pij-armed-cow",
+  "plan": "docs/plans/015-session-query-cli/plan.dd.json",
+  "plan_sha256": "23e11ee7ec867315349aab8df11282da08bf211a6c86e27a3782292ba5bcecef",
+  "guide": "docs/plans/015-session-query-cli/assets/impl-guide.dd.json",
+  "guide_sha256": "5caed35ffa6f28570c16b6bc42baf47ce4403012069e429eeeaeb4e02f04c88f",
+  "guide_version": 6,
+  "subject_sha": "72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9",
+  "prior_subject_sha": "4c3c665f757ddaeb1469753853018cb18febe538",
+  "prior_guide_sha256": "0b886259f6227b42b45939bb8bdb9f9ebaad48169a35a296cdb4c1f7b9ddecc7",
+  "code_identity_with_prior_subject": true,
+  "report": "docs/plans/015-session-query-cli/assets/reviews/baseline-r2-n1-pij-armed-cow.json",
+  "report_sha256": "5da35ec416f1a2e15b08ea16282f9824510b37e4195c12dbc0b9779ea7f69666",
+  "supersedes": null,
+  "immutability": "The R2 report fb59ed36... and receipt aafdd629... remain immutable at code subject 4c3c665f and guide 0b886259 and are not amended by this record.",
+  "scope": "decomposition",
+  "scope_note": "Basis addendum only. Verifies that 72d9d0cf changes exactly the one permitted guide token and no reviewed code, closes N1, and binds the existing R2 approval to this subject.",
+  "reviewer": "pij-armed-cow",
+  "reviewer_runtime": {
+    "harness": "omp",
+    "model_id_exposed": "github-copilot/claude-opus-5",
+    "effort_exposed": "high",
+    "settings_source": "guide",
+    "native_session": "01a08872-82bb-7641-b1dc-3964616e3e0a",
+    "attestation": "locally observed configuration strings only; no provider attestation"
+  },
+  "recorded_at": "2026-09-10T04:52:00Z",
+  "verdict": "approved",
+  "conditions_outstanding": "none",
+  "findings": [
+    {
+      "id": "N1",
+      "severity": "low",
+      "disposition": "fixed",
+      "summary": "C21 now enumerates FormatLoss with all five variants including TimestampBasis; verified as a pure 15-character insertion, the only contract text changed, with crates/, Cargo.toml and Cargo.lock tree objects byte-identical to 4c3c665f."
+    }
+  ],
+  "carried_findings": "F1, F2, F3, F5, F6, F7, F8 remain fixed and F4 remains fixed as recorded in the R2 receipt; none was re-evaluated here.",
+  "observations": [
+    {
+      "id": "O1",
+      "severity": "informational",
+      "blocking": false,
+      "summary": "meta.version and meta.updated are unchanged, so two distinct guide byte-strings both self-identify as v6; the seal binds guide_sha256, not the version label."
+    }
+  ],
+  "reviewer_gaps": [
+    "Read-only: no build, test, lint, formatter or proof command was executed for this addendum.",
+    "No proof rerun for the doc-only subject; assets/verification/baseline-proof-4c3c665f.json remains the exercised-code evidence and is valid here only because the code trees are byte-identical.",
+    "Carried: absent loader-query/output-query crate directories behind declared workspace dependencies, marked [INFERENCE] in R2.",
+    "Carried: runtime C25 metamorphs unproven, bound to unchecked dw-002a under bp-0008."
+  ],
+  "seal": {
+    "baseline_sealed": false,
+    "independent_review": "complete",
+    "reviewer_gates_seal": false,
+    "recommendation": "Seal wave0 at 72d9d0cf and release the wave1 lanes.",
+    "no_approved_with_unresolved_material_findings": true
+  }
+}

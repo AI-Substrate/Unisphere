@@ -11,7 +11,7 @@
 | --- | --- |
 | title | Query/recipe/actionable-output proof selection |
 | plan | [meta](../plan.dd.md#meta) |
-| basis_sha | 9fbb66391ed715e2a13909251664eb7eb726bc3441e6d6ad444ca26fc74d1f9d |
+| basis_sha | 23e11ee7ec867315349aab8df11282da08bf211a6c86e27a3782292ba5bcecef |
 | certainty | Confident |
 
 <a id="rows"></a>

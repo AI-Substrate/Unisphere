@@ -1,0 +1,100 @@
+{
+  "record_type": "review",
+  "id": "rv-plan015-baseline-r2-pij-armed-cow",
+  "plan": "docs/plans/015-session-query-cli/plan.dd.json",
+  "plan_sha256": "23e11ee7ec867315349aab8df11282da08bf211a6c86e27a3782292ba5bcecef",
+  "guide": "docs/plans/015-session-query-cli/assets/impl-guide.dd.json",
+  "guide_sha256": "0b886259f6227b42b45939bb8bdb9f9ebaad48169a35a296cdb4c1f7b9ddecc7",
+  "subject_sha": "4c3c665f757ddaeb1469753853018cb18febe538",
+  "prior_subject_sha": "819fc30ae5d721fe2a2100ae9eef5692f10eac63",
+  "report": "docs/plans/015-session-query-cli/assets/reviews/baseline-r2-pij-armed-cow.json",
+  "report_sha256": "fb59ed36b99b32c0133846f204d362ed5db826441051ae0402dd419645e33f62",
+  "scope": "decomposition",
+  "scope_note": "Final independent exact-code delta review of the corrected wave0 query contract baseline at 4c3c665f under the baseline seal grammar. Not full plan acceptance, not a query service or CLI feature claim, and not a restatement of the guide-level R3 decomposition approval.",
+  "reviewer": "pij-armed-cow",
+  "reviewer_runtime": {
+    "harness": "omp",
+    "model_id_exposed": "github-copilot/claude-opus-5",
+    "effort_exposed": "high",
+    "settings_source": "guide",
+    "native_session": "01a08872-82bb-7641-b1dc-3964616e3e0a",
+    "attestation": "locally observed configuration strings only; no provider attestation"
+  },
+  "reviewer_gaps": [
+    "Read-only: this reviewer executed no build, test, lint, formatter or proof command.",
+    "PM proof at assets/verification/baseline-proof-4c3c665f.json was read and its subject/plan/guide bindings independently recomputed; its run outcomes are the PM's measurement, not this reviewer's.",
+    "The C25 preimage vector was independently re-derived by this reviewer in a separate kernel; the delivered script was read but not executed.",
+    "Runtime behaviour of the wave1 query service and CLI was not exercised because it does not exist at this subject; the C25 runtime metamorphs remain bound to unchecked dw-002a.",
+    "[INFERENCE] The two declared workspace dependency entries point at directories that do not yet exist; cargo does not resolve unconsumed [workspace.dependencies] templates, and PM's boot at this subject exited 0, but this reviewer did not run cargo to demonstrate it."
+  ],
+  "recorded_at": "2026-09-10T04:45:00Z",
+  "verdict": "approved",
+  "supersedes": null,
+  "relates_to": {
+    "prior_review": "rv-plan015-baseline-r1-pij-armed-cow",
+    "note": "R1 remains immutable at changes-requested against 819fc30a. This receipt assesses the corrected subject and does not amend R1."
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "high",
+      "disposition": "fixed",
+      "summary": "Declared inward query-adapter edges added to Cargo.toml, arch-check allowlist and the allowed.json fixture, and bp-000e rewritten to withdraw the runtime claim the baseline cannot support."
+    },
+    {
+      "id": "F2",
+      "severity": "high",
+      "disposition": "fixed",
+      "summary": "All six datasets now declare the C18 common row fields; turns, messages, tools and events each gained exactly the four missing entries."
+    },
+    {
+      "id": "F3",
+      "severity": "medium",
+      "disposition": "fixed",
+      "summary": "Fixed independently derived preimage vector plus repeat stability committed; admits algebra, from_untrusted, ResultUniverse::validate and Coverage::validate now tested; runtime C25 metamorphs bound to unchecked dw-002a under bp-0008."
+    },
+    {
+      "id": "F4",
+      "severity": "medium",
+      "disposition": "fixed",
+      "summary": "Dead JSON fixture deleted and replaced by a typed shared_query_fixture() consumed by a behavioural provenance-rejection test; freeze inventory updated."
+    },
+    {
+      "id": "F5",
+      "severity": "medium",
+      "disposition": "fixed",
+      "summary": "TimestampBasis::SuppliedUnknown used by both supplied-string read paths; FormatLoss::TimestampBasis declared lossy on timestamp-bearing datasets only; C10 amended."
+    },
+    {
+      "id": "F6",
+      "severity": "low",
+      "disposition": "fixed",
+      "summary": "Paired validate/validate_for routing keeps ConsultSchema dataset-accurate and confines ReadQueryHelp to standalone validators; C21 records the rule."
+    },
+    {
+      "id": "F7",
+      "severity": "low",
+      "disposition": "fixed",
+      "summary": "Grouping fields emptied on the three datasets that permit no Stats; the remaining three carry real metric sets."
+    },
+    {
+      "id": "F8",
+      "severity": "medium",
+      "disposition": "fixed",
+      "summary": "Timestamp equality and ordering compare unix_nanos only; basis is provenance metadata and never an ordering tie-break; C10 amended."
+    },
+    {
+      "id": "N1",
+      "severity": "low",
+      "disposition": "open",
+      "summary": "C21 still enumerates FormatLoss with four variants while C10 v6 and schema.rs require five including TimestampBasis; append |TimestampBasis to C21 before writing the seal record."
+    }
+  ],
+  "seal": {
+    "baseline_sealed": false,
+    "recommendation": "Seal at 4c3c665f once N1 is corrected. That correction is confined to appending one variant to C21's FormatLoss enumeration so the guide matches already-approved code; a guide re-hash for exactly that edit does not require re-review, while any other guide or code change at this subject does.",
+    "release": "Normal wave1 lanes may be released against this baseline.",
+    "no_approved_with_unresolved_material_findings": true,
+    "materiality_note": "N1 is graded non-material: it is a guide-text inconsistency that the compiler prevents from reaching behaviour, and the code it disagrees with is correct."
+  }
+}

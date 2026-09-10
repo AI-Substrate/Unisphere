@@ -106,3 +106,20 @@ The normative output namespace and pinned schema references live in
 [claude-adapter.md](claude-adapter.md). Native record, logical message and completed
 model invocation are distinct entities: do not silently deduplicate or invent
 usage totals merely to fit a consumer's presentation.
+
+## Git-object representation
+
+`GitNoteLoader` and `GitNoteAdapter` are separate core ports for Git Notes, not
+JSONL cursors or SQLite snapshots. `GitObjectLoader` owns bounded, read-only
+standard Git access; `GitAiAdapter` receives only `LoadedGitNote` bytes and pinned
+object provenance. It imports no Git AI implementation. The SDK
+`GitNotesCollector` composes them with the existing `RecordWriter`.
+
+The registered `SourceRepresentation::GitNotes` uses the dedicated
+`run_git_notes` parser and an app-owned constructor closure. Its test fixture is
+synthetic note bytes installed into a real temporary repository with ordinary Git;
+the existing registry provenance test uses `--repo` and an explicit Git executable.
+The descriptor has empty location hints because repositories are caller-selected.
+Content markers live on identity content and appear only under content opt-in.
+The architecture sensor enforces inward dependencies and pure mapper source;
+`unisphere-proof git-notes` exercises external SDK and installed CLI composition.

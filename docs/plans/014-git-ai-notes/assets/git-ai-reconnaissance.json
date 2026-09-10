@@ -1,0 +1,317 @@
+{
+  "scope": "Git-ai-format notes only; retired harness telemetry excluded; input format only, no git-ai dependency or code reuse.",
+  "examples": [
+    {
+      "repo": "unisphere",
+      "commit": "d4679f44952851204e5b46dcc0f201d86802256b",
+      "blob": "644472487cf51e8f8bfe7a7123bda097bb52bc54",
+      "bytes": 1043,
+      "schema_version": "authorship/3.0.0",
+      "git_ai_version": "1.6.21",
+      "metadata_keys": [
+        "base_commit_sha",
+        "git_ai_version",
+        "prompts",
+        "schema_version",
+        "sessions"
+      ],
+      "attested_files": 6,
+      "attestation_entries": 6,
+      "maps": {
+        "prompts": {
+          "entries": 0,
+          "record_keys": [],
+          "agent_id_keys": [],
+          "embedded_message_count": 0
+        },
+        "sessions": {
+          "entries": 1,
+          "record_keys": [
+            "agent_id",
+            "human_author"
+          ],
+          "agent_id_keys": [
+            "id",
+            "model",
+            "tool"
+          ],
+          "embedded_message_count": 0
+        }
+      }
+    },
+    {
+      "repo": "unisphere",
+      "commit": "eb2fcb7c07f551cec67a4cb77cebe99b3090dd81",
+      "blob": "c07c43df8b21ed0a56e5a91218f3ec1b77b1c6f2",
+      "bytes": 554,
+      "schema_version": "authorship/3.0.0",
+      "git_ai_version": "1.6.21",
+      "metadata_keys": [
+        "base_commit_sha",
+        "git_ai_version",
+        "prompts",
+        "schema_version",
+        "sessions"
+      ],
+      "attested_files": 1,
+      "attestation_entries": 1,
+      "maps": {
+        "prompts": {
+          "entries": 0,
+          "record_keys": [],
+          "agent_id_keys": [],
+          "embedded_message_count": 0
+        },
+        "sessions": {
+          "entries": 1,
+          "record_keys": [
+            "agent_id",
+            "human_author"
+          ],
+          "agent_id_keys": [
+            "id",
+            "model",
+            "tool"
+          ],
+          "embedded_message_count": 0
+        }
+      }
+    },
+    {
+      "repo": "unisphere",
+      "commit": "4a907d6e2832f3907c6538809b4e07e7d2c7a724",
+      "blob": "a9678c653cb03e2dc2d3131f6bf13bc3100b9ccb",
+      "bytes": 2562,
+      "schema_version": "authorship/3.0.0",
+      "git_ai_version": "1.6.21",
+      "metadata_keys": [
+        "base_commit_sha",
+        "git_ai_version",
+        "humans",
+        "prompts",
+        "schema_version"
+      ],
+      "attested_files": 22,
+      "attestation_entries": 22,
+      "maps": {
+        "prompts": {
+          "entries": 0,
+          "record_keys": [],
+          "agent_id_keys": [],
+          "embedded_message_count": 0
+        },
+        "humans": {
+          "entries": 1,
+          "record_keys": [
+            "author"
+          ],
+          "agent_id_keys": [],
+          "embedded_message_count": 0
+        }
+      }
+    },
+    {
+      "repo": "mini-flight-bag",
+      "commit": "6bf0809c6ec9c4e326359cb4de343c82f8d49131",
+      "blob": "c586ef9c5ef3aebfdf3deed54e7ea671a002c616",
+      "bytes": 1224,
+      "schema_version": "authorship/3.0.0",
+      "git_ai_version": "1.6.21",
+      "metadata_keys": [
+        "base_commit_sha",
+        "git_ai_version",
+        "prompts",
+        "schema_version",
+        "sessions"
+      ],
+      "attested_files": 5,
+      "attestation_entries": 7,
+      "maps": {
+        "prompts": {
+          "entries": 0,
+          "record_keys": [],
+          "agent_id_keys": [],
+          "embedded_message_count": 0
+        },
+        "sessions": {
+          "entries": 1,
+          "record_keys": [
+            "agent_id",
+            "human_author"
+          ],
+          "agent_id_keys": [
+            "id",
+            "model",
+            "tool"
+          ],
+          "embedded_message_count": 0
+        }
+      }
+    },
+    {
+      "repo": "mini-flight-bag",
+      "commit": "015d4dbcc5550cb011ca4744f044e6cb63aff0d9",
+      "blob": "3f4e73d85e0062abf851115dd441555a5646740c",
+      "bytes": 523,
+      "schema_version": "authorship/3.0.0",
+      "git_ai_version": "1.6.21",
+      "metadata_keys": [
+        "base_commit_sha",
+        "git_ai_version",
+        "prompts",
+        "schema_version",
+        "sessions"
+      ],
+      "attested_files": 1,
+      "attestation_entries": 1,
+      "maps": {
+        "prompts": {
+          "entries": 0,
+          "record_keys": [],
+          "agent_id_keys": [],
+          "embedded_message_count": 0
+        },
+        "sessions": {
+          "entries": 1,
+          "record_keys": [
+            "agent_id",
+            "human_author"
+          ],
+          "agent_id_keys": [
+            "id",
+            "model",
+            "tool"
+          ],
+          "embedded_message_count": 0
+        }
+      }
+    },
+    {
+      "repo": "git-ai",
+      "commit": "6fbc1ef0f4d40232315efc1b907e7ff5526dbea7",
+      "blob": "e697aeffbb75dad3c1078546cad74f5376a3762c",
+      "bytes": 668,
+      "schema_version": "authorship/3.0.0",
+      "git_ai_version": "development:1.6.25",
+      "metadata_keys": [
+        "base_commit_sha",
+        "git_ai_version",
+        "prompts",
+        "schema_version",
+        "sessions"
+      ],
+      "attested_files": 2,
+      "attestation_entries": 4,
+      "maps": {
+        "prompts": {
+          "entries": 0,
+          "record_keys": [],
+          "agent_id_keys": [],
+          "embedded_message_count": 0
+        },
+        "sessions": {
+          "entries": 1,
+          "record_keys": [
+            "agent_id",
+            "human_author"
+          ],
+          "agent_id_keys": [
+            "id",
+            "model",
+            "tool"
+          ],
+          "embedded_message_count": 0
+        }
+      }
+    },
+    {
+      "repo": "git-ai",
+      "commit": "fa3765e577dfac0252592ff2dfa05cedd8164dd6",
+      "blob": "a0fd9c284a78b6fc0c957166572457cac1b96360",
+      "bytes": 668,
+      "schema_version": "authorship/3.0.0",
+      "git_ai_version": "development:1.6.25",
+      "metadata_keys": [
+        "base_commit_sha",
+        "git_ai_version",
+        "prompts",
+        "schema_version",
+        "sessions"
+      ],
+      "attested_files": 2,
+      "attestation_entries": 4,
+      "maps": {
+        "prompts": {
+          "entries": 0,
+          "record_keys": [],
+          "agent_id_keys": [],
+          "embedded_message_count": 0
+        },
+        "sessions": {
+          "entries": 1,
+          "record_keys": [
+            "agent_id",
+            "human_author"
+          ],
+          "agent_id_keys": [
+            "id",
+            "model",
+            "tool"
+          ],
+          "embedded_message_count": 0
+        }
+      }
+    },
+    {
+      "repo": "git-ai",
+      "commit": "000841e6607a4289f39ac3aa57f964c8418ebc4d",
+      "blob": "70ea7fe03643512c109b1d5b38ad525121c451dd",
+      "bytes": 3150,
+      "schema_version": "authorship/3.0.0",
+      "git_ai_version": "development:1.0.30",
+      "metadata_keys": [
+        "base_commit_sha",
+        "git_ai_version",
+        "prompts",
+        "schema_version"
+      ],
+      "attested_files": 1,
+      "attestation_entries": 2,
+      "maps": {
+        "prompts": {
+          "entries": 6,
+          "record_keys": [
+            "accepted_lines",
+            "agent_id",
+            "human_author",
+            "messages",
+            "messages_url",
+            "overriden_lines",
+            "total_additions",
+            "total_deletions"
+          ],
+          "agent_id_keys": [
+            "id",
+            "model",
+            "tool"
+          ],
+          "embedded_message_count": 0
+        }
+      }
+    }
+  ],
+  "source_contracts": {
+    "git_ai_format": "/Users/jordanknight/github/git-ai/src/authorship/authorship_log_serialization.rs",
+    "git_ai_records": "/Users/jordanknight/github/git-ai/src/authorship/authorship_log.rs",
+    "git_ai_ref_reader": "/Users/jordanknight/github/git-ai/src/git/refs.rs",
+    "git_ai_backends": "/Users/jordanknight/github/git-ai/src/git/notes_api.rs",
+    "unisphere_output": "/Users/jordanknight/substrate/unisphere/unishpere-main/docs/telemetry-profile.md"
+  },
+  "observations": [
+    "File/range attestations, exact --- divider, then JSON metadata.",
+    "Legacy prompts, current sessions and humans may coexist under authorship/3.0.0.",
+    "Git-ai can use other storage, but this feature reads explicit local Git refs only.",
+    "Note absence is not proof that no AI activity happened.",
+    "Examples are locators and structural projections, not payload fixtures."
+  ]
+}

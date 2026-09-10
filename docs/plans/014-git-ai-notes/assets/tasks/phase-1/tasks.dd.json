@@ -1,0 +1,266 @@
+{
+  "dd": {
+    "schema": "builder/plan"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Git Notes SDK and CLI integration",
+        "slug": "phase-1",
+        "status": "ready",
+        "summary": ""
+      }
+    },
+    {
+      "name": "summary",
+      "value": "Implement guide v3 after focused independent approval: four same-owner units, precise Git executable/CLI/registry/profile contracts, unresolved attribution preserved, direct selected lookup, canonical output exclusions and real Git Notes readiness proof. R1 dispositions live in ../../reviews/guide-r1-dispositions.json."
+    },
+    {
+      "name": "tasks",
+      "value": [
+        {
+          "id": "tk-0001",
+          "title": "Core Git Notes contracts",
+          "phase": "ph-7688",
+          "state": "checked",
+          "success": "Pure owned DTOs, bounds and safe GitNotes errors/ports; existing common telemetry/writer types reused. Core contracts also carry canonical worktree_root/git_dir, normalized selection, unresolved-resolution representation and typed UnsupportedTarget/UnsafeRepository; no I/O.",
+          "notes": "Owner pij-forthcoming-araminta, same guide unit tk-0001. Core contracts also carry canonical worktree_root/git_dir, normalized selection, unresolved-resolution representation and typed UnsupportedTarget/UnsafeRepository; no I/O. No product edits before focused independent R2 approval.",
+          "satisfies_toward": [
+            "../../../plan.dd.json#acceptance_criteria/ac-0001",
+            "../../../plan.dd.json#acceptance_criteria/ac-0006"
+          ],
+          "done": "tasks.dd.json#done_when/tk-0001",
+          "receipt": "../../execution-log.dd.json#entries/lg-0004"
+        },
+        {
+          "id": "tk-0002",
+          "title": "Read-only pinned Git object ingestion",
+          "phase": "ph-7688",
+          "state": "checked",
+          "success": "Explicit injected Git executable; bounded list/read, pinned membership, bare/worktree identity and controlled external behavior. Concrete GitObjectLoader, explicit absolute executable, Unix boundary, selected fanout without full enumeration, typed foreign-owner refusal (no global trust override), non-commit selected-target error and pinned membership.",
+          "notes": "Owner pij-forthcoming-araminta, same guide unit tk-0002. Concrete GitObjectLoader, explicit absolute executable, Unix boundary, selected fanout without full enumeration, typed foreign-owner refusal (no global trust override), non-commit selected-target error and pinned membership. No product edits before focused independent R2 approval.",
+          "satisfies_toward": [
+            "../../../plan.dd.json#acceptance_criteria/ac-0001",
+            "../../../plan.dd.json#acceptance_criteria/ac-0004",
+            "../../../plan.dd.json#acceptance_criteria/ac-0005",
+            "../../../plan.dd.json#acceptance_criteria/ac-0006",
+            "../../../plan.dd.json#acceptance_criteria/ac-0008"
+          ],
+          "done": "tasks.dd.json#done_when/tk-0002",
+          "receipt": "../../execution-log.dd.json#entries/lg-0004"
+        },
+        {
+          "id": "tk-0003",
+          "title": "Independent Git-ai attribution mapping",
+          "phase": "ph-7688",
+          "state": "checked",
+          "success": "Pure independent mixed-format parser and metadata-first telemetry projection, no Git AI code or dependency. Normal and optionally quoted paths; positive single-line and inclusive ranges; source-labelled 7/16-hex legacy support per spec line193; unresolved keys retained with identity_resolution, no cross-note/cache lookup; exact common and Git provenance.",
+          "notes": "Owner pij-forthcoming-araminta, same guide unit tk-0003. Normal and optionally quoted paths; positive single-line and inclusive ranges; source-labelled 7/16-hex legacy support per spec line193; unresolved keys retained with identity_resolution, no cross-note/cache lookup; exact common and Git provenance. No product edits before focused independent R2 approval.",
+          "satisfies_toward": [
+            "../../../plan.dd.json#acceptance_criteria/ac-0003",
+            "../../../plan.dd.json#acceptance_criteria/ac-0007"
+          ],
+          "done": "tasks.dd.json#done_when/tk-0003",
+          "receipt": "../../execution-log.dd.json#entries/lg-0004"
+        },
+        {
+          "id": "tk-0004",
+          "title": "SDK CLI composition and consumer proof",
+          "phase": "ph-7688",
+          "state": "checked",
+          "success": "SDK/CLI/registry and synthetic consumer composition, explicit Git executable injection, canonical source-root output exclusion, architecture checks, narrow readiness lane and accurate docs. Dedicated run_git_notes parser and app-owned generic constructor closure; static GitNotes registration/catalog and real-Git fixture branch; --git-executable through sealed empty-PATH positive proof; exact manifest; canonical source-root output exclusion; narrow boot lane/regression ownership and genuine readiness proof.",
+          "notes": "Owner pij-forthcoming-araminta, same guide unit tk-0004. Dedicated run_git_notes parser and app-owned generic constructor closure; static GitNotes registration/catalog and real-Git fixture branch; --git-executable through sealed empty-PATH positive proof; exact manifest; canonical source-root output exclusion; narrow boot lane/regression ownership and genuine readiness proof. No product edits before focused independent R2 approval.",
+          "satisfies_toward": [
+            "../../../plan.dd.json#acceptance_criteria/ac-0002",
+            "../../../plan.dd.json#acceptance_criteria/ac-0009",
+            "../../../plan.dd.json#acceptance_criteria/ac-000a"
+          ],
+          "done": "tasks.dd.json#done_when/tk-0004",
+          "receipt": "../../execution-log.dd.json#entries/lg-0004"
+        }
+      ]
+    },
+    {
+      "name": "done_when",
+      "value": {
+        "tk-0001": [
+          {
+            "id": "dw-0001",
+            "assertion": "Core Git Notes source/selection/limits validate before side effects and preserve object-native provenance without byte offsets.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0001",
+            "note": "BUILD→RUN: cargo test --locked -p unisphere-loader-git plus external git-notes proof: normal/bare/linked/nested repositories, pinned tip/commit/blob, selective fanout membership and listing parity.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0004"
+          },
+          {
+            "id": "dw-0002",
+            "assertion": "Core Git Notes source/selection/limits validate before side effects and preserve object-native provenance without byte offsets.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0006",
+            "note": "BUILD→RUN: real Git missing ref/present empty selection, selected non-commit UnsupportedTarget and missing-object ObjectRead, malformed/unsupported/oversized notes, bounded All vs successful direct selected fanout lookup, output size/write/flush failures, deadline/helper capture and UnsafeRepository error handling. No successful truncation or partial-result receipt.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0004"
+          }
+        ],
+        "tk-0002": [
+          {
+            "id": "dw-0003",
+            "assertion": "An external Rust SDK consumer can list and read explicitly selected local Git Notes attached to commits, retaining repository, notes-ref, pinned ref tip, target commit and note-blob provenance. Bare repositories and linked worktrees resolve Git storage correctly.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0001",
+            "note": "BUILD→RUN: cargo test --locked -p unisphere-loader-git plus external git-notes proof: normal/bare/linked/nested repositories, pinned tip/commit/blob, selective fanout membership and listing parity.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0004"
+          },
+          {
+            "id": "dw-0004",
+            "assertion": "Git AI can be absent: no git-ai invocation, imported implementation, crate/library dependency, daemon, HTTP service or private git-ai cache is used. Standard read-only Git is the only Git-side runtime prerequisite.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0004",
+            "note": "BUILD→RUN: git-notes external SDK/installed CLI runs under sealed empty PATH and isolated HOME with explicit actual absolute standard Git executable. Successful collection is distinct from missing/non-executable Git and empty-PATH-without-explicit-Git failures. Inspect dependency/source graph for no imported Git AI implementation/invocation/cache.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0004"
+          },
+          {
+            "id": "dw-0005",
+            "assertion": "Ingestion does not modify source refs, notes, index, worktree, configuration or hooks and performs no fetch/push/network access. Git arguments are passed without shell interpolation; external Git behaviour that could execute hooks/filters or fetch missing objects is controlled or refused.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0005",
+            "note": "BUILD→RUN: loader regressions and git-notes consumer proof check unchanged source refs/index/worktree/config/hooks, hostile inherited Git environment, disabled helpers/lazy fetch and promisor refusal; reject output under canonical worktree/git-dir/common-dir and symlinked parent aliases. Independent source review complements, not substitutes for, runtime evidence; no network-denial trace claim.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0004"
+          },
+          {
+            "id": "dw-0006",
+            "assertion": "Missing notes and empty selections are distinguishable from invalid refs, missing Git, malformed/oversized note data and object-read failures. Explicit input/output bounds, output failures and partial-result policy are observable; no silent successful truncation.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0006",
+            "note": "BUILD→RUN: real Git missing ref/present empty selection, selected non-commit UnsupportedTarget and missing-object ObjectRead, malformed/unsupported/oversized notes, bounded All vs successful direct selected fanout lookup, output size/write/flush failures, deadline/helper capture and UnsafeRepository error handling. No successful truncation or partial-result receipt.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0004"
+          },
+          {
+            "id": "dw-0007",
+            "assertion": "Existing tracking refs do not silently duplicate canonical-note observations; selection and ref revisions are explicit. Note attribution is not presented as a complete conversation, token ledger, tool-duration stream or lossless archive.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0008",
+            "note": "BUILD→RUN: git-notes proof checks explicit normalized selection, no automatic tracking-ref duplicate aggregation, unchanged pinned revision on ref movement, exact closing manifest fields and empty-result semantics; selection-scoped replace_projection, unknown finality, not conversation history.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0004"
+          }
+        ],
+        "tk-0003": [
+          {
+            "id": "dw-0008",
+            "assertion": "Independent parsing preserves supported authorship/3.0.0 file paths, inclusive line ranges, attestation keys and declared prompts/sessions/humans, including mixed maps and their agent identities. Missing data is not synthesized; unsupported variants or schema versions are explicit.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0003",
+            "note": "BUILD→RUN: cargo test --locked -p unisphere-adapter-git-ai and git-notes composed proof: mixed current/legacy/human maps, 16-hex and spec-line193 7-hex keys, normal/optionally quoted paths, single/inclusive ranges, unreferenced identities and unresolved attribution without synthesis.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0004"
+          },
+          {
+            "id": "dw-0009",
+            "assertion": "Metadata-first output preserves source identifiers without emitting human-author strings, free-form custom attributes or legacy message content unless the declared content policy explicitly permits them. Missing timestamps/counts remain unknown, not zero or invented timing.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0007",
+            "note": "BUILD→RUN: parser plus external SDK/CLI decoded OTLP: exact common profile/source keys, structural Git object provenance and allowlisted metadata; human/custom/message fields only with content; null versus missing; no synthetic times/offsets/spans/totals.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0004"
+          }
+        ],
+        "tk-0004": [
+          {
+            "id": "dw-000a",
+            "assertion": "The registered CLI Git-ai ingestion path calls the SDK and produces the same source-derived OTLP LogsData for the same repository, note selection and content policy; existing native session commands remain working.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0002",
+            "note": "BUILD→RUN: cargo run --locked -p unisphere-testkit --bin unisphere-proof -- git-notes. Dedicated run_git_notes frontend, SourceRepresentation::GitNotes registry branch, synthetic Git fixture and static descriptor; compare actual installed CLI/external SDK and retain existing native commands.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0004"
+          },
+          {
+            "id": "dw-000b",
+            "assertion": "No retired refs/harness-telemetry reader, old segment/rollup import, migration, compatibility shim or parallel telemetry path is introduced.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0009",
+            "note": "EXTEND→RUN: unisphere-arch-check registers inward-only unisphere-loader-git and unisphere-adapter-git-ai; actual source/dependency review confirms no retired harness telemetry reader/migration/compatibility path. New format name does not import upstream implementation.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0004"
+          },
+          {
+            "id": "dw-000c",
+            "assertion": "Synthetic real-Git fixtures and exercised external SDK/CLI paths prove ordinary, mixed legacy/current/human, empty, malformed, bounded, bare/worktree and Git-AI-absent behavior without committing real private note payloads. Documentation names commands, provenance and limitations.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-000a",
+            "note": "BUILD→RUN: real synthetic external SDK/temporary-installed CLI git-notes mode covers all source/format/absence/failure fixtures; then harness boot --json includes git-notes alongside every existing proof mode. Boot regression proves Git Notes failure prevents readiness and retains child evidence, not wording. Preserve exact source/command/cwd/exit and limitations; no private payload publication.",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0004"
+          }
+        ]
+      }
+    },
+    {
+      "name": "goals",
+      "value": []
+    },
+    {
+      "name": "non_goals",
+      "value": []
+    },
+    {
+      "name": "acceptance_criteria",
+      "value": []
+    },
+    {
+      "name": "phases",
+      "value": []
+    },
+    {
+      "name": "research_context",
+      "value": ""
+    },
+    {
+      "name": "testing_strategy",
+      "value": {}
+    },
+    {
+      "name": "documentation_strategy",
+      "value": {}
+    },
+    {
+      "name": "risks_assumptions",
+      "value": ""
+    },
+    {
+      "name": "open_questions",
+      "value": []
+    },
+    {
+      "name": "workshop_opportunities",
+      "value": []
+    },
+    {
+      "name": "clarifications",
+      "value": []
+    },
+    {
+      "name": "planning_seam",
+      "value": []
+    },
+    {
+      "name": "gate_matrix",
+      "value": []
+    },
+    {
+      "name": "implementation_summary",
+      "value": "All four implementation units exercised by the recorded composed proof and accepted at 9250b8f6f9084598433bc49d0077303df80cabc3 after independent committed-source review. Five non-blocking follow-ups remain; observation 5 is withdrawn and separately documented. Only documentary closeout follows; landing/publication remain separately controlled."
+    },
+    {
+      "name": "key_findings",
+      "value": []
+    },
+    {
+      "name": "acceptance_coverage",
+      "value": []
+    },
+    {
+      "name": "risks",
+      "value": []
+    },
+    {
+      "name": "execution_guardrails",
+      "value": []
+    }
+  ]
+}

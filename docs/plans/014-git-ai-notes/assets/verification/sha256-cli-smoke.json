@@ -1,0 +1,47 @@
+{
+  "command": [
+    "target/debug/unisphere",
+    "sessions",
+    "export",
+    "--adapter",
+    "git-ai",
+    "--repo",
+    "/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/.harness/temp/git-notes-sha256-probe",
+    "--git-executable",
+    "/usr/bin/git",
+    "--commit",
+    "321147a5d8b09c4b51fccb088105b7171b97e9f7bcc27886a6943d5cc323badd"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes",
+  "exit": 0,
+  "algorithm": "sha256",
+  "commit_id_length": 64,
+  "events": [
+    "unisphere.git_ai.note",
+    "unisphere.git_ai.identity",
+    "unisphere.git_ai.attribution",
+    "unisphere.git_notes.snapshot"
+  ],
+  "object_ids": [
+    {
+      "key": "unisphere.git.commit",
+      "value": {
+        "stringValue": "321147a5d8b09c4b51fccb088105b7171b97e9f7bcc27886a6943d5cc323badd"
+      }
+    },
+    {
+      "key": "unisphere.git.note.blob",
+      "value": {
+        "stringValue": "04eaf0784b7a693d33877f4cb86edb32dbc2de2f53d0748d15b5a56f0be4b2a1"
+      }
+    },
+    {
+      "key": "unisphere.git.notes.tip",
+      "value": {
+        "stringValue": "09a9589873391a57021bffc06b913dceb98b826245c1a1bc433aa59fa054a9ef"
+      }
+    }
+  ],
+  "stderr": "{\"command\":\"sessions.export\",\"data\":{\"adapter\":\"git-ai\",\"finality\":\"unknown\",\"notes\":1,\"notes_ref\":\"refs/notes/ai\",\"notes_tip\":\"09a9589873391a57021bffc06b913dceb98b826245c1a1bc433aa59fa054a9ef\",\"persisted_resume\":false,\"records\":4,\"semantics\":\"replace_projection\"},\"ok\":true,\"v\":1}\n",
+  "at": "2026-09-10T00:18:37.900Z"
+}

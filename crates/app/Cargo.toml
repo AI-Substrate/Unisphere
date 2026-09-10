@@ -25,6 +25,8 @@ unisphere-adapter-vscode-copilot.workspace = true
 unisphere-loader-snapshot.workspace = true
 unisphere-loader-query.workspace = true
 unisphere-output-query.workspace = true
+unisphere-loader-git.workspace = true
+unisphere-adapter-git-ai.workspace = true
 
 [dev-dependencies]
 unisphere-testkit.workspace = true

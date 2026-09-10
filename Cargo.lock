@@ -617,6 +617,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "unisphere-adapter-git-ai"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+ "unisphere-core",
+ "unisphere-testkit",
+]
+
+[[package]]
 name = "unisphere-adapter-omp"
 version = "0.1.0"
 dependencies = [
@@ -655,10 +665,12 @@ dependencies = [
  "unisphere-adapter-codex",
  "unisphere-adapter-copilot-cli",
  "unisphere-adapter-cursor",
+ "unisphere-adapter-git-ai",
  "unisphere-adapter-omp",
  "unisphere-adapter-pi",
  "unisphere-adapter-vscode-copilot",
  "unisphere-cli",
+ "unisphere-loader-git",
  "unisphere-loader-jsonl",
  "unisphere-loader-query",
  "unisphere-loader-snapshot",
@@ -688,6 +700,16 @@ dependencies = [
  "serde_json",
  "sha2",
  "time",
+]
+
+[[package]]
+name = "unisphere-loader-git"
+version = "0.1.0"
+dependencies = [
+ "libc",
+ "tempfile",
+ "unisphere-core",
+ "unisphere-testkit",
 ]
 
 [[package]]

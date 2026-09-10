@@ -1,0 +1,154 @@
+{
+  "captured_at": "2026-09-10T00:29:41.530Z",
+  "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes",
+  "branch": "builder/014-git-ai-notes",
+  "implementation_commit": null,
+  "base_commit": "2fb5b15349873cd62ccd75c94fdfedae40d561f5",
+  "status": "Implementation remains uncommitted at this checkpoint, but is runtime-proven against the source SHA256 manifest. Separate committed-source review is pending.",
+  "reviewed_guide": {
+    "path": "docs/plans/014-git-ai-notes/assets/impl-guide.dd.json",
+    "version": 3,
+    "sha256": "0663554ff3439b83cd5992621e26b778928c71087941971b736f7d5a47303378",
+    "approval": "Independent pij-armed-cow R2 guide-only approval"
+  },
+  "contracts": [
+    {
+      "path": "crates/core/src/git_notes.rs",
+      "exports": [
+        "GitNoteSelection::All|Commits(Vec<String>)",
+        "GitNotesScope { repository, notes_ref, selection }",
+        "GitNotesLimits",
+        "GitNoteRef { repository, repository_id, notes_ref, notes_tip, target_commit, note_blob }",
+        "GitNotesListing { repository, repository_id, git_dir, worktree_root, notes_ref, notes_tip, selection, notes }",
+        "LoadedGitNote",
+        "GitNotesRequest { scope, limits, options }",
+        "GitNotesCollection { listing, records_written }",
+        "GitNotesError",
+        "GitNoteLoader::{list_notes,read_note}",
+        "GitNoteAdapter::{name,map_note}",
+        "GitNotesApi::{list_notes,collect_notes}"
+      ]
+    },
+    {
+      "path": "crates/sdk/src/git_notes.rs",
+      "exports": [
+        "GitNotesCollector<L,A,W>::new(loader,adapter,writer)",
+        "GitNotesApi implementation; core Git Notes types re-exported through crates/sdk/src/lib.rs"
+      ]
+    },
+    {
+      "path": "crates/loader-git/src/lib.rs",
+      "exports": [
+        "GitObjectLoader::new(absolute_standard_git_executable)",
+        "GitNoteLoader implementation, Unix only"
+      ]
+    },
+    {
+      "path": "crates/adapter-git-ai/src/lib.rs",
+      "exports": [
+        "GitAiAdapter",
+        "GitNoteAdapter implementation over provided LoadedGitNote only",
+        "DESCRIPTOR"
+      ]
+    },
+    {
+      "path": "crates/cli/src/git_notes.rs",
+      "exports": [
+        "run_git_notes<C:GitNotesApi>(args,context,make_collector:impl FnOnce(Option<PathBuf>)->Result<C,GitNotesError>,stdout,stderr)->u8"
+      ]
+    },
+    {
+      "path": "crates/app/src/adapters.rs",
+      "exports": [
+        "Private SourceRepresentation::GitNotes and ADAPTERS registration; app-owned resolve_git constructor closure; existing requested_session_adapter dispatch retained"
+      ]
+    }
+  ],
+  "descriptor": {
+    "id": "git-ai",
+    "application": "Git AI",
+    "locations": [],
+    "capabilities": {
+      "export_platforms": [
+        "unix"
+      ],
+      "output_formats": [
+        "otlp-jsonl"
+      ],
+      "sdk_caller_owned_cursor": false,
+      "cursor_source_assumption": "pinned_git_notes_ref",
+      "cli_persisted_resume": false,
+      "delayed_revision_reconciliation": false,
+      "lossless_archive": false
+    }
+  },
+  "cli": [
+    "unisphere sessions list --adapter git-ai --repo PATH [--notes-ref refs/notes/ai] [--commit FULL_OID ...] [--git-executable ABSOLUTE_PATH]",
+    "unisphere sessions export same selection [--include-content] [--output NEW_FILE]"
+  ],
+  "provenance_and_association": [
+    "Canonical common Git directory is local repository identity, not a remote/global repository ID. All note records retain requested ref, pinned ref tip, target commit and note blob. Paths/ranges apply to that target commit, not current worktree state.",
+    "No event timestamps are emitted. Commit/note timestamps are not tool execution times. Ordering is deterministic projection order, not conversation chronology. No turns, tool spans, duration, token totals or full transcripts are synthesized.",
+    "Native session key s_<14hex>, checkpoint key t_<14hex>, legacy 16/7-hex prompt key and h_<14hex> human key are preserved. Checkpoints are not OTel span IDs.",
+    "Declared agent tool/id/model are namespaced attributes under unisphere.git_ai.agent.*; agent.id is a source-declared conversation/session identifier, not a verified cross-adapter join. Join only with explicit namespace/provenance policy; no global entity association is performed here.",
+    "Valid missing identity-map entries produce identity_resolution=unresolved and retain key/range evidence; no cross-note/private-cache lookup. Declared identities without any attested lines are retained.",
+    "Human-author strings, custom attributes and legacy messages/URLs require MappingOptions.include_content. They appear once on identity records; URLs are inert. Null/missing counts remain unknown, not zeros.",
+    "One ref selected explicitly, no tracking-ref aggregation. The closing manifest replaces only the stated repository/ref/normalized selection after complete output acceptance. Pinning does not retain objects against Git GC; no persistent history or exactly-once semantics."
+  ],
+  "integration_boundary": "Araminta owns plan014 source and registration changes until candidate handoff; Main coordinates convergence of shared app/CLI/SDK files with plan015. Tiger is read-only here and can model independent query lanes using these core ports/fakes. No existing broad query implementation is supplied.",
+  "next_action_boundary": "Plan015 next-action/recovery requirement is noted, not silently added to plan014. GitNotesError exposes typed kind/message and wrapped PipelineError for output; current CLI diagnostics/summaries go to stderr, never OTLP stdout. Shared app routing is a named convergence boundary.",
+  "proof": {
+    "command": [
+      "harness",
+      "boot",
+      "--json"
+    ],
+    "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes",
+    "exit": 0,
+    "ready": true,
+    "scope": "configuration-native-sessions-and-git-notes",
+    "modes": [
+      {
+        "name": "composition",
+        "exit": 0
+      },
+      {
+        "name": "sdk-consumer",
+        "exit": 0
+      },
+      {
+        "name": "installed-cli",
+        "exit": 0
+      },
+      {
+        "name": "collection",
+        "exit": 0
+      },
+      {
+        "name": "native",
+        "exit": 0
+      },
+      {
+        "name": "git-notes",
+        "exit": 0
+      }
+    ],
+    "artifact": "docs/plans/014-git-ai-notes/assets/verification/boot-attempt-2.json",
+    "source_manifest_files": 30,
+    "source_manifest_match_confirmed": true,
+    "additional_sha256_smoke": "docs/plans/014-git-ai-notes/assets/verification/sha256-cli-smoke.json",
+    "limitations": [
+      "Observed Darwin/Unix synthetic fixtures, not every platform/dialect.",
+      "No network-denial trace; standard Git controls and promisor refusal exercised.",
+      "Negative-only ownership fixture forces standard Git ownership check; positive Git-AI-absent proof uses actual Git directly.",
+      "Caller-controlled output parents; concurrent malicious path replacement is not claimed safe.",
+      "Independent implementation review pending."
+    ]
+  },
+  "docs": [
+    "docs/sdk.md#read-git-ai-format-git-notes",
+    "docs/cli.md#git-notes-attribution",
+    "docs/telemetry-profile.md#git-notes-attribution-and-selection-manifests",
+    "docs/fidelity.md"
+  ]
+}

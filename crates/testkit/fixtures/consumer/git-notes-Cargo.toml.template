@@ -1,0 +1,13 @@
+[package]
+name = "unisphere-git-notes-consumer"
+version = "0.0.0"
+edition = "2024"
+
+[dependencies]
+unisphere-sdk = { path = @SDK_PATH@ }
+unisphere-loader-git = { path = @LOADER_PATH@ }
+unisphere-adapter-git-ai = { path = @ADAPTER_PATH@ }
+unisphere-output-otlp = { path = @OUTPUT_PATH@ }
+serde_json = "1"
+
+[workspace]

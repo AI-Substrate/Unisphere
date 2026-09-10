@@ -223,3 +223,75 @@ inspect argv. The older `run`, `run_adapters`, `run_sessions`, and
 root parser and typed execution. New application composition parses once and
 dispatches `ParsedCommand`; `requested_session_adapter` was removed with no
 raw-argv compatibility shim.
+
+## Git Notes attribution
+
+```sh
+unisphere sessions list --adapter git-ai --repo /absolute/repository
+unisphere sessions export --adapter git-ai --repo /absolute/repository --git-executable /usr/bin/git
+unisphere sessions export --adapter git-ai --repo /absolute/repository --notes-ref refs/notes/ai --commit FULL_COMMIT_OID --include-content
+```
+
+Git AI is an input format only: no installation, executable invocation, crate,
+library, cache, daemon or HTTP service from Git AI is needed. The app resolves
+standard `git` from PATH unless `--git-executable` names an absolute trusted Git
+binary. Help works without Git. Missing Git returns `git_unavailable`, not a
+Git AI installation error.
+
+`--repo` accepts an explicit local normal/bare repository or linked worktree,
+including a nested directory; relative paths resolve under the captured cwd.
+The default ref is `refs/notes/ai`. Only full `refs/notes/*` refs are accepted.
+Repeat `--commit` for full lowercase 40/64-hex commit IDs; duplicates do not
+duplicate observations. Omitting it selects all notes in the one requested ref,
+not all refs or repository history. Tracking refs are never auto-aggregated.
+
+Listing writes one JSON envelope on stdout with `data.adapter` and `data.listing`.
+The listing contains canonical repository/common-dir/git-dir/worktree identities,
+normalized selection, requested ref, nullable pinned ref tip and note references
+with target commit and blob IDs. A missing valid ref is a normal empty result,
+not evidence that no AI work occurred.
+
+Export writes one complete bounded OTLP LogsData JSONL batch on stdout and a
+structural summary on stderr. `--output FILE` instead creates a new file outside
+the canonical source worktree, per-worktree Git directory and common Git directory.
+Existing files/symlinks and symlink-parent aliases into those roots are rejected.
+Output parents must be caller-controlled; concurrent malicious parent replacement
+is not a filesystem sandbox guarantee. Shell redirection and SDK-supplied writers
+remain caller-owned.
+
+| Flag | Default | Hard ceiling |
+| --- | --- | --- |
+| `--max-notes` | 1,000 | 10,000 |
+| `--max-records` | 10,000 including manifest | 100,000 |
+| `--max-note-bytes` | 1 MiB | 32 MiB |
+| `--max-total-bytes` | 16 MiB | 64 MiB |
+| `--max-listing-bytes` | 1 MiB | 64 MiB |
+| `--command-timeout-ms` | 5,000 per command | 60,000 |
+
+All limits are positive; total bytes must cover the per-note budget. Selected
+fanout lookup avoids enumerating unrelated notes; `All` retains a bounded listing.
+The existing writer independently enforces 32 MiB of encoded output. Input size
+does not imply encoded size. Overflows, timeout, malformed/unsupported notes and
+read errors never produce a successful truncated projection. Write/flush failures
+may leave partial destination bytes; discard them before retrying.
+
+Metadata retains native paths, keys, declared agent identities and supplied
+statistics. Human-author strings, custom attributes and legacy messages/URLs are
+omitted unless `--include-content`; content is emitted once per declared identity,
+not copied into every line-range event. URLs remain inert. Missing/null counts
+are not zeros, and checkpoint IDs are never OpenTelemetry span IDs.
+
+Errors use `command: "sessions"` on stderr with `error.kind`, fixed `message` and
+nullable `output_code` for shared writer errors. Invalid arguments exit 2;
+operational failures exit 1. Important kinds include `git_unavailable`,
+`unsafe_repository`, `unsupported_repository`, `unsupported_target`, `object_read`,
+`invalid_ref`, `unsupported_format`, `invalid_data` and the named budget failures.
+Partial clones/promisor configuration are refused before object reads; inherited
+Git configuration/helpers are cleared, protocols disabled and ownership checks
+preserved. Global/system `safe.directory` entries are deliberately not inherited:
+use a caller-owned checkout. No fetch, push, note/config/index/hook mutation occurs.
+
+Native note commands use the same typed root parser as queries and invoke an
+app-owned constructor only after validation. Query `--source-adapter git-ai`
+remains separate from native `--adapter git-ai`; neither reconstructs a transcript
+or timing from attribution alone.

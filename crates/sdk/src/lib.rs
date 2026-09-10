@@ -47,8 +47,11 @@ mod service;
 pub mod snapshot;
 pub use collection::{Collector, collect_batch};
 pub use query::{QueryService, QueryView, execute_view};
+pub mod git_notes;
+pub use git_notes::GitNotesCollector;
 pub use snapshot::SnapshotCollector;
 pub use unisphere_core::collection::*;
+pub use unisphere_core::git_notes::*;
 pub use unisphere_core::{
     MappedSnapshot, NativeSnapshot, SnapshotAdapter, SnapshotCheckpoint, SnapshotCollection,
     SnapshotCollectionApi, SnapshotDiagnostic, SnapshotFormat, SnapshotLimits, SnapshotLoader,

@@ -1,0 +1,15 @@
+[package]
+name = "unisphere-adapter-git-ai"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+unisphere-core.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+
+[dev-dependencies]
+unisphere-testkit.workspace = true

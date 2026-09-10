@@ -40,6 +40,8 @@ fn allowed(package: &str, dependency: &str, kind: &str) -> bool {
                 | "unisphere-output-otlp"
                 | "unisphere-loader-query"
                 | "unisphere-output-query"
+                | "unisphere-loader-git"
+                | "unisphere-adapter-git-ai"
         ),
         ("unisphere-loader-jsonl", "normal") => {
             matches!(dependency, "unisphere-core" | "libc" | "sha2")
@@ -59,6 +61,10 @@ fn allowed(package: &str, dependency: &str, kind: &str) -> bool {
                 | "libc"
         ),
         ("unisphere-output-query", "normal") => {
+            matches!(dependency, "unisphere-core" | "serde" | "serde_json")
+        }
+        ("unisphere-loader-git", "normal") => matches!(dependency, "unisphere-core" | "libc"),
+        ("unisphere-adapter-git-ai", "normal") => {
             matches!(dependency, "unisphere-core" | "serde" | "serde_json")
         }
         (
@@ -102,7 +108,9 @@ fn allowed(package: &str, dependency: &str, kind: &str) -> bool {
             | "unisphere-loader-snapshot"
             | "unisphere-output-otlp"
             | "unisphere-loader-query"
-            | "unisphere-output-query",
+            | "unisphere-output-query"
+            | "unisphere-loader-git"
+            | "unisphere-adapter-git-ai",
             "dev",
         ) => matches!(dependency, "unisphere-testkit" | "tempfile" | "serde_json"),
         _ => false,
@@ -149,6 +157,8 @@ fn check(graph: &Value) -> Result<usize, String> {
                 | "unisphere-output-otlp"
                 | "unisphere-loader-query"
                 | "unisphere-output-query"
+                | "unisphere-loader-git"
+                | "unisphere-adapter-git-ai"
         ) {
             return Err(format!("unapproved workspace package {name}"));
         }

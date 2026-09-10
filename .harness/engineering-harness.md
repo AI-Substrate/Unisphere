@@ -4,7 +4,7 @@
 
 ## Boot command
 
-`harness boot --json` runs the quality gate once, then configuration composition, external SDK, installed CLI, Claude collection, and native/query proof. The native proof reuses its built and installed CLI binaries for explicit-source queries, lineage, time/text filtering, context, statistics, decimal duration thresholds, offline input and bundled docs/schema. Only every required proof succeeding returns `ready:true`; the compatibility scope string remains `configuration-and-native-session-projections`. Read each proof's actual output: this is not Git Notes query readiness, all-client fidelity or session finality. See [development guide](../docs/development.md).
+`harness boot --json` runs the quality gate once, then configuration composition, external SDK, installed CLI, Claude collection, native/query proof and Git Notes attribution proof. Native proof reuses its built/installed binaries for explicit-source queries, lineage, time/text filtering, context, statistics, decimal duration thresholds, offline input and bundled docs/schema. Only every required proof succeeding returns `ready:true`, scoped to `configuration-native-sessions-and-git-notes`. Read each proof's actual output; this is not universal capture or source finality. See [development guide](../docs/development.md).
 
 ## Checks command
 
@@ -20,7 +20,7 @@ There is no product daemon or health endpoint. Interactions include explicit con
 |---|---|---|
 | Harness wiring | `harness doctor --json` | Extensions/conventions, not product behavior |
 | Product quality | `harness checks --json` | Actual tool identity and reported Rust/harness gates |
-| Product readiness | `harness boot --json` | Quality plus configuration, native and explicit-source query proofs; inspect individual scopes, not only `ready` |
+| Product readiness | `harness boot --json` | Quality plus configuration/native/query/Git Notes consumer proofs; inspect individual scopes, not only ready |
 | Dependency direction | `cargo run --locked -p unisphere-testkit --bin unisphere-arch-check` | Declared normal/dev/build edges, including optional/target/renamed edges; negative graph fixtures |
 | Independent proof tools | `cargo test --locked -p unisphere-testkit --bins` | Controlled tool fixtures without hidden SDK/CLI implementation dependency |
 | Composition parity | `cargo run --locked -p unisphere-testkit --bin unisphere-proof -- composition` | Real SDK/app success and safe failure parity |
@@ -28,6 +28,7 @@ There is no product daemon or health endpoint. Interactions include explicit con
 | Installed CLI | `cargo run --locked -p unisphere-testkit --bin unisphere-proof -- installed-cli` | Real temporary installation, outside-checkout runtime, machine/human stream routing |
 | Claude collection | `cargo run --locked -p unisphere-testkit --bin unisphere-proof -- collection` | Real shared loader, pure mapper, writer, external SDK and installed CLI on synthetic data |
 | Native and query composition | `cargo run --locked -p unisphere-testkit --bin unisphere-proof -- native` | All registered native formats plus built/installed query workflows on synthetic Claude data; excludes Git Notes query integration |
+| Git Notes attribution | `cargo run --locked -p unisphere-testkit --bin unisphere-proof -- git-notes` | Real standard-Git fixtures, external SDK/installed CLI parity with Git AI unavailable, pinned/empty/privacy/error/bounds and source-safety scenarios |
 | Harness propagation | `node --test .harness/extensions/checks/checks.test.mjs .harness/extensions/boot/extension.test.mjs` | Missing/mixed tool identity and failed child propagation; not collector proof |
 
 ## Isolation and remaining proof limits

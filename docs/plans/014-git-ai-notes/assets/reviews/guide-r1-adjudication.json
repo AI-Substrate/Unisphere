@@ -1,0 +1,46 @@
+{
+  "verdict": "Changes requested; no product edits until focused re-review",
+  "basis": "R1 report git-ai-guide-review-pij-armed-cow.md and primary source inspected by Main",
+  "accepted": [
+    {
+      "finding": "F1",
+      "decision": "Add an explicit absolute Git-executable input/injection seam and pass real standard Git through sealed positive proof; preserve missing-Git negative case and Git-AI-absent success proof."
+    },
+    {
+      "finding": "F2",
+      "decision": "Specify real parser/frontend routing, repository representation, registry fixture strategy and descriptor/capabilities. Preserve existing invocations and behavior. Additive flags are not inherently forbidden by ac-0002; the actual gap is missing concrete integration contract, not a ban on extending syntax."
+    },
+    {
+      "finding": "F3",
+      "decision": "Specify common profile/source attributes on every record plus the closing manifest field set and source-path meaning. No invented offsets/times/spans."
+    },
+    {
+      "finding": "F4",
+      "decision": "Retain syntactically valid unresolved attestation keys as source evidence with explicit identity resolution status; no speculative cross-note lookup. Specify non-commit target handling separately as an explicit unsupported case if commits-only scope is retained."
+    },
+    {
+      "finding": "F5b/F5c",
+      "decision": "Clarify optionally quoted paths and legal single-line plus inclusive-range forms."
+    },
+    {
+      "finding": "F6",
+      "decision": "Own the narrow boot/check regression files and wire Git Notes into real readiness with an honest scope; do not claim a prose scope update is proof."
+    },
+    {
+      "finding": "F7",
+      "decision": "Avoid whole-tree enumeration for an explicit commit selection; retain bounded all-notes mode. State Unix runtime support honestly and give foreign-owned repository failures an actionable typed disposition rather than weakening safe.directory globally."
+    }
+  ],
+  "rejected": [
+    {
+      "finding": "F5a",
+      "decision": "Do not remove 7-character legacy-key support on this rationale. Git AI Standard v3.0.0 line193 explicitly says implementations SHOULD accept 7-character hashes for versions before v1.0. Parsing that documented note compatibility form does not depend on the private checkpoint cache. Keep compatibility source-labelled and tested independently."
+    }
+  ],
+  "known_refinements": [
+    "Concrete GitObjectLoader name avoids trait collision.",
+    "Output exclusion covers canonical worktree root and Git common dir, not just nested input repo directory."
+  ],
+  "review_accuracy_note": "Do not claim 16MiB input necessarily fits 32MiB serialized output: escaping/expansion may exceed it. The existing writer bound and explicit OutputLimit failure are the relevant guarantee.",
+  "instructions": "Araminta owns guide/task/proof-map corrections via DD, then supplies new digests and focused disposition to the same independent reviewer. No repeating baseline boot or unrequested implementation while this design review remains open."
+}

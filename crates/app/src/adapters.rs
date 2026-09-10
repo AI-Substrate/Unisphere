@@ -20,6 +20,7 @@ enum SourceRepresentation {
     Jsonl,
     JsonDocument,
     SqliteKeyValue(&'static str),
+    GitNotes,
 }
 
 type QueryFactory = fn(&AdapterRegistration) -> Result<QueryRegistration, QueryFailure>;
@@ -34,7 +35,7 @@ struct AdapterRegistration {
     fixture: &'static [u8],
 }
 
-const ADAPTERS: [AdapterRegistration; 9] = [
+const ADAPTERS: [AdapterRegistration; 10] = [
     AdapterRegistration {
         descriptor: AdapterDescriptor {
             id: "claude-code",
@@ -265,6 +266,28 @@ const ADAPTERS: [AdapterRegistration; 9] = [
         #[cfg(test)]
         fixture: include_bytes!("../../adapter-copilot-cli/tests/fixtures/legacy.json"),
     },
+    AdapterRegistration {
+        descriptor: unisphere_adapter_git_ai::DESCRIPTOR,
+        source: SourceRepresentation::GitNotes,
+        run: |_, args, context, stdout, stderr| {
+            unisphere_cli::run_git_notes(
+                args,
+                context,
+                |explicit| {
+                    let git = resolve_git(explicit, &context.cwd)?;
+                    Ok(unisphere_sdk::GitNotesCollector::new(
+                        unisphere_loader_git::GitObjectLoader::new(git),
+                        unisphere_adapter_git_ai::GitAiAdapter,
+                        OtlpJsonlWriter,
+                    ))
+                },
+                stdout,
+                stderr,
+            )
+        },
+        #[cfg(test)]
+        fixture: include_bytes!("../../adapter-git-ai/fixtures/mixed.notes"),
+    },
 ];
 
 fn query_registration<A: QueryAdapter + 'static>(
@@ -331,6 +354,43 @@ fn run_with_adapter<A: SessionAdapter>(
     }
 }
 
+fn resolve_git(
+    explicit: Option<std::path::PathBuf>,
+    cwd: &std::path::Path,
+) -> Result<std::path::PathBuf, unisphere_sdk::GitNotesError> {
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        let usable = |path: std::path::PathBuf| {
+            let path = std::fs::canonicalize(path).ok()?;
+            let metadata = path.metadata().ok()?;
+            (metadata.is_file() && metadata.permissions().mode() & 0o111 != 0).then_some(path)
+        };
+        if let Some(path) = explicit {
+            return usable(path).ok_or(unisphere_sdk::GitNotesError::GitUnavailable);
+        }
+        let path = std::env::var_os("PATH").ok_or(unisphere_sdk::GitNotesError::GitUnavailable)?;
+        if path.is_empty() {
+            return Err(unisphere_sdk::GitNotesError::GitUnavailable);
+        }
+        std::env::split_paths(&path)
+            .map(|directory| {
+                if directory.is_absolute() {
+                    directory.join("git")
+                } else {
+                    cwd.join(directory).join("git")
+                }
+            })
+            .find_map(usable)
+            .ok_or(unisphere_sdk::GitNotesError::GitUnavailable)
+    }
+    #[cfg(not(unix))]
+    {
+        let _ = (explicit, cwd);
+        Err(unisphere_sdk::GitNotesError::UnsupportedPlatform)
+    }
+}
+
 fn run_with_snapshot<A: SnapshotAdapter>(
     adapter: A,
     source: SourceRepresentation,
@@ -344,7 +404,7 @@ fn run_with_snapshot<A: SnapshotAdapter>(
         SourceRepresentation::SqliteKeyValue(table) => SnapshotFormat::SqliteKeyValue {
             table: table.into(),
         },
-        SourceRepresentation::Jsonl => {
+        SourceRepresentation::Jsonl | SourceRepresentation::GitNotes => {
             return unisphere_cli::session_error(
                 stderr,
                 &PipelineError::new(PipelineErrorKind::InvalidInput, None),
@@ -525,6 +585,16 @@ mod tests {
                 SourceRepresentation::Jsonl | SourceRepresentation::JsonDocument => {
                     std::fs::write(&input, registration.fixture).unwrap();
                 }
+                SourceRepresentation::GitNotes => {
+                    let git = unisphere_testkit::git_notes::standard_git().unwrap();
+                    unisphere_testkit::git_notes::initialize(
+                        &input,
+                        &git,
+                        false,
+                        registration.fixture,
+                    )
+                    .unwrap();
+                }
                 SourceRepresentation::SqliteKeyValue(table) => {
                     let db = rusqlite::Connection::open(&input).unwrap();
                     db.execute_batch(&format!(
@@ -547,18 +617,30 @@ mod tests {
             }
             let mut stdout = Vec::new();
             let mut stderr = Vec::new();
-            let args = [
+            let mut args = [
                 "unisphere",
                 "sessions",
                 "export",
                 "--adapter",
                 registration.descriptor.id,
-                "--input",
+                if matches!(registration.source, SourceRepresentation::GitNotes) {
+                    "--repo"
+                } else {
+                    "--input"
+                },
                 input.to_str().unwrap(),
                 "--include-content",
             ]
             .map(OsString::from)
             .to_vec();
+            if matches!(registration.source, SourceRepresentation::GitNotes) {
+                args.push("--git-executable".into());
+                args.push(
+                    unisphere_testkit::git_notes::standard_git()
+                        .unwrap()
+                        .into_os_string(),
+                );
+            }
             assert_eq!(
                 (registration.run)(
                     registration.source,

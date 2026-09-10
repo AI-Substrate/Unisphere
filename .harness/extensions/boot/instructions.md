@@ -2,17 +2,17 @@
 
 ## What this verb computes
 
-Run `harness boot --json` for product readiness: checks once, then real `unisphere-proof composition`, `sdk-consumer`, `installed-cli`, `collection` and `native` modes using the Cargo executable observed by checks. It starts no services; failures preserve child evidence and stop the chain.
+Run `harness boot --json` for product readiness: checks once, then real `unisphere-proof composition`, `sdk-consumer`, `installed-cli`, `collection`, `native` and `git-notes` modes using the Cargo executable observed by checks. It starts no services; failures preserve child evidence and stop the chain.
 
 - Missing checks: degraded, exit 0, ready false.
 - Unconfigured checks: unconfigured, exit 2.
 - Failed/timed-out checks or smoke: error, exit 1, with diagnostics/remediation.
 - Invalid checks JSON: error; a non-ok or wrong-command envelope is not readiness.
-- All real checks and smoke succeed: ok, exit 0, ready true, scope `configuration-and-native-session-projections`.
+- All real checks and smoke succeed: ok, exit 0, ready true, scope `configuration-native-sessions-and-git-notes`.
 
 ## Your role
 
-Read the actual toolchain and each proof result. Passing boot proves the documented configuration/native projections and their bounded revision scenarios, not lossless telemetry, complete sessions, persistent history or every future client dialect. Preserve exact source identities and failure evidence; no fabricated fields or approval.
+Read the actual toolchain and each proof result. Passing boot proves documented configuration/native projections, bounded revision scenarios and local Git Notes attribution through external SDK/installed CLI with Git AI unavailable. It does not prove lossless telemetry, complete conversations, persistent history, network-denial traces or every future dialect. Preserve exact source identities and failure evidence.
 
 ## Watch out for
 

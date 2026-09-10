@@ -26,6 +26,8 @@ unisphere-adapter-vscode-copilot = { path = "crates/adapter-vscode-copilot" }
 unisphere-loader-snapshot = { path = "crates/loader-snapshot" }
 unisphere-loader-query = { path = "crates/loader-query" }
 unisphere-output-query = { path = "crates/output-query" }
+unisphere-loader-git = { path = "crates/loader-git" }
+unisphere-adapter-git-ai = { path = "crates/adapter-git-ai" }
 rusqlite = { version = "0.37", features = ["bundled", "limits", "modern_sqlite"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"

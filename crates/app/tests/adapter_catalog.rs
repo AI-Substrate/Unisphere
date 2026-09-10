@@ -42,6 +42,7 @@ fn descriptor(output: &Output) -> serde_json::Value {
             "cursor-transcript",
             "cursor-ide",
             "vscode-copilot",
+            "git-ai",
         ])
     );
     for adapter in adapters {

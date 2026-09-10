@@ -1,0 +1,31 @@
+{
+  "candidate": "9250b8f6f9084598433bc49d0077303df80cabc3",
+  "reviewer": "pij-armed-cow",
+  "verdict": "APPROVE",
+  "original_report": "implementation-r1-pij-armed-cow.md",
+  "original_report_sha256": "d6da2540f6a95590a5e449c126ca751ba86c92b56bf8f9b345621b28b5f7aee9",
+  "resolution": {
+    "observation": 5,
+    "status": "withdrawn",
+    "reason": "Reviewer verified Main's prior narrow authorization and committed execution-log lg-0005. The AGENTS.md description edit followed successful boot proof and was outside the runtime source manifest; it was not an ownership deviation.",
+    "reviewer_verified_order": {
+      "boot_finished": "2026-09-10T00:14:07Z",
+      "documentation_log": "2026-09-10T00:16:36Z"
+    }
+  },
+  "remaining_observations": [
+    1,
+    2,
+    3,
+    4,
+    6
+  ],
+  "remaining_status": "Non-blocking open follow-ups; not implemented after approval.",
+  "all_observations_retained_in": "implementation-r1-pij-armed-cow.md",
+  "main_ratification": {
+    "authority_message": "eb071806-b9cc-4c1e-bf4d-108f2bbc2ab7",
+    "acceptance_record": "main-acceptance-9250b8f6.json",
+    "status": "Pre-authorised and explicitly ratified; no scope breach remains."
+  },
+  "preservation": "Evidence-only documentary closeout. Original review is verbatim; observation 5 is withdrawn, the other five remain non-blocking follow-ups. Approved runtime subject remains 9250b8f6f9084598433bc49d0077303df80cabc3. No runtime fixes, full-suite rerun, push, merge or formal Builder ReviewReceipt."
+}

@@ -12,6 +12,7 @@ use unisphere_core::{ConfigOverrides, ConfigSource, Failure, InspectionApi, Insp
 mod args;
 mod catalog;
 mod docs;
+pub mod git_notes;
 mod output;
 mod query;
 pub mod sessions;
@@ -29,6 +30,7 @@ pub use query::{
 };
 pub use sessions::{run_native_export, run_native_list, run_sessions, session_error};
 pub use snapshots::{run_native_snapshot_export, run_snapshot_sessions};
+pub use git_notes::run_git_notes;
 pub use unisphere_core::{AdapterCapabilities, AdapterDescriptor, LocationHint};
 
 use output::Response;

@@ -23,10 +23,10 @@ export async function runBoot(ctx) {
   }
   const proofs = [];
   const cargo = envelope.data?.toolchain?.cargo?.provenance?.invoked ?? 'cargo';
-  for (const name of ['composition', 'sdk-consumer', 'installed-cli', 'collection', 'native']) {
+  for (const name of ['composition', 'sdk-consumer', 'installed-cli', 'collection', 'native', 'git-notes']) {
     const args = ['run', '--locked', '-p', 'unisphere-testkit', '--bin', 'unisphere-proof', '--', name];
     try {
-      const result = await ctx.exec(cargo, args, { timeoutMs: ['collection', 'native'].includes(name) ? 600_000 : 300_000 });
+      const result = await ctx.exec(cargo, args, { timeoutMs: ['collection', 'native', 'git-notes'].includes(name) ? 600_000 : 300_000 });
       proofs.push({ name, command: cargo, args, ...result });
       if (!result.ok) return ctx.error('E_FOUNDATION_SMOKE', `${name} failed (exit ${result.code})`, {
         details: { checks: envelope, proofs }, next_action: `Run cargo ${args.join(' ')}, repair the failure, then rerun harness boot --json.`,
@@ -37,6 +37,6 @@ export async function runBoot(ctx) {
       });
     }
   }
-  return ctx.ok({ ready: true, scope: 'configuration-and-native-session-projections', checks: envelope, proofs,
-    limitations: ['Native proof includes built/installed query workflows over explicit synthetic Claude sources; it does not establish Git Notes query integration or all-client query fidelity.', 'No universal session reconstruction or private-store discovery; optional Pij lookup is separately covered by controlled process/CLI scenarios in the quality gate.', 'Metadata-only output is not anonymity: source paths and observed identities remain metadata.', 'Revisions describe source observations, not persisted CLI resume, exactly-once ingestion or session finality.', 'No executed network-denial test; independent core/adapter source review is additionally required.'] });
+  return ctx.ok({ ready: true, scope: 'configuration-native-sessions-and-git-notes', checks: envelope, proofs,
+    limitations: ['Native proof includes built/installed query workflows over synthetic sources; it does not establish all-client query fidelity or universal conversation reconstruction.', 'Git Notes require standard Git, not Git AI; no note fetch, push, remote transcript access, invented tool timing or conversation-completeness claim.', 'Optional Pij lookup is separately covered by controlled process/CLI scenarios in the quality gate.', 'Metadata-only output is not anonymity: source paths and observed identities remain metadata.', 'Revisions describe source observations, not persisted CLI resume, exactly-once ingestion or session finality.', 'No executed network-denial test; independent core/adapter source review is additionally required.'] });
 }

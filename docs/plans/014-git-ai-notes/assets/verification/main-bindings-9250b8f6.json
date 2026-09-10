@@ -1,0 +1,53 @@
+{
+  "candidate": "9250b8f6f9084598433bc49d0077303df80cabc3",
+  "base": "2fb5b15349873cd62ccd75c94fdfedae40d561f5",
+  "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes",
+  "changed_file_count": 61,
+  "delivery_inventory_matches": true,
+  "runtime_and_proof_files_checked": 30,
+  "mismatches": [],
+  "changed_runtime_or_fixture_paths_outside_manifest": [],
+  "actual_boot_exit": 0,
+  "actual_boot_status": "ok",
+  "actual_ready": true,
+  "scope": "configuration-native-sessions-and-git-notes",
+  "proof_modes": [
+    {
+      "name": "composition",
+      "ok": true,
+      "code": 0
+    },
+    {
+      "name": "sdk-consumer",
+      "ok": true,
+      "code": 0
+    },
+    {
+      "name": "installed-cli",
+      "ok": true,
+      "code": 0
+    },
+    {
+      "name": "collection",
+      "ok": true,
+      "code": 0
+    },
+    {
+      "name": "native",
+      "ok": true,
+      "code": 0
+    },
+    {
+      "name": "git-notes",
+      "ok": true,
+      "code": 0
+    }
+  ],
+  "committed_document_sha256": {
+    "docs/plans/014-git-ai-notes/plan.dd.json": "46db54e26a9e47cdf7958fc344f09688361b0c76cf5fcc76de8c3b27891de3c9",
+    "docs/plans/014-git-ai-notes/assets/impl-guide.dd.json": "0663554ff3439b83cd5992621e26b778928c71087941971b736f7d5a47303378",
+    "docs/plans/014-git-ai-notes/assets/backpressure.dd.json": "2d6d0795b76b4c6612e06a604131bb14554a4a6ccabd6005c9c67bf20f727a57",
+    "docs/plans/014-git-ai-notes/assets/tasks/phase-1/tasks.dd.json": "3be0d5d1becd26e01049ab66190e8750db1557299a228f935683b0dd11304d25"
+  },
+  "verification_boundary": "Read committed objects and captured receipts; did not rerun completed tests or readiness. Independent implementation review pending."
+}

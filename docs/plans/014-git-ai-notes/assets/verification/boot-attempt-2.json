@@ -1,0 +1,370 @@
+{
+  "command": [
+    "harness",
+    "boot",
+    "--json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes",
+  "base_commit": "2fb5b15349873cd62ccd75c94fdfedae40d561f5",
+  "working_tree": true,
+  "source_sha256": {
+    "Cargo.toml": "f79762a9a985ee3ddeaa702d559e9328f84483fbaf53c861a26148f675b5e04d",
+    "Cargo.lock": "b05f75ab6cd9ffb38523823659b7d978bbf30098c361f5f8254f861dd78ea01f",
+    "crates/core/src/lib.rs": "abcb01a2e783abcdd43a9b06dc1e29ab0d195095cc476886bd05a6bafaa02816",
+    "crates/core/src/git_notes.rs": "4261f117f598726da973fd6fc80ca546d65a368a7acc33d8982f7c5723c61571",
+    "crates/loader-git/Cargo.toml": "b094980b1dc8e1612c28404ba068bb990c2ef45dce27d4753b269892c0a6bad3",
+    "crates/loader-git/src/lib.rs": "92454d420e72837dd489f8a78f17cbab4feb71908671dce2f9ebc0d6e623d661",
+    "crates/loader-git/tests/storage.rs": "7376402eceb100f1bed663bd5b9edfda0ccac610019753465d1f858ec47201cf",
+    "crates/adapter-git-ai/Cargo.toml": "17d0ddfdbfec8d455e005c70150a3bd16973a1f4e9c12d93d92da3bc9edf5213",
+    "crates/adapter-git-ai/src/lib.rs": "57d902344041538cbaf96bec8a35348fa44b66e7b346c22825321e34e8567d60",
+    "crates/adapter-git-ai/tests/format.rs": "d650001118ca864e8303b54502706b01c1f93f2ab83878bd7cd029324a094cf1",
+    "crates/adapter-git-ai/fixtures/mixed.notes": "3d8837cad9e0ab0a91899c74b9a7ec923e707ce30c54eb901b1bb6fc138618ec",
+    "crates/sdk/src/lib.rs": "c9508b6ed4f84543f6481ca77be8ea1c3e85564991477897c19ef97b087cb06c",
+    "crates/sdk/src/git_notes.rs": "9168746c6bb57816199b56708c56887f47704fbf037d01a25d8fd4b87921d229",
+    "crates/cli/src/lib.rs": "1773625d564a0574ea4c1ab8ddc6544732b2567abf3ec7fcbf128f16bb2ab59b",
+    "crates/cli/src/git_notes.rs": "4721e0ff811b7e8db7baceb67b6765ef7e35e863dbeeb6eaa442d825780a9a00",
+    "crates/app/Cargo.toml": "eb6bb642486ddb4be6eb97a63cd1630b4bacecc9305aad91ab52135493054669",
+    "crates/app/src/adapters.rs": "4fbf7f65848bc3a9f13f22326277dfafd8401eeaa85a6fb0b80f1d1c0bc640f4",
+    "crates/app/tests/adapter_catalog.rs": "440793c2c9e3afe5ac446ccffa67d9a151913ca1db490e085cbe7d3b63c02495",
+    "crates/testkit/src/lib.rs": "58b7eac576a6a02e00ef9e483fad72c4209291041bf42314b42dcd8f17ddc31f",
+    "crates/testkit/src/git_notes.rs": "661a3316ae147fd9d76f6fd2ec47a88017304aa76c08fd8909da77895a6612d6",
+    "crates/testkit/src/bin/unisphere-arch-check.rs": "670fa7adbdd8c3eabb77725f37cc6729b3f45456c57ef35c0e60215a580ece01",
+    "crates/testkit/src/bin/unisphere-proof.rs": "42bab80dc1c05c63cb0cb256c97bc4349ddd019859a97087edd38c3f46628499",
+    "crates/testkit/src/bin/proof/native.rs": "4f3a4dac4ab99d7c523d3be842dc8de4676c6a6eb7fa61587212cc176b77e52a",
+    "crates/testkit/src/bin/proof/git_notes.rs": "1ae2a01613062f3b4d50c5df959701660e458fa1524d3ddfea407eb523e4ce9f",
+    "crates/testkit/fixtures/consumer/git-notes-Cargo.toml.template": "692554cf43f68dac2090127526b612810515fe6942b612d23fbb907e099fb5e0",
+    "crates/testkit/fixtures/consumer/git-notes-main.rs": "cf0574c30c3dc3374acb1e17807503a50872c5c70ddebab2da28f42163ca239b",
+    ".harness/extensions/boot/boot.mjs": "2853bb08900be56d079d9eebb3019af22094495c6994a000cabd88ea16f1972b",
+    ".harness/extensions/boot/extension.test.mjs": "9c4d87ef4c04a0d4283bdda9b110e83445ec4e67b311211ddcd1624fe76b0c32",
+    ".harness/extensions/boot/extension.ts": "b5910f3e9d71cdbdde29a979b27ac1108c4403910f814bb63760631b386c2d02",
+    ".harness/extensions/boot/instructions.md": "c8e1e51c3fbd69ae854fff9fc096f5919cb93fc944ef94ee1ee75df5b6ef6479"
+  },
+  "started_at": "2026-09-10T00:11:22.298Z",
+  "finished_at": "2026-09-10T00:14:07.556Z",
+  "exit": 0,
+  "stdout": {
+    "command": "boot",
+    "status": "ok",
+    "timestamp": "2026-09-10T00:14:07.550Z",
+    "data": {
+      "ready": true,
+      "scope": "configuration-native-sessions-and-git-notes",
+      "checks": {
+        "command": "checks",
+        "status": "ok",
+        "timestamp": "2026-09-10T00:11:52.404Z",
+        "data": {
+          "scope": "configuration-and-claude-jsonl",
+          "toolchain": {
+            "rustc": {
+              "release": "1.95.0",
+              "normalized_release": "1.95.0",
+              "commit": "59807616e1fa2540724bfbac14d7976d7e4a3860",
+              "commit_metadata": "emitted",
+              "release_matches": true,
+              "commit_matches": true,
+              "approved": true,
+              "provenance": {
+                "invoked": "/opt/homebrew/bin/rustc",
+                "resolved": "/opt/homebrew/Cellar/rust/1.95.0/bin/rustc"
+              },
+              "args": [
+                "-vV"
+              ],
+              "code": 0,
+              "stdout": "rustc 1.95.0 (59807616e 2026-04-14) (Homebrew)\nbinary: rustc\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\ncommit-date: 2026-04-14\nhost: aarch64-apple-darwin\nrelease: 1.95.0\nLLVM version: 22.1.3\n",
+              "stderr": ""
+            },
+            "cargo": {
+              "release": "1.95.0",
+              "normalized_release": "1.95.0",
+              "commit": "f2d3ce0bd7f24a49f8f72d9000448f8838c4e850",
+              "commit_metadata": "emitted",
+              "release_matches": true,
+              "commit_matches": true,
+              "approved": true,
+              "provenance": {
+                "invoked": "/opt/homebrew/bin/cargo",
+                "resolved": "/opt/homebrew/Cellar/rust/1.95.0/bin/cargo"
+              },
+              "args": [
+                "-vV"
+              ],
+              "code": 0,
+              "stdout": "cargo 1.95.0 (f2d3ce0bd 2026-03-21) (Homebrew)\nrelease: 1.95.0\ncommit-hash: f2d3ce0bd7f24a49f8f72d9000448f8838c4e850\ncommit-date: 2026-03-21\nhost: aarch64-apple-darwin\nlibgit2: 1.9.3 (sys:0.20.4 system)\nlibcurl: 8.7.1 (sys:0.4.83+curl-8.15.0 system ssl:(SecureTransport) LibreSSL/3.3.6)\nos: Mac OS 26.6.2 [64-bit]\n",
+              "stderr": ""
+            },
+            "clippy": {
+              "release": "0.1.95",
+              "normalized_release": "0.1.95",
+              "commit": "59807616e1",
+              "commit_metadata": "emitted",
+              "release_matches": true,
+              "commit_matches": true,
+              "approved": true,
+              "provenance": {
+                "invoked": "/opt/homebrew/bin/cargo",
+                "resolved": "/opt/homebrew/Cellar/rust/1.95.0/bin/cargo"
+              },
+              "args": [
+                "clippy",
+                "--version"
+              ],
+              "code": 0,
+              "stdout": "clippy 0.1.95 (59807616e1 2026-04-14)\n",
+              "stderr": "",
+              "binaries": {
+                "cargo-clippy": {
+                  "invoked": "/opt/homebrew/bin/cargo-clippy",
+                  "resolved": "/opt/homebrew/Cellar/rust/1.95.0/bin/cargo-clippy"
+                },
+                "clippy-driver": {
+                  "invoked": "/opt/homebrew/bin/clippy-driver",
+                  "resolved": "/opt/homebrew/Cellar/rust/1.95.0/bin/clippy-driver"
+                }
+              }
+            },
+            "rustfmt": {
+              "release": "1.9.0-stable",
+              "normalized_release": "1.9.0",
+              "commit": "59807616e1",
+              "commit_metadata": "emitted",
+              "release_matches": true,
+              "commit_matches": true,
+              "approved": true,
+              "provenance": {
+                "invoked": "/opt/homebrew/bin/cargo",
+                "resolved": "/opt/homebrew/Cellar/rust/1.95.0/bin/cargo"
+              },
+              "args": [
+                "fmt",
+                "--version"
+              ],
+              "code": 0,
+              "stdout": "rustfmt 1.9.0-stable (59807616e1 2026-04-14)\n",
+              "stderr": "",
+              "binaries": {
+                "cargo-fmt": {
+                  "invoked": "/opt/homebrew/bin/cargo-fmt",
+                  "resolved": "/opt/homebrew/Cellar/rust/1.95.0/bin/cargo-fmt"
+                },
+                "rustfmt": {
+                  "invoked": "/opt/homebrew/bin/rustfmt",
+                  "resolved": "/opt/homebrew/Cellar/rust/1.95.0/bin/rustfmt"
+                }
+              }
+            }
+          },
+          "provenance_gaps": [],
+          "gates": [
+            {
+              "name": "format",
+              "command": "/opt/homebrew/bin/cargo",
+              "args": [
+                "fmt",
+                "--all",
+                "--check"
+              ],
+              "code": 0,
+              "stdout": "",
+              "stderr": "",
+              "ok": true
+            },
+            {
+              "name": "clippy",
+              "command": "/opt/homebrew/bin/cargo",
+              "args": [
+                "clippy",
+                "--workspace",
+                "--all-targets",
+                "--locked",
+                "--",
+                "-D",
+                "warnings"
+              ],
+              "code": 0,
+              "stdout": "",
+              "stderr": "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.45s\n",
+              "ok": true
+            },
+            {
+              "name": "tests",
+              "command": "/opt/homebrew/bin/cargo",
+              "args": [
+                "test",
+                "--workspace",
+                "--all-targets",
+                "--locked"
+              ],
+              "code": 0,
+              "stdout": "\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 15 tests\ntest missing_optional_facts_remain_absent_and_empty_content_is_not_invented ... ok\ntest invalid_optional_metadata_is_omitted_without_affecting_valid_fields ... ok\ntest explicit_source_validation_is_independent_of_filesystem_existence ... ok\ntest unknown_or_nonobject_records_retain_provenance_without_promoting_payloads ... ok\ntest malformed_bytes_fail_batch_at_physical_offset_without_public_content ... ok\ntest malformed_message_fields_are_not_filled_from_record_type ... ok\ntest default_policy_omits_every_content_category_but_retains_structural_diagnostics ... ok\ntest redacted_and_attachment_parts_are_markers_not_payloads_or_dereferences ... ok\ntest usage_accepts_only_independent_nonnegative_i64_components ... ok\ntest repeated_logical_ids_retain_physical_records_and_usage_snapshots ... ok\ntest malformed_parts_do_not_erase_supported_siblings_or_guess_tool_fields ... ok\ntest native_parts_remain_structured_and_sidechain_session_is_not_inferred ... ok\ntest timestamps_preserve_offsets_and_nanoseconds_and_reject_unrepresentable_values ... ok\ntest split_batches_and_replay_are_identical_without_adapter_state ... ok\ntest shared_conformance_over_both_native_fixtures ... ok\n\ntest result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 10 tests\ntest supplied_native_turn_metadata_and_source_validation_need_no_filesystem ... ok\ntest malformed_bytes_fail_the_batch_with_only_safe_offset_diagnostics ... ok\ntest usage_rejects_invalid_components_without_guessing_missing_totals ... ok\ntest native_shell_and_search_actions_are_opt_in_and_do_not_invent_call_ids ... ok\ntest invalid_fields_preserve_supported_siblings_without_promoting_unknown_payloads ... ok\ntest repeated_last_and_cumulative_usage_remain_independent_snapshots ... ok\ntest timestamps_preserve_nanoseconds_and_never_fall_back_to_header_or_clock ... ok\ntest function_and_custom_tools_keep_pairing_and_native_argument_encoding ... ok\ntest summaries_compaction_and_encrypted_parts_are_not_ordinary_turns ... ok\ntest shared_conformance_and_batch_partition_preserve_physical_identity ... ok\n\ntest result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 10 tests\ntest source_validation_is_explicit_and_does_not_require_a_real_path ... ok\ntest malformed_bytes_fail_the_batch_at_the_physical_offset_without_parser_text ... ok\ntest invalid_usage_values_are_not_coerced_summed_or_replaced_with_zero ... ok\ntest timestamps_use_only_the_event_clock_and_preserve_nanoseconds ... ok\ntest scoped_agent_metrics_exclude_prompt_labels_and_keep_independent_model_counters ... ok\ntest malformed_parts_preserve_valid_siblings_and_diagnostics_never_echo_payloads ... ok\ntest context_model_and_subagent_state_do_not_become_response_facts_or_turns ... ok\ntest native_lifecycle_content_is_structured_not_a_reconstructed_conversation ... ok\ntest physical_records_and_all_usage_scopes_survive_replay_and_batch_splitting ... ok\ntest full_synthetic_dialect_obeys_shared_metadata_and_provenance_contract ... ok\n\ntest result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 8 tests\ntest malformed_documents_and_wrong_representations_fail_without_fake_offsets_or_payloads ... ok\ntest session_start_time_never_becomes_a_message_occurrence_time ... ok\ntest unknown_variants_and_invalid_siblings_are_key_diagnosed_without_content_fallback ... ok\ntest supplied_session_selector_must_match_the_observed_document_identity ... ok\ntest tool_arguments_keep_the_native_string_or_object_and_results_stay_structured ... ok\ntest empty_replacement_does_not_retain_messages_from_the_previous_revision ... ok\ntest chat_and_timeline_are_distinct_views_not_deduplicated_turns_or_usage ... ok\ntest metadata_preserves_revision_qualified_structural_identity_without_content_or_offsets ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 13 tests\ntest non_native_formats_duplicate_keys_and_invalid_source_are_rejected ... ok\ntest complete_revision_selection_and_empty_deletion_do_not_use_previous_state ... ok\ntest composer_order_overrides_row_order_lexical_keys_and_timestamps ... ok\ntest duplicate_or_mismatched_headers_and_orphans_are_not_extra_turns ... ok\ntest malformed_rows_report_keys_without_parser_payload_and_do_not_abort_siblings ... ok\ntest identity_mismatches_and_missing_rows_never_rebind_another_conversation ... ok\ntest native_timestamp_and_counter_errors_do_not_invent_fallbacks ... ok\ntest metadata_never_leaks_overviews_usage_objects_tools_or_message_content ... ok\ntest summary_and_simulated_bubbles_remain_control_not_ordinary_turns ... ok\ntest source_key_revision_and_verified_session_replace_fake_offsets ... ok\ntest unknown_bubble_kinds_and_legacy_composers_have_explicit_disposition ... ok\ntest raw_argument_strings_and_idless_tool_errors_are_not_repaired_or_linked ... ok\ntest opt_in_tools_keep_arguments_and_results_structured_without_aggregation ... ok\n\ntest result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 10 tests\ntest malformed_bytes_fail_the_entire_batch_at_safe_physical_offset ... ok\ntest native_type_prevents_custom_or_compaction_payload_promotion ... ok\ntest nested_role_and_unverified_metadata_do_not_override_native_envelope ... ok\ntest overview_and_turn_end_are_not_message_turns_or_session_finality ... ok\ntest facts_discarded_by_native_writer_are_never_reconstructed ... ok\ntest actual_outer_role_and_idless_structured_tools_are_preserved ... ok\ntest unsupported_envelopes_and_bad_known_fields_stay_observable_without_payloads ... ok\ntest malformed_parts_preserve_valid_siblings_and_hide_unsupported_payloads ... ok\ntest shared_conformance_and_content_privacy_include_control_records ... ok\ntest split_batches_replay_and_crlf_preserve_physical_identity ... ok\n\ntest result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 3 tests\ntest malformed_or_unsupported_notes_do_not_become_partial_success ... ok\ntest mixed_keys_preserve_ranges_unresolved_evidence_and_content_policy ... ok\ntest repeated_long_paths_hit_output_bound_before_unbounded_amplification ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 11 tests\ntest physical_and_message_timestamps_are_distinct_and_never_guessed ... ok\ntest malformed_json_or_utf8_fails_the_whole_batch_with_safe_offset ... ok\ntest invalid_usage_is_not_coerced_or_leaked_into_diagnostics ... ok\ntest unsupported_shapes_are_observable_without_raw_content ... ok\ntest measured_usage_preserves_native_components_without_inventing_totals ... ok\ntest invalid_parts_are_diagnosed_even_when_content_is_disabled ... ok\ntest mutable_title_slot_retains_physical_offsets_and_audit_events ... ok\ntest source_context_and_execution_messages_remain_non_conversational ... ok\ntest control_custom_and_compaction_records_do_not_become_model_turns ... ok\ntest tools_reasoning_and_references_remain_structured_and_unresolved ... ok\ntest metadata_is_content_free_and_mapping_is_partition_independent ... ok\n\ntest result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 10 tests\ntest usage_rejects_invalid_components_independently_and_does_not_invent_totals ... ok\ntest malformed_bytes_fail_the_batch_at_physical_offset_without_payload_leak ... ok\ntest malformed_and_unknown_parts_keep_valid_siblings_with_safe_diagnostics ... ok\ntest unsupported_records_and_roles_are_provenance_not_guessed_messages ... ok\ntest timestamps_use_explicit_units_without_fallback_or_saturation ... ok\ntest explicit_source_validation_precedes_parsing_without_opening_any_path ... ok\ntest physical_tree_identity_and_native_usage_scopes_are_not_reconstructed ... ok\ntest compaction_custom_bash_and_label_operations_never_become_ordinary_turns ... ok\ntest opt_in_preserves_native_tool_and_content_structure_without_opaque_payloads ... ok\ntest shared_conformance_and_partition_independence ... ok\n\ntest result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 14 tests\ntest tiny_journal_cannot_allocate_a_giant_sparse_array ... ok\ntest sparse_array_extension_and_delete_do_not_shift_following_parts ... ok\ntest invalid_optional_timestamps_and_unknown_fields_do_not_become_guessed_data ... ok\ntest malformed_journal_never_salvages_an_earlier_session_or_leaks_payloads ... ok\ntest native_journal_emits_only_final_logical_revision ... ok\ntest push_creates_missing_or_falsy_leaf_but_not_missing_intermediate ... ok\ntest wrong_representation_and_invalid_document_fail_with_fixed_errors ... ok\ntest empty_replacement_and_future_schema_are_observable_without_guessing ... ok\ntest suffix_replacement_and_later_initial_follow_native_replay_order ... ok\ntest usage_scopes_do_not_confuse_latest_call_turn_and_session_counters ... ok\ntest tool_identity_survives_privacy_filter_but_native_details_require_opt_in ... ok\ntest native_versions_preserve_requests_and_responses_without_synthetic_ids_or_times ... ok\ntest session_selection_is_verified_against_native_identity ... ok\ntest metadata_only_never_exposes_content_and_mapping_is_repeatable ... ok\n\ntest result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 2 tests\ntest adapters::tests::another_adapter_needs_one_registration_and_no_core_or_claude_change ... ok\ntest adapters::tests::production_catalog_ids_match_exported_provenance ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.45s\n\n\nrunning 3 tests\ntest catalog_argument_errors_keep_the_catalog_label_and_hide_input ... ok\ntest catalog_does_not_resolve_inaccessible_store_roots ... ok\ntest catalog_json_is_static_under_hostile_environment ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.49s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 18 tests\ntest a_relative_context_cannot_silently_create_a_relative_file_request ... ok\ntest defaults_call_only_the_injected_inspector_and_render_its_report ... ok\ntest config_paths_are_resolved_lexically_without_discovery_or_canonicalization ... ok\ntest non_utf8_file_paths_are_preserved_but_non_utf8_root_values_are_rejected_safely ... ok\ntest failure_output_errors_override_argument_exit_and_tolerate_broken_stderr ... ok\ntest conflicting_modes_always_fail_in_json_regardless_of_order_or_terminal ... ok\ntest invalid_invocations_are_safe_typed_failures_without_port_calls ... ok\ntest repeated_roots_and_explicit_clear_have_distinct_requests ... ok\ntest request_values_never_leak_into_failure_diagnostics ... ok\ntest blank_root_is_configuration_input_not_a_parser_diagnostic ... ok\ntest mode_looking_values_and_end_of_options_do_not_select_a_mode ... ok\ntest output_escapes_control_characters_without_changing_semantic_data ... ok\ntest global_modes_work_before_between_and_after_subcommands ... ok\ntest version_uses_explicit_context_and_selected_mode_without_inspection ... ok\ntest failures_preserve_core_semantics_and_structural_location ... ok\ntest output_modes_override_terminal_status_for_success_and_failure ... ok\ntest short_writes_are_completed_and_write_or_flush_failures_exit_one_safely ... ok\ntest help_at_every_command_level_honors_output_mode_without_inspection ... ok\n\ntest result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 7 tests\ntest empty_listing_says_nonrecursive_and_names_leaf_directory_remedy ... ok\ntest loader_failure_is_safe_and_not_a_telemetry_record ... ok\ntest rejected_destination_does_not_report_success ... ok\ntest export_keeps_diagnostics_off_telemetry_stdout_and_passes_explicit_policy ... ok\ntest invalid_invocation_does_not_echo_sensitive_arguments ... ok\ntest zero_limits_fail_before_file_creation_or_collector_calls ... ok\ntest output_file_is_never_overwritten ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 7 tests\ntest collection::tests::invalid_limits_are_rejected_before_use ... ok\ntest config::tests::omitted_and_explicit_empty_overrides_remain_distinct ... ok\ntest collection::tests::limit_failures_identify_the_remedy_without_content ... ok\ntest collection::tests::loader_results_cannot_exceed_limits_or_claim_impossible_offsets ... ok\ntest errors::tests::display_does_not_include_caller_supplied_location_text ... ok\ntest errors::tests::public_constructors_preserve_typed_categories_and_location ... ok\ntest git_notes::tests::invalid_selectors_and_limits_fail_before_ports_are_needed ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 4 tests\ntest deadline_and_oversized_subprocess_output_are_not_success ... ok\ntest absence_errors_and_hostile_repository_settings_are_distinct ... ok\ntest direct_fanout_selection_does_not_enumerate_unrelated_notes ... ok\ntest pinned_reads_work_for_bare_and_linked_repositories_without_source_writes ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 18 tests\ntest unix::non_utf8_roots_and_inputs_are_rejected_before_io ... ok\ntest unix::fifo_is_rejected_without_waiting_for_a_writer ... ok\ntest unix::relative_inputs_and_invalid_limits_fail_before_opening ... ok\ntest unix::empty_leaf_is_valid_but_zero_listing_budget_is_not ... ok\ntest unix::non_utf8_candidates_are_rejected_when_filesystem_permits_them ... ok\ntest unix::physical_blank_lines_consume_record_budget_and_resume_progress ... ok\ntest unix::oversize_after_prior_records_returns_no_partial_batch_and_retries_all_records ... ok\ntest unix::listing_requires_an_explicit_directory_not_a_file_or_symlink ... ok\ntest unix::batch_capacity_retains_the_next_record_including_blank_byte_cost ... ok\ntest unix::lf_and_cr_count_toward_record_limit_and_oversize_retry_loses_nothing ... ok\ntest unix::cursor_requires_exact_path_identity_and_lf_boundary ... ok\ntest unix::split_utf8_tail_waits_for_lf_and_then_emits_from_its_original_offset ... ok\ntest unix::empty_eof_and_exact_capacity_eof_do_not_request_a_busy_loop ... ok\ntest unix::oversize_blank_and_unterminated_lines_are_not_silently_skipped ... ok\ntest unix::replacement_and_truncation_reject_old_cursor_instead_of_restarting ... ok\ntest unix::preserves_native_bytes_and_shared_fixture_offsets_without_parsing ... ok\ntest unix::rejects_final_symlinks_without_opening_target_or_sidecars ... ok\ntest unix::lists_only_immediate_regular_jsonl_files_in_sorted_order ... ok\n\ntest result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 4 tests\ntest unix::sqlite::tests::loader_connection_rejects_sql_mutations_and_database_creation ... ok\ntest unix::sqlite::tests::wal_commit_between_size_check_and_extraction_cannot_mix_revisions ... ok\ntest unix::sqlite::tests::sqlite_accepts_trusted_ancestor_links_but_rejects_database_links ... ok\ntest unix::tests::file_snapshot_rejects_changes_between_read_and_publication ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 10 tests\ntest unix::fifo_fails_without_waiting_for_a_writer ... ok\ntest invalid_inputs_fail_before_any_filesystem_operation ... ok\ntest unix::empty_journal_has_a_stable_revision_and_deletions_change_it ... ok\ntest unix::journal_preserves_order_cr_and_structural_locations_not_byte_offsets ... ok\ntest unix::partial_journal_tail_never_publishes_prior_complete_records ... ok\ntest unix::journal_count_value_and_aggregate_limits_reject_the_whole_snapshot ... ok\ntest unix::document_budgets_include_root_key_and_reject_overflow_without_partial_output ... ok\ntest unix::document_preserves_exact_bytes_and_content_revision_across_relocation_and_selection ... ok\ntest unix::final_symlinks_directories_and_missing_sources_are_never_followed_or_created ... ok\ntest unix::malformed_documents_and_blank_or_malformed_journal_records_fail_closed ... ok\n\ntest result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s\n\n\nrunning 9 tests\ntest malformed_database_returns_safe_errors_without_native_payload ... ok\ntest sqlite_retains_text_and_opaque_blob_bytes_with_native_keys_in_byte_order ... ok\ntest exact_database_limits_count_utf8_keys_and_raw_values_not_sql_character_lengths ... ok\ntest revision_frames_key_and_value_boundaries_and_table_namespace ... ok\ntest read_only_snapshot_keeps_database_bytes_unchanged_and_sees_committed_wal_content ... ok\ntest revision_is_independent_of_insertion_order_but_tracks_keys_values_and_deletion ... ok\ntest sqlite_requires_a_real_stored_key_value_table_and_utf8_database ... ok\ntest oversized_native_text_blob_and_key_fail_before_unbounded_extraction ... ok\ntest duplicate_empty_nontext_and_invalid_utf8_keys_are_not_silently_overwritten ... ok\n\ntest result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 9 tests\ntest empty_batches_never_write_or_flush ... ok\ntest write_all_retries_interruptions_and_short_writes_before_flushing ... ok\ntest preserves_record_order_batch_framing_and_absent_vs_empty_values ... ok\ntest encodes_recursive_any_values_and_only_legal_otlp_fields ... ok\ntest failed_or_zero_writes_report_safe_errors_without_flushing ... ok\ntest invalid_late_values_reject_entire_batch_before_destination_access ... ok\ntest flush_failure_reports_failure_despite_complete_written_bytes ... ok\ntest output_budget_counts_json_escape_expansion_not_input_length ... ok\ntest encoded_limit_includes_newline_and_rejects_before_destination_access ... ok\n\ntest result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.44s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 6 tests\ntest fs::tests::io_categories_are_preserved_without_carrying_os_messages ... ok\ntest fs::tests::a_growing_input_stops_after_the_single_oversize_probe_byte ... ok\ntest collection::tests::invalid_limits_do_not_reach_the_loader ... ok\ntest collection::tests::an_injected_loader_cannot_force_a_no_progress_loop ... ok\ntest collection::tests::write_failure_returns_no_checkpoint_and_leaves_input_cursor_unchanged ... ok\ntest collection::tests::incomplete_tail_is_returned_after_complete_records_only ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 8 tests\ntest direct_adapter_rejects_relative_paths_without_opening_them ... ok\ntest public_facade_defaults_inline_overrides_and_diagnostics_are_usable ... ok\ntest missing_and_non_file_inputs_are_typed_read_failures_not_defaults ... ok\ntest filesystem_calls_are_parallel_safe_with_private_fixture_roots ... ok\ntest public_facade_and_injected_service_agree_on_explicit_file ... ok\ntest adapter_enforces_byte_limits_including_zero_and_exact_length ... ok\ntest real_file_parser_failures_retain_path_but_not_sensitive_document_values ... ok\ntest facade_file_limit_distinguishes_exact_size_from_one_byte_over ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 14 tests\ntest relative_file_paths_fail_before_reader_calls ... ok\ntest built_in_defaults_and_explicit_empty_are_valid ... ok\ntest escaped_keys_and_structural_characters_inside_roots_remain_valid ... ok\ntest file_failures_preserve_typed_reason_and_supplied_path ... ok\ntest explicit_file_reads_once_with_the_bound_and_preserves_document_roots ... ok\ntest invalid_defaults_and_overrides_are_not_hidden_by_precedence ... ok\ntest oversized_bytes_from_a_nonconforming_reader_are_still_rejected ... ok\ntest independent_readers_and_defaults_are_parallel_safe ... ok\ntest invalid_root_locations_are_structural_and_parser_coordinates_are_safe ... ok\ntest roots_are_literal_in_all_supplied_layers ... ok\ntest precedence_preserves_omission_and_explicit_empty_at_each_layer ... ok\ntest json_edges_reject_duplicates_escaped_aliases_unknowns_and_trailing_input ... ok\ntest shared_invalid_documents_fail_inline_and_file_without_secret_diagnostics ... ok\ntest inline_size_boundary_accepts_exact_limit_and_never_calls_reader ... ok\n\ntest result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 14 tests\ntest fixtures::tests::duplicate_fixture_retains_both_keys_in_the_input_stream ... ok\ntest collection::tests::configured_loader_error_does_not_touch_any_real_source ... ok\ntest collection::tests::fixture_framing_preserves_physical_offsets_across_blanks_and_crlf ... ok\ntest collection::tests::fake_collector_returns_checkpoint_only_when_output_is_accepted ... ok\ntest fakes::tests::inspector_records_requests_for_both_success_and_error ... ok\ntest fixtures::tests::valid_documents_express_empty_and_uninterpreted_roots ... ok\ntest fakes::tests::reader_records_limits_and_returns_isolated_values_or_typed_failures ... ok\ntest fixtures::tests::invalid_documents_and_read_failures_have_explicit_expected_categories ... ok\ntest fakes::tests::fakes_are_parallel_safe_without_shared_environment ... ok\ntest collection::tests::another_pure_adapter_conforms_without_storage_or_claude ... ok\ntest fakes::tests::relative_fixture_paths_are_rejected - should panic ... ok\ntest sealed::tests::rejects_relative_paths_before_creating_directories ... ok\ntest sealed::tests::constructs_without_executing_and_replaces_ambient_configuration ... ok\ntest fixtures::tests::oversized_fixture_is_valid_json_but_exceeds_the_limit ... ok\n\ntest result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 4 tests\ntest tests::malformed_or_incomplete_graphs_never_pass ... ok\ntest tests::accepts_only_declared_allowed_edges_in_a_partial_workspace ... ok\ntest tests::forbidden_graph_fixtures_are_rejected_with_the_edge_kind ... ok\ntest tests::purity_sensor_rejects_negative_sources_but_permits_core_ports ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 3 tests\ntest tests::absent_targets_fail_before_any_build ... ok\ntest tests::child_failure_preserves_status_and_both_streams ... ok\ntest tests::rejects_nonmachine_output_and_wrong_discrimination ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s\n\n",
+              "stderr": "   Compiling unisphere-core v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/core)\n   Compiling unisphere-testkit v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/testkit)\n   Compiling unisphere-adapter-cursor v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/adapter-cursor)\n   Compiling unisphere-adapter-copilot-cli v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/adapter-copilot-cli)\n   Compiling unisphere-sdk v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/sdk)\n   Compiling unisphere-output-otlp v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/output-otlp)\n   Compiling unisphere-cli v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/cli)\n   Compiling unisphere-loader-snapshot v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/loader-snapshot)\n   Compiling unisphere-loader-jsonl v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/loader-jsonl)\n   Compiling unisphere-adapter-codex v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/adapter-codex)\n   Compiling unisphere-adapter-claude v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/adapter-claude)\n   Compiling unisphere-adapter-omp v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/adapter-omp)\n   Compiling unisphere-adapter-vscode-copilot v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/adapter-vscode-copilot)\n   Compiling unisphere-adapter-pi v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/adapter-pi)\n   Compiling unisphere-adapter-git-ai v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/adapter-git-ai)\n   Compiling unisphere-loader-git v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/loader-git)\n   Compiling unisphere-app v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/app)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.96s\n     Running unittests src/lib.rs (target/debug/deps/unisphere_adapter_claude-f6386dff763f93f1)\n     Running tests/mapping.rs (target/debug/deps/mapping-baad5922b3a5048a)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_adapter_codex-6fa5c4d80dfb9426)\n     Running tests/mapping.rs (target/debug/deps/mapping-8dbb223d86e2c046)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_adapter_copilot_cli-6047598247d14309)\n     Running tests/mapping.rs (target/debug/deps/mapping-3b86b31387924934)\n     Running tests/snapshot.rs (target/debug/deps/snapshot-d189e53c27a44e8d)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_adapter_cursor-5fa17fb3d09dd1ad)\n     Running tests/ide.rs (target/debug/deps/ide-d3d850e1077f976e)\n     Running tests/transcript.rs (target/debug/deps/transcript-73092495b1de89f5)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_adapter_git_ai-8551e626ff43222a)\n     Running tests/format.rs (target/debug/deps/format-5ffe32ad4b66236a)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_adapter_omp-88135646a4a6276b)\n     Running tests/mapping.rs (target/debug/deps/mapping-7371eafb3ebf52f9)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_adapter_pi-5691d51307e98cde)\n     Running tests/mapping.rs (target/debug/deps/mapping-e646e62cdd4d7c65)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_adapter_vscode_copilot-b554fa59884cffd4)\n     Running tests/mapping.rs (target/debug/deps/mapping-8187c49ca2016a47)\n     Running unittests src/main.rs (target/debug/deps/unisphere-7bafadaf2d865448)\n     Running tests/adapter_catalog.rs (target/debug/deps/adapter_catalog-5b5e5084a0ce5907)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_cli-0d05e9255c85cc41)\n     Running tests/frontend.rs (target/debug/deps/frontend-9d39276ea3f1e45d)\n     Running tests/sessions.rs (target/debug/deps/sessions-50efbcce244cf6d8)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_core-1ef0357b227b2a42)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_loader_git-12dd350e6f425bfa)\n     Running tests/storage.rs (target/debug/deps/storage-7f655caf06e3593a)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_loader_jsonl-d49012f98746c057)\n     Running tests/filesystem.rs (target/debug/deps/filesystem-ff06f3119425c39d)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_loader_snapshot-1edf33f33f136cab)\n     Running tests/filesystem.rs (target/debug/deps/filesystem-74e2f3fa193334b2)\n     Running tests/sqlite.rs (target/debug/deps/sqlite-16240a873374080e)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_output_otlp-77f7220b30d77665)\n     Running tests/writer.rs (target/debug/deps/writer-b11bffb6c9059ce1)\n     Running unittests examples/encode.rs (target/debug/examples/encode-2bdac18a32e69b07)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_sdk-ea6546d4df5f2b14)\n     Running tests/public_api.rs (target/debug/deps/public_api-9e5e0b0868114cd8)\n     Running tests/service_in_isolation.rs (target/debug/deps/service_in_isolation-d1038d03429c2cde)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_testkit-518550a5861b2d53)\n     Running unittests src/bin/unisphere-arch-check.rs (target/debug/deps/unisphere_arch_check-15d182ed988029c3)\n     Running unittests src/bin/unisphere-proof.rs (target/debug/deps/unisphere_proof-ff572395e34fd849)\n",
+              "ok": true
+            },
+            {
+              "name": "rustdoc",
+              "command": "/opt/homebrew/bin/cargo",
+              "args": [
+                "test",
+                "--workspace",
+                "--doc",
+                "--locked"
+              ],
+              "code": 0,
+              "stdout": "\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 2 tests\ntest crates/sdk/src/lib.rs - (line 8) ... ok\ntest crates/sdk/src/lib.rs - (line 23) ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\nall doctests ran in 0.63s; merged doctests compilation took 0.26s\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+              "stderr": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.17s\n   Doc-tests unisphere_adapter_claude\n   Doc-tests unisphere_adapter_codex\n   Doc-tests unisphere_adapter_copilot_cli\n   Doc-tests unisphere_adapter_cursor\n   Doc-tests unisphere_adapter_git_ai\n   Doc-tests unisphere_adapter_omp\n   Doc-tests unisphere_adapter_pi\n   Doc-tests unisphere_adapter_vscode_copilot\n   Doc-tests unisphere_cli\n   Doc-tests unisphere_core\n   Doc-tests unisphere_loader_git\n   Doc-tests unisphere_loader_jsonl\n   Doc-tests unisphere_loader_snapshot\n   Doc-tests unisphere_output_otlp\n   Doc-tests unisphere_sdk\n   Doc-tests unisphere_testkit\n",
+              "ok": true
+            },
+            {
+              "name": "architecture",
+              "command": "/opt/homebrew/bin/cargo",
+              "args": [
+                "run",
+                "--locked",
+                "-p",
+                "unisphere-testkit",
+                "--bin",
+                "unisphere-arch-check"
+              ],
+              "code": 0,
+              "stdout": "architecture: 80 declared normal/dev/build edges accepted\npurity: 20 core/adapter production source files checked (lexical sensor; independent review still required)\n",
+              "stderr": "   Compiling unisphere-core v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/core)\n   Compiling unisphere-testkit v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/testkit)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.76s\n     Running `target/debug/unisphere-arch-check`\n",
+              "ok": true
+            },
+            {
+              "name": "harness-regression",
+              "command": "/opt/homebrew/Cellar/node/24.7.0/bin/node",
+              "args": [
+                "--test",
+                ".harness/extensions/checks/checks.test.mjs",
+                ".harness/extensions/boot/extension.test.mjs"
+              ],
+              "code": 0,
+              "stdout": "✔ missing, unconfigured, malformed and degraded gates cannot imply readiness (0.906333ms)\n✔ failed product checks preserve exit/stdout/stderr and never start smoke (0.103083ms)\n✔ native and Git Notes proof failures prevent readiness and preserve evidence (0.144834ms)\n✔ successful quality and assembled proofs establish scoped readiness (0.098625ms)\n✔ a real harness child failure is not laundered into readiness (342.568875ms)\n✔ release and commit identity ignore distribution wording and installation path (1.088667ms)\n✔ missing formatter commit metadata is named, not invented as a match (0.1035ms)\n✔ mixed or missing tool identity records all tools and prevents quality gates (0.253708ms)\n✔ unavailable formatter commit permits gates while retaining an explicit provenance gap (0.23025ms)\n✔ failing product check preserves child evidence and stops later gates (0.442042ms)\n✔ all gates run once after coherent observations without boot recursion (0.184917ms)\nℹ tests 11\nℹ suites 0\nℹ pass 11\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 385.631209\n",
+              "stderr": "",
+              "ok": true
+            }
+          ]
+        }
+      },
+      "proofs": [
+        {
+          "name": "composition",
+          "command": "/opt/homebrew/bin/cargo",
+          "args": [
+            "run",
+            "--locked",
+            "-p",
+            "unisphere-testkit",
+            "--bin",
+            "unisphere-proof",
+            "--",
+            "composition"
+          ],
+          "code": 0,
+          "stdout": "product proof composition: passed (temporary isolated build and product runtime; configuration foundation)\n",
+          "stderr": "   Compiling unisphere-testkit v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/testkit)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.58s\n     Running `target/debug/unisphere-proof composition`\n",
+          "ok": true
+        },
+        {
+          "name": "sdk-consumer",
+          "command": "/opt/homebrew/bin/cargo",
+          "args": [
+            "run",
+            "--locked",
+            "-p",
+            "unisphere-testkit",
+            "--bin",
+            "unisphere-proof",
+            "--",
+            "sdk-consumer"
+          ],
+          "code": 0,
+          "stdout": "product proof sdk-consumer: passed (temporary isolated build and product runtime; configuration foundation)\n",
+          "stderr": "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.08s\n     Running `target/debug/unisphere-proof sdk-consumer`\n",
+          "ok": true
+        },
+        {
+          "name": "installed-cli",
+          "command": "/opt/homebrew/bin/cargo",
+          "args": [
+            "run",
+            "--locked",
+            "-p",
+            "unisphere-testkit",
+            "--bin",
+            "unisphere-proof",
+            "--",
+            "installed-cli"
+          ],
+          "code": 0,
+          "stdout": "product proof installed-cli: passed (temporary isolated build and product runtime; configuration foundation)\n",
+          "stderr": "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.04s\n     Running `target/debug/unisphere-proof installed-cli`\n",
+          "ok": true
+        },
+        {
+          "name": "collection",
+          "command": "/opt/homebrew/bin/cargo",
+          "args": [
+            "run",
+            "--locked",
+            "-p",
+            "unisphere-testkit",
+            "--bin",
+            "unisphere-proof",
+            "--",
+            "collection"
+          ],
+          "code": 0,
+          "stdout": "collection proof: pure adapter, SDK/CLI parity, metadata policy, partial tail, error isolation and installed runtime passed\nproduct proof collection: passed (temporary isolated build and product runtime; explicit Claude JSONL projection; not lossless or final completeness)\n",
+          "stderr": "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s\n     Running `target/debug/unisphere-proof collection`\n",
+          "ok": true
+        },
+        {
+          "name": "native",
+          "command": "/opt/homebrew/bin/cargo",
+          "args": [
+            "run",
+            "--locked",
+            "-p",
+            "unisphere-testkit",
+            "--bin",
+            "unisphere-proof",
+            "--",
+            "native"
+          ],
+          "code": 0,
+          "stdout": "native proof: all registered dialects SDK/CLI/installed parity; changed/deleted/late sources; partial output without checkpoint\nproduct proof native: passed (temporary isolated build and product runtime; explicit native JSONL and revision snapshots; not lossless or final completeness)\n",
+          "stderr": "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.30s\n     Running `target/debug/unisphere-proof native`\n",
+          "ok": true
+        },
+        {
+          "name": "git-notes",
+          "command": "/opt/homebrew/bin/cargo",
+          "args": [
+            "run",
+            "--locked",
+            "-p",
+            "unisphere-testkit",
+            "--bin",
+            "unisphere-proof",
+            "--",
+            "git-notes"
+          ],
+          "code": 0,
+          "stdout": "Git Notes: real SDK + installed CLI parity; mixed/unresolved/7-hex privacy; pinned reads; explicit selection; empty/absent; bare/worktree; source/output safety; missing Git, unsupported/malformed/bounded/output/ownership/promisor failures. Positive runtimes use empty PATH and explicit standard Git, never Git AI.\nproduct proof git-notes: passed (temporary isolated build and product runtime; explicit local Git Notes attribution without Git AI; not complete conversations or history)\n",
+          "stderr": "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.07s\n     Running `target/debug/unisphere-proof git-notes`\n",
+          "ok": true
+        }
+      ],
+      "limitations": [
+        "Explicit Unix JSONL/native snapshots and local commit-attached Git Notes attribution only; no universal session reconstruction or private-store discovery.",
+        "Git Notes require standard Git, not Git AI; no note fetch, push, remote access or conversation-completeness claim.",
+        "Metadata-only output is not anonymity: source paths and observed identities remain metadata.",
+        "Revisions describe source observations, not persisted CLI resume, exactly-once ingestion or session finality.",
+        "No executed network-denial test; independent core/adapter source review is additionally required."
+      ]
+    }
+  },
+  "stderr": ""
+}

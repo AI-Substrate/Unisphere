@@ -1,0 +1,52 @@
+{
+  "kind": "ProductOnlyDelivery",
+  "unit_id": "plan015-git-notes-query",
+  "allocation_kind": "manual-external-follow-on",
+  "formal_builder_allocation": false,
+  "sealed_plan015_roster_delivery": false,
+  "candidate_only": true,
+  "peer_id": "pij-bold-parrotfish",
+  "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/pij-session-resolution",
+  "branch": "work/015-git-notes-query",
+  "source_sha": "ad6ae02339330e966cf85b0e2d73175bc78459ad",
+  "commit_sha": "98c8f2553358913fdd1e276ee0cc19f78986a5ce",
+  "paths": [
+    "crates/adapter-git-ai/src/lib.rs",
+    "crates/adapter-git-ai/src/query.rs",
+    "crates/adapter-git-ai/tests/query.rs"
+  ],
+  "interface": {
+    "adapter": "GitAiAdapter implements unisphere_core::query::QueryAdapter",
+    "policy": "pub const QUERY_POLICY_VERSION: &str = git-ai/authorship3/query-v1",
+    "input": "NativeQueryInput::ProvidedObject with NativeLocator::GitNote only"
+  },
+  "behavior": [
+    "Factors authorship/3.0.0 duplicate-key rejection, metadata validation, identity classification, and line-attribution range parsing into one native classifier shared by OTLP mapping and query inspection.",
+    "Builds source-only and declared-session partitions without TelemetryRecord or encoded OTLP intermediates.",
+    "Scopes declared session evidence to a digest of native repository identity and never promotes legacy prompts, humans, or unresolved references into sessions.",
+    "Preserves supplied SourceId, revision, and GitNote locator on every source reference.",
+    "Replicates the bridge-provided canonical GitRepositoryIdentity association onto every output partition, falling back to the admitted local source path only for direct synthetic callers.",
+    "Emits only control, session metadata, and attribution facets with unavailable timestamps; no messages, turns, tools, timings, or transcript facts are fabricated.",
+    "Retains sensitive session names/models and attribution author/file details only under the corresponding ContentAccess fields; attribution parts capability is declared."
+  ],
+  "focused_tests": [
+    "declared session versus source-only attribution classification",
+    "canonical association propagation",
+    "no fabricated transcript/timing facets",
+    "content consent for identity and file details",
+    "malformed, duplicate-key, unsupported-schema, and unsupported-input failures",
+    "source-byte and observation expansion bounds",
+    "pinned locator/revision preservation and repeated snapshot consistency",
+    "valid zero-session note"
+  ],
+  "unrun_checks": [
+    "All startup, build, test, lint, and formatter commands were intentionally not run under the convergence packet.",
+    "PM owns QuerySource bridge integration and composed validation."
+  ],
+  "friction": [],
+  "attribution": {
+    "commit_mode": "direct-verified",
+    "collector_probe": "connected",
+    "git_note": "landed"
+  }
+}

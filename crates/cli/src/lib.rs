@@ -24,13 +24,13 @@ pub use args::{
     PijTarget, QueryCommand, SchemaCommand, diagnostic_mode, parse,
 };
 pub use catalog::{run_adapters, run_catalog};
+pub use git_notes::{run_git_notes, run_native_git_notes};
 pub use query::{
     emit_parse_failure, emit_pij_failure, emit_pij_resolution, emit_query_failure, run_docs,
     run_query, run_schema,
 };
 pub use sessions::{run_native_export, run_native_list, run_sessions, session_error};
 pub use snapshots::{run_native_snapshot_export, run_snapshot_sessions};
-pub use git_notes::run_git_notes;
 pub use unisphere_core::{AdapterCapabilities, AdapterDescriptor, LocationHint};
 
 use output::Response;

@@ -4,9 +4,9 @@
 pub mod collection;
 pub mod fakes;
 pub mod fixtures;
-pub mod query;
 #[cfg(unix)]
 pub mod git_notes;
+pub mod query;
 pub mod sealed;
 
 pub use fakes::{FakeInspector, FakeReader, ReadCall};

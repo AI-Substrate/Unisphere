@@ -1,0 +1,45 @@
+{
+  "kind": "ProductOnlyDelivery",
+  "unit_id": "tk-000b-native-git-notes-cli",
+  "peer_id": "pij-unfortunate-rat",
+  "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-000b-manual",
+  "branch": "work/015-git-notes-cli",
+  "source_sha": "ad6ae02339330e966cf85b0e2d73175bc78459ad",
+  "commit_sha": "8c25da3e19edb7ba4ceb9d2cb8a0c58cc085711d",
+  "packet": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/team/git-convergence-packets.json",
+  "paths": [
+    "crates/cli/src/git_notes.rs",
+    "crates/cli/tests/git_notes.rs",
+    "crates/cli/src/lib.rs"
+  ],
+  "public_interface": "run_native_git_notes<C: GitNotesApi>(command: &ParsedCommand, make_collector: impl FnOnce(Option<PathBuf>) -> Result<C, GitNotesError>, stdout: &mut dyn Write, stderr: &mut dyn Write) -> u8",
+  "behavior": [
+    "run_git_notes remains public and now delegates full argv to the crate's single typed root parser.",
+    "run_native_git_notes accepts only NativeGitNotesList or NativeExport with adapter git-ai and constructs the injected port only after typed DTO, scope, limits, output, and executable validation.",
+    "Accepted Git Notes ref, commit selection, include-content policy, and bounded limits are preserved through GitNotesScope and GitNotesRequest.",
+    "File export validates an outside-source canonical parent, writes to an exclusive 0600 stage, and publishes create-new by hard link only after successful collection; failures remove the stage and never replace an existing destination.",
+    "OTLP stdout remains data-only; export guidance stays on stderr.",
+    "Nonempty structured next_action guidance covers nonempty list, empty list, export success, and every GitNotesError family without embedding rejected arguments or native payloads.",
+    "GitNotesError kind and PipelineError output_code fields retain their public envelope semantics."
+  ],
+  "authored_evidence": [
+    "Typed runner list behavior for empty and nonempty selections.",
+    "Compatibility wrapper help and invalid-input behavior without port construction.",
+    "Wrong typed variant rejection before port construction.",
+    "Data-only OTLP stdout and stderr export guidance.",
+    "Inside-source path refusal without collection.",
+    "Successful private create-new publication.",
+    "Partial-stage cleanup and no publication after collection failure.",
+    "Existing destination preservation with UNI-WRITE output code.",
+    "Cause-specific Git-unavailable recovery."
+  ],
+  "unrun_checks": [
+    "No build, test, lint, format, startup, boot, or product validation command was run, per concurrent-edit instruction."
+  ],
+  "attribution": {
+    "mode": "direct-verified",
+    "refs_notes_ai": "landed",
+    "claim_boundary": "Collector attribution only; not product acceptance or runtime proof."
+  },
+  "acceptance_claim": "Candidate only. PM owns app/source bridging, composition, validation, review, and acceptance."
+}

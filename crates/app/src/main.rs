@@ -18,6 +18,7 @@ use unisphere_sdk::query::{
 use unisphere_sdk::{Inspector, StdConfigReader};
 
 mod adapters;
+mod git_query;
 mod pij;
 
 fn main() -> ExitCode {
@@ -96,7 +97,7 @@ fn main() -> ExitCode {
 fn query_source(
     command: &QueryCommand,
     context: &CliContext,
-) -> Result<LocalQuerySource, QueryFailure> {
+) -> Result<git_query::Sources<unisphere_loader_git::GitObjectLoader>, QueryFailure> {
     let mut local = LocalQueryContext::new(env::consts::OS, BTreeMap::new());
     if let QueryScope::Offline { input } = &command.request.scope {
         if matches!(input, OfflineRef::Stdin) {
@@ -121,7 +122,11 @@ fn query_source(
             });
         }
         // Saved inputs never acquire source roots, adapter instances, or Git.
-        return Ok(LocalQuerySource::new(Vec::new(), local));
+        return Ok(git_query::Sources {
+            local: LocalQuerySource::new(Vec::new(), local),
+            identities: Vec::new(),
+            git: None,
+        });
     }
     for (base, variable) in [("home", "HOME"), ("appdata", "APPDATA")] {
         if let Some(path) = env::var_os(variable).map(PathBuf::from) {
@@ -137,10 +142,23 @@ fn query_source(
     ) {
         local.git_executable = find_executable("git", context);
     }
-    Ok(LocalQuerySource::new(
-        adapters::query_registrations()?,
-        local,
-    ))
+    let registrations = adapters::query_registrations()?;
+    let identities = registrations
+        .iter()
+        .map(|entry| {
+            (
+                unisphere_sdk::query::AdapterId::new(entry.descriptor.id)
+                    .expect("registered adapter"),
+                entry.harness.clone(),
+            )
+        })
+        .collect();
+    let git = adapters::git_query_source(context.cwd.clone(), find_executable("git", context));
+    Ok(git_query::Sources {
+        local: LocalQuerySource::new(registrations, local),
+        identities,
+        git,
+    })
 }
 
 fn find_executable(name: &str, context: &CliContext) -> Option<PathBuf> {

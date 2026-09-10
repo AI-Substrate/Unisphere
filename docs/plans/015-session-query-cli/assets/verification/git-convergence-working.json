@@ -1,0 +1,285 @@
+{
+  "recorded_at": "2026-09-10T21:50:03.554Z",
+  "scope": "Uncommitted merged composition;131 focused tests passed before final locator/retained-bound regression refinement. Initial lifetime/import/fixture errors and native bound classification repair retained, not erased.",
+  "runs": [
+    {
+      "receipt": {
+        "command": [
+          "cargo",
+          "test",
+          "--offline",
+          "--no-fail-fast",
+          "-p",
+          "unisphere-adapter-git-ai",
+          "-p",
+          "unisphere-loader-git",
+          "-p",
+          "unisphere-sdk",
+          "-p",
+          "unisphere-cli",
+          "-p",
+          "unisphere-app"
+        ],
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+        "before": {
+          "head": {
+            "args": [
+              "rev-parse",
+              "HEAD"
+            ],
+            "exit": 0,
+            "stdout": "ad6ae02339330e966cf85b0e2d73175bc78459ad\n",
+            "stderr": ""
+          },
+          "status": {
+            "args": [
+              "status",
+              "--porcelain"
+            ],
+            "exit": 0,
+            "stdout": "MM crates/adapter-git-ai/src/lib.rs\nAM crates/adapter-git-ai/src/query.rs\nAM crates/adapter-git-ai/tests/query.rs\n M crates/app/src/adapters.rs\n M crates/app/src/main.rs\nMM crates/cli/src/git_notes.rs\nMM crates/cli/src/lib.rs\nAM crates/cli/tests/git_notes.rs\n M crates/sdk/src/query/view.rs\n M crates/testkit/src/bin/proof/git_notes.rs\n M crates/testkit/src/bin/unisphere-proof.rs\n M crates/testkit/src/lib.rs\n?? crates/app/src/git_query.rs\n?? crates/app/tests/git_query.rs\n?? crates/testkit/src/bin/proof/git_query.rs\n?? docs/plans/015-session-query-cli/assets/team/git-convergence-packets.json\n?? docs/plans/015-session-query-cli/assets/team/git-notes-cli-delivery.json\n?? docs/plans/015-session-query-cli/assets/team/git-notes-query-delivery.json\n",
+            "stderr": ""
+          }
+        },
+        "after": {
+          "head": {
+            "args": [
+              "rev-parse",
+              "HEAD"
+            ],
+            "exit": 0,
+            "stdout": "ad6ae02339330e966cf85b0e2d73175bc78459ad\n",
+            "stderr": ""
+          },
+          "status": {
+            "args": [
+              "status",
+              "--porcelain"
+            ],
+            "exit": 0,
+            "stdout": "MM crates/adapter-git-ai/src/lib.rs\nAM crates/adapter-git-ai/src/query.rs\nAM crates/adapter-git-ai/tests/query.rs\n M crates/app/src/adapters.rs\n M crates/app/src/main.rs\nMM crates/cli/src/git_notes.rs\nMM crates/cli/src/lib.rs\nAM crates/cli/tests/git_notes.rs\n M crates/sdk/src/query/view.rs\n M crates/testkit/src/bin/proof/git_notes.rs\n M crates/testkit/src/bin/unisphere-proof.rs\n M crates/testkit/src/lib.rs\n?? crates/app/src/git_query.rs\n?? crates/app/tests/git_query.rs\n?? crates/testkit/src/bin/proof/git_query.rs\n?? docs/plans/015-session-query-cli/assets/team/git-convergence-packets.json\n?? docs/plans/015-session-query-cli/assets/team/git-notes-cli-delivery.json\n?? docs/plans/015-session-query-cli/assets/team/git-notes-query-delivery.json\n",
+            "stderr": ""
+          }
+        },
+        "started_at": "2026-09-10T21:45:56.886Z",
+        "finished_at": "2026-09-10T21:46:04.307Z",
+        "exit": 101,
+        "signal": null,
+        "stdout_path": ".harness/temp/pij-empirical-tiger/git-convergence-1.stdout",
+        "stderr_path": ".harness/temp/pij-empirical-tiger/git-convergence-1.stderr"
+      },
+      "stdout": "",
+      "stderr": "   Compiling unisphere-core v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/core)\n   Compiling unisphere-testkit v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/testkit)\n   Compiling unisphere-output-query v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/output-query)\n   Compiling unisphere-cli v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/cli)\n   Compiling unisphere-sdk v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/sdk)\n   Compiling unisphere-adapter-git-ai v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/adapter-git-ai)\n   Compiling unisphere-loader-git v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/loader-git)\n   Compiling unisphere-loader-jsonl v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/loader-jsonl)\n   Compiling unisphere-loader-snapshot v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/loader-snapshot)\n   Compiling unisphere-adapter-claude v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/adapter-claude)\n   Compiling unisphere-adapter-vscode-copilot v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/adapter-vscode-copilot)\n   Compiling unisphere-output-otlp v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/output-otlp)\n   Compiling unisphere-adapter-pi v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/adapter-pi)\n   Compiling unisphere-adapter-codex v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/adapter-codex)\n   Compiling unisphere-adapter-cursor v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/adapter-cursor)\n   Compiling unisphere-adapter-copilot-cli v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/adapter-copilot-cli)\nerror: lifetime may not live long enough\n   --> crates/adapter-git-ai/src/lib.rs:244:21\n    |\n176 | pub(crate) fn classify_note(bytes: &[u8]) -> Result<ClassifiedNote, GitNotesError> {\n    |                                    - let's call the lifetime of this reference `'1`\n...\n244 |                     map_name,\n    |                     ^^^^^^^^ this usage requires that `'1` must outlive `'static`\n\nerror: could not compile `unisphere-adapter-git-ai` (lib) due to 1 previous error\nwarning: build failed, waiting for other jobs to finish...\n"
+    },
+    {
+      "receipt": {
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--no-fail-fast",
+          "-p",
+          "unisphere-adapter-git-ai",
+          "-p",
+          "unisphere-loader-git",
+          "-p",
+          "unisphere-sdk",
+          "-p",
+          "unisphere-cli",
+          "-p",
+          "unisphere-app"
+        ],
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+        "before": {
+          "head": {
+            "args": [
+              "rev-parse",
+              "HEAD"
+            ],
+            "exit": 0,
+            "stdout": "ad6ae02339330e966cf85b0e2d73175bc78459ad\n",
+            "stderr": ""
+          },
+          "status": {
+            "args": [
+              "status",
+              "--porcelain"
+            ],
+            "exit": 0,
+            "stdout": "MM crates/adapter-git-ai/src/lib.rs\nAM crates/adapter-git-ai/src/query.rs\nAM crates/adapter-git-ai/tests/query.rs\n M crates/app/src/adapters.rs\n M crates/app/src/main.rs\nMM crates/cli/src/git_notes.rs\nMM crates/cli/src/lib.rs\nAM crates/cli/tests/git_notes.rs\n M crates/sdk/src/query/view.rs\n M crates/testkit/src/bin/proof/git_notes.rs\n M crates/testkit/src/bin/unisphere-proof.rs\n M crates/testkit/src/lib.rs\n?? crates/app/src/git_query.rs\n?? crates/app/tests/git_query.rs\n?? crates/testkit/src/bin/proof/git_query.rs\n?? docs/plans/015-session-query-cli/assets/team/git-convergence-packets.json\n?? docs/plans/015-session-query-cli/assets/team/git-notes-cli-delivery.json\n?? docs/plans/015-session-query-cli/assets/team/git-notes-query-delivery.json\n",
+            "stderr": ""
+          }
+        },
+        "after": {
+          "head": {
+            "args": [
+              "rev-parse",
+              "HEAD"
+            ],
+            "exit": 0,
+            "stdout": "ad6ae02339330e966cf85b0e2d73175bc78459ad\n",
+            "stderr": ""
+          },
+          "status": {
+            "args": [
+              "status",
+              "--porcelain"
+            ],
+            "exit": 0,
+            "stdout": "MM crates/adapter-git-ai/src/lib.rs\nAM crates/adapter-git-ai/src/query.rs\nAM crates/adapter-git-ai/tests/query.rs\n M crates/app/src/adapters.rs\n M crates/app/src/main.rs\nMM crates/cli/src/git_notes.rs\nMM crates/cli/src/lib.rs\nAM crates/cli/tests/git_notes.rs\n M crates/sdk/src/query/view.rs\n M crates/testkit/src/bin/proof/git_notes.rs\n M crates/testkit/src/bin/unisphere-proof.rs\n M crates/testkit/src/lib.rs\n?? crates/app/src/git_query.rs\n?? crates/app/tests/git_query.rs\n?? crates/testkit/src/bin/proof/git_query.rs\n?? docs/plans/015-session-query-cli/assets/team/git-convergence-packets.json\n?? docs/plans/015-session-query-cli/assets/team/git-notes-cli-delivery.json\n?? docs/plans/015-session-query-cli/assets/team/git-notes-query-delivery.json\n",
+            "stderr": ""
+          }
+        },
+        "started_at": "2026-09-10T21:46:31.762Z",
+        "finished_at": "2026-09-10T21:46:34.846Z",
+        "exit": 101,
+        "signal": null,
+        "stdout_path": ".harness/temp/pij-empirical-tiger/git-convergence-2.stdout",
+        "stderr_path": ".harness/temp/pij-empirical-tiger/git-convergence-2.stderr"
+      },
+      "stdout": "",
+      "stderr": "   Compiling unisphere-adapter-git-ai v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/adapter-git-ai)\n   Compiling unisphere-adapter-omp v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/adapter-omp)\n   Compiling unisphere-cli v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/cli)\n   Compiling unisphere-loader-git v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/loader-git)\n   Compiling unisphere-sdk v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/sdk)\n   Compiling unisphere-loader-query v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/loader-query)\nerror[E0405]: cannot find trait `Write` in this scope\n  --> crates/cli/tests/git_notes.rs:38:31\n   |\n38 |         destination: &mut dyn Write,\n   |                               ^^^^^ not found in this scope\n   |\nhelp: consider importing one of these traits\n   |\n 1 + use std::fmt::Write;\n   |\n 1 + use std::io::Write;\n   |\n 1 + use core::fmt::Write;\n   |\n\nFor more information about this error, try `rustc --explain E0405`.\nerror: could not compile `unisphere-cli` (test \"git_notes\") due to 1 previous error\nwarning: build failed, waiting for other jobs to finish...\n"
+    },
+    {
+      "receipt": {
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--no-fail-fast",
+          "-p",
+          "unisphere-adapter-git-ai",
+          "-p",
+          "unisphere-loader-git",
+          "-p",
+          "unisphere-sdk",
+          "-p",
+          "unisphere-cli",
+          "-p",
+          "unisphere-app"
+        ],
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+        "before": {
+          "head": {
+            "args": [
+              "rev-parse",
+              "HEAD"
+            ],
+            "exit": 0,
+            "stdout": "ad6ae02339330e966cf85b0e2d73175bc78459ad\n",
+            "stderr": ""
+          },
+          "status": {
+            "args": [
+              "status",
+              "--porcelain"
+            ],
+            "exit": 0,
+            "stdout": "MM crates/adapter-git-ai/src/lib.rs\nAM crates/adapter-git-ai/src/query.rs\nAM crates/adapter-git-ai/tests/query.rs\n M crates/app/src/adapters.rs\n M crates/app/src/main.rs\nMM crates/cli/src/git_notes.rs\nMM crates/cli/src/lib.rs\nAM crates/cli/tests/git_notes.rs\n M crates/sdk/src/query/view.rs\n M crates/testkit/src/bin/proof/git_notes.rs\n M crates/testkit/src/bin/unisphere-proof.rs\n M crates/testkit/src/lib.rs\n?? crates/app/src/git_query.rs\n?? crates/app/tests/git_query.rs\n?? crates/testkit/src/bin/proof/git_query.rs\n?? docs/plans/015-session-query-cli/assets/team/git-convergence-packets.json\n?? docs/plans/015-session-query-cli/assets/team/git-notes-cli-delivery.json\n?? docs/plans/015-session-query-cli/assets/team/git-notes-query-delivery.json\n",
+            "stderr": ""
+          }
+        },
+        "after": {
+          "head": {
+            "args": [
+              "rev-parse",
+              "HEAD"
+            ],
+            "exit": 0,
+            "stdout": "ad6ae02339330e966cf85b0e2d73175bc78459ad\n",
+            "stderr": ""
+          },
+          "status": {
+            "args": [
+              "status",
+              "--porcelain"
+            ],
+            "exit": 0,
+            "stdout": "MM crates/adapter-git-ai/src/lib.rs\nAM crates/adapter-git-ai/src/query.rs\nAM crates/adapter-git-ai/tests/query.rs\n M crates/app/src/adapters.rs\n M crates/app/src/main.rs\nMM crates/cli/src/git_notes.rs\nMM crates/cli/src/lib.rs\nAM crates/cli/tests/git_notes.rs\n M crates/sdk/src/query/view.rs\n M crates/testkit/src/bin/proof/git_notes.rs\n M crates/testkit/src/bin/unisphere-proof.rs\n M crates/testkit/src/lib.rs\n?? crates/app/src/git_query.rs\n?? crates/app/tests/git_query.rs\n?? crates/testkit/src/bin/proof/git_query.rs\n?? docs/plans/015-session-query-cli/assets/team/git-convergence-packets.json\n?? docs/plans/015-session-query-cli/assets/team/git-notes-cli-delivery.json\n?? docs/plans/015-session-query-cli/assets/team/git-notes-query-delivery.json\n",
+            "stderr": ""
+          }
+        },
+        "started_at": "2026-09-10T21:47:35.526Z",
+        "finished_at": "2026-09-10T21:48:01.503Z",
+        "exit": 101,
+        "signal": null,
+        "stdout_path": ".harness/temp/pij-empirical-tiger/git-convergence-3.stdout",
+        "stderr_path": ".harness/temp/pij-empirical-tiger/git-convergence-3.stderr"
+      },
+      "stdout": "\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 3 tests\ntest malformed_or_unsupported_notes_do_not_become_partial_success ... ok\ntest mixed_keys_preserve_ranges_unresolved_evidence_and_content_policy ... ok\ntest repeated_long_paths_hit_output_bound_before_unbounded_amplification ... FAILED\n\nfailures:\n\n---- repeated_long_paths_hit_output_bound_before_unbounded_amplification stdout ----\n\nthread 'repeated_long_paths_hit_output_bound_before_unbounded_amplification' (1480506956) panicked at crates/adapter-git-ai/tests/format.rs:190:5:\nassertion failed: matches!(error, GitNotesError::Output(e) if e.kind() ==\n    PipelineErrorKind::OutputLimit)\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n\n\nfailures:\n    repeated_long_paths_hit_output_bound_before_unbounded_amplification\n\ntest result: FAILED. 2 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 6 tests\ntest note_without_declared_sessions_remains_a_valid_source_only_snapshot ... ok\ntest native_input_and_observation_expansion_respect_query_bounds ... ok\ntest malformed_duplicate_and_unsupported_notes_fail_as_typed_source_errors ... ok\ntest native_authorship_maps_only_declared_sessions_and_attribution_facts ... ok\ntest pinned_native_locator_and_repeated_snapshot_are_preserved_exactly ... ok\ntest sensitive_identity_and_file_content_requires_explicit_access ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 2 tests\ntest adapters::tests::another_adapter_needs_one_registration_and_no_core_or_claude_change ... ok\ntest adapters::tests::production_catalog_ids_match_exported_provenance ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.69s\n\n\nrunning 3 tests\ntest catalog_argument_errors_hide_input_and_retain_machine_classification ... ok\ntest catalog_does_not_resolve_inaccessible_store_roots ... ok\ntest catalog_json_is_static_under_hostile_environment ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.00s\n\n\nrunning 3 tests\ntest missing_git_is_actionable_and_empty_notes_are_a_complete_selection ... ok\ntest note_revision_invalidates_cursor_and_bad_note_is_not_empty_success ... FAILED\ntest declared_attribution_session_is_queryable_without_inventing_a_transcript ... FAILED\n\nfailures:\n\n---- note_revision_invalidates_cursor_and_bad_note_is_not_empty_success stdout ----\n\nthread 'note_revision_invalidates_cursor_and_bad_note_is_not_empty_success' (1480510563) panicked at crates/app/tests/git_query.rs:161:5:\nassertion `left == right` failed\n  left: Some(0)\n right: Some(1)\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n\n---- declared_attribution_session_is_queryable_without_inventing_a_transcript stdout ----\n\nthread 'declared_attribution_session_is_queryable_without_inventing_a_transcript' (1480510561) panicked at crates/app/tests/git_query.rs:107:6:\ncalled `Result::unwrap()` on an `Err` value: \"synthetic Git [\\\"notes\\\", \\\"show\\\", \\\"79286760c42b44906a3ec380793eb5f8f96f27b9\\\"] failed: error: no note found for object 79286760c42b44906a3ec380793eb5f8f96f27b9.\\n\"\n\n\nfailures:\n    declared_attribution_session_is_queryable_without_inventing_a_transcript\n    note_revision_invalidates_cursor_and_bad_note_is_not_empty_success\n\ntest result: FAILED. 1 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.33s\n\n\nrunning 5 tests\ntest explicit_native_operation_never_invokes_pij ... ok\ntest optional_lookup_failure_categories_do_not_pollute_row_streams ... ok\ntest live_and_retired_aliases_reach_native_sdk_without_changing_identity ... ok\ntest changed_alias_is_resolved_per_query_and_missing_transcript_is_not_unknown_seat ... ok\ntest continuation_uses_pinned_native_source_after_alias_changes ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.35s\n\n\nrunning 2 tests\ntest partial_csv_reports_coverage_and_format_losses_outside_row_stream ... ok\ntest finite_duration_thresholds_compare_to_native_observed_milliseconds ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 18 tests\ntest defaults_call_only_the_injected_inspector_and_render_its_report ... ok\ntest a_relative_context_cannot_silently_create_a_relative_file_request ... ok\ntest output_escapes_control_characters_without_changing_semantic_data ... ok\ntest non_utf8_file_paths_are_preserved_but_non_utf8_root_values_are_rejected_safely ... ok\ntest blank_root_is_configuration_input_not_a_parser_diagnostic ... ok\ntest repeated_roots_and_explicit_clear_have_distinct_requests ... ok\ntest request_values_never_leak_into_failure_diagnostics ... ok\ntest conflicting_modes_always_fail_in_json_regardless_of_order_or_terminal ... ok\ntest mode_looking_values_and_end_of_options_do_not_select_a_mode ... ok\ntest failure_output_errors_override_argument_exit_and_tolerate_broken_stderr ... ok\ntest global_modes_work_before_between_and_after_subcommands ... ok\ntest config_paths_are_resolved_lexically_without_discovery_or_canonicalization ... ok\ntest failures_preserve_core_semantics_and_structural_location ... ok\ntest invalid_invocations_are_safe_typed_failures_without_port_calls ... ok\ntest output_modes_override_terminal_status_for_success_and_failure ... ok\ntest version_uses_explicit_context_and_selected_mode_without_inspection ... ok\ntest short_writes_are_completed_and_write_or_flush_failures_exit_one_safely ... ok\ntest help_at_every_command_level_honors_output_mode_without_inspection ... ok\n\ntest result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s\n\n\nrunning 10 tests\ntest invalid_typed_variant_fails_before_constructing_port ... ok\ntest compatibility_wrapper_preserves_native_invalid_input_envelope ... ok\ntest typed_runner_lists_with_actionable_empty_and_nonempty_outcomes ... ok\ntest compatibility_wrapper_uses_root_help_without_constructing_port ... ok\ntest export_keeps_otlp_stdout_data_only_and_reports_guidance_on_stderr ... ok\ntest constructor_failures_keep_kind_and_cause_specific_recovery ... ok\ntest failed_export_removes_stage_and_never_publishes_partial_bytes ... ok\ntest existing_export_is_not_overwritten_and_preserves_output_error_code ... ok\ntest export_refuses_source_paths_and_never_collects_into_them ... FAILED\ntest successful_file_export_publishes_new_private_output ... ok\n\nfailures:\n\n---- export_refuses_source_paths_and_never_collects_into_them stdout ----\n\nthread 'export_refuses_source_paths_and_never_collects_into_them' (1480519322) panicked at crates/cli/tests/git_notes.rs:295:5:\nassertion `left == right` failed\n  left: 0\n right: 2\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n\n\nfailures:\n    export_refuses_source_paths_and_never_collects_into_them\n\ntest result: FAILED. 9 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 19 tests\ntest pij_resolution_and_failures_use_only_the_diagnostic_channel ... ok\ntest diagnostic_mode_is_selected_before_parse_consumes_argv ... ok\ntest pij_turn_range_stays_pending_and_duration_threshold_is_finite_float ... ok\ntest resolved_pij_continuation_uses_pinned_query_ids ... ok\ntest csv_rows_parse_separately_from_loss_and_coverage_diagnostics ... ok\ntest raw_rows_stay_clean_and_guidance_uses_diagnostic_channel ... ok\ntest generated_actions_withhold_private_paths_and_parse_after_binding ... ok\ntest static_lookup_errors_name_valid_alternatives ... ok\ntest bundled_docs_and_schema_are_real_static_routes ... ok\ntest typed_query_initialization_failures_keep_stdout_clean ... ok\ntest seven_staged_examples_parse_after_declared_bindings ... ok\ntest parsed_static_and_config_commands_execute_without_reparsing ... ok\ntest stdin_framing_is_explicit_scope_bound_and_preserved_in_actions ... ok\ntest pij_selector_produces_explicit_pending_targets ... ok\ntest native_and_query_session_routes_are_unambiguous ... ok\ntest pij_selector_rejects_contradictory_or_unsafe_identity_inputs ... ok\ntest failed_file_serialization_never_publishes_partial_destination ... ok\ntest complete_catalogue_grammar_parses_to_typed_commands ... ok\ntest existing_query_destination_fails_before_query_execution ... ok\n\ntest result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s\n\n\nrunning 8 tests\ntest invalid_invocation_does_not_echo_sensitive_arguments ... ok\ntest loader_failure_is_safe_and_not_a_telemetry_record ... ok\ntest rejected_destination_does_not_report_success ... ok\ntest export_keeps_diagnostics_off_telemetry_stdout_and_passes_explicit_policy ... ok\ntest empty_listing_says_nonrecursive_and_names_leaf_directory_remedy ... ok\ntest zero_limits_fail_before_file_creation_or_collector_calls ... ok\ntest output_file_is_never_overwritten ... ok\ntest parsed_native_commands_execute_without_second_parsing ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 4 tests\ntest deadline_and_oversized_subprocess_output_are_not_success ... ok\ntest absence_errors_and_hostile_repository_settings_are_distinct ... ok\ntest direct_fanout_selection_does_not_enumerate_unrelated_notes ... ok\ntest pinned_reads_work_for_bare_and_linked_repositories_without_source_writes ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.50s\n\n\nrunning 6 tests\ntest collection::tests::invalid_limits_do_not_reach_the_loader ... ok\ntest collection::tests::an_injected_loader_cannot_force_a_no_progress_loop ... ok\ntest fs::tests::a_growing_input_stops_after_the_single_oversize_probe_byte ... ok\ntest fs::tests::io_categories_are_preserved_without_carrying_os_messages ... ok\ntest collection::tests::incomplete_tail_is_returned_after_complete_records_only ... ok\ntest collection::tests::write_failure_returns_no_checkpoint_and_leaves_input_cursor_unchanged ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 8 tests\ntest direct_adapter_rejects_relative_paths_without_opening_them ... ok\ntest public_facade_defaults_inline_overrides_and_diagnostics_are_usable ... ok\ntest missing_and_non_file_inputs_are_typed_read_failures_not_defaults ... ok\ntest public_facade_and_injected_service_agree_on_explicit_file ... ok\ntest filesystem_calls_are_parallel_safe_with_private_fixture_roots ... ok\ntest adapter_enforces_byte_limits_including_zero_and_exact_length ... ok\ntest facade_file_limit_distinguishes_exact_size_from_one_byte_over ... ok\ntest real_file_parser_failures_retain_path_but_not_sensitive_document_values ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s\n\n\nrunning 18 tests\ntest invalid_limits_refuse_before_source_io ... ok\ntest malformed_saved_envelope_fails_with_schema_recovery ... ok\ntest conflicting_branch_evidence_remains_explicit_and_blocks_exact_statistics ... ok\ntest query_api_rejects_stats_only_columns_and_sorts_before_loading ... ok\ntest cyclic_and_dangling_parent_paths_keep_rows_without_inventing_branches ... ok\ntest source_statuses_remain_distinct_and_strict_session_queries_refuse_partial_reads ... ok\ntest cumulative_usage_statistics_take_latest_native_snapshot ... ok\ntest tool_statistics_use_measured_values_and_named_terminal_denominator ... ok\ntest content_search_does_not_authorize_content_projection ... ok\ntest tool_responses_do_not_create_extra_turns_and_ambiguous_calls_are_not_guessed ... ok\ntest parent_tree_preserves_shared_prefix_and_fork_scopes ... ok\ntest c25_view_digest_excludes_response_and_request_options_but_binds_view_inputs ... ok\ntest standalone_jsonl_refuses_context_without_partition_completeness ... ok\ntest saved_statistics_keep_absent_null_and_literal_null_groups_distinct ... ok\ntest offline_saved_input_is_bounded_and_never_reaches_a_live_enrichment_path ... ok\ntest context_expands_within_each_session_branch_after_matching ... ok\ntest service_extracts_source_selection_before_io_and_reconstructs_all_datasets ... ok\ntest filters_time_order_and_continuation_share_one_deterministic_selection ... ok\n\ntest result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 14 tests\ntest built_in_defaults_and_explicit_empty_are_valid ... ok\ntest escaped_keys_and_structural_characters_inside_roots_remain_valid ... ok\ntest invalid_root_locations_are_structural_and_parser_coordinates_are_safe ... ok\ntest explicit_file_reads_once_with_the_bound_and_preserves_document_roots ... ok\ntest precedence_preserves_omission_and_explicit_empty_at_each_layer ... ok\ntest invalid_defaults_and_overrides_are_not_hidden_by_precedence ... ok\ntest relative_file_paths_fail_before_reader_calls ... ok\ntest roots_are_literal_in_all_supplied_layers ... ok\ntest oversized_bytes_from_a_nonconforming_reader_are_still_rejected ... ok\ntest file_failures_preserve_typed_reason_and_supplied_path ... ok\ntest json_edges_reject_duplicates_escaped_aliases_unknowns_and_trailing_input ... ok\ntest independent_readers_and_defaults_are_parallel_safe ... ok\ntest shared_invalid_documents_fail_inline_and_file_without_secret_diagnostics ... ok\ntest inline_size_boundary_accepts_exact_limit_and_never_calls_reader ... ok\n\ntest result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 2 tests\ntest crates/sdk/src/lib.rs - (line 23) ... ok\ntest crates/sdk/src/lib.rs - (line 8) ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\nall doctests ran in 1.16s; merged doctests compilation took 0.77s\n",
+      "stderr": "   Compiling unisphere-adapter-git-ai v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/adapter-git-ai)\n   Compiling unisphere-cli v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/cli)\n   Compiling unisphere-app v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/app)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.17s\n     Running unittests src/lib.rs (target/debug/deps/unisphere_adapter_git_ai-1291ec1fbe0f0863)\n     Running tests/format.rs (target/debug/deps/format-ea8650eb499286c7)\nerror: test failed, to rerun pass `-p unisphere-adapter-git-ai --test format`\n     Running tests/query.rs (target/debug/deps/query-b0522a94b0eb1505)\n     Running unittests src/main.rs (target/debug/deps/unisphere-18b5afde7c2cf74f)\n     Running tests/adapter_catalog.rs (target/debug/deps/adapter_catalog-e699306c8d5fa6e7)\n     Running tests/git_query.rs (target/debug/deps/git_query-188e352f4f6db86b)\nerror: test failed, to rerun pass `-p unisphere-app --test git_query`\n     Running tests/pij_query.rs (target/debug/deps/pij_query-63cac27f83e04b8b)\n     Running tests/query_workflows.rs (target/debug/deps/query_workflows-d261c6a29cc87c94)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_cli-b2c66a86934b67a7)\n     Running tests/frontend.rs (target/debug/deps/frontend-9c792da0f4630f82)\n     Running tests/git_notes.rs (target/debug/deps/git_notes-8cef0e08cc82e554)\nerror: test failed, to rerun pass `-p unisphere-cli --test git_notes`\n     Running tests/query_frontend.rs (target/debug/deps/query_frontend-b233823fc09150aa)\n     Running tests/sessions.rs (target/debug/deps/sessions-b4bfb4cfa984acb4)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_loader_git-032156818ef2ac37)\n     Running tests/storage.rs (target/debug/deps/storage-3befd9d78c8dcb00)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_sdk-fbfc8e23cd62653d)\n     Running tests/public_api.rs (target/debug/deps/public_api-47b8e991c4c45354)\n     Running tests/query.rs (target/debug/deps/query-a4ff24d88ad8a480)\n     Running tests/service_in_isolation.rs (target/debug/deps/service_in_isolation-478ff63d7fe61c0d)\n   Doc-tests unisphere_adapter_git_ai\n   Doc-tests unisphere_cli\n   Doc-tests unisphere_loader_git\n   Doc-tests unisphere_sdk\nerror: 3 targets failed:\n    `-p unisphere-adapter-git-ai --test format`\n    `-p unisphere-app --test git_query`\n    `-p unisphere-cli --test git_notes`\n"
+    },
+    {
+      "receipt": {
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--no-fail-fast",
+          "-p",
+          "unisphere-adapter-git-ai",
+          "-p",
+          "unisphere-loader-git",
+          "-p",
+          "unisphere-sdk",
+          "-p",
+          "unisphere-cli",
+          "-p",
+          "unisphere-app"
+        ],
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+        "before": {
+          "head": {
+            "args": [
+              "rev-parse",
+              "HEAD"
+            ],
+            "exit": 0,
+            "stdout": "ad6ae02339330e966cf85b0e2d73175bc78459ad\n",
+            "stderr": ""
+          },
+          "status": {
+            "args": [
+              "status",
+              "--porcelain"
+            ],
+            "exit": 0,
+            "stdout": "MM crates/adapter-git-ai/src/lib.rs\nAM crates/adapter-git-ai/src/query.rs\nAM crates/adapter-git-ai/tests/query.rs\n M crates/app/src/adapters.rs\n M crates/app/src/main.rs\nMM crates/cli/src/git_notes.rs\nMM crates/cli/src/lib.rs\nAM crates/cli/tests/git_notes.rs\n M crates/sdk/src/query/view.rs\n M crates/testkit/src/bin/proof/git_notes.rs\n M crates/testkit/src/bin/unisphere-proof.rs\n M crates/testkit/src/lib.rs\n?? crates/app/src/git_query.rs\n?? crates/app/tests/git_query.rs\n?? crates/testkit/src/bin/proof/git_query.rs\n?? docs/plans/015-session-query-cli/assets/team/git-convergence-packets.json\n?? docs/plans/015-session-query-cli/assets/team/git-notes-cli-delivery.json\n?? docs/plans/015-session-query-cli/assets/team/git-notes-query-delivery.json\n",
+            "stderr": ""
+          }
+        },
+        "after": {
+          "head": {
+            "args": [
+              "rev-parse",
+              "HEAD"
+            ],
+            "exit": 0,
+            "stdout": "ad6ae02339330e966cf85b0e2d73175bc78459ad\n",
+            "stderr": ""
+          },
+          "status": {
+            "args": [
+              "status",
+              "--porcelain"
+            ],
+            "exit": 0,
+            "stdout": "MM crates/adapter-git-ai/src/lib.rs\nAM crates/adapter-git-ai/src/query.rs\nAM crates/adapter-git-ai/tests/query.rs\n M crates/app/src/adapters.rs\n M crates/app/src/main.rs\nMM crates/cli/src/git_notes.rs\nMM crates/cli/src/lib.rs\nAM crates/cli/tests/git_notes.rs\n M crates/sdk/src/query/view.rs\n M crates/testkit/src/bin/proof/git_notes.rs\n M crates/testkit/src/bin/unisphere-proof.rs\n M crates/testkit/src/lib.rs\n?? crates/app/src/git_query.rs\n?? crates/app/tests/git_query.rs\n?? crates/testkit/src/bin/proof/git_query.rs\n?? docs/plans/015-session-query-cli/assets/team/git-convergence-packets.json\n?? docs/plans/015-session-query-cli/assets/team/git-notes-cli-delivery.json\n?? docs/plans/015-session-query-cli/assets/team/git-notes-query-delivery.json\n",
+            "stderr": ""
+          }
+        },
+        "started_at": "2026-09-10T21:48:41.998Z",
+        "finished_at": "2026-09-10T21:49:01.805Z",
+        "exit": 0,
+        "signal": null,
+        "stdout_path": ".harness/temp/pij-empirical-tiger/git-convergence-4.stdout",
+        "stderr_path": ".harness/temp/pij-empirical-tiger/git-convergence-4.stderr"
+      },
+      "stdout": "\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 3 tests\ntest malformed_or_unsupported_notes_do_not_become_partial_success ... ok\ntest mixed_keys_preserve_ranges_unresolved_evidence_and_content_policy ... ok\ntest repeated_long_paths_hit_output_bound_before_unbounded_amplification ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 6 tests\ntest note_without_declared_sessions_remains_a_valid_source_only_snapshot ... ok\ntest malformed_duplicate_and_unsupported_notes_fail_as_typed_source_errors ... ok\ntest native_input_and_observation_expansion_respect_query_bounds ... ok\ntest native_authorship_maps_only_declared_sessions_and_attribution_facts ... ok\ntest sensitive_identity_and_file_content_requires_explicit_access ... ok\ntest pinned_native_locator_and_repeated_snapshot_are_preserved_exactly ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 2 tests\ntest adapters::tests::another_adapter_needs_one_registration_and_no_core_or_claude_change ... ok\ntest adapters::tests::production_catalog_ids_match_exported_provenance ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.88s\n\n\nrunning 3 tests\ntest catalog_argument_errors_hide_input_and_retain_machine_classification ... ok\ntest catalog_does_not_resolve_inaccessible_store_roots ... ok\ntest catalog_json_is_static_under_hostile_environment ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.05s\n\n\nrunning 3 tests\ntest missing_git_is_actionable_and_empty_notes_are_a_complete_selection ... ok\ntest note_revision_invalidates_cursor_and_bad_note_is_not_empty_success ... ok\ntest declared_attribution_session_is_queryable_without_inventing_a_transcript ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.39s\n\n\nrunning 5 tests\ntest explicit_native_operation_never_invokes_pij ... ok\ntest optional_lookup_failure_categories_do_not_pollute_row_streams ... ok\ntest live_and_retired_aliases_reach_native_sdk_without_changing_identity ... ok\ntest changed_alias_is_resolved_per_query_and_missing_transcript_is_not_unknown_seat ... ok\ntest continuation_uses_pinned_native_source_after_alias_changes ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.32s\n\n\nrunning 2 tests\ntest partial_csv_reports_coverage_and_format_losses_outside_row_stream ... ok\ntest finite_duration_thresholds_compare_to_native_observed_milliseconds ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 18 tests\ntest a_relative_context_cannot_silently_create_a_relative_file_request ... ok\ntest defaults_call_only_the_injected_inspector_and_render_its_report ... ok\ntest non_utf8_file_paths_are_preserved_but_non_utf8_root_values_are_rejected_safely ... ok\ntest config_paths_are_resolved_lexically_without_discovery_or_canonicalization ... ok\ntest blank_root_is_configuration_input_not_a_parser_diagnostic ... ok\ntest request_values_never_leak_into_failure_diagnostics ... ok\ntest output_escapes_control_characters_without_changing_semantic_data ... ok\ntest repeated_roots_and_explicit_clear_have_distinct_requests ... ok\ntest conflicting_modes_always_fail_in_json_regardless_of_order_or_terminal ... ok\ntest mode_looking_values_and_end_of_options_do_not_select_a_mode ... ok\ntest global_modes_work_before_between_and_after_subcommands ... ok\ntest failure_output_errors_override_argument_exit_and_tolerate_broken_stderr ... ok\ntest failures_preserve_core_semantics_and_structural_location ... ok\ntest output_modes_override_terminal_status_for_success_and_failure ... ok\ntest invalid_invocations_are_safe_typed_failures_without_port_calls ... ok\ntest version_uses_explicit_context_and_selected_mode_without_inspection ... ok\ntest short_writes_are_completed_and_write_or_flush_failures_exit_one_safely ... ok\ntest help_at_every_command_level_honors_output_mode_without_inspection ... ok\n\ntest result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s\n\n\nrunning 10 tests\ntest invalid_typed_variant_fails_before_constructing_port ... ok\ntest compatibility_wrapper_preserves_native_invalid_input_envelope ... ok\ntest compatibility_wrapper_uses_root_help_without_constructing_port ... ok\ntest constructor_failures_keep_kind_and_cause_specific_recovery ... ok\ntest export_keeps_otlp_stdout_data_only_and_reports_guidance_on_stderr ... ok\ntest export_refuses_source_paths_and_never_collects_into_them ... ok\ntest failed_export_removes_stage_and_never_publishes_partial_bytes ... ok\ntest existing_export_is_not_overwritten_and_preserves_output_error_code ... ok\ntest typed_runner_lists_with_actionable_empty_and_nonempty_outcomes ... ok\ntest successful_file_export_publishes_new_private_output ... ok\n\ntest result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 19 tests\ntest pij_resolution_and_failures_use_only_the_diagnostic_channel ... ok\ntest diagnostic_mode_is_selected_before_parse_consumes_argv ... ok\ntest raw_rows_stay_clean_and_guidance_uses_diagnostic_channel ... ok\ntest csv_rows_parse_separately_from_loss_and_coverage_diagnostics ... ok\ntest resolved_pij_continuation_uses_pinned_query_ids ... ok\ntest pij_turn_range_stays_pending_and_duration_threshold_is_finite_float ... ok\ntest static_lookup_errors_name_valid_alternatives ... ok\ntest bundled_docs_and_schema_are_real_static_routes ... ok\ntest typed_query_initialization_failures_keep_stdout_clean ... ok\ntest generated_actions_withhold_private_paths_and_parse_after_binding ... ok\ntest stdin_framing_is_explicit_scope_bound_and_preserved_in_actions ... ok\ntest seven_staged_examples_parse_after_declared_bindings ... ok\ntest existing_query_destination_fails_before_query_execution ... ok\ntest parsed_static_and_config_commands_execute_without_reparsing ... ok\ntest failed_file_serialization_never_publishes_partial_destination ... ok\ntest native_and_query_session_routes_are_unambiguous ... ok\ntest pij_selector_produces_explicit_pending_targets ... ok\ntest pij_selector_rejects_contradictory_or_unsafe_identity_inputs ... ok\ntest complete_catalogue_grammar_parses_to_typed_commands ... ok\n\ntest result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s\n\n\nrunning 8 tests\ntest invalid_invocation_does_not_echo_sensitive_arguments ... ok\ntest rejected_destination_does_not_report_success ... ok\ntest export_keeps_diagnostics_off_telemetry_stdout_and_passes_explicit_policy ... ok\ntest loader_failure_is_safe_and_not_a_telemetry_record ... ok\ntest empty_listing_says_nonrecursive_and_names_leaf_directory_remedy ... ok\ntest zero_limits_fail_before_file_creation_or_collector_calls ... ok\ntest output_file_is_never_overwritten ... ok\ntest parsed_native_commands_execute_without_second_parsing ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 4 tests\ntest deadline_and_oversized_subprocess_output_are_not_success ... ok\ntest absence_errors_and_hostile_repository_settings_are_distinct ... ok\ntest direct_fanout_selection_does_not_enumerate_unrelated_notes ... ok\ntest pinned_reads_work_for_bare_and_linked_repositories_without_source_writes ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.63s\n\n\nrunning 6 tests\ntest fs::tests::io_categories_are_preserved_without_carrying_os_messages ... ok\ntest fs::tests::a_growing_input_stops_after_the_single_oversize_probe_byte ... ok\ntest collection::tests::invalid_limits_do_not_reach_the_loader ... ok\ntest collection::tests::an_injected_loader_cannot_force_a_no_progress_loop ... ok\ntest collection::tests::write_failure_returns_no_checkpoint_and_leaves_input_cursor_unchanged ... ok\ntest collection::tests::incomplete_tail_is_returned_after_complete_records_only ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 8 tests\ntest direct_adapter_rejects_relative_paths_without_opening_them ... ok\ntest public_facade_defaults_inline_overrides_and_diagnostics_are_usable ... ok\ntest missing_and_non_file_inputs_are_typed_read_failures_not_defaults ... ok\ntest filesystem_calls_are_parallel_safe_with_private_fixture_roots ... ok\ntest public_facade_and_injected_service_agree_on_explicit_file ... ok\ntest adapter_enforces_byte_limits_including_zero_and_exact_length ... ok\ntest real_file_parser_failures_retain_path_but_not_sensitive_document_values ... ok\ntest facade_file_limit_distinguishes_exact_size_from_one_byte_over ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 18 tests\ntest invalid_limits_refuse_before_source_io ... ok\ntest malformed_saved_envelope_fails_with_schema_recovery ... ok\ntest tool_responses_do_not_create_extra_turns_and_ambiguous_calls_are_not_guessed ... ok\ntest conflicting_branch_evidence_remains_explicit_and_blocks_exact_statistics ... ok\ntest cyclic_and_dangling_parent_paths_keep_rows_without_inventing_branches ... ok\ntest query_api_rejects_stats_only_columns_and_sorts_before_loading ... ok\ntest content_search_does_not_authorize_content_projection ... ok\ntest parent_tree_preserves_shared_prefix_and_fork_scopes ... ok\ntest source_statuses_remain_distinct_and_strict_session_queries_refuse_partial_reads ... ok\ntest context_expands_within_each_session_branch_after_matching ... ok\ntest tool_statistics_use_measured_values_and_named_terminal_denominator ... ok\ntest cumulative_usage_statistics_take_latest_native_snapshot ... ok\ntest offline_saved_input_is_bounded_and_never_reaches_a_live_enrichment_path ... ok\ntest standalone_jsonl_refuses_context_without_partition_completeness ... ok\ntest saved_statistics_keep_absent_null_and_literal_null_groups_distinct ... ok\ntest service_extracts_source_selection_before_io_and_reconstructs_all_datasets ... ok\ntest c25_view_digest_excludes_response_and_request_options_but_binds_view_inputs ... ok\ntest filters_time_order_and_continuation_share_one_deterministic_selection ... ok\n\ntest result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s\n\n\nrunning 14 tests\ntest built_in_defaults_and_explicit_empty_are_valid ... ok\ntest file_failures_preserve_typed_reason_and_supplied_path ... ok\ntest escaped_keys_and_structural_characters_inside_roots_remain_valid ... ok\ntest invalid_root_locations_are_structural_and_parser_coordinates_are_safe ... ok\ntest relative_file_paths_fail_before_reader_calls ... ok\ntest invalid_defaults_and_overrides_are_not_hidden_by_precedence ... ok\ntest explicit_file_reads_once_with_the_bound_and_preserves_document_roots ... ok\ntest oversized_bytes_from_a_nonconforming_reader_are_still_rejected ... ok\ntest independent_readers_and_defaults_are_parallel_safe ... ok\ntest precedence_preserves_omission_and_explicit_empty_at_each_layer ... ok\ntest roots_are_literal_in_all_supplied_layers ... ok\ntest shared_invalid_documents_fail_inline_and_file_without_secret_diagnostics ... ok\ntest json_edges_reject_duplicates_escaped_aliases_unknowns_and_trailing_input ... ok\ntest inline_size_boundary_accepts_exact_limit_and_never_calls_reader ... ok\n\ntest result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 2 tests\ntest crates/sdk/src/lib.rs - (line 23) ... ok\ntest crates/sdk/src/lib.rs - (line 8) ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s\n\nall doctests ran in 1.77s; merged doctests compilation took 1.26s\n",
+      "stderr": "   Compiling unisphere-adapter-git-ai v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/adapter-git-ai)\n   Compiling unisphere-cli v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/cli)\n   Compiling unisphere-app v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/app)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.94s\n     Running unittests src/lib.rs (target/debug/deps/unisphere_adapter_git_ai-1291ec1fbe0f0863)\n     Running tests/format.rs (target/debug/deps/format-ea8650eb499286c7)\n     Running tests/query.rs (target/debug/deps/query-b0522a94b0eb1505)\n     Running unittests src/main.rs (target/debug/deps/unisphere-18b5afde7c2cf74f)\n     Running tests/adapter_catalog.rs (target/debug/deps/adapter_catalog-e699306c8d5fa6e7)\n     Running tests/git_query.rs (target/debug/deps/git_query-188e352f4f6db86b)\n     Running tests/pij_query.rs (target/debug/deps/pij_query-63cac27f83e04b8b)\n     Running tests/query_workflows.rs (target/debug/deps/query_workflows-d261c6a29cc87c94)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_cli-b2c66a86934b67a7)\n     Running tests/frontend.rs (target/debug/deps/frontend-9c792da0f4630f82)\n     Running tests/git_notes.rs (target/debug/deps/git_notes-8cef0e08cc82e554)\n     Running tests/query_frontend.rs (target/debug/deps/query_frontend-b233823fc09150aa)\n     Running tests/sessions.rs (target/debug/deps/sessions-b4bfb4cfa984acb4)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_loader_git-032156818ef2ac37)\n     Running tests/storage.rs (target/debug/deps/storage-3befd9d78c8dcb00)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_sdk-fbfc8e23cd62653d)\n     Running tests/public_api.rs (target/debug/deps/public_api-47b8e991c4c45354)\n     Running tests/query.rs (target/debug/deps/query-a4ff24d88ad8a480)\n     Running tests/service_in_isolation.rs (target/debug/deps/service_in_isolation-478ff63d7fe61c0d)\n   Doc-tests unisphere_adapter_git_ai\n   Doc-tests unisphere_cli\n   Doc-tests unisphere_loader_git\n   Doc-tests unisphere_sdk\n"
+    }
+  ]
+}

@@ -716,7 +716,26 @@ impl QueryView {
                         });
                         "usage"
                     }
-                    ObservationFacet::Attribution { .. } => "attribution",
+                    ObservationFacet::Attribution {
+                        identity_kind,
+                        native_key,
+                        declared_agent,
+                        target_commit,
+                        ranges,
+                    } => {
+                        event_parts.push(if access.permits_payload(FieldId::Parts) {
+                            ObservationPart::Structured(serde_json::json!({
+                                "identity_kind": identity_kind,
+                                "native_key": native_key,
+                                "declared_agent": declared_agent,
+                                "target_commit": target_commit,
+                                "ranges": ranges,
+                            }))
+                        } else {
+                            ObservationPart::Unavailable(AvailabilityCode::SensitiveOmitted)
+                        });
+                        "attribution"
+                    }
                 };
                 let event_id = event_id_for(observation, facet_index);
                 events.push(EventRow {

@@ -306,6 +306,7 @@ mod unix {
         {
             return Err("public SDK/CLI listing/provenance mismatch".into());
         }
+        super::super::git_query::run(&cli, &source, &git, &runtime.join("query"))?;
         let pinned = listing["notes"][0].clone();
         let original = run_product(
             &sdk,

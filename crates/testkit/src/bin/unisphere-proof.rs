@@ -14,6 +14,8 @@ use unisphere_testkit::{fixtures, sealed_command};
 mod collection;
 #[path = "proof/git_notes.rs"]
 mod git_notes;
+#[path = "proof/git_query.rs"]
+mod git_query;
 #[path = "proof/native.rs"]
 mod native;
 #[path = "proof/query.rs"]

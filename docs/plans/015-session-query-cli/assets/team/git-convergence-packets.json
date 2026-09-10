@@ -1,0 +1,34 @@
+{
+  "recorded_at": "2026-09-10T21:37:32.183Z",
+  "source_sha": "ad6ae02339330e966cf85b0e2d73175bc78459ad",
+  "authority": "Jordan PROCEED; Main exact cf4931ed convergence grant",
+  "common": [
+    "Skip all startup/build/test/lint/format. PM validates after both deliveries.",
+    "Reuse your clean existing clone; fetch PM exact merge commit and checkout a new named branch from it. Do not overwrite dirty work.",
+    "Commit only owned files through harness commit; return ProductOnlyDelivery (candidate, no Builder receipt).",
+    "Do not edit app, root manifests/lock, SDK/core, canonical plan/guide/team records, .the-flow-state.json,the-flow.json,the-flow.md, global settings or peer transport logs; no push/merge."
+  ],
+  "native_cli": {
+    "peer": "pij-unfortunate-rat",
+    "branch": "work/015-git-notes-cli",
+    "paths": [
+      "crates/cli/src/git_notes.rs",
+      "crates/cli/tests/git_notes.rs",
+      "crates/cli/src/lib.rs: Git Notes exports only"
+    ],
+    "change": "Replace imported duplicate parser with the existing crate::parse typed commands. Preserve public run_git_notes<C:GitNotesApi>(Vec<OsString>,&CliContext,FnOnce(Option<PathBuf>)->Result<C,GitNotesError>,stdout,stderr) wrapper. Add pub run_native_git_notes<C:GitNotesApi>(command:&ParsedCommand,make_collector:impl FnOnce(Option<PathBuf>)->Result<C,GitNotesError>,stdout:&mut dyn Write,stderr:&mut dyn Write)->u8. Match only NativeGitNotesList or NativeExport(adapter git-ai), use DTO validated absolute paths/options. Preserve accepted Git Notes scope/ref/selection/bounds and output safety; caller-owned outside-source create-new stage before publication, no source writes. Add nonempty cause-specific next_action to success/empty/export/errors without polluting OTLP. Keep upstream public failure kind/output_code semantics and explicit executable construction after validation. No root grammar edits needed; report any mismatch to PM.",
+    "tests": "Use existing Git Notes fake port tests; cover typed wrapper/runner and safety, not duplicate request forwarding assertions. Remove obsolete prose/implementation pins rather than repinning."
+  },
+  "pure_adapter": {
+    "peer": "pij-bold-parrotfish",
+    "branch": "work/015-git-notes-query",
+    "paths": [
+      "crates/adapter-git-ai/src/lib.rs",
+      "crates/adapter-git-ai/src/query.rs",
+      "crates/adapter-git-ai/tests/query.rs"
+    ],
+    "interface": "GitAiAdapter implements core::query::QueryAdapter; pub const QUERY_POLICY_VERSION:&str at crate root. inspect accepts only NativeQueryInput::ProvidedObject{source,bytes,locator:NativeLocator::GitNote}. Emits InspectedSource with pinned source/revision/locators, no fs/clock/process/env. Existing GitNoteAdapter::map_note byte/semantic behavior retained.",
+    "change": "Factor shared native authorship/3.0.0 validation/classification (metadata identity and attribution ranges) so native OTLP and query consume native facts, NOT TelemetryRecord or encoded OTLP roundtrips. Reuse duplicate-key rejection and bounds. Query emits metadata/source-qualified identity/attribution events with timestamps unavailable. Native sessions map declared attribution sessions only, namespace git-ai/authorship3/session scoped to repository, transcript_available=false, no messages/turns/tools/timings or cross-adapter joins. Legacy prompt/human and unresolved references remain source/event-only unless explicit native session declaration supports them. ObservationFacet::Attribution and Identity/SessionMeta as appropriate; inspect actual core types. Sensitive author strings/custom metadata/path/legacy content only when ContentAccess permits; default action/diagnostic must not leak raw input. Session identity is declared attribution, never verified conversation. Preserve source association supplied by bridge. Zero declared sessions is valid zero sessions; recipe7 fixture should use real declared session metadata.",
+    "tests": "Retain native tests unchanged except shared internals; new behavioral tests metadata/no fabricated transcript/timing, content consent, malformed/unsupported note, pinned locator, repeated snapshot consistency. Do not assert byte equality to telemetry intermediates."
+  }
+}

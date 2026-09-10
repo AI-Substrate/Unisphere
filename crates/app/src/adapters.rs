@@ -269,10 +269,10 @@ const ADAPTERS: [AdapterRegistration; 10] = [
     AdapterRegistration {
         descriptor: unisphere_adapter_git_ai::DESCRIPTOR,
         source: SourceRepresentation::GitNotes,
+        query: None, // Git objects use the registered injected bridge, not file framing.
         run: |_, args, context, stdout, stderr| {
-            unisphere_cli::run_git_notes(
+            unisphere_cli::run_native_git_notes(
                 args,
-                context,
                 |explicit| {
                     let git = resolve_git(explicit, &context.cwd)?;
                     Ok(unisphere_sdk::GitNotesCollector::new(
@@ -302,6 +302,7 @@ fn query_registration<A: QueryAdapter + 'static>(
         SourceRepresentation::SqliteKeyValue(table) => NativeRepresentation::SqliteKeyValue {
             table: table.into(),
         },
+        SourceRepresentation::GitNotes => return Err(QueryFailure::invalid_data()),
     };
     Ok(QueryRegistration::new(
         entry.descriptor,
@@ -333,6 +334,21 @@ pub fn query_registrations() -> Result<Vec<QueryRegistration>, QueryFailure> {
         registrations.push(registration);
     }
     Ok(registrations)
+}
+
+pub fn git_query_source(
+    repository: std::path::PathBuf,
+    executable: Option<std::path::PathBuf>,
+) -> Option<super::git_query::GitSource<unisphere_loader_git::GitObjectLoader>> {
+    ADAPTERS
+        .iter()
+        .find(|entry| matches!(entry.source, SourceRepresentation::GitNotes))
+        .map(|_| super::git_query::GitSource {
+            loader: executable.map(unisphere_loader_git::GitObjectLoader::new),
+            adapter: Arc::new(unisphere_adapter_git_ai::GitAiAdapter),
+            policy: unisphere_adapter_git_ai::QUERY_POLICY_VERSION,
+            repository,
+        })
 }
 
 fn run_with_adapter<A: SessionAdapter>(

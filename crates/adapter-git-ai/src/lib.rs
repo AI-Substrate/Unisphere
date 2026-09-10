@@ -1,6 +1,10 @@
 //! Independent authorship/3.0.0 input-format projection. No upstream implementation is imported.
 //! Attribution is not an execution trace, conversation archive or token ledger.
 #![forbid(unsafe_code)]
+mod query;
+
+pub use query::QUERY_POLICY_VERSION;
+
 use serde::{
     Deserialize, Deserializer,
     de::{self, MapAccess, SeqAccess, Visitor},
@@ -33,6 +37,7 @@ impl GitNoteAdapter for GitAiAdapter {
     fn name(&self) -> &'static str {
         DESCRIPTOR.id
     }
+
     fn map_note(
         &self,
         note: &LoadedGitNote,
@@ -44,46 +49,23 @@ impl GitNoteAdapter for GitAiAdapter {
         if note.bytes.len() > limits.max_note_bytes {
             return Err(GitNotesError::NoteLimit);
         }
-        let text = std::str::from_utf8(&note.bytes).map_err(|_| GitNotesError::InvalidData)?;
-        let mut offset = 0;
-        let mut split = None;
-        for line in text.split_inclusive('\n') {
-            let content = line.strip_suffix('\n').unwrap_or(line);
-            let content = content.strip_suffix('\r').unwrap_or(content);
-            if content == "---" {
-                split = Some((offset, offset + line.len()));
-                break;
+        let classified = classify_note(
+            &note.bytes,
+            limits.max_records,
+            unisphere_core::MAX_OUTPUT_BATCH_BYTES,
+        )
+        .map_err(|error| {
+            if error == GitNotesError::BatchLimit {
+                unisphere_core::PipelineError::new(
+                    unisphere_core::PipelineErrorKind::OutputLimit,
+                    None,
+                )
+                .into()
+            } else {
+                error
             }
-            offset += line.len();
-        }
-        let (attestations_end, metadata_start) = split.ok_or(GitNotesError::InvalidData)?;
-        let NoDuplicates(value) = serde_json::from_str(&text[metadata_start..])
-            .map_err(|_| GitNotesError::InvalidData)?;
-        let metadata = value.as_object().ok_or(GitNotesError::InvalidData)?;
-        allowed(
-            metadata,
-            &[
-                "schema_version",
-                "git_ai_version",
-                "base_commit_sha",
-                "prompts",
-                "sessions",
-                "humans",
-            ],
-        )?;
-        if metadata.get("schema_version").and_then(Value::as_str) != Some("authorship/3.0.0") {
-            return Err(GitNotesError::UnsupportedFormat);
-        }
-        for key in ["git_ai_version", "base_commit_sha"] {
-            string_field(metadata, key)?;
-        }
-        for map_name in ["prompts", "sessions", "humans"] {
-            if let Some(map) = identity_map(metadata, map_name)? {
-                for (key, value) in map {
-                    validate_identity(map_name, key, value)?;
-                }
-            }
-        }
+        })?;
+        let metadata = &classified.metadata;
         let mut records = Vec::new();
         let mut payload_bytes = 0;
         let mut attrs = common(note, "note_metadata", "$note")?;
@@ -125,82 +107,213 @@ impl GitNoteAdapter for GitAiAdapter {
                 }
             }
         }
-        let mut file: Option<Cow<'_, str>> = None;
-        let mut file_index = 0usize;
-        let mut entry_index = 0usize;
-        for line in text[..attestations_end].lines() {
-            if line.is_empty() {
-                continue;
+        for attribution in &classified.attributions {
+            let identity = classified.identity(attribution.map_name, &attribution.identity_key);
+            let mut attrs = common(note, "line_attribution", &attribution.subrecord)?;
+            attrs.insert(
+                "unisphere.git_ai.file.path".into(),
+                json!(attribution.file.as_str()),
+            );
+            attrs.insert(
+                "unisphere.git_ai.attestation.key".into(),
+                json!(attribution.native_key.as_str()),
+            );
+            attrs.insert(
+                "unisphere.git_ai.identity.key".into(),
+                json!(attribution.identity_key.as_str()),
+            );
+            attrs.insert(
+                "unisphere.git_ai.identity.kind".into(),
+                json!(kind(attribution.map_name)),
+            );
+            attrs.insert(
+                "unisphere.git_ai.identity_resolution".into(),
+                json!(if identity.is_some() {
+                    "resolved"
+                } else {
+                    "unresolved"
+                }),
+            );
+            attrs.insert(
+                "unisphere.git_ai.line.start".into(),
+                json!(attribution.start),
+            );
+            attrs.insert("unisphere.git_ai.line.end".into(), json!(attribution.end));
+            if let Some(checkpoint) = &attribution.checkpoint {
+                attrs.insert(
+                    "unisphere.git_ai.session.id".into(),
+                    json!(attribution.identity_key.as_str()),
+                );
+                attrs.insert("unisphere.git_ai.checkpoint.id".into(), json!(checkpoint));
             }
-            if let Some(entry) = line.strip_prefix("  ") {
-                let path = file.as_ref().ok_or(GitNotesError::InvalidData)?;
-                let (key, ranges) = entry.split_once(' ').ok_or(GitNotesError::InvalidData)?;
-                let (map_name, identity_key, checkpoint) = attestation_key(key)?;
-                let identity = identity_map(metadata, map_name)?
-                    .and_then(|map| map.get(identity_key))
-                    .and_then(Value::as_object);
-                let mut previous_end = 0u64;
-                for (range_index, range) in ranges.split(',').enumerate() {
-                    let (start, end) = line_range(range)?;
-                    if start <= previous_end {
-                        return Err(GitNotesError::InvalidData);
-                    }
-                    previous_end = end;
-                    let mut attrs = common(
-                        note,
-                        "line_attribution",
-                        &format!("attestations/{file_index}/{entry_index}/{range_index}"),
-                    )?;
-                    attrs.insert("unisphere.git_ai.file.path".into(), json!(path.as_ref()));
-                    attrs.insert("unisphere.git_ai.attestation.key".into(), json!(key));
-                    attrs.insert("unisphere.git_ai.identity.key".into(), json!(identity_key));
-                    attrs.insert(
-                        "unisphere.git_ai.identity.kind".into(),
-                        json!(kind(map_name)),
-                    );
-                    attrs.insert(
-                        "unisphere.git_ai.identity_resolution".into(),
-                        json!(if identity.is_some() {
-                            "resolved"
-                        } else {
-                            "unresolved"
-                        }),
-                    );
-                    attrs.insert("unisphere.git_ai.line.start".into(), json!(start));
-                    attrs.insert("unisphere.git_ai.line.end".into(), json!(end));
-                    if let Some(checkpoint) = checkpoint {
-                        attrs.insert("unisphere.git_ai.session.id".into(), json!(identity_key));
-                        attrs.insert("unisphere.git_ai.checkpoint.id".into(), json!(checkpoint));
-                    }
-                    // Content is retained once on the declared identity, not copied per line range.
-                    if let Some(identity) = identity {
-                        identity_attributes(&mut attrs, identity, MappingOptions::default());
-                    }
-                    push(
-                        &mut records,
-                        "unisphere.git_ai.attribution",
-                        attrs,
-                        limits,
-                        &mut payload_bytes,
-                    )?;
-                }
-                entry_index += 1;
-            } else {
-                if file.is_some() && entry_index == 0 {
-                    return Err(GitNotesError::InvalidData);
-                }
-                if file.is_some() {
-                    file_index += 1;
-                }
-                file = Some(file_path(line)?);
-                entry_index = 0;
+            // Content is retained once on the declared identity, not copied per line range.
+            if let Some(identity) = identity {
+                identity_attributes(&mut attrs, identity, MappingOptions::default());
             }
-        }
-        if file.is_some() && entry_index == 0 {
-            return Err(GitNotesError::InvalidData);
+            push(
+                &mut records,
+                "unisphere.git_ai.attribution",
+                attrs,
+                limits,
+                &mut payload_bytes,
+            )?;
         }
         Ok(records)
     }
+}
+
+pub(crate) struct ClassifiedNote {
+    pub(crate) metadata: Map<String, Value>,
+    pub(crate) attributions: Vec<NativeAttribution>,
+}
+
+impl ClassifiedNote {
+    pub(crate) fn identity(&self, map_name: &str, key: &str) -> Option<&Map<String, Value>> {
+        self.metadata
+            .get(map_name)
+            .and_then(Value::as_object)
+            .and_then(|map| map.get(key))
+            .and_then(Value::as_object)
+    }
+}
+
+pub(crate) struct NativeAttribution {
+    pub(crate) subrecord: String,
+    pub(crate) file: String,
+    pub(crate) native_key: String,
+    pub(crate) map_name: &'static str,
+    pub(crate) identity_key: String,
+    pub(crate) checkpoint: Option<String>,
+    pub(crate) start: u64,
+    pub(crate) end: u64,
+}
+
+pub(crate) fn classify_note(
+    bytes: &[u8],
+    max_records: usize,
+    max_retained: usize,
+) -> Result<ClassifiedNote, GitNotesError> {
+    let text = std::str::from_utf8(bytes).map_err(|_| GitNotesError::InvalidData)?;
+    let mut offset = 0;
+    let mut split = None;
+    for line in text.split_inclusive('\n') {
+        let content = line.strip_suffix('\n').unwrap_or(line);
+        let content = content.strip_suffix('\r').unwrap_or(content);
+        if content == "---" {
+            split = Some((offset, offset + line.len()));
+            break;
+        }
+        offset += line.len();
+    }
+    let (attestations_end, metadata_start) = split.ok_or(GitNotesError::InvalidData)?;
+    let NoDuplicates(value) =
+        serde_json::from_str(&text[metadata_start..]).map_err(|_| GitNotesError::InvalidData)?;
+    let metadata = match value {
+        Value::Object(metadata) => metadata,
+        _ => return Err(GitNotesError::InvalidData),
+    };
+    allowed(
+        &metadata,
+        &[
+            "schema_version",
+            "git_ai_version",
+            "base_commit_sha",
+            "prompts",
+            "sessions",
+            "humans",
+        ],
+    )?;
+    if metadata.get("schema_version").and_then(Value::as_str) != Some("authorship/3.0.0") {
+        return Err(GitNotesError::UnsupportedFormat);
+    }
+    for key in ["git_ai_version", "base_commit_sha"] {
+        string_field(&metadata, key)?;
+    }
+    for map_name in ["prompts", "sessions", "humans"] {
+        if let Some(map) = identity_map(&metadata, map_name)? {
+            for (key, value) in map {
+                validate_identity(map_name, key, value)?;
+            }
+        }
+    }
+
+    let mut count = 1usize;
+    for name in ["prompts", "sessions", "humans"] {
+        count = count
+            .checked_add(identity_map(&metadata, name)?.map_or(0, Map::len))
+            .ok_or(GitNotesError::RecordLimit)?;
+    }
+    if count > max_records {
+        return Err(GitNotesError::RecordLimit);
+    }
+    let mut retained = 0usize;
+    let mut attributions = Vec::new();
+    let mut file: Option<String> = None;
+    let mut file_index = 0usize;
+    let mut entry_index = 0usize;
+    for line in text[..attestations_end].lines() {
+        if line.is_empty() {
+            continue;
+        }
+        if let Some(entry) = line.strip_prefix("  ") {
+            let path = file.as_ref().ok_or(GitNotesError::InvalidData)?;
+            let (key, ranges) = entry.split_once(' ').ok_or(GitNotesError::InvalidData)?;
+            let (map_name, identity_key, checkpoint) = attestation_key(key)?;
+            let mut previous_end = 0u64;
+            for (range_index, range) in ranges.split(',').enumerate() {
+                let (start, end) = line_range(range)?;
+                if start <= previous_end {
+                    return Err(GitNotesError::InvalidData);
+                }
+                previous_end = end;
+                if count == max_records {
+                    return Err(GitNotesError::RecordLimit);
+                }
+                count += 1;
+                let subrecord = format!("attestations/{file_index}/{entry_index}/{range_index}");
+                retained = [
+                    path.len(),
+                    key.len(),
+                    identity_key.len(),
+                    checkpoint.map_or(0, str::len),
+                    subrecord.len(),
+                ]
+                .into_iter()
+                .try_fold(retained, |sum, length| sum.checked_add(length))
+                .ok_or(GitNotesError::BatchLimit)?;
+                if retained > max_retained {
+                    return Err(GitNotesError::BatchLimit);
+                }
+                attributions.push(NativeAttribution {
+                    subrecord,
+                    file: path.clone(),
+                    native_key: key.to_owned(),
+                    map_name,
+                    identity_key: identity_key.to_owned(),
+                    checkpoint: checkpoint.map(str::to_owned),
+                    start,
+                    end,
+                });
+            }
+            entry_index += 1;
+        } else {
+            if file.is_some() && entry_index == 0 {
+                return Err(GitNotesError::InvalidData);
+            }
+            if file.is_some() {
+                file_index += 1;
+            }
+            file = Some(file_path(line)?.into_owned());
+            entry_index = 0;
+        }
+    }
+    if file.is_some() && entry_index == 0 {
+        return Err(GitNotesError::InvalidData);
+    }
+    Ok(ClassifiedNote {
+        metadata,
+        attributions,
+    })
 }
 fn push(
     records: &mut Vec<TelemetryRecord>,
@@ -404,7 +517,7 @@ fn identity_attributes(
         }
     }
 }
-fn attestation_key(key: &str) -> Result<(&str, &str, Option<&str>), GitNotesError> {
+fn attestation_key(key: &str) -> Result<(&'static str, &str, Option<&str>), GitNotesError> {
     if key.starts_with("s_") {
         let (session, trace) = key.split_once("::").ok_or(GitNotesError::InvalidData)?;
         if !prefixed(session, "s_") || !prefixed(trace, "t_") {

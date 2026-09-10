@@ -1,0 +1,14 @@
+docs/plans/015-session-query-cli/assets/verification/p1-external-proof-5ee631b4.json
+  h_9e71e8b09f7cf2 1-115
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "5fb8949112ea98cbafe42cd9506d49b1726fbeb9",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

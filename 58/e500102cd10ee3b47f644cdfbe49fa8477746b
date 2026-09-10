@@ -1,0 +1,64 @@
+Cargo.lock
+  h_9e71e8b09f7cf2 5-13,79-88,247-259,319-324,385-413,686-687,726-727,730-731
+Cargo.toml
+  h_9e71e8b09f7cf2 30-32,35
+crates/core/Cargo.toml
+  h_9e71e8b09f7cf2 12-13
+crates/core/src/lib.rs
+  h_9e71e8b09f7cf2 11
+crates/core/src/query/error.rs
+  h_9e71e8b09f7cf2 1-171
+crates/core/src/query/fingerprint.rs
+  h_9e71e8b09f7cf2 1-256
+crates/core/src/query/identity.rs
+  h_9e71e8b09f7cf2 1-199
+crates/core/src/query/mod.rs
+  h_9e71e8b09f7cf2 1-61
+crates/core/src/query/model.rs
+  h_9e71e8b09f7cf2 1-616
+crates/core/src/query/schema.rs
+  h_9e71e8b09f7cf2 1-197
+crates/core/src/query/source.rs
+  h_9e71e8b09f7cf2 1-193
+crates/core/tests/query_contract.rs
+  h_9e71e8b09f7cf2 1-762
+crates/sdk/Cargo.toml
+  h_9e71e8b09f7cf2 13-16
+crates/sdk/src/lib.rs
+  h_9e71e8b09f7cf2 50
+crates/testkit/fixtures/query/shared-v1.json
+  h_9e71e8b09f7cf2 1-217
+crates/testkit/src/bin/unisphere-arch-check.rs
+  h_9e71e8b09f7cf2 15-17,19-22
+crates/testkit/src/lib.rs
+  h_9e71e8b09f7cf2 7
+crates/testkit/src/query.rs
+  h_9e71e8b09f7cf2 1-91
+docs/plans/015-session-query-cli/assets/pm-continuity-handoff.json
+  h_9e71e8b09f7cf2 1-151
+docs/plans/015-session-query-cli/assets/pm-handoff.md
+  h_9e71e8b09f7cf2 5-7
+docs/plans/015-session-query-cli/assets/team/baseline-assistants.json
+  h_9e71e8b09f7cf2 1-88
+docs/plans/015-session-query-cli/assets/team/baseline-contracts-packet.md
+  h_9e71e8b09f7cf2 1-28
+docs/plans/015-session-query-cli/assets/team/baseline-proof-packet.md
+  h_9e71e8b09f7cf2 1-26
+docs/plans/015-session-query-cli/assets/verification/baseline-handover-checkpoint.json
+  h_9e71e8b09f7cf2 1-38
+docs/plans/015-session-query-cli/plan.dd.json
+  h_9e71e8b09f7cf2 287
+docs/plans/015-session-query-cli/plan.dd.md
+  h_9e71e8b09f7cf2 181
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "58e500102cd10ee3b47f644cdfbe49fa8477746b",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

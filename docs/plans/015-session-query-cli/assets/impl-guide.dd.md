@@ -11,8 +11,8 @@
 | --- | --- |
 | title | SDK-first session query and actionable recipe CLI — implementation guide |
 | plan | [meta](../plan.dd.md#meta) |
-| version | 4 |
-| updated | 2026-09-10T01:48:23.383Z |
+| version | 5 |
+| updated | 2026-09-10T04:07:32.984Z |
 
 <a id="architecture"></a>
 
@@ -90,7 +90,7 @@
 
 | Field | Value |
 | --- | --- |
-| files | crates/core/src/query/mod.rs, crates/core/src/query/model.rs, crates/core/src/query/source.rs, crates/core/src/query/error.rs, crates/core/src/query/schema.rs, crates/testkit/src/query.rs, crates/testkit/fixtures/query/shared-v1.json, crates/core/tests/query_contract.rs |
+| files | crates/core/src/query/mod.rs, crates/core/src/query/model.rs, crates/core/src/query/source.rs, crates/core/src/query/error.rs, crates/core/src/query/schema.rs, crates/testkit/src/query.rs, crates/testkit/fixtures/query/shared-v1.json, crates/core/tests/query_contract.rs, crates/core/src/query/identity.rs, crates/core/src/query/fingerprint.rs, crates/core/src/lib.rs, crates/sdk/src/lib.rs, crates/testkit/src/lib.rs, crates/testkit/src/bin/unisphere-arch-check.rs, Cargo.toml, Cargo.lock, crates/core/Cargo.toml, crates/sdk/Cargo.toml |
 | proof | [bp-0001](impl-guide.dd.md#checks), [bp-000e](impl-guide.dd.md#checks) |
 | receipt | team/baseline.dd.json |
 

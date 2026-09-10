@@ -41,6 +41,12 @@ fn assert_request_error(request: &QueryRequest, expected: QueryFailureCode) {
     assert_eq!(request.validate().unwrap_err().kind(), expected);
 }
 
+fn assert_unsupported_operation(request: &QueryRequest, dataset: Dataset) {
+    let error = request.validate().unwrap_err();
+    assert_eq!(error.kind(), QueryFailureCode::UnsupportedOperation);
+    assert_eq!(error.recovery(), &RecoveryAction::ConsultSchema { dataset });
+}
+
 fn view_basis() -> ViewDigestBasis {
     let source_id = SourceId::derive([&b"fixture-source"[..]]);
     let coverage = Coverage {
@@ -164,9 +170,11 @@ fn identifier_hashing_frames_components_and_keeps_kinds_distinct() {
 
     let partition = PartitionId::derive(split_after_two, b"main");
     assert!(partition.to_string().parse::<SourceId>().is_err());
-    assert!(format!("q1:source:{}", "A".repeat(64))
-        .parse::<SourceId>()
-        .is_err());
+    assert!(
+        format!("q1:source:{}", "A".repeat(64))
+            .parse::<SourceId>()
+            .is_err()
+    );
 }
 
 #[test]
@@ -252,9 +260,11 @@ fn responses_require_semantic_actions_and_rendered_actions_require_readable_summ
             QueryFailureCode::InvalidData
         );
     }
-    assert!(options("Inspect the session schema")
-        .validate(&QueryLimits::default())
-        .is_ok());
+    assert!(
+        options("Inspect the session schema")
+            .validate(&QueryLimits::default())
+            .is_ok()
+    );
 }
 
 #[test]
@@ -332,9 +342,11 @@ fn structured_source_association_cannot_bypass_content_consent() {
 #[test]
 fn message_event_extract_and_default_metadata_projection_are_supported() {
     for dataset in [Dataset::Messages, Dataset::Events] {
-        assert!(schema(dataset)
-            .permitted_operations
-            .contains(&OperationKind::Extract));
+        assert!(
+            schema(dataset)
+                .permitted_operations
+                .contains(&OperationKind::Extract)
+        );
         let mut request = base_request();
         request.dataset = dataset;
         request.operation = Operation::Extract;
@@ -343,11 +355,13 @@ fn message_event_extract_and_default_metadata_projection_are_supported() {
 
     let sessions = schema(Dataset::Sessions);
     assert!(!sessions.default_columns.contains(&FieldId::Name));
-    assert!(sessions.default_columns.iter().all(|field| {
-        sessions.field(*field).unwrap().sensitivity == Sensitivity::Metadata
-    }));
+    assert!(
+        sessions
+            .default_columns
+            .iter()
+            .all(|field| { sessions.field(*field).unwrap().sensitivity == Sensitivity::Metadata })
+    );
 }
-
 
 #[test]
 fn requests_reject_relative_scopes_unsupported_context_and_unsupported_time() {
@@ -373,10 +387,7 @@ fn requests_reject_relative_scopes_unsupported_context_and_unsupported_time() {
 
     let mut unsupported_context = base_request();
     unsupported_context.context.before = 1;
-    assert_request_error(
-        &unsupported_context,
-        QueryFailureCode::UnsupportedOperation,
-    );
+    assert_request_error(&unsupported_context, QueryFailureCode::UnsupportedOperation);
 
     for dataset in [Dataset::Turns, Dataset::Messages] {
         let mut supported_context = base_request();
@@ -389,10 +400,22 @@ fn requests_reject_relative_scopes_unsupported_context_and_unsupported_time() {
     sources.dataset = Dataset::Sources;
     sources.time.include_undated = true;
     assert!(sources.validate().is_ok());
-    sources.time.since = Some(
-        Timestamp::parse("2026-09-01", TimestampBasis::Native).unwrap(),
-    );
-    assert_request_error(&sources, QueryFailureCode::UnsupportedOperation);
+    sources.time.since = Some(Timestamp::parse("2026-09-01", TimestampBasis::Native).unwrap());
+    assert_unsupported_operation(&sources, Dataset::Sources);
+
+    let mut sessions = base_request();
+    sessions.time.since = Some(Timestamp::parse("2026-09-01", TimestampBasis::Native).unwrap());
+    assert!(sessions.validate().is_ok());
+
+    for invalid_field in [FieldId::Name, FieldId::Timestamp] {
+        let mut invalid = base_request();
+        invalid.time.field = Some(invalid_field);
+        assert_unsupported_operation(&invalid, Dataset::Sessions);
+    }
+
+    let mut alternate_time = base_request();
+    alternate_time.time.field = Some(FieldId::FirstEventAt);
+    assert!(alternate_time.validate().is_ok());
 }
 
 #[cfg(unix)]
@@ -423,28 +446,27 @@ fn requests_reject_non_utf8_path_scopes() {
 }
 
 #[test]
-fn turn_ranges_require_valid_bounds_and_one_exact_session_branch_group() {
+fn turn_ranges_require_turns_and_one_exact_session_but_not_a_branch() {
     let mut malformed = base_request();
     malformed.turn_range = Some(InclusiveRange { start: 0, end: 1 });
     assert_request_error(&malformed, QueryFailureCode::InvalidArgument);
 
     let range = InclusiveRange::new(2, 4).unwrap();
-    let mut unscoped = base_request();
-    unscoped.turn_range = Some(range);
-    assert_request_error(&unscoped, QueryFailureCode::InvalidArgument);
+    let mut wrong_dataset = base_request();
+    wrong_dataset.turn_range = Some(range);
+    assert_request_error(&wrong_dataset, QueryFailureCode::InvalidArgument);
+
+    let mut unscoped_turns = base_request();
+    unscoped_turns.dataset = Dataset::Turns;
+    unscoped_turns.operation = Operation::Extract;
+    unscoped_turns.turn_range = Some(range);
+    assert_request_error(&unscoped_turns, QueryFailureCode::InvalidArgument);
 
     let session = EntityId::derive(EntityKind::Session, [&b"session-a"[..]]);
     let branch = EntityId::derive(EntityKind::Branch, [&b"branch-a"[..]]);
-    let mut tree = base_request();
-    tree.operation = Operation::Tree { session };
-    tree.branch = Some(branch);
-    tree.turn_range = Some(range);
-    assert!(tree.validate().is_ok());
-
     let mut filtered = base_request();
     filtered.dataset = Dataset::Turns;
     filtered.operation = Operation::Extract;
-    filtered.branch = Some(branch);
     filtered.turn_range = Some(range);
     filtered.filters = vec![Filter {
         field: FieldId::SessionId,
@@ -454,11 +476,39 @@ fn turn_ranges_require_valid_bounds_and_one_exact_session_branch_group() {
     }];
     assert!(filtered.validate().is_ok());
 
-    let mut multiple_sessions = filtered;
-    multiple_sessions.filters[0].values.push(FieldValue::Id(
-        EntityId::derive(EntityKind::Session, [&b"session-b"[..]]),
-    ));
+    let mut with_branch = filtered.clone();
+    with_branch.branch = Some(branch);
+    assert!(with_branch.validate().is_ok());
+
+    let mut via_in = filtered.clone();
+    via_in.filters[0].predicate = Predicate::In;
+    assert!(via_in.validate().is_ok());
+
+    let mut multiple_sessions = filtered.clone();
+    multiple_sessions.filters[0]
+        .values
+        .push(FieldValue::Id(EntityId::derive(
+            EntityKind::Session,
+            [&b"session-b"[..]],
+        )));
     assert_request_error(&multiple_sessions, QueryFailureCode::InvalidArgument);
+
+    let mut wrong_session_kind = filtered.clone();
+    wrong_session_kind.filters[0].values = vec![FieldValue::Id(EntityId::derive(
+        EntityKind::Message,
+        [&b"message-a"[..]],
+    ))];
+    assert_request_error(&wrong_session_kind, QueryFailureCode::InvalidArgument);
+
+    let mut non_id_session = filtered.clone();
+    non_id_session.filters[0].values = vec![FieldValue::String("session-a".into())];
+    assert_request_error(&non_id_session, QueryFailureCode::InvalidArgument);
+
+    let mut wrong_operation = filtered;
+    wrong_operation.operation = Operation::Check {
+        source: SourceId::derive([&b"source-a"[..]]),
+    };
+    assert_unsupported_operation(&wrong_operation, Dataset::Turns);
 }
 
 #[test]
@@ -583,8 +633,23 @@ fn cursor_binding_checks_query_before_view_and_preserves_typed_recovery() {
 }
 
 #[test]
-fn query_binding_normalizes_list_default_and_same_field_or_order() {
+fn query_binding_normalizes_defaults_filters_and_time_field() {
     let selection = SourceSelection::default();
+    let implicit_time_field = base_request();
+    let mut explicit_default_time_field = implicit_time_field.clone();
+    explicit_default_time_field.time.field = Some(FieldId::StartedAt);
+    assert_eq!(
+        query_binding_digest(&implicit_time_field, &selection).unwrap(),
+        query_binding_digest(&explicit_default_time_field, &selection).unwrap()
+    );
+
+    let mut alternate_time_field = implicit_time_field.clone();
+    alternate_time_field.time.field = Some(FieldId::FirstEventAt);
+    assert_ne!(
+        query_binding_digest(&implicit_time_field, &selection).unwrap(),
+        query_binding_digest(&alternate_time_field, &selection).unwrap()
+    );
+
     let mut implicit_default = base_request();
     implicit_default.dataset = Dataset::Messages;
     implicit_default.limit = None;
@@ -668,10 +733,7 @@ fn native_view_rejects_orphan_and_revision_mismatch_but_allows_native_parent_ids
     orphan.observations[0].source_ref.source_id =
         SourceId::derive([&b"orphan-observation-source"[..]]);
     assert_eq!(
-        orphan
-            .validate(&QueryLimits::default())
-            .unwrap_err()
-            .kind(),
+        orphan.validate(&QueryLimits::default()).unwrap_err().kind(),
         QueryFailureCode::InvalidData
     );
 

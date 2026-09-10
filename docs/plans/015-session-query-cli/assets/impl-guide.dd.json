@@ -8,8 +8,8 @@
       "value": {
         "title": "SDK-first session query and actionable recipe CLI — implementation guide",
         "plan": "../plan.dd.json#meta",
-        "version": 4,
-        "updated": "2026-09-10T01:48:23.383Z"
+        "version": 5,
+        "updated": "2026-09-10T04:07:32.984Z"
       }
     },
     {
@@ -1048,7 +1048,17 @@
           "crates/core/src/query/schema.rs",
           "crates/testkit/src/query.rs",
           "crates/testkit/fixtures/query/shared-v1.json",
-          "crates/core/tests/query_contract.rs"
+          "crates/core/tests/query_contract.rs",
+          "crates/core/src/query/identity.rs",
+          "crates/core/src/query/fingerprint.rs",
+          "crates/core/src/lib.rs",
+          "crates/sdk/src/lib.rs",
+          "crates/testkit/src/lib.rs",
+          "crates/testkit/src/bin/unisphere-arch-check.rs",
+          "Cargo.toml",
+          "Cargo.lock",
+          "crates/core/Cargo.toml",
+          "crates/sdk/Cargo.toml"
         ],
         "proof": [
           "impl-guide.dd.json#checks/bp-0001",

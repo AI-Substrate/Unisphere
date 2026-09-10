@@ -10,9 +10,15 @@ const HEX: &[u8; 16] = b"0123456789abcdef";
 pub struct Digest([u8; 32]);
 
 impl Digest {
-    pub const fn from_bytes(bytes: [u8; 32]) -> Self { Self(bytes) }
-    pub const fn bytes(&self) -> &[u8; 32] { &self.0 }
-    pub fn of_bytes(bytes: &[u8]) -> Self { Self(Sha256::digest(bytes).into()) }
+    pub const fn from_bytes(bytes: [u8; 32]) -> Self {
+        Self(bytes)
+    }
+    pub const fn bytes(&self) -> &[u8; 32] {
+        &self.0
+    }
+    pub fn of_bytes(bytes: &[u8]) -> Self {
+        Self(Sha256::digest(bytes).into())
+    }
 
     /// Hash a domain and components with unambiguous little-endian lengths.
     pub fn framed<'a>(domain: &[u8], components: impl IntoIterator<Item = &'a [u8]>) -> Self {
@@ -29,11 +35,19 @@ impl Digest {
 impl FromStr for Digest {
     type Err = QueryNameError;
     fn from_str(value: &str) -> Result<Self, Self::Err> {
-        if value.len() != 64 { return Err(QueryNameError); }
+        if value.len() != 64 {
+            return Err(QueryNameError);
+        }
         let mut bytes = [0; 32];
         for (index, pair) in value.as_bytes().chunks_exact(2).enumerate() {
-            let high = HEX.iter().position(|byte| *byte == pair[0]).ok_or(QueryNameError)?;
-            let low = HEX.iter().position(|byte| *byte == pair[1]).ok_or(QueryNameError)?;
+            let high = HEX
+                .iter()
+                .position(|byte| *byte == pair[0])
+                .ok_or(QueryNameError)?;
+            let low = HEX
+                .iter()
+                .position(|byte| *byte == pair[1])
+                .ok_or(QueryNameError)?;
             bytes[index] = ((high << 4) | low) as u8;
         }
         Ok(Self(bytes))
@@ -51,14 +65,20 @@ impl fmt::Display for Digest {
     }
 }
 impl fmt::Debug for Digest {
-    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result { fmt::Display::fmt(self, formatter) }
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Display::fmt(self, formatter)
+    }
 }
 impl Serialize for Digest {
-    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> { serializer.collect_str(self) }
+    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.collect_str(self)
+    }
 }
 impl<'de> Deserialize<'de> for Digest {
     fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        String::deserialize(deserializer)?.parse().map_err(serde::de::Error::custom)
+        String::deserialize(deserializer)?
+            .parse()
+            .map_err(serde::de::Error::custom)
     }
 }
 
@@ -71,16 +91,28 @@ query_enum! {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct EntityId { kind: EntityKind, digest: Digest }
+pub struct EntityId {
+    kind: EntityKind,
+    digest: Digest,
+}
 impl EntityId {
-    pub const fn new(kind: EntityKind, digest: Digest) -> Self { Self { kind, digest } }
-    pub const fn kind(self) -> EntityKind { self.kind }
-    pub const fn digest(self) -> Digest { self.digest }
+    pub const fn new(kind: EntityKind, digest: Digest) -> Self {
+        Self { kind, digest }
+    }
+    pub const fn kind(self) -> EntityKind {
+        self.kind
+    }
+    pub const fn digest(self) -> Digest {
+        self.digest
+    }
     pub fn derive<'a>(kind: EntityKind, components: impl IntoIterator<Item = &'a [u8]>) -> Self {
-        Self::new(kind, Digest::framed(
-            b"unisphere/query-entity/v1",
-            std::iter::once(kind.as_str().as_bytes()).chain(components),
-        ))
+        Self::new(
+            kind,
+            Digest::framed(
+                b"unisphere/query-entity/v1",
+                std::iter::once(kind.as_str().as_bytes()).chain(components),
+            ),
+        )
     }
 }
 impl FromStr for EntityId {
@@ -92,44 +124,64 @@ impl FromStr for EntityId {
     }
 }
 impl fmt::Display for EntityId {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { write!(f, "q1:{}:{}", self.kind, self.digest) }
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "q1:{}:{}", self.kind, self.digest)
+    }
 }
 impl Serialize for EntityId {
-    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> { serializer.collect_str(self) }
+    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.collect_str(self)
+    }
 }
 impl<'de> Deserialize<'de> for EntityId {
     fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        String::deserialize(deserializer)?.parse().map_err(serde::de::Error::custom)
+        String::deserialize(deserializer)?
+            .parse()
+            .map_err(serde::de::Error::custom)
     }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct SourceId(Digest);
 impl SourceId {
-    pub const fn new(digest: Digest) -> Self { Self(digest) }
-    pub const fn digest(self) -> Digest { self.0 }
+    pub const fn new(digest: Digest) -> Self {
+        Self(digest)
+    }
+    pub const fn digest(self) -> Digest {
+        self.0
+    }
     pub fn derive<'a>(components: impl IntoIterator<Item = &'a [u8]>) -> Self {
         Self(Digest::framed(b"unisphere/query-source/v1", components))
     }
-    pub const fn entity(self) -> EntityId { EntityId::new(EntityKind::Source, self.0) }
+    pub const fn entity(self) -> EntityId {
+        EntityId::new(EntityKind::Source, self.0)
+    }
 }
 impl FromStr for SourceId {
     type Err = QueryNameError;
     fn from_str(value: &str) -> Result<Self, Self::Err> {
         let id: EntityId = value.parse()?;
-        if id.kind() != EntityKind::Source { return Err(QueryNameError); }
+        if id.kind() != EntityKind::Source {
+            return Err(QueryNameError);
+        }
         Ok(Self(id.digest()))
     }
 }
 impl fmt::Display for SourceId {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { fmt::Display::fmt(&self.entity(), f) }
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Display::fmt(&self.entity(), f)
+    }
 }
 impl Serialize for SourceId {
-    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> { serializer.collect_str(self) }
+    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.collect_str(self)
+    }
 }
 impl<'de> Deserialize<'de> for SourceId {
     fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        String::deserialize(deserializer)?.parse().map_err(serde::de::Error::custom)
+        String::deserialize(deserializer)?
+            .parse()
+            .map_err(serde::de::Error::custom)
     }
 }
 
@@ -143,21 +195,35 @@ macro_rules! registry_id {
                 let valid = !value.is_empty()
                     && value.len() <= 128
                     && value.as_bytes()[0].is_ascii_alphanumeric()
-                    && value.bytes().all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || matches!(b, b'-' | b'_' | b'.'));
-                if !valid { return Err(QueryNameError); }
+                    && value.bytes().all(|b| {
+                        b.is_ascii_lowercase()
+                            || b.is_ascii_digit()
+                            || matches!(b, b'-' | b'_' | b'.')
+                    });
+                if !valid {
+                    return Err(QueryNameError);
+                }
                 Ok(Self(value))
             }
-            pub fn as_str(&self) -> &str { &self.0 }
+            pub fn as_str(&self) -> &str {
+                &self.0
+            }
         }
         impl FromStr for $name {
             type Err = QueryNameError;
-            fn from_str(value: &str) -> Result<Self, Self::Err> { Self::new(value) }
+            fn from_str(value: &str) -> Result<Self, Self::Err> {
+                Self::new(value)
+            }
         }
         impl fmt::Display for $name {
-            fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { f.write_str(self.as_str()) }
+            fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+                f.write_str(self.as_str())
+            }
         }
         impl Serialize for $name {
-            fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> { serializer.serialize_str(self.as_str()) }
+            fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+                serializer.serialize_str(self.as_str())
+            }
         }
         impl<'de> Deserialize<'de> for $name {
             fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
@@ -174,26 +240,39 @@ registry_id!(HarnessId);
 pub struct PartitionId(EntityId);
 impl PartitionId {
     pub fn derive(source: SourceId, native_key: &[u8]) -> Self {
-        Self(EntityId::derive(EntityKind::Partition, [source.digest().bytes().as_slice(), native_key]))
+        Self(EntityId::derive(
+            EntityKind::Partition,
+            [source.digest().bytes().as_slice(), native_key],
+        ))
     }
-    pub const fn entity(self) -> EntityId { self.0 }
+    pub const fn entity(self) -> EntityId {
+        self.0
+    }
 }
 impl FromStr for PartitionId {
     type Err = QueryNameError;
     fn from_str(value: &str) -> Result<Self, Self::Err> {
         let id: EntityId = value.parse()?;
-        if id.kind() != EntityKind::Partition { return Err(QueryNameError); }
+        if id.kind() != EntityKind::Partition {
+            return Err(QueryNameError);
+        }
         Ok(Self(id))
     }
 }
 impl fmt::Display for PartitionId {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { fmt::Display::fmt(&self.0, f) }
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Display::fmt(&self.0, f)
+    }
 }
 impl Serialize for PartitionId {
-    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> { serializer.collect_str(self) }
+    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        serializer.collect_str(self)
+    }
 }
 impl<'de> Deserialize<'de> for PartitionId {
     fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        String::deserialize(deserializer)?.parse().map_err(serde::de::Error::custom)
+        String::deserialize(deserializer)?
+            .parse()
+            .map_err(serde::de::Error::custom)
     }
 }

@@ -178,7 +178,7 @@ _No entries._
 
 ## Implementation Summary
 
-Phase 1 shared query baseline is in progress and paused for handover. PM delegated contracts and fakes/proof to OMP GitHub Sol Fast 1M/high coders; PM owns integration and quality. Composed contracts067ac042 + proof39c62092 passed18 core contract tests. Newer contracts9b0a9560 + prooffa792618 are preserved but unintegrated/unvalidated. No sealed baseline, independent baseline acceptance or normal implementation-lane release exists. Resume from assets/pm-continuity-handoff.json, phase-1 task tk-0001 and assets/verification/baseline-handover-checkpoint.json; do not infer product completion from this checkpoint.
+Resumed from checkpoint58e5001. Latest delegated contracts9b0a9560 and prooffa792618 are integrated;18 core contract tests and external public SDK smoke passed. PM formatting, enum-documentation correction and compact private error-location storage preserve the public API; workspace all-target/all-feature clippy passes. Exact-source full boot and independent Opus baseline review remain pending; no baseline seal or normal lane release. See assets/verification and assets/team for current receipts; the handover preserves the previous paused checkpoint.
 
 <a id="key-findings"></a>
 

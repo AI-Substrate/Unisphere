@@ -74,7 +74,7 @@ Always escape terminal controls and untrusted Markdown/HTML appropriately. CSV d
 ## Output contracts
 
 - Human tables are presentation, not a machine parser contract. Data goes to stdout; warnings/progress/coverage summaries to stderr.
-- JSON query output is one versioned envelope with `dataset`, `query`, `rows`, `coverage`, `matched`, `emitted` and `next_cursor` where applicable.
+- JSON query output is one versioned envelope with `dataset`, `query`, `rows`, `coverage`, `matched`, `emitted`, `next_action` and `next_cursor` where applicable.
 - JSONL is one versioned typed row per line, suitable for `jq`/DuckDB; no interleaved banners. Common reserved fields are `schema_version`, `dataset`, `id`, and source provenance. Declared data fields such as `duration_ms` are directly addressable. Summary/coverage goes to stderr or an explicitly requested separate manifest, not a fake data row.
 - CSV is a flat UTF-8 RFC4180 projection with a header, the null/compound encoding and safety modes above, and explicit time-unit column names. Text/Markdown are supported by session/turn/message extraction, and payload-focused tool extraction, not arbitrary metrics serialization.
 - `schema show DATASET` exposes fields, types, nullability, units, content sensitivity, valid filters, default time/sort rules and capability limits. It is the discoverable contract used by humans and agents.
@@ -83,6 +83,18 @@ Always escape terminal controls and untrusted Markdown/HTML appropriately. CSV d
 - Preserve existing `--json` and `--human` behavior. New query commands additionally accept `--format`; specifying more than one output-mode selector is an argument error even if the modes appear equivalent. No hidden precedence or TTY-dependent change to selected rows. Docs/config keep their existing-style mode surface unless their documented parser explicitly adds another format.
 
 Retain existing exit conventions: 0 for completed query (including zero matches), 1 for operational/read/output failure, 2 for invalid arguments. An unreadable requested source is not an empty success. `--allow-partial` is the only way to accept partial source reads; output explicitly carries incomplete coverage, including in machine-mode summaries. Optional missing fields alone are not read failures.
+
+### Next actions and actionable errors
+
+Every command outcome must tell the user or calling agent what to try next: success, zero matches, partial results, help, version and completed exports, not just failures. Machine command envelopes carry a nonempty `next_action`; human presentation labels the next step. Raw JSONL, CSV, text/Markdown extracts and OTLP remain clean data: next-action guidance belongs in their documented summary/diagnostic channel, never an extra data record or trailer. This applies to existing config/catalog/list/export commands as well as the new query/docs/schema surface.
+
+Choose the action from the actual outcome: inspect a selected entity, follow a continuation, narrow a broad result, diagnose an empty source set, inspect coverage, or use the next recipe step. Recommendations must use supported command/option grammar and preserve live/offline scope and content consent. They are suggestions, never automatically executed actions. Use safe known identifiers where available; when required input cannot safely be reproduced, name the missing input explicitly rather than leaking it or presenting a placeholder as an executable command.
+
+Every error names a stable category/code, explains the failure safely and gives a concrete cause-specific recovery step. Name valid alternatives for invalid commands/options/topics/fields; distinguish missing, unreadable, unsupported and malformed input; explain ambiguous identity/branch selection, stale continuations, denied content projection, resource bounds and output failures. State whether retry can help and what must change first. Do not merely repeat the error, advise blind retries, echo hostile arguments/content or automatically relax privacy and safety bounds.
+
+An output failure must not report completed output, advance a checkpoint or add a repair envelope to already-partial data. Emit actionable diagnostics on a healthy diagnostic channel where possible; if that destination also fails, retain a nonzero exit and make no claim that guidance was delivered.
+
+Proof must exercise all command leaves plus help/version, legitimate zero matches and partial outcomes; parse emitted command suggestions with the real parser after binding explicitly named inputs, and execute representative next steps. Fault cases cover the error categories above, safe stream routing and sentinel content. Presence of a `next_action` key or a generic help link alone does not prove useful guidance.
 
 ## Statistics are evidence, not arithmetic over whatever is present
 

@@ -29,7 +29,7 @@ unisphere docs
 These are planned additions, not currently installed commands. Root `--help` points to `docs get start` and `docs get agents`. No separate custom query language, documentation server, browser or model service is required. Start with list/get; do not add a docs search index unless the topic set actually becomes hard to navigate.
 
 - `docs list --json`: existing versioned command envelope with ordered `topics: [{name,title,summary,bytes}]` and a concrete next action.
-- `docs get TOPIC --json`: envelope with `topic,title,text,related,cli_version`; Markdown is a complete string, not paginated fragments.
+- `docs get TOPIC --json`: envelope with `topic,title,text,related,cli_version` and `next_action`; Markdown is a complete string, not paginated fragments.
 - `--human`: readable Markdown/text with no machine envelope. Piped machine mode remains predictable and explicitly overridable.
 - Unknown topic: invalid-argument exit2, safe structured error including valid topic IDs and a `docs list` recovery action. No source scan or configuration repair.
 - `docs` must work outside a checkout, with no agent stores, no Git/Git AI, malformed or missing Unisphere runtime configuration, no network, and no daemon. Route it before constructing optional storage/query dependencies.
@@ -67,6 +67,7 @@ The Git-ai page is conditional on plan014's actual public contract; docs must no
 - Include files within the publishing crate/package boundary. Test an installed/package artifact outside the repository; successful developer-checkout reads are not packaging proof.
 - `schema show` supplies fields, units, availability and sensitivity. Docs teach how to use that schema, not independently redeclare every field.
 - Document source-format versions and observations. Do not treat an upstream harness privacy setting or an external project's parser as proof of Unisphere's behavior.
+- Every command outcome provides a useful next action, and every error provides safe cause-specific recovery; the shared contract is in `query-contract.md#next-actions-and-actionable-errors`. Recipes teach these transitions, including zero matches, partial coverage and failures, rather than leaving users at a dead end.
 
 ## Required deterministic proof
 
@@ -82,6 +83,8 @@ The Git-ai page is conditional on plan014's actual public contract; docs must no
 | Privacy claims survive modes | Synthetic sentinel content cannot appear in default JSON, JSONL, tables, CSV, Markdown errors or diagnostics; explicit content output is tested separately |
 | Output examples are truthful | Expected JSON validates and numeric summaries are derived from the fixture, with missing data and units explicit |
 | Changes cannot silently rot docs | CI's normal PR lane executes docs/example checks; removal/rename of a taught nested verb/flag or a schema change breaks the relevant proof |
+| Every outcome has a useful next step | Exercise every command leaf plus help/version, zero-match and partial outcomes; validate suggested command grammar with the actual parser and run representative follow-on steps without contaminating data streams |
+| Every error is actionable | Trigger invalid selection, input, permissions, identity, continuation, privacy, bound and output failures; check cause-specific recovery, valid alternatives/retry conditions and privacy-safe diagnostics rather than exact prose |
 
 Existing tests that only pin help wording or incidental formatting should not be multiplied. Keep guards that defend actual availability, privacy, grammar and consumer behavior. No passing documentation-source grep alone can prove an extraction workflow.
 

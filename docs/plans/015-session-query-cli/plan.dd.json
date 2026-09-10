@@ -154,6 +154,16 @@
           "id": "ac-0016",
           "claim": "Public-release documentation/examples use synthetic or authorised content, retain required provenance/licenses, and make no universal completeness, secret-free, cost-estimate or unprecedented-product claim.",
           "state": "unchecked"
+        },
+        {
+          "id": "ac-0017",
+          "claim": "Every CLI command outcome, including success, zero matches, partial results, help, version and completed exports, supplies an explicit useful next action grounded in that outcome. Machine envelopes expose stable next_action guidance, human output labels the next step, and JSONL/CSV/text/Markdown/OTLP data streams remain clean by carrying guidance on their documented summary or diagnostic channel. Suggested commands use real supported grammar, respect scope and content consent, and never execute automatically.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0018",
+          "claim": "Every CLI error provides a stable category/code, a safe explanation and concrete cause-specific recovery guidance rather than merely restating the failure or suggesting blind retries. Invalid commands/options/topics/fields, absent or unreadable sources, unsupported or malformed input, ambiguous identity/branch, stale continuation, denied content projection, resource limits and output failures are covered; valid alternatives, needed user input and retry conditions are named where applicable. Guidance does not leak source content or raw hostile arguments, weaken privacy/safety, or claim incomplete work succeeded; failed diagnostic destinations receive best-effort guidance and a nonzero exit.",
+          "state": "unchecked"
         }
       ]
     },

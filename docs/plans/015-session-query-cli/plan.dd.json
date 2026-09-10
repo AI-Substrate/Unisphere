@@ -132,7 +132,7 @@
         },
         {
           "id": "ac-0012",
-          "claim": "Every documented command includes its motivating question, prerequisites, example, expected interpretation, limits and recovery; all seven end-to-end workflows are demonstrated against shared synthetic fixtures.",
+          "claim": "Every documented command includes useful use cases, its motivating question, prerequisites, example, expected interpretation, limits and recovery; recipe-led guides demonstrate all seven end-to-end workflows against shared synthetic fixtures and distinguish evidence supplied by Unisphere from human or downstream interpretation.",
           "state": "unchecked"
         },
         {
@@ -212,7 +212,7 @@
     {
       "name": "documentation_strategy",
       "value": {
-        "approach": "First-class offline docs list/get bundled with CLI, source/schema-driven command facts and maintained synthetic workflow cases. Dedicated docs owner; every command owner supplies motivation, examples, interpretation and failures.",
+        "approach": "First-class offline docs list/get bundled with CLI, source/schema-driven command facts and maintained synthetic workflow cases. Recipe-led guides compose commands into useful end-to-end outcomes, including creative applications grounded in evidence; every command owner supplies its own use cases, motivation, examples, interpretation and failures. A dedicated docs owner integrates the recipes. Companion skills are a proposed optional guidance layer over the same CLI; exact packaging and scope are implementation-guide design work, not a prerequisite for progressing the plan.",
         "artifacts": [
           "assets/workflows-and-command-reference.md",
           "assets/command-catalog.json",
@@ -226,7 +226,7 @@
     },
     {
       "name": "risks_assumptions",
-      "value": "Source formats/identities/timestamps and turn/call boundaries vary and can be partial; copies/forks/cumulative counters can inflate aggregates; cross-store atomicity is not assumed. Resource bounds and view freshness need concrete guide mechanisms. CSV defaults to spreadsheet-safe encoding with explicit raw opt-in; output-mode selectors are mutually exclusive. Product direction is prepared; PM nomination, reviewed architecture, exact Rust/schema/ID shapes and implementation proof remain future work."
+      "value": "Source formats/identities/timestamps and turn/call boundaries vary and can be partial; copies/forks/cumulative counters can inflate aggregates; cross-store atomicity is not assumed. Resource bounds and view freshness need concrete guide mechanisms. CSV defaults to spreadsheet-safe encoding with explicit raw opt-in; output-mode selectors are mutually exclusive. Tiger owns canonical plan015 planning; Distro is a separate future-state synthesis, not a dependency. Reviewed architecture, exact Rust/schema/ID shapes and implementation proof remain future work. Recipe-led documentation is confirmed; companion skills remain a proposal whose packaging can be resolved in the guide without blocking planning."
     },
     {
       "name": "open_questions",

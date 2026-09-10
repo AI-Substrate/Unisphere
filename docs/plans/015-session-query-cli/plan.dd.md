@@ -76,7 +76,7 @@ Make Unisphere a coherent, SDK-first session exploration and query tool: discove
 | ac-000f | Offline query input never triggers hidden live enrichment; missing required projected fields, malformed envelopes and unsupported versions fail with actionable availability/schema errors. | [ ] unchecked | — | — | — | — |
 | ac-0010 | External Rust SDK consumers obtain the same selection/projection/error semantics as the CLI through injected ports; there is no mandatory CLI subprocess, daemon, hosted store, model service or persistent index. | [ ] unchecked | — | — | — | — |
 | ac-0011 | The installed CLI provides offline docs list/get and discoverable schema output before source/config/Git/Git-AI access; unknown topics/fields name valid alternatives and recovery actions. | [ ] unchecked | — | — | — | — |
-| ac-0012 | Every documented command includes its motivating question, prerequisites, example, expected interpretation, limits and recovery; all seven end-to-end workflows are demonstrated against shared synthetic fixtures. | [ ] unchecked | — | — | — | — |
+| ac-0012 | Every documented command includes useful use cases, its motivating question, prerequisites, example, expected interpretation, limits and recovery; recipe-led guides demonstrate all seven end-to-end workflows against shared synthetic fixtures and distinguish evidence supplied by Unisphere from human or downstream interpretation. | [ ] unchecked | — | — | — | — |
 | ac-0013 | Documentation ships inside the package/binary and normal CI checks full nested command/option examples, installed offline behavior, SDK examples, topic links and privacy/output semantics rather than only pinning prose. | [ ] unchecked | — | — | — | — |
 | ac-0014 | Plan014 Git-ai notes integrate through their reviewed registered contract without blocking unrelated CLI lanes or fabricating transcript/timing fields; retired harness telemetry remains unsupported with no compatibility bridge. | [ ] unchecked | — | — | — | — |
 | ac-0015 | The future PM supplies reviewed shared contracts, explicit ownership/fakes, bounded proof and genuinely independent work packets before dispatch; no coder fleet or implementation approval is inferred from this product plan. | [ ] unchecked | — | — | — | — |
@@ -132,7 +132,7 @@ Current CLI lists immediate JSONL files under an explicit leaf root and exports 
 | --- | --- |
 | location | — |
 | rationale | — |
-| approach | First-class offline docs list/get bundled with CLI, source/schema-driven command facts and maintained synthetic workflow cases. Dedicated docs owner; every command owner supplies motivation, examples, interpretation and failures. |
+| approach | First-class offline docs list/get bundled with CLI, source/schema-driven command facts and maintained synthetic workflow cases. Recipe-led guides compose commands into useful end-to-end outcomes, including creative applications grounded in evidence; every command owner supplies its own use cases, motivation, examples, interpretation and failures. A dedicated docs owner integrates the recipes. Companion skills are a proposed optional guidance layer over the same CLI; exact packaging and scope are implementation-guide design work, not a prerequisite for progressing the plan. |
 | artifacts | assets/workflows-and-command-reference.md, assets/command-catalog.json, assets/synthetic-query-fixture.json, assets/documentation-design.md, assets/query-contract.md, assets/pm-handoff.md |
 | proof | Package/install offline execution, nested parser/option checks, real SDK/CLI examples, topic-link coherence and privacy sentinels. |
 
@@ -140,7 +140,7 @@ Current CLI lists immediate JSONL files under an explicit leaf root and exports 
 
 ## Risks & Assumptions
 
-Source formats/identities/timestamps and turn/call boundaries vary and can be partial; copies/forks/cumulative counters can inflate aggregates; cross-store atomicity is not assumed. Resource bounds and view freshness need concrete guide mechanisms. CSV defaults to spreadsheet-safe encoding with explicit raw opt-in; output-mode selectors are mutually exclusive. Product direction is prepared; PM nomination, reviewed architecture, exact Rust/schema/ID shapes and implementation proof remain future work.
+Source formats/identities/timestamps and turn/call boundaries vary and can be partial; copies/forks/cumulative counters can inflate aggregates; cross-store atomicity is not assumed. Resource bounds and view freshness need concrete guide mechanisms. CSV defaults to spreadsheet-safe encoding with explicit raw opt-in; output-mode selectors are mutually exclusive. Tiger owns canonical plan015 planning; Distro is a separate future-state synthesis, not a dependency. Reviewed architecture, exact Rust/schema/ID shapes and implementation proof remain future work. Recipe-led documentation is confirmed; companion skills remain a proposal whose packaging can be resolved in the guide without blocking planning.
 
 <a id="open-questions"></a>
 

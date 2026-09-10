@@ -1,0 +1,36 @@
+crates/app/src/adapters.rs
+  h_9e71e8b09f7cf2 342,352
+crates/app/src/git_query.rs
+  h_9e71e8b09f7cf2 18,202-206,230,250-257,468-476
+crates/app/src/main.rs
+  h_9e71e8b09f7cf2 156-160
+crates/app/tests/git_query.rs
+  h_9e71e8b09f7cf2 268-345
+crates/cli/src/git_notes.rs
+  h_9e71e8b09f7cf2 327
+crates/cli/src/output.rs
+  h_9e71e8b09f7cf2 274-283,285-291
+crates/cli/src/query.rs
+  h_9e71e8b09f7cf2 51-64,92-105
+crates/core/src/git_notes.rs
+  h_9e71e8b09f7cf2 4-10,135-148
+crates/testkit/src/bin/proof/git_query.rs
+  h_9e71e8b09f7cf2 121-122
+docs/plans/015-session-query-cli/assets/git-query-integration.json
+  h_9e71e8b09f7cf2 1-13
+docs/plans/015-session-query-cli/assets/verification/boot-78af49ce.json
+  h_9e71e8b09f7cf2 1-59
+docs/plans/015-session-query-cli/assets/verification/git-source-output-safety.json
+  h_9e71e8b09f7cf2 1-139
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "63cc530528867338c3acce2ef1a172cdbf0e3fa3",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

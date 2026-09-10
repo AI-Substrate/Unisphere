@@ -1,0 +1,21 @@
+{
+  "recorded_at": "2026-09-10T09:23:11.322Z",
+  "scope": "Actual built working CLI before Pij selector integration; not final exact-source proof",
+  "run": {
+    "argv": [
+      "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/target/debug/unisphere",
+      "docs",
+      "get",
+      "find-sessions",
+      "--json"
+    ],
+    "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+    "stdout": "{\"command\":\"docs.get\",\"data\":{\"id\":\"find-sessions\",\"related\":[\"inspect-conversations\",\"privacy-and-coverage\",\"git-ai\"],\"summary\":\"Discover source coverage before selecting a session.\",\"text\":\"# Find repository-associated sessions\\n\\n## Motivating question\\n\\nWhich supported local stores provide evidence for this repository, and which sessions can be selected without confusing physical copies, reused native IDs, or unavailable stores?\\n\\n## Prerequisites\\n\\nChoose `--repo PATH` explicitly. `--repo .` inspects registered locations associated with that repository; it is not permission to recursively scan HOME. Use `--repo-scope exact`, `tree` (default), or `worktrees`. The last requires injected trusted Git capability.\\n\\n## Recipe 1 — discover, diagnose, select\\n\\n```sh\\nunisphere sources list --repo . --format json\\nSOURCE_ID='q1:source:1111111111111111111111111111111111111111111111111111111111111111'\\nunisphere sources check --source \\\"$SOURCE_ID\\\" --format json\\nunisphere sessions list --repo . --harness claude --format json\\nSESSION_ID='q1:session:2222222222222222222222222222222222222222222222222222222222222222'\\nunisphere sessions show \\\"$SESSION_ID\\\" --repo . --format json\\n```\\n\\nExpected: source results distinguish readable, absent, unreadable, unsupported, partial, unassociated and conflicting facts. Session results retain every supporting source reference and use local `q1:` identities. Two source rows can support one session; equal native IDs or equal text do not merge entities by themselves.\\n\\nInterpretation: Unisphere supplies association basis, revisions and coverage. A human decides whether the selected evidence answers the review question. A location hint, matching basename, remote URL, or prompt mention is not repository proof.\\n\\n## Creative use cases\\n\\n- Audit why a known conversation is missing before assuming it was never recorded.\\n- Compare repository association evidence after moving a working tree.\\n- Select only `--source-adapter git-ai` while leaving excluded registrations unopened.\\n- Use explicit `--source PATH_OR_ID` for known evidence whose project association is unavailable.\\n\\n## Limits and recovery\\n\\nZero sessions with unreadable sources is not the same as a complete zero-match view. Without `--allow-partial`, a requested source read failure is operational failure. With it, coverage remains partial. If worktree identity is ambiguous or Git is unavailable, supply the required trusted Git executable through the caller's composition or use `exact`/`tree` scope; blind retry cannot help.\\n\\n**Next step:** bind one returned session ID and run `unisphere sessions tree \\\"$SESSION_ID\\\" --repo . --format json`.\\n\",\"title\":\"Find repository-associated sessions\"},\"next_action\":{\"argv\":[\"unisphere\",\"docs\",\"list\",\"--json\"],\"required_inputs\":[],\"summary\":\"Follow the documented workflow or inspect a related topic.\"},\"ok\":true,\"v\":1}\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "environment": {
+    "PATH": "",
+    "HOME": "/does-not-exist"
+  }
+}

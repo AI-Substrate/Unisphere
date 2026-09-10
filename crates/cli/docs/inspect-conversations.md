@@ -11,7 +11,7 @@ Start from an exact local session ID returned by the same source view. If lineag
 ## Recipe 2 — follow one conversation without flattening it
 
 ```sh
-unisphere sessions tree "$SESSION_ID" --repo . --format json
+unisphere sessions tree "$SESSION_ID" --repo . --columns parent_ids,branch_ids --format json
 unisphere turns list --repo . --session "$SESSION_ID" --format json
 unisphere turns show "$TURN_ID" --repo . --format json
 unisphere messages list --repo . --session "$SESSION_ID" --format json
@@ -20,6 +20,8 @@ unisphere events list --repo . --session "$SESSION_ID" --format json
 ```
 
 Expected: turns represent supported initiating request boundaries, not physical records. Tool-result-shaped or injected records do not become extra user turns. Messages and calls link through explicit local IDs. Events preserve observations that cannot justify a higher-level row.
+
+JSON rows keep projected values under `fields` (for example, `data.rows[].fields.branch_ids`); JSONL rows expose projected values directly. Choose columns explicitly when a relationship is not in the dataset's default projection.
 
 Interpretation: Unisphere supplies versioned reconstruction basis and branch membership. It does not infer ancestry from timestamps, concatenate fork leaves, choose the active branch by recency, or claim that every event is a turn/call/span. A human may narrate the evidence only after retaining those qualifications.
 

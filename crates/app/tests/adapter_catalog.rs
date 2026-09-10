@@ -146,7 +146,7 @@ fn catalog_does_not_resolve_inaccessible_store_roots() {
 }
 
 #[test]
-fn catalog_argument_errors_keep_the_catalog_label_and_hide_input() {
+fn catalog_argument_errors_hide_input_and_retain_machine_classification() {
     let root = tempfile::tempdir().unwrap();
     let output = catalog(
         root.path(),
@@ -159,8 +159,7 @@ fn catalog_argument_errors_keep_the_catalog_label_and_hide_input() {
     let document: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
     assert_eq!(document["ok"], false);
     assert_eq!(document["v"], 1);
-    assert_eq!(document["command"], "adapters.list");
-    assert_eq!(document["error"]["kind"], "invalid_arguments");
+    assert_eq!(document["error"]["code"], "UNI-CLI-ARGUMENT");
     assert!(
         !String::from_utf8(output.stdout)
             .unwrap()

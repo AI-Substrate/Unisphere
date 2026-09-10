@@ -660,8 +660,10 @@ dependencies = [
  "unisphere-adapter-vscode-copilot",
  "unisphere-cli",
  "unisphere-loader-jsonl",
+ "unisphere-loader-query",
  "unisphere-loader-snapshot",
  "unisphere-output-otlp",
+ "unisphere-output-query",
  "unisphere-sdk",
  "unisphere-testkit",
 ]
@@ -674,6 +676,7 @@ dependencies = [
  "serde_json",
  "tempfile",
  "unisphere-core",
+ "unisphere-output-query",
  "unisphere-testkit",
 ]
 
@@ -704,6 +707,7 @@ version = "0.1.0"
 dependencies = [
  "globset",
  "libc",
+ "serde_json",
  "tempfile",
  "unisphere-core",
  "unisphere-loader-jsonl",

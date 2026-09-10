@@ -19,8 +19,8 @@ The first is the existing native Git-note listing; `--adapter` is a native dispa
 
 ```sh
 unisphere sources list --repo . --source-adapter git-ai --format json
-unisphere sessions list --repo . --source-adapter git-ai --format json
-unisphere sessions tree "$SESSION_ID" --repo . --format json
+unisphere sessions list --repo . --source-adapter git-ai --columns transcript_available --format json
+unisphere sessions tree "$SESSION_ID" --repo . --columns parent_ids,branch_ids --format json
 unisphere events list --repo . --session "$SESSION_ID" --format json
 ```
 

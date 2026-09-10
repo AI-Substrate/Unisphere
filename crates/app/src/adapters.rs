@@ -1,17 +1,19 @@
 //! Explicit compile-time adapter registration; no plugin loader or service locator.
-use std::{io::Write, sync::Arc};
 #[cfg(test)]
 use std::ffi::OsString;
-use unisphere_cli::{AdapterCapabilities, AdapterDescriptor, CliContext, LocationHint, ParsedCommand};
+use std::{io::Write, sync::Arc};
+use unisphere_cli::{
+    AdapterCapabilities, AdapterDescriptor, CliContext, LocationHint, ParsedCommand,
+};
 use unisphere_loader_jsonl::FileSessionLoader;
+use unisphere_loader_query::{NativeRepresentation, QueryRegistration};
 use unisphere_loader_snapshot::FileSnapshotLoader;
 use unisphere_output_otlp::OtlpJsonlWriter;
+use unisphere_sdk::query::{HarnessId, QueryAdapter, QueryFailure};
 use unisphere_sdk::{
     Collector, PipelineError, PipelineErrorKind, SessionAdapter, SnapshotAdapter,
     SnapshotCollector, SnapshotFormat,
 };
-use unisphere_sdk::query::{HarnessId, QueryAdapter, QueryFailure};
-use unisphere_loader_query::{NativeRepresentation, QueryRegistration};
 
 #[derive(Clone, Copy)]
 enum SourceRepresentation {
@@ -24,7 +26,8 @@ struct AdapterRegistration {
     descriptor: AdapterDescriptor,
     source: SourceRepresentation,
     query: Option<fn(&AdapterRegistration) -> Result<QueryRegistration, QueryFailure>>,
-    run: fn(SourceRepresentation, &ParsedCommand, &CliContext, &mut dyn Write, &mut dyn Write) -> u8,
+    run:
+        fn(SourceRepresentation, &ParsedCommand, &CliContext, &mut dyn Write, &mut dyn Write) -> u8,
     #[cfg(test)]
     fixture: &'static [u8],
 }
@@ -53,8 +56,14 @@ const ADAPTERS: [AdapterRegistration; 9] = [
             },
         },
         source: SourceRepresentation::Jsonl,
-        query: Some(|entry| query_registration(entry, "claude-code",
-            unisphere_adapter_claude::QUERY_POLICY_VERSION, unisphere_adapter_claude::ClaudeCodeAdapter)),
+        query: Some(|entry| {
+            query_registration(
+                entry,
+                "claude-code",
+                unisphere_adapter_claude::QUERY_POLICY_VERSION,
+                unisphere_adapter_claude::ClaudeCodeAdapter,
+            )
+        }),
         run: |_, args, context, stdout, stderr| {
             run_with_adapter(
                 unisphere_adapter_claude::ClaudeCodeAdapter,
@@ -70,8 +79,14 @@ const ADAPTERS: [AdapterRegistration; 9] = [
     AdapterRegistration {
         descriptor: unisphere_adapter_codex::DESCRIPTOR,
         source: SourceRepresentation::Jsonl,
-        query: Some(|entry| query_registration(entry, "codex",
-            unisphere_adapter_codex::QUERY_POLICY_VERSION, unisphere_adapter_codex::CodexAdapter)),
+        query: Some(|entry| {
+            query_registration(
+                entry,
+                "codex",
+                unisphere_adapter_codex::QUERY_POLICY_VERSION,
+                unisphere_adapter_codex::CodexAdapter,
+            )
+        }),
         run: |_, args, context, stdout, stderr| {
             run_with_adapter(
                 unisphere_adapter_codex::CodexAdapter,
@@ -87,8 +102,14 @@ const ADAPTERS: [AdapterRegistration; 9] = [
     AdapterRegistration {
         descriptor: unisphere_adapter_omp::DESCRIPTOR,
         source: SourceRepresentation::Jsonl,
-        query: Some(|entry| query_registration(entry, "oh-my-pi",
-            unisphere_adapter_omp::POLICY_VERSION, unisphere_adapter_omp::OmpAdapter)),
+        query: Some(|entry| {
+            query_registration(
+                entry,
+                "oh-my-pi",
+                unisphere_adapter_omp::POLICY_VERSION,
+                unisphere_adapter_omp::OmpAdapter,
+            )
+        }),
         run: |_, args, context, stdout, stderr| {
             run_with_adapter(
                 unisphere_adapter_omp::OmpAdapter,
@@ -104,8 +125,14 @@ const ADAPTERS: [AdapterRegistration; 9] = [
     AdapterRegistration {
         descriptor: unisphere_adapter_pi::DESCRIPTOR,
         source: SourceRepresentation::Jsonl,
-        query: Some(|entry| query_registration(entry, "pi",
-            unisphere_adapter_pi::POLICY_VERSION, unisphere_adapter_pi::PiAdapter)),
+        query: Some(|entry| {
+            query_registration(
+                entry,
+                "pi",
+                unisphere_adapter_pi::POLICY_VERSION,
+                unisphere_adapter_pi::PiAdapter,
+            )
+        }),
         run: |_, args, context, stdout, stderr| {
             run_with_adapter(
                 unisphere_adapter_pi::PiAdapter,
@@ -121,8 +148,14 @@ const ADAPTERS: [AdapterRegistration; 9] = [
     AdapterRegistration {
         descriptor: unisphere_adapter_copilot_cli::DESCRIPTOR,
         source: SourceRepresentation::Jsonl,
-        query: Some(|entry| query_registration(entry, "copilot-cli",
-            unisphere_adapter_copilot_cli::CURRENT_QUERY_POLICY_VERSION, unisphere_adapter_copilot_cli::CopilotCliAdapter)),
+        query: Some(|entry| {
+            query_registration(
+                entry,
+                "copilot-cli",
+                unisphere_adapter_copilot_cli::CURRENT_QUERY_POLICY_VERSION,
+                unisphere_adapter_copilot_cli::CopilotCliAdapter,
+            )
+        }),
         run: |_, args, context, stdout, stderr| {
             run_with_adapter(
                 unisphere_adapter_copilot_cli::CopilotCliAdapter,
@@ -138,8 +171,14 @@ const ADAPTERS: [AdapterRegistration; 9] = [
     AdapterRegistration {
         descriptor: unisphere_adapter_cursor::DESCRIPTOR,
         source: SourceRepresentation::Jsonl,
-        query: Some(|entry| query_registration(entry, "cursor",
-            unisphere_adapter_cursor::TRANSCRIPT_POLICY, unisphere_adapter_cursor::CursorAdapter)),
+        query: Some(|entry| {
+            query_registration(
+                entry,
+                "cursor",
+                unisphere_adapter_cursor::TRANSCRIPT_POLICY,
+                unisphere_adapter_cursor::CursorAdapter,
+            )
+        }),
         run: |_, args, context, stdout, stderr| {
             run_with_adapter(
                 unisphere_adapter_cursor::CursorAdapter,
@@ -155,8 +194,14 @@ const ADAPTERS: [AdapterRegistration; 9] = [
     AdapterRegistration {
         descriptor: unisphere_adapter_vscode_copilot::DESCRIPTOR,
         source: SourceRepresentation::JsonDocument,
-        query: Some(|entry| query_registration(entry, "copilot",
-            unisphere_adapter_vscode_copilot::QUERY_POLICY_VERSION, unisphere_adapter_vscode_copilot::VsCodeCopilotAdapter)),
+        query: Some(|entry| {
+            query_registration(
+                entry,
+                "copilot",
+                unisphere_adapter_vscode_copilot::QUERY_POLICY_VERSION,
+                unisphere_adapter_vscode_copilot::VsCodeCopilotAdapter,
+            )
+        }),
         run: |source, args, context, stdout, stderr| {
             run_with_snapshot(
                 unisphere_adapter_vscode_copilot::VsCodeCopilotAdapter,
@@ -173,8 +218,14 @@ const ADAPTERS: [AdapterRegistration; 9] = [
     AdapterRegistration {
         descriptor: unisphere_adapter_cursor::IDE_DESCRIPTOR,
         source: SourceRepresentation::SqliteKeyValue("cursorDiskKV"),
-        query: Some(|entry| query_registration(entry, "cursor",
-            unisphere_adapter_cursor::IDE_POLICY, unisphere_adapter_cursor::CursorIdeAdapter)),
+        query: Some(|entry| {
+            query_registration(
+                entry,
+                "cursor",
+                unisphere_adapter_cursor::IDE_POLICY,
+                unisphere_adapter_cursor::CursorIdeAdapter,
+            )
+        }),
         run: |source, args, context, stdout, stderr| {
             run_with_snapshot(
                 unisphere_adapter_cursor::CursorIdeAdapter,
@@ -191,8 +242,14 @@ const ADAPTERS: [AdapterRegistration; 9] = [
     AdapterRegistration {
         descriptor: unisphere_adapter_copilot_cli::SNAPSHOT_DESCRIPTOR,
         source: SourceRepresentation::JsonDocument,
-        query: Some(|entry| query_registration(entry, "copilot-cli",
-            unisphere_adapter_copilot_cli::LEGACY_QUERY_POLICY_VERSION, unisphere_adapter_copilot_cli::CopilotCliAdapterSnapshot)),
+        query: Some(|entry| {
+            query_registration(
+                entry,
+                "copilot-cli",
+                unisphere_adapter_copilot_cli::LEGACY_QUERY_POLICY_VERSION,
+                unisphere_adapter_copilot_cli::CopilotCliAdapterSnapshot,
+            )
+        }),
         run: |source, args, context, stdout, stderr| {
             run_with_snapshot(
                 unisphere_adapter_copilot_cli::CopilotCliAdapterSnapshot,
@@ -221,17 +278,28 @@ fn query_registration<A: QueryAdapter + 'static>(
             table: table.into(),
         },
     };
-    Ok(QueryRegistration::new(entry.descriptor, HarnessId::new(harness)?,
-        representation, Arc::new(adapter)).with_query_policy_version(policy))
+    Ok(QueryRegistration::new(
+        entry.descriptor,
+        HarnessId::new(harness).map_err(|_| QueryFailure::invalid_data())?,
+        representation,
+        Arc::new(adapter),
+    )
+    .with_query_policy_version(policy))
 }
 
 pub fn query_registrations() -> Result<Vec<QueryRegistration>, QueryFailure> {
     let mut registrations = Vec::with_capacity(ADAPTERS.len() + 1);
     for entry in &ADAPTERS {
-        let Some(make_query) = entry.query else { continue };
+        let Some(make_query) = entry.query else {
+            continue;
+        };
         let registration = make_query(entry)?;
         if matches!(entry.source, SourceRepresentation::JsonDocument)
-            && entry.descriptor.locations.iter().any(|hint| hint.storage_format == "json_journal")
+            && entry
+                .descriptor
+                .locations
+                .iter()
+                .any(|hint| hint.storage_format == "json_journal")
         {
             let mut journal = registration.clone();
             journal.representation = NativeRepresentation::JsonJournal;
@@ -251,10 +319,12 @@ fn run_with_adapter<A: SessionAdapter>(
 ) -> u8 {
     let collector = Collector::new(FileSessionLoader, adapter, OtlpJsonlWriter);
     match command {
-        ParsedCommand::NativeRootList(command) =>
-            unisphere_cli::run_native_list(command, &collector, stdout, stderr),
-        ParsedCommand::NativeExport(command) =>
-            unisphere_cli::run_native_export(command, &collector, stdout, stderr),
+        ParsedCommand::NativeRootList(command) => {
+            unisphere_cli::run_native_list(command, &collector, stdout, stderr)
+        }
+        ParsedCommand::NativeExport(command) => {
+            unisphere_cli::run_native_export(command, &collector, stdout, stderr)
+        }
         _ => invalid_native(stderr),
     }
 }
@@ -282,8 +352,9 @@ fn run_with_snapshot<A: SnapshotAdapter>(
     };
     let collector = SnapshotCollector::new(FileSnapshotLoader, adapter, OtlpJsonlWriter);
     match command {
-        ParsedCommand::NativeExport(command) =>
-            unisphere_cli::run_native_snapshot_export(command, &collector, format, stdout, stderr),
+        ParsedCommand::NativeExport(command) => {
+            unisphere_cli::run_native_snapshot_export(command, &collector, format, stdout, stderr)
+        }
         _ => invalid_native(stderr),
     }
 }
@@ -301,8 +372,13 @@ fn dispatch<const N: usize>(
             return unisphere_cli::run_catalog(command, &descriptors, stdout, stderr);
         }
         ParsedCommand::NativeRootList(_) => {
-            return run_with_adapter(unisphere_adapter_claude::ClaudeCodeAdapter,
-                command, context, stdout, stderr);
+            return run_with_adapter(
+                unisphere_adapter_claude::ClaudeCodeAdapter,
+                command,
+                context,
+                stdout,
+                stderr,
+            );
         }
         ParsedCommand::NativeExport(command) => &command.adapter,
         ParsedCommand::NativeGitNotesList(command) => &command.adapter,
@@ -315,7 +391,11 @@ fn dispatch<const N: usize>(
 }
 
 fn invalid_native(stderr: &mut dyn Write) -> u8 {
-    unisphere_cli::session_error(stderr, &PipelineError::new(PipelineErrorKind::InvalidInput, None), 2)
+    unisphere_cli::session_error(
+        stderr,
+        &PipelineError::new(PipelineErrorKind::InvalidInput, None),
+        2,
+    )
 }
 
 pub fn run(
@@ -367,8 +447,11 @@ mod tests {
                 &registry,
                 &unisphere_cli::parse(
                     ["unisphere", "adapters", "list", "--json"]
-                        .map(OsString::from).to_vec(), &context
-                ).unwrap(),
+                        .map(OsString::from)
+                        .to_vec(),
+                    &context
+                )
+                .unwrap(),
                 &context,
                 &mut catalog_stdout,
                 &mut catalog_stderr,
@@ -398,7 +481,13 @@ mod tests {
         let mut stdout = Vec::new();
         let mut stderr = Vec::new();
         assert_eq!(
-            dispatch(&registry, &unisphere_cli::parse(args, &context).unwrap(), &context, &mut stdout, &mut stderr),
+            dispatch(
+                &registry,
+                &unisphere_cli::parse(args, &context).unwrap(),
+                &context,
+                &mut stdout,
+                &mut stderr
+            ),
             0
         );
         let document: serde_json::Value = serde_json::from_slice(&stdout).unwrap();

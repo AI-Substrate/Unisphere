@@ -1,0 +1,22 @@
+{
+  "recorded_at": "2026-09-10T09:27:47.174Z",
+  "scope": "Actual pre-Pij built working CLI; tool duration observed1000ms, --min-duration500 incorrectly emitted integer filter for FiniteF64 schema",
+  "run": {
+    "argv": [
+      "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/target/debug/unisphere",
+      "tools",
+      "list",
+      "--repo",
+      "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+      "--harness",
+      "claude-code",
+      "--min-duration",
+      "500",
+      "--json"
+    ],
+    "cwd": "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+    "stdout": "",
+    "stderr": "{\"command\":\"tools.list\",\"error\":{\"code\":\"UNI-QUERY-ARGUMENT\",\"location\":{\"entity\":null,\"field\":null,\"offset\":null,\"source\":null},\"message\":\"The query arguments are not valid for this operation.\",\"reason\":null,\"recovery\":{\"dataset\":\"tools\",\"kind\":\"consult_schema\"},\"retryable\":false},\"next_action\":\"Inspect the dataset schema and use its supported fields and operation.\",\"ok\":false,\"v\":1}\n",
+    "exit": 1
+  }
+}

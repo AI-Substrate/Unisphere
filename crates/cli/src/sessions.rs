@@ -1,81 +1,14 @@
-//! Session commands use only the core application port; source adapters are selected by the app.
-use crate::CliContext;
-use clap::{Parser, Subcommand};
+//! Native JSONL session operations through injected collection ports.
+use crate::{
+    CliContext, NativeExportCommand, NativeRootListCommand, ParsedCommand, args,
+    output::StagedOutput, run_help,
+};
 use serde_json::json;
-use std::{ffi::OsString, fs::OpenOptions, io::Write, path::PathBuf};
+use std::{ffi::OsString, io::Write};
 use unisphere_core::{
     CollectionApi, MappingOptions, PipelineError, PipelineErrorKind, ReadCursor, ReadLimits,
     SessionRef, SourceScope,
 };
-
-#[derive(Parser)]
-#[command(
-    name = "unisphere sessions",
-    about = "List an explicit leaf project directory or export source-derived OTLP JSONL; no implicit HOME scan"
-)]
-struct Arguments {
-    #[command(subcommand)]
-    command: SessionCommand,
-}
-#[derive(Subcommand)]
-enum SessionCommand {
-    /// List immediate .jsonl files only (not recursive); choose the Claude leaf project directory.
-    List {
-        #[arg(long)]
-        root: PathBuf,
-        #[arg(long, default_value_t = 4096)]
-        max_sessions: usize,
-    },
-    /// Export one explicit file; content is omitted unless --include-content is given.
-    Export {
-        #[arg(long, default_value = "claude-code")]
-        adapter: String,
-        #[arg(long)]
-        input: PathBuf,
-        /// New destination file; existing files are never overwritten. Default: OTLP JSONL on stdout.
-        #[arg(long)]
-        output: Option<PathBuf>,
-        #[arg(long)]
-        include_content: bool,
-        #[arg(long, default_value_t = 128)]
-        max_records: usize,
-        #[arg(long, default_value_t = 1_048_576)]
-        max_record_bytes: usize,
-        #[arg(long, default_value_t = 4_194_304)]
-        max_batch_bytes: usize,
-    },
-}
-
-/// Inspect only the adapter selection for the composition root. Parsing and all
-/// argument validation still occur in `run_sessions` before any collection I/O.
-/// App registries can add another adapter name without changing the frontend.
-pub fn requested_session_adapter(args: &[OsString]) -> &str {
-    let mut selected = "claude-code";
-    let mut iter = args.iter().skip(2);
-    while let Some(arg) = iter.next() {
-        if arg == "--adapter" {
-            if let Some(value) = iter.next().and_then(|value| value.to_str()) {
-                selected = value;
-            }
-        } else if let Some(value) = arg
-            .to_str()
-            .and_then(|value| value.strip_prefix("--adapter="))
-        {
-            selected = value;
-        }
-    }
-    selected
-}
-
-fn absolute(path: PathBuf, context: &CliContext) -> Result<PathBuf, PipelineError> {
-    let path = if path.is_absolute() {
-        path
-    } else {
-        context.cwd.join(path)
-    };
-    SessionRef { path: path.clone() }.validate()?;
-    Ok(path)
-}
 
 fn json_line(output: &mut dyn Write, value: &serde_json::Value) -> Result<(), PipelineError> {
     serde_json::to_writer(&mut *output, value)
@@ -92,149 +25,176 @@ pub fn session_error(stderr: &mut dyn Write, error: &PipelineError, exit: u8) ->
         stderr,
         &json!({"ok":false,"command":"sessions","v":1,
         "error":{"kind":error.kind(),"code":error.code(),"message":error.message(),
-        "fix":error.fix(),"offset":error.offset()}}),
+            "fix":error.fix(),"offset":error.offset(),"retryable":false},
+        "next_action":{"summary":error.fix(),"argv":["unisphere","sessions","--help"],
+            "required_inputs":[]}}),
     );
     if result.is_err() { 1 } else { exit }
 }
 
-/// Args include binary name and the `sessions` token. The supplied collector must
-/// correspond to the name selected by `requested_session_adapter` in the app.
-pub fn run_sessions(
-    args: impl IntoIterator<Item = OsString>,
-    context: &CliContext,
+/// Execute one parsed native nonrecursive JSONL-root listing.
+pub fn run_native_list(
+    command: &NativeRootListCommand,
     collector: &dyn CollectionApi,
     stdout: &mut dyn Write,
     stderr: &mut dyn Write,
 ) -> u8 {
-    let args: Vec<_> = args.into_iter().collect();
-    let parsed = Arguments::try_parse_from(
-        std::iter::once(OsString::from("unisphere sessions")).chain(args.into_iter().skip(2)),
-    );
-    let parsed = match parsed {
-        Ok(parsed) => parsed,
-        Err(error) if error.kind() == clap::error::ErrorKind::DisplayHelp => {
-            return if stdout
-                .write_all(error.to_string().as_bytes())
-                .and_then(|()| stdout.flush())
-                .is_ok()
-            {
-                0
-            } else {
-                1
-            };
-        }
-        Err(_) => {
-            return session_error(
-                stderr,
-                &PipelineError::new(PipelineErrorKind::InvalidInput, None),
-                2,
-            );
-        }
-    };
-    let result = match parsed.command {
-        SessionCommand::List { root, max_sessions } => (|| {
-            let root = absolute(root, context)?;
-            let scope = SourceScope { root, max_sessions };
-            scope.validate()?;
-            let sessions = collector.list_sessions(&scope)?;
-            if sessions.is_empty() {
-                json_line(
-                    stderr,
-                    &json!({"ok":true,"command":"sessions.list","v":1,
-                    "note":"No immediate .jsonl files found; listing is not recursive, so select a leaf project directory."}),
-                )?;
-            }
+    let result = (|| {
+        let scope = SourceScope {
+            root: command.root.clone(),
+            max_sessions: command.max_sessions,
+        };
+        scope.validate()?;
+        let sessions = collector.list_sessions(&scope)?;
+        let empty = sessions.is_empty();
+        let next_action = if empty {
+            json!({"summary":"Choose the explicit leaf project directory or read the source-discovery workflow.",
+                "argv":["unisphere","docs","get","find-sessions","--human"],"required_inputs":[]})
+        } else {
+            json!({"summary":"Inspect one returned native session file through the explicit OTLP exporter.",
+                "argv":["unisphere","sessions","export","--input"],"required_inputs":["session_path"]})
+        };
+        json_line(
+            stdout,
+            &json!({"ok":true,"command":"sessions.list","v":1,
+            "data":{"root":scope.root,"recursive":false,"sessions":sessions},
+            "next_action":next_action}),
+        )?;
+        if empty {
             json_line(
-                stdout,
+                stderr,
                 &json!({"ok":true,"command":"sessions.list","v":1,
-                "data":{"root":scope.root,"recursive":false,"sessions":sessions}}),
-            )
-        })(),
-        SessionCommand::Export {
-            adapter,
-            input,
-            output,
-            include_content,
-            max_records,
-            max_record_bytes,
-            max_batch_bytes,
-        } => (|| {
-            let limits = ReadLimits {
-                max_records,
-                max_record_bytes,
-                max_batch_bytes,
-            };
-            limits.validate()?;
-            let session = SessionRef {
-                path: absolute(input, context)?,
-            };
-            let output = output.map(|path| absolute(path, context)).transpose()?;
-            let mut file = if let Some(path) = output.as_ref() {
-                Some(
-                    OpenOptions::new()
-                        .write(true)
-                        .create_new(true)
-                        .open(path)
-                        .map_err(|_| PipelineError::new(PipelineErrorKind::Write, None))?,
-                )
+                "note":"No immediate .jsonl files found; listing is not recursive, so select a leaf project directory.",
+                "next_action":{"summary":"Choose the explicit leaf project directory or read the source-discovery workflow.",
+                    "argv":["unisphere","docs","get","find-sessions","--human"],"required_inputs":[]}}),
+            )?;
+        }
+        Ok(())
+    })();
+    finish(result, stderr)
+}
+
+/// Execute one parsed native append-JSONL export. Snapshot and Git-AI commands
+/// have separate typed entrypoints and are rejected here before collector I/O.
+pub fn run_native_export(
+    command: &NativeExportCommand,
+    collector: &dyn CollectionApi,
+    stdout: &mut dyn Write,
+    stderr: &mut dyn Write,
+) -> u8 {
+    let result = (|| {
+        if command.adapter == "git-ai"
+            || command.repo.is_some()
+            || command
+                .input
+                .as_ref()
+                .is_none_or(|path| !path.is_absolute())
+            || command
+                .output
+                .as_ref()
+                .is_some_and(|path| !path.is_absolute())
+            || command.source_format.is_some()
+            || command.table.is_some()
+            || command.session_id.is_some()
+            || command.max_snapshot_bytes.is_some()
+            || command.notes_ref.is_some()
+            || !command.commits.is_empty()
+            || command.git_executable.is_some()
+            || command.max_notes.is_some()
+            || command.max_note_bytes.is_some()
+            || command.max_total_bytes.is_some()
+            || command.max_listing_bytes.is_some()
+            || command.command_timeout_ms.is_some()
+        {
+            return Err(PipelineError::new(PipelineErrorKind::InvalidInput, None));
+        }
+        let limits = ReadLimits {
+            max_records: command.max_records.unwrap_or(128),
+            max_record_bytes: command.max_record_bytes.unwrap_or(1_048_576),
+            max_batch_bytes: command.max_batch_bytes.unwrap_or(4_194_304),
+        };
+        limits.validate()?;
+        let session = SessionRef {
+            path: command.input.clone().expect("validated native JSONL input"),
+        };
+        session.validate()?;
+        let mut staged = command
+            .output
+            .as_ref()
+            .map(|path| StagedOutput::create(path))
+            .transpose()
+            .map_err(|_| PipelineError::new(PipelineErrorKind::Write, None))?;
+        let mut cursor: Option<ReadCursor> = None;
+        let mut count = 0usize;
+        let mut batches = 0usize;
+        let mut diagnostics = 0usize;
+        let incomplete_tail;
+        loop {
+            let batch = if let Some(staged) = staged.as_mut() {
+                collector.collect_batch(
+                    &session,
+                    cursor.as_ref(),
+                    limits,
+                    MappingOptions {
+                        include_content: command.include_content,
+                    },
+                    staged.writer(),
+                )?
             } else {
-                None
+                collector.collect_batch(
+                    &session,
+                    cursor.as_ref(),
+                    limits,
+                    MappingOptions {
+                        include_content: command.include_content,
+                    },
+                    stdout,
+                )?
             };
-            let mut cursor: Option<ReadCursor> = None;
-            let mut count = 0usize;
-            let mut batches = 0usize;
-            let mut diagnostics = 0usize;
-            let incomplete_tail;
-            loop {
-                let batch = if let Some(file) = file.as_mut() {
-                    collector.collect_batch(
-                        &session,
-                        cursor.as_ref(),
-                        limits,
-                        MappingOptions { include_content },
-                        file,
-                    )?
-                } else {
-                    collector.collect_batch(
-                        &session,
-                        cursor.as_ref(),
-                        limits,
-                        MappingOptions { include_content },
-                        stdout,
-                    )?
-                };
-                let prior = cursor.as_ref().map_or(0, |cursor| cursor.offset);
-                if batch.next_cursor.source != session.path
-                    || batch.next_cursor.offset < prior
-                    || (batch.more && batch.next_cursor.offset == prior)
-                {
-                    return Err(PipelineError::new(
-                        PipelineErrorKind::InvalidData,
-                        Some(prior),
-                    ));
-                }
-                count = count
-                    .checked_add(batch.mapped.records.len())
-                    .ok_or_else(|| PipelineError::new(PipelineErrorKind::BatchLimit, None))?;
-                diagnostics = diagnostics
-                    .checked_add(batch.mapped.diagnostics.len())
-                    .ok_or_else(|| PipelineError::new(PipelineErrorKind::BatchLimit, None))?;
-                batches += 1;
-                cursor = Some(batch.next_cursor);
-                if !batch.more {
-                    incomplete_tail = batch.incomplete_tail;
-                    break;
-                }
+            let prior = cursor.as_ref().map_or(0, |cursor| cursor.offset);
+            if batch.next_cursor.source != session.path
+                || batch.next_cursor.offset < prior
+                || (batch.more && batch.next_cursor.offset == prior)
+            {
+                return Err(PipelineError::new(
+                    PipelineErrorKind::InvalidData,
+                    Some(prior),
+                ));
             }
-            json_line(
-                stderr,
-                &json!({"ok":true,"command":"sessions.export","v":1,
-                "data":{"adapter":adapter,"records":count,"batches":batches,
-                    "diagnostics":diagnostics,"incomplete_tail":incomplete_tail,
-                    "offset":cursor.map(|cursor| cursor.offset),"output":output}}),
-            )
-        })(),
-    };
+            count = count
+                .checked_add(batch.mapped.records.len())
+                .ok_or_else(|| PipelineError::new(PipelineErrorKind::BatchLimit, None))?;
+            diagnostics = diagnostics
+                .checked_add(batch.mapped.diagnostics.len())
+                .ok_or_else(|| PipelineError::new(PipelineErrorKind::BatchLimit, None))?;
+            batches = batches
+                .checked_add(1)
+                .ok_or_else(|| PipelineError::new(PipelineErrorKind::BatchLimit, None))?;
+            cursor = Some(batch.next_cursor);
+            if !batch.more {
+                incomplete_tail = batch.incomplete_tail;
+                break;
+            }
+        }
+        if let Some(staged) = staged {
+            staged
+                .publish()
+                .map_err(|_| PipelineError::new(PipelineErrorKind::Write, None))?;
+        }
+        json_line(
+            stderr,
+            &json!({"ok":true,"command":"sessions.export","v":1,
+            "data":{"adapter":command.adapter,"records":count,"batches":batches,
+                "diagnostics":diagnostics,"incomplete_tail":incomplete_tail,
+                "offset":cursor.map(|cursor| cursor.offset),"output":command.output},
+            "next_action":{"summary":"Import the completed OTLP JSONL stream, or inspect adapter capabilities before another export.",
+                "argv":["unisphere","adapters","list","--json"],"required_inputs":[]}}),
+        )
+    })();
+    finish(result, stderr)
+}
+
+fn finish(result: Result<(), PipelineError>, stderr: &mut dyn Write) -> u8 {
     match result {
         Ok(()) => 0,
         Err(error) => {
@@ -245,5 +205,30 @@ pub fn run_sessions(
             };
             session_error(stderr, &error, exit)
         }
+    }
+}
+
+/// Backwards-compatible native JSONL frontend implemented through the sole root parser.
+pub fn run_sessions(
+    args: impl IntoIterator<Item = OsString>,
+    context: &CliContext,
+    collector: &dyn CollectionApi,
+    stdout: &mut dyn Write,
+    stderr: &mut dyn Write,
+) -> u8 {
+    let args = args.into_iter().collect::<Vec<_>>();
+    match args::parse(args, context) {
+        Ok(ParsedCommand::NativeRootList(command)) => {
+            run_native_list(&command, collector, stdout, stderr)
+        }
+        Ok(ParsedCommand::NativeExport(command)) => {
+            run_native_export(&command, collector, stdout, stderr)
+        }
+        Ok(ParsedCommand::Help(help)) => run_help(&help, stdout, stderr),
+        Ok(_) | Err(_) => session_error(
+            stderr,
+            &PipelineError::new(PipelineErrorKind::InvalidInput, None),
+            2,
+        ),
     }
 }

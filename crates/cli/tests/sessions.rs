@@ -1,6 +1,8 @@
 use serde_json::Value;
 use std::{ffi::OsString, io::Write};
-use unisphere_cli::{CliContext, run_sessions};
+use unisphere_cli::{
+    CliContext, ParsedCommand, parse, run_native_export, run_native_list, run_sessions,
+};
 use unisphere_core::{
     CollectionBatch, MappedBatch, PipelineError, PipelineErrorKind, ReadCursor, SourceIdentity,
 };
@@ -34,6 +36,71 @@ fn fake(context: &CliContext) -> FakeCollector {
 }
 fn args(values: &[&str]) -> Vec<OsString> {
     values.iter().map(OsString::from).collect()
+}
+
+#[test]
+fn parsed_native_commands_execute_without_second_parsing() {
+    let context = context();
+    let collector = fake(&context);
+    let ParsedCommand::NativeRootList(list) = parse(
+        args(&["unisphere", "sessions", "list", "--root", "."]),
+        &context,
+    )
+    .unwrap() else {
+        panic!("native list route");
+    };
+    let mut list_stdout = Vec::new();
+    let mut list_stderr = Vec::new();
+    assert_eq!(
+        run_native_list(&list, &collector, &mut list_stdout, &mut list_stderr),
+        0
+    );
+    let list_response: Value = serde_json::from_slice(&list_stdout).unwrap();
+    let list_action = list_response["next_action"]["argv"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|value| OsString::from(value.as_str().unwrap()))
+        .collect::<Vec<_>>();
+    assert!(matches!(
+        parse(list_action, &context),
+        Ok(ParsedCommand::Docs(_))
+    ));
+
+    let collector = fake(&context);
+    let ParsedCommand::NativeExport(export) = parse(
+        args(&[
+            "unisphere",
+            "sessions",
+            "export",
+            "--adapter",
+            "claude-code",
+            "--input",
+            "session.jsonl",
+        ]),
+        &context,
+    )
+    .unwrap() else {
+        panic!("native export route");
+    };
+    let mut stdout = Vec::new();
+    let mut stderr = Vec::new();
+    assert_eq!(
+        run_native_export(&export, &collector, &mut stdout, &mut stderr),
+        0
+    );
+    assert_eq!(stdout, b"{\"resourceLogs\":[]}\n");
+    let summary: Value = serde_json::from_slice(&stderr).unwrap();
+    let action = summary["next_action"]["argv"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|value| OsString::from(value.as_str().unwrap()))
+        .collect::<Vec<_>>();
+    assert!(matches!(
+        parse(action, &context),
+        Ok(ParsedCommand::Catalog(_))
+    ));
 }
 
 #[test]

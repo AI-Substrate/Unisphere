@@ -79,20 +79,25 @@ fn envelope(invocation: &Invocation) -> Value {
     serde_json::from_str(&invocation.stdout).unwrap()
 }
 
-fn expected_failure(failure: &Failure) -> Value {
-    json!({
-        "ok": false,
-        "command": "config.check",
-        "v": 1,
-        "error": {
-            "kind": failure.kind(),
-            "code": failure.code(),
-            "message": failure.message(),
-            "fix": failure.fix(),
-            "retryable": failure.retryable(),
-            "location": failure.location(),
-        }
-    })
+fn assert_failure(invocation: &Invocation, failure: &Failure) {
+    let value = envelope(invocation);
+    assert_eq!(value["ok"], false);
+    assert_eq!(value["command"], "config.check");
+    assert_eq!(value["v"], 1);
+    assert_eq!(value["error"]["kind"], json!(failure.kind()));
+    assert_eq!(value["error"]["code"], failure.code());
+    assert_eq!(value["error"]["retryable"], failure.retryable());
+    assert_eq!(value["error"]["location"], json!(failure.location()));
+    assert!(
+        value["next_action"]["summary"]
+            .as_str()
+            .is_some_and(|summary| !summary.trim().is_empty())
+    );
+    assert!(
+        value["next_action"]["argv"]
+            .as_array()
+            .is_some_and(|argv| !argv.is_empty())
+    );
 }
 
 #[test]
@@ -101,9 +106,12 @@ fn defaults_call_only_the_injected_inspector_and_render_its_report() {
     let output = invoke(&["unisphere", "config", "check"], false, Ok(result.clone()));
     assert_eq!(output.code, 0);
     assert_eq!(output.requests, vec![InspectionRequest::default()]);
-    assert_eq!(
-        envelope(&output),
-        json!({"ok":true,"command":"config.check","v":1,"data":result})
+    let value = envelope(&output);
+    assert_eq!(value["data"], json!(result));
+    assert!(
+        value["next_action"]["summary"]
+            .as_str()
+            .is_some_and(|summary| !summary.trim().is_empty())
     );
 }
 
@@ -226,7 +234,7 @@ fn blank_root_is_configuration_input_not_a_parser_diagnostic() {
             output.requests[0].overrides.source_roots,
             Some(vec![root.to_owned()])
         );
-        assert_eq!(envelope(&output), expected_failure(&failure));
+        assert_failure(&output, &failure);
     }
 }
 
@@ -261,7 +269,7 @@ fn output_modes_override_terminal_status_for_success_and_failure() {
             let failed = invoke(&args, terminal, Err(failure.clone()));
             assert_eq!(failed.code, 1);
             if is_json {
-                assert_eq!(envelope(&failed), expected_failure(&failure));
+                assert_failure(&failed, &failure);
             } else {
                 assert!(failed.stdout.is_empty());
                 assert!(failed.stderr.contains(failure.code()));
@@ -296,10 +304,7 @@ fn conflicting_modes_always_fail_in_json_regardless_of_order_or_terminal() {
             );
             assert_eq!(output.code, 2);
             assert!(output.requests.is_empty());
-            assert_eq!(
-                envelope(&output),
-                expected_failure(&Failure::invalid_arguments(None))
-            );
+            assert_failure(&output, &Failure::invalid_arguments(None));
         }
     }
 }
@@ -342,10 +347,7 @@ fn invalid_invocations_are_safe_typed_failures_without_port_calls() {
         let output = invoke(&args, false, Ok(report(&[])));
         assert_eq!(output.code, 2, "args: {args:?}");
         assert!(output.requests.is_empty());
-        assert_eq!(
-            envelope(&output),
-            expected_failure(&Failure::invalid_arguments(None))
-        );
+        assert_failure(&output, &Failure::invalid_arguments(None));
         assert!(!output.stdout.contains("SENSITIVE-ARG-MARKER"));
     }
     let human = invoke(
@@ -446,12 +448,16 @@ fn version_uses_explicit_context_and_selected_mode_without_inspection() {
                 assert!(output.requests.is_empty());
                 assert!(output.stderr.is_empty());
                 if flag == Some("--json") || (flag.is_none() && !terminal) {
-                    assert_eq!(
-                        envelope(&output),
-                        json!({"ok":true,"command":"version","v":1,"data":{"version":"9.8.7-test"}})
+                    let value = envelope(&output);
+                    assert_eq!(value["data"]["version"], "9.8.7-test");
+                    assert!(
+                        value["next_action"]["summary"]
+                            .as_str()
+                            .is_some_and(|summary| !summary.trim().is_empty())
                     );
                 } else {
-                    assert_eq!(output.stdout, "unisphere 9.8.7-test\n");
+                    assert!(output.stdout.starts_with("unisphere 9.8.7-test\n"));
+                    assert!(output.stdout.contains("Next:"));
                 }
             }
         }
@@ -496,7 +502,7 @@ fn failures_preserve_core_semantics_and_structural_location() {
         };
         assert_eq!(output.code, expected_code);
         assert_eq!(output.requests.len(), 1);
-        assert_eq!(envelope(&output), expected_failure(&failure));
+        assert_failure(&output, &failure);
     }
     let output = invoke(
         &["unisphere", "config", "check", "--human"],
@@ -590,10 +596,7 @@ fn a_relative_context_cannot_silently_create_a_relative_file_request() {
     );
     assert_eq!(output.code, 2);
     assert!(output.requests.is_empty());
-    assert_eq!(
-        envelope(&output),
-        expected_failure(&Failure::invalid_arguments(None))
-    );
+    assert_failure(&output, &Failure::invalid_arguments(None));
 }
 
 #[cfg(unix)]
@@ -631,10 +634,7 @@ fn non_utf8_file_paths_are_preserved_but_non_utf8_root_values_are_rejected_safel
     );
     assert_eq!(root.code, 2);
     assert!(root.requests.is_empty());
-    assert_eq!(
-        envelope(&root),
-        expected_failure(&Failure::invalid_arguments(None))
-    );
+    assert_failure(&root, &Failure::invalid_arguments(None));
     assert!(!root.stdout.contains("SENSITIVE-ARG-MARKER"));
 }
 
@@ -700,7 +700,7 @@ fn short_writes_are_completed_and_write_or_flush_failures_exit_one_safely() {
                 assert!(stderr.is_empty());
                 assert!(stdout.bytes.ends_with(b"\n"));
             } else {
-                assert_eq!(stderr, b"unisphere: could not write output.\n");
+                assert!(String::from_utf8_lossy(&stderr).contains("output incomplete"));
                 assert!(
                     !String::from_utf8_lossy(&stdout.bytes).contains("SENSITIVE-WRITER-MARKER")
                 );

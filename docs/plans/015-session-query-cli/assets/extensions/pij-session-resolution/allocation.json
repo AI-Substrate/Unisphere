@@ -1,6 +1,6 @@
 {
   "recorded_at": "2026-09-10T08:47:36.661Z",
-  "status": "received-and-started",
+  "status": "candidate-delivered-and-applied; product validation pending",
   "kind": "manual-external-follow-on",
   "extension_id": "plan015-pij-session-resolution",
   "source_sha": "771f94a6d478dd50d74b661b2592d67bd0eeaa1a",
@@ -53,5 +53,8 @@
     "message_id": "5935987f-589e-4169-89bb-52624a7091e9",
     "change": "serde_json.workspace = true under [dependencies] in crates/loader-query/Cargo.toml",
     "no_new_package": true
-  }
+  },
+  "delivery": "delivery.json",
+  "candidate_sha": "ae809f3cd2c49d42f01814e4db91ae5bd6853f7c",
+  "effort_corroboration": "Worker additionally observed high effort in pij list --here metadata; locally exposed configuration, not provider attestation"
 }

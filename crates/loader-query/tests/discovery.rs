@@ -141,43 +141,89 @@ fn explicit_adapter_selects_declared_document_or_journal_framing_outside_hint_ro
         application: "fixture",
         description: "Two declared native framings",
         locations: &[
-            LocationHint { platforms: &["macos"], base: "home", path: "store",
-                session_glob: "*.json", storage_format: "json_document" },
-            LocationHint { platforms: &["macos"], base: "home", path: "store",
-                session_glob: "*.jsonl", storage_format: "json_journal" },
+            LocationHint {
+                platforms: &["macos"],
+                base: "home",
+                path: "store",
+                session_glob: "*.json",
+                storage_format: "json_document",
+            },
+            LocationHint {
+                platforms: &["macos"],
+                base: "home",
+                path: "store",
+                session_glob: "*.jsonl",
+                storage_format: "json_journal",
+            },
         ],
         capabilities: CAPABILITIES,
     };
     let temporary = tempdir().unwrap();
-    let registrations = [NativeRepresentation::JsonDocument, NativeRepresentation::JsonJournal]
-        .into_iter()
-        .map(|representation| QueryRegistration::new(
-            DESCRIPTOR, HarnessId::new("fixture").unwrap(), representation, Arc::new(EchoAdapter)
-        )).collect();
+    let registrations = [
+        NativeRepresentation::JsonDocument,
+        NativeRepresentation::JsonJournal,
+    ]
+    .into_iter()
+    .map(|representation| {
+        QueryRegistration::new(
+            DESCRIPTOR,
+            HarnessId::new("fixture").unwrap(),
+            representation,
+            Arc::new(EchoAdapter),
+        )
+    })
+    .collect();
     let source = LocalQuerySource::new(registrations, context(temporary.path()));
     for (name, bytes) in [
-        ("copied.json", include_bytes!("../../adapter-vscode-copilot/tests/fixtures/session-v3.json").as_slice()),
-        ("copied.jsonl", include_bytes!("../../adapter-vscode-copilot/tests/fixtures/session-journal.jsonl").as_slice()),
+        (
+            "copied.json",
+            include_bytes!("../../adapter-vscode-copilot/tests/fixtures/session-v3.json")
+                .as_slice(),
+        ),
+        (
+            "copied.jsonl",
+            include_bytes!("../../adapter-vscode-copilot/tests/fixtures/session-journal.jsonl")
+                .as_slice(),
+        ),
     ] {
         let path = temporary.path().join(name);
         fs::write(&path, bytes).unwrap();
-        let view = native(source.load(
-            &QueryScope::Source { selector: unisphere_core::query::SourceSelector::Path {
-                path, adapter: Some(AdapterId::new("documents").unwrap()),
-            }},
-            &SourceSelection::default(), &QueryLimits::default(), ContentAccess::default(),
-        ).expect("explicit copied source retains its declared native framing"));
+        let view = native(
+            source
+                .load(
+                    &QueryScope::Source {
+                        selector: unisphere_core::query::SourceSelector::Path {
+                            path,
+                            adapter: Some(AdapterId::new("documents").unwrap()),
+                        },
+                    },
+                    &SourceSelection::default(),
+                    &QueryLimits::default(),
+                    ContentAccess::default(),
+                )
+                .expect("explicit copied source retains its declared native framing"),
+        );
         assert_eq!(view.coverage.loaded_sources, 1);
         assert_eq!(view.sources[0].read_status, SourceReadStatus::Readable);
     }
-    let failure = source.load(
-        &QueryScope::Source { selector: unisphere_core::query::SourceSelector::Path {
-            path: temporary.path().join("ambiguous.native"),
-            adapter: Some(AdapterId::new("documents").unwrap()),
-        }},
-        &SourceSelection::default(), &QueryLimits::default(), ContentAccess::default(),
-    ).err().expect("unrecognised framing remains ambiguous before opening");
-    assert_eq!(failure.kind(), unisphere_core::query::QueryFailureCode::UnsupportedSource);
+    let failure = source
+        .load(
+            &QueryScope::Source {
+                selector: unisphere_core::query::SourceSelector::Path {
+                    path: temporary.path().join("ambiguous.native"),
+                    adapter: Some(AdapterId::new("documents").unwrap()),
+                },
+            },
+            &SourceSelection::default(),
+            &QueryLimits::default(),
+            ContentAccess::default(),
+        )
+        .err()
+        .expect("unrecognised framing remains ambiguous before opening");
+    assert_eq!(
+        failure.kind(),
+        unisphere_core::query::QueryFailureCode::UnsupportedSource
+    );
 }
 
 #[test]

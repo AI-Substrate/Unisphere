@@ -5,6 +5,8 @@
 //! scans an implicit current directory, contacts a remote, or enriches saved input.
 #![forbid(unsafe_code)]
 
+pub mod pij;
+
 use globset::{GlobBuilder, GlobMatcher};
 use std::{
     borrow::Cow,
@@ -518,9 +520,9 @@ impl LocalQuerySource {
                 let registration = &self.registrations[*index];
                 registration.descriptor.locations.iter().any(|hint| {
                     hint.storage_format == registration.representation.storage_format()
-                        && Path::new(hint.session_glob).extension().is_some_and(|extension| {
-                            path.extension() == Some(extension)
-                        })
+                        && Path::new(hint.session_glob)
+                            .extension()
+                            .is_some_and(|extension| path.extension() == Some(extension))
                 })
             });
         }

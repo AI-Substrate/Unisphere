@@ -1,0 +1,33 @@
+crates/adapter-cursor/src/lib.rs
+  s_61dfe47e9838df::t_2e4c0f709bfd53 11
+crates/adapter-cursor/src/query.rs
+  s_61dfe47e9838df::t_d4f10690a7ce86 19-22
+crates/adapter-omp/src/lib.rs
+  s_61dfe47e9838df::t_bb357e1d509da8 5
+crates/adapter-omp/src/query.rs
+  s_61dfe47e9838df::t_57712529c60e44 19-20
+crates/adapter-pi/src/lib.rs
+  s_61dfe47e9838df::t_fe71b1b0a6a2da 5
+crates/adapter-pi/src/query.rs
+  s_61dfe47e9838df::t_7041498c8f6d1d 19-20
+crates/app/src/adapters.rs
+  s_61dfe47e9838df::t_f0bc4a17356e2a 2-5,13-14,26-27,56-57,73-74,90-91,107-108,124-125,141-142,158-159,176-177,194-195,211-244,247-248,253-259,265-266,284-288,293,298-310,312-313,317-320,322,327,352,368-371,401,474
+docs/plans/015-session-query-cli/assets/reviews/p4p6p7-corrections-pij-armed-cow.json
+  s_61dfe47e9838df::t_a23b09797079f4 1-116
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "b0357c762fea0396e6e5bb6bb3c2ec09b08e0128",
+  "prompts": {},
+  "sessions": {
+    "s_61dfe47e9838df": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cbe08128-4097-4473-9f99-71e9415824f6",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

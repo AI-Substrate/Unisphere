@@ -1,0 +1,50 @@
+crates/adapter-git-ai/src/lib.rs
+  h_9e71e8b09f7cf2 4-7,40,52-65,67-68,110-147,149-265,268-270,272-296,298-307,310-316,520
+crates/adapter-git-ai/src/query.rs
+  h_9e71e8b09f7cf2 1-478
+crates/adapter-git-ai/tests/query.rs
+  h_9e71e8b09f7cf2 1-323
+crates/app/src/adapters.rs
+  h_9e71e8b09f7cf2 272,274,305,339-353
+crates/app/src/git_query.rs
+  h_9e71e8b09f7cf2 1-452
+crates/app/src/main.rs
+  h_9e71e8b09f7cf2 21,100,125-129,145-161
+crates/app/tests/git_query.rs
+  h_9e71e8b09f7cf2 1-267
+crates/cli/src/git_notes.rs
+  h_9e71e8b09f7cf2 1-4,8,17-20,28-31,33-51,55-57,60-69,71-72,85-134,136-266,268-321,325,332,342-473,484,487,495-505
+crates/cli/src/lib.rs
+  h_9e71e8b09f7cf2 27
+crates/cli/tests/git_notes.rs
+  h_9e71e8b09f7cf2 1-415
+crates/sdk/src/query/view.rs
+  h_9e71e8b09f7cf2 719-738
+crates/testkit/src/bin/proof/git_notes.rs
+  h_9e71e8b09f7cf2 309
+crates/testkit/src/bin/proof/git_query.rs
+  h_9e71e8b09f7cf2 1-135
+crates/testkit/src/bin/unisphere-proof.rs
+  h_9e71e8b09f7cf2 17-18
+crates/testkit/src/lib.rs
+  h_9e71e8b09f7cf2 9
+docs/plans/015-session-query-cli/assets/team/git-convergence-packets.json
+  h_9e71e8b09f7cf2 1-34
+docs/plans/015-session-query-cli/assets/team/git-notes-cli-delivery.json
+  h_9e71e8b09f7cf2 1-45
+docs/plans/015-session-query-cli/assets/team/git-notes-query-delivery.json
+  h_9e71e8b09f7cf2 1-52
+docs/plans/015-session-query-cli/assets/verification/git-convergence-working.json
+  h_9e71e8b09f7cf2 1-285
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "78af49ce85915a83566a4f7333a804dc1a9397a7",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

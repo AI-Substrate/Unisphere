@@ -392,6 +392,12 @@ before source I/O. Bound violations and availability failures carry stable codes
 safe explanations and typed recovery actions; no diagnostic includes raw source
 payload or a content-bearing filter value.
 
+`QueryLimits::default()` permits 1 GiB of total input, equal to that field's
+existing hard ceiling. Other defaults remain independent: 64 MiB per source,
+200,000 observations/rows, 256 MiB retained data and 128 MiB output. Raising the
+input allowance does not raise these budgets or change query materialisation
+and paging behavior.
+
 ## Read Git-ai-format Git Notes
 
 Add path dependencies on `crates/loader-git`, `crates/adapter-git-ai` and

@@ -415,7 +415,7 @@ impl Default for QueryLimits {
     fn default() -> Self {
         Self {
             max_sources: 4_096,
-            max_total_input_bytes: 256 * 1024 * 1024,
+            max_total_input_bytes: 1024 * 1024 * 1024,
             max_source_bytes: 64 * 1024 * 1024,
             max_observations_and_rows: 200_000,
             max_retained_bytes: 256 * 1024 * 1024,

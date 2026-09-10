@@ -116,6 +116,12 @@ text. Use JSON or JSONL where those distinctions matter.
 Piped query output defaults to JSON; terminal query output defaults to a table.
 TTY status changes presentation only, never row selection.
 
+Queries default to at most **1 GiB of total input**, with separate unchanged
+limits of 64 MiB per source, 200,000 observations/rows, 256 MiB retained data and
+128 MiB output. A row limit or cursor limits returned results, not source-reading
+work; `--allow-partial` does not disable resource limits. These are independent
+budgets, not a guarantee that process memory stays below the input allowance.
+
 ## Native versus query sessions
 
 These forms have deliberately different meanings:

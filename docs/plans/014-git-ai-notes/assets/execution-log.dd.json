@@ -71,6 +71,15 @@
             "../plan.dd.json#acceptance_criteria/ac-0001",
             "../plan.dd.json#acceptance_criteria/ac-000a"
           ]
+        },
+        {
+          "id": "lg-0007",
+          "at": "2026-09-10T00:53:05.582Z",
+          "text": "Main accepted implementation candidate 9250b8f6f9084598433bc49d0077303df80cabc3 after independent pij-armed-cow APPROVE and immutable source/proof binding. Verbatim review: reviews/implementation-r1-pij-armed-cow.md; Main acceptance: reviews/main-acceptance-9250b8f6.json; Main binding: verification/main-bindings-9250b8f6.json. Observation 5 was withdrawn after reviewer verification of pre-authorised post-proof AGENTS edits (authority message eb071806-b9cc-4c1e-bf4d-108f2bbc2ab7); all six original observations are retained, five remain non-blocking. Resolution: reviews/implementation-r1-resolution.json. Evidence-only closeout; no runtime fix, suite rerun, push, merge, publication or formal Builder ReviewReceipt.",
+          "links": [
+            "../plan.dd.json#meta",
+            "impl-guide.dd.json#meta"
+          ]
         }
       ]
     }

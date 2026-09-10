@@ -169,7 +169,7 @@
     },
     {
       "name": "implementation_summary",
-      "value": "Implemented explicit read-only git-ai-format Git Notes through pure core ports, Unix GitObjectLoader, independent mapper, injected SDK and registered dedicated CLI. Full readiness passed all six proof modes, including real external SDK/installed CLI with Git AI unavailable; SHA256 CLI smoke also passed. Source/proof manifests are in assets/verification. Independent committed-source implementation review remains pending; guide approval is not code approval. No push/merge or formal linked-worktree dispatch occurred."
+      "value": "Implementation accepted by Main at runtime candidate 9250b8f6f9084598433bc49d0077303df80cabc3 following independent pij-armed-cow APPROVE and source/proof binding. All ten criteria have committed implementation and matching proof; full six-mode readiness and SHA256 CLI smoke remain the recorded runtime evidence. Verbatim implementation review, Main acceptance and observation-5 withdrawal are preserved under assets/reviews; five remaining observations are non-blocking follow-ups, not runtime fixes. This closeout changes evidence/accounting only; no full-suite rerun, push, merge, publication or formal Builder ReviewReceipt."
     },
     {
       "name": "key_findings",

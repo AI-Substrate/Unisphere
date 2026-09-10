@@ -244,7 +244,7 @@
     },
     {
       "name": "implementation_summary",
-      "value": "All four implementation units and their observable assertions exercised by the recorded composed quality/readiness proof. Separate independent implementation review and landing remain pending."
+      "value": "All four implementation units exercised by the recorded composed proof and accepted at 9250b8f6f9084598433bc49d0077303df80cabc3 after independent committed-source review. Five non-blocking follow-ups remain; observation 5 is withdrawn and separately documented. Only documentary closeout follows; landing/publication remain separately controlled."
     },
     {
       "name": "key_findings",

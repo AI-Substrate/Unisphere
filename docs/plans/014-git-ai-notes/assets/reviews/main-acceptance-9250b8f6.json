@@ -1,0 +1,21 @@
+{
+  "candidate": "9250b8f6f9084598433bc49d0077303df80cabc3",
+  "branch": "builder/014-git-ai-notes",
+  "verdict": "accepted implementation; not landed or published",
+  "independent_review": "/tmp/unisphere-worker-cleanup-3kSogq/git-ai-implementation-review-pij-armed-cow.md",
+  "reviewer": {"peer":"pij-armed-cow","harness":"omp","exposed_model":"github-copilot/claude-opus-5","exposed_effort":"high","provider_identity_attested":false},
+  "main_proof_binding": "/tmp/unisphere-worker-cleanup-3kSogq/git-ai-candidate-bindings-9250b8f6.json",
+  "accepted_basis": "All61 changed paths matched the delivery inventory; all30 runtime/proof files matched the successful committed six-mode boot manifest; actual captured boot status/ready and SHA256-object smoke were inspected. Reviewer independently inspected committed code and the assertions supporting all ten ACs. No suite rerun or reuse of guide approval.",
+  "blocking_findings": [],
+  "scope_ratification": {"file":"AGENTS.md","extent":"Only the two product/readiness-description updates in base2fb5b153..candidate9250b8f6.","authority":"Main explicitly authorised this narrow closeout correction before the candidate was produced in pij message eb071806-b9cc-4c1e-bf4d-108f2bbc2ab7; ratified here for the review record.","not_authorised":"Broader governance/policy edits or unreviewed product changes."},
+  "non_blocking_observations": [
+    "Per-note repository resolution creates avoidable subprocess overhead; retain membership/type/size revalidation if later optimising.",
+    "UnsafeRepository classification depends on an English Git fatal prefix under LC_ALL=C; unexpected wording remains a safe ObjectRead failure.",
+    "stderr overflow maps to ListingLimit through shared capture.",
+    "Testkit standard_git searches /usr/bin/git and /bin/git only; portability limitation, not hidden success.",
+    "AGENTS closeout edits are explicitly ratified above.",
+    "The two documented sessions error-envelope shapes require consumers to branch on kind; future SDK/CLI work should account for this."
+  ],
+  "limits": ["Unix/Darwin proof, not Windows runtime certification.","No executed network-denial trace; configured Git restrictions and promisor refusal were exercised.","Output parents remain caller-controlled; hostile concurrent parent replacement is not claimed safe.","No Git AI dependency, retired harness telemetry or broad query-CLI path was added.","No push, merge, default-branch landing or formal Builder ReviewReceipt is claimed by this record."],
+  "next": "Preserve the independent implementation review and this acceptance in plan014 as evidence-only changes, retaining exact runtime source binding; then report closeout head for the separately controlled PR/landing workflow."
+}

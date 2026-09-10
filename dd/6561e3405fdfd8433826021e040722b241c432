@@ -1,0 +1,18 @@
+docs/plans/015-session-query-cli/assets/team/continuation-status.json
+  h_9e71e8b09f7cf2 8
+docs/plans/015-session-query-cli/assets/team/manual-cli-continuation.json
+  h_9e71e8b09f7cf2 1-30
+docs/plans/015-session-query-cli/assets/verification/review-fixes-proof.json
+  h_9e71e8b09f7cf2 1-36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "dd6561e3405fdfd8433826021e040722b241c432",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

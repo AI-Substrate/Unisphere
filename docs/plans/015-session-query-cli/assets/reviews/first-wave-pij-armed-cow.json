@@ -1,0 +1,262 @@
+{
+  "record_type": "review",
+  "id": "rv-plan015-first-wave-pij-armed-cow",
+  "kind": "product-review",
+  "title": "Integrated first-wave product review \u2014 SDK query engine, source composition, writers, adapters",
+  "scope": "Independent product review of the integrated first-wave units and PM corrections at the named subject. Assesses actual committed code and A1-A6 closure.",
+  "explicitly_not": [
+    "Not a Builder composition receipt. No formal composition acceptance is recorded or implied.",
+    "Not a CLI acceptance. No query CLI exists at this subject and none is claimed.",
+    "Not a re-run of any proof. Read-only: no build, test, lint, formatter or harness command was executed.",
+    "Not an amendment to the sealed wave-0 baseline records, which remain immutable."
+  ],
+  "reviewer": {
+    "seat": "pij-armed-cow",
+    "role": "independent reviewer",
+    "harness": "omp",
+    "model_id_exposed": "github-copilot/claude-opus-5",
+    "effort_exposed": "high",
+    "settings_source": "guide",
+    "native_session": "01a08872-82bb-7641-b1dc-3964616e3e0a",
+    "attestation_note": "Harness, model and effort are locally observed configuration strings; no provider attestation is claimed."
+  },
+  "recorded_at": "2026-09-10T07:10:00Z",
+  "basis": {
+    "subject_sha": "5ee631b46142b88dea2a2742c9cb8087642c4d25",
+    "subject_subject": "style(query): format final loader dependency declaration",
+    "commit_chain": [
+      "843b3bb wip(query): integrate nine first-wave candidate sources",
+      "d2d890d fix(query): integrate and prove first-wave SDK behavior",
+      "5ee631b style(query): format final loader dependency declaration"
+    ],
+    "baseline_sha": "72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9",
+    "plan_sha256": "cadab76f98e7f12ecae30969e4ddef791a62c3bda20520c961ddb70fc3c121d1",
+    "guide_sha256": "5caed35ffa6f28570c16b6bc42baf47ce4403012069e429eeeaeb4e02f04c88f",
+    "guide_note": "Guide bytes are identical to the sealed wave-0 baseline; see A5.",
+    "packet": "docs/plans/015-session-query-cli/assets/team/first-wave-review-packet.json",
+    "delta_from_baseline": "105 files changed, 21578 insertions(+), 282 deletions(-)",
+    "new_crates": [
+      "unisphere-loader-query (1236 src lines, 317 test lines)",
+      "unisphere-output-query (538 src lines, 338 test lines)"
+    ],
+    "method": "Read-only. Every fact was read from committed bytes with git show at the named shas, or derived by arithmetic over bytes committed inside the proof receipts."
+  },
+  "verdict": "changes-requested",
+  "headline": "The integrated first-wave code is sound and all six amendment findings are closed in code. No defect found requires rebaselining, reworking the SDK core or reopening the sealed baseline. The four medium findings are an evidence-binding gap and three documentation/staging claims, not product defects; P4 is the only one that touches emitted bytes.",
+  "amendment_closure": {
+    "A1": {
+      "disposition": "fixed",
+      "severity": "high",
+      "summary": "Token bucket availability corrected to SourceQualified.",
+      "evidence": [
+        "crates/core/src/query/schema.rs: field!(InputTokens, U64, true, Tokens, Metadata, SourceQualified, NO_PREDICATES) at lines 253, 341, 573, and the same shape for OutputTokens (262/350/582), CacheReadTokens (271/359/591) and CacheWriteTokens (280/368/600) on Sessions, Turns and Tools.",
+        "Matches C11 'source-qualified token buckets' and C22 'field availability remains source-qualified after loading', and now matches the frozen precedent TurnCount/MessageCount/ToolCallCount."
+      ]
+    },
+    "A2": {
+      "disposition": "fixed",
+      "severity": "medium",
+      "summary": "Computed aggregates corrected to ProjectedOptional.",
+      "evidence": [
+        "crates/core/src/query/schema.rs:244/332/447 Count, 456 MeasuredCount, 465 MissingDurationCount, 474 Succeeded, 483 Failures, 492 Cancelled, 501 Incomplete, 510 Unknown, 519 FailureRate, 528 MeanMs, 537 MinMs, 546 MaxMs, 555 P50Ms, 564 P95Ms \u2014 all Availability::ProjectedOptional.",
+        "IsContext likewise moved from Required to ProjectedOptional at schema.rs:297 and 385.",
+        "Matches C18 'stats rows contain requested group fields and declared Metric fields' and reuses the existing Command/Input/Output vocabulary."
+      ]
+    },
+    "A3": {
+      "disposition": "fixed",
+      "severity": "medium",
+      "summary": "Stats-only fields are now rejected in non-statistics projection and sorting, before any source I/O.",
+      "evidence": [
+        "crates/sdk/src/query/engine.rs:136-156 validate_operation_projection returns UnsupportedOperation with RecoveryAction::ConsultSchema{dataset} when a Metric-backed FieldId appears in columns or sort and the operation is not Stats.",
+        "engine.rs:158-162 is_stats_metric_field derives the set from Metric::ALL through metric_field, so it cannot drift from the metric registry.",
+        "Called from engine.rs:24-25 inside source_selection, which runs in QueryService::open_view before self.source.load and again at engine.rs:224 in execute_view.",
+        "Proven by crates/sdk/tests/query.rs:259-308 query_api_rejects_stats_only_columns_and_sorts_before_loading: all 18 metric fields rejected in both columns and sort, assert!(service.source().calls().is_empty()) proves no load occurred, and a DurationMs negative control still executes and produces exactly one load.",
+        "Chosen resolution is the one that avoids rebaseline: FieldSchema and DatasetSchema keep the struct shape C18 freezes."
+      ]
+    },
+    "A4": {
+      "disposition": "fixed",
+      "severity": "medium",
+      "summary": "The context marker is force-retained in the effective projection and is described by the result universe.",
+      "evidence": [
+        "crates/sdk/src/query/engine.rs:932-949 normalized_columns appends FieldId::IsContext whenever context.before or context.after is non-zero, after the caller's explicit columns.",
+        "engine.rs:300-306 passes that column list to row.project(&columns, &access, is_context); crates/sdk/src/query/rows.rs:271-275 inserts FieldValue::Bool only for Turns and Messages.",
+        "engine.rs:1276-1295 folds the same column list into ResultUniverse.columns and columns_digest, closing the C23 tie flagged in A4.",
+        "Proven by crates/sdk/tests/query.rs:525-663: with columns explicitly set to [Role], the response carries 2 matched rows with is_context=false and 4 context rows with is_context=true across two sessions, universe.columns equals [Id, SourceRefs, Role, IsContext] and columns_digest equals the independently recomputed framed digest. The turns half repeats it with [SessionId].",
+        "The same test also proves C8 date-window escape: the before and after neighbours lie outside the since/until filter and are still emitted."
+      ]
+    },
+    "A5": {
+      "disposition": "accepted-with-note",
+      "severity": "low",
+      "summary": "The C18 enumeration repair was published in a supplementary asset rather than the frozen guide, deliberately, to preserve sealed bindings.",
+      "evidence": [
+        "docs/plans/015-session-query-cli/assets/query-contract.md gains two paragraphs: one defining is_context as metadata-only, non-null Bool, ProjectedOptional, no predicates, force-retained under explicit --columns and described by universe.columns/columns_digest; one enumerating the admitted statistics fields per dataset with their availability split.",
+        "The frozen guide is unchanged: assets/impl-guide.dd.json sha256 5caed35ffa6f28570c16b6bc42baf47ce4403012069e429eeeaeb4e02f04c88f, identical to the sealed baseline, so C18's per-dataset enumeration still lists neither is_context nor the metric fields.",
+        "The packet declares this as a known_gap. I record it as accepted for this review and still outstanding: guide text and code remain textually divergent, and the supplementary asset is not part of the frozen freeze set.",
+        "No action is required inside this delta. The repair remains a one-paragraph additive edit whenever the sealed bindings are next rolled forward."
+      ]
+    },
+    "A6": {
+      "disposition": "fixed",
+      "severity": "low",
+      "summary": "Proof gaps closed; the tests no longer pin the disputed values and now assert the converse.",
+      "evidence": [
+        "crates/core/tests/query_contract.rs:894 the context test was renamed from context_marker_is_non_filterable_metadata_and_round_trips_with_explicit_columns to context_marker_is_non_filterable_metadata_and_round_trips, removing the coverage the core test could not provide; the retention claim is now proven where it belongs, in the SDK test.",
+        "query_contract.rs:905 and :1124-1131 assert the corrected availability values, including the explicit SourceQualified-versus-ProjectedOptional split, so the proof moved with the schema.",
+        "Converse assertions added: query_contract.rs:943-950 asserts IsContext is absent from Sources, Sessions, Tools and Events; :1206-1235 asserts each of the 18 metric fields is absent from Sources, Messages and Events and that ProjectedRow::new rejects them there with InvalidField.",
+        "Boundary proofs retained and still real: null rejected for every non-nullable counter with InvalidData (:1177-1191) and f64::NAN rejected for FailureRate with InvalidData (:1194-1204); the statistics test drives from dataset_schema.metrics so it self-maintains.",
+        "The A3 rejection is proven in the SDK with a pre-I/O assertion and a negative control, which is a stronger shape than the schema-level assertion I asked for."
+      ]
+    }
+  },
+  "amendment_closure_summary": "A1, A2, A3, A4 and A6 are closed in code and proven by tests at this subject. A5 is closed in a supplementary asset and remains open against the frozen guide by declared design.",
+  "findings": [
+    {
+      "id": "P1",
+      "severity": "medium",
+      "disposition": "open",
+      "summary": "The external SDK/loader/adapter/writer composition smoke and both packaged SDK recipes are bound to 843b3bb4, not to the reviewed subject, and roughly 5,900 lines of product code changed in between \u2014 including the recipe fixture they exercised.",
+      "evidence": [
+        "assets/verification/first-wave-proof-working.json declares base_commit 843b3bb434cfe37649ee13932fb564d61d7c0c1e and cwd the working tree, not the subject.",
+        "Its first run, harness boot --json, exited 1 with E_CHECKS_FAILED wrapping E_PRODUCT_CHECK_FAILED 'architecture failed (exit 1)'. Only the second run, the out-of-workspace cargo run against .harness/temp/pij-empirical-tiger/external-query-composition/Cargo.toml, exited 0, and the third entry holds the two sdk-recipes runs.",
+        "assets/verification/first-wave-proof-5ee631b4.json, the receipt bound to the subject, contains exactly one run, harness boot --json, exit 0. For the external evidence it carries the pointer external_real_query: first-wave-proof-working.json rather than a rerun.",
+        "git diff --stat 843b3bb4 5ee631b4 -- crates Cargo.toml Cargo.lock reports 38 files changed, 4396 insertions(+), 1520 deletions(-), including crates/sdk/src/query/engine.rs (+596), crates/sdk/src/query/view.rs (+568), crates/core/src/query/schema.rs (+269), crates/loader-query/src/lib.rs (+80) and crates/output-query/src/lib.rs (+26).",
+        "crates/testkit/fixtures/query-docs/sdk-query.rs itself changed by 23 lines over the same range, so the recipe that was observed to pass is not the recipe now committed.",
+        "Consequence: at the subject, out-of-workspace consumption of unisphere-sdk, unisphere-loader-query, unisphere-adapter-claude and unisphere-output-query by path, and both packaged recipes, are unproven. The in-workspace suite is separately proven at the subject; this finding is only about the external-consumer half.",
+        "Closing action is cheap and mechanical: rerun the external composition and the two recipes at 5ee631b4 and record them in a receipt bound to that sha. I did not run them; this review is read-only."
+      ]
+    },
+    {
+      "id": "P2",
+      "severity": "medium",
+      "disposition": "open",
+      "summary": "crates/cli/src/docs.rs is not part of the CLI crate. Only the integration test compiles it, so the doc bundle its own header claims is 'bundled into the CLI binary' is absent from the binary.",
+      "evidence": [
+        "crates/cli/src/lib.rs declares exactly: mod args; mod catalog; mod output; pub mod sessions; pub mod snapshots;. There is no mod docs, and no reference to docs anywhere in lib.rs.",
+        "crates/cli/tests/docs_bundle.rs line 1-2 reaches it out-of-tree: #[path = \"../src/docs.rs\"] mod docs;. That compiles docs.rs into the test binary only.",
+        "crates/cli/src/docs.rs line 1 states 'Version-matched offline documentation bundled into the CLI binary.' At this commit no include_str! in that file is ever compiled into the library or any shipped binary.",
+        "Side effect: because the module is not in the crate graph, cargo never reports it as dead code, and because the test compiles it privately, the gap does not surface as a failure. The clippy gate passing is therefore not evidence that this module is reachable.",
+        "This is consistent with the declared 'no new CLI' scope, so it is not an over-claim by the packet. It is a staging trap: the asset looks wired and is not. Either declare the module and expose the topics, or mark the file as an unwired design asset until the CLI lane lands."
+      ]
+    },
+    {
+      "id": "P3",
+      "severity": "medium",
+      "disposition": "open",
+      "summary": "The committed documentation assets describe a query CLI and a git-ai source adapter in the present indicative, neither of which exists at this commit, and the accompanying manifest asserts executability.",
+      "evidence": [
+        "crates/cli/docs/start.md carries a 28-row command reference in the present tense, opening 'Start with `unisphere sources list --repo . --format json`', and documents unisphere sources list/show/check, sessions list/show/tree/stats/extract/export, turns list/show/stats/extract, messages list/show/extract, tools list/show/stats/extract, events list/show/extract, schema show, docs list/get.",
+        "crates/cli/src/args.rs, catalog.rs, sessions.rs and snapshots.rs contain the only Subcommand derives in the crate; the CLI surface at this commit is configuration, sessions export/list, adapters and snapshots. No query verb is parsed.",
+        "crates/testkit/fixtures/query-docs/example-cases.json declares seven cases whose argv begins with 'unisphere' and whose expect.action.executable_after_bindings is true, including 'unisphere sessions list --repo ${REPO} --source-adapter git-ai --format json'. No adapter-git-ai crate exists in this workspace: crates/ holds adapter-claude, adapter-codex, adapter-copilot-cli, adapter-cursor, adapter-omp, adapter-pi, adapter-vscode-copilot only.",
+        "crates/cli/tests/docs_bundle.rs seven_recipes_and_case_manifest_have_actionable_semantics asserts the manifest's shape \u2014 seven unique cases, argv[0]=='unisphere', bindings object present, non-empty semantic_fields, numeric exit, privacy object, action.automatic==false \u2014 and executes nothing. The test name claims actionable semantics; the assertions are structural.",
+        "Credit where due: every rows[] leaf named in the manifest resolves to a real FieldId, and the two non-FieldId leaves, dataset and schema_version, are genuine row-envelope keys emitted by FlatRow. The manifest is not inventing fields.",
+        "Recommended: mark the bundle and the manifest as design-stage until the CLI lane lands, and when it does, add a check that every documented argv is accepted by the parser. Otherwise the first wiring of P2 ships offline help for commands the binary rejects."
+      ]
+    },
+    {
+      "id": "P4",
+      "severity": "medium",
+      "disposition": "open",
+      "summary": "Human-format escaping neutralises C0/C1 control characters but not Unicode bidirectional and format characters, so untrusted recorded text can still reorder rendered output.",
+      "evidence": [
+        "crates/output-query/src/lib.rs:488-501 EscapingWriter escapes only characters for which char::is_control() is true, which is general category Cc. U+202A-U+202E, U+2066-U+2069 and U+200E/U+200F are category Cf and fall through to the verbatim branch at :518-522.",
+        "The Markdown arm at :504-516 escapes &, <, > and the Markdown punctuation set; the Table arm at :517 escapes only the pipe. Neither covers bidi overrides.",
+        "The values reaching this writer are untrusted recorded payloads: FieldValue::String and Timestamp go through write_escaped at :446-452, and Structured/Strings/IdList go through write_human_json at :454-456.",
+        "The contract this is measured against is the project's own: assets/query-contract.md states 'Always escape terminal controls and untrusted Markdown/HTML appropriately.' A right-to-left override in a tool name or message text renders reversed in a terminal or Markdown viewer, which is the trojan-source class.",
+        "Fix is local: extend the escape predicate to the explicit bidi and format set, or to category Cf, in the same \\u{:04x} form already used at :499.",
+        "Verified adjacent and correct: ESC and every other Cc byte is escaped in all three human styles, and the CSV path is separately protected by the spreadsheet-prefix rule at :303-312 and :355-361."
+      ]
+    },
+    {
+      "id": "P5",
+      "severity": "low",
+      "disposition": "open",
+      "summary": "Statistics grouping conflates a projected absence with a present null, which C18 separates.",
+      "evidence": [
+        "crates/sdk/src/query/engine.rs:994-1000 builds the group key as row.field(*field).map_or_else(|| b\"null\".to_vec(), |value| canonical_value(&value)).",
+        "engine.rs:928-930 canonical_value is serde_json::to_vec, so FieldValue::Null encodes to the four bytes null and collides exactly with the missing-field sentinel. A row whose field is absent and a row whose field is present and null therefore land in the same group.",
+        "String values cannot collide: FieldValue::String(\"null\") encodes to six bytes with quotes.",
+        "C18 states 'projected absence is distinct from a present null and documented in availability', and the availability vocabulary corrected under A1 exists precisely to carry that distinction.",
+        "The same conflation is deliberate and consistent in sorting at engine.rs:912-915, where None and Some(Null) compare Equal, so this is a coherent design choice rather than an oversight. It is recorded because the grouped output cannot express which of the two a group came from.",
+        "Cheap resolution: give the absent case a distinct non-JSON sentinel in the key, and leave sorting as is."
+      ]
+    },
+    {
+      "id": "P6",
+      "severity": "low",
+      "disposition": "open",
+      "summary": "Outcome metrics match tool status by string literal rather than through the Outcome enum, so a wire-spelling change would silently zero the counts instead of failing.",
+      "evidence": [
+        "crates/sdk/src/query/engine.rs:1106-1108 outcome_count compares row.field(FieldId::Status) against a &str parameter, called at :1115-1123 with \"succeeded\", \"failed\", \"cancelled\", \"incomplete\" and \"unknown\".",
+        "crates/core/src/query/source.rs:21 defines query_enum! Outcome { Succeeded => \"succeeded\", Failed => \"failed\", Cancelled => \"cancelled\", Incomplete => \"incomplete\", Unknown => \"unknown\" }. The strings match today, so there is no present defect.",
+        "The failure mode is silent: a renamed wire spelling would make every outcome metric and the FailureRate numerator return zero rather than raise. Metric::Failures maps to FieldId::Failures through the exhaustive match at engine.rs:1077-1097, so the metric side is compile-checked while the status side is not.",
+        "Fix is a one-line substitution of Outcome::Failed.as_str() and siblings, restoring compile-time coupling."
+      ]
+    },
+    {
+      "id": "P7",
+      "severity": "low",
+      "disposition": "open",
+      "summary": "The loader-jsonl refactor deleted four comments that documented security-relevant read invariants; the behaviour they described is unchanged.",
+      "evidence": [
+        "Removed at crates/loader-jsonl/src/lib.rs: 'NOFOLLOW closes the check/open symlink race. NONBLOCK prevents a FIFO or other special leaf from blocking before its descriptor is inspected.', 'Take freezes the observed boundary: this call never chases an appender.', 'Rotation/removal and observable truncation invalidate the entire call, not merely its checkpoint. Same-inode rewriting/regrowth is unsupported.', and 'Only LF is removed; native CR remains.'",
+        "Verified absent at the subject: none of the four strings occurs in the file. Comment lines went 10 to 11 because new doc comments were added elsewhere, so the loss is not visible in a line count.",
+        "The behaviour is intact: O_NOFOLLOW | O_NONBLOCK still set on the open, file.take(observed_end - offset) still frames the read, verify_source is still called, and bytes.pop() still removes only the LF.",
+        "Non-blocking. Recorded because these four comments carry the reasons a future edit must not relax those flags."
+      ]
+    },
+    {
+      "id": "P8",
+      "severity": "low",
+      "disposition": "accepted",
+      "summary": "Output is fully materialised before any byte reaches the destination. This buys atomicity at the cost of the guide's streaming preference, and the tradeoff is sound.",
+      "evidence": [
+        "crates/output-query/src/lib.rs:38-52 encodes into a BoundedBuffer and only then calls destination.write_all followed by flush.",
+        "BoundedBuffer::write at :110-116 returns io::ErrorKind::FileTooLarge as soon as a write would exceed max_output_bytes, and :73-79 maps that to QueryFailure::limit(LimitKind::OutputBytes). Nothing has reached the destination at that point, so a limit breach produces a typed failure and zero partial output, which is exactly the 'no silent truncation' rule.",
+        "Vec::with_capacity(limit.min(8 * 1024)) at :99 avoids preallocating an attacker-sized buffer.",
+        "assets/query-contract.md asks to 'stream where ordering permits; materialise only when the operation requires it'. JSONL and CSV could stream. Recorded as an intentional tradeoff, not a defect: max_output_bytes bounds the memory, and atomic output is the stronger property for an agent consumer.",
+        "Accepted with no action requested."
+      ]
+    }
+  ],
+  "verified_correct": [
+    "Adapter and core purity intact. No std::fs, std::net, std::process, std::env, File::open or Command::new anywhere in the seven adapter src trees, in crates/core/src or in crates/output-query/src. crates/loader-query/src/lib.rs is the only new filesystem shell, with 13 fs:: call sites; the pre-existing crates/sdk/src/fs.rs is unchanged.",
+    "Architecture rules are real, not policy-only. crates/testkit/src/bin/unisphere-arch-check.rs now carries executable allow-rules for both new crates: unisphere-loader-query may depend on unisphere-core, unisphere-loader-jsonl, unisphere-loader-snapshot, globset, serde_json, sha2 and libc; unisphere-output-query may depend on unisphere-core, serde and serde_json. Baseline finding F1, which was over-claimed when neither crate existed, is now genuinely closed by 1236 and 538 lines of implementation plus tests.",
+    "Privacy holds at the type level. SourceEvidence and SourceLocator in crates/core/src/query/source.rs derive only Clone, PartialEq and Eq, with no Serialize, so a raw local path cannot reach the wire by construction. Coverage carries only counters, status maps, excluded adapter ids, a completeness flag and AvailabilityIssue, which itself holds only a code, an optional FieldId, digest-keyed SourceId/EntityId and an offset.",
+    "Consent is unbypassable for every payload-bearing field. schema.rs declares NativeId, Association, ProjectPath, SourcePath, Name, Models, Text, Parts, Command, Input and Output as Sensitivity::Sensitive, and crates/sdk/src/query/rows.rs:276-282 routes every projection through ProjectedRow::new, which enforces the consent gate. The added metric fields and IsContext are Metadata, which is correct: counters and a boolean marker are not payload.",
+    "Attribution never fabricates a transcript. crates/sdk/src/query/view.rs:1035 sets transcript_available: message_count != 0, so a session with attribution evidence and no recorded messages reports false. The corresponding documented case asserts claims_transcript_from_attribution_alone: false.",
+    "Turn identity does not guess. crates/sdk/src/query/engine.rs is fed by view.rs:1242-1269 resolve_turn: an explicit native turn id wins, an Initiating marker opens a new turn derived from session, message and native sequence, and anything else attaches to the active turn. active_turn_for at :1286-1303 returns None when branches disagree, so an ambiguous tool response produces no turn rather than an invented one.",
+    "Tool completion records its basis instead of inventing a number. view.rs:1371-1411 complete_tool sets DurationBasis::SourceReported when the source reported a duration and DurationBasis::PairedClock when it derived one from a non-negative finite interval; a negative or non-finite interval sets AvailabilityCode::InvalidClock and a missing completion sets AvailabilityCode::MissingCompletion. engine.rs:1159-1167 measured_durations then admits only finite non-negative values, so an unknown duration is never counted as zero.",
+    "Statistics denominators are named and reconstructible. engine.rs:1120-1130 computes FailureRate over succeeded + failed + cancelled and returns FieldValue::Null when that denominator is zero, and MeasuredCount and MissingDurationCount are emitted alongside so a consumer can see how many samples were measured. C11's rule against hiding missing samples is satisfied.",
+    "Percentiles are exact, not approximate. engine.rs:1169-1176 sorts with f64::total_cmp and takes the nearest-rank element at ceil(p*n/100) clamped to at least 1, returning Null for an empty sample. There is no interpolation and no sketch, which matches the guide's prohibition on hidden approximate percentiles.",
+    "Cumulative usage snapshots are not summed. engine.rs:1228-1245 partitions usage facts, keying CumulativeSnapshot facts by (source_id, session_id, owner, scope) and retaining only the highest sequence before adding them to the per-call values. engine.rs:1255-1257 returns Ok(None), rendered as FieldValue::Null, if any admitted fact lacks the requested counter, so a partially reported group yields a source-qualified null rather than an understated sum.",
+    "Context expansion is bounded by evidence, not by convenience. engine.rs:254-262 refuses context over saved input whose partitions are not Complete, returning InputSubset with RecoveryAction::UseCompleteInput, and engine.rs:214-223 rejects context flags on any operation other than Extract.",
+    "The explicit-path selector stays separate from canonical identity. crates/loader-query/src/lib.rs:929-943 derives the SourceId from adapter, harness, representation and the normalized physical path while SourceEvidence retains the caller's literal locator, with the reasoning stated in the code at :931-932. normalize_explicit_path at :1061-1072 canonicalizes only the parent, and explicit_path_status at :1074-1080 uses symlink_metadata and marks a symlinked leaf Unsupported, so a symlinked file is refused rather than aliased into a second identity.",
+    "Unsupported explicit paths fail with alternatives. discover_explicit_path at :495-530 returns unsupported_source carrying the admitted adapter ids whenever the match is not unique; the single-fallback branch at :514-516 only fires when the caller named an adapter explicitly, so no ambiguous silent binding is possible.",
+    "CSV honours its documented contract. encode_csv writes RFC4180 CRLF rows with a header computed from universe.columns unioned with every field present in any row, so no row can carry an undeclared column. Numeric, boolean and id cells bypass the string path entirely, so numerics remain numeric. CsvSafety::Spreadsheet prefixes an apostrophe only for string cells whose first non-whitespace character is =, +, - or @ or which start with tab or CR, and CsvSafety::Raw preserves the value. JSON-valued cells are always quoted with doubled inner quotes through CsvQuoted.",
+    "Output bounds produce a typed refusal with no partial write, as recorded in P8.",
+    "The JSONL row wire is stable and explicit. FlatRow at output-query lib.rs:179-194 emits schema_version, dataset, id and source_refs followed by the projected fields keyed by FieldId::as_str, and WireValue at :196-214 maps each FieldValue variant to a concrete serde primitive rather than relying on a derived representation.",
+    "Response validation is real before encoding. output-query lib.rs:56-70 re-runs options.validate_for against QueryLimits::HARD, revalidates coverage and universe, and rejects any response whose emitted count disagrees with rows.len() or whose row dataset or schema version disagrees with the response, with QueryFailure::invalid_data.",
+    "The workspace gate genuinely covers the new code. Summing the 51 'test result:' lines captured in first-wave-proof-5ee631b4.json's own stdout gives 327 passed and 0 failed across 31 unit and 296 integration cases, and the gate argv is cargo test --workspace --all-targets --locked. That arithmetic is mine, recomputed from the committed receipt; it reproduces the figure the PM reported. The format, clippy -D warnings, rustdoc, architecture and harness-regression gates all recorded code 0 in the same receipt.",
+    "The packet does not over-claim the CLI. crates/cli gained only docs and an unwired module; no query verb is parsed, and both the packet scope and the proof receipt scope say so in as many words."
+  ],
+  "conditions_before_any_acceptance": [
+    "P1: rerun the external composition and both packaged SDK recipes at 5ee631b4 and bind the result to that sha. Everything else in the readiness claim is already bound to the subject; this half is not.",
+    "P4: extend human-format escaping to Unicode bidi and format characters, or record an explicit reasoned decision not to.",
+    "P2 and P3: decide the doc-bundle staging question with the pending tenth-lane CLI decision, so the offline help and the case manifest are either wired to a real parser or marked design-stage.",
+    "P5, P6 and P7 are low and may be carried; P8 needs no action."
+  ],
+  "scope_caveats": [
+    "harness boot --json at the subject reports scope 'configuration-and-native-session-projections' and its checks report scope 'configuration-and-claude-jsonl'. Those scope strings do not name the query surface. The workspace test gate inside that run does compile and execute the new crates' tests, so the in-repo query suite is proven; the product smoke scope is not evidence of query-surface readiness.",
+    "Test counts and pass results are read from the receipt's captured output. I did not execute any test, and the PM's reported figures remain the PM's measurement; the 327/0 arithmetic above is my own recomputation over those committed bytes.",
+    "I reviewed the committed tree at 5ee631b4 only. Untracked dispatch artefacts present in the working tree were not part of this review.",
+    "No judgement is offered on the nine per-lane deliveries as individual units; this is a review of their integrated result."
+  ],
+  "reviewer_gaps": [
+    "Read-only. Compile and runtime statements about code not exercised by a test I read are static reasoning over committed bytes.",
+    "I did not audit every one of the seven adapter query modules line by line; adapter assessment here is limited to purity, composition and the shared contract surface.",
+    "P4's rendering impact is argued from the escape predicate and the Unicode general categories, not from an observed terminal render."
+  ]
+}

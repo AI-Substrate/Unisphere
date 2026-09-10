@@ -486,7 +486,13 @@ impl Write for EscapingWriter<'_> {
         let value =
             std::str::from_utf8(bytes).map_err(|_| io::Error::from(io::ErrorKind::InvalidData))?;
         for character in value.chars() {
-            if character.is_control() {
+            if character.is_control()
+                || matches!(
+                    character,
+                    '\u{061c}' | '\u{200e}'..='\u{200f}' | '\u{202a}'..='\u{202e}'
+                        | '\u{2066}'..='\u{2069}'
+                )
+            {
                 if matches!(self.style, EscapeStyle::Markdown) {
                     self.output.write_all(b"\\\\")?;
                 } else {

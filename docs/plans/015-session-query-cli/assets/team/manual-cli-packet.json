@@ -1,0 +1,139 @@
+{
+  "authorization": {
+    "operator": "Jordan",
+    "verbatim": "ye",
+    "context": "Explicit approval to launch the final CLI as a product-only manual Sol/high helper, preserving clone isolation and independent review while the formal Builder receipt gap remains unresolved",
+    "recorded_at": "2026-09-10T07:00:20.551Z"
+  },
+  "allocation": {
+    "owner": "external",
+    "kind": "ordinary-git-clone",
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-000b-manual",
+    "branch": "work/015-manual-cli",
+    "source_sha": "4f4a6eef348fac18508b438ed9b216a8c982d460",
+    "proved_source_sha": "5ee631b46142b88dea2a2742c9cb8087642c4d25",
+    "parent": "pij-empirical-tiger"
+  },
+  "requested": {
+    "harness": "omp",
+    "model": "github-copilot/gpt-5.6-sol-fast",
+    "effort": "high"
+  },
+  "status": "authorized; not yet allocated or launched",
+  "unit": {
+    "id": "tk-000b",
+    "name": "Thin complete CLI and actionable outcomes",
+    "role": "coder",
+    "responsibility": "Implement the complete 27-leaf grammar and injected query frontend, mount docs, preserve config/catalog/legacy list/export, and add useful next actions plus actionable errors to every outcome. Keep matching/reconstruction/privacy/stats in QueryApi; render through injected QueryWriter. Own create-new staging/publication and stream/error routing.",
+    "paths": [
+      "crates/cli/src/lib.rs",
+      "crates/cli/src/args.rs",
+      "crates/cli/src/output.rs",
+      "crates/cli/src/query.rs",
+      "crates/cli/src/sessions.rs",
+      "crates/cli/src/snapshots.rs",
+      "crates/cli/src/catalog.rs",
+      "crates/cli/Cargo.toml",
+      "crates/cli/tests/query_frontend.rs",
+      "crates/cli/tests/frontend.rs",
+      "crates/cli/tests/sessions.rs",
+      "docs/cli.md"
+    ],
+    "reads": [
+      {
+        "owner": "tk-0001",
+        "paths": [
+          "crates/core/src/**",
+          "crates/testkit/src/query.rs",
+          "docs/plans/015-session-query-cli/assets/impl-guide.dd.json",
+          "docs/plans/015-session-query-cli/assets/query-contract.md"
+        ]
+      },
+      {
+        "owner": "tk-000a",
+        "paths": [
+          "crates/cli/src/docs.rs",
+          "crates/cli/docs/**",
+          "crates/cli/tests/docs_bundle.rs",
+          "crates/testkit/fixtures/query-docs/**"
+        ]
+      },
+      {
+        "owner": "tk-0009",
+        "paths": [
+          "crates/output-query/**"
+        ]
+      }
+    ],
+    "interface": "pub fn parse(args:Vec<OsString>,context:&CliContext)->Result<ParsedCommand,CliParseFailure>; pub fn run_query(command:&QueryCommand,context:&CliContext,query:&dyn QueryApi,writer:&dyn QueryWriter,stdout:&mut dyn Write,stderr:&mut dyn Write)->u8. C20 is the sole root grammar: explicit native --root/--adapter forms versus query --source-adapter, native export always native. App consumes ParsedCommand, not token scanning. Mount docs/schema/help/version before I/O. Preserve old injected frontends as supported APIs where required, but remove requested_session_adapter and migrate every caller rather than keeping an obsolete export.",
+    "depends_on": [
+      "tk-0001",
+      "tk-000a",
+      "tk-0009"
+    ],
+    "wave": 2,
+    "acceptance": [
+      "../plan.dd.json#acceptance_criteria/ac-0004",
+      "../plan.dd.json#acceptance_criteria/ac-0005",
+      "../plan.dd.json#acceptance_criteria/ac-000c",
+      "../plan.dd.json#acceptance_criteria/ac-000d",
+      "../plan.dd.json#acceptance_criteria/ac-000e",
+      "../plan.dd.json#acceptance_criteria/ac-0011",
+      "../plan.dd.json#acceptance_criteria/ac-0012",
+      "../plan.dd.json#acceptance_criteria/ac-0013",
+      "../plan.dd.json#acceptance_criteria/ac-0017",
+      "../plan.dd.json#acceptance_criteria/ac-0018"
+    ],
+    "proof": [
+      "impl-guide.dd.json#checks/bp-000b",
+      "impl-guide.dd.json#checks/bp-000a",
+      "impl-guide.dd.json#checks/bp-000d"
+    ],
+    "notes": "Wave2 consumes committed docs/output deliveries, uses FakeQueryApi and actual output adapter in tests rather than waiting for SDK engine. Delete directly affected wording/implementation-pinning tests instead of re-pinning prose. Git-note specific frontend changes are a PM convergence boundary after the owner handoff. Skip validation while concurrent. Named routing acceptance: catalogue sessions list --repo . --harness claude-code reaches QueryApi; --source-adapter git-ai selects query facts; --adapter git-ai --repo selects the existing native note listing; --root selects native JSONL listing; sessions export preserves native OTLP. Reject mixed forms with actionable guidance, and preserve semantic data/streams while adding next-action metadata. CSV schema/loss diagnostics direct availability-sensitive consumers to JSON/JSONL. The routing regression matrix is owned here, not inferred solely from one primary example per catalogue leaf; explicitly cover query --source-adapter git-ai versus native --adapter git-ai, legacy --root and all rejected mixtures."
+  },
+  "first_instruction": "Implement the full CLI now. This is an authorized product-only manual helper, NOT a successful harness builder dispatch/adoption. Do not wait for or fabricate Builder acknowledgement, readiness, delivery or composition receipts. Skip ALL startup/product boot, builds/tests/lint/formatters; PM alone runs composed proof. Read packet and exact code first.",
+  "read_first": [
+    "docs/plans/015-session-query-cli/plan.dd.json",
+    "docs/plans/015-session-query-cli/assets/impl-guide.dd.json",
+    "docs/plans/015-session-query-cli/assets/query-contract.md",
+    "docs/plans/015-session-query-cli/assets/command-catalog.json",
+    "docs/plans/015-session-query-cli/assets/workflows-and-command-reference.md",
+    "docs/plans/015-session-query-cli/assets/tasks/phase-2/tasks.dd.json",
+    "crates/core/src/query",
+    "crates/cli/src/docs.rs",
+    "crates/cli/docs",
+    "crates/output-query/src/lib.rs",
+    "crates/testkit/src/query.rs"
+  ],
+  "contracts": {
+    "parser": "pub fn parse(args:Vec<OsString>,context:&CliContext)->Result<ParsedCommand,CliParseFailure>; pub fn run_query(command:&QueryCommand,context:&CliContext,query:&dyn QueryApi,writer:&dyn QueryWriter,stdout:&mut dyn Write,stderr:&mut dyn Write)->u8. C20 is the sole root grammar: explicit native --root/--adapter forms versus query --source-adapter, native export always native. App consumes ParsedCommand, not token scanning. Mount docs/schema/help/version before I/O. Preserve old injected frontends as supported APIs where required, but remove requested_session_adapter and migrate every caller rather than keeping an obsolete export.",
+    "semantics": "SDK owns matching/identity/branches/context/stats. CLI translates arguments into QueryRequest and calls injected QueryApi, then injected QueryWriter. Use the existing core schema/FieldId/Metric registry; never a second schema or source registry.",
+    "routes": "All 27 leaves including docs/schema/help/version. Explicit native sessions export, sessions list --root, and native --adapter forms remain native. Query filtering uses --source-adapter. Reject mixed modes, no raw argv/default-adapter routing.",
+    "guidance": "Every outcome gives a useful nonempty next action; every error gives concrete safe recovery/alternatives. Render real grammar. Raw JSONL/CSV/text/Markdown/OTLP streams stay free of guidance records; use envelopes or diagnostic channels as designed.",
+    "privacy": "Never echo private input in errors/actions. Content predicates authorize inspection only; explicit content output consent remains separate. IsContext is output-only metadata, no --is-context predicate. Statistics-only fields are not row-operation columns/sorts.",
+    "files": "Create-new output, staging/publication and truthful partial-write/flush failures. No source-store mutations.",
+    "integration": "PM owns app/main.rs, app/adapters.rs, root workspace/lock/architecture and all canonical plan records. Publish exact ParsedCommand/new frontend API to PM early. Remove obsolete requested_session_adapter instead of keeping a shim; PM migrates app callers. Git-ai bridge/native-note-specific app integration remains PM-owned."
+  },
+  "quality": [
+    "Reuse committed docs and real writer. Use actual parser and meaningful boundary/error/stream tests; no source/prose pins, mock-echo tests or fake success.",
+    "Complete the whole unit, not a scaffold or placeholder. Commit only the exact packet write fence via harness commit.",
+    "Send structural API handoff early; send final candidate SHA, changed paths, unrun checks, startup attempts and actual attribution evidence. A landed note alone is not proof of AI attribution."
+  ],
+  "forbidden": [
+    ".the-flow-state.json",
+    "the-flow.json",
+    "the-flow.md",
+    "canonical plan/guide/tasks/team/records",
+    "core/SDK/loader/output/docs-owner files outside unit.paths",
+    "app composition files",
+    "root Cargo.toml/Cargo.lock/architecture policy",
+    "global settings/tooling repair",
+    "push/merge",
+    "other peer inbox/session transport logs"
+  ],
+  "delivery": {
+    "path": ".harness/temp/manual-cli-delivery.json",
+    "format": "ProductOnlyDelivery: unit_id, peer_id, workspace, source_sha, commit_sha, paths, unrun_checks, friction, attribution. Explicitly manual/external; no claim current Builder can automatically reconcile it."
+  },
+  "known_tooling_gap": "Installed Builder0.14 requires predecessor verified composition before CLI dispatch, while composition requires all coders including CLI. Already-integrated/adopt-peer do not remove this cycle. No global tooling repair or automatic future reconciliation authorized."
+}

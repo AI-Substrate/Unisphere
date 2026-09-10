@@ -8,7 +8,7 @@ use globset::{GlobBuilder, GlobMatcher};
 use regex::{Regex, RegexBuilder};
 use unisphere_core::query::{
     ActionReason, Completeness, ContentAccess, CursorBinding, Dataset, Digest, EntityId,
-    EntityKind, FieldId, FieldValue, Filter, LimitKind, Metric, Operation, Predicate, ProjectedRow,
+    EntityKind, FieldId, FieldValue, Filter, LimitKind, Metric, Operation, Outcome, Predicate, ProjectedRow,
     QueryAction, QueryDescription, QueryFailure, QueryFailureCode, QueryRequest, QueryResponse,
     QueryScope, RecoveryAction, ResultUniverse, SortDirection, SortKey, SourceProblem,
     SourceReadStatus, SourceSelection, SourceSelector, UniverseBasis,
@@ -993,9 +993,10 @@ fn execute_stats(
     for row in rows {
         let key = group_by
             .iter()
+            // A NUL-prefixed absence marker cannot collide with encoded JSON.
             .map(|field| {
                 row.field(*field)
-                    .map_or_else(|| b"null".to_vec(), |value| canonical_value(&value))
+                    .map_or_else(|| b"\0absent".to_vec(), |value| canonical_value(&value))
             })
             .collect::<Vec<_>>();
         grouped_bytes = key
@@ -1103,8 +1104,8 @@ fn metric_value(
     usage: &[UsageFact],
 ) -> Result<FieldValue, QueryFailure> {
     let measured_count = || measured_durations(rows).count();
-    let outcome_count = |name: &str| {
-        rows.iter().filter(|row| matches!(row.field(FieldId::Status), Some(FieldValue::String(value)) if value == name)).count() as u64
+    let outcome_count = |outcome: Outcome| {
+        rows.iter().filter(|row| matches!(row.field(FieldId::Status), Some(FieldValue::String(value)) if value == outcome.as_str())).count() as u64
     };
     Ok(match metric {
         Metric::Count => FieldValue::Unsigned(rows.len() as u64),
@@ -1112,15 +1113,15 @@ fn metric_value(
         Metric::MissingDurationCount => {
             FieldValue::Unsigned(rows.len().saturating_sub(measured_count()) as u64)
         }
-        Metric::Succeeded => FieldValue::Unsigned(outcome_count("succeeded")),
-        Metric::Failures => FieldValue::Unsigned(outcome_count("failed")),
-        Metric::Cancelled => FieldValue::Unsigned(outcome_count("cancelled")),
-        Metric::Incomplete => FieldValue::Unsigned(outcome_count("incomplete")),
-        Metric::Unknown => FieldValue::Unsigned(outcome_count("unknown")),
+        Metric::Succeeded => FieldValue::Unsigned(outcome_count(Outcome::Succeeded)),
+        Metric::Failures => FieldValue::Unsigned(outcome_count(Outcome::Failed)),
+        Metric::Cancelled => FieldValue::Unsigned(outcome_count(Outcome::Cancelled)),
+        Metric::Incomplete => FieldValue::Unsigned(outcome_count(Outcome::Incomplete)),
+        Metric::Unknown => FieldValue::Unsigned(outcome_count(Outcome::Unknown)),
         Metric::FailureRate => {
-            let succeeded = outcome_count("succeeded");
-            let failed = outcome_count("failed");
-            let cancelled = outcome_count("cancelled");
+            let succeeded = outcome_count(Outcome::Succeeded);
+            let failed = outcome_count(Outcome::Failed);
+            let cancelled = outcome_count(Outcome::Cancelled);
             let denominator = succeeded + failed + cancelled;
             if denominator == 0 {
                 FieldValue::Null

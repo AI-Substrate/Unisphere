@@ -12,10 +12,12 @@ use unisphere_core::{ConfigOverrides, ConfigSource, Failure, InspectionApi, Insp
 
 mod args;
 mod catalog;
+pub mod git_notes;
 mod output;
 pub mod sessions;
 pub mod snapshots;
 pub use catalog::run_adapters;
+pub use git_notes::run_git_notes;
 pub use sessions::{requested_session_adapter, run_sessions, session_error};
 pub use snapshots::run_snapshot_sessions;
 pub use unisphere_core::{AdapterCapabilities, AdapterDescriptor, LocationHint};

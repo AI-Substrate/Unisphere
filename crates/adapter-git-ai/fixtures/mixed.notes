@@ -1,0 +1,10 @@
+source.rs
+  s_123456789abcde::t_11111111111111 1-3,7
+  h_123456789abcde 4-6
+  0123456789abcdef 8
+  abc1234 9
+  s_aaaaaaaaaaaaaa::t_bbbbbbbbbbbbbb 10
+"file name.rs"
+  0123456789abcdef 2-3
+---
+{"schema_version":"authorship/3.0.0","base_commit_sha":"0000000000000000000000000000000000000000","git_ai_version":"synthetic-fixture","sessions":{"s_123456789abcde":{"agent_id":{"tool":"claude","id":"synthetic-session","model":"synthetic-model"},"human_author":"SENSITIVE-session-author","custom_attributes":{"note":"SENSITIVE-custom"}}},"humans":{"h_123456789abcde":{"author":"SENSITIVE-human <human@example.invalid>"}},"prompts":{"0123456789abcdef":{"agent_id":{"tool":"codex","id":"synthetic-legacy","model":null},"human_author":"SENSITIVE-prompt-author","total_additions":null,"accepted_lines":4,"messages":[{"role":"user","content":"SENSITIVE-message"}],"messages_url":"https://example.invalid/SENSITIVE-never-fetch"},"abc1234":{"agent_id":{"tool":"pi","id":"synthetic-seven","model":"synthetic-model"}},"abcdef0123456789":{"agent_id":{"tool":"pi","id":"synthetic-unreferenced","model":null}}}}

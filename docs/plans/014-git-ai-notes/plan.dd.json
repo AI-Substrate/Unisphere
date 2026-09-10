@@ -42,52 +42,72 @@
         {
           "id": "ac-0001",
           "claim": "An external Rust SDK consumer can list and read explicitly selected local Git Notes attached to commits, retaining repository, notes-ref, pinned ref tip, target commit and note-blob provenance. Bare repositories and linked worktrees resolve Git storage correctly.",
-          "state": "unchecked"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0001",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0004"
         },
         {
           "id": "ac-0002",
           "claim": "The registered CLI Git-ai ingestion path calls the SDK and produces the same source-derived OTLP LogsData for the same repository, note selection and content policy; existing native session commands remain working.",
-          "state": "unchecked"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0002",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0004"
         },
         {
           "id": "ac-0003",
           "claim": "Independent parsing preserves supported authorship/3.0.0 file paths, inclusive line ranges, attestation keys and declared prompts/sessions/humans, including mixed maps and their agent identities. Missing data is not synthesized; unsupported variants or schema versions are explicit.",
-          "state": "unchecked"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0003",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0004"
         },
         {
           "id": "ac-0004",
           "claim": "Git AI can be absent: no git-ai invocation, imported implementation, crate/library dependency, daemon, HTTP service or private git-ai cache is used. Standard read-only Git is the only Git-side runtime prerequisite.",
-          "state": "unchecked"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0004",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0004"
         },
         {
           "id": "ac-0005",
           "claim": "Ingestion does not modify source refs, notes, index, worktree, configuration or hooks and performs no fetch/push/network access. Git arguments are passed without shell interpolation; external Git behaviour that could execute hooks/filters or fetch missing objects is controlled or refused.",
-          "state": "unchecked"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0005",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0004"
         },
         {
           "id": "ac-0006",
           "claim": "Missing notes and empty selections are distinguishable from invalid refs, missing Git, malformed/oversized note data and object-read failures. Explicit input/output bounds, output failures and partial-result policy are observable; no silent successful truncation.",
-          "state": "unchecked"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0006",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0004"
         },
         {
           "id": "ac-0007",
           "claim": "Metadata-first output preserves source identifiers without emitting human-author strings, free-form custom attributes or legacy message content unless the declared content policy explicitly permits them. Missing timestamps/counts remain unknown, not zero or invented timing.",
-          "state": "unchecked"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0007",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0004"
         },
         {
           "id": "ac-0008",
           "claim": "Existing tracking refs do not silently duplicate canonical-note observations; selection and ref revisions are explicit. Note attribution is not presented as a complete conversation, token ledger, tool-duration stream or lossless archive.",
-          "state": "unchecked"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0008",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0004"
         },
         {
           "id": "ac-0009",
           "claim": "No retired refs/harness-telemetry reader, old segment/rollup import, migration, compatibility shim or parallel telemetry path is introduced.",
-          "state": "unchecked"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0009",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0004"
         },
         {
           "id": "ac-000a",
           "claim": "Synthetic real-Git fixtures and exercised external SDK/CLI paths prove ordinary, mixed legacy/current/human, empty, malformed, bounded, bare/worktree and Git-AI-absent behavior without committing real private note payloads. Documentation names commands, provenance and limitations.",
-          "state": "unchecked"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000a",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0004"
         }
       ]
     },
@@ -98,7 +118,7 @@
           "id": "ph-7688",
           "title": "Git Notes SDK and CLI integration",
           "brief": "Deliver one end-to-end Git-ai notes ingestion path through SDK, registered CLI composition and OTLP output, with independent parsing, source fidelity, explicit limits and absence/error proof.",
-          "state": "unchecked",
+          "state": "checked",
           "tasks": "assets/tasks/phase-1/tasks.dd.json#tasks"
         }
       ]
@@ -149,7 +169,7 @@
     },
     {
       "name": "implementation_summary",
-      "value": ""
+      "value": "Implemented explicit read-only git-ai-format Git Notes through pure core ports, Unix GitObjectLoader, independent mapper, injected SDK and registered dedicated CLI. Full readiness passed all six proof modes, including real external SDK/installed CLI with Git AI unavailable; SHA256 CLI smoke also passed. Source/proof manifests are in assets/verification. Independent committed-source implementation review remains pending; guide approval is not code approval. No push/merge or formal linked-worktree dispatch occurred."
     },
     {
       "name": "key_findings",

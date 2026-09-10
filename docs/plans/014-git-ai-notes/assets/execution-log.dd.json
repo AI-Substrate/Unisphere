@@ -1,0 +1,78 @@
+{
+  "dd": {
+    "schema": "builder/execution-log"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Observed Git Notes implementation evidence",
+        "plan": "../plan.dd.json#meta"
+      }
+    },
+    {
+      "name": "entries",
+      "value": [
+        {
+          "id": "lg-0001",
+          "at": "2026-09-09T23:12:37.867Z",
+          "text": "Orientation at source 2fb5b15349873cd62ccd75c94fdfedae40d561f5: harness boot --json cwd /Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes completed exit0, ready=true, scope configuration-and-native-session-projections. This is baseline existing-product proof only, not Git Notes behavior. harness doctor reported degraded machine attribution (capture off, CLI-only trace2) with both project extensions loaded and no convention complaints; no global settings changed. Prime registry --prime flag refused E-RS-UNPORTED; no authority inferred.",
+          "links": [
+            "../plan.dd.json#meta"
+          ]
+        },
+        {
+          "id": "lg-0002",
+          "at": "2026-09-09T23:12:37.971Z",
+          "text": "Read-only storage feasibility: ordinary /usr/bin/git in isolated synthetic bare repository .harness/temp/git-notes-probe created one commit/note; rev-parse --verify --quiet --end-of-options refs/notes/ai pinned fc5a35844943cafce22e39088f49251e74ece8d6; ls-tree -r -z --full-tree returned blob-to-target mapping; absent refs/notes/absent returned exit1/no stdout. Git common-dir resolved absolute bare root. Effective promisor config query distinguished no match(exit1) from injected remote.fake.promisor=true(exit0). All process cwd values /Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes; child Git configuration and environment isolated. These experiments prove command shapes only, not a product loader.",
+          "links": [
+            "impl-guide.dd.json#units/tk-0002"
+          ]
+        },
+        {
+          "id": "lg-0003",
+          "at": "2026-09-09T23:38:04.278Z",
+          "text": "Independent reviewer pij-armed-cow (reported OMP github-copilot/claude-opus-5 high) approved guide v3 SHA256 0663554ff3439b83cd5992621e26b778928c71087941971b736f7d5a47303378 against unchanged plan e832077b4c7a3c27ea5d3f444a13862c1984170193626dfc7b4ae3f20676ced8. Full R2 report preserved at reviews/guide-r2-pij-armed-cow.md. All R1 findings closed or refuted by Main; approval is architecture only. Product implementation now begins under previously granted scope, not a new permission gate. AGENTS.md stale readiness text remains outside ownership and will be raised at closeout.",
+          "links": [
+            "impl-guide.dd.json#meta",
+            "../plan.dd.json#meta"
+          ]
+        },
+        {
+          "id": "lg-0004",
+          "at": "2026-09-10T00:16:36.555Z",
+          "text": "Composed implementation proof: harness boot --json, cwd /Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes, exit0, ready=true, scope configuration-native-sessions-and-git-notes. All quality gates and composition/sdk-consumer/installed-cli/collection/native/git-notes modes passed. Full raw envelope, timestamps and SHA256 manifest of compiled source/fixtures/harness files: verification/boot-attempt-2.json (base2fb5b15349873cd62ccd75c94fdfedae40d561f5 plus working-tree changes). Prior attempt1 stopped on two Clippy diagnostics; corrected without suppression and Clippy recheck passed. Independent implementation review is still pending; guide-only R2 approval is not reused as code approval.",
+          "links": [
+            "../plan.dd.json#acceptance_criteria/ac-0001",
+            "../plan.dd.json#acceptance_criteria/ac-0002",
+            "../plan.dd.json#acceptance_criteria/ac-0003",
+            "../plan.dd.json#acceptance_criteria/ac-0004",
+            "../plan.dd.json#acceptance_criteria/ac-0005",
+            "../plan.dd.json#acceptance_criteria/ac-0006",
+            "../plan.dd.json#acceptance_criteria/ac-0007",
+            "../plan.dd.json#acceptance_criteria/ac-0008",
+            "../plan.dd.json#acceptance_criteria/ac-0009",
+            "../plan.dd.json#acceptance_criteria/ac-000a"
+          ]
+        },
+        {
+          "id": "lg-0005",
+          "at": "2026-09-10T00:16:36.639Z",
+          "text": "After successful full readiness proof, applied Main's narrow additional permission to AGENTS.md only at its product-description paragraph and stale readiness-scope paragraph. New scope matches observed verification/boot-attempt-2.json; governance, ownership, tool setup and commit policy remain unchanged. Runtime source files did not change after that proof.",
+          "links": [
+            "../plan.dd.json#acceptance_criteria/ac-000a"
+          ]
+        },
+        {
+          "id": "lg-0006",
+          "at": "2026-09-10T00:21:01.048Z",
+          "text": "Additional actual CLI smoke over an ordinary-Git SHA256 bare repository passed exit0: full 64-character commit/note/ref-tip IDs preserved through an explicit selected-commit export. Evidence: verification/sha256-cli-smoke.json. Runtime code unchanged from full readiness proof.",
+          "links": [
+            "../plan.dd.json#acceptance_criteria/ac-0001",
+            "../plan.dd.json#acceptance_criteria/ac-000a"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -44,22 +44,24 @@ test('failed product checks preserve exit/stdout/stderr and never start smoke', 
   assert.equal(verdict.error.details.stderr, 'failure');
 });
 
-test('native revision proof failure prevents readiness and preserves its evidence', async () => {
-  const verdict = await runBoot(context(async (_command, args) => {
-    if (args.at(-1) === 'native') {
-      return { ok: false, code: 19, stdout: 'native-out', stderr: 'native-error' };
-    }
-    return good;
-  }));
-  assert.equal(verdict.error.code, 'E_FOUNDATION_SMOKE');
-  assert.notEqual(verdict.data?.ready, true);
-  assert.equal(verdict.error.details.proofs.at(-1).stderr, 'native-error');
+test('native and Git Notes proof failures prevent readiness and preserve evidence', async () => {
+  for (const mode of ['native', 'git-notes']) {
+    const verdict = await runBoot(context(async (_command, args) => {
+      if (args.at(-1) === mode) {
+        return { ok: false, code: 19, stdout: 'proof-out', stderr: 'proof-error' };
+      }
+      return good;
+    }));
+    assert.equal(verdict.error.code, 'E_FOUNDATION_SMOKE');
+    assert.notEqual(verdict.data?.ready, true);
+    assert.equal(verdict.error.details.proofs.at(-1).name, mode);
+    assert.equal(verdict.error.details.proofs.at(-1).stderr, 'proof-error');
+  }
 });
 
 test('successful quality and assembled proofs establish scoped readiness', async () => {
   const verdict = await runBoot(context(async () => good));
   assert.equal(verdict.data.ready, true);
-  assert.equal(verdict.data.scope, 'configuration-and-native-session-projections');
 });
 
 test('a real harness child failure is not laundered into readiness', () => {

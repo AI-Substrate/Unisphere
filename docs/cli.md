@@ -1,10 +1,10 @@
 # Unisphere CLI
 
-Unisphere provides configuration inspection, a registered-adapter catalog and an
-explicit Claude JSONL session pipeline. Catalog/configuration command JSON and
-OTLP telemetry JSONL are distinct output contracts. No implicit HOME scan, daemon,
-remote service or persistent ingest store is started. Session projection is not
-lossless or complete-session capture.
+Unisphere provides configuration inspection, a registered-adapter catalog,
+explicit native session projections and read-only Git-ai-format Git Notes.
+Catalog/configuration JSON and OTLP telemetry JSONL are distinct contracts.
+No implicit HOME scan, daemon, remote service or persistent ingest store starts.
+Projection is not lossless or complete-session capture.
 
 ## Install and run
 
@@ -199,7 +199,7 @@ unisphere adapters list --human
 
 The catalog contains registered production adapters only, never the test fixture.
 The current IDs are `claude-code`, `codex`, `oh-my-pi`, `pi`, `copilot-cli`,
-`cursor-transcript`, `vscode-copilot`, `cursor-ide` and `copilot-cli-snapshot`.
+`cursor-transcript`, `vscode-copilot`, `cursor-ide`, `copilot-cli-snapshot` and `git-ai`.
 Cursor transcript/IDE and Copilot event/legacy-snapshot dialects remain distinct.
 The v1 envelope is `{"ok":true,"command":"adapters.list","v":1,"data":{"adapters":[...]}}`.
 Each descriptor supplies:
@@ -236,6 +236,11 @@ and `.jsonl` hints so a program need not infer a format from a combined pattern.
 not pure journal replay or reading another current snapshot. It is false for the
 current snapshot pipelines. VS Code's description names journal replay separately;
 no descriptor promises a background tracker, persistent/idempotent sink or history.
+The `git-ai` descriptor has no location hints: callers select a repository, not
+a HOME-relative store. It declares Unix export, OTLP JSONL, no append cursor,
+`pinned_git_notes_ref` source semantics, and no persisted resume, reconciliation
+or lossless archive. Catalog listing does not probe either Git or Git AI.
+
 
 Piped catalog output defaults to JSON; terminal output defaults to readable
 descriptions, hints and capabilities. **Catalog JSON failures go to stdout;
@@ -310,3 +315,75 @@ no persisted resume. `records` includes the manifest. Consumers accept the entir
 output before replacing their prior projection; failed writes may leave bytes but
 return no accepted SDK checkpoint. Repeated invocations are not deduplicated, and
 no persistent history, destination transaction or exactly-once guarantee is added.
+
+## Git Notes attribution
+
+```sh
+unisphere sessions list --adapter git-ai --repo /absolute/repository
+unisphere sessions export --adapter git-ai --repo /absolute/repository --git-executable /usr/bin/git
+unisphere sessions export --adapter git-ai --repo /absolute/repository --notes-ref refs/notes/ai --commit FULL_COMMIT_OID --include-content
+```
+
+Git AI is an input format only: no installation, executable invocation, crate,
+library, cache, daemon or HTTP service from Git AI is needed. The app resolves
+standard `git` from PATH unless `--git-executable` names an absolute trusted Git
+binary. Help works without Git. Missing Git returns `git_unavailable`, not a
+Git AI installation error.
+
+`--repo` accepts an explicit local normal/bare repository or linked worktree,
+including a nested directory; relative paths resolve under the captured cwd.
+The default ref is `refs/notes/ai`. Only full `refs/notes/*` refs are accepted.
+Repeat `--commit` for full lowercase 40/64-hex commit IDs; duplicates do not
+duplicate observations. Omitting it selects all notes in the one requested ref,
+not all refs or repository history. Tracking refs are never auto-aggregated.
+
+Listing writes one JSON envelope on stdout with `data.adapter` and `data.listing`.
+The listing contains canonical repository/common-dir/git-dir/worktree identities,
+normalized selection, requested ref, nullable pinned ref tip and note references
+with target commit and blob IDs. A missing valid ref is a normal empty result,
+not evidence that no AI work occurred.
+
+Export writes one complete bounded OTLP LogsData JSONL batch on stdout and a
+structural summary on stderr. `--output FILE` instead creates a new file outside
+the canonical source worktree, per-worktree Git directory and common Git directory.
+Existing files/symlinks and symlink-parent aliases into those roots are rejected.
+Output parents must be caller-controlled; concurrent malicious parent replacement
+is not a filesystem sandbox guarantee. Shell redirection and SDK-supplied writers
+remain caller-owned.
+
+| Flag | Default | Hard ceiling |
+| --- | --- | --- |
+| `--max-notes` | 1,000 | 10,000 |
+| `--max-records` | 10,000 including manifest | 100,000 |
+| `--max-note-bytes` | 1 MiB | 32 MiB |
+| `--max-total-bytes` | 16 MiB | 64 MiB |
+| `--max-listing-bytes` | 1 MiB | 64 MiB |
+| `--command-timeout-ms` | 5,000 per command | 60,000 |
+
+All limits are positive; total bytes must cover the per-note budget. Selected
+fanout lookup avoids enumerating unrelated notes; `All` retains a bounded listing.
+The existing writer independently enforces 32 MiB of encoded output. Input size
+does not imply encoded size. Overflows, timeout, malformed/unsupported notes and
+read errors never produce a successful truncated projection. Write/flush failures
+may leave partial destination bytes; discard them before retrying.
+
+Metadata retains native paths, keys, declared agent identities and supplied
+statistics. Human-author strings, custom attributes and legacy messages/URLs are
+omitted unless `--include-content`; content is emitted once per declared identity,
+not copied into every line-range event. URLs remain inert. Missing/null counts
+are not zeros, and checkpoint IDs are never OpenTelemetry span IDs.
+
+Errors use `command: "sessions"` on stderr with `error.kind`, fixed `message` and
+nullable `output_code` for shared writer errors. Invalid arguments exit 2;
+operational failures exit 1. Important kinds include `git_unavailable`,
+`unsafe_repository`, `unsupported_repository`, `unsupported_target`, `object_read`,
+`invalid_ref`, `unsupported_format`, `invalid_data` and the named budget failures.
+Partial clones/promisor configuration are refused before object reads; inherited
+Git configuration/helpers are cleared, protocols disabled and ownership checks
+preserved. Global/system `safe.directory` entries are deliberately not inherited:
+use a caller-owned checkout. No fetch, push, note/config/index/hook mutation occurs.
+
+The source-specific parser is `unisphere_cli::run_git_notes`; it invokes an
+app-owned constructor closure only after argument validation. Existing session
+and snapshot frontend invocations are unchanged. This is not the broad session
+exploration/query/extraction CLI, and it reads no retired harness telemetry.

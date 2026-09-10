@@ -4,7 +4,7 @@
 
 ## Boot command
 
-`harness boot --json` runs the quality gate once, then configuration composition, external SDK, installed CLI and real Claude collection smoke. Only all four successful modes return `ready:true`, scoped to `configuration-and-claude-jsonl`. It starts no services and never claims lossless or all-client capture. See [development guide](../docs/development.md).
+`harness boot --json` runs the quality gate once, then configuration composition, external SDK, installed CLI, Claude collection, native revision scenarios and Git Notes attribution proof. Only all six successful modes return `ready:true`, scoped to `configuration-native-sessions-and-git-notes`. It starts no services and claims neither lossless capture nor complete conversations. See [development guide](../docs/development.md).
 
 ## Checks command
 
@@ -12,7 +12,7 @@
 
 ## Health and interaction
 
-There is no product daemon or health endpoint. Supported interactions are `unisphere config check` and explicit `unisphere sessions list/export`; the latter projects Claude JSONL through a pure adapter and independent OTLP writer. `harness doctor --json` reports harness/machine health separately from product proof.
+There is no product daemon or health endpoint. Supported interactions are configuration/catalog inspection and explicit `unisphere sessions list/export`; source-specific SDK collectors compose pure adapters and the shared OTLP writer. Git Notes use standard Git, not Git AI. `harness doctor --json` reports harness/machine health separately from product proof.
 
 ## Deterministic signal inventory
 
@@ -20,13 +20,14 @@ There is no product daemon or health endpoint. Supported interactions are `unisp
 |---|---|---|
 | Harness wiring | `harness doctor --json` | Extensions/conventions, not product behavior |
 | Product quality | `harness checks --json` | Actual tool identity and reported Rust/harness gates |
-| Product readiness | `harness boot --json` | Quality plus configuration and explicit Claude collection proofs; not full fidelity |
+| Product readiness | `harness boot --json` | Quality plus configuration/native-session/Git Notes consumer proofs; not complete history or conversations |
 | Dependency direction | `cargo run --locked -p unisphere-testkit --bin unisphere-arch-check` | Declared normal/dev/build edges, including optional/target/renamed edges; negative graph fixtures |
 | Independent proof tools | `cargo test --locked -p unisphere-testkit --bins` | Controlled tool fixtures without hidden SDK/CLI implementation dependency |
 | Composition parity | `cargo run --locked -p unisphere-testkit --bin unisphere-proof -- composition` | Real SDK/app success and safe failure parity |
 | External SDK | `cargo run --locked -p unisphere-testkit --bin unisphere-proof -- sdk-consumer` | Public facade/injected reader and sealed hostile-environment behavior |
 | Installed CLI | `cargo run --locked -p unisphere-testkit --bin unisphere-proof -- installed-cli` | Real temporary installation, outside-checkout runtime, machine/human stream routing |
 | Claude collection | `cargo run --locked -p unisphere-testkit --bin unisphere-proof -- collection` | Real shared loader, pure mapper, writer, external SDK and installed CLI on synthetic data |
+| Git Notes attribution | `cargo run --locked -p unisphere-testkit --bin unisphere-proof -- git-notes` | Real standard-Git fixtures, external SDK/installed CLI parity with Git AI unavailable, pinned/empty/privacy/error/bounds and source-safety scenarios |
 | Harness propagation | `node --test .harness/extensions/checks/checks.test.mjs .harness/extensions/boot/extension.test.mjs` | Missing/mixed tool identity and failed child propagation; not collector proof |
 
 ## Isolation and remaining proof limits

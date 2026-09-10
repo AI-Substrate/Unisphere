@@ -103,8 +103,8 @@ Snapshot-derived records additionally require:
 | Key | Value and meaning |
 | --- | --- |
 | `unisphere.source.key` | Native SQLite key or mapper's structural document/journal location. |
-| `unisphere.source.revision` | Loader-owned SHA256 revision of the bounded raw representation. |
-| `unisphere.source.format` | `json_document`, `json_journal` or `sqlite_key_value`. |
+| `unisphere.source.revision` | Loader-owned snapshot SHA256 revision, or the Git object identity described below. |
+| `unisphere.source.format` | `json_document`, `json_journal`, `sqlite_key_value` or `git_notes`. |
 | `unisphere.source.session.id` | Optional verified native selected session identity. |
 
 `unisphere.source.offset` is **absent** for snapshots, never a synthesized ordinal.
@@ -137,6 +137,63 @@ and [Cursor](cursor-adapter.md). Their `unisphere.*` fields are explicit native
 extensions, not additional OpenTelemetry standard totals. In particular,
 latest-call, whole-turn, checkpoint and cumulative-session counters are not
 interchangeable or automatically summed.
+
+## Git Notes attribution and selection manifests
+
+The `git-ai` adapter independently projects supported `authorship/3.0.0` note
+variants, including mixed current sessions, legacy 16/7-hex prompt keys and known
+humans. Normal/optionally quoted paths, single lines and inclusive ranges retain
+their source meanings. Unknown variants and duplicate JSON keys fail explicitly.
+Valid unresolved keys remain attribution records with `identity_resolution`
+`unresolved`; no identity is invented or loaded from another note/cache.
+
+| Event | `unisphere.source.kind` | `unisphere.source.key` |
+| --- | --- | --- |
+| `unisphere.git_ai.note` | `note_metadata` | `$note` |
+| `unisphere.git_ai.identity` | `declared_identity` | `metadata/<prompts\|sessions\|humans>/<native-key>` |
+| `unisphere.git_ai.attribution` | `line_attribution` | `attestations/<file-index>/<entry-index>/<range-index>` |
+| `unisphere.git_notes.snapshot` | `notes_manifest` | `$git-notes` |
+
+All four retain integer profile version `1`, adapter `git-ai`, canonical selected
+repository as `unisphere.source.path`, and source format `git_notes`. Structural
+indices are not byte offsets. No event timestamp, OTel trace/span, tool duration
+or token total is synthesized.
+
+Every record has `unisphere.git.repository.id` (canonical Git common directory,
+local identity only), `unisphere.git.notes.ref` and `unisphere.git.notes.tip`.
+Note-derived records also have `unisphere.git.commit`, `unisphere.git.note.blob`
+and `unisphere.source.revision` equal to that blob. Attribution adds
+`unisphere.git_ai.file.path`, `attestation.key`, `identity.key`, `identity.kind`,
+`identity_resolution`, positive inclusive `line.start`/`line.end`, and native
+`session.id`/`checkpoint.id` when supplied by a session key. These suffixes are
+all under `unisphere.git_ai`, not new standard OTel fields.
+
+Declared agent fields are `unisphere.git_ai.agent.tool`, `.id` and `.model`.
+Supplied prompt statistics retain their native names (`total_additions`,
+`total_deletions`, `accepted_lines`, `overriden_lines`) and scope. Missing fields
+stay absent; explicit null stays empty AnyValue. Human strings, custom attributes,
+legacy messages and message URLs are included only with explicit content policy,
+once on their identity record. URLs are never fetched.
+
+The closing manifest has no body, timestamp, target commit or note blob.
+Its revision and notes tip are the pinned ref commit, or explicit null for a
+missing ref. Its `unisphere.git_notes.*` fields are:
+
+| Suffix | Meaning |
+| --- | --- |
+| `semantics` | `replace_projection`, scoped to the selected repository/ref/selection only. |
+| `records` | Count of preceding mapped records, excluding this manifest. |
+| `notes` | Count of selected note objects. |
+| `selection` | Structured canonical repository, requested notes ref, `mode: all\|commits`, and normalized requested `commits` when selected. |
+| `include_content` | Applied content-policy boolean. |
+| `finality` | `unknown`; no producer/session completeness claim. |
+| `ref_state` | `present` or `missing`, distinguishing absence from a present empty selection. |
+
+An empty selection still emits this manifest. Accept the complete output before
+replacing its selected view; failed writes can leave a prefix and return no
+accepted collection. Ref pinning identifies objects without retaining them
+against Git garbage collection. Tracking refs are not automatically aggregated.
+
 
 ## Claude attribute registry
 

@@ -33,12 +33,18 @@ fn allowed(package: &str, dependency: &str, kind: &str) -> bool {
                 | "unisphere-adapter-cursor"
                 | "unisphere-loader-snapshot"
                 | "unisphere-output-otlp"
+                | "unisphere-loader-git"
+                | "unisphere-adapter-git-ai"
         ),
         ("unisphere-loader-jsonl", "normal") => matches!(dependency, "unisphere-core" | "libc"),
         ("unisphere-loader-snapshot", "normal") => matches!(
             dependency,
             "unisphere-core" | "libc" | "serde" | "serde_json" | "sha2" | "rusqlite"
         ),
+        ("unisphere-loader-git", "normal") => matches!(dependency, "unisphere-core" | "libc"),
+        ("unisphere-adapter-git-ai", "normal") => {
+            matches!(dependency, "unisphere-core" | "serde" | "serde_json")
+        }
         (
             "unisphere-adapter-claude"
             | "unisphere-adapter-codex"
@@ -75,7 +81,9 @@ fn allowed(package: &str, dependency: &str, kind: &str) -> bool {
             | "unisphere-adapter-vscode-copilot"
             | "unisphere-adapter-cursor"
             | "unisphere-loader-snapshot"
-            | "unisphere-output-otlp",
+            | "unisphere-output-otlp"
+            | "unisphere-loader-git"
+            | "unisphere-adapter-git-ai",
             "dev",
         ) => matches!(dependency, "unisphere-testkit" | "tempfile" | "serde_json"),
         _ => false,
@@ -120,6 +128,8 @@ fn check(graph: &Value) -> Result<usize, String> {
                 | "unisphere-adapter-cursor"
                 | "unisphere-loader-snapshot"
                 | "unisphere-output-otlp"
+                | "unisphere-loader-git"
+                | "unisphere-adapter-git-ai"
         ) {
             return Err(format!("unapproved workspace package {name}"));
         }

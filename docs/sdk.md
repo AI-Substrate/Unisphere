@@ -256,3 +256,73 @@ The manifest identifies `replace_projection`, record count, source selection,
 content policy and unknown finality. A revision is an observation of that bounded
 source representation, not producer finality or a global clock. Caller-side
 history, destination transactions and cross-source deduplication remain separate.
+
+## Read Git-ai-format Git Notes
+
+Add path dependencies on `crates/loader-git`, `crates/adapter-git-ai` and
+`crates/output-otlp`. These are Unisphere implementations, not Git AI libraries.
+The SDK itself still depends inward on core, not concrete loaders/adapters.
+Standard Git is the only Git-side runtime prerequisite; Git AI need not exist.
+
+```rust
+use unisphere_sdk::{
+    GitNoteSelection, GitNotesApi, GitNotesCollector, GitNotesLimits,
+    GitNotesRequest, GitNotesScope, MappingOptions,
+};
+use unisphere_loader_git::GitObjectLoader;
+use unisphere_adapter_git_ai::GitAiAdapter;
+use unisphere_output_otlp::OtlpJsonlWriter;
+
+let collector = GitNotesCollector::new(
+    GitObjectLoader::new("/usr/bin/git".into()),
+    GitAiAdapter,
+    OtlpJsonlWriter,
+);
+let scope = GitNotesScope {
+    repository: "/explicit/repository".into(),
+    notes_ref: "refs/notes/ai".into(),
+    selection: GitNoteSelection::All,
+};
+let limits = GitNotesLimits::default();
+let listing = collector.list_notes(&scope, limits)?;
+let mut output = Vec::new();
+let result = collector.collect_notes(
+    &GitNotesRequest { scope, limits, options: MappingOptions::default() },
+    &mut output,
+)?;
+# Ok::<(), unisphere_sdk::GitNotesError>(())
+```
+
+Use a trusted absolute standard Git executable. `GitObjectLoader` runs on Unix;
+the pure `GitAiAdapter` accepts supplied `LoadedGitNote` values on any platform.
+Neither parser nor SDK reads environment/configuration, invokes Git AI, or
+dereferences message URLs. There is no upstream Git AI code/library dependency.
+
+`GitNoteSelection::Commits(vec![full_oid])` selects exact lowercase SHA-1/SHA-256
+commit IDs. Duplicates collapse deterministically; an empty vector selects
+nothing, unlike `All`. Selected lookup follows only matching Git-notes fanout
+paths, so an unrelated large notes tree need not fit the all-notes listing budget.
+No tracking refs are discovered or aggregated.
+
+The listing retains the canonical selected repository, Git common-directory
+identity, per-worktree Git directory, optional worktree top-level, requested ref
+and pinned ref tip. Each `GitNoteRef` adds target commit and note blob. Through
+the `GitNoteLoader` trait, `read_note(&reference, limits)` verifies membership
+against that immutable tip, even after the named ref changes. This pins identity,
+not retention: later Git garbage collection can make old objects unreadable.
+
+Missing valid refs (`notes_tip: None`) and existing empty selections (`Some(tip)`)
+are successful, distinct results. Invalid refs, non-commit selected targets,
+missing objects, unsupported/malformed notes, ownership refusal, unavailable Git,
+deadlines and limits are typed `GitNotesError` failures. Unknown source values
+are not filled with zero. Valid unresolved attribution keys remain explicit
+unresolved evidence, without speculative cross-note or cache lookup.
+
+Collection stages the complete bounded selection and writes one OTLP batch with
+a closing `unisphere.git_notes.snapshot` manifest, including for empty results.
+`records_written` includes that manifest. No result is accepted after mapping,
+write or flush failure; a destination failure can leave partial bytes. Consumers
+replace only the identified repository/ref/selection after accepting the entire
+batch. There is no persisted cursor, history store or exactly-once guarantee.
+See [CLI limits](cli.md#git-notes-attribution) and the
+[Git Notes profile](telemetry-profile.md#git-notes-attribution-and-selection-manifests).

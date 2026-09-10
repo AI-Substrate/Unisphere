@@ -53,16 +53,16 @@ Read explicitly selected local Git-ai authorship notes as a Unisphere-supported 
 
 | id | claim | state | note | receipt | pressure | proven_by |
 | --- | --- | --- | --- | --- | --- | --- |
-| ac-0001 | An external Rust SDK consumer can list and read explicitly selected local Git Notes attached to commits, retaining repository, notes-ref, pinned ref tip, target commit and note-blob provenance. Bare repositories and linked worktrees resolve Git storage correctly. | [ ] unchecked | — | — | — | — |
-| ac-0002 | The registered CLI Git-ai ingestion path calls the SDK and produces the same source-derived OTLP LogsData for the same repository, note selection and content policy; existing native session commands remain working. | [ ] unchecked | — | — | — | — |
-| ac-0003 | Independent parsing preserves supported authorship/3.0.0 file paths, inclusive line ranges, attestation keys and declared prompts/sessions/humans, including mixed maps and their agent identities. Missing data is not synthesized; unsupported variants or schema versions are explicit. | [ ] unchecked | — | — | — | — |
-| ac-0004 | Git AI can be absent: no git-ai invocation, imported implementation, crate/library dependency, daemon, HTTP service or private git-ai cache is used. Standard read-only Git is the only Git-side runtime prerequisite. | [ ] unchecked | — | — | — | — |
-| ac-0005 | Ingestion does not modify source refs, notes, index, worktree, configuration or hooks and performs no fetch/push/network access. Git arguments are passed without shell interpolation; external Git behaviour that could execute hooks/filters or fetch missing objects is controlled or refused. | [ ] unchecked | — | — | — | — |
-| ac-0006 | Missing notes and empty selections are distinguishable from invalid refs, missing Git, malformed/oversized note data and object-read failures. Explicit input/output bounds, output failures and partial-result policy are observable; no silent successful truncation. | [ ] unchecked | — | — | — | — |
-| ac-0007 | Metadata-first output preserves source identifiers without emitting human-author strings, free-form custom attributes or legacy message content unless the declared content policy explicitly permits them. Missing timestamps/counts remain unknown, not zero or invented timing. | [ ] unchecked | — | — | — | — |
-| ac-0008 | Existing tracking refs do not silently duplicate canonical-note observations; selection and ref revisions are explicit. Note attribution is not presented as a complete conversation, token ledger, tool-duration stream or lossless archive. | [ ] unchecked | — | — | — | — |
-| ac-0009 | No retired refs/harness-telemetry reader, old segment/rollup import, migration, compatibility shim or parallel telemetry path is introduced. | [ ] unchecked | — | — | — | — |
-| ac-000a | Synthetic real-Git fixtures and exercised external SDK/CLI paths prove ordinary, mixed legacy/current/human, empty, malformed, bounded, bare/worktree and Git-AI-absent behavior without committing real private note payloads. Documentation names commands, provenance and limitations. | [ ] unchecked | — | — | — | — |
+| ac-0001 | An external Rust SDK consumer can list and read explicitly selected local Git Notes attached to commits, retaining repository, notes-ref, pinned ref tip, target commit and note-blob provenance. Bare repositories and linked worktrees resolve Git storage correctly. | [x] checked | — | — | [bp-0001](assets/backpressure.dd.md#rows) | [lg-0004](assets/execution-log.dd.md#entries) |
+| ac-0002 | The registered CLI Git-ai ingestion path calls the SDK and produces the same source-derived OTLP LogsData for the same repository, note selection and content policy; existing native session commands remain working. | [x] checked | — | — | [bp-0002](assets/backpressure.dd.md#rows) | [lg-0004](assets/execution-log.dd.md#entries) |
+| ac-0003 | Independent parsing preserves supported authorship/3.0.0 file paths, inclusive line ranges, attestation keys and declared prompts/sessions/humans, including mixed maps and their agent identities. Missing data is not synthesized; unsupported variants or schema versions are explicit. | [x] checked | — | — | [bp-0003](assets/backpressure.dd.md#rows) | [lg-0004](assets/execution-log.dd.md#entries) |
+| ac-0004 | Git AI can be absent: no git-ai invocation, imported implementation, crate/library dependency, daemon, HTTP service or private git-ai cache is used. Standard read-only Git is the only Git-side runtime prerequisite. | [x] checked | — | — | [bp-0004](assets/backpressure.dd.md#rows) | [lg-0004](assets/execution-log.dd.md#entries) |
+| ac-0005 | Ingestion does not modify source refs, notes, index, worktree, configuration or hooks and performs no fetch/push/network access. Git arguments are passed without shell interpolation; external Git behaviour that could execute hooks/filters or fetch missing objects is controlled or refused. | [x] checked | — | — | [bp-0005](assets/backpressure.dd.md#rows) | [lg-0004](assets/execution-log.dd.md#entries) |
+| ac-0006 | Missing notes and empty selections are distinguishable from invalid refs, missing Git, malformed/oversized note data and object-read failures. Explicit input/output bounds, output failures and partial-result policy are observable; no silent successful truncation. | [x] checked | — | — | [bp-0006](assets/backpressure.dd.md#rows) | [lg-0004](assets/execution-log.dd.md#entries) |
+| ac-0007 | Metadata-first output preserves source identifiers without emitting human-author strings, free-form custom attributes or legacy message content unless the declared content policy explicitly permits them. Missing timestamps/counts remain unknown, not zero or invented timing. | [x] checked | — | — | [bp-0007](assets/backpressure.dd.md#rows) | [lg-0004](assets/execution-log.dd.md#entries) |
+| ac-0008 | Existing tracking refs do not silently duplicate canonical-note observations; selection and ref revisions are explicit. Note attribution is not presented as a complete conversation, token ledger, tool-duration stream or lossless archive. | [x] checked | — | — | [bp-0008](assets/backpressure.dd.md#rows) | [lg-0004](assets/execution-log.dd.md#entries) |
+| ac-0009 | No retired refs/harness-telemetry reader, old segment/rollup import, migration, compatibility shim or parallel telemetry path is introduced. | [x] checked | — | — | [bp-0009](assets/backpressure.dd.md#rows) | [lg-0004](assets/execution-log.dd.md#entries) |
+| ac-000a | Synthetic real-Git fixtures and exercised external SDK/CLI paths prove ordinary, mixed legacy/current/human, empty, malformed, bounded, bare/worktree and Git-AI-absent behavior without committing real private note payloads. Documentation names commands, provenance and limitations. | [x] checked | — | — | [bp-000a](assets/backpressure.dd.md#rows) | [lg-0004](assets/execution-log.dd.md#entries) |
 
 <a id="phases"></a>
 
@@ -70,7 +70,7 @@ Read explicitly selected local Git-ai authorship notes as a Unisphere-supported 
 
 | id | title | brief | state | note | receipt | depends_on | tasks | objective | delivers | key_risks |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| ph-7688 | Git Notes SDK and CLI integration | Deliver one end-to-end Git-ai notes ingestion path through SDK, registered CLI composition and OTLP output, with independent parsing, source fidelity, explicit limits and absence/error proof. | [ ] unchecked | — | — | — | [tasks](assets/tasks/phase-1/tasks.dd.md#tasks) | — | — | — |
+| ph-7688 | Git Notes SDK and CLI integration | Deliver one end-to-end Git-ai notes ingestion path through SDK, registered CLI composition and OTLP output, with independent parsing, source fidelity, explicit limits and absence/error proof. | [x] checked | — | — | — | [tasks](assets/tasks/phase-1/tasks.dd.md#tasks) | — | — | — |
 
 <a id="tasks"></a>
 
@@ -151,7 +151,7 @@ _No entries._
 
 ## Implementation Summary
 
-_Empty._
+Implemented explicit read-only git-ai-format Git Notes through pure core ports, Unix GitObjectLoader, independent mapper, injected SDK and registered dedicated CLI. Full readiness passed all six proof modes, including real external SDK/installed CLI with Git AI unavailable; SHA256 CLI smoke also passed. Source/proof manifests are in assets/verification. Independent committed-source implementation review remains pending; guide approval is not code approval. No push/merge or formal linked-worktree dispatch occurred.
 
 <a id="key-findings"></a>
 

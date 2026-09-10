@@ -48,20 +48,20 @@ pub fn run_query(
             stderr,
         );
     }
-    let mut staged = match command.output.as_ref() {
-        Some(path) => match StagedOutput::create(path) {
-            Ok(staged) => Some(staged),
-            Err(_) => {
-                return emit_query_failure_inner(
-                    &command.request,
-                    &output_failure(),
-                    command.diagnostic_mode,
-                    stderr,
-                );
-            }
-        },
-        None => None,
-    };
+    // Refuse an existing destination before source I/O, including dangling links.
+    // Actual staging waits until providers have checked source-specific safety.
+    if command
+        .output
+        .as_ref()
+        .is_some_and(|path| StagedOutput::preflight(path).is_err())
+    {
+        return emit_query_failure_inner(
+            &command.request,
+            &output_failure(),
+            command.diagnostic_mode,
+            stderr,
+        );
+    }
     let response = match query.execute(&command.request) {
         Ok(response) => response,
         Err(failure) => {
@@ -89,6 +89,20 @@ pub fn run_query(
         );
     }
 
+    let mut staged = match command.output.as_ref() {
+        Some(path) => match StagedOutput::create(path) {
+            Ok(staged) => Some(staged),
+            Err(_) => {
+                return emit_query_failure_inner(
+                    &command.request,
+                    &output_failure(),
+                    command.diagnostic_mode,
+                    stderr,
+                );
+            }
+        },
+        None => None,
+    };
     let written = if let Some(staged) = staged.as_mut() {
         writer.write(&response, &options, staged.writer())
     } else {

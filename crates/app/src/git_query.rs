@@ -15,6 +15,7 @@ pub struct GitSource<L> {
     pub adapter: Arc<dyn QueryAdapter>,
     pub policy: &'static str,
     pub repository: PathBuf,
+    pub output: Option<PathBuf>,
 }
 
 pub struct Sources<L> {
@@ -198,6 +199,11 @@ impl<L: GitNoteLoader> GitSource<L> {
                 ..Coverage::default()
             },
         };
+        // Never authorize a file destination if the admitted Git source's roots
+        // cannot be established, even on partial or ID-based query paths.
+        if self.output.is_some() && self.loader.is_none() {
+            return Err(invalid_output());
+        }
         let loader = match self.loader.as_ref() {
             Some(loader) => loader,
             None if matches!(
@@ -221,6 +227,7 @@ impl<L: GitNoteLoader> GitSource<L> {
             }
         };
         let listing = match loader.list_notes(&requested, note_limits) {
+            Err(_) if self.output.is_some() => return Err(invalid_output()),
             Ok(listing) => listing,
             Err(_)
                 if matches!(
@@ -240,6 +247,14 @@ impl<L: GitNoteLoader> GitSource<L> {
         listing
             .validate(&requested, note_limits)
             .map_err(|_| QueryFailure::invalid_data())?;
+        if let Some(output) = &self.output {
+            let leaf = output.file_name().ok_or_else(invalid_output)?;
+            let parent = std::fs::canonicalize(output.parent().ok_or_else(invalid_output)?)
+                .map_err(|_| invalid_output())?;
+            if !listing.allows_output_path(&parent.join(leaf)) {
+                return Err(invalid_output());
+            }
+        }
         if let QueryScope::Repository { path, .. } = scope {
             view.repository_roots
                 .push(std::fs::canonicalize(path).map_err(|_| QueryFailure::invalid_data())?);
@@ -449,4 +464,13 @@ fn combine(notes: &mut NativeQueryView, local: NativeQueryView) -> Result<(), Qu
         .extend(local.coverage.excluded_adapters);
     coverage.issues.extend(local.coverage.issues);
     coverage.validate()
+}
+
+fn invalid_output() -> QueryFailure {
+    QueryFailure::new(
+        QueryFailureCode::InvalidArgument,
+        RecoveryAction::ChooseNewOutput {
+            discard_partial: false,
+        },
+    )
 }

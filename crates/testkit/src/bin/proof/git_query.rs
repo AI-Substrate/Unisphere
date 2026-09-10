@@ -118,6 +118,8 @@ pub fn run(
             "list".into(),
             "--input".into(),
             saved.into_os_string(),
+            "--columns".into(),
+            "transcript_available".into(),
             "--json".into(),
         ],
     )?;

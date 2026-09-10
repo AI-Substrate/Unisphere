@@ -265,3 +265,81 @@ fn missing_git_is_actionable_and_empty_notes_are_a_complete_selection() {
     assert_eq!(empty["data"]["emitted"], 0);
     assert_eq!(empty["data"]["coverage"]["source_read_complete"], true);
 }
+
+#[test]
+fn query_output_cannot_create_files_in_git_source_roots() {
+    let root = tempfile::tempdir().unwrap();
+    let repo = root.path().join("repo");
+    let git = standard_git().unwrap();
+    initialize(&repo, &git, false, NOTE).unwrap();
+    let worktree = root.path().join("linked");
+    git_ok(
+        &git,
+        &repo,
+        &[
+            "worktree",
+            "add",
+            "-b",
+            "query-proof",
+            worktree.to_str().unwrap(),
+        ],
+        None,
+    )
+    .unwrap();
+    let source = json(&run(
+        root.path(),
+        &worktree,
+        &[
+            "sources",
+            "list",
+            "--repo",
+            ".",
+            "--source-adapter",
+            "git-ai",
+            "--json",
+        ],
+        true,
+    ));
+    let source_id = source["data"]["rows"][0]["id"].as_str().unwrap();
+    for target in [
+        worktree.join("query-output"),
+        repo.join(".git/refs/notes/query-output"),
+        repo.join(".git/worktrees/linked/query-output"),
+    ] {
+        for with_git in [true, false] {
+            for scope in [vec!["--repo", "."], vec!["--source", source_id]] {
+                let parent = target.parent().unwrap();
+                let before = fs::read_dir(parent)
+                    .unwrap()
+                    .map(|entry| entry.unwrap().file_name())
+                    .collect::<std::collections::BTreeSet<_>>();
+                let mut args = vec![
+                    "sessions",
+                    "list",
+                    "--source-adapter",
+                    "git-ai",
+                    "--allow-partial",
+                    "--output",
+                    target.to_str().unwrap(),
+                    "--json",
+                ];
+                args.extend(scope);
+                let output = run(root.path(), &worktree, &args, with_git);
+                assert!(!output.status.success());
+                assert!(output.stdout.is_empty());
+                assert!(
+                    !target.exists(),
+                    "query output must not create inside any Git source root"
+                );
+                let after = fs::read_dir(parent)
+                    .unwrap()
+                    .map(|entry| entry.unwrap().file_name())
+                    .collect::<std::collections::BTreeSet<_>>();
+                assert_eq!(
+                    before, after,
+                    "even failed staging must not change the source store"
+                );
+            }
+        }
+    }
+}

@@ -324,17 +324,7 @@ fn output_path(path: PathBuf, listing: &GitNotesListing) -> Result<PathBuf, GitN
     let parent = fs::canonicalize(path.parent().ok_or(GitNotesError::InvalidInput)?)
         .map_err(output_error)?;
     let path = parent.join(leaf);
-    let roots = [
-        Some(listing.repository_id.as_path()),
-        Some(listing.git_dir.as_path()),
-        listing.worktree_root.as_deref(),
-    ];
-    if !absolute_utf8(&path)
-        || roots
-            .into_iter()
-            .flatten()
-            .any(|root: &Path| path.starts_with(root))
-    {
+    if !listing.allows_output_path(&path) {
         return Err(GitNotesError::InvalidInput);
     }
     Ok(path)

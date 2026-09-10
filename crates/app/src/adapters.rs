@@ -339,6 +339,7 @@ pub fn query_registrations() -> Result<Vec<QueryRegistration>, QueryFailure> {
 pub fn git_query_source(
     repository: std::path::PathBuf,
     executable: Option<std::path::PathBuf>,
+    output: Option<std::path::PathBuf>,
 ) -> Option<super::git_query::GitSource<unisphere_loader_git::GitObjectLoader>> {
     ADAPTERS
         .iter()
@@ -348,6 +349,7 @@ pub fn git_query_source(
             adapter: Arc::new(unisphere_adapter_git_ai::GitAiAdapter),
             policy: unisphere_adapter_git_ai::QUERY_POLICY_VERSION,
             repository,
+            output,
         })
 }
 

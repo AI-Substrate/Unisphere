@@ -153,7 +153,11 @@ fn query_source(
             )
         })
         .collect();
-    let git = adapters::git_query_source(context.cwd.clone(), find_executable("git", context));
+    let git = adapters::git_query_source(
+        context.cwd.clone(),
+        find_executable("git", context),
+        command.output.clone(),
+    );
     Ok(git_query::Sources {
         local: LocalQuerySource::new(registrations, local),
         identities,

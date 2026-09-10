@@ -1,7 +1,13 @@
 //! Explicit Git-object ingestion contracts. No process, filesystem or ambient access.
 use crate::{MappingOptions, PipelineError, TelemetryRecord};
 use serde::{Deserialize, Serialize};
-use std::{collections::BTreeSet, error::Error, fmt, io::Write, path::PathBuf};
+use std::{
+    collections::BTreeSet,
+    error::Error,
+    fmt,
+    io::Write,
+    path::{Path, PathBuf},
+};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "mode", content = "commits", rename_all = "snake_case")]
@@ -126,6 +132,20 @@ pub struct GitNotesListing {
     pub notes: Vec<GitNoteRef>,
 }
 impl GitNotesListing {
+    /// Whether an absolute UTF-8 destination lies outside this source's roots.
+    /// The shell must canonicalize its existing parent first; this does no I/O.
+    pub fn allows_output_path(&self, path: &Path) -> bool {
+        absolute_utf8(path)
+            && [
+                Some(self.repository_id.as_path()),
+                Some(self.git_dir.as_path()),
+                self.worktree_root.as_deref(),
+            ]
+            .into_iter()
+            .flatten()
+            .all(|root| !path.starts_with(root))
+    }
+
     pub fn validate(
         &self,
         scope: &GitNotesScope,

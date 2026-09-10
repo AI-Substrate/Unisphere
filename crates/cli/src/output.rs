@@ -271,10 +271,24 @@ fn open_stage(path: &Path) -> io::Result<File> {
 }
 
 impl StagedOutput {
-    pub(crate) fn create(target: &Path) -> io::Result<Self> {
-        if target.exists() {
-            return Err(io::ErrorKind::AlreadyExists.into());
+    pub(crate) fn preflight(target: &Path) -> io::Result<()> {
+        match std::fs::symlink_metadata(target) {
+            Ok(_) => return Err(io::ErrorKind::AlreadyExists.into()),
+            Err(error) if error.kind() == io::ErrorKind::NotFound => {}
+            Err(error) => return Err(error),
         }
+        let parent = target.parent().ok_or(io::ErrorKind::InvalidInput)?;
+        let metadata = parent.metadata()?;
+        if !metadata.is_dir() {
+            return Err(io::ErrorKind::NotADirectory.into());
+        }
+        if metadata.permissions().readonly() {
+            return Err(io::ErrorKind::PermissionDenied.into());
+        }
+        Ok(())
+    }
+    pub(crate) fn create(target: &Path) -> io::Result<Self> {
+        Self::preflight(target)?;
         let parent = target.parent().ok_or(io::ErrorKind::InvalidInput)?;
         for _ in 0..32 {
             let sequence = STAGE_SEQUENCE.fetch_add(1, Ordering::Relaxed);

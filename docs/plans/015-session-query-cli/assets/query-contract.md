@@ -27,7 +27,13 @@ Live dataset queries require an explicit `--repo PATH` or `--source PATH_OR_ID`.
 
 `--repo-scope exact|tree|worktrees` defaults to `tree`: exact repo directory and component-boundary descendants. `exact` excludes descendant working directories. `worktrees` additionally includes Git-verified linked worktrees. Similar prefixes, equal basenames, repository mentions inside prompts and remote URLs alone do not prove project association. Known lossy directory encodings are labelled hints; they cannot silently override contradictory native metadata. Source discovery exposes unreadable, unassociated, unsupported and absent locations separately.
 
-`--source` accepts explicit known source files/stores or a source ID returned by discovery. New source dialects are registered in the existing catalogue; no shadow registry. `--harness` selects the human-facing harness family, while `--adapter` selects a concrete representation. Thus Cursor transcript and IDE forms can share a harness without becoming interchangeable adapters.
+`--source` accepts explicit known source files/stores or a source ID returned by discovery. New source dialects are registered in the existing catalogue; no shadow registry. On query commands, `--harness` selects the human-facing harness family and `--source-adapter` selects a concrete representation; there is no query `--adapter` alias. Thus Cursor transcript and IDE forms can share a harness without becoming interchangeable adapters. The SDK derives typed adapter/harness source selection before provider I/O; excluded registrations are not scanned or decoded and cannot force failure or partial-read acceptance.
+
+### Native and query command routing
+
+One CLI-owned root parser produces typed commands for app dispatch; raw first-token/default-adapter scanning is removed. `sessions export` is always native export. `sessions list --root PATH` remains the existing bounded native JSONL-file listing. `sessions list --adapter git-ai --repo PATH` remains the existing native Git-note listing; legacy `--adapter` is a native dispatch selector, not a query predicate. All other `sessions list/show/tree/stats/extract` query forms use `--repo`, `--source` or saved `--input`, with `--source-adapter` for representation filtering. For example, `sessions list --repo . --source-adapter git-ai` is a logical query, distinct from native note inventory.
+
+Reject mixed native/query selector forms rather than guessing a mode. On query forms `--repo` means repository association scope; on explicitly native Git-note list/export it selects the Git repository. Existing native invocations retain their semantic data and stream placement, with additive next-action metadata; OTLP bytes stay unchanged. Suggested actions and compatibility checks use this same real parser grammar.
 
 ## Identity, lineage and deduplication
 
@@ -40,6 +46,8 @@ Deduplication/reconciliation is a read-view operation over the selected sources.
 ## Turns and tool pairing
 
 Prefer native turn/request IDs and explicit terminal boundaries. Where a supported format requires reconstruction, version and label the rule: one initiating user request plus its associated assistant/tool activity up to the next initiating request or an explicit terminal event. Tool-result messages, user-shaped tool responses, injected context and compaction records are not new initiating requests merely because a physical role field says `user`. Fork branches are selected explicitly, never concatenated as if chronological neighbours proved ancestry. Unresolvable fragments remain events with `turn_id: null`; turn counts state their observed basis.
+
+Recognized source formats may supply a versioned query membership rule from a validated session header, native request containment or explicit parent tree. This is evidence-qualified query reconstruction, not a change to record-local OTLP mapping or permission to invent a missing native conversation ID. Source-only or unresolved membership remains explicitly unavailable.
 
 Pair calls/results by supported native identity within the correct session/branch scope, not adjacency or command text. Preserve original tool name and a separately registered tool family such as `shell` or `file-read`. Multiple shell implementations are discoverable under `--tool-family shell`; original names remain available. Unknown tool families remain unknown.
 
@@ -63,26 +71,36 @@ List defaults to 50 rows in every output format, not a TTY-dependent change of m
 
 `list` browses a projected dataset; `show` expands one selected entity; `extract` emits reusable selected data/content; `stats` reduces the same semantic dataset. Existing `sessions export --input FILE` remains native-source to OTLP LogsData, not an alias for Markdown extraction.
 
-`--context-before N` / `--context-after N` apply to turns/messages after matching, within the same session/branch only. Merge overlapping windows and label rows as `match` or `context`. Report matched versus emitted counts. Context expands beyond date filters deliberately; output must make that visible. Other datasets reject context flags.
+`--context-before N` / `--context-after N` apply to turns/messages after matching, partitioned by each matched row's admitted session/branch. Multiple unambiguous session/branch groups are valid in one repository-wide extraction; only `--range` requires exactly one group. Merge overlapping windows within each group, label rows as `match` or `context`, and report matched versus emitted counts. Context may expand beyond date filters deliberately, but never beyond the admitted repository/source/participant authority. Linear text/Markdown uses separate labeled groups rather than inventing one cross-branch timeline. Actual ambiguous selectors or unresolved membership fail with valid branch alternatives; other datasets reject context flags.
 
 Metadata is not anonymity. Default output omits recorded session titles/names, message bodies, command strings, tool arguments/results, reasoning, human identity strings and free-form source attributes. A recorded name can itself contain prompt text. Payload-search flags (including `--name`) authorise inspecting their named content locally, but do not authorise emitting it. `--include-content` is required for payload-bearing projections, names, snippets, text/Markdown extraction and tool `--part input|output|all`. Without it, a requested sensitive column fails clearly rather than leaking or pretending it was empty. Select only explicitly supported content; never follow external URLs, sidecars or attachments implicitly.
 
 Always escape terminal controls and untrusted Markdown/HTML appropriately. CSV defaults to `--csv-safety spreadsheet`: string cells whose first non-whitespace character is `=`, `+`, `-` or `@`, or which begin with tab/CR, receive a leading apostrophe before normal RFC4180 encoding. Numeric cells remain numeric. `--csv-safety raw` explicitly preserves string values and warns about spreadsheet interpretation; it does not bypass content consent. CSV is a convenience projection, not a lossless round-trip format: null is an empty cell, empty strings can be indistinguishable to CSV consumers, and compound values are JSON text. Use JSON/JSONL when those distinctions matter. No blanket 'redacted' or 'secret-free' claim: omission policies require synthetic canary proof for every adapter and output mode. Reading content locally must not cause it to be persisted in an index, query log, diagnostic or report.
+
+The schema explicitly marks CSV as lossy for projected absence, null and empty strings, and CSV diagnostic guidance points to JSON/JSONL when those distinctions matter. The typed SDK/JSON availability contract is not a CSV round-trip promise.
 
 `--output FILE` is create-new by default; no overwrite flag in this initial scope. Use temporary staging/atomic publication where needed to avoid presenting a partial file as a complete extract. For stdout, a later error may leave partial bytes; exit/report must say incomplete. No successful checkpoint/final manifest after failed output. Pipe closure is handled explicitly and tested.
 
 ## Output contracts
 
 - Human tables are presentation, not a machine parser contract. Data goes to stdout; warnings/progress/coverage summaries to stderr.
-- JSON query output is one versioned envelope with `dataset`, `query`, `rows`, `coverage`, `matched`, `emitted`, `next_action` and `next_cursor` where applicable.
+- JSON query output uses the existing command envelope style: `ok`, `command`, `v: 1`, `data` containing `schema_version: 1`, `dataset`, `query`, `rows`, `coverage`, `universe`, `matched`, `emitted` and `next_cursor` where applicable, plus top-level `next_action`.
 - JSONL is one versioned typed row per line, suitable for `jq`/DuckDB; no interleaved banners. Common reserved fields are `schema_version`, `dataset`, `id`, and source provenance. Declared data fields such as `duration_ms` are directly addressable. Summary/coverage goes to stderr or an explicitly requested separate manifest, not a fake data row.
 - CSV is a flat UTF-8 RFC4180 projection with a header, the null/compound encoding and safety modes above, and explicit time-unit column names. Text/Markdown are supported by session/turn/message extraction, and payload-focused tool extraction, not arbitrary metrics serialization.
-- `schema show DATASET` exposes fields, types, nullability, units, content sensitivity, valid filters, default time/sort rules and capability limits. It is the discoverable contract used by humans and agents.
+- `schema show DATASET` exposes fields, types, nullability, units, content sensitivity, valid filters, default time/sort rules, capability limits and format losses. It is the discoverable contract used by humans and agents.
 - Query JSON/JSONL is a view format, not a replacement for Unisphere's standard OTLP telemetry output. Never masquerade it as LogsData. OTLP export retains pinned standard semantics; Unisphere-specific concepts remain versioned extensions.
 - Offline input accepts supported versioned query JSON/JSONL, not arbitrary native formats. A projected input missing fields needed for a requested operation fails with an availability reason. Never enrich it by silently rescanning live stores.
 - Preserve existing `--json` and `--human` behavior. New query commands additionally accept `--format`; specifying more than one output-mode selector is an argument error even if the modes appear equivalent. No hidden precedence or TTY-dependent change to selected rows. Docs/config keep their existing-style mode surface unless their documented parser explicitly adds another format.
 
 Retain existing exit conventions: 0 for completed query (including zero matches), 1 for operational/read/output failure, 2 for invalid arguments. An unreadable requested source is not an empty success. `--allow-partial` is the only way to accept partial source reads; output explicitly carries incomplete coverage, including in machine-mode summaries. Optional missing fields alone are not read failures.
+
+### Saved input and completeness
+
+Saved JSON records source-view, selection and column digests, projected columns, applied limit, and separate `rows_complete_for_selection` and `partitions_complete` states. Capturing every filtered match does not prove that all neighbouring rows in a source/session/branch were saved. A present continuation or fewer emitted than matched rows prevents an all-matches claim; emitted context rows do not establish full partitions either. Validate metadata consistency and required fields rather than trusting EOF.
+
+Standalone query JSONL has no completeness proof merely because it ends at a newline. Treat it as provided rows with unknown universe completeness unless an explicit validated completeness record is supplied; never add a fake data row or implicitly open a sidecar. Filtering/list/show can operate on the available rows. Statistics over incomplete saved inputs are explicitly bounded by those provided rows, not exact totals for the original query or source. Offline context/reconstruction requires complete needed partitions and order/membership fields; otherwise return actionable input-availability failure instead of silently shortening context. Recover with a complete versioned JSON extraction, never hidden live enrichment.
+
+An in-process query view also retains its admitted scope, source selection, fields and universe. A subsequent query may narrow that view; widening it or requiring unavailable fields must request a new view/input rather than return a misleading empty result.
 
 ### Next actions and actionable errors
 

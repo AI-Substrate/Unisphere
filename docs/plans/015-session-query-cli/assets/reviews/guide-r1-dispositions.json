@@ -1,0 +1,98 @@
+{
+  "scope": "Guide changes only; no product implementation or approval claim",
+  "review_subject": "e1da02513fd509c1d7ffac919a3bdb3f4ffbbd55",
+  "review_report": "guide-r1-pij-armed-cow.md",
+  "guide_version": 3,
+  "findings": [
+    {
+      "id": "F1",
+      "disposition": "fixed_in_guide",
+      "change": "C20 defines one typed root parser, explicit legacy native forms and query --source-adapter with no alias; old native data/streams preserved, token scanning removed; CLI/composition own executable routing regressions.",
+      "evidence": [
+        "impl-guide.dd.json#architecture C20",
+        "impl-guide.dd.json#units/tk-000b",
+        "impl-guide.dd.json#units/tk-000d",
+        "query-contract.md#native-and-query-command-routing",
+        "workflows-and-command-reference.md#shared-selector-families"
+      ]
+    },
+    {
+      "id": "F2",
+      "disposition": "fixed_in_guide",
+      "change": "C21 enumerates complete shared return/coverage/availability/branch/format/access/recovery/output types; C22/C23 source-selection and universe types are part of the reviewed, committed wave0 freeze set and sealed baseline prerequisite.",
+      "evidence": [
+        "impl-guide.dd.json#architecture C21-C23",
+        "impl-guide.dd.json#units/tk-0001",
+        "impl-guide.dd.json#composition"
+      ]
+    },
+    {
+      "id": "F3",
+      "disposition": "fixed_in_guide",
+      "change": "QuerySource::load now accepts typed SourceSelection; SDK derives adapter/harness include/exclude groups before I/O and loader prunes registrations before enumeration or decoding. Excluded bad stores cannot force allow-partial.",
+      "evidence": [
+        "impl-guide.dd.json#architecture C2/C6/C22",
+        "impl-guide.dd.json#units/tk-0007",
+        "query-contract.md#scope-and-discovery"
+      ]
+    },
+    {
+      "id": "F4",
+      "disposition": "fixed_in_guide",
+      "change": "Only range is globally single-session/branch. Context partitions per admitted matched group; multi-session queries are valid, text renders labeled groups, and expansion cannot cross repository/source/participant authority.",
+      "evidence": [
+        "impl-guide.dd.json#architecture C8",
+        "query-contract.md#extraction-and-content-privacy"
+      ]
+    },
+    {
+      "id": "F5",
+      "disposition": "fixed_in_guide",
+      "change": "C23 records separate selection versus partition completeness, digests/columns/limit and bounded-input basis. Saved subset stats remain explicitly input-bounded; incomplete context/reconstruction refuses; JSONL EOF is not completeness and execute_view cannot widen admitted scope.",
+      "evidence": [
+        "impl-guide.dd.json#architecture C23",
+        "query-contract.md#saved-input-and-completeness"
+      ]
+    },
+    {
+      "id": "F6",
+      "disposition": "fixed_in_guide",
+      "change": "Every format lane now has different falsifiable dialect/availability conditions and an explicit fact-versus-SDK ownership boundary; the single SDK owner has five ordered internal proof milestones without stub delivery or a worker/test-count quota.",
+      "evidence": [
+        "impl-guide.dd.json#units/tk-0002",
+        "impl-guide.dd.json#units/tk-0003",
+        "impl-guide.dd.json#units/tk-0004",
+        "impl-guide.dd.json#units/tk-0005",
+        "impl-guide.dd.json#units/tk-0006",
+        "impl-guide.dd.json#units/tk-0008",
+        "impl-guide.dd.json#architecture C24"
+      ]
+    },
+    {
+      "id": "F7",
+      "disposition": "fixed_in_guide",
+      "change": "C17 names actual app registry/dispatch symbols and explicitly distinguishes the plan015 base from accepted plan014 9250b8f6, including its dispatch 284-304 anchor.",
+      "evidence": [
+        "impl-guide.dd.json#architecture C17"
+      ]
+    },
+    {
+      "id": "F8",
+      "disposition": "fixed_in_guide",
+      "change": "Schema format capabilities explicitly mark CSV losses; CSV guidance recommends JSON/JSONL where absent/null/empty must remain distinct.",
+      "evidence": [
+        "impl-guide.dd.json#architecture C12/C18/C21",
+        "query-contract.md#extraction-and-content-privacy"
+      ]
+    }
+  ],
+  "receipt_adaptation": {
+    "raw": "guide-r1-pij-armed-cow-receipt.json",
+    "canonical": "../team/review-decomposition-r1.dd.json",
+    "note": "Raw proposal retained unchanged. Canonical wrapper maps bindings to root plan/guide/report, session to native_session, and record_type ReviewReceipt to live Builder discriminator review. harness builder review accepted the bound changes-requested receipt."
+  },
+  "factual_notes": [
+    "R1's blanket wording that every declared check is BUILD/EXTEND is shorthand, not literal: existing native-regression is RUN and ac-0015's instrument is EXISTS. No new query behavior is proven either way; all 24 AC/pressure states remain unchecked.",
+    "The reviewer’s original report and open findings remain immutable; this disposition records design fixes awaiting R2, not a retroactive approved verdict."
+  ]
+}

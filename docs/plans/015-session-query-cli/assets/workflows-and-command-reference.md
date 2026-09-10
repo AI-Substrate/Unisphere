@@ -71,13 +71,15 @@ The authoritative semantic rules are in [query-contract.md](query-contract.md). 
 ### Shared selector families
 
 - Scope: `--repo`, `--repo-scope exact|tree|worktrees`, `--source`, or offline `--input`.
-- Identity: `--harness`, `--adapter`, `--session`, `--native-id`, `--model`.
+- Query identity: `--harness`, `--source-adapter`, `--session`, `--native-id`, `--model`; legacy native listing/export retains `--adapter` as a dispatch selector.
 - Time: `--since`, `--until`, `--time-field`, `--include-undated`.
 - Text: `--contains`, `--regex`, `--ignore-case`; session names use `--name` glob.
 - Output: `--columns`, `--sort`, `--limit`, continuation cursor, `--format`, `--include-content`, `--output`, and explicit partial-read acceptance.
 - Dataset-specific selectors: session name/branch/kind/parent/min-turns; turn range/has-role/has-tool/has-tool-family/has-errors/min-tool-calls; message role/turn; tool name/family/status/exit-code/min-duration/has-duration/command-contains; event kind/turn/call.
 
 A command rejects unsupported filter/format combinations rather than pretending every option makes sense everywhere. Existing `--json`/`--human` contracts remain supported; multiple mode selectors, including a new `--format`, are rejected instead of given hidden precedence. CSV defaults to spreadsheet-safe string escaping; explicit `--csv-safety raw` is available with a warning and does not bypass content consent.
+
+Native and query forms are parsed explicitly: `sessions export` is native, `sessions list --root` is native JSONL-file listing, and `sessions list --adapter git-ai --repo` is native note inventory. Repository queries use `sessions list --repo` and optional `--source-adapter`; mixed forms fail with a corrective next action rather than falling through to a default adapter.
 
 ## Command reference
 

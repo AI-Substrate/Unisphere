@@ -12,9 +12,9 @@
 | title | Composition proof and operator documentation |
 | slug | phase-3 |
 | ordinal | — |
-| status | draft |
+| status | ready |
 | complexity | — |
-| summary | — |
+| summary | Accepted Git-ai source converges through Main; the actual app, external SDK and installed CLI agree on every declared recipe, source limit, privacy/failure and next action. |
 | backpressure | — |
 | log | — |
 | mode | — |
@@ -27,19 +27,57 @@
 
 ## Summary
 
-_Empty._
+Accepted Git-ai source converges through Main; the actual app, external SDK and installed CLI agree on every declared recipe, source limit, privacy/failure and next action. Exact composed-source query/docs/native/Git-note/architecture/boot receipts, independent composition review and explicit whole-plan coverage, followed by separate authorized closeout/publication.
 
 <a id="tasks"></a>
 
 ## Tasks
 
-_No entries._
+| id | title | domain | phase | state | note | receipt | done | success | notes | satisfies | satisfies_toward |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| tk-0001 | PM Git-ai source convergence and query bridge | — | ph-20c3 | [ ] unchecked | — | — | [tk-0001](tasks.dd.md#done-when) | Coordinate the immutable plan014 handoff through Main, preserve its reviewed/runtime-proven source contract and add a query fact bridge without a second Git-ai parser or fabricated transcript fields. This unit mutates only the composed plan015 tree after authorized convergence, never Araminta's live worktree. | Guide unit: tk-000c; wave 2; owner role pm. Exact paths/reads/interfaces/dependencies: ../../impl-guide.dd.json#units/tk-000c. Approved decomposition receipt: ../../team/review-decomposition-approved.dd.json. External accepted source/API prerequisite is plan014 handoff 9250b8f6f9084598433bc49d0077303df80cabc3. Owner six-mode runtime proof and independent Opus5/high implementation approval are reported and Main accepted it; actual shared-history landing/convergence remains Main-owned and separate. No unrelated query unit depends on its implementation. PM quality acceptance is mandatory: candidate code is inspected for correctness, maintainability and needless allocations/duplication, exercised through applicable composed behavior and independently reviewed. A compile or coder completion claim is not acceptance. | — | [ac-0014](../../../plan.dd.md#acceptance-criteria), [ac-0001](../../../plan.dd.md#acceptance-criteria), [ac-0002](../../../plan.dd.md#acceptance-criteria), [ac-0003](../../../plan.dd.md#acceptance-criteria), [ac-000c](../../../plan.dd.md#acceptance-criteria), [ac-0017](../../../plan.dd.md#acceptance-criteria), [ac-0018](../../../plan.dd.md#acceptance-criteria) |
+| tk-0002 | PM application composition and external consumer proof | — | ph-20c3 | [ ] unchecked | — | — | [tk-0002](tasks.dd.md#done-when) | Integrate concrete deliveries through the one app registry and composition root, add all query/docs/Git-note proof modes and current harness readiness, migrate public examples, prove installed SDK/CLI parity and all workflows, and resolve every affected caller before release. | Guide unit: tk-000d; wave 3; owner role pm. Exact paths/reads/interfaces/dependencies: ../../impl-guide.dd.json#units/tk-000d. Approved decomposition receipt: ../../team/review-decomposition-approved.dd.json. Run composed validation once after concurrent edits stop, then targeted fixes/reproof as failures require. External consumer examples and installed artifact, not only unit mocks, prove the full contract. Independent cross-model composition review and separately authorized publication remain required. PM quality acceptance is mandatory: candidate code is inspected for correctness, maintainability and needless allocations/duplication, exercised through applicable composed behavior and independently reviewed. A compile or coder completion claim is not acceptance. | [ac-0001](../../../plan.dd.md#acceptance-criteria), [ac-0002](../../../plan.dd.md#acceptance-criteria), [ac-0003](../../../plan.dd.md#acceptance-criteria), [ac-0004](../../../plan.dd.md#acceptance-criteria), [ac-0005](../../../plan.dd.md#acceptance-criteria), [ac-0006](../../../plan.dd.md#acceptance-criteria), [ac-0007](../../../plan.dd.md#acceptance-criteria), [ac-0008](../../../plan.dd.md#acceptance-criteria), [ac-0009](../../../plan.dd.md#acceptance-criteria), [ac-000a](../../../plan.dd.md#acceptance-criteria), [ac-000b](../../../plan.dd.md#acceptance-criteria), [ac-000c](../../../plan.dd.md#acceptance-criteria), [ac-000d](../../../plan.dd.md#acceptance-criteria), [ac-000e](../../../plan.dd.md#acceptance-criteria), [ac-000f](../../../plan.dd.md#acceptance-criteria), [ac-0010](../../../plan.dd.md#acceptance-criteria), [ac-0011](../../../plan.dd.md#acceptance-criteria), [ac-0012](../../../plan.dd.md#acceptance-criteria), [ac-0013](../../../plan.dd.md#acceptance-criteria), [ac-0014](../../../plan.dd.md#acceptance-criteria), [ac-0015](../../../plan.dd.md#acceptance-criteria), [ac-0016](../../../plan.dd.md#acceptance-criteria), [ac-0017](../../../plan.dd.md#acceptance-criteria), [ac-0018](../../../plan.dd.md#acceptance-criteria) | — |
 
 <a id="done-when"></a>
 
 ## Done when
 
-_No fields._
+### tk-0001
+
+| id | assertion | state | pressure |
+| --- | --- | --- | --- |
+| dw-0001 | The actual accepted Git-note source is registered and queryable through its real ports without a duplicate parser, retired reader or invented conversation/timing fields. | [ ] unchecked | [bp-0014](../../backpressure.dd.md#rows) |
+| dw-0002 | Declared agent IDs remain evidence, not an unverified cross-adapter identity join. | [ ] unchecked | [bp-0002](../../backpressure.dd.md#rows) |
+| dw-0003 | Typed Git-note failures gain actionable guidance without assuming legacy error envelopes always contain code or contaminating OTLP stdout. | [ ] unchecked | [bp-0018](../../backpressure.dd.md#rows) |
+
+### tk-0002
+
+| id | assertion | state | pressure |
+| --- | --- | --- | --- |
+| dw-0004 | Exact composed source and applicable consumer/native/installed proof establish: Users discover repository-associated supported sources and sessions without knowing native storage layouts; exact/tree/worktree scope is component-safe and unreadable, absent, unsupported and unassociated sources are distinguishable. | [ ] unchecked | [bp-0001](../../backpressure.dd.md#rows) |
+| dw-0005 | Exact composed source and applicable consumer/native/installed proof establish: Source representations are distinct from logical sessions; scoped identities, proven copies, subagents, forks and unresolved conflicts produce consistent list/tree/extract/statistics behavior without synthesising absent native conversation IDs. | [ ] unchecked | [bp-0002](../../backpressure.dd.md#rows) |
+| dw-0006 | Exact composed source and applicable consumer/native/installed proof establish: Sessions, turns, messages, tools and events share a documented versioned schema, typed availability and traceable source revisions/watermarks; source-only fragments are not invented higher-level entities. | [ ] unchecked | [bp-0003](../../backpressure.dd.md#rows) |
+| dw-0007 | Exact composed source and applicable consumer/native/installed proof establish: The full command catalogue has implemented list/show/tree/stats/extract behavior where declared, and existing config/catalog/native OTLP export invocations continue to work without a second application registry. | [ ] unchecked | [bp-0004](../../backpressure.dd.md#rows) |
+| dw-0008 | Exact composed source and applicable consumer/native/installed proof establish: Identity, harness/adapter/model/name/role/text filters have consistent AND/OR/case/regex semantics, reject unsupported fields and preserve explicit content-inspection versus content-output permissions. | [ ] unchecked | [bp-0005](../../backpressure.dd.md#rows) |
+| dw-0009 | Exact composed source and applicable consumer/native/installed proof establish: Time filtering uses documented fields, inclusive since/exclusive until, UTC date boundaries and explicit undated handling; session creation, first observed event, tool time and file modification are never conflated. | [ ] unchecked | [bp-0006](../../backpressure.dd.md#rows) |
+| dw-000a | Exact composed source and applicable consumer/native/installed proof establish: Sorting and pagination are deterministic with ID tie-breaks and unknowns last; continuation is bound to the query/source view and rejects stale evidence rather than silently skipping or duplicating records. | [ ] unchecked | [bp-0007](../../backpressure.dd.md#rows) |
+| dw-000b | Exact composed source and applicable consumer/native/installed proof establish: Turn reconstruction follows versioned source-supported boundaries, preserving branches/compaction and stable ordinals; tool-result or injected-context records do not become extra initiating user requests. | [ ] unchecked | [bp-0008](../../backpressure.dd.md#rows) |
+| dw-000c | Exact composed source and applicable consumer/native/installed proof establish: Tool invocations pair start/result/progress by scoped native evidence, preserve original names and normalised families, and expose retries, incomplete/unknown outcomes and duration basis without adjacency or text guessing. | [ ] unchecked | [bp-0009](../../backpressure.dd.md#rows) |
+| dw-000d | Exact composed source and applicable consumer/native/installed proof establish: Statistics use the same logical matched records as extraction; missing durations are excluded from measured averages but counted explicitly, percentile method/units/denominators are named, and cumulative/replayed usage is not double-counted. | [ ] unchecked | [bp-000a](../../backpressure.dd.md#rows) |
+| dw-000e | Exact composed source and applicable consumer/native/installed proof establish: Context extraction expands only within the selected session/branch after matching, merges overlapping windows and distinguishes matched from context rows including dates outside the original filter. | [ ] unchecked | [bp-000b](../../backpressure.dd.md#rows) |
+| dw-000f | Exact composed source and applicable consumer/native/installed proof establish: Default outputs and diagnostics omit names/titles, messages, command arguments/results, reasoning and free-form identity content; explicit content opt-in is enforced consistently across formats, errors, examples and any temporary state. | [ ] unchecked | [bp-000c](../../backpressure.dd.md#rows) |
+| dw-0010 | Exact composed source and applicable consumer/native/installed proof establish: JSON, JSONL, CSV, text and Markdown expose documented shapes where supported; JSONL remains clean row data, CSV has explicit spreadsheet-safety/null rules, and query output is never mislabelled as OTLP. | [ ] unchecked | [bp-000d](../../backpressure.dd.md#rows) |
+| dw-0011 | Exact composed source and applicable consumer/native/installed proof establish: Output files are create-new and source stores are untouched; partial read/write results and bounded-resource refusals cannot be reported as complete successful output or accepted checkpoints. | [ ] unchecked | [bp-000e](../../backpressure.dd.md#rows) |
+| dw-0012 | Exact composed source and applicable consumer/native/installed proof establish: Offline query input never triggers hidden live enrichment; missing required projected fields, malformed envelopes and unsupported versions fail with actionable availability/schema errors. | [ ] unchecked | [bp-000f](../../backpressure.dd.md#rows) |
+| dw-0013 | Exact composed source and applicable consumer/native/installed proof establish: External Rust SDK consumers obtain the same selection/projection/error semantics as the CLI through injected ports; there is no mandatory CLI subprocess, daemon, hosted store, model service or persistent index. | [ ] unchecked | [bp-0010](../../backpressure.dd.md#rows) |
+| dw-0014 | Exact composed source and applicable consumer/native/installed proof establish: The installed CLI provides offline docs list/get and discoverable schema output before source/config/Git/Git-AI access; unknown topics/fields name valid alternatives and recovery actions. | [ ] unchecked | [bp-0011](../../backpressure.dd.md#rows) |
+| dw-0015 | Exact composed source and applicable consumer/native/installed proof establish: Every documented command includes useful use cases, its motivating question, prerequisites, example, expected interpretation, limits and recovery; recipe-led guides demonstrate all seven end-to-end workflows against shared synthetic fixtures and distinguish evidence supplied by Unisphere from human or downstream interpretation. | [ ] unchecked | [bp-0012](../../backpressure.dd.md#rows) |
+| dw-0016 | Exact composed source and applicable consumer/native/installed proof establish: Documentation ships inside the package/binary and normal CI checks full nested command/option examples, installed offline behavior, SDK examples, topic links and privacy/output semantics rather than only pinning prose. | [ ] unchecked | [bp-0013](../../backpressure.dd.md#rows) |
+| dw-0017 | Exact composed source and applicable consumer/native/installed proof establish: Plan014 Git-ai notes integrate through their reviewed registered contract without blocking unrelated CLI lanes or fabricating transcript/timing fields; retired harness telemetry remains unsupported with no compatibility bridge. | [ ] unchecked | [bp-0014](../../backpressure.dd.md#rows) |
+| dw-0018 | Exact composed source and applicable consumer/native/installed proof establish: The future PM supplies reviewed shared contracts, explicit ownership/fakes, bounded proof and genuinely independent work packets before dispatch; no coder fleet or implementation approval is inferred from this product plan. | [ ] unchecked | [bp-0015](../../backpressure.dd.md#rows) |
+| dw-0019 | Exact composed source and applicable consumer/native/installed proof establish: Public-release documentation/examples use synthetic or authorised content, retain required provenance/licenses, and make no universal completeness, secret-free, cost-estimate or unprecedented-product claim. | [ ] unchecked | [bp-0016](../../backpressure.dd.md#rows) |
+| dw-001a | Exact composed source and applicable consumer/native/installed proof establish: Every CLI command outcome, including success, zero matches, partial results, help, version and completed exports, supplies an explicit useful next action grounded in that outcome. Machine envelopes expose stable next_action guidance, human output labels the next step, and JSONL/CSV/text/Markdown/OTLP data streams remain clean by carrying guidance on their documented summary or diagnostic channel. Suggested commands use real supported grammar, respect scope and content consent, and never execute automatically. | [ ] unchecked | [bp-0017](../../backpressure.dd.md#rows) |
+| dw-001b | Exact composed source and applicable consumer/native/installed proof establish: Every CLI error provides a stable category/code, a safe explanation and concrete cause-specific recovery guidance rather than merely restating the failure or suggesting blind retries. Invalid commands/options/topics/fields, absent or unreadable sources, unsupported or malformed input, ambiguous identity/branch, stale continuation, denied content projection, resource limits and output failures are covered; valid alternatives, needed user input and retry conditions are named where applicable. Guidance does not leak source content or raw hostile arguments, weaken privacy/safety, or claim incomplete work succeeded; failed diagnostic destinations receive best-effort guidance and a nonzero exit. | [ ] unchecked | [bp-0018](../../backpressure.dd.md#rows) |
 
 <a id="goals"></a>
 
@@ -77,11 +115,14 @@ _Empty._
 
 | Field | Value |
 | --- | --- |
-| approach | — |
+| approach | Use each assertion's selected pressure and the exact guide check; no unexecuted test or imported commit is runtime proof. |
 | rationale | — |
 | focus_areas | — |
 | excluded | — |
 | mock_usage | — |
+| phase_boundary | Exact composed-source query/docs/native/Git-note/architecture/boot receipts, independent composition review and explicit whole-plan coverage, followed by separate authorized closeout/publication. |
+| concurrency | No build/test/lint/formatter while concurrent edits are in flight; PM executes final composed lanes and targeted fixes. |
+| proof_grades | Existing boot proves native projections only. BUILD/EXTEND checks must be implemented and run before assertions become checked. |
 
 <a id="documentation-strategy"></a>
 

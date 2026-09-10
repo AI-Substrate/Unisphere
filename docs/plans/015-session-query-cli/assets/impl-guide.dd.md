@@ -110,8 +110,8 @@
 
 | id | role | harness | model | effort | note |
 | --- | --- | --- | --- | --- | --- |
-| role-coder | coder | omp | github-copilot/gpt-6-astra | high | Explicit selection from observed OMP model catalog; per-field provenance resolved by harness builder settings before release. |
-| role-reviewer | reviewer | omp | github-copilot/claude-opus-5 | high | Independent cross-model decomposition/composition review; record actual observed runtime separately. No provider-served model attestation inferred. |
+| role-coder | coder | omp | github-copilot/gpt-5.6-sol-fast | high | Explicit Jordan instruction: OMP, GitHub Sol Fast 1M, high. Observed catalog selector github-copilot/gpt-5.6-sol-fast has contextWindow 1050000 and supports high. No silent model/harness fallback; actual runtime is observed at dispatch. |
+| role-reviewer | reviewer | omp | github-copilot/claude-opus-5 | high | Explicit Jordan instruction: OMP, GitHub Opus 5 reviewers. Retain high effort. Independent reviewer actual configuration is observed; no provider attestation inferred. |
 
 <a id="checks"></a>
 

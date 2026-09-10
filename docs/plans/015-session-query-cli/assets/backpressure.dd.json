@@ -243,7 +243,7 @@
           "tier": "human-judgement",
           "proof": "RUN: harness builder guide --check plus actual independent cross-model decomposition review; baseline sealing/dispatch proof remains future implementation work.",
           "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-0015 owns source path and accountable unit. Wave1 requires the actual complete C21-C23 DTO/schema/fake freeze set independently reviewed and sealed at its committed baseline, not only a guide approval.",
+          "note": "Selected proof only; new query behavior not executed. Guide capability ac-0015 owns source path and accountable unit. Wave1 requires the actual complete C21/C22/C23/C25 DTO/schema/fake freeze set independently reviewed and sealed at its committed baseline, not only a guide approval.",
           "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-0001"
         },
         {

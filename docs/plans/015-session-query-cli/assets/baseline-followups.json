@@ -1,0 +1,29 @@
+{
+  "scope": "Required wave0 refinements under approved guide v4; not implemented or baseline-approved",
+  "guide_subject": "b3d758c1ba4dec5fbad01c549fd54d5bfd9f52ef",
+  "guide_sha256": "68229e734a08f1ba17ec42297e32caa27cf513e107adb7075043b70b9e420b39",
+  "review": "reviews/guide-r3-pij-armed-cow.md",
+  "items": [
+    {
+      "id": "F11",
+      "owner": "tk-0001",
+      "requirement": "Keep QueryFailureCode::StaleCursor and add the closed public CursorMismatchReason enum with QueryOptionsChanged and SourceViewChanged. QueryFailure::stale_cursor(reason) requires exactly one reason; expose it to SDK consumers and serialize a stable reason field in CLI diagnostics. No raw detail string or reuse of ViewScopeMismatch.",
+      "validation_order": "After token syntax/version/integrity validation, compare normalized query binding first; mismatch is QueryOptionsChanged. Only if query binding matches, compare view digest; mismatch is SourceViewChanged. Malformed tokens/out-of-range positions remain typed invalid-argument failures, never mislabeled source changes.",
+      "recovery": "Both may require a fresh query, but explanations distinguish changed options from changed source/view evidence; never echo private query values. Query-options recovery may suggest repeating the original options or removing the cursor; source-view recovery requires a fresh view.",
+      "proof": "Baseline enum/constructor cases plus SDK continuation cases and CLI typed-reason/next-action cases distinguish the causes; changing only page size or available columns must not be asserted as source mutation.",
+      "paths": [
+        "crates/core/src/query/error.rs",
+        "crates/core/tests/query_contract.rs",
+        "crates/sdk/tests/query.rs",
+        "crates/cli/tests/query_frontend.rs"
+      ],
+      "state": "specified; implementation and exact-baseline review pending"
+    },
+    {
+      "id": "F12",
+      "owner": "tk-0001",
+      "requirement": "Seal-gating pressure row bp-0015 must name the entire C21/C22/C23/C25 DTO/schema/fake/digest freeze set.",
+      "state": "documentation fixed; baseline seal remains future work"
+    }
+  ]
+}

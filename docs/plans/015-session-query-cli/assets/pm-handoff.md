@@ -2,13 +2,13 @@
 
 ## Status and authority
 
-Jordan has nominated **pij-empirical-tiger** as the PM. Planning and user preamble are authorised; product implementation and fan-out remain on hold until that discussion and the reviewed guide boundaries are satisfied. No CLI coders are allocated, and the candidate lanes below are not work packets or approval receipts. After Main's handoff commit, the PM owns this plan/worktree's planning and guide/task records; Main will not edit them concurrently.
+Jordan has nominated **pij-empirical-tiger** as the PM and directed work to continue into implementation. Guide v4 received independent Opus5/high decomposition approval in R3, with the scoped receipt recorded at `team/review-decomposition-approved.dd.json`. Phase dossiers contain 13 tasks and 84 initially unchecked assertions. The PM now implements the shared Rust baseline; coder release still requires its actual proof, independent exact-baseline review and seal. Main will not edit these canonical planning records concurrently.
 
 Subsequent ownership reconciliation confirmed that Tiger remains the sole canonical plan015 writer. Mammal owns a distinct private future-state Distro synthesis that assumes this CLI exists and interviews its owner; this is not a plan015 succession or competing implementation plan. Reptile is Distro's designated eventual coder, with no product allocation yet. The agreed split is recorded in `pm-appointment.json`; the temporary planning-write freeze is resolved.
 
 Builder allocated plan015 in the `unisphere-session-query-cli` sibling worktree, branch `builder/015-session-query-cli`, from main `1469998cd750d23d2420feb83cf8e93a0841b347`. Allocation `al-015-5470067d-b5e9-4de3-aa42-809f81d5f5f0` is owned by harness, with authority in the main Git directory outside the worktree. Keep this plan separate from plan014 Git-ai source implementation and plan016 Dependabot configuration.
 
-The allocated teaching guide has been disarmed: empty units/contracts/checks, title UNAUTHORED, no baseline or review claim. Do not mistake its existence for architectural readiness. You must author the real `assets/impl-guide.dd.json`, obtain independent review and use live Builder readiness/dispatch tooling before releasing a fleet. Current installed dispatch is map-first/warning-first, not the stale acknowledgment lifecycle; it still rejects linked-worktree coder allocations. Choose coder clones explicitly if required, with observed runtime bindings. Do not silently change isolation, restart existing seats or invent native-root rebinding.
+The teaching guide has been replaced by the real `assets/impl-guide.dd.json`: 13 owned units, 10 coder lanes and a complete 24-AC proof map. Jordan subsequently selected OMP `github-copilot/gpt-5.6-sol-fast` high coders and OMP `github-copilot/claude-opus-5` high reviewers; `team/operator-role-amendment.json` records the role-only change from the approved guide basis. `baseline-followups.json` carries the mandatory typed cursor-reason refinement before sealing. Installed Builder dispatch is map-first/warning-first, not the stale acknowledgment lifecycle, and rejects linked-worktree coder allocations; use explicit coder clones with observed runtime bindings, never a claimed shell-cd rebind.
 
 ## What we are building and why
 
@@ -19,6 +19,8 @@ The core product is a coherent query/extraction capability in the Rust SDK, surf
 **This requires a substantial SDK upgrade.** Discovery, identity/lineage, dataset construction, turn/call reconstruction, filtering, ordering/view freshness, context selection, privacy-aware projection and statistics are SDK capabilities with public injected Rust APIs. CLI argument parsing, terminal presentation and bundled CLI docs sit outside that semantic core. Extraction serializers can remain reusable output adapters; the CLI must not become the only place where a query or privacy rule is implemented.
 
 In the delivery breakdown below, the discovery through statistics lanes are primarily SDK work. Extraction owns SDK selection/projection plus reusable output adapters. The docs lane includes executable external SDK examples. Composition proves SDK consumers and CLI handlers observe the same result, error and coverage semantics. Existing collection APIs are inputs to this upgrade, not assumed to already provide it.
+
+The PM owns code quality and acceptance. A coder delivery is a candidate: inspect correctness, maintainability, dependency direction, allocations/copies and source-evidence honesty; reject or rewrite weak code instead of forwarding it. Compilation or a coder's completion claim is not acceptance. Require the real composed SDK/CLI/native/offline-docs/error/action scenarios and independent review; tests must defend observable behavior, not implementation snapshots or mock echoes. Model speed does not lower that bar.
 
 ## Read in this order
 

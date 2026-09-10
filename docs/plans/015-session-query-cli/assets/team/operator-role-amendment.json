@@ -1,0 +1,27 @@
+{
+  "recorded_at": "2026-09-10T02:16:42.501Z",
+  "authority": "Jordan's direct coder/reviewer instruction",
+  "prior_approved_guide_sha256": "68229e734a08f1ba17ec42297e32caa27cf513e107adb7075043b70b9e420b39",
+  "current_guide_sha256": "a40aab41b687bf9302616e6ced2279dda8f2d6f28a7af76d311406c8a7340f04",
+  "changed_section": "roles only; architecture, interfaces, units and proof topology unchanged",
+  "roles": [
+    {
+      "id": "role-coder",
+      "role": "coder",
+      "harness": "omp",
+      "model": "github-copilot/gpt-5.6-sol-fast",
+      "effort": "high",
+      "note": "Explicit Jordan instruction: OMP, GitHub Sol Fast 1M, high. Observed catalog selector github-copilot/gpt-5.6-sol-fast has contextWindow 1050000 and supports high. No silent model/harness fallback; actual runtime is observed at dispatch."
+    },
+    {
+      "id": "role-reviewer",
+      "role": "reviewer",
+      "harness": "omp",
+      "model": "github-copilot/claude-opus-5",
+      "effort": "high",
+      "note": "Explicit Jordan instruction: OMP, GitHub Opus 5 reviewers. Retain high effort. Independent reviewer actual configuration is observed; no provider attestation inferred."
+    }
+  ],
+  "approval_boundary": "R3 approves the prior exact guide decomposition; operator role amendment is explicit. Future independent exact-baseline review binds this current guide before any coder release.",
+  "quality_owner": "pij-empirical-tiger; coder output remains a candidate until PM inspection, composed proof and independent review"
+}

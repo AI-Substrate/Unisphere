@@ -146,8 +146,8 @@ enum SourcesSubcommand {
 enum SessionsSubcommand {
     /// Query sessions, list a native JSONL root, or list native Git-AI notes.
     List(SessionListArgs),
-    /// Show one exact query session.
-    Show(ShowArgs),
+    /// Show one exact query session, or resolve the latest native session for --pij.
+    Show(SessionShowArgs),
     /// Show observed parent, fork, and subagent relationships.
     Tree(ShowArgs),
     /// Aggregate selected sessions.
@@ -326,6 +326,14 @@ impl NativeExportArgs {
 }
 
 #[derive(Args)]
+struct SessionShowArgs {
+    /// Exact local query entity ID returned by Unisphere; omitted only with --pij.
+    entity: Option<String>,
+    #[command(flatten)]
+    query: QueryArgs,
+}
+
+#[derive(Args)]
 struct ShowArgs {
     /// Exact local query entity ID returned by Unisphere.
     entity: String,
@@ -345,6 +353,9 @@ struct StatsArgs {
 
 #[derive(Args, Default)]
 struct QueryArgs {
+    /// Resolve the latest native source/session mapping for this Pij seat ID.
+    #[arg(long)]
+    pij: Option<String>,
     #[arg(long)]
     repo: Option<PathBuf>,
     #[arg(long)]
@@ -437,7 +448,7 @@ struct QueryArgs {
     #[arg(long)]
     exit_code: Vec<i64>,
     #[arg(long)]
-    min_duration: Option<u64>,
+    min_duration: Option<f64>,
     #[arg(long)]
     has_duration: bool,
     #[arg(long)]
@@ -504,6 +515,20 @@ pub struct QueryCommand {
     pub stdin_format: SavedFormat,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum PijTarget {
+    Query,
+    SessionShow,
+    SourceCheck,
+}
+
+#[derive(Clone, PartialEq)]
+pub struct PijQueryCommand {
+    pub id: String,
+    pub query: QueryCommand,
+    pub target: PijTarget,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct NativeRootListCommand {
     pub root: PathBuf,
@@ -562,6 +587,7 @@ pub enum ParsedCommand {
     Docs(DocsCommand),
     Schema(SchemaCommand),
     Query(QueryCommand),
+    PijQuery(PijQueryCommand),
     NativeRootList(NativeRootListCommand),
     NativeGitNotesList(NativeGitNotesListCommand),
     NativeExport(NativeExportCommand),
@@ -592,8 +618,28 @@ impl CliParseFailure {
     fn scope() -> Self {
         Self {
             code: "UNI-CLI-SCOPE",
-            message: "A query requires exactly one of --repo, --source, or --input.",
+            message: "A query requires exactly one of --pij, --repo, --source, or --input.",
             next_action: "Choose one explicit scope; use `--repo .` only when repository-associated local evidence is intended.",
+            alternatives: Vec::new(),
+            retryable: false,
+        }
+    }
+
+    fn pij_id() -> Self {
+        Self {
+            code: "UNI-CLI-PIJ-ID",
+            message: "The Pij seat ID is not valid.",
+            next_action: "Supply one explicit Pij seat ID without leading option syntax, whitespace, or control characters.",
+            alternatives: Vec::new(),
+            retryable: false,
+        }
+    }
+
+    fn pij_conflict() -> Self {
+        Self {
+            code: "UNI-CLI-PIJ-CONFLICT",
+            message: "The Pij selector conflicts with an explicit native source or session selector.",
+            next_action: "Use --pij ID as the only source/session identity; remove --repo, --source, --input, --repo-scope, --session, --native-id, --harness, --source-adapter, and excluded identity selectors.",
             alternatives: Vec::new(),
             retryable: false,
         }
@@ -780,26 +826,37 @@ pub fn parse(args: Vec<OsString>, context: &CliContext) -> Result<ParsedCommand,
                 selected_mode,
             ),
             SourcesSubcommand::Check(query) => {
-                let source = query
-                    .source
-                    .as_ref()
-                    .and_then(|source| source.to_str())
-                    .and_then(|source| SourceId::from_str(source).ok())
-                    .ok_or_else(CliParseFailure::arguments)?;
-                query_command(
-                    Dataset::Sources,
-                    Operation::Check { source },
-                    query,
-                    context,
-                    selected_mode,
-                )
+                if query.pij.is_some() {
+                    pij_target(
+                        query_command(
+                            Dataset::Sources,
+                            Operation::List,
+                            query,
+                            context,
+                            selected_mode,
+                        ),
+                        PijTarget::SourceCheck,
+                    )
+                } else {
+                    let source = query
+                        .source
+                        .as_ref()
+                        .and_then(|source| source.to_str())
+                        .and_then(|source| SourceId::from_str(source).ok())
+                        .ok_or_else(CliParseFailure::arguments)?;
+                    query_command(
+                        Dataset::Sources,
+                        Operation::Check { source },
+                        query,
+                        context,
+                        selected_mode,
+                    )
+                }
             }
         },
         RootCommand::Sessions { command } => match command {
             SessionsSubcommand::List(args) => session_list(args, context, selected_mode),
-            SessionsSubcommand::Show(args) => {
-                show_command(Dataset::Sessions, args, context, selected_mode)
-            }
+            SessionsSubcommand::Show(args) => session_show_command(args, context, selected_mode),
             SessionsSubcommand::Tree(args) => {
                 let session = parse_entity(&args.entity)?;
                 query_command(
@@ -903,6 +960,49 @@ fn show_command(
         context,
         mode,
     )
+}
+
+fn session_show_command(
+    args: SessionShowArgs,
+    context: &CliContext,
+    mode: OutputMode,
+) -> Result<ParsedCommand, CliParseFailure> {
+    match (args.entity, args.query.pij.is_some()) {
+        (None, true) => pij_target(
+            query_command(
+                Dataset::Sessions,
+                Operation::List,
+                args.query,
+                context,
+                mode,
+            ),
+            PijTarget::SessionShow,
+        ),
+        (Some(_), true) => Err(CliParseFailure::pij_conflict()),
+        (Some(entity), false) => query_command(
+            Dataset::Sessions,
+            Operation::Show {
+                entity: parse_entity(&entity)?,
+            },
+            args.query,
+            context,
+            mode,
+        ),
+        (None, false) => Err(CliParseFailure::arguments()),
+    }
+}
+
+fn pij_target(
+    command: Result<ParsedCommand, CliParseFailure>,
+    target: PijTarget,
+) -> Result<ParsedCommand, CliParseFailure> {
+    match command? {
+        ParsedCommand::PijQuery(mut command) => {
+            command.target = target;
+            Ok(ParsedCommand::PijQuery(command))
+        }
+        _ => Err(CliParseFailure::arguments()),
+    }
 }
 
 fn stats_command(
@@ -1085,6 +1185,7 @@ fn query_command(
     context: &CliContext,
     mode: OutputMode,
 ) -> Result<ParsedCommand, CliParseFailure> {
+    let pij_id = args.pij.as_deref().map(validate_pij_id).transpose()?;
     let scope = query_scope(&args, context)?;
     let stdin = matches!(
         &scope,
@@ -1222,7 +1323,7 @@ fn query_command(
     )?;
     unsigned_filter(&mut filters, FieldId::TurnCount, args.min_turns)?;
     unsigned_filter(&mut filters, FieldId::ToolCallCount, args.min_tool_calls)?;
-    unsigned_filter(&mut filters, FieldId::DurationMs, args.min_duration)?;
+    duration_filter(&mut filters, args.min_duration)?;
     if args.has_errors {
         filters.push(Filter {
             field: FieldId::HasErrors,
@@ -1354,7 +1455,15 @@ fn query_command(
         },
         limits,
     };
-    request.validate().map_err(CliParseFailure::from_query)?;
+    if pij_id.is_some() && request.turn_range.is_some() {
+        let mut validation_request = request.clone();
+        validation_request.turn_range = None;
+        validation_request
+            .validate()
+            .map_err(CliParseFailure::from_query)?;
+    } else {
+        request.validate().map_err(CliParseFailure::from_query)?;
+    }
 
     let format = match args.format.as_deref() {
         Some(value) => value.parse().map_err(|_| {
@@ -1391,7 +1500,7 @@ fn query_command(
         })?,
         Some(_) => return Err(CliParseFailure::arguments()),
     };
-    Ok(ParsedCommand::Query(QueryCommand {
+    let query = QueryCommand {
         request,
         format,
         csv_safety,
@@ -1401,15 +1510,44 @@ fn query_command(
             .transpose()?,
         diagnostic_mode: mode,
         stdin_format,
-    }))
+    };
+    Ok(match pij_id {
+        Some(id) => ParsedCommand::PijQuery(PijQueryCommand {
+            id,
+            query,
+            target: PijTarget::Query,
+        }),
+        None => ParsedCommand::Query(query),
+    })
 }
 
 fn query_scope(args: &QueryArgs, context: &CliContext) -> Result<QueryScope, CliParseFailure> {
-    let count = usize::from(args.repo.is_some())
+    if args.pij.is_some() && (args.repo.is_some() || args.source.is_some() || args.input.is_some())
+    {
+        return Err(CliParseFailure::pij_conflict());
+    }
+    let count = usize::from(args.pij.is_some())
+        + usize::from(args.repo.is_some())
         + usize::from(args.source.is_some())
         + usize::from(args.input.is_some());
     if count != 1 {
         return Err(CliParseFailure::scope());
+    }
+    if args.pij.is_some() {
+        if args.repo_scope != "tree"
+            || !args.session.is_empty()
+            || !args.native_id.is_empty()
+            || !args.harness.is_empty()
+            || !args.exclude_harness.is_empty()
+            || !args.source_adapter.is_empty()
+            || !args.exclude_source_adapter.is_empty()
+        {
+            return Err(CliParseFailure::pij_conflict());
+        }
+        return Ok(QueryScope::Repository {
+            path: absolute(context.cwd.clone(), context)?,
+            scope: "tree".parse().map_err(|_| CliParseFailure::arguments())?,
+        });
     }
     if args.repo.is_none() && args.repo_scope != "tree" {
         return Err(CliParseFailure::arguments());
@@ -1559,6 +1697,21 @@ fn unsigned_filter(
     Ok(())
 }
 
+fn duration_filter(filters: &mut Vec<Filter>, value: Option<f64>) -> Result<(), CliParseFailure> {
+    if let Some(value) = value {
+        if !value.is_finite() || value < 0.0 {
+            return Err(CliParseFailure::arguments());
+        }
+        filters.push(Filter {
+            field: FieldId::DurationMs,
+            predicate: Predicate::AtLeast,
+            values: vec![FieldValue::Float(value)],
+            ignore_case: false,
+        });
+    }
+    Ok(())
+}
+
 fn parse_entity(value: &str) -> Result<EntityId, CliParseFailure> {
     value.parse().map_err(|_| CliParseFailure::arguments())
 }
@@ -1570,6 +1723,18 @@ fn parse_name<T: FromStr>(value: &str) -> Result<T, CliParseFailure> {
 fn validate_registry_name(value: String) -> Result<String, CliParseFailure> {
     let _: AdapterId = parse_name(&value)?;
     Ok(value)
+}
+
+fn validate_pij_id(value: &str) -> Result<String, CliParseFailure> {
+    if value.is_empty()
+        || value.starts_with('-')
+        || value
+            .chars()
+            .any(|character| character.is_control() || character.is_whitespace())
+    {
+        return Err(CliParseFailure::pij_id());
+    }
+    Ok(value.to_owned())
 }
 
 fn absolute(path: PathBuf, context: &CliContext) -> Result<PathBuf, CliParseFailure> {
@@ -1588,14 +1753,16 @@ fn absolute(path: PathBuf, context: &CliContext) -> Result<PathBuf, CliParseFail
 
 impl QueryArgs {
     fn has_query_selector(&self) -> bool {
-        self.repo.is_some()
+        self.pij.is_some()
+            || self.repo.is_some()
             || self.source.is_some()
             || self.input.is_some()
             || self.has_query_option_besides_repo()
     }
 
     fn has_query_option_besides_repo(&self) -> bool {
-        self.source.is_some()
+        self.pij.is_some()
+            || self.source.is_some()
             || self.input.is_some()
             || self.stdin_format.is_some()
             || self.repo_scope != "tree"

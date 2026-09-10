@@ -19,11 +19,14 @@ pub mod snapshots;
 
 pub use args::{
     CatalogCommand, CliParseFailure, ConfigCommand, DocsCommand, HelpCommand, NativeExportCommand,
-    NativeGitNotesListCommand, NativeRootListCommand, OutputMode, ParsedCommand, QueryCommand,
-    SchemaCommand, diagnostic_mode, parse,
+    NativeGitNotesListCommand, NativeRootListCommand, OutputMode, ParsedCommand, PijQueryCommand,
+    PijTarget, QueryCommand, SchemaCommand, diagnostic_mode, parse,
 };
 pub use catalog::{run_adapters, run_catalog};
-pub use query::{emit_parse_failure, emit_query_failure, run_docs, run_query, run_schema};
+pub use query::{
+    emit_parse_failure, emit_pij_failure, emit_pij_resolution, emit_query_failure, run_docs,
+    run_query, run_schema,
+};
 pub use sessions::{run_native_export, run_native_list, run_sessions, session_error};
 pub use snapshots::{run_native_snapshot_export, run_snapshot_sessions};
 pub use unisphere_core::{AdapterCapabilities, AdapterDescriptor, LocationHint};

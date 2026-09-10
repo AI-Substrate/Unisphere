@@ -245,10 +245,12 @@ fn invalid_input_and_limits_fail_before_process_execution() {
 fn absent_or_future_envelope_versions_cannot_resolve_identity() {
     let (_temporary, executable) = program("", 0);
     for prefix in ["", "\"v\":3,", "\"v\":\"2\","] {
-        set_response(&executable, &format!(
-            "{{{prefix}\"ok\":true,\"data\":{{\"id\":\"{ID}\",\"harness\":\"omp\",\"session\":\"native\"}}}}"
-        ));
+        set_response(
+            &executable,
+            &format!(
+                "{{{prefix}\"ok\":true,\"data\":{{\"id\":\"{ID}\",\"harness\":\"omp\",\"session\":\"native\"}}}}"
+            ),
+        );
         assert_eq!(resolve(&executable), Err(PijLookupError::InvalidResponse));
     }
 }
-

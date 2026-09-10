@@ -22,10 +22,12 @@ enum SourceRepresentation {
     SqliteKeyValue(&'static str),
 }
 
+type QueryFactory = fn(&AdapterRegistration) -> Result<QueryRegistration, QueryFailure>;
+
 struct AdapterRegistration {
     descriptor: AdapterDescriptor,
     source: SourceRepresentation,
-    query: Option<fn(&AdapterRegistration) -> Result<QueryRegistration, QueryFailure>>,
+    query: Option<QueryFactory>,
     run:
         fn(SourceRepresentation, &ParsedCommand, &CliContext, &mut dyn Write, &mut dyn Write) -> u8,
     #[cfg(test)]

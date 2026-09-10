@@ -1,15 +1,16 @@
-use std::{ffi::OsString, io::Write, path::PathBuf};
+use std::{collections::BTreeMap, ffi::OsString, io::Write, path::PathBuf};
 
 use serde_json::Value;
 use unisphere_cli::{
-    CliContext, DocsCommand, OutputMode, ParsedCommand, QueryCommand, diagnostic_mode,
-    emit_parse_failure, emit_query_failure, parse, run_catalog, run_config, run_docs, run_help,
-    run_query, run_schema, run_version,
+    CliContext, DocsCommand, OutputMode, ParsedCommand, PijTarget, QueryCommand, diagnostic_mode,
+    emit_parse_failure, emit_pij_failure, emit_pij_resolution, emit_query_failure, parse,
+    run_catalog, run_config, run_docs, run_help, run_query, run_schema, run_version,
 };
 use unisphere_core::query::{
-    ActionReason, Completeness, Coverage, Dataset, Digest, EntityId, EntityKind, FieldId,
-    OperationKind, QueryAction, QueryDescription, QueryFailure, QueryFailureCode, QueryResponse,
-    QueryWriter, RecoveryAction, ResultUniverse, SavedFormat, UniverseBasis,
+    ActionReason, Completeness, ContentAccess, Coverage, Dataset, Digest, EntityId, EntityKind,
+    FieldId, FieldValue, Filter, OperationKind, Predicate, ProjectedRow, QueryAction,
+    QueryDescription, QueryFailure, QueryFailureCode, QueryResponse, QueryScope, QueryWriter,
+    RecoveryAction, ResultUniverse, SavedFormat, SourceId, SourceSelector, UniverseBasis,
 };
 use unisphere_core::{Configuration, InspectionReport};
 use unisphere_output_query::ProjectedQueryWriter;
@@ -45,6 +46,33 @@ fn emitted_action(bytes: &[u8]) -> Vec<OsString> {
         .iter()
         .map(|value| OsString::from(value.as_str().unwrap()))
         .collect()
+}
+
+fn parse_csv(bytes: &[u8]) -> Vec<Vec<String>> {
+    let mut records = Vec::new();
+    let mut record = Vec::new();
+    let mut field = Vec::new();
+    let mut quoted = false;
+    let mut index = 0;
+    while index < bytes.len() {
+        match bytes[index] {
+            b'"' if quoted && bytes.get(index + 1) == Some(&b'"') => {
+                field.push(b'"');
+                index += 1;
+            }
+            b'"' => quoted = !quoted,
+            b',' if !quoted => record.push(String::from_utf8(std::mem::take(&mut field)).unwrap()),
+            b'\r' if !quoted && bytes.get(index + 1) == Some(&b'\n') => {
+                record.push(String::from_utf8(std::mem::take(&mut field)).unwrap());
+                records.push(std::mem::take(&mut record));
+                index += 1;
+            }
+            byte => field.push(byte),
+        }
+        index += 1;
+    }
+    assert!(!quoted && field.is_empty() && record.is_empty());
+    records
 }
 
 #[test]
@@ -86,6 +114,209 @@ fn diagnostic_mode_is_selected_before_parse_consumes_argv() {
     assert_eq!(
         serde_json::from_slice::<Value>(&stderr).unwrap()["ok"],
         false
+    );
+}
+
+#[test]
+fn pij_selector_produces_explicit_pending_targets() {
+    for (root, dataset) in [
+        ("sources", Dataset::Sources),
+        ("sessions", Dataset::Sessions),
+        ("turns", Dataset::Turns),
+        ("messages", Dataset::Messages),
+        ("tools", Dataset::Tools),
+        ("events", Dataset::Events),
+    ] {
+        let ParsedCommand::PijQuery(command) = parse(
+            argv(&[
+                "unisphere",
+                root,
+                "list",
+                "--pij",
+                "pij-example-seat",
+                "--format",
+                "json",
+            ]),
+            &context(),
+        )
+        .unwrap() else {
+            panic!("shared Pij dataset route");
+        };
+        assert_eq!(command.target, PijTarget::Query);
+        assert_eq!(command.query.request.dataset, dataset);
+    }
+
+    let ParsedCommand::PijQuery(source_check) = parse(
+        argv(&[
+            "unisphere",
+            "sources",
+            "check",
+            "--pij",
+            "pij-example-seat",
+            "--format",
+            "json",
+        ]),
+        &context(),
+    )
+    .unwrap() else {
+        panic!("Pij source check route");
+    };
+    assert_eq!(source_check.target, PijTarget::SourceCheck);
+    assert_eq!(
+        source_check.query.request.operation.kind(),
+        OperationKind::List
+    );
+
+    let ParsedCommand::PijQuery(session_show) = parse(
+        argv(&[
+            "unisphere",
+            "sessions",
+            "show",
+            "--pij",
+            "pij-example-seat",
+            "--format",
+            "json",
+        ]),
+        &context(),
+    )
+    .unwrap() else {
+        panic!("Pij session show route");
+    };
+    assert_eq!(session_show.id, "pij-example-seat");
+    assert_eq!(session_show.target, PijTarget::SessionShow);
+    assert_eq!(
+        session_show.query.request.operation.kind(),
+        OperationKind::List
+    );
+    assert!(matches!(
+        session_show.query.request.scope,
+        QueryScope::Repository { ref path, .. } if path == &context().cwd
+    ));
+
+    let turn = entity(EntityKind::Turn, b"pij-turn");
+    let ParsedCommand::PijQuery(query) = parse(
+        argv(&[
+            "unisphere",
+            "turns",
+            "show",
+            &turn,
+            "--pij",
+            "pij-example-seat",
+            "--format",
+            "json",
+        ]),
+        &context(),
+    )
+    .unwrap() else {
+        panic!("ordinary Pij query route");
+    };
+    assert_eq!(query.target, PijTarget::Query);
+    assert_eq!(query.query.request.operation.kind(), OperationKind::Show);
+}
+
+#[test]
+fn pij_selector_rejects_contradictory_or_unsafe_identity_inputs() {
+    let session = entity(EntityKind::Session, b"conflicting-session");
+    let conflicts = [
+        vec!["--repo", "."],
+        vec!["--source", "/source"],
+        vec!["--input", "saved.json"],
+        vec!["--repo-scope", "exact"],
+        vec!["--session", session.as_str()],
+        vec!["--native-id", "native"],
+        vec!["--harness", "claude-code"],
+        vec!["--exclude-harness", "claude-code"],
+        vec!["--source-adapter", "claude-code"],
+        vec!["--exclude-source-adapter", "claude-code"],
+    ];
+    for conflict in conflicts {
+        let mut args = argv(&["unisphere", "tools", "list", "--pij", "pij-example-seat"]);
+        args.extend(conflict.into_iter().map(OsString::from));
+        let failure = parse(args, &context())
+            .err()
+            .expect("conflicting Pij selector");
+        assert_eq!(failure.code(), "UNI-CLI-PIJ-CONFLICT");
+    }
+
+    for id in ["", "-option", "has space", "line\nbreak"] {
+        let failure = parse(
+            vec![
+                "unisphere".into(),
+                "sessions".into(),
+                "list".into(),
+                format!("--pij={id}").into(),
+            ],
+            &context(),
+        )
+        .err()
+        .expect("invalid Pij ID");
+        assert!(matches!(
+            failure.code(),
+            "UNI-CLI-PIJ-ID" | "UNI-CLI-ARGUMENT"
+        ));
+    }
+
+    assert!(
+        parse(
+            argv(&[
+                "unisphere",
+                "sessions",
+                "show",
+                &session,
+                "--pij",
+                "pij-example-seat",
+            ]),
+            &context(),
+        )
+        .is_err()
+    );
+}
+
+#[test]
+fn pij_turn_range_stays_pending_and_duration_threshold_is_finite_float() {
+    let ParsedCommand::PijQuery(pending) = parse(
+        argv(&[
+            "unisphere",
+            "tools",
+            "extract",
+            "--pij",
+            "pij-example-seat",
+            "--range",
+            "1:3",
+            "--min-duration",
+            "500.25",
+            "--format",
+            "jsonl",
+        ]),
+        &context(),
+    )
+    .unwrap() else {
+        panic!("pending Pij query");
+    };
+    assert!(pending.query.request.turn_range.is_some());
+    let duration = pending
+        .query
+        .request
+        .filters
+        .iter()
+        .find(|filter| filter.field == FieldId::DurationMs)
+        .expect("duration filter");
+    assert!(matches!(duration.values.as_slice(), [FieldValue::Float(value)] if *value == 500.25));
+
+    assert!(
+        parse(
+            argv(&[
+                "unisphere",
+                "tools",
+                "list",
+                "--repo",
+                ".",
+                "--min-duration",
+                "-0.1",
+            ]),
+            &context(),
+        )
+        .is_err()
     );
 }
 
@@ -774,6 +1005,222 @@ fn raw_rows_stay_clean_and_guidance_uses_diagnostic_channel() {
 }
 
 #[test]
+fn csv_rows_parse_separately_from_loss_and_coverage_diagnostics() {
+    let command = query_command(&[
+        "unisphere",
+        "tools",
+        "extract",
+        "--repo",
+        ".",
+        "--format",
+        "csv",
+        "--csv-safety",
+        "raw",
+    ]);
+    let mut result = response(
+        Dataset::Tools,
+        OperationKind::Extract,
+        QueryAction::InspectCoverage {
+            reason: ActionReason::PartialEvidence,
+        },
+    );
+    result.rows = vec![
+        ProjectedRow::new(
+            Dataset::Tools,
+            EntityId::derive(EntityKind::Tool, [b"csv-tool".as_slice()]),
+            Vec::new(),
+            BTreeMap::new(),
+            &ContentAccess::default(),
+        )
+        .unwrap(),
+    ];
+    result.matched = 1;
+    result.emitted = 1;
+    result.coverage.discovered_sources = 2;
+    result.coverage.loaded_sources = 1;
+    result.coverage.selected_sources = 1;
+    result.coverage.source_read_complete = false;
+    result.universe.rows_complete_for_selection = Completeness::Subset;
+    result.universe.partitions_complete = Completeness::Unknown;
+    result.universe.basis = UniverseBasis::SavedSelection;
+
+    let query = FakeQueryApi::new(Ok(result));
+    let mut stdout = Vec::new();
+    let mut stderr = Vec::new();
+    assert_eq!(
+        run_query(
+            &command,
+            &context(),
+            &query,
+            &ProjectedQueryWriter,
+            &mut stdout,
+            &mut stderr
+        ),
+        0
+    );
+    let records = parse_csv(&stdout);
+    assert_eq!(records.len(), 2);
+    assert_eq!(records[0][0], "schema_version");
+    assert_eq!(records[1][1], "tools");
+
+    let diagnostic: Value = serde_json::from_slice(&stderr).unwrap();
+    assert_eq!(
+        diagnostic["data"]["coverage"]["source_read_complete"],
+        false
+    );
+    assert_eq!(
+        diagnostic["data"]["universe"]["rows_complete_for_selection"],
+        "subset"
+    );
+    assert_eq!(
+        diagnostic["data"]["universe"]["partitions_complete"],
+        "unknown"
+    );
+    let losses = diagnostic["data"]["output"]["losses"].as_array().unwrap();
+    assert!(
+        losses
+            .iter()
+            .any(|loss| loss == "absence_null_empty_collapse")
+    );
+    assert!(losses.iter().any(|loss| loss == "structured_as_json_text"));
+    assert_eq!(diagnostic["data"]["output"]["csv_safety"], "raw");
+    assert_eq!(
+        diagnostic["data"]["output"]["formula_interpretation_risk"],
+        true
+    );
+    assert_eq!(
+        diagnostic["data"]["output"]["preserve_absent_null_empty_with"],
+        serde_json::json!(["json", "jsonl"]),
+    );
+}
+
+#[test]
+fn pij_resolution_and_failures_use_only_the_diagnostic_channel() {
+    let session_id = EntityId::derive(EntityKind::Session, [b"resolved-session".as_slice()]);
+    let source_id = SourceId::derive([b"resolved-source".as_slice()]);
+    let mut stderr = Vec::new();
+    emit_pij_resolution(
+        "pij-example-seat",
+        "claude-code",
+        session_id,
+        source_id,
+        OutputMode::JsonDiagnostic,
+        &mut stderr,
+    )
+    .unwrap();
+    let provenance: Value = serde_json::from_slice(&stderr).unwrap();
+    assert_eq!(provenance["command"], "pij.resolve");
+    assert_eq!(provenance["data"]["pij_id"], "pij-example-seat");
+    assert_eq!(provenance["data"]["session_id"], session_id.to_string());
+    assert_eq!(provenance["data"]["source_id"], source_id.to_string());
+    assert!(provenance["data"].get("native_session_id").is_none());
+    assert!(provenance["data"].get("path").is_none());
+
+    stderr.clear();
+    emit_pij_resolution(
+        "pij\u{202e}seat",
+        "claude\u{2066}code",
+        session_id,
+        source_id,
+        OutputMode::Human,
+        &mut stderr,
+    )
+    .unwrap();
+    let human = String::from_utf8(stderr).unwrap();
+    assert!(!human.contains('\u{202e}') && !human.contains('\u{2066}'));
+    assert!(human.contains("\\u{202e}") && human.contains("\\u{2066}"));
+
+    let mut failure = Vec::new();
+    assert_eq!(
+        emit_pij_failure(
+            "UNI-PIJ-NOT-FOUND",
+            "The Pij seat was not found in the selected instance.",
+            "Check the seat ID or use explicit native selectors.",
+            OutputMode::JsonDiagnostic,
+            &mut failure,
+        ),
+        1
+    );
+    let failure: Value = serde_json::from_slice(&failure).unwrap();
+    assert_eq!(failure["error"]["code"], "UNI-PIJ-NOT-FOUND");
+    assert!(
+        failure["next_action"]
+            .as_str()
+            .is_some_and(|action| !action.is_empty())
+    );
+}
+
+#[test]
+fn resolved_pij_continuation_uses_pinned_query_ids() {
+    let ParsedCommand::PijQuery(mut pending) = parse(
+        argv(&[
+            "unisphere",
+            "tools",
+            "list",
+            "--pij",
+            "pij-example-seat",
+            "--format",
+            "json",
+        ]),
+        &context(),
+    )
+    .unwrap() else {
+        panic!("pending Pij query");
+    };
+    let source = SourceId::derive([b"pij-source".as_slice()]);
+    let session = EntityId::derive(EntityKind::Session, [b"pij-session".as_slice()]);
+    pending.query.request.scope = QueryScope::Source {
+        selector: SourceSelector::Id(source),
+    };
+    pending.query.request.filters.push(Filter {
+        field: FieldId::SessionId,
+        predicate: Predicate::In,
+        values: vec![FieldValue::Id(session)],
+        ignore_case: false,
+    });
+    let query = FakeQueryApi::new(Ok(response(
+        Dataset::Tools,
+        OperationKind::List,
+        QueryAction::Continue {
+            cursor: "q1:cursor:opaque".to_owned(),
+            reason: ActionReason::MoreRows,
+        },
+    )));
+    let mut stdout = Vec::new();
+    assert_eq!(
+        run_query(
+            &pending.query,
+            &context(),
+            &query,
+            &ProjectedQueryWriter,
+            &mut stdout,
+            &mut Vec::new(),
+        ),
+        0
+    );
+    let envelope: Value = serde_json::from_slice(&stdout).unwrap();
+    let argv = envelope["next_action"]["argv"].as_array().unwrap();
+    let source = source.to_string();
+    let session = session.to_string();
+    assert!(
+        argv.iter()
+            .any(|value| value.as_str() == Some(source.as_str()))
+    );
+    assert!(
+        argv.iter()
+            .any(|value| value.as_str() == Some(session.as_str()))
+    );
+    assert!(!argv.iter().any(|value| value == "--pij"));
+    assert!(
+        envelope["next_action"]["required_inputs"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|value| value == "original_query_options")
+    );
+}
+
+#[test]
 fn generated_actions_withhold_private_paths_and_parse_after_binding() {
     let command = query_command(&[
         "unisphere",
@@ -899,7 +1346,7 @@ fn typed_query_initialization_failures_keep_stdout_clean() {
     let mut stderr = Vec::new();
     assert_eq!(
         emit_query_failure(&command, &failure, &mut stdout, &mut stderr),
-        1
+        2
     );
     assert!(stdout.is_empty());
     let envelope: Value = serde_json::from_slice(&stderr).unwrap();
@@ -908,6 +1355,18 @@ fn typed_query_initialization_failures_keep_stdout_clean() {
         envelope["next_action"]
             .as_str()
             .is_some_and(|value| !value.is_empty())
+    );
+
+    stderr.clear();
+    let failure = QueryFailure::new(
+        QueryFailureCode::OutputFailure,
+        RecoveryAction::ChooseNewOutput {
+            discard_partial: true,
+        },
+    );
+    assert_eq!(
+        emit_query_failure(&command, &failure, &mut stdout, &mut stderr),
+        1
     );
 }
 

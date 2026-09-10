@@ -589,7 +589,7 @@ fn run() -> ProofResult<()> {
     result?;
     let scope = match mode.to_str() {
         Some("native") => {
-            "explicit native JSONL and revision snapshots; not lossless or final completeness"
+            "explicit native JSONL/revision snapshots plus installed query workflows; not Git Notes queries, lossless capture or final completeness"
         }
         Some("collection") => {
             "explicit Claude JSONL projection; not lossless or final completeness"

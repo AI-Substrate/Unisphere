@@ -2,9 +2,10 @@ use std::io::{self, Write};
 
 use serde_json::json;
 use unisphere_core::query::{
-    Dataset, OfflineRef, OperationKind, OutputFormat, QueryAction, QueryApi, QueryFailure,
-    QueryFailureCode, QueryOutputOptions, QueryScope, QueryWriter, RecoveryAction, RenderedAction,
-    SourceSelector, schema,
+    Completeness, CsvSafety, Dataset, EntityId, FieldId, FieldValue, Filter, OfflineRef,
+    OperationKind, OutputFormat, Predicate, QueryAction, QueryApi, QueryFailure, QueryFailureCode,
+    QueryOutputOptions, QueryResponse, QueryScope, QueryWriter, RecoveryAction, RenderedAction,
+    SourceId, SourceSelector, schema,
 };
 
 use crate::{
@@ -103,30 +104,21 @@ pub fn run_query(
             stderr,
         );
     }
-    if let Some(staged) = staged {
-        if staged.publish().is_err() {
-            return emit_query_failure_inner(
-                &command.request,
-                &output_failure(),
-                command.diagnostic_mode,
-                stderr,
-            );
-        }
+    if let Some(staged) = staged
+        && staged.publish().is_err()
+    {
+        return emit_query_failure_inner(
+            &command.request,
+            &output_failure(),
+            command.diagnostic_mode,
+            stderr,
+        );
     }
 
     if command.format == OutputFormat::Json {
         return 0;
     }
-    if emit_query_summary(
-        &command.request,
-        response.matched,
-        response.emitted,
-        &next_action,
-        command.diagnostic_mode,
-        stderr,
-    )
-    .is_err()
-    {
+    if emit_query_summary(&command.request, &response, &next_action, command, stderr).is_err() {
         1
     } else {
         0
@@ -168,6 +160,9 @@ fn render_action(action: &QueryAction, command: &QueryCommand) -> RenderedAction
             ]);
             argv.extend(scope_argv);
             argv.extend(["--cursor".to_owned(), cursor.clone()]);
+            if let Some(session) = exact_session_binding(request) {
+                argv.extend(["--session".to_owned(), session.to_string()]);
+            }
             required_inputs.push("original_query_options".to_owned());
             "Repeat the original query options against the same source view with this cursor."
                 .to_owned()
@@ -218,6 +213,26 @@ fn render_action(action: &QueryAction, command: &QueryCommand) -> RenderedAction
     }
 }
 
+fn exact_session_binding(request: &unisphere_core::query::QueryRequest) -> Option<EntityId> {
+    let field = if request.dataset == Dataset::Sessions {
+        FieldId::Id
+    } else {
+        FieldId::SessionId
+    };
+    request.filters.iter().find_map(|filter| match filter {
+        Filter {
+            field: candidate,
+            predicate: Predicate::In | Predicate::Equal,
+            values,
+            ..
+        } if *candidate == field => match values.as_slice() {
+            [FieldValue::Id(session)] => Some(*session),
+            _ => None,
+        },
+        _ => None,
+    })
+}
+
 fn rendered_scope(
     scope: &QueryScope,
     stdin_format: unisphere_core::query::SavedFormat,
@@ -266,13 +281,15 @@ fn rendered_scope(
 
 fn emit_query_summary(
     request: &unisphere_core::query::QueryRequest,
-    matched: u64,
-    emitted: u64,
+    response: &QueryResponse,
     action: &RenderedAction,
-    mode: OutputMode,
+    command: &QueryCommand,
     stderr: &mut dyn Write,
 ) -> io::Result<()> {
-    match mode {
+    let format = schema(request.dataset)
+        .format(request.operation.kind(), command.format)
+        .expect("query format was validated before serialization");
+    match command.diagnostic_mode {
         OutputMode::Json | OutputMode::JsonDiagnostic => {
             serde_json::to_writer(
                 &mut *stderr,
@@ -280,7 +297,22 @@ fn emit_query_summary(
                     "ok": true,
                     "command": command_name(request.dataset, request.operation.kind()),
                     "v": 1,
-                    "data": {"matched": matched, "emitted": emitted},
+                    "data": {
+                        "matched": response.matched,
+                        "emitted": response.emitted,
+                        "coverage": &response.coverage,
+                        "universe": &response.universe,
+                        "output": {
+                            "format": command.format,
+                            "lossy": format.lossy,
+                            "losses": format.losses,
+                            "csv_safety": (command.format == OutputFormat::Csv).then_some(command.csv_safety),
+                            "formula_interpretation_risk": command.format == OutputFormat::Csv
+                                && command.csv_safety == CsvSafety::Raw,
+                            "preserve_absent_null_empty_with":
+                                (command.format == OutputFormat::Csv).then_some(["json", "jsonl"]),
+                        },
+                    },
                     "next_action": action,
                 }),
             )
@@ -288,7 +320,49 @@ fn emit_query_summary(
             stderr.write_all(b"\n")?;
         }
         OutputMode::Human => {
-            writeln!(stderr, "Matched {matched}; emitted {emitted}.")?;
+            writeln!(
+                stderr,
+                "Matched {}; emitted {}.",
+                response.matched, response.emitted
+            )?;
+            writeln!(
+                stderr,
+                "Coverage: loaded {}/{} discovered sources; selected {}; source read complete: {}.",
+                response.coverage.loaded_sources,
+                response.coverage.discovered_sources,
+                response.coverage.selected_sources,
+                response.coverage.source_read_complete,
+            )?;
+            writeln!(
+                stderr,
+                "Universe: {}; rows {}; partitions {}; bounded by input: {}.",
+                response.universe.basis.as_str(),
+                response.universe.rows_complete_for_selection.as_str(),
+                response.universe.partitions_complete.as_str(),
+                response.universe.bounded_by_input,
+            )?;
+            if !response.coverage.source_read_complete
+                || !response.coverage.issues.is_empty()
+                || response.universe.rows_complete_for_selection != Completeness::Complete
+                || response.universe.partitions_complete != Completeness::Complete
+            {
+                writeln!(
+                    stderr,
+                    "Warning: evidence coverage is incomplete, subset, or unknown; counts are not a complete universe."
+                )?;
+            }
+            if command.format == OutputFormat::Csv {
+                writeln!(
+                    stderr,
+                    "CSV loss: absent fields, null values, and empty values share an empty cell; choose JSON or JSONL when the distinction matters."
+                )?;
+                if command.csv_safety == CsvSafety::Raw {
+                    writeln!(
+                        stderr,
+                        "CSV safety: raw cells can be interpreted as formulas by spreadsheet software."
+                    )?;
+                }
+            }
             writeln!(stderr, "Next: {}", action.summary)?;
             if !action.argv.is_empty() {
                 write!(stderr, "Command:")?;
@@ -353,7 +427,131 @@ fn emit_query_failure_inner(
         )
         .and_then(|()| stderr.flush()),
     };
-    if result.is_err() { 1 } else { 1 }
+    if result.is_err() {
+        1
+    } else {
+        query_failure_exit(failure.kind())
+    }
+}
+
+const fn query_failure_exit(code: QueryFailureCode) -> u8 {
+    match code {
+        QueryFailureCode::MissingSource
+        | QueryFailureCode::UnreadableSource
+        | QueryFailureCode::UnsupportedSource
+        | QueryFailureCode::StaleCursor(_)
+        | QueryFailureCode::ResourceLimit
+        | QueryFailureCode::OutputFailure => 1,
+        QueryFailureCode::InvalidArgument
+        | QueryFailureCode::InvalidField
+        | QueryFailureCode::InvalidPattern
+        | QueryFailureCode::InvalidTime
+        | QueryFailureCode::UnsupportedSchema
+        | QueryFailureCode::UnsupportedOperation
+        | QueryFailureCode::InvalidData
+        | QueryFailureCode::AmbiguousIdentity
+        | QueryFailureCode::AmbiguousBranch
+        | QueryFailureCode::MissingField
+        | QueryFailureCode::InputSubset
+        | QueryFailureCode::ViewScopeMismatch
+        | QueryFailureCode::ContentConsentRequired => 2,
+    }
+}
+
+/// Emit a safe application-supplied failure for optional Pij resolution.
+///
+/// `code`, `message`, and `next_action` must be static, payload-free strings.
+pub fn emit_pij_failure(
+    code: &str,
+    message: &str,
+    next_action: &str,
+    mode: OutputMode,
+    stderr: &mut dyn Write,
+) -> u8 {
+    let result = match mode {
+        OutputMode::Json | OutputMode::JsonDiagnostic => (|| {
+            serde_json::to_writer(
+                &mut *stderr,
+                &json!({
+                    "ok": false,
+                    "command": "pij.resolve",
+                    "v": 1,
+                    "error": {
+                        "code": code,
+                        "message": message,
+                        "alternatives": [],
+                        "retryable": false,
+                    },
+                    "next_action": next_action,
+                }),
+            )
+            .map_err(io::Error::other)?;
+            stderr.write_all(b"\n")?;
+            stderr.flush()
+        })(),
+        OutputMode::Human => writeln!(
+            stderr,
+            "{code}: {message}\nRetryable: false\nNext: {next_action}"
+        )
+        .and_then(|()| stderr.flush()),
+    };
+    let _ = result;
+    1
+}
+
+/// Emit payload-free provenance after one Pij seat resolves to local query IDs.
+pub fn emit_pij_resolution(
+    pij_id: &str,
+    harness: &str,
+    session_id: EntityId,
+    source_id: SourceId,
+    mode: OutputMode,
+    stderr: &mut dyn Write,
+) -> io::Result<()> {
+    match mode {
+        OutputMode::Json | OutputMode::JsonDiagnostic => {
+            serde_json::to_writer(
+                &mut *stderr,
+                &json!({
+                    "ok": true,
+                    "command": "pij.resolve",
+                    "v": 1,
+                    "data": {
+                        "pij_id": pij_id,
+                        "harness": harness,
+                        "session_id": session_id,
+                        "source_id": source_id,
+                    },
+                }),
+            )
+            .map_err(io::Error::other)?;
+            stderr.write_all(b"\n")?;
+        }
+        OutputMode::Human => writeln!(
+            stderr,
+            "Resolved Pij seat \"{}\" to harness \"{}\"; pinned session {} and source {} for this query.",
+            safe_human_identifier(pij_id),
+            safe_human_identifier(harness),
+            session_id,
+            source_id,
+        )?,
+    }
+    stderr.flush()
+}
+
+fn safe_human_identifier(value: &str) -> String {
+    let mut safe = String::with_capacity(value.len());
+    for character in value.chars() {
+        let code = u32::from(character);
+        if character.is_control()
+            || matches!(code, 0x061c | 0x200e | 0x200f | 0x202a..=0x202e | 0x2066..=0x2069)
+        {
+            safe.push_str(&format!("\\u{{{code:x}}}"));
+        } else {
+            safe.push(character);
+        }
+    }
+    safe
 }
 
 fn command_name(dataset: Dataset, operation: OperationKind) -> String {

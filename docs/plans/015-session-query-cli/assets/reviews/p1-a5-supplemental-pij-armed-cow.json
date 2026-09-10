@@ -1,0 +1,149 @@
+{
+  "record_type": "review",
+  "id": "rv-plan015-p1-a5-supplemental-pij-armed-cow",
+  "kind": "supplemental-adjudication",
+  "title": "Supplemental adjudication \u2014 P1 closure and minimal A5 guide-binding resolution",
+  "supplements": {
+    "report": "docs/plans/015-session-query-cli/assets/reviews/first-wave-pij-armed-cow.json",
+    "report_sha256": "7bc47e052e62fefb4bd773b2f7183159a75f05d5abc980f7aad7cfb913d53d9c",
+    "note": "Additive. The prior report's bytes are not edited and it remains the record of what I found at the subject. One of its findings is superseded here: P5 is withdrawn as false, on the PM's disproof and my own re-reading of the source. P2, P3, P4, P6, P7 and P8 stand as written. A report is not made honest by being immutable, so read it together with this record."
+  },
+  "explicitly_not": [
+    "Not a Builder composition receipt.",
+    "Not a CLI acceptance; the CLI surface still does not exist.",
+    "Not a re-run: no build, test, lint or formatter was executed.",
+    "Not an edit to any canonical plan, guide, team or verification asset.",
+    "Not an amendment to the sealed wave-0 baseline records."
+  ],
+  "reviewer": {
+    "seat": "pij-armed-cow",
+    "role": "independent reviewer",
+    "harness": "omp",
+    "model_id_exposed": "github-copilot/claude-opus-5",
+    "effort_exposed": "high",
+    "attestation_note": "Harness/model/effort are locally observed configuration strings; no provider attestation is claimed."
+  },
+  "recorded_at": "2026-09-10T08:09:38Z\n",
+  "recorded_at_local": "2026-09-10T18:09:38+1000\n",
+  "written_to": "/Users/jordanknight/substrate/unisphere/unishpere-main/.harness/temp/pij-armed-cow/p1-a5-supplemental-pij-armed-cow.json",
+  "written_to_note": "Reviewer scratch in the reviewer's own root. Not committed, not a plan asset.",
+  "basis": {
+    "reviewed_subject": "5ee631b46142b88dea2a2742c9cb8087642c4d25",
+    "proof_commit": "5fb8949112ea98cbafe42cd9506d49b1726fbeb9",
+    "proof_commit_subject": "test(query): bind external composition and recipes to reviewed source",
+    "proof_commit_stat": "1 file changed, 115 insertions(+)",
+    "receipt": "docs/plans/015-session-query-cli/assets/verification/p1-external-proof-5ee631b4.json",
+    "receipt_sha256": "8f614039bb48bb534915753d74e97d93d6a31f6fc7e7ad5bc0f971bf19ae83e0",
+    "receipt_bytes": 52925,
+    "sealed_guide_sha256": "5caed35ffa6f28570c16b6bc42baf47ce4403012069e429eeeaeb4e02f04c88f",
+    "method": "Read-only. Facts read from committed bytes via git show, from bytes inside the committed receipt, or by direct inspection of the retained exact-source directory."
+  },
+  "p1": {
+    "verdict": "closed",
+    "prior_severity": "medium",
+    "statement": "P1 is closed. The external composition and both packaged recipes were executed against source materially and verifiably identical to the reviewed subject, and the recipe fixtures they compiled are byte-identical to the ones committed at that subject.",
+    "evidence": [
+      "The receipt binds itself to the subject: subject_sha 5ee631b46142b88dea2a2742c9cb8087642c4d25, and source_binding records git rev-parse HEAD returning that sha with git status --porcelain empty both before and after the runs.",
+      "All five path dependencies in external/Cargo.toml resolve into p1-exact-source/source/crates/{core,sdk,loader-query,adapter-claude,output-query}, and recipes/Cargo.toml resolves unisphere-sdk into the same source root. The runs therefore consumed the checkout, not the live worktree.",
+      "I closed the one attribution gap in the receipt independently. source_binding's three git entries carry no cwd field, while every runs[] entry does, so the receipt alone does not state where git ran. The retained directory is still present: .harness/temp/pij-empirical-tiger/p1-exact-source/source has HEAD 5ee631b46142b88dea2a2742c9cb8087642c4d25, an empty porcelain status, and a crates tree id of 08762f96937bf882306522ccd267a8bf598e26d5, which is exactly the crates tree of the reviewed subject.",
+      "That tree id is the decisive discriminator. The proof commit's own tree carries crates 86fb990d9b108bb637afc859337f440fb26b0661, because 5ee631b4..5fb8949 changed crates/output-query/src/lib.rs (+8/-1), crates/output-query/tests/query_writer.rs (+23) and crates/sdk/src/query/engine.rs (+25/-13) as in-flight P4-P7 work. The exact-source checkout carries the earlier tree, so the in-flight fixes did not leak into the proof.",
+      "The recipe drift that motivated P1 is directly refuted. recipes/sdk-schema.rs sha256 b2569b6678d957411370d10b2d47d52fcf7ffe358af1b16b78a8a22ffb077b1f and recipes/sdk-query.rs sha256 cb7f38573eea88159db9d5f058137b8fb23e72058ea33ee2cd94f8ba71cf7faf, both recorded in the receipt, equal the sha256 of crates/testkit/fixtures/query-docs/sdk-schema.rs and sdk-query.rs as committed at 5ee631b4. I recomputed both.",
+      "Run 1, cargo run --offline in external/, exit 0, printing {\"clean_jsonl\":true,\"cli_implemented\":false,\"mean_ms\":1000.0,\"private_payload_omitted\":true,\"sessions\":1,\"tools\":1}. Run 2, sdk-schema, exit 0. Run 3, cargo run --offline --locked --bin sdk-query, exit 0.",
+      "The composition is real work, not a link check. external/src/main.rs writes three Claude JSONL records to a tempdir, loads them through LocalQuerySource with a real ClaudeCodeAdapter registration, runs Sessions/List, opens a view, runs Tools/List through execute_view, then runs Stats grouped by ToolFamily over Count, MeanMs and Failures, and finally encodes through ProjectedQueryWriter as JSONL.",
+      "It asserts the amendment surface from outside the workspace: Count == Unsigned(1), MeanMs == Float(1000.0), Failures == Unsigned(0), and on the emitted wire row count == 1 and mean_ms == 1000.0. A1, A2 and A4's declared-metric plumbing are therefore exercised by an external consumer, not only by in-repo tests.",
+      "It carries two real negative assertions on emitted bytes: next_action is absent from the row, and the three PRIVATE-SMOKE payload strings do not appear anywhere in the output.",
+      "limit: Some(0) in the smoke's request builder is not a zero cap. engine.rs:951-958 effective_limit maps Some(0) to None, meaning unlimited, so the matched and rows assertions are meaningful rather than artifacts of an empty page.",
+      "Timing note on my corroboration: when I inspected the exact-source checkout it was clean, and it has since acquired two test-only overlays for the P4 and P5 reproductions. HEAD and the crates tree id are unchanged and no src path is modified, so neither P1's closure nor the P5 reproduction is affected."
+    ],
+    "residual_limits_not_blocking": [
+      "Runs 1 and 2 omitted --locked; only run 3 used it. Their stderr shows Locking 65 packages and Locking 36 packages, so cargo resolved dependencies during the run rather than being pinned by a prior lock. --offline bounds resolution to the local cache, and the resulting external/Cargo.lock and recipes/Cargo.lock are recorded as inputs with sha256, so the resolution is reconstructible after the fact. Worth making --locked uniform next time; it does not weaken the closure.",
+      "include_content is false throughout the composition, so the privacy assertion proves the default-off path, not the consent gate. The gate itself is covered in-workspace at ProjectedRow::new.",
+      "Run 3 exits 0 while printing a UNI-QUERY-SOURCE-MISSING envelope with recovery kind fix_source. That is the recipe succeeding at demonstrating typed recovery, and must not be read as a query returning rows.",
+      "The receipt's own scope line already says this is not CLI readiness. It proves external consumption of five crates at the reviewed source, nothing more.",
+      "The exact-source directory inspection is live working state, not a committed byte. It corroborates the receipt; the receipt's internal binding is what will survive that directory being deleted."
+    ],
+    "conditions_remaining": "None for P1."
+  },
+  "a5": {
+    "recommendation": "No guide bytes need to change. Record a one-clause interpretive ruling in an addendum; keep the sealed guide sha256 untouched.",
+    "correction_to_my_prior_report": "My first-wave report said guide text and code remain textually divergent. Reading C18 and C8 verbatim, that was too strong, and I withdraw it. C8 mandates the context marker in its own words and C18 already licenses declared Metric fields. What remains is that C18's per-dataset lists do not name the new fields, which is documentation completeness, not a contract conflict.",
+    "textual_findings": [
+      "C8 requires the marker literally: 'Context before/after ... union overlapping windows, mark match/context, retain dates outside the filter window and report matched versus emitted.' is_context is the implementation of a clause the frozen guide already contains. It is mandated, not unlicensed.",
+      "C18 already licenses the metric fields: 'Stats rows contain requested group fields and declared Metric fields with a stable group ID.' C18 also requires every field to carry type, nullability, unit, sensitivity and availability, and states that 'projected absence is distinct from a present null and documented in availability'. Declaring the metrics in DatasetSchema.fields is the only construction that satisfies both sentences at once, which is exactly what A2 did.",
+      "C18's per-dataset enumerations are floors, not ceilings, on their face. The text reads 'Common row fields: native_id,harness,adapter,availability. Sources add ...; sessions add ...; turns add ...' The verb is add. No contract in the set says the lists are exhaustive; I checked all 25 for exhaustive, closed set, no other, only these, exactly the and complete set, and the only hits are C22's source-predicate extraction and C25's hash membership, neither of which is about DatasetSchema fields.",
+      "What C18 does close is closed, and is intact: the reserved wire fields schema_version, dataset, id and source_refs that --columns cannot remove, and the FieldType vocabulary Bool, U64, I64, FiniteF64, String, Timestamp, EntityId, SourceRefs, IdList, EnumList, Structured. is_context is Bool and every metric field is U64 or FiniteF64, all inside that vocabulary.",
+      "C21's freeze set does not enumerate FieldId variants. It freezes DTO declarations and names FieldId only as a type that derives the ordering its sets and maps need. Adding IsContext to the FieldId registry therefore does not breach the C21 freeze as written."
+    ],
+    "conclusion": "On the literal frozen text there is no conflict to resolve, so no rebaseline and no guide edit are warranted. The residue is that a reader of C18 alone cannot enumerate the current row surface.",
+    "recommended_minimal_action": {
+      "shape": "One addendum record under docs/plans/015-session-query-cli/assets/reviews/ or assets/, following the precedent already set three times in this plan by baseline-r2-n1 and baseline-evidence-addendum.",
+      "must_contain": [
+        "The sealed guide sha256 5caed35ffa6f28570c16b6bc42baf47ce4403012069e429eeeaeb4e02f04c88f as its declared base, unmodified.",
+        "The ruling: C18's per-dataset 'X add ...' enumerations state the minimum required fields for each dataset and are not closed sets; the closed sets in C18 are the reserved wire fields and the FieldType vocabulary.",
+        "A binding table naming each addition and the frozen clause that licenses it: is_context licensed by C8's mark match/context; the eighteen metric fields licensed by C18's declared Metric fields together with C11.",
+        "The subject sha 5ee631b46142b88dea2a2742c9cb8087642c4d25 at which the code satisfies the ruling.",
+        "A pointer to assets/query-contract.md, which already carries the prose, so the addendum is a binding rather than a second copy of the text."
+      ],
+      "must_not_contain": [
+        "Any change to assets/impl-guide.dd.json bytes.",
+        "Any edit to a sealed baseline record.",
+        "Any new contract number."
+      ],
+      "why_this_is_minimal": "Zero guide bytes change, so every sealed record's guide binding stays a literally true statement about 5caed35f..., no dependent proof is invalidated, and C21's return-to-tk-0001 rule for changed shared declarations is never triggered."
+    },
+    "rejected_alternatives": [
+      {
+        "option": "Edit C18's enumeration in assets/impl-guide.dd.json.",
+        "why_rejected": "Any byte change moves the guide sha256, which every sealed wave-0 record binds. It would make those records' guide reference false and, under C21, a changed shared declaration returns to tk-0001 and invalidates dependent proof. Disproportionate to a documentation gap, and it is the rewrite of sealed history the request excludes."
+      },
+      {
+        "option": "Append a new contract number such as C26.",
+        "why_rejected": "Same sha256 consequence as editing C18, plus it splits one subject across two contract numbers for future readers."
+      },
+      {
+        "option": "Leave the repair only in assets/query-contract.md.",
+        "why_rejected": "That is today's state. The prose exists but nothing binds it to the frozen set or to a subject sha, so a future reader cannot tell whether it is normative or a draft. The addendum costs one file and removes that ambiguity."
+      }
+    ],
+    "opportunistic_followup": "If and when a later seal boundary rolls the guide forward for independent reasons, fold the ruling into C18's own text then. New sealed records would bind the new sha and older records keep the old one. Do not manufacture a roll-forward for this alone."
+  },
+  "p5": {
+    "verdict": "withdrawn",
+    "prior_severity": "low",
+    "statement": "P5 is withdrawn. The finding's premise was false. I assert no defect here, and no change to grouping is warranted or credited.",
+    "mechanical_cause_of_my_error": "I read canonical_value at engine.rs:928-930 as serde_json::to_vec(value) and reasoned about the JSON of the value the variant carries, without checking FieldValue's container attribute. I never opened model.rs:299-301.",
+    "what_is_actually_true": [
+      "crates/core/src/query/model.rs:299-301 declares #[derive(Clone, PartialEq, Serialize, Deserialize)] with #[serde(tag = \"kind\", content = \"value\", rename_all = \"snake_case\")] on enum FieldValue. The Serialize impl is derived; I grepped the tree at 5ee631b4 and there is no manual impl Serialize for FieldValue anywhere.",
+      "Adjacent tagging makes the encoding injective across all eleven variants. FieldValue::Null is a unit variant, so it serializes as {\"kind\":\"null\"}, fifteen bytes, not the four bytes null.",
+      "The missing-field sentinel at engine.rs:998 is b\"null\".to_vec(), four bytes, which no variant encoding can produce. Absence and a present null therefore cannot collide.",
+      "The property is stronger than the three cases under test. Because every variant carries its own tag, a literal String(\"null\") encodes as {\"kind\":\"string\",\"value\":\"null\"} and even a string whose text is the JSON {\"kind\":\"null\"} encodes with that brace escaped inside the value field. No cross-variant collision is constructible.",
+      "So absent, present null and literal null are three distinct group keys on the reviewed engine, which is what the reproduction observed."
+    ],
+    "reproduction_reviewed": [
+      "assets/verification/p4-p5-regressions-before.json declares base_sha 5ee631b46142b88dea2a2742c9cb8087642c4d25 and runs from cwd .harness/temp/pij-empirical-tiger/p1-exact-source/source.",
+      "runs[3] executes cargo test --locked -p unisphere-sdk --test query saved_statistics_keep_absent_null_and_literal_null_groups_distinct and reports ok, 1 passed, 0 failed, against product source I confirmed unmodified.",
+      "I verified that independently rather than taking it on trust. That checkout now shows exactly two modified paths, crates/output-query/tests/query_writer.rs and crates/sdk/tests/query.rs. Both are test files. No src path is modified, HEAD is still 5ee631b4 and the crates tree id is still 08762f96937bf882306522ccd267a8bf598e26d5, so the engine the reproduction exercised is the reviewed engine.",
+      "The receipt is candid about its own false starts, which is why I credit it. runs[0] exit 101 is labelled a fixture compilation failure from taking Debug on a private payload value, and runs[2] exit 101 an envelope construction failure; both are explicitly disclaimed as not product reproductions. Neither is offered as evidence.",
+      "I did not execute any of this. These are the receipt's bytes plus my own reading of the committed source."
+    ],
+    "endorsement_of_the_revert": [
+      "Removing the speculative NUL sentinel is correct and I endorse it. C18 requires stats rows to carry a stable group ID; changing the sentinel would have churned every group key to fix nothing.",
+      "Retaining the consumer regression and the explanatory comment is the right residue. That test defends an observable contract, group identity, against a plausible future bug, and is not padding.",
+      "One request on its shape, since the property is load-bearing and non-obvious. The distinctness now depends entirely on FieldValue's container attribute, and the codebase already has a precedent for wanting a flatter shape: output-query declares a separate WireValue for exactly that purpose. If anyone later adds #[serde(untagged)] or a manual Serialize to FieldValue, the collision I wrongly alleged becomes real. Assert the three-way distinctness explicitly and point the comment at model.rs:299-301 as the line that carries it.",
+      "Do not harden the sentinel to a non-JSON byte. It would be defensible in a green field and is not worth group-ID churn now."
+    ],
+    "residue": "None. My report also observed that compare_optional at engine.rs:912-915 treats None and Some(Null) as Equal, but I characterised that as deliberate and coherent at the time and it is: both sort last, which is the right ordering behaviour and is not an identity claim. Nothing actionable remains under P5."
+  },
+  "first_wave_finding_status": {
+    "P2": "crates/cli/src/docs.rs still not declared in crates/cli/src/lib.rs.",
+    "P3": "start.md and example-cases.json still describe verbs no parser accepts.",
+    "P4": "Stands, and is now independently reproduced. p4-p5-regressions-before.json runs[1] shows human_formats_escape_direction_controls_without_stripping_text failing at query_writer.rs:210 on assert !output.contains(control), against unmodified product source at 5ee631b4. PM's fix is in flight and I have reviewed no commit later than the subject.",
+    "P5": "WITHDRAWN. Premise false; see the p5 section. No defect, no fix credited.",
+    "P6": "outcome metrics still match Status by string literal.",
+    "P7": "four loader-jsonl invariant comments still absent.",
+    "P8": "accepted, no action.",
+    "note": "P4 through P7 remain PM-owned and unreviewed by me at any commit later than 5ee631b4. Changes to crates/output-query/src/lib.rs, crates/output-query/tests/query_writer.rs and crates/sdk/src/query/engine.rs exist between 5ee631b4 and 5fb8949 and are outside this adjudication. P5 is listed here as withdrawn rather than carried forward."
+  },
+  "verdict": "P1 closed. P5 withdrawn as a false finding; no fix is credited and the revert to the original group keys is endorsed. A5 needs no guide edit and no rebaseline; a single interpretive addendum discharges it. P2, P3, P4, P6 and P7 remain open and PM-owned. No CLI acceptance is claimed or implied.",
+  "subsequent_pm_commit_not_reviewed": "771f94a6d478dd50d74b661b2592d67bd0eeaa1a is reported by the PM as carrying the corrections. I have not read it. Nothing in this record adjudicates it."
+}

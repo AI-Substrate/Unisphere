@@ -1,0 +1,188 @@
+{
+  "record_type": "interpretive-addendum",
+  "recorded_at": "2026-09-10T08:08:20.839Z",
+  "subject_sha": "5ee631b46142b88dea2a2742c9cb8087642c4d25",
+  "sealed_guide_sha256": "5caed35ffa6f28570c16b6bc42baf47ce4403012069e429eeeaeb4e02f04c88f",
+  "guide_unchanged": true,
+  "ruling": "C18 per-dataset add enumerations state minimum required fields, not exhaustive registries. Its reserved wire fields and FieldType vocabulary remain closed sets. C8 requires marking match/context; C18 and C11 require declared statistics metrics. No new contract, changed frozen declaration or rebaseline.",
+  "bindings": [
+    {
+      "field": "is_context",
+      "clauses": [
+        "C8",
+        "C18"
+      ],
+      "datasets": [
+        "turns",
+        "messages"
+      ],
+      "type": "bool",
+      "availability": "projected_optional"
+    },
+    {
+      "field": "count",
+      "clauses": [
+        "C18",
+        "C11"
+      ],
+      "type": "u64",
+      "availability": "projected_optional"
+    },
+    {
+      "field": "measured_count",
+      "clauses": [
+        "C18",
+        "C11"
+      ],
+      "type": "u64",
+      "availability": "projected_optional"
+    },
+    {
+      "field": "missing_duration_count",
+      "clauses": [
+        "C18",
+        "C11"
+      ],
+      "type": "u64",
+      "availability": "projected_optional"
+    },
+    {
+      "field": "succeeded",
+      "clauses": [
+        "C18",
+        "C11"
+      ],
+      "type": "u64",
+      "availability": "projected_optional"
+    },
+    {
+      "field": "failures",
+      "clauses": [
+        "C18",
+        "C11"
+      ],
+      "type": "u64",
+      "availability": "projected_optional"
+    },
+    {
+      "field": "cancelled",
+      "clauses": [
+        "C18",
+        "C11"
+      ],
+      "type": "u64",
+      "availability": "projected_optional"
+    },
+    {
+      "field": "incomplete",
+      "clauses": [
+        "C18",
+        "C11"
+      ],
+      "type": "u64",
+      "availability": "projected_optional"
+    },
+    {
+      "field": "unknown",
+      "clauses": [
+        "C18",
+        "C11"
+      ],
+      "type": "u64",
+      "availability": "projected_optional"
+    },
+    {
+      "field": "failure_rate",
+      "clauses": [
+        "C18",
+        "C11"
+      ],
+      "type": "finite_f64",
+      "availability": "projected_optional"
+    },
+    {
+      "field": "mean_ms",
+      "clauses": [
+        "C18",
+        "C11"
+      ],
+      "type": "finite_f64",
+      "availability": "projected_optional"
+    },
+    {
+      "field": "min_ms",
+      "clauses": [
+        "C18",
+        "C11"
+      ],
+      "type": "finite_f64",
+      "availability": "projected_optional"
+    },
+    {
+      "field": "max_ms",
+      "clauses": [
+        "C18",
+        "C11"
+      ],
+      "type": "finite_f64",
+      "availability": "projected_optional"
+    },
+    {
+      "field": "p50_ms",
+      "clauses": [
+        "C18",
+        "C11"
+      ],
+      "type": "finite_f64",
+      "availability": "projected_optional"
+    },
+    {
+      "field": "p95_ms",
+      "clauses": [
+        "C18",
+        "C11"
+      ],
+      "type": "finite_f64",
+      "availability": "projected_optional"
+    },
+    {
+      "field": "input_tokens",
+      "clauses": [
+        "C18",
+        "C11"
+      ],
+      "type": "u64",
+      "availability": "source_qualified"
+    },
+    {
+      "field": "output_tokens",
+      "clauses": [
+        "C18",
+        "C11"
+      ],
+      "type": "u64",
+      "availability": "source_qualified"
+    },
+    {
+      "field": "cache_read_tokens",
+      "clauses": [
+        "C18",
+        "C11"
+      ],
+      "type": "u64",
+      "availability": "source_qualified"
+    },
+    {
+      "field": "cache_write_tokens",
+      "clauses": [
+        "C18",
+        "C11"
+      ],
+      "type": "u64",
+      "availability": "source_qualified"
+    }
+  ],
+  "contract_details": "assets/query-contract.md",
+  "adjudication": "assets/reviews/p1-a5-supplemental-pij-armed-cow.json",
+  "scope": "Interpretation of the frozen guide at the named subject, not CLI or Builder composition acceptance"
+}

@@ -563,7 +563,15 @@ fn installed_cli(repo: &Path, scratch: &Path) -> ProofResult<()> {
             "root",
         ]),
     )?;
-    machine(&invalid_args, 2, "config.check")?;
+    expect_status(&invalid_args, 2, "conflicting root arguments")?;
+    let failure: Value = serde_json::from_slice(&invalid_args.stdout).map_err(|e| e.to_string())?;
+    if !invalid_args.stderr.is_empty()
+        || failure["ok"] != false
+        || failure["error"]["code"] != "UNI-CLI-ARGUMENT"
+        || failure["next_action"].as_str().is_none_or(str::is_empty)
+    {
+        return Err("installed CLI lost typed root-argument recovery or stream routing".into());
+    }
     Ok(())
 }
 

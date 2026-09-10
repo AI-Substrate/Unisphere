@@ -38,5 +38,5 @@ export async function runBoot(ctx) {
     }
   }
   return ctx.ok({ ready: true, scope: 'configuration-and-native-session-projections', checks: envelope, proofs,
-    limitations: ['Explicit Unix JSONL and native revision-snapshot projections only; no universal session reconstruction or private-store discovery.', 'Metadata-only output is not anonymity: source paths and observed identities remain metadata.', 'Revisions describe source observations, not persisted CLI resume, exactly-once ingestion or session finality.', 'No executed network-denial test; independent core/adapter source review is additionally required.'] });
+    limitations: ['Native proof includes built/installed query workflows over explicit synthetic Claude sources; it does not establish Git Notes query integration or all-client query fidelity.', 'No universal session reconstruction or private-store discovery; optional Pij lookup is separately covered by controlled process/CLI scenarios in the quality gate.', 'Metadata-only output is not anonymity: source paths and observed identities remain metadata.', 'Revisions describe source observations, not persisted CLI resume, exactly-once ingestion or session finality.', 'No executed network-denial test; independent core/adapter source review is additionally required.'] });
 }

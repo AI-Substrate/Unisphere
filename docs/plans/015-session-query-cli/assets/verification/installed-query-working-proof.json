@@ -1,0 +1,134 @@
+{
+  "recorded_at": "2026-09-10T09:58:17.717Z",
+  "scope": "Corrected working proof runner; built/installed actual non-Git query and native scenarios passed. Exact committed final boot follows.",
+  "runs": [
+    {
+      "receipt": {
+        "command": [
+          "cargo",
+          "run",
+          "--locked",
+          "-p",
+          "unisphere-testkit",
+          "--bin",
+          "unisphere-proof",
+          "--",
+          "installed-cli"
+        ],
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+        "before": {
+          "head": {
+            "args": [
+              "rev-parse",
+              "HEAD"
+            ],
+            "exit": 0,
+            "stdout": "07112e584689d997f456677bf664803412a9eba8\n",
+            "stderr": ""
+          },
+          "status": {
+            "args": [
+              "status",
+              "--porcelain"
+            ],
+            "exit": 0,
+            "stdout": " M crates/testkit/src/bin/unisphere-proof.rs\n?? docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/m1-directory-disproof.json\n?? docs/plans/015-session-query-cli/assets/verification/boot-07112e58.json\n",
+            "stderr": ""
+          }
+        },
+        "after": {
+          "head": {
+            "args": [
+              "rev-parse",
+              "HEAD"
+            ],
+            "exit": 0,
+            "stdout": "07112e584689d997f456677bf664803412a9eba8\n",
+            "stderr": ""
+          },
+          "status": {
+            "args": [
+              "status",
+              "--porcelain"
+            ],
+            "exit": 0,
+            "stdout": " M crates/testkit/src/bin/unisphere-proof.rs\n?? docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/m1-directory-disproof.json\n?? docs/plans/015-session-query-cli/assets/verification/boot-07112e58.json\n",
+            "stderr": ""
+          }
+        },
+        "started_at": "2026-09-10T09:56:11.294Z",
+        "finished_at": "2026-09-10T09:56:39.770Z",
+        "exit": 0,
+        "signal": null,
+        "stdout_path": ".harness/temp/pij-empirical-tiger/installed-cli-corrected.stdout",
+        "stderr_path": ".harness/temp/pij-empirical-tiger/installed-cli-corrected.stderr"
+      },
+      "stdout": "product proof installed-cli: passed (temporary isolated build and product runtime; configuration foundation)\n",
+      "stderr": "    Blocking waiting for file lock on package cache\n    Blocking waiting for file lock on package cache\n   Compiling unisphere-testkit v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/testkit)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.99s\n     Running `target/debug/unisphere-proof installed-cli`\n"
+    },
+    {
+      "receipt": {
+        "command": [
+          "cargo",
+          "run",
+          "--locked",
+          "-p",
+          "unisphere-testkit",
+          "--bin",
+          "unisphere-proof",
+          "--",
+          "native"
+        ],
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+        "before": {
+          "head": {
+            "args": [
+              "rev-parse",
+              "HEAD"
+            ],
+            "exit": 0,
+            "stdout": "07112e584689d997f456677bf664803412a9eba8\n",
+            "stderr": ""
+          },
+          "status": {
+            "args": [
+              "status",
+              "--porcelain"
+            ],
+            "exit": 0,
+            "stdout": " M crates/testkit/src/bin/unisphere-proof.rs\n?? docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/m1-directory-disproof.json\n?? docs/plans/015-session-query-cli/assets/verification/boot-07112e58.json\n",
+            "stderr": ""
+          }
+        },
+        "after": {
+          "head": {
+            "args": [
+              "rev-parse",
+              "HEAD"
+            ],
+            "exit": 0,
+            "stdout": "07112e584689d997f456677bf664803412a9eba8\n",
+            "stderr": ""
+          },
+          "status": {
+            "args": [
+              "status",
+              "--porcelain"
+            ],
+            "exit": 0,
+            "stdout": " M crates/testkit/src/bin/unisphere-proof.rs\n?? docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/composition-binding.json\n?? docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/m1-directory-disproof.json\n?? docs/plans/015-session-query-cli/assets/verification/boot-07112e58.json\n",
+            "stderr": ""
+          }
+        },
+        "started_at": "2026-09-10T09:56:11.298Z",
+        "finished_at": "2026-09-10T09:56:49.900Z",
+        "exit": 0,
+        "signal": null,
+        "stdout_path": ".harness/temp/pij-empirical-tiger/native-query-corrected.stdout",
+        "stderr_path": ".harness/temp/pij-empirical-tiger/native-query-corrected.stderr"
+      },
+      "stdout": "query proof: built/installed native source, lineage, time/text privacy, context, statistics, duration predicate, saved input and bundled docs/schema parity; Git Notes query not included\nnative proof: all registered dialects SDK/CLI/installed parity; changed/deleted/late sources; partial output without checkpoint\nproduct proof native: passed (temporary isolated build and product runtime; explicit native JSONL/revision snapshots plus installed query workflows; not Git Notes queries, lossless capture or final completeness)\n",
+      "stderr": "    Blocking waiting for file lock on package cache\n    Blocking waiting for file lock on package cache\n    Blocking waiting for file lock on artifact directory\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.00s\n     Running `target/debug/unisphere-proof native`\n"
+    }
+  ]
+}

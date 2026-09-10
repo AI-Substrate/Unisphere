@@ -63,6 +63,7 @@ A query scope is exactly one of:
 --repo PATH [--repo-scope exact|tree|worktrees]
 --source PATH_OR_SOURCE_ID
 --input FILE|-
+--pij ID
 ```
 
 Relative paths resolve lexically against the executable-supplied absolute working
@@ -74,6 +75,25 @@ parsing.
 explicit default. The flag is rejected with file/live scopes. Unisphere never
 sniffs stdin to guess framing. Saved files retain the loader's extension-based
 selection.
+
+`--pij ID` is optional and invokes one bounded `pij state ID --json` lookup through
+the installed Pij CLI. It accepts live or retired seats with a recorded native
+session, verifies that identity through registered local source decoding, and
+then uses the ordinary SDK query view. For example:
+
+```sh
+unisphere sessions show --pij pij-example-seat --json
+unisphere tools extract --pij pij-example-seat --tool-family shell --format jsonl
+```
+
+The example seat is a placeholder for your ID. Do not combine `--pij` with another
+scope or native session/harness selector. The resolver does not use Pij's cwd hint
+to relocate a query, fetch a remote transcript, start a daemon, or combine old
+seat incarnations. It emits resolution provenance on stderr using canonical
+hashed IDs; continuations use the pinned native source/session rather than
+resolving the alias again. Missing Pij, unknown seat, missing recorded native ID,
+unsupported protocol/harness and missing local transcript have distinct error
+codes and concrete recovery. Ordinary native/query selectors do not require Pij.
 
 Common query selectors include `--harness`, `--source-adapter`, `--session`,
 `--native-id`, `--model`, `--name`, `--branch`, `--since`, `--until`,

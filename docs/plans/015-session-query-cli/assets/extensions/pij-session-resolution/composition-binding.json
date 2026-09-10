@@ -1,0 +1,20 @@
+{
+  "recorded_at": "2026-09-10T09:56:47.386Z",
+  "authorization": "Jordan: yep brief it and get a coder on it.",
+  "original_guide_sha256": "5caed35ffa6f28570c16b6bc42baf47ce4403012069e429eeeaeb4e02f04c88f",
+  "guide_and_sealed_roster_unchanged": true,
+  "product_subject": "f818e2f5e6c4e5fb34ab8a00c34cc9928dc0d283",
+  "approved_extension": "ParsedCommand gains PijQuery(PijQueryCommand); PijTarget explicitly carries deferred SessionShow/SourceCheck. This new authorised selector was not in historical C20 enumeration, but preserves its parse-once typed-dispatch invariant.",
+  "core_contracts_unchanged": "No QueryRequest, QueryApi, QuerySource, QueryAdapter, QueryWriter or native source-identity schema changed for Pij.",
+  "nonblocking_decisions": {
+    "exit_status": "Pij lookup failures are operational exit1; stable UNI-PIJ-* codes distinguish unknown seat, missing native ID, unavailable lookup and missing transcript. No new numeric exit taxonomy.",
+    "executable_lookup": "Retain existing POSIX PATH resolution shared with trusted Git lookup, including caller-configured relative entries. Callers control PATH; no implicit installation or daemon lifecycle repair. No separate Pij lookup convention introduced.",
+    "cwd": "Returned cwd/machine stay untrusted hints and are not opened or displayed. Native metadata discovery then explicit SourceId scope makes Pij identity lookup independent of current repository association; M1 was disproved by actual runtime comparison."
+  },
+  "evidence": [
+    "cli-delivery.json",
+    "delivery.json",
+    "m1-directory-disproof.json",
+    "../../verification/pij-cli-working-checks.json"
+  ]
+}

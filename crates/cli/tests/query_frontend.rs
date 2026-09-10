@@ -1468,4 +1468,7 @@ fn existing_query_destination_fails_before_query_execution() {
         serde_json::from_slice::<Value>(&stderr).unwrap()["error"]["code"],
         "UNI-QUERY-OUTPUT"
     );
+    let error: Value = serde_json::from_slice(&stderr).unwrap();
+    assert_eq!(error["error"]["recovery"]["discard_partial"], false);
+    assert_eq!(error["error"]["retryable"], false);
 }

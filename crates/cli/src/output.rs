@@ -282,9 +282,6 @@ impl StagedOutput {
         if !metadata.is_dir() {
             return Err(io::ErrorKind::NotADirectory.into());
         }
-        if metadata.permissions().readonly() {
-            return Err(io::ErrorKind::PermissionDenied.into());
-        }
         Ok(())
     }
     pub(crate) fn create(target: &Path) -> io::Result<Self> {

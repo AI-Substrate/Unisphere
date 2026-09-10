@@ -202,7 +202,7 @@ impl<L: GitNoteLoader> GitSource<L> {
         // Never authorize a file destination if the admitted Git source's roots
         // cannot be established, even on partial or ID-based query paths.
         if self.output.is_some() && self.loader.is_none() {
-            return Err(invalid_output());
+            return Err(git_read_failure(&GitNotesError::GitUnavailable));
         }
         let loader = match self.loader.as_ref() {
             Some(loader) => loader,
@@ -227,7 +227,7 @@ impl<L: GitNoteLoader> GitSource<L> {
             }
         };
         let listing = match loader.list_notes(&requested, note_limits) {
-            Err(_) if self.output.is_some() => return Err(invalid_output()),
+            Err(error) if self.output.is_some() => return Err(git_read_failure(&error)),
             Ok(listing) => listing,
             Err(_)
                 if matches!(
@@ -251,7 +251,7 @@ impl<L: GitNoteLoader> GitSource<L> {
             let leaf = output.file_name().ok_or_else(invalid_output)?;
             let parent = std::fs::canonicalize(output.parent().ok_or_else(invalid_output)?)
                 .map_err(|_| invalid_output())?;
-            if !listing.allows_output_path(&parent.join(leaf)) {
+            if !listing.allows_query_output_path(&parent.join(leaf)) {
                 return Err(invalid_output());
             }
         }
@@ -471,6 +471,25 @@ fn invalid_output() -> QueryFailure {
         QueryFailureCode::InvalidArgument,
         RecoveryAction::ChooseNewOutput {
             discard_partial: false,
+        },
+    )
+}
+
+fn git_read_failure(error: &GitNotesError) -> QueryFailure {
+    let reason = match error {
+        GitNotesError::GitUnavailable | GitNotesError::Timeout => SourceProblem::GitUnavailable,
+        GitNotesError::UnsupportedFormat
+        | GitNotesError::UnsupportedPlatform
+        | GitNotesError::UnsupportedRepository
+        | GitNotesError::UnsupportedTarget => SourceProblem::UnsupportedDialect,
+        GitNotesError::UnsafeRepository | GitNotesError::ObjectRead => SourceProblem::Permissions,
+        _ => SourceProblem::InvalidData,
+    };
+    QueryFailure::new(
+        QueryFailureCode::UnreadableSource,
+        RecoveryAction::FixSource {
+            reason,
+            source: None,
         },
     )
 }

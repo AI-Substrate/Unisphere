@@ -135,11 +135,21 @@ impl GitNotesListing {
     /// Whether an absolute UTF-8 destination lies outside this source's roots.
     /// The shell must canonicalize its existing parent first; this does no I/O.
     pub fn allows_output_path(&self, path: &Path) -> bool {
+        self.outside_output_roots(path, true)
+    }
+
+    /// Query files may be created in the checkout, but never in either Git store.
+    /// The shell must canonicalize the existing parent before calling.
+    pub fn allows_query_output_path(&self, path: &Path) -> bool {
+        self.outside_output_roots(path, false)
+    }
+
+    fn outside_output_roots(&self, path: &Path, protect_worktree: bool) -> bool {
         absolute_utf8(path)
             && [
                 Some(self.repository_id.as_path()),
                 Some(self.git_dir.as_path()),
-                self.worktree_root.as_deref(),
+                self.worktree_root.as_deref().filter(|_| protect_worktree),
             ]
             .into_iter()
             .flatten()

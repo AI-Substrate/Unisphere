@@ -1,11 +1,11 @@
 {
-  "recorded_at": "2026-09-10T10:09:24.263Z",
-  "authorization": "Jordan: continue",
-  "source_sha": "1d24e0c4b2b624e128cd773a8d29d7382cb30a6c",
+  "recorded_at": "2026-09-10T22:03:12.314Z",
+  "authorization": "Jordan: PROCEED",
+  "source_sha": "63cc530528867338c3acce2ef1a172cdbf0e3fa3",
   "previous_pause_lifted": true,
   "cli_peer": "pij-unfortunate-rat",
   "cli_checkpoint": "10e72f900e744fe6c83ba7601ba0e3570c12a27a",
-  "status": "Non-Git CLI/native/query and separately authorised Pij extension verified and independently reviewed; Git Notes convergence awaits typed PROCEED",
+  "status": "History merge and Git/native/query implementation complete; guarded exact-source proof and final source review running",
   "review_dispositions": {
     "P1": "closed by independent exact-source review",
     "A5": "resolved by schema-binding-addendum; frozen guide unchanged",
@@ -38,14 +38,18 @@
   },
   "merge": {
     "source": "cf4931ed084d892050d43ed98cfcbb62b0c2fe7e",
-    "approved_by": "pij-female-varl",
-    "status": "Awaiting Jordan typed PROCEED required by Builder; no merge performed"
+    "history_merge": "ad6ae02339330e966cf85b0e2d73175bc78459ad",
+    "parents": [
+      "c87e00cf8b976cfacb01d8c88b0d6465011d5157",
+      "cf4931ed084d892050d43ed98cfcbb62b0c2fe7e"
+    ],
+    "approved_by": "Jordan PROCEED and Main convergence grant",
+    "status": "merged without rewriting histories; no push"
   },
   "current_followups": [
-    "Obtain typed PROCEED for normal history-preserving merge of accepted cf4931ed into plan015 only",
-    "Resolve shared manifests/exports/app/Git bridge conflicts without changing accepted Git Notes semantics",
-    "Execute fresh merged native/Git Notes/query/installed proof and independent review",
-    "Complete remaining criterion/assertion grading and canonical Builder gap closeout without fabricating receipts"
+    "Finish exact guarded Git/native/query/installed proof and review",
+    "Preserve final reviewed source/proof and grade matching Git acceptance claims",
+    "Keep formal Builder receipt gap and shipping authority separate"
   ],
   "proof": {
     "path": "assets/verification/boot-1d24e0c4.json",
@@ -59,7 +63,8 @@
       "collection",
       "native"
     ],
-    "native_mode_includes": "Built/installed query lineage, time/text privacy, context, stats, decimal duration, saved-input identity, docs/schema"
+    "native_mode_includes": "Built/installed query lineage, time/text privacy, context, stats, decimal duration, saved-input identity, docs/schema",
+    "status": "Historical nonGit source only; current merged proof pending"
   },
   "cli_follow_on": "073d321752221398a9097cca3c3a999a0f5a40f5",
   "review": "assets/reviews/composed-review-disposition.json"

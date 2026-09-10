@@ -57,7 +57,7 @@ pub fn run_query(
     {
         return emit_query_failure_inner(
             &command.request,
-            &output_failure(),
+            &output_destination_failure(),
             command.diagnostic_mode,
             stderr,
         );
@@ -95,7 +95,7 @@ pub fn run_query(
             Err(_) => {
                 return emit_query_failure_inner(
                     &command.request,
-                    &output_failure(),
+                    &output_destination_failure(),
                     command.diagnostic_mode,
                     stderr,
                 );
@@ -137,6 +137,15 @@ pub fn run_query(
     } else {
         0
     }
+}
+
+fn output_destination_failure() -> QueryFailure {
+    QueryFailure::new(
+        QueryFailureCode::OutputFailure,
+        RecoveryAction::ChooseNewOutput {
+            discard_partial: false,
+        },
+    )
 }
 
 fn output_failure() -> QueryFailure {

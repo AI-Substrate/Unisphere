@@ -302,7 +302,6 @@ fn query_output_cannot_create_files_in_git_source_roots() {
     ));
     let source_id = source["data"]["rows"][0]["id"].as_str().unwrap();
     for target in [
-        worktree.join("query-output"),
         repo.join(".git/refs/notes/query-output"),
         repo.join(".git/worktrees/linked/query-output"),
     ] {
@@ -325,7 +324,16 @@ fn query_output_cannot_create_files_in_git_source_roots() {
                 ];
                 args.extend(scope);
                 let output = run(root.path(), &worktree, &args, with_git);
-                assert!(!output.status.success());
+                assert_eq!(output.status.code(), Some(if with_git { 2 } else { 1 }));
+                let error: Value = serde_json::from_slice(&output.stderr).unwrap();
+                assert_eq!(
+                    error["error"]["code"],
+                    if with_git {
+                        "UNI-QUERY-ARGUMENT"
+                    } else {
+                        "UNI-QUERY-SOURCE-READ"
+                    }
+                );
                 assert!(output.stdout.is_empty());
                 assert!(
                     !target.exists(),
@@ -342,4 +350,56 @@ fn query_output_cannot_create_files_in_git_source_roots() {
             }
         }
     }
+    let destination = worktree.join("query-output.json");
+    let written = run(
+        root.path(),
+        &worktree,
+        &[
+            "sessions",
+            "list",
+            "--repo",
+            ".",
+            "--source-adapter",
+            "git-ai",
+            "--output",
+            destination.to_str().unwrap(),
+            "--json",
+        ],
+        true,
+    );
+    assert!(
+        written.status.success(),
+        "{}",
+        String::from_utf8_lossy(&written.stderr)
+    );
+    assert_eq!(
+        serde_json::from_slice::<Value>(&fs::read(&destination).unwrap()).unwrap()["data"]["emitted"],
+        1
+    );
+    let native_destination = worktree.join("native-output.json");
+    let without_git = run(
+        root.path(),
+        &worktree,
+        &[
+            "sources",
+            "list",
+            "--repo",
+            ".",
+            "--harness",
+            "claude-code",
+            "--output",
+            native_destination.to_str().unwrap(),
+            "--json",
+        ],
+        false,
+    );
+    assert!(
+        without_git.status.success(),
+        "{}",
+        String::from_utf8_lossy(&without_git.stderr)
+    );
+    assert_eq!(
+        serde_json::from_slice::<Value>(&fs::read(native_destination).unwrap()).unwrap()["ok"],
+        true
+    );
 }

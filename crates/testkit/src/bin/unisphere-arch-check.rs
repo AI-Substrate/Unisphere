@@ -41,7 +41,9 @@ fn allowed(package: &str, dependency: &str, kind: &str) -> bool {
                 | "unisphere-loader-query"
                 | "unisphere-output-query"
         ),
-        ("unisphere-loader-jsonl", "normal") => matches!(dependency, "unisphere-core" | "libc" | "sha2"),
+        ("unisphere-loader-jsonl", "normal") => {
+            matches!(dependency, "unisphere-core" | "libc" | "sha2")
+        }
         ("unisphere-loader-snapshot", "normal") => matches!(
             dependency,
             "unisphere-core" | "libc" | "serde" | "serde_json" | "sha2" | "rusqlite"

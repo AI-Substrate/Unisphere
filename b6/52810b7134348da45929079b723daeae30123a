@@ -1,0 +1,64 @@
+docs/plans/015-session-query-cli/assets/backpressure.dd.json
+  h_9e71e8b09f7cf2 246
+docs/plans/015-session-query-cli/assets/backpressure.dd.md
+  h_9e71e8b09f7cf2 43
+docs/plans/015-session-query-cli/assets/baseline-followups.json
+  h_9e71e8b09f7cf2 1-29
+docs/plans/015-session-query-cli/assets/impl-guide.dd.json
+  h_9e71e8b09f7cf2 1075,1077,1085
+docs/plans/015-session-query-cli/assets/impl-guide.dd.md
+  h_9e71e8b09f7cf2 113-114
+docs/plans/015-session-query-cli/assets/pm-appointment.json
+  h_9e71e8b09f7cf2 10
+docs/plans/015-session-query-cli/assets/pm-handoff.md
+  h_9e71e8b09f7cf2 5,11,23-24
+docs/plans/015-session-query-cli/assets/reviews/guide-r3-packet.md
+  h_9e71e8b09f7cf2 1-19
+docs/plans/015-session-query-cli/assets/reviews/guide-r3-pij-armed-cow-receipt.json
+  h_9e71e8b09f7cf2 1-97
+docs/plans/015-session-query-cli/assets/reviews/guide-r3-pij-armed-cow.md
+  h_9e71e8b09f7cf2 1-96
+docs/plans/015-session-query-cli/assets/reviews/guide-r3-scope-addendum-receipt.json
+  h_9e71e8b09f7cf2 1-86
+docs/plans/015-session-query-cli/assets/reviews/guide-r3-scope-addendum.md
+  h_9e71e8b09f7cf2 1-48
+docs/plans/015-session-query-cli/assets/tasks/phase-1/context-brief.md
+  h_9e71e8b09f7cf2 1-22
+docs/plans/015-session-query-cli/assets/tasks/phase-1/tasks.dd.json
+  h_9e71e8b09f7cf2 11-12,17,21-170,174-437,461-466,516
+docs/plans/015-session-query-cli/assets/tasks/phase-1/tasks.dd.md
+  h_9e71e8b09f7cf2 15,17,30,36-45,51-130,168,173-175
+docs/plans/015-session-query-cli/assets/tasks/phase-2/context-brief.md
+  h_9e71e8b09f7cf2 1-22
+docs/plans/015-session-query-cli/assets/tasks/phase-2/tasks.dd.json
+  h_9e71e8b09f7cf2 11-12,17,21-76,80-183,207-212,262
+docs/plans/015-session-query-cli/assets/tasks/phase-2/tasks.dd.md
+  h_9e71e8b09f7cf2 15,17,30,36-40,46-75,113,118-120
+docs/plans/015-session-query-cli/assets/tasks/phase-3/context-brief.md
+  h_9e71e8b09f7cf2 1-22
+docs/plans/015-session-query-cli/assets/tasks/phase-3/tasks.dd.json
+  h_9e71e8b09f7cf2 11-12,17,21-75,79-246,270-275,325
+docs/plans/015-session-query-cli/assets/tasks/phase-3/tasks.dd.md
+  h_9e71e8b09f7cf2 15,17,30,36-39,45-80,118,123-125
+docs/plans/015-session-query-cli/assets/team/operator-role-amendment.json
+  h_9e71e8b09f7cf2 1-27
+docs/plans/015-session-query-cli/assets/team/review-decomposition-approved.dd.json
+  h_9e71e8b09f7cf2 1-91
+docs/plans/015-session-query-cli/assets/team/review-decomposition-approved.dd.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/015-session-query-cli/assets/team/review-decomposition-r3.dd.json
+  h_9e71e8b09f7cf2 1-96
+docs/plans/015-session-query-cli/assets/team/review-decomposition-r3.dd.md
+  h_9e71e8b09f7cf2 1-24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "b652810b7134348da45929079b723daeae30123a",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+docs/plans/015-session-query-cli/assets/impl-guide.dd.json
+  h_9e71e8b09f7cf2 41
+docs/plans/015-session-query-cli/assets/impl-guide.dd.md
+  h_9e71e8b09f7cf2 25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

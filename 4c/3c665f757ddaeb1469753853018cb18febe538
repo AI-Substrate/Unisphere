@@ -1,0 +1,72 @@
+Cargo.toml
+  h_9e71e8b09f7cf2 27-28
+crates/core/src/query/error.rs
+  h_9e71e8b09f7cf2 139,192
+crates/core/src/query/model.rs
+  h_9e71e8b09f7cf2 146-148,153,197-212,214,224,236-237,240-251,254,274-283,331-340,345,384,563,628,657,1006
+crates/core/src/query/schema.rs
+  h_9e71e8b09f7cf2 28,247-250,282-285,305-308,344-347,405-417,450-451,456-457,463,469,475,481,488-489,494-495,501,507,513,519,526-527,532-533,539,545,551,557,564-565,570-571,577,583,601,658,692
+crates/core/tests/query_contract.rs
+  h_9e71e8b09f7cf2 50-81,234,820-1243
+crates/testkit/fixtures/architecture/allowed.json
+  h_9e71e8b09f7cf2 55-118,124-127
+crates/testkit/src/bin/unisphere-arch-check.rs
+  h_9e71e8b09f7cf2 41-42,49-60,97-99,144-145,367-393
+crates/testkit/src/query.rs
+  h_9e71e8b09f7cf2 1,4-10,96-312
+docs/plans/015-session-query-cli/assets/backpressure.dd.json
+  h_9e71e8b09f7cf2 46,246
+docs/plans/015-session-query-cli/assets/backpressure.dd.md
+  h_9e71e8b09f7cf2 25,43
+docs/plans/015-session-query-cli/assets/impl-guide.dd.json
+  h_9e71e8b09f7cf2 9,11-12,30,41,351,633,1048-1049,1092,1099-1102,1203,1295
+docs/plans/015-session-query-cli/assets/impl-guide.dd.md
+  h_9e71e8b09f7cf2 2,12,14-15,25,73,80,93,122,129,135
+docs/plans/015-session-query-cli/assets/pm-handoff.md
+  h_9e71e8b09f7cf2 5,7
+docs/plans/015-session-query-cli/assets/query-contract.md
+  h_9e71e8b09f7cf2 20,84-85
+docs/plans/015-session-query-cli/assets/reviews/baseline-r1-pij-armed-cow-receipt.json
+  h_9e71e8b09f7cf2 1-85
+docs/plans/015-session-query-cli/assets/reviews/baseline-r1-pij-armed-cow.json
+  h_9e71e8b09f7cf2 1-168
+docs/plans/015-session-query-cli/assets/tasks/phase-1/tasks.dd.json
+  h_9e71e8b09f7cf2 435-440
+docs/plans/015-session-query-cli/assets/tasks/phase-1/tasks.dd.md
+  h_9e71e8b09f7cf2 131
+docs/plans/015-session-query-cli/assets/team/baseline-assistants.json
+  h_9e71e8b09f7cf2 5,19,35-37,48,65-67,82,84-92
+docs/plans/015-session-query-cli/assets/team/baseline-r1-contracts-packet.json
+  h_9e71e8b09f7cf2 1-40
+docs/plans/015-session-query-cli/assets/team/baseline-r1-decisions.json
+  h_9e71e8b09f7cf2 1-36
+docs/plans/015-session-query-cli/assets/team/baseline-r1-proof-packet.json
+  h_9e71e8b09f7cf2 1-41
+docs/plans/015-session-query-cli/assets/team/baseline-review-packet.json
+  h_9e71e8b09f7cf2 1-67
+docs/plans/015-session-query-cli/assets/verification/baseline-proof-819fc30a.json
+  h_9e71e8b09f7cf2 1-40
+docs/plans/015-session-query-cli/assets/verification/baseline-r1-focused.json
+  h_9e71e8b09f7cf2 1-21
+docs/plans/015-session-query-cli/assets/verification/c25-independent-derivation.json
+  h_9e71e8b09f7cf2 2-28,30-35,37-40,42-75
+docs/plans/015-session-query-cli/assets/verification/c25-independent-derivation.py
+  h_9e71e8b09f7cf2 1-91
+docs/plans/015-session-query-cli/assets/verification/c25-oracle-reproduction.json
+  h_9e71e8b09f7cf2 1-33
+docs/plans/015-session-query-cli/plan.dd.json
+  h_9e71e8b09f7cf2 287
+docs/plans/015-session-query-cli/plan.dd.md
+  h_9e71e8b09f7cf2 181
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "4c3c665f757ddaeb1469753853018cb18febe538",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+crates/testkit/src/bin/unisphere-proof.rs
+  h_9e71e8b09f7cf2 320-333
+docs/plans/015-session-query-cli/assets/reviews/composed-validation-contract.json
+  h_9e71e8b09f7cf2 1-12
+docs/plans/015-session-query-cli/assets/verification/boot-f818e2f5.json
+  h_9e71e8b09f7cf2 1-58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "d42051770f1b99f23a9d040b2fcbf58eb820ed31",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

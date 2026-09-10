@@ -197,15 +197,19 @@ fn text_and_markdown_escape_controls_and_hostile_markup_without_guidance() {
 #[test]
 fn human_formats_escape_direction_controls_without_stripping_text() {
     let controls = [
-        '\u{061c}', '\u{200e}', '\u{200f}', '\u{202a}', '\u{202b}', '\u{202c}',
-        '\u{202d}', '\u{202e}', '\u{2066}', '\u{2067}', '\u{2068}', '\u{2069}',
+        '\u{061c}', '\u{200e}', '\u{200f}', '\u{202a}', '\u{202b}', '\u{202c}', '\u{202d}',
+        '\u{202e}', '\u{2066}', '\u{2067}', '\u{2068}', '\u{2069}',
     ];
     for control in controls {
         let row = response(BTreeMap::from([(
             FieldId::Text,
             FieldValue::String(format!("before{control}after")),
         )]));
-        for format in [OutputFormat::Text, OutputFormat::Markdown, OutputFormat::Table] {
+        for format in [
+            OutputFormat::Text,
+            OutputFormat::Markdown,
+            OutputFormat::Table,
+        ] {
             let output = String::from_utf8(write(&row, &options(format))).unwrap();
             assert!(!output.contains(control));
             assert!(output.contains(&format!("\\u{:04x}", u32::from(control))));
@@ -213,7 +217,10 @@ fn human_formats_escape_direction_controls_without_stripping_text() {
         }
         let machine = write(&row, &options(OutputFormat::Json));
         let parsed: Value = serde_json::from_slice(&machine).unwrap();
-        assert_eq!(parsed["data"]["rows"][0]["fields"]["text"], format!("before{control}after"));
+        assert_eq!(
+            parsed["data"]["rows"][0]["fields"]["text"],
+            format!("before{control}after")
+        );
     }
 }
 

@@ -8,10 +8,10 @@ use globset::{GlobBuilder, GlobMatcher};
 use regex::{Regex, RegexBuilder};
 use unisphere_core::query::{
     ActionReason, Completeness, ContentAccess, CursorBinding, Dataset, Digest, EntityId,
-    EntityKind, FieldId, FieldValue, Filter, LimitKind, Metric, Operation, Outcome, Predicate, ProjectedRow,
-    QueryAction, QueryDescription, QueryFailure, QueryFailureCode, QueryRequest, QueryResponse,
-    QueryScope, RecoveryAction, ResultUniverse, SortDirection, SortKey, SourceProblem,
-    SourceReadStatus, SourceSelection, SourceSelector, UniverseBasis,
+    EntityKind, FieldId, FieldValue, Filter, LimitKind, Metric, Operation, Outcome, Predicate,
+    ProjectedRow, QueryAction, QueryDescription, QueryFailure, QueryFailureCode, QueryRequest,
+    QueryResponse, QueryScope, RecoveryAction, ResultUniverse, SortDirection, SortKey,
+    SourceProblem, SourceReadStatus, SourceSelection, SourceSelector, UniverseBasis,
 };
 
 use super::{
@@ -993,10 +993,10 @@ fn execute_stats(
     for row in rows {
         let key = group_by
             .iter()
-            // A NUL-prefixed absence marker cannot collide with encoded JSON.
+            // FieldValue is tagged: a present null encodes as {"kind":"null"}.
             .map(|field| {
                 row.field(*field)
-                    .map_or_else(|| b"\0absent".to_vec(), |value| canonical_value(&value))
+                    .map_or_else(|| b"null".to_vec(), |value| canonical_value(&value))
             })
             .collect::<Vec<_>>();
         grouped_bytes = key

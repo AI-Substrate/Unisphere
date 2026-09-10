@@ -198,6 +198,8 @@ mod unix {
                 return Err(error(PipelineErrorKind::Unsupported, Some(offset)));
             }
         }
+        // NOFOLLOW closes the check/open symlink race. NONBLOCK prevents a FIFO or
+        // other special leaf from blocking before its descriptor is inspected.
         let mut file = OpenOptions::new()
             .read(true)
             .custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK)
@@ -237,6 +239,7 @@ mod unix {
             }
         }
         file.seek(SeekFrom::Start(offset)).map_err(read_error)?;
+        // Take freezes the observed boundary: this call never chases an appender.
         let mut reader = BufReader::with_capacity(
             limits.max_record_bytes.min(8192),
             file.take(observed_end - offset),
@@ -272,6 +275,7 @@ mod unix {
                         digest.update(&bytes);
                     }
                     if !bytes.iter().all(u8::is_ascii_whitespace) {
+                        // Only LF is removed; native CR remains.
                         bytes.pop();
                         records.push(unisphere_core::NativeRecord {
                             offset: next,
@@ -299,6 +303,8 @@ mod unix {
                 }
             }
         }
+        // Rotation/removal and observable truncation invalidate the entire call,
+        // not merely its checkpoint. Same-inode rewriting/regrowth is unsupported.
         verify_source(
             reader.get_ref().get_ref(),
             session,

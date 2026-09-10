@@ -1,0 +1,78 @@
+{
+  "base_sha": "5ee631b46142b88dea2a2742c9cb8087642c4d25",
+  "scope": "Regression-only test overlays on the earlier source; P1 clean-source proof completed before these overlays",
+  "runs": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "unisphere-sdk",
+        "--test",
+        "query",
+        "saved_statistics_keep_absent_null_and_literal_null_groups_distinct"
+      ],
+      "stdout": "",
+      "stderr": "   Compiling libc v0.2.189\n   Compiling version_check v0.9.5\n   Compiling proc-macro2 v1.0.107\n   Compiling memchr v2.8.3\n   Compiling quote v1.0.47\n   Compiling unicode-ident v1.0.24\n   Compiling typenum v1.20.1\n   Compiling serde_core v1.0.229\n   Compiling cfg-if v1.0.4\n   Compiling zmij v1.0.23\n   Compiling serde v1.0.229\n   Compiling serde_json v1.0.151\n   Compiling regex-syntax v0.8.11\n   Compiling itoa v1.0.18\n   Compiling rustix v1.1.4\n   Compiling num-conv v0.2.2\n   Compiling powerfmt v0.2.0\n   Compiling time-core v0.1.9\n   Compiling getrandom v0.4.3\n   Compiling deranged v0.5.8\n   Compiling generic-array v0.14.7\n   Compiling aho-corasick v1.1.5\n   Compiling bitflags v2.13.1\n   Compiling bstr v1.13.1\n   Compiling fastrand v2.5.0\n   Compiling once_cell v1.21.4\n   Compiling log v0.4.34\n   Compiling time v0.3.55\n   Compiling regex-automata v0.4.18\n   Compiling syn v3.0.5\n   Compiling cpufeatures v0.2.17\n   Compiling errno v0.3.14\n   Compiling block-buffer v0.10.4\n   Compiling crypto-common v0.1.7\n   Compiling globset v0.4.20\n   Compiling regex v1.13.1\n   Compiling digest v0.10.7\n   Compiling sha2 v0.10.9\n   Compiling serde_derive v1.0.229\n   Compiling tempfile v3.27.0\n   Compiling unisphere-core v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/p1-exact-source/source/crates/core)\n   Compiling unisphere-sdk v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/p1-exact-source/source/crates/sdk)\n   Compiling unisphere-testkit v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/p1-exact-source/source/crates/testkit)\nerror[E0277]: `unisphere_sdk::query::FieldValue` doesn't implement `Debug`\n    --> crates/sdk/tests/query.rs:1045:9\n     |\n1045 |         assert_eq!(group.field(FieldId::Count), Some(&FieldValue::Unsigned(1)));\n     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `Debug` is not implemented for `unisphere_sdk::query::FieldValue`\n     |\nhelp: the trait `Debug` is implemented for `Option<T>`\n    --> /opt/homebrew/Cellar/rust/1.95.0/lib/rustlib/src/rust/library/core/src/option.rs:594:16\n     |\n 594 | #[derive(Copy, Debug, Hash)]\n     |                ^^^^^\n\nFor more information about this error, try `rustc --explain E0277`.\nerror: could not compile `unisphere-sdk` (test \"query\") due to 2 previous errors\n",
+      "exit": 101,
+      "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/p1-exact-source/source",
+      "test_overlay": "crates/sdk/tests/query.rs"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "unisphere-output-query",
+        "--test",
+        "query_writer",
+        "human_formats_escape_direction_controls_without_stripping_text"
+      ],
+      "stdout": "\nrunning 1 test\ntest human_formats_escape_direction_controls_without_stripping_text ... FAILED\n\nfailures:\n\n---- human_formats_escape_direction_controls_without_stripping_text stdout ----\n\nthread 'human_formats_escape_direction_controls_without_stripping_text' (1419174141) panicked at crates/output-query/tests/query_writer.rs:210:13:\nassertion failed: !output.contains(control)\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n\n\nfailures:\n    human_formats_escape_direction_controls_without_stripping_text\n\ntest result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 0.00s\n\n",
+      "stderr": "   Compiling libc v0.2.189\n   Compiling cpufeatures v0.2.17\n   Compiling sha2 v0.10.9\n   Compiling unisphere-core v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/p1-exact-source/source/crates/core)\n   Compiling unisphere-output-query v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/p1-exact-source/source/crates/output-query)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.31s\n     Running tests/query_writer.rs (target/debug/deps/query_writer-65c78cfefaeb30c8)\nerror: test failed, to rerun pass `-p unisphere-output-query --test query_writer`\n",
+      "exit": 101,
+      "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/p1-exact-source/source",
+      "test_overlay": "crates/output-query/tests/query_writer.rs"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "unisphere-sdk",
+        "--test",
+        "query",
+        "saved_statistics_keep_absent_null_and_literal_null_groups_distinct"
+      ],
+      "stdout": "\nrunning 1 test\ntest saved_statistics_keep_absent_null_and_literal_null_groups_distinct ... FAILED\n\nfailures:\n\n---- saved_statistics_keep_absent_null_and_literal_null_groups_distinct stdout ----\n\nthread 'saved_statistics_keep_absent_null_and_literal_null_groups_distinct' (1419201063) panicked at crates/sdk/tests/query.rs:1038:43:\ncomplete saved statistics: QueryFailure { code: UnsupportedSchema, location: QueryErrorLocation { source: None, entity: None, field: None, offset: None }, recovery: UseCompleteInput, retryable: false }\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n\n\nfailures:\n    saved_statistics_keep_absent_null_and_literal_null_groups_distinct\n\ntest result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 17 filtered out; finished in 0.00s\n\n",
+      "stderr": "   Compiling unisphere-sdk v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/p1-exact-source/source/crates/sdk)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.31s\n     Running tests/query.rs (target/debug/deps/query-aac6d8dc711ae5da)\nerror: test failed, to rerun pass `-p unisphere-sdk --test query`\n",
+      "exit": 101,
+      "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/p1-exact-source/source",
+      "note": "Corrected the regression assertion to avoid Debug on private payload values; prior compilation failure is not reproduction evidence"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "unisphere-sdk",
+        "--test",
+        "query",
+        "saved_statistics_keep_absent_null_and_literal_null_groups_distinct"
+      ],
+      "stdout": "\nrunning 1 test\ntest saved_statistics_keep_absent_null_and_literal_null_groups_distinct ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 17 filtered out; finished in 0.01s\n\n",
+      "stderr": "   Compiling unisphere-sdk v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/p1-exact-source/source/crates/sdk)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.16s\n     Running tests/query.rs (target/debug/deps/query-aac6d8dc711ae5da)\n",
+      "exit": 0,
+      "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/p1-exact-source/source",
+      "note": "Complete saved envelope; genuine grouping regression expected at group count"
+    }
+  ],
+  "conclusions": {
+    "P4": "Genuine pre-fix failure; corrected human output test passes",
+    "P5": "Original source already separates absence, present null and literal null. FieldValue uses tagged serialization; finding premise was false. Removed speculative sentinel change to retain existing group IDs. Earlier Debug/envelope failures were fixture construction failures, not product reproductions."
+  }
+}

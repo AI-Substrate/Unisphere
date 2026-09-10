@@ -1002,6 +1002,88 @@ fn tool_statistics_use_measured_values_and_named_terminal_denominator() {
 }
 
 #[test]
+fn saved_statistics_keep_absent_null_and_literal_null_groups_distinct() {
+    let mut native = native_view();
+    native
+        .observations
+        .extend(tool_observations(&native, Outcome::Succeeded));
+    let live = QueryService::new(FakeQuerySource::new(Ok(QueryInput::Native(native))));
+    let response = live
+        .execute(&request(Dataset::Tools, Operation::List))
+        .unwrap();
+    let mut data = serde_json::to_value(response).unwrap();
+    let original = data["rows"][0].clone();
+    let rows = [
+        ("absent", None),
+        ("null", Some(serde_json::Value::Null)),
+        ("literal", Some(serde_json::json!("null"))),
+    ]
+    .into_iter()
+    .map(|(name, value)| {
+        let mut row = original.clone();
+        row["id"] =
+            serde_json::to_value(EntityId::derive(EntityKind::Tool, [name.as_bytes()])).unwrap();
+        let fields = row["fields"].as_object_mut().unwrap();
+        fields.remove("tool_family");
+        if let Some(value) = value {
+            fields.insert("tool_family".into(), value);
+        }
+        row
+    })
+    .collect::<Vec<_>>();
+    data["rows"] = serde_json::json!(rows);
+    data["matched"] = serde_json::json!(3);
+    data["emitted"] = serde_json::json!(3);
+    let bytes = serde_json::to_vec(&serde_json::json!({
+        "ok": true, "command": "tools list", "v": 1, "data": data,
+        "next_action": {"summary": "Inspect a saved tool"}
+    }))
+    .unwrap()
+    .into();
+    let service = QueryService::new(FakeQuerySource::new(Ok(QueryInput::Saved {
+        bytes,
+        format: SavedFormat::QueryJsonV1,
+    })));
+    let mut query = request(
+        Dataset::Tools,
+        Operation::Stats {
+            group_by: vec![FieldId::ToolFamily],
+            metrics: vec![Metric::Count],
+        },
+    );
+    query.scope = QueryScope::Offline {
+        input: OfflineRef::Stdin,
+    };
+    let grouped = service.execute(&query).expect("complete saved statistics");
+    assert_eq!(grouped.matched, 3);
+    assert_eq!(grouped.rows.len(), 3);
+    assert_eq!(
+        grouped
+            .rows
+            .iter()
+            .map(ProjectedRow::id)
+            .collect::<BTreeSet<_>>()
+            .len(),
+        3
+    );
+    for expected in [
+        None,
+        Some(FieldValue::Null),
+        Some(FieldValue::String("null".into())),
+    ] {
+        let group = grouped
+            .rows
+            .iter()
+            .find(|row| row.field(FieldId::ToolFamily) == expected.as_ref())
+            .expect("each availability state retains its own group");
+        assert!(matches!(
+            group.field(FieldId::Count),
+            Some(FieldValue::Unsigned(1))
+        ));
+    }
+}
+
+#[test]
 fn c25_view_digest_excludes_response_and_request_options_but_binds_view_inputs() {
     let native = native_view();
     let scope = request(Dataset::Sessions, Operation::List).scope;

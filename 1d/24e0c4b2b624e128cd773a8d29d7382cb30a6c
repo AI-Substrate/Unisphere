@@ -1,0 +1,28 @@
+.harness/engineering-harness.md
+  h_9e71e8b09f7cf2 7,15,23,30
+.harness/extensions/boot/boot.mjs
+  h_9e71e8b09f7cf2 41
+crates/testkit/src/bin/unisphere-proof.rs
+  h_9e71e8b09f7cf2 566-574
+docs/cli.md
+  h_9e71e8b09f7cf2 66,79-97
+docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/composition-binding.json
+  h_9e71e8b09f7cf2 1-20
+docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/m1-directory-disproof.json
+  h_9e71e8b09f7cf2 1-37
+docs/plans/015-session-query-cli/assets/verification/boot-07112e58.json
+  h_9e71e8b09f7cf2 1-59
+docs/plans/015-session-query-cli/assets/verification/installed-query-working-proof.json
+  h_9e71e8b09f7cf2 1-134
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "1d24e0c4b2b624e128cd773a8d29d7382cb30a6c",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

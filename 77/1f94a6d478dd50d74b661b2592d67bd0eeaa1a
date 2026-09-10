@@ -1,0 +1,24 @@
+crates/loader-jsonl/src/lib.rs
+  h_9e71e8b09f7cf2 201-202,242,278,306-307
+crates/output-query/tests/query_writer.rs
+  h_9e71e8b09f7cf2 200-201,208-212,220-223
+crates/sdk/src/query/engine.rs
+  h_9e71e8b09f7cf2 11-14,996,999
+crates/sdk/tests/query.rs
+  h_9e71e8b09f7cf2 1004-1085
+docs/plans/015-session-query-cli/assets/verification/p4-p5-regressions-before.json
+  h_9e71e8b09f7cf2 1-78
+docs/plans/015-session-query-cli/assets/verification/review-fixes-working.json
+  h_9e71e8b09f7cf2 1-36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "771f94a6d478dd50d74b661b2592d67bd0eeaa1a",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

@@ -1,0 +1,38 @@
+crates/app/src/pij.rs
+  h_9e71e8b09f7cf2 76,78-79,81-82
+crates/app/tests/pij_query.rs
+  h_9e71e8b09f7cf2 32,82,84,103
+crates/app/tests/query_workflows.rs
+  h_9e71e8b09f7cf2 1-49
+crates/loader-query/src/lib.rs
+  h_9e71e8b09f7cf2 4-7
+crates/loader-query/src/pij.rs
+  h_9e71e8b09f7cf2 51-52,121-122,231-233
+crates/loader-query/tests/pij.rs
+  h_9e71e8b09f7cf2 47,59,80,90,100,105,120-123,131,154,161,244-254
+crates/testkit/src/bin/proof/native.rs
+  h_9e71e8b09f7cf2 563
+crates/testkit/src/bin/proof/query.rs
+  h_9e71e8b09f7cf2 1-72
+crates/testkit/src/bin/unisphere-proof.rs
+  h_9e71e8b09f7cf2 17-18
+docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/review-disposition.json
+  h_9e71e8b09f7cf2 1-8
+docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/review-pij-armed-cow.json
+  h_9e71e8b09f7cf2 1-154
+docs/plans/015-session-query-cli/assets/team/continuation-status.json
+  h_9e71e8b09f7cf2 2,4,7-8,13-17,29-49
+docs/plans/015-session-query-cli/assets/verification/query-file-output-working.json
+  h_9e71e8b09f7cf2 1-50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "c7908e943439a6f860f403ce87b3be70d2d04da9",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

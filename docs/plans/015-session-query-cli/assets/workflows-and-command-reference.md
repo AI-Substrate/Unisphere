@@ -116,7 +116,7 @@ unisphere adapters list --json
 **Why:** Diagnose where repository work can be read and attributed.
 
 ```sh
-unisphere sources list --repo . --format json
+unisphere sources list --repo . --include-content --format json
 ```
 
 **Expected result projection (synthetic):**
@@ -578,7 +578,7 @@ unisphere messages extract --repo . --role user --since 2026-09-01 --until 2026-
 **Why:** Find operational failures without reading whole conversations.
 
 ```sh
-unisphere tools list --repo . --status failed --format json
+unisphere tools list --repo . --status failed --include-content --format json
 ```
 
 **Expected result projection (synthetic):**

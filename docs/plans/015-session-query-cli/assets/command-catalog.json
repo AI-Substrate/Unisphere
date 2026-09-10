@@ -35,6 +35,7 @@
         "list",
         "--repo",
         ".",
+        "--include-content",
         "--format",
         "json"
       ],
@@ -509,6 +510,7 @@
         ".",
         "--status",
         "failed",
+        "--include-content",
         "--format",
         "json"
       ],

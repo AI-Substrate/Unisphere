@@ -48,122 +48,146 @@
         {
           "id": "ac-0001",
           "claim": "Users discover repository-associated supported sources and sessions without knowing native storage layouts; exact/tree/worktree scope is component-safe and unreadable, absent, unsupported and unassociated sources are distinguishable.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0001"
         },
         {
           "id": "ac-0002",
           "claim": "Source representations are distinct from logical sessions; scoped identities, proven copies, subagents, forks and unresolved conflicts produce consistent list/tree/extract/statistics behavior without synthesising absent native conversation IDs.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0002"
         },
         {
           "id": "ac-0003",
           "claim": "Sessions, turns, messages, tools and events share a documented versioned schema, typed availability and traceable source revisions/watermarks; source-only fragments are not invented higher-level entities.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0003"
         },
         {
           "id": "ac-0004",
           "claim": "The full command catalogue has implemented list/show/tree/stats/extract behavior where declared, and existing config/catalog/native OTLP export invocations continue to work without a second application registry.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0004"
         },
         {
           "id": "ac-0005",
           "claim": "Identity, harness/adapter/model/name/role/text filters have consistent AND/OR/case/regex semantics, reject unsupported fields and preserve explicit content-inspection versus content-output permissions.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0005"
         },
         {
           "id": "ac-0006",
           "claim": "Time filtering uses documented fields, inclusive since/exclusive until, UTC date boundaries and explicit undated handling; session creation, first observed event, tool time and file modification are never conflated.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0006"
         },
         {
           "id": "ac-0007",
           "claim": "Sorting and pagination are deterministic with ID tie-breaks and unknowns last; continuation is bound to the query/source view and rejects stale evidence rather than silently skipping or duplicating records.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0007"
         },
         {
           "id": "ac-0008",
           "claim": "Turn reconstruction follows versioned source-supported boundaries, preserving branches/compaction and stable ordinals; tool-result or injected-context records do not become extra initiating user requests.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0008"
         },
         {
           "id": "ac-0009",
           "claim": "Tool invocations pair start/result/progress by scoped native evidence, preserve original names and normalised families, and expose retries, incomplete/unknown outcomes and duration basis without adjacency or text guessing.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0009"
         },
         {
           "id": "ac-000a",
           "claim": "Statistics use the same logical matched records as extraction; missing durations are excluded from measured averages but counted explicitly, percentile method/units/denominators are named, and cumulative/replayed usage is not double-counted.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000a"
         },
         {
           "id": "ac-000b",
           "claim": "Context extraction expands only within the selected session/branch after matching, merges overlapping windows and distinguishes matched from context rows including dates outside the original filter.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000b"
         },
         {
           "id": "ac-000c",
           "claim": "Default outputs and diagnostics omit names/titles, messages, command arguments/results, reasoning and free-form identity content; explicit content opt-in is enforced consistently across formats, errors, examples and any temporary state.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000c"
         },
         {
           "id": "ac-000d",
           "claim": "JSON, JSONL, CSV, text and Markdown expose documented shapes where supported; JSONL remains clean row data, CSV has explicit spreadsheet-safety/null rules, and query output is never mislabelled as OTLP.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000d"
         },
         {
           "id": "ac-000e",
           "claim": "Output files are create-new and source stores are untouched; partial read/write results and bounded-resource refusals cannot be reported as complete successful output or accepted checkpoints.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000e"
         },
         {
           "id": "ac-000f",
           "claim": "Offline query input never triggers hidden live enrichment; missing required projected fields, malformed envelopes and unsupported versions fail with actionable availability/schema errors.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000f"
         },
         {
           "id": "ac-0010",
           "claim": "External Rust SDK consumers obtain the same selection/projection/error semantics as the CLI through injected ports; there is no mandatory CLI subprocess, daemon, hosted store, model service or persistent index.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0010"
         },
         {
           "id": "ac-0011",
           "claim": "The installed CLI provides offline docs list/get and discoverable schema output before source/config/Git/Git-AI access; unknown topics/fields name valid alternatives and recovery actions.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0011"
         },
         {
           "id": "ac-0012",
           "claim": "Every documented command includes useful use cases, its motivating question, prerequisites, example, expected interpretation, limits and recovery; recipe-led guides demonstrate all seven end-to-end workflows against shared synthetic fixtures and distinguish evidence supplied by Unisphere from human or downstream interpretation.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0012"
         },
         {
           "id": "ac-0013",
           "claim": "Documentation ships inside the package/binary and normal CI checks full nested command/option examples, installed offline behavior, SDK examples, topic links and privacy/output semantics rather than only pinning prose.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0013"
         },
         {
           "id": "ac-0014",
           "claim": "Plan014 Git-ai notes integrate through their reviewed registered contract without blocking unrelated CLI lanes or fabricating transcript/timing fields; retired harness telemetry remains unsupported with no compatibility bridge.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0014"
         },
         {
           "id": "ac-0015",
           "claim": "The future PM supplies reviewed shared contracts, explicit ownership/fakes, bounded proof and genuinely independent work packets before dispatch; no coder fleet or implementation approval is inferred from this product plan.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0015"
         },
         {
           "id": "ac-0016",
           "claim": "Public-release documentation/examples use synthetic or authorised content, retain required provenance/licenses, and make no universal completeness, secret-free, cost-estimate or unprecedented-product claim.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0016"
         },
         {
           "id": "ac-0017",
           "claim": "Every CLI command outcome, including success, zero matches, partial results, help, version and completed exports, supplies an explicit useful next action grounded in that outcome. Machine envelopes expose stable next_action guidance, human output labels the next step, and JSONL/CSV/text/Markdown/OTLP data streams remain clean by carrying guidance on their documented summary or diagnostic channel. Suggested commands use real supported grammar, respect scope and content consent, and never execute automatically.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0017"
         },
         {
           "id": "ac-0018",
           "claim": "Every CLI error provides a stable category/code, a safe explanation and concrete cause-specific recovery guidance rather than merely restating the failure or suggesting blind retries. Invalid commands/options/topics/fields, absent or unreadable sources, unsupported or malformed input, ambiguous identity/branch, stale continuation, denied content projection, resource limits and output failures are covered; valid alternatives, needed user input and retry conditions are named where applicable. Guidance does not leak source content or raw hostile arguments, weaken privacy/safety, or claim incomplete work succeeded; failed diagnostic destinations receive best-effort guidance and a nonzero exit.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0018"
         }
       ]
     },

@@ -128,6 +128,7 @@ Public core contracts, real source inspection/provider seams and SDK query/disco
 | dw-0027 | Saved-input queries distinguish unavailable fields and incomplete row universes from empty evidence; no fabricated context or live reads. | [ ] unchecked | [bp-000f](../../backpressure.dd.md#rows) |
 | dw-0028 | A real external SDK caller obtains the same typed selection/error/projection semantics without invoking the CLI. | [ ] unchecked | [bp-0010](../../backpressure.dd.md#rows) |
 | dw-0029 | Continuation failures distinguish changed query options from changed source/view evidence using the baseline's closed CursorMismatchReason, with no private value echoed. | [ ] unchecked | [bp-0007](../../backpressure.dd.md#rows) |
+| dw-002a | Actual QueryService/QueryView calls prove C25: limit and available-column changes retain the source-view digest; creating/changing response universe, action or cursor cannot feed back into it; source revision, admission selection or retained capability changes alter it. Prove via crates/sdk/tests/query.rs under guide check bp-0008; baseline type-exclusion and fixed-vector proof do not satisfy this runtime obligation. | [ ] unchecked | [bp-0007](../../backpressure.dd.md#rows) |
 
 <a id="goals"></a>
 

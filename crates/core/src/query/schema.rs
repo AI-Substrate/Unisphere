@@ -25,7 +25,7 @@ pub struct FormatCapability {
     pub lossy: bool,
     pub losses: &'static [FormatLoss],
 }
-query_enum! { pub enum FormatLoss { AbsenceNullEmptyCollapse => "absence_null_empty_collapse", StructuredAsJsonText => "structured_as_json_text", HumanRounding => "human_rounding", PresentationOnly => "presentation_only" } }
+query_enum! { pub enum FormatLoss { AbsenceNullEmptyCollapse => "absence_null_empty_collapse", StructuredAsJsonText => "structured_as_json_text", HumanRounding => "human_rounding", PresentationOnly => "presentation_only", TimestampBasis => "timestamp_basis" } }
 
 #[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 pub struct DatasetSchema {
@@ -244,6 +244,10 @@ const SESSION_FIELDS: &[FieldSchema] = &[
 const TURN_FIELDS: &[FieldSchema] = &[
     field!(Id, EntityId, false, Metadata, Required, EQ),
     field!(SourceRefs, SourceRefs, false, Metadata, Required, HAS),
+    field!(NativeId, String, true, Sensitive, SourceQualified, TEXT),
+    field!(Harness, String, false, Metadata, Required, EQ),
+    field!(Adapter, String, false, Metadata, Required, EQ),
+    field!(Availability, EnumList, false, Metadata, Required, HAS),
     field!(SessionId, EntityId, false, Metadata, Required, EQ),
     field!(BranchIds, IdList, false, Metadata, SourceQualified, HAS),
     field!(Ordinal, U64, false, Count, Metadata, Required, ORDERED),
@@ -275,6 +279,10 @@ const TURN_FIELDS: &[FieldSchema] = &[
 const MESSAGE_FIELDS: &[FieldSchema] = &[
     field!(Id, EntityId, false, Metadata, Required, EQ),
     field!(SourceRefs, SourceRefs, false, Metadata, Required, HAS),
+    field!(NativeId, String, true, Sensitive, SourceQualified, TEXT),
+    field!(Harness, String, false, Metadata, Required, EQ),
+    field!(Adapter, String, false, Metadata, Required, EQ),
+    field!(Availability, EnumList, false, Metadata, Required, HAS),
     field!(SessionId, EntityId, false, Metadata, Required, EQ),
     field!(BranchIds, IdList, false, Metadata, SourceQualified, HAS),
     field!(TurnId, EntityId, true, Metadata, SourceQualified, EQ),
@@ -294,6 +302,10 @@ const MESSAGE_FIELDS: &[FieldSchema] = &[
 const TOOL_FIELDS: &[FieldSchema] = &[
     field!(Id, EntityId, false, Metadata, Required, EQ),
     field!(SourceRefs, SourceRefs, false, Metadata, Required, HAS),
+    field!(NativeId, String, true, Sensitive, SourceQualified, TEXT),
+    field!(Harness, String, false, Metadata, Required, EQ),
+    field!(Adapter, String, false, Metadata, Required, EQ),
+    field!(Availability, EnumList, false, Metadata, Required, HAS),
     field!(SessionId, EntityId, false, Metadata, Required, EQ),
     field!(BranchIds, IdList, false, Metadata, SourceQualified, HAS),
     field!(TurnId, EntityId, true, Metadata, SourceQualified, EQ),
@@ -329,6 +341,10 @@ const TOOL_FIELDS: &[FieldSchema] = &[
 const EVENT_FIELDS: &[FieldSchema] = &[
     field!(Id, EntityId, false, Metadata, Required, EQ),
     field!(SourceRefs, SourceRefs, false, Metadata, Required, HAS),
+    field!(NativeId, String, true, Sensitive, SourceQualified, TEXT),
+    field!(Harness, String, false, Metadata, Required, EQ),
+    field!(Adapter, String, false, Metadata, Required, EQ),
+    field!(Availability, EnumList, false, Metadata, Required, HAS),
     field!(SessionId, EntityId, true, Metadata, SourceQualified, EQ),
     field!(BranchIds, IdList, false, Metadata, SourceQualified, HAS),
     field!(TurnId, EntityId, true, Metadata, SourceQualified, EQ),
@@ -386,6 +402,19 @@ const LOSSES_CSV: &[FormatLoss] = &[
     FormatLoss::StructuredAsJsonText,
 ];
 const LOSSES_HUMAN: &[FormatLoss] = &[FormatLoss::HumanRounding, FormatLoss::PresentationOnly];
+const LOSSES_TIMESTAMP_JSON: &[FormatLoss] = &[FormatLoss::TimestampBasis];
+const LOSSES_TIMESTAMP_CSV: &[FormatLoss] = &[
+    FormatLoss::AbsenceNullEmptyCollapse,
+    FormatLoss::StructuredAsJsonText,
+    FormatLoss::TimestampBasis,
+];
+const LOSSES_TIMESTAMP_HUMAN: &[FormatLoss] = &[
+    FormatLoss::HumanRounding,
+    FormatLoss::PresentationOnly,
+    FormatLoss::TimestampBasis,
+];
+const LOSSES_TIMESTAMP_PRESENTATION: &[FormatLoss] =
+    &[FormatLoss::PresentationOnly, FormatLoss::TimestampBasis];
 const EXTRACT: &[OperationKind] = &[OperationKind::Extract];
 
 const SOURCE_FORMATS: &[FormatCapability] = &[
@@ -418,140 +447,140 @@ const SESSION_FORMATS: &[FormatCapability] = &[
     FormatCapability {
         format: OutputFormat::Json,
         operations: SESSION_OPS,
-        lossy: false,
-        losses: &[],
+        lossy: true,
+        losses: LOSSES_TIMESTAMP_JSON,
     },
     FormatCapability {
         format: OutputFormat::Jsonl,
         operations: SESSION_OPS,
-        lossy: false,
-        losses: &[],
+        lossy: true,
+        losses: LOSSES_TIMESTAMP_JSON,
     },
     FormatCapability {
         format: OutputFormat::Csv,
         operations: SESSION_OPS,
         lossy: true,
-        losses: LOSSES_CSV,
+        losses: LOSSES_TIMESTAMP_CSV,
     },
     FormatCapability {
         format: OutputFormat::Table,
         operations: SESSION_OPS,
         lossy: true,
-        losses: LOSSES_HUMAN,
+        losses: LOSSES_TIMESTAMP_HUMAN,
     },
     FormatCapability {
         format: OutputFormat::Text,
         operations: EXTRACT,
         lossy: true,
-        losses: &[FormatLoss::PresentationOnly],
+        losses: LOSSES_TIMESTAMP_PRESENTATION,
     },
     FormatCapability {
         format: OutputFormat::Markdown,
         operations: EXTRACT,
         lossy: true,
-        losses: &[FormatLoss::PresentationOnly],
+        losses: LOSSES_TIMESTAMP_PRESENTATION,
     },
 ];
 const ROW_FORMATS: &[FormatCapability] = &[
     FormatCapability {
         format: OutputFormat::Json,
         operations: ROW_OPS,
-        lossy: false,
-        losses: &[],
+        lossy: true,
+        losses: LOSSES_TIMESTAMP_JSON,
     },
     FormatCapability {
         format: OutputFormat::Jsonl,
         operations: ROW_OPS,
-        lossy: false,
-        losses: &[],
+        lossy: true,
+        losses: LOSSES_TIMESTAMP_JSON,
     },
     FormatCapability {
         format: OutputFormat::Csv,
         operations: ROW_OPS,
         lossy: true,
-        losses: LOSSES_CSV,
+        losses: LOSSES_TIMESTAMP_CSV,
     },
     FormatCapability {
         format: OutputFormat::Table,
         operations: ROW_OPS,
         lossy: true,
-        losses: LOSSES_HUMAN,
+        losses: LOSSES_TIMESTAMP_HUMAN,
     },
     FormatCapability {
         format: OutputFormat::Text,
         operations: EXTRACT,
         lossy: true,
-        losses: &[FormatLoss::PresentationOnly],
+        losses: LOSSES_TIMESTAMP_PRESENTATION,
     },
     FormatCapability {
         format: OutputFormat::Markdown,
         operations: EXTRACT,
         lossy: true,
-        losses: &[FormatLoss::PresentationOnly],
+        losses: LOSSES_TIMESTAMP_PRESENTATION,
     },
 ];
 const MESSAGE_FORMATS: &[FormatCapability] = &[
     FormatCapability {
         format: OutputFormat::Json,
         operations: LIST_SHOW_EXTRACT,
-        lossy: false,
-        losses: &[],
+        lossy: true,
+        losses: LOSSES_TIMESTAMP_JSON,
     },
     FormatCapability {
         format: OutputFormat::Jsonl,
         operations: LIST_SHOW_EXTRACT,
-        lossy: false,
-        losses: &[],
+        lossy: true,
+        losses: LOSSES_TIMESTAMP_JSON,
     },
     FormatCapability {
         format: OutputFormat::Csv,
         operations: LIST_SHOW_EXTRACT,
         lossy: true,
-        losses: LOSSES_CSV,
+        losses: LOSSES_TIMESTAMP_CSV,
     },
     FormatCapability {
         format: OutputFormat::Table,
         operations: LIST_SHOW_EXTRACT,
         lossy: true,
-        losses: LOSSES_HUMAN,
+        losses: LOSSES_TIMESTAMP_HUMAN,
     },
     FormatCapability {
         format: OutputFormat::Text,
         operations: EXTRACT,
         lossy: true,
-        losses: &[FormatLoss::PresentationOnly],
+        losses: LOSSES_TIMESTAMP_PRESENTATION,
     },
     FormatCapability {
         format: OutputFormat::Markdown,
         operations: EXTRACT,
         lossy: true,
-        losses: &[FormatLoss::PresentationOnly],
+        losses: LOSSES_TIMESTAMP_PRESENTATION,
     },
 ];
 const EVENT_FORMATS: &[FormatCapability] = &[
     FormatCapability {
         format: OutputFormat::Json,
         operations: LIST_SHOW_EXTRACT,
-        lossy: false,
-        losses: &[],
+        lossy: true,
+        losses: LOSSES_TIMESTAMP_JSON,
     },
     FormatCapability {
         format: OutputFormat::Jsonl,
         operations: LIST_SHOW_EXTRACT,
-        lossy: false,
-        losses: &[],
+        lossy: true,
+        losses: LOSSES_TIMESTAMP_JSON,
     },
     FormatCapability {
         format: OutputFormat::Csv,
         operations: LIST_SHOW_EXTRACT,
         lossy: true,
-        losses: LOSSES_CSV,
+        losses: LOSSES_TIMESTAMP_CSV,
     },
     FormatCapability {
         format: OutputFormat::Table,
         operations: LIST_SHOW_EXTRACT,
         lossy: true,
-        losses: LOSSES_HUMAN,
+        losses: LOSSES_TIMESTAMP_HUMAN,
     },
 ];
 
@@ -569,7 +598,7 @@ const SOURCE_SCHEMA: DatasetSchema = DatasetSchema {
     default_time_field: None,
     default_order: &[FieldId::Id],
     permitted_operations: SOURCE_OPS,
-    grouping_fields: &[FieldId::Adapter, FieldId::Harness, FieldId::ReadStatus],
+    grouping_fields: &[],
     metrics: NO_METRICS,
     capability_notes: NOTES,
     formats: SOURCE_FORMATS,
@@ -626,7 +655,7 @@ const MESSAGE_SCHEMA: DatasetSchema = DatasetSchema {
     default_time_field: Some(FieldId::Timestamp),
     default_order: &[FieldId::Timestamp, FieldId::Id],
     permitted_operations: LIST_SHOW_EXTRACT,
-    grouping_fields: &[FieldId::Role, FieldId::Model],
+    grouping_fields: &[],
     metrics: NO_METRICS,
     capability_notes: NOTES,
     formats: MESSAGE_FORMATS,
@@ -660,7 +689,7 @@ const EVENT_SCHEMA: DatasetSchema = DatasetSchema {
     default_time_field: Some(FieldId::Timestamp),
     default_order: &[FieldId::Timestamp, FieldId::Id],
     permitted_operations: LIST_SHOW_EXTRACT,
-    grouping_fields: &[FieldId::Kind],
+    grouping_fields: &[],
     metrics: NO_METRICS,
     capability_notes: NOTES,
     formats: EVENT_FORMATS,

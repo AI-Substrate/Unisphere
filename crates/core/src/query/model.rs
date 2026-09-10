@@ -143,13 +143,14 @@ impl Operation {
 }
 query_enum! { pub enum OperationKind { List => "list", Show => "show", Tree => "tree", Check => "check", Stats => "stats", Extract => "extract" } }
 
-/// Exact instant plus its native evidence basis. `unix_nanos` is UTC since Unix epoch.
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+/// Exact instant plus its native evidence basis. `unix_nanos` is UTC since Unix epoch;
+/// equality and ordering compare only that instant, never the evidence basis.
+#[derive(Debug, Clone)]
 pub struct Timestamp {
     unix_nanos: i128,
     basis: TimestampBasis,
 }
-query_enum! { pub enum TimestampBasis { Native => "native", SourceReported => "source_reported", DerivedFromSupportedNative => "derived_from_supported_native" } }
+query_enum! { pub enum TimestampBasis { Native => "native", SourceReported => "source_reported", DerivedFromSupportedNative => "derived_from_supported_native", SuppliedUnknown => "supplied_unknown" } }
 impl Timestamp {
     pub fn new(unix_nanos: i128, basis: TimestampBasis) -> Result<Self, QueryFailure> {
         time::OffsetDateTime::from_unix_timestamp_nanos(unix_nanos).map_err(|_| invalid_time())?;
@@ -193,13 +194,24 @@ impl Timestamp {
             .map_err(|_| invalid_time())
     }
 }
+impl PartialEq for Timestamp {
+    fn eq(&self, other: &Self) -> bool {
+        self.unix_nanos == other.unix_nanos
+    }
+}
+impl Eq for Timestamp {}
+impl PartialOrd for Timestamp {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+impl Ord for Timestamp {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.unix_nanos.cmp(&other.unix_nanos)
+    }
+}
 fn invalid_time() -> QueryFailure {
-    QueryFailure::new(
-        QueryFailureCode::InvalidTime,
-        RecoveryAction::ConsultSchema {
-            dataset: Dataset::Events,
-        },
-    )
+    QueryFailure::new(QueryFailureCode::InvalidTime, RecoveryAction::ReadQueryHelp)
 }
 impl Serialize for Timestamp {
     fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
@@ -209,7 +221,7 @@ impl Serialize for Timestamp {
 impl<'de> Deserialize<'de> for Timestamp {
     fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         let value = String::deserialize(deserializer)?;
-        Self::parse(&value, TimestampBasis::Native).map_err(serde::de::Error::custom)
+        Self::parse(&value, TimestampBasis::SuppliedUnknown).map_err(serde::de::Error::custom)
     }
 }
 
@@ -221,18 +233,25 @@ pub struct TimeWindow {
     pub include_undated: bool,
 }
 impl TimeWindow {
-    pub fn validate(&self) -> Result<(), QueryFailure> {
-        if self
-            .since
+    fn has_invalid_bounds(&self) -> bool {
+        self.since
             .as_ref()
             .zip(self.until.as_ref())
-            .is_some_and(|(a, b)| a >= b)
-        {
+            .is_some_and(|(since, until)| since.unix_nanos() >= until.unix_nanos())
+    }
+
+    pub fn validate(&self) -> Result<(), QueryFailure> {
+        if self.has_invalid_bounds() {
+            return Err(invalid_time());
+        }
+        Ok(())
+    }
+
+    fn validate_for(&self, dataset: Dataset) -> Result<(), QueryFailure> {
+        if self.has_invalid_bounds() {
             return Err(QueryFailure::new(
                 QueryFailureCode::InvalidTime,
-                RecoveryAction::ConsultSchema {
-                    dataset: Dataset::Events,
-                },
+                RecoveryAction::ConsultSchema { dataset },
             ));
         }
         Ok(())
@@ -252,7 +271,16 @@ impl InclusiveRange {
     }
     pub fn validate(self) -> Result<(), QueryFailure> {
         if self.start == 0 || self.end < self.start {
-            return Err(invalid_request(Dataset::Turns));
+            return Err(QueryFailure::new(
+                QueryFailureCode::InvalidArgument,
+                RecoveryAction::ReadQueryHelp,
+            ));
+        }
+        Ok(())
+    }
+    fn validate_for(self, dataset: Dataset) -> Result<(), QueryFailure> {
+        if self.start == 0 || self.end < self.start {
+            return Err(invalid_request(dataset));
         }
         Ok(())
     }
@@ -300,13 +328,21 @@ pub struct Filter {
 }
 impl Filter {
     pub fn validate(&self, limits: &QueryLimits) -> Result<(), QueryFailure> {
+        self.validate_with(limits, RecoveryAction::ReadQueryHelp)
+    }
+    fn validate_for(&self, limits: &QueryLimits, dataset: Dataset) -> Result<(), QueryFailure> {
+        self.validate_with(limits, RecoveryAction::ConsultSchema { dataset })
+    }
+    fn validate_with(
+        &self,
+        limits: &QueryLimits,
+        invalid_argument_recovery: RecoveryAction,
+    ) -> Result<(), QueryFailure> {
         if self.predicate == Predicate::Has {
             if !self.values.is_empty() {
                 return Err(QueryFailure::new(
                     QueryFailureCode::InvalidArgument,
-                    RecoveryAction::ConsultSchema {
-                        dataset: Dataset::Events,
-                    },
+                    invalid_argument_recovery,
                 ));
             }
             return Ok(());
@@ -345,9 +381,7 @@ impl SourceSelection {
         {
             return Err(QueryFailure::new(
                 QueryFailureCode::InvalidArgument,
-                RecoveryAction::ConsultSchema {
-                    dataset: Dataset::Sources,
-                },
+                RecoveryAction::ReadQueryHelp,
             ));
         }
         Ok(())
@@ -526,7 +560,7 @@ impl QueryRequest {
     /// Validate all effect-independent bounds before any source or writer is called.
     pub fn validate(&self) -> Result<(), QueryFailure> {
         self.limits.validate()?;
-        self.time.validate()?;
+        self.time.validate_for(self.dataset)?;
         let schema = super::schema(self.dataset);
         if !schema.permitted_operations.contains(&self.operation.kind()) {
             return Err(QueryFailure::new(
@@ -591,7 +625,7 @@ impl QueryRequest {
             ));
         }
         for filter in &self.filters {
-            filter.validate(&self.limits)?;
+            filter.validate_for(&self.limits, self.dataset)?;
             schema.validate_field(filter.field, filter.predicate)?;
         }
         for sort in &self.sort {
@@ -620,7 +654,7 @@ impl QueryRequest {
             schema.validate_projection(columns, self.include_content)?;
         }
         if let Some(range) = self.turn_range {
-            range.validate()?;
+            range.validate_for(self.dataset)?;
             if self.dataset != Dataset::Turns || !has_exact_session_selection(&self.filters) {
                 return Err(invalid_request(self.dataset));
             }
@@ -969,7 +1003,7 @@ fn projected_value_from_json(
             Ok(FieldValue::String(value))
         }
         (Value::String(value), super::FieldType::Timestamp) => {
-            Timestamp::parse(&value, TimestampBasis::Native).map(FieldValue::Timestamp)
+            Timestamp::parse(&value, TimestampBasis::SuppliedUnknown).map(FieldValue::Timestamp)
         }
         (Value::String(value), super::FieldType::EntityId) => {
             value.parse().map(FieldValue::Id).map_err(|_| invalid())

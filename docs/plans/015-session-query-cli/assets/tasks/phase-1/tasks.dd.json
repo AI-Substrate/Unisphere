@@ -432,6 +432,12 @@
             "assertion": "Continuation failures distinguish changed query options from changed source/view evidence using the baseline's closed CursorMismatchReason, with no private value echoed.",
             "state": "unchecked",
             "pressure": "../../backpressure.dd.json#rows/bp-0007"
+          },
+          {
+            "id": "dw-002a",
+            "assertion": "Actual QueryService/QueryView calls prove C25: limit and available-column changes retain the source-view digest; creating/changing response universe, action or cursor cannot feed back into it; source revision, admission selection or retained capability changes alter it. Prove via crates/sdk/tests/query.rs under guide check bp-0008; baseline type-exclusion and fixed-vector proof do not satisfy this runtime obligation.",
+            "state": "unchecked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0007"
           }
         ]
       }

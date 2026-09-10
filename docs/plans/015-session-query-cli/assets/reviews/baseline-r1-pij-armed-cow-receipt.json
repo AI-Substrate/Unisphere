@@ -1,0 +1,85 @@
+{
+  "record_type": "review",
+  "id": "rv-plan015-baseline-r1-pij-armed-cow",
+  "plan": "docs/plans/015-session-query-cli/plan.dd.json",
+  "plan_sha256": "3af595c0e1c8f0e6c53bcbf5f538864d8eb93d8d7126030e1e9943e15be8395a",
+  "guide": "docs/plans/015-session-query-cli/assets/impl-guide.dd.json",
+  "guide_sha256": "7dad5fc51e5762fcf26ba279f55bac4875ab8b30290291d7803a7acee32908a2",
+  "subject_sha": "819fc30ae5d721fe2a2100ae9eef5692f10eac63",
+  "report": "docs/plans/015-session-query-cli/assets/reviews/baseline-r1-pij-armed-cow.json",
+  "report_sha256": "344a092df96ab964bd4e9c95c30f30eea99e6f286916b78a1464931338720374",
+  "scope": "decomposition",
+  "scope_note": "Independent exact-code review of the actual wave0 query contract baseline at 819fc30a under the baseline seal grammar. Not full plan acceptance, not a query service or CLI feature claim, and not a restatement of the guide-level R3 decomposition approval.",
+  "reviewer": "pij-armed-cow",
+  "reviewer_runtime": {
+    "harness": "omp",
+    "model_id_exposed": "github-copilot/claude-opus-5",
+    "effort_exposed": "high",
+    "settings_source": "guide",
+    "native_session": "01a08872-82bb-7641-b1dc-3964616e3e0a",
+    "attestation": "locally observed configuration strings only; no provider attestation"
+  },
+  "reviewer_gaps": [
+    "Read-only: this reviewer executed no build, test, lint, formatter or proof command.",
+    "PM proof at assets/verification/baseline-proof-819fc30a.json was read and its subject/plan/guide bindings independently recomputed; its run outcomes are the PM's measurement, not this reviewer's.",
+    "Runtime behaviour of the wave1 query service and CLI was not exercised because it does not exist at this subject.",
+    "Serde missing-field behaviour cited in F4 is marked [INFERENCE] in the report because no build was run to demonstrate it."
+  ],
+  "recorded_at": "2026-09-10T04:31:00Z",
+  "verdict": "changes-requested",
+  "supersedes": null,
+  "relates_to": {
+    "guide_review": "rv-plan015-guide-r3-pij-armed-cow",
+    "guide_review_addendum": "rv-plan015-guide-r3-scope-addendum-pij-armed-cow",
+    "note": "The prior approvals bind the guide decomposition only. This receipt is the first assessment of committed baseline code and does not inherit them."
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "high",
+      "disposition": "open",
+      "summary": "Declared inward loader-query and output-query edges are absent from Cargo.toml and the arch-check allowlist, so bp-000e passes without proving the extension it describes."
+    },
+    {
+      "id": "F2",
+      "severity": "high",
+      "disposition": "open",
+      "summary": "C18 common row fields native_id, harness, adapter and availability are declared only for sources and sessions; turns, messages, tools and events have none, so per-row availability has no wire location for four of six datasets."
+    },
+    {
+      "id": "F3",
+      "severity": "medium",
+      "disposition": "open",
+      "summary": "The metamorphic digest proof tk-0001 names as part of the baseline check is only partly present, and SourceSelection::admits, from_untrusted, ResultUniverse::validate and Coverage::validate have no tests."
+    },
+    {
+      "id": "F4",
+      "severity": "medium",
+      "disposition": "open",
+      "summary": "crates/testkit/fixtures/query/shared-v1.json has no consumer and encodes shapes the frozen types cannot deserialize, including a timestamp object against a frozen RFC3339 string form."
+    },
+    {
+      "id": "F5",
+      "severity": "medium",
+      "disposition": "open",
+      "summary": "Timestamp basis is absent from the wire and hardcoded to Native on both deserialization paths while Json and Jsonl are declared lossy:false, and the closed TimestampBasis has no supplied-or-unknown variant."
+    },
+    {
+      "id": "F6",
+      "severity": "low",
+      "disposition": "open",
+      "summary": "Dataset-agnostic validators return ConsultSchema for a hardcoded unrelated dataset, so a sessions time error points at the events schema."
+    },
+    {
+      "id": "F7",
+      "severity": "low",
+      "disposition": "open",
+      "summary": "grouping_fields are declared for sources, messages and events, which permit no Stats operation and declare no metrics."
+    }
+  ],
+  "seal": {
+    "baseline_sealed": false,
+    "recommendation": "Do not seal at 819fc30a. Resolve F1 and F2, land the F3 assertions, and record an explicit decision on F4 and F5, then re-review the delta at its new commit.",
+    "no_approved_with_unresolved_material_findings": true
+  }
+}

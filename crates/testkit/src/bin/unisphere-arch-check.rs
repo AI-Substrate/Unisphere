@@ -38,12 +38,26 @@ fn allowed(package: &str, dependency: &str, kind: &str) -> bool {
                 | "unisphere-adapter-cursor"
                 | "unisphere-loader-snapshot"
                 | "unisphere-output-otlp"
+                | "unisphere-loader-query"
+                | "unisphere-output-query"
         ),
         ("unisphere-loader-jsonl", "normal") => matches!(dependency, "unisphere-core" | "libc"),
         ("unisphere-loader-snapshot", "normal") => matches!(
             dependency,
             "unisphere-core" | "libc" | "serde" | "serde_json" | "sha2" | "rusqlite"
         ),
+        ("unisphere-loader-query", "normal") => matches!(
+            dependency,
+            "unisphere-core"
+                | "unisphere-loader-jsonl"
+                | "unisphere-loader-snapshot"
+                | "serde_json"
+                | "sha2"
+                | "libc"
+        ),
+        ("unisphere-output-query", "normal") => {
+            matches!(dependency, "unisphere-core" | "serde_json")
+        }
         (
             "unisphere-adapter-claude"
             | "unisphere-adapter-codex"
@@ -80,7 +94,9 @@ fn allowed(package: &str, dependency: &str, kind: &str) -> bool {
             | "unisphere-adapter-vscode-copilot"
             | "unisphere-adapter-cursor"
             | "unisphere-loader-snapshot"
-            | "unisphere-output-otlp",
+            | "unisphere-output-otlp"
+            | "unisphere-loader-query"
+            | "unisphere-output-query",
             "dev",
         ) => matches!(dependency, "unisphere-testkit" | "tempfile" | "serde_json"),
         _ => false,
@@ -125,6 +141,8 @@ fn check(graph: &Value) -> Result<usize, String> {
                 | "unisphere-adapter-cursor"
                 | "unisphere-loader-snapshot"
                 | "unisphere-output-otlp"
+                | "unisphere-loader-query"
+                | "unisphere-output-query"
         ) {
             return Err(format!("unapproved workspace package {name}"));
         }
@@ -344,6 +362,33 @@ mod tests {
             )))
             .is_ok()
         );
+    }
+
+    #[test]
+    fn query_adapters_cannot_depend_outward_on_services_or_cli() {
+        for (package, forbidden) in [
+            ("unisphere-loader-query", "unisphere-sdk"),
+            ("unisphere-output-query", "unisphere-cli"),
+        ] {
+            let mut graph = fixture(include_str!("../../fixtures/architecture/allowed.json"));
+            let adapter = graph["packages"]
+                .as_array_mut()
+                .unwrap()
+                .iter_mut()
+                .find(|entry| entry["name"] == package)
+                .unwrap();
+            adapter["dependencies"]
+                .as_array_mut()
+                .unwrap()
+                .push(serde_json::json!({
+                    "name": forbidden, "kind": null, "path": "../forbidden"
+                }));
+            let error = check(&graph).unwrap_err();
+            assert!(
+                error.contains(&format!("{package} -> {forbidden}")),
+                "{error}"
+            );
+        }
     }
 
     #[test]

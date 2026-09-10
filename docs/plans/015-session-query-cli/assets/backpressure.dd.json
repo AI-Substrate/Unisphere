@@ -43,7 +43,7 @@
           "phase": "ph-0375",
           "mode": "BUILD",
           "tier": "computational",
-          "proof": "BUILD→RUN: Build typed query schemas/availability/source-reference contracts and per-format observation fixtures; current OTLP types alone do not cover query rows. Command: cargo test --locked -p unisphere-core --test query_contract",
+          "proof": "BUILD→RUN: Typed query schemas/availability/source references and executable typed native fixture; current OTLP types alone do not cover query rows. Baseline command: cargo test --locked -p unisphere-core -p unisphere-testkit --lib --tests. Includes R1 selection/digest/saved-input/provenance regression cases; no passing result assumed before composed execution.",
           "state": "unchecked",
           "note": "Selected proof only; new query behavior not executed. Guide capability ac-0003 owns source path and accountable unit.",
           "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-0001"
@@ -243,7 +243,7 @@
           "tier": "human-judgement",
           "proof": "RUN: harness builder guide --check plus actual independent cross-model decomposition review; baseline sealing/dispatch proof remains future implementation work.",
           "state": "unchecked",
-          "note": "Selected proof only; new query behavior not executed. Guide capability ac-0015 owns source path and accountable unit. Wave1 requires the actual complete C21/C22/C23/C25 DTO/schema/fake freeze set independently reviewed and sealed at its committed baseline, not only a guide approval.",
+          "note": "Wave1 requires the complete C21/C22/C23/C25 DTO/schema/fake freeze set independently reviewed and sealed at its committed baseline. Guide approval is not code acceptance. R1 rejected819fc30a; seven corrections and explicit typed-fixture/timestamp-loss decisions are tracked in team/baseline-r1-decisions.json.",
           "probe": "Read current core/SDK, all registered adapter representations, app/CLI and testkit proofs; existing harness boot passed native-session scope only. Full guide check: impl-guide.dd.json#checks/bp-0001"
         },
         {

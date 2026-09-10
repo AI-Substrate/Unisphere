@@ -1,0 +1,168 @@
+{
+  "record_type": "review",
+  "id": "rv-plan015-baseline-r1-pij-armed-cow",
+  "title": "Independent exact-code wave0 baseline review for plan015",
+  "reviewer": {
+    "seat": "pij-armed-cow",
+    "role": "independent reviewer",
+    "harness": "omp",
+    "model_id_exposed": "github-copilot/claude-opus-5",
+    "effort_exposed": "high",
+    "settings_source": "guide",
+    "native_session": "01a08872-82bb-7641-b1dc-3964616e3e0a",
+    "attestation_note": "Harness/model/effort are locally observed configuration strings only; no provider attestation is claimed."
+  },
+  "recorded_at": "2026-09-10T04:31:00Z",
+  "scope": {
+    "grammar": "decomposition",
+    "subject": "actual wave0 query contract baseline at commit 819fc30a only",
+    "explicit_non_scope": [
+      "Not full plan acceptance and not a query service/CLI feature claim.",
+      "Not a re-issue of the guide-level R3 decomposition approval; that approval is not baseline acceptance.",
+      "No build, test, lint, formatter or proof rerun was performed by this reviewer; PM owns composed validation."
+    ]
+  },
+  "basis": {
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+    "subject_sha": "819fc30ae5d721fe2a2100ae9eef5692f10eac63",
+    "head_at_review": "819fc30ae5d721fe2a2100ae9eef5692f10eac63",
+    "worktree_state": "clean except untracked assets/team/baseline-review-packet.json",
+    "plan_sha256": "3af595c0e1c8f0e6c53bcbf5f538864d8eb93d8d7126030e1e9943e15be8395a",
+    "guide_sha256": "7dad5fc51e5762fcf26ba279f55bac4875ab8b30290291d7803a7acee32908a2",
+    "guide_version": 5,
+    "verification": "Working-tree plan/guide bytes hashed equal to `git show 819fc30a:<path>`; guide v4->v5 diff changes only meta, baseline.files inventory and roles model settings. The 25 architecture contracts are byte-identical to the R3-approved guide v4."
+  },
+  "verdict": "changes-requested",
+  "verdict_rationale": "The delivered contracts are of high quality and the F11 cursor-cause requirement is fully and correctly implemented, but two declared wave0 deliverables are absent from the committed baseline (F1, F2) and the metamorphic digest proof that tk-0001 names as part of the baseline check before seal is only partly present (F3). Under C21 a later change to these shared declarations returns to tk-0001 and invalidates dependent proof, so they must be resolved before the seal rather than after wave1 dispatch.",
+  "pm_proof_assessment": {
+    "receipt": "assets/verification/baseline-proof-819fc30a.json",
+    "bindings_verified": "subject_sha, plan_sha256 and guide_sha256 in the receipt equal the values this reviewer independently computed.",
+    "observed": [
+      "harness boot --json exit 0",
+      "external consumer cargo run --locked --offline exit 0",
+      "baseline_sealed=false, independent_review=pending recorded honestly"
+    ],
+    "what_it_proves": "Existing product readiness plus reachability and behaviour of the new public query contracts through the external SDK surface: null-versus-absent projection, content-consent denial with no sentinel leak in the serialized failure, cursor-reason precedence, and limit validation.",
+    "what_it_does_not_prove": "It executes no query service, no CLI query path, and none of the wave0 gaps recorded below; a passing suite does not evidence a declaration that was never written.",
+    "reviewer_action": "Read only. This reviewer ran no command from the receipt and does not restate its outcomes as its own measurement."
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "high",
+      "disposition": "open",
+      "title": "Declared inward loader-query and output-query edges are absent, so bp-000e passes vacuously",
+      "requirement": "tk-0001 interface: 'Add only required SDK dependencies (regex/globset/sha2/time) and declared inward loader-query/output-query edges.' Check bp-000e: 'EXTEND then RUN: dependency graph includes two new inward adapters and approved SDK libraries.'",
+      "evidence": [
+        "Cargo.toml [workspace.dependencies] lists no unisphere-loader-query or unisphere-output-query entry.",
+        "Repository-wide search for 'loader-query' and 'output-query' across Cargo.toml and crates/ returns no match at 819fc30a.",
+        "crates/testkit/src/bin/unisphere-arch-check.rs allowed() has no arm naming either crate; the unisphere-app arm lists only the pre-existing adapters."
+      ],
+      "consequence": "bp-000e was run and exited 0 while proving only the pre-existing graph. When tk-0007 and tk-0009 arrive, their inward edges are undeclared, arch-check rejects them, and the fix lands in PM-owned shared files - the exact tk-0001 return that C21 says invalidates dependent proof.",
+      "required_resolution": "Declare the two crates and their inward edges (workspace dependency entries plus arch-check allowlist arms) in the sealed baseline, or amend bp-000e and the tk-0001 interface so the check no longer claims an extension the baseline does not contain."
+    },
+    {
+      "id": "F2",
+      "severity": "high",
+      "disposition": "open",
+      "title": "C18 common row fields are missing from four of six datasets, disabling per-row availability there",
+      "requirement": "C18: 'Common row fields: native_id,harness,adapter,availability. Sources add ...; sessions add ...; turns add ...; messages add ...; tools add ...; events add ...'. C21: 'per-row projection availability remains on ProjectedRows.'",
+      "evidence": [
+        "crates/core/src/query/schema.rs SOURCE_FIELDS and SESSION_FIELDS declare all four of NativeId, Harness, Adapter, Availability.",
+        "TURN_FIELDS (14 entries), MESSAGE_FIELDS (10), TOOL_FIELDS (18) and EVENT_FIELDS (10) declare none of those four.",
+        "FieldId in crates/core/src/query/model.rs already contains NativeId, Harness, Adapter and Availability, so the registry vocabulary exists and only the per-dataset declarations are missing."
+      ],
+      "consequence": "For turns, messages, tools and events a projected row cannot carry availability at all, so AvailabilityCode values such as NotCaptured, SensitiveOmitted and ProjectionMissing have no per-row wire location; those datasets also cannot be filtered by harness or adapter and expose no native_id. DatasetSchema.fields is consulted by QueryRequest::validate, validate_projection and ProjectedRow::new, so every downstream lane inherits the omission, and adding fields later is a frozen-registry change returning to tk-0001.",
+      "required_resolution": "Declare the four common fields with their sensitivity and availability on turns, messages, tools and events, or amend C18 to state explicitly that the common set applies only to sources and sessions and record where per-row availability lives for the other four datasets."
+    },
+    {
+      "id": "F3",
+      "severity": "medium",
+      "disposition": "open",
+      "title": "Metamorphic digest proof named as part of the baseline check is only partly present, and the C22 selection algebra is untested",
+      "requirement": "tk-0001 interface: 'Metamorphic digest proof is part of the actual baseline check before seal.' C25 Required proof: limit/columns within retained capability leave the digest equal; changing revision/selection/retained fields changes it; changing or creating a ResultUniverse, action or cursor cannot change it; repeat encoding is stable; no digest is in its own preimage.",
+      "evidence": [
+        "crates/core/tests/query_contract.rs view_digest_canonicalizes_input_order_and_binds_source_and_retention covers permutation invariance and the revision/selection/retention change cases; view_digest_binds_saved_input_origin_and_completeness covers the saved-input basis.",
+        "No test varies limit or columns and asserts view-digest equality; no test asserts that creating or mutating a ResultUniverse, next action or cursor leaves it equal; no repeat-encoding stability assertion; no explicit no-self-preimage assertion.",
+        "SourceSelection::admits (crates/core/src/query/model.rs:336-341) has no test: the C22 rules 'empty includes mean all', 'values within a group OR', 'adapter and harness groups AND' and 'exclusions subtract' are unexercised, and SourceSelection::validate is exercised only indirectly through digest construction.",
+        "Also untested: ProjectedRow::from_untrusted and its UnsupportedSchema path, ResultUniverse::validate, Coverage::validate and QueryOutputOptions::validate_for."
+      ],
+      "consequence": "The invariants that make the freeze safe are asserted in prose but not mechanically defended. Three of the four excluded-input invariants hold structurally today only because the excluded values are absent from ViewDigestBasis; nothing prevents a later contributor from widening the basis, and the untrusted-input and selection-algebra paths are the ones wave1 lanes will rely on first.",
+      "required_resolution": "Add the four missing C25 metamorphic assertions and direct tests for SourceSelection::admits, from_untrusted schema rejection, ResultUniverse::validate and Coverage::validate to the bp-0001 target before seal."
+    },
+    {
+      "id": "F4",
+      "severity": "medium",
+      "disposition": "open",
+      "title": "The shared cross-lane fixture cannot be parsed by the frozen types and has no consumer",
+      "requirement": "tk-0001 owns 'FakeQuerySource, FakeQueryApi and shared synthetic observation vocabulary'; crates/testkit/fixtures/query/shared-v1.json is named in the guide baseline file inventory and in the review packet code scope.",
+      "evidence": [
+        "crates/testkit/src/query.rs:91 is the only reference to SHARED_QUERY_FIXTURE anywhere in crates/; the bytes are exposed but never parsed or asserted.",
+        "The fixture encodes timestamps as {\"unix_nanos\":...,\"basis\":\"native\"}, whereas the frozen Timestamp serde representation is a bare RFC3339 string (crates/core/src/query/model.rs:204-214).",
+        "Observation, InspectedSource, SourceEvidence, SourcePartition, SourceLocator and AssociationObservation derive no Deserialize at all (crates/core/src/query/source.rs), so the fixture's inspected_sources cannot be loaded into the frozen types by any route.",
+        "[INFERENCE] Its AvailabilityIssue entries supply only code and field; the frozen struct's source, entity and offset are Option without #[serde(default)], which under serde's derived Deserialize is a missing-field error rather than None."
+      ],
+      "consequence": "A fixture presented as the shared cross-lane vocabulary disagrees with the contracts it is meant to illustrate. Each parser lane that reuses it will invent its own decoding and the divergence will surface as a shared-file change after wave1 dispatch.",
+      "required_resolution": "Either give the fixture a real consumer that parses it through the frozen types and correct its encoding to match them, or remove SHARED_QUERY_FIXTURE from the freeze set and state in the guide that the file is design vocabulary only, as C16 already does for the planning fixture."
+    },
+    {
+      "id": "F5",
+      "severity": "medium",
+      "disposition": "open",
+      "title": "Timestamp provenance is dropped on the wire and re-asserted as Native on read while JSON and JSONL are declared lossless",
+      "requirement": "C10: 'Timestamp stores an exact parsed instant and its observed basis.' C18/C21: FormatCapability declares lossy and losses per format. C23: saved inputs are 'validated supplied provenance claims, not authentication of a third-party file.'",
+      "evidence": [
+        "crates/core/src/query/model.rs:204-208 serializes Timestamp as an RFC3339 string only; basis is not emitted.",
+        "crates/core/src/query/model.rs:209-214 deserializes with TimestampBasis::Native hardcoded, and model.rs:971-973 does the same in projected_value_from_json for supplied saved rows.",
+        "crates/core/src/query/schema.rs declares Json and Jsonl with lossy:false and losses:&[] for all six datasets, and FormatLoss has no variant describing a dropped provenance basis.",
+        "TimestampBasis is closed over Native|SourceReported|DerivedFromSupportedNative, so the saved-input path has no variant meaning 'supplied, basis unknown'.",
+        "Mitigating: Timestamp::basis has zero callers in the workspace at 819fc30a, and view-level origin is still recorded by ViewInputBasis::Saved and UniverseBasis::ProvidedRows, so nothing false is emitted today."
+      ],
+      "consequence": "Once wave1 adapters begin producing SourceReported or DerivedFromSupportedNative, the sanctioned saved-JSON round trip will silently upgrade them to Native, which is the strongest provenance claim, in a format the schema advertises as lossless. Correcting it later changes a frozen shared type.",
+      "required_resolution": "Decide now and record the decision: either carry basis on the wire, or add a supplied/unknown variant used by both deserialization paths, or declare the loss on the Json/Jsonl FormatCapability and state in C10 that the wire timestamp is deliberately basis-free."
+    },
+    {
+      "id": "F6",
+      "severity": "low",
+      "disposition": "open",
+      "title": "Dataset-agnostic validators return ConsultSchema for a hardcoded unrelated dataset",
+      "requirement": "C14: invalid fields/options name safe alternatives derived from the actual request.",
+      "evidence": [
+        "crates/core/src/query/model.rs:196-203 invalid_time() always returns ConsultSchema { dataset: Dataset::Events }, and is reached from TimeWindow::validate inside QueryRequest::validate, which knows the real dataset.",
+        "model.rs:253-258 InclusiveRange::validate hardcodes Dataset::Turns; model.rs:303-312 the Predicate::Has arity error hardcodes Dataset::Events; model.rs:342-354 SourceSelection::validate hardcodes Dataset::Sources."
+      ],
+      "consequence": "A sessions query whose since is not before until is told to consult the events schema. The guidance is typed and safe but points at the wrong place.",
+      "required_resolution": "Thread the request dataset into these constructors, or use a recovery variant that does not name a dataset."
+    },
+    {
+      "id": "F7",
+      "severity": "low",
+      "disposition": "open",
+      "title": "grouping_fields are declared for datasets that permit no Stats operation and declare no metrics",
+      "requirement": "C18: DatasetSchema declares grouping fields and metrics as one coherent registry.",
+      "evidence": [
+        "crates/core/src/query/schema.rs: SOURCE_SCHEMA, MESSAGE_SCHEMA and EVENT_SCHEMA each declare non-empty grouping_fields with metrics: NO_METRICS while their permitted_operations omit OperationKind::Stats.",
+        "QueryRequest::validate rejects Stats for those datasets before grouping is consulted, and validate_metrics rejects an empty metric set, so the declarations are unreachable."
+      ],
+      "consequence": "The frozen registry advertises grouping capability that can never be exercised; a downstream lane reading the schema may build grouping support for datasets that cannot use it.",
+      "required_resolution": "Empty those grouping_fields, or permit Stats with a real metric set where grouping is intended."
+    }
+  ],
+  "verified_correct": [
+    "F11 is implemented exactly as specified: CursorMismatchReason is closed over QueryOptionsChanged and SourceViewChanged (error.rs:5-11); QueryFailureCode::StaleCursor carries the reason; QueryFailure::stale_cursor takes exactly one reason and maps it to the existing StartFreshQuery and ReopenView actions with no new RecoveryAction variant; cause-specific fixed messages contain no detail string; the failure serializes a stable reason field; cursor_reason exposes it to SDK consumers; ViewScopeMismatch is not reused.",
+    "F11 precedence is implemented and defended: CursorBinding::validate compares the query digest before the view digest (fingerprint.rs), and cursor_binding_checks_query_before_view_and_preserves_typed_recovery asserts that a both-changed cursor reports QueryOptionsChanged, which is the case the original finding could not reach.",
+    "F12 is satisfied: the guide freeze inventory and the review anchors now name C21/C22/C23/C25 consistently, and the guide v4->v5 diff touches no contract text.",
+    "C25 canonical encoding is correct as written: fixed ASCII domain 'unisphere/query-view/v1' followed by NUL; every emitted object's members are in lexical key order, checked object by object; sets and maps are ordered by wire name or by SourceId whose display form is order-isomorphic to its digest bytes; integers only, no floats; streaming into the hash rather than materializing a graph; ResultUniverse, cursors, actions and row predicates are structurally absent from the preimage.",
+    "C25 validation is real, not decorative: duplicate sources are rejected, the retained field map must cover exactly the bound sources, every source must retain the mandatory Id and SourceRefs structural fields, and non-absolute or non-UTF-8 paths fail.",
+    "Privacy boundary holds at the constructor: ProjectedRow::new refuses sensitive fields unless emit_content, so ContentAccess::permits_payload (inspection) cannot become emission; the external consumer proves the denial and that the serialized failure carries no sentinel.",
+    "Raw evidence is unserializable by construction: Observation, ObservationFacet, ObservationPart, InspectedSource, SourceEvidence, NativeQueryView and SourcePartition derive neither Serialize nor Debug.",
+    "Untrusted input is separated from validated state: UntrustedProjectedRow and UntrustedProjectedSourceRef are deserialization targets only, and ProjectedRow and ProjectedSourceRef keep private fields behind validating constructors.",
+    "Coverage carries no universe field and QueryResponse alone owns universe beside coverage, matching C21 and the C19 wire envelope.",
+    "C22 pre-I/O selection is structural: QuerySource::load receives scope, selection, limits and access, and FakeQuerySource records each call so the boundary is observable rather than asserted.",
+    "Turn ranges require the Turns dataset and exactly one exact session selection without requiring a branch, matching C8, and the test covers the In predicate, multiple sessions, wrong entity kind and non-Id values.",
+    "Identity hashing is domain-tagged and length-framed, kinds are distinct, and PartitionId cannot be parsed as a SourceId.",
+    "Core purity is preserved: no fs, env, process, net or clock access in crates/core/src/query; time is depended on without local-offset; the arch-check allowlist was extended for sha2, time, regex and globset at declaration level.",
+    "Query-binding normalization is faithful to C9 and C18: merging repeated same field, predicate and case groups and unioning their values is the declared OR semantics, so the normalization introduces no collision between semantically distinct requests."
+  ],
+  "seal_recommendation": "Do not seal at 819fc30a. Resolve F1 and F2, land the F3 assertions, and record an explicit decision on F4 and F5; then re-review the delta at its new commit. No further guide change is implied - F1 through F3 are baseline-content gaps against the already-approved guide."
+}

@@ -136,6 +136,7 @@ pub enum RecoveryAction {
         discard_partial: bool,
     },
     UseCompleteInput,
+    ReadQueryHelp,
     ReopenView,
     ConsultSchema {
         dataset: Dataset,
@@ -188,6 +189,7 @@ impl RecoveryAction {
             Self::UseCompleteInput => {
                 "Supply a complete versioned JSON extraction with needed partition and field metadata."
             }
+            Self::ReadQueryHelp => "Review the query syntax and supply valid typed query values.",
             Self::ReopenView => "Open a fresh source view before issuing a new query.",
             Self::ConsultSchema { .. } => {
                 "Inspect the dataset schema and use its supported fields and operation."

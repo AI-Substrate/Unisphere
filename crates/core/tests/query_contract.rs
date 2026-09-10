@@ -47,6 +47,38 @@ fn assert_unsupported_operation(request: &QueryRequest, dataset: Dataset) {
     assert_eq!(error.recovery(), &RecoveryAction::ConsultSchema { dataset });
 }
 
+fn empty_response(dataset: Dataset, operation: OperationKind) -> QueryResponse {
+    QueryResponse {
+        schema_version: 1,
+        dataset,
+        query: QueryDescription {
+            dataset,
+            operation,
+            scope_digest: Digest::of_bytes(b"response-scope"),
+        },
+        rows: Vec::new(),
+        coverage: Coverage::default(),
+        universe: ResultUniverse {
+            source_view_digest: None,
+            selection_digest: Digest::of_bytes(b"response-selection"),
+            columns_digest: Digest::of_bytes(b"response-columns"),
+            columns: Vec::new(),
+            applied_limit: Some(50),
+            rows_complete_for_selection: Completeness::Complete,
+            partitions_complete: Completeness::Complete,
+            basis: UniverseBasis::LiveView,
+            bounded_by_input: false,
+        },
+        matched: 0,
+        emitted: 0,
+        next_cursor: None,
+        next_action: QueryAction::ReadSchema {
+            dataset,
+            reason: ActionReason::EmptySelection,
+        },
+    }
+}
+
 fn view_basis() -> ViewDigestBasis {
     let source_id = SourceId::derive([&b"fixture-source"[..]]);
     let coverage = Coverage {
@@ -199,44 +231,7 @@ fn projected_fields_preserve_present_null_and_absent_as_different_states() {
 
 #[test]
 fn responses_require_semantic_actions_and_rendered_actions_require_readable_summaries() {
-    let response = QueryResponse {
-        schema_version: 1,
-        dataset: Dataset::Sessions,
-        query: QueryDescription {
-            dataset: Dataset::Sessions,
-            operation: OperationKind::List,
-            scope_digest: Digest::of_bytes(b"action-scope"),
-        },
-        rows: Vec::new(),
-        coverage: Coverage {
-            discovered_sources: 0,
-            loaded_sources: 0,
-            selected_sources: 0,
-            source_status: BTreeMap::new(),
-            association_status: BTreeMap::new(),
-            excluded_adapters: Vec::new(),
-            source_read_complete: true,
-            issues: Vec::new(),
-        },
-        universe: ResultUniverse {
-            source_view_digest: None,
-            selection_digest: Digest::of_bytes(b"action-selection"),
-            columns_digest: Digest::of_bytes(b"action-columns"),
-            columns: Vec::new(),
-            applied_limit: Some(50),
-            rows_complete_for_selection: Completeness::Complete,
-            partitions_complete: Completeness::Complete,
-            basis: UniverseBasis::LiveView,
-            bounded_by_input: false,
-        },
-        matched: 0,
-        emitted: 0,
-        next_cursor: None,
-        next_action: QueryAction::ReadSchema {
-            dataset: Dataset::Sessions,
-            reason: ActionReason::EmptySelection,
-        },
-    };
+    let response = empty_response(Dataset::Sessions, OperationKind::List);
     let serialized = serde_json::to_value(response).unwrap();
     assert_eq!(serialized["next_action"]["kind"], "read_schema");
     assert_eq!(serialized["next_action"]["reason"], "empty_selection");
@@ -821,4 +816,428 @@ fn view_digest_binds_saved_input_origin_and_completeness() {
         *partitions_complete = Completeness::Unknown;
     }
     assert_ne!(original, changed_partitions.digest().unwrap());
+}
+
+#[test]
+fn every_dataset_projects_common_metadata_and_protects_native_ids() {
+    let common_fields = [
+        FieldId::NativeId,
+        FieldId::Harness,
+        FieldId::Adapter,
+        FieldId::Availability,
+    ];
+    let source_schema = schema(Dataset::Sources);
+    for &dataset in Dataset::ALL {
+        for field in common_fields {
+            assert_eq!(
+                schema(dataset).field(field),
+                source_schema.field(field),
+                "{dataset} must preserve the common field contract for {field}"
+            );
+        }
+        assert!(schema(dataset).default_columns.iter().all(|field| {
+            schema(dataset).field(*field).unwrap().sensitivity == Sensitivity::Metadata
+        }));
+    }
+
+    for (dataset, kind) in [
+        (Dataset::Sources, EntityKind::Source),
+        (Dataset::Sessions, EntityKind::Session),
+        (Dataset::Turns, EntityKind::Turn),
+        (Dataset::Messages, EntityKind::Message),
+        (Dataset::Tools, EntityKind::Tool),
+        (Dataset::Events, EntityKind::Event),
+    ] {
+        let metadata = BTreeMap::from([
+            (FieldId::Harness, FieldValue::String("omp".into())),
+            (
+                FieldId::Adapter,
+                FieldValue::String("fixture-adapter".into()),
+            ),
+            (
+                FieldId::Availability,
+                FieldValue::Strings(vec!["not_captured".into()]),
+            ),
+        ]);
+        let id = EntityId::derive(kind, [dataset.as_str().as_bytes()]);
+        assert!(
+            ProjectedRow::new(
+                dataset,
+                id,
+                Vec::new(),
+                metadata.clone(),
+                &ContentAccess::default(),
+            )
+            .is_ok()
+        );
+
+        let mut with_native_id = metadata;
+        with_native_id.insert(
+            FieldId::NativeId,
+            FieldValue::String("sensitive-native-id".into()),
+        );
+        let denied = match ProjectedRow::new(
+            dataset,
+            id,
+            Vec::new(),
+            with_native_id,
+            &ContentAccess::default(),
+        ) {
+            Ok(_) => panic!("native ID escaped without content consent for {dataset}"),
+            Err(error) => error,
+        };
+        assert_eq!(denied.kind(), QueryFailureCode::ContentConsentRequired);
+    }
+}
+
+#[test]
+fn non_stats_datasets_declare_no_grouping_fields() {
+    for dataset in [Dataset::Sources, Dataset::Messages, Dataset::Events] {
+        let dataset_schema = schema(dataset);
+        assert!(
+            !dataset_schema
+                .permitted_operations
+                .contains(&OperationKind::Stats)
+        );
+        assert!(dataset_schema.grouping_fields.is_empty());
+        assert!(dataset_schema.metrics.is_empty());
+        let mut request = base_request();
+        request.dataset = dataset;
+        request.operation = Operation::Stats {
+            group_by: vec![FieldId::Harness],
+            metrics: vec![Metric::Count],
+        };
+        let error = request.validate().unwrap_err();
+        assert_eq!(error.kind(), QueryFailureCode::UnsupportedOperation);
+        assert_eq!(error.recovery(), &RecoveryAction::ConsultSchema { dataset });
+    }
+}
+
+#[test]
+fn source_selection_applies_or_within_groups_and_across_group_exclusions() {
+    let claude = AdapterId::new("claude-jsonl").unwrap();
+    let codex = AdapterId::new("codex-jsonl").unwrap();
+    let cursor = AdapterId::new("cursor-sqlite").unwrap();
+    let omp = HarnessId::new("omp").unwrap();
+    let vscode = HarnessId::new("vscode").unwrap();
+
+    let all = SourceSelection::default();
+    assert!(all.admits(&claude, &omp));
+    assert!(all.admits(&cursor, &vscode));
+
+    let mut selected = SourceSelection {
+        include_adapters: BTreeSet::from([claude.clone(), codex.clone()]),
+        include_harnesses: BTreeSet::from([omp.clone()]),
+        ..SourceSelection::default()
+    };
+    assert!(selected.admits(&claude, &omp));
+    assert!(selected.admits(&codex, &omp));
+    assert!(!selected.admits(&cursor, &omp));
+    assert!(!selected.admits(&claude, &vscode));
+
+    selected.exclude_adapters.insert(claude.clone());
+    assert!(!selected.admits(&claude, &omp));
+    assert!(selected.admits(&codex, &omp));
+    selected.exclude_harnesses.insert(omp.clone());
+    assert!(!selected.admits(&codex, &omp));
+
+    let conflict = selected.validate().unwrap_err();
+    assert_eq!(conflict.kind(), QueryFailureCode::InvalidArgument);
+    assert_eq!(conflict.recovery(), &RecoveryAction::ReadQueryHelp);
+}
+
+#[test]
+fn view_digest_matches_closed_preimage_vector_and_repeats_stably() {
+    let basis = view_basis();
+    let first = basis.digest().unwrap();
+    assert_eq!(
+        first.to_string(),
+        "23c71eb09affec419f8bf44180fcb9b975d9ead38351be921688a1b904d0ae35"
+    );
+    assert_eq!(first, basis.digest().unwrap());
+}
+
+#[test]
+fn query_binding_changes_when_columns_change() {
+    let selection = SourceSelection::default();
+    let mut narrow = base_request();
+    narrow.columns = Some(vec![FieldId::Id]);
+    narrow.limit = Some(5);
+    let mut wide = narrow.clone();
+    wide.columns = Some(vec![FieldId::Id, FieldId::StartedAt]);
+
+    assert_ne!(
+        query_binding_digest(&narrow, &selection).unwrap(),
+        query_binding_digest(&wide, &selection).unwrap()
+    );
+}
+
+#[test]
+fn untrusted_rows_reject_schema_drift_and_convert_supplied_timestamps() {
+    let timestamp = "2026-09-01T12:00:00Z";
+    let row = UntrustedProjectedRow {
+        schema_version: 1,
+        dataset: Dataset::Sessions,
+        id: EntityId::derive(EntityKind::Session, [&b"untrusted-session"[..]]),
+        source_refs: Vec::new(),
+        fields: BTreeMap::from([(
+            FieldId::StartedAt,
+            serde_json::Value::String(timestamp.into()),
+        )]),
+    };
+    let projected = ProjectedRow::from_untrusted(row.clone(), &ContentAccess::default()).unwrap();
+    assert!(matches!(
+        projected.field(FieldId::StartedAt),
+        Some(FieldValue::Timestamp(value)) if value.basis() == TimestampBasis::SuppliedUnknown
+    ));
+
+    let mut wrong_schema = row.clone();
+    wrong_schema.schema_version = 2;
+    let unsupported = match ProjectedRow::from_untrusted(wrong_schema, &ContentAccess::default()) {
+        Ok(_) => panic!("unsupported row schema was accepted"),
+        Err(error) => error,
+    };
+    assert_eq!(unsupported.kind(), QueryFailureCode::UnsupportedSchema);
+    assert_eq!(
+        unsupported.recovery(),
+        &RecoveryAction::ConsultSchema {
+            dataset: Dataset::Sessions
+        }
+    );
+
+    let mut foreign_field = row;
+    foreign_field.fields =
+        BTreeMap::from([(FieldId::ToolName, serde_json::Value::String("tool".into()))]);
+    assert_eq!(
+        match ProjectedRow::from_untrusted(foreign_field, &ContentAccess::default()) {
+            Ok(_) => panic!("foreign field entered a session row"),
+            Err(error) => error,
+        }
+        .kind(),
+        QueryFailureCode::InvalidField
+    );
+}
+
+#[test]
+fn scalar_timestamp_round_trip_records_unknown_supplied_basis_and_declared_loss() {
+    let source_reported =
+        Timestamp::parse("2026-09-01T12:00:00Z", TimestampBasis::SourceReported).unwrap();
+    let wire = serde_json::to_value(&source_reported).unwrap();
+    assert_eq!(
+        wire,
+        serde_json::Value::String("2026-09-01T12:00:00Z".into())
+    );
+    let supplied: Timestamp = serde_json::from_value(wire).unwrap();
+    assert_eq!(supplied.unix_nanos(), source_reported.unix_nanos());
+    assert_eq!(supplied.basis(), TimestampBasis::SuppliedUnknown);
+
+    let same_instant_native =
+        Timestamp::parse("2026-09-01T12:00:00Z", TimestampBasis::Native).unwrap();
+    assert_eq!(source_reported, same_instant_native);
+    assert_eq!(
+        source_reported.cmp(&same_instant_native),
+        std::cmp::Ordering::Equal
+    );
+    assert_eq!(source_reported, supplied);
+    assert_eq!(source_reported.cmp(&supplied), std::cmp::Ordering::Equal);
+
+    let earlier = Timestamp::parse(
+        "2026-09-01T11:59:59Z",
+        TimestampBasis::DerivedFromSupportedNative,
+    )
+    .unwrap();
+    let later = Timestamp::parse("2026-09-01T12:00:01Z", TimestampBasis::SuppliedUnknown).unwrap();
+    assert!(earlier < source_reported);
+    assert!(supplied < later);
+
+    for dataset in [
+        Dataset::Sessions,
+        Dataset::Turns,
+        Dataset::Messages,
+        Dataset::Tools,
+        Dataset::Events,
+    ] {
+        for capability in schema(dataset).formats {
+            assert!(capability.losses.contains(&FormatLoss::TimestampBasis));
+            assert_eq!(capability.lossy, !capability.losses.is_empty());
+        }
+    }
+    for capability in schema(Dataset::Sources).formats {
+        assert!(!capability.losses.contains(&FormatLoss::TimestampBasis));
+        assert_eq!(capability.lossy, !capability.losses.is_empty());
+    }
+}
+
+#[test]
+fn time_bounds_compare_instants_and_preserve_contextual_recovery() {
+    let instant = "2026-09-01T12:00:00Z";
+    let window = TimeWindow {
+        field: Some(FieldId::StartedAt),
+        since: Some(Timestamp::parse(instant, TimestampBasis::Native).unwrap()),
+        until: Some(Timestamp::parse(instant, TimestampBasis::SourceReported).unwrap()),
+        include_undated: false,
+    };
+    let standalone = window.validate().unwrap_err();
+    assert_eq!(standalone.kind(), QueryFailureCode::InvalidTime);
+    assert_eq!(standalone.recovery(), &RecoveryAction::ReadQueryHelp);
+
+    let mut request = base_request();
+    request.time = window;
+    let contextual = request.validate().unwrap_err();
+    assert_eq!(contextual.kind(), QueryFailureCode::InvalidTime);
+    assert_eq!(
+        contextual.recovery(),
+        &RecoveryAction::ConsultSchema {
+            dataset: Dataset::Sessions
+        }
+    );
+}
+
+#[test]
+fn standalone_validators_use_neutral_help_while_requests_name_their_dataset() {
+    for error in [
+        Timestamp::parse("not-a-time", TimestampBasis::Native).unwrap_err(),
+        Timestamp::new(i128::MAX, TimestampBasis::Native).unwrap_err(),
+    ] {
+        assert_eq!(error.kind(), QueryFailureCode::InvalidTime);
+        assert_eq!(error.recovery(), &RecoveryAction::ReadQueryHelp);
+    }
+
+    let invalid_range = InclusiveRange { start: 0, end: 1 };
+    let standalone_range = invalid_range.validate().unwrap_err();
+    assert_eq!(standalone_range.kind(), QueryFailureCode::InvalidArgument);
+    assert_eq!(standalone_range.recovery(), &RecoveryAction::ReadQueryHelp);
+
+    let invalid_has = Filter {
+        field: FieldId::Parts,
+        predicate: Predicate::Has,
+        values: vec![FieldValue::String("unexpected".into())],
+        ignore_case: false,
+    };
+    let standalone_has = invalid_has.validate(&QueryLimits::default()).unwrap_err();
+    assert_eq!(standalone_has.kind(), QueryFailureCode::InvalidArgument);
+    assert_eq!(standalone_has.recovery(), &RecoveryAction::ReadQueryHelp);
+
+    let session = EntityId::derive(EntityKind::Session, [&b"range-session"[..]]);
+    let mut range_request = base_request();
+    range_request.dataset = Dataset::Turns;
+    range_request.operation = Operation::Extract;
+    range_request.turn_range = Some(invalid_range);
+    range_request.filters = vec![Filter {
+        field: FieldId::SessionId,
+        predicate: Predicate::Equal,
+        values: vec![FieldValue::Id(session)],
+        ignore_case: false,
+    }];
+    let contextual_range = range_request.validate().unwrap_err();
+    assert_eq!(contextual_range.kind(), QueryFailureCode::InvalidArgument);
+    assert_eq!(
+        contextual_range.recovery(),
+        &RecoveryAction::ConsultSchema {
+            dataset: Dataset::Turns
+        }
+    );
+
+    let mut has_request = base_request();
+    has_request.dataset = Dataset::Messages;
+    has_request.filters = vec![invalid_has];
+    let contextual_has = has_request.validate().unwrap_err();
+    assert_eq!(contextual_has.kind(), QueryFailureCode::InvalidArgument);
+    assert_eq!(
+        contextual_has.recovery(),
+        &RecoveryAction::ConsultSchema {
+            dataset: Dataset::Messages
+        }
+    );
+}
+
+#[test]
+fn universe_coverage_and_output_boundaries_reject_invalid_states() {
+    let valid_coverage = Coverage {
+        discovered_sources: 1,
+        loaded_sources: 1,
+        selected_sources: 1,
+        source_status: BTreeMap::from([(SourceReadStatus::Readable, 1)]),
+        association_status: BTreeMap::new(),
+        excluded_adapters: Vec::new(),
+        source_read_complete: true,
+        issues: Vec::new(),
+    };
+    assert!(valid_coverage.validate().is_ok());
+    let mut too_many_loaded = valid_coverage.clone();
+    too_many_loaded.loaded_sources = 2;
+    assert_eq!(
+        too_many_loaded.validate().unwrap_err().kind(),
+        QueryFailureCode::InvalidData
+    );
+    let mut too_many_selected = valid_coverage.clone();
+    too_many_selected.selected_sources = 2;
+    assert_eq!(
+        too_many_selected.validate().unwrap_err().kind(),
+        QueryFailureCode::InvalidData
+    );
+    let mut overflowing_statuses = valid_coverage;
+    overflowing_statuses.discovered_sources = u64::MAX;
+    overflowing_statuses.source_status = BTreeMap::from([
+        (SourceReadStatus::Readable, u64::MAX),
+        (SourceReadStatus::Partial, 1),
+    ]);
+    assert_eq!(
+        overflowing_statuses.validate().unwrap_err().kind(),
+        QueryFailureCode::InvalidData
+    );
+
+    let valid_universe = empty_response(Dataset::Sessions, OperationKind::List).universe;
+    assert!(valid_universe.validate().is_ok());
+    let mut duplicate_columns = valid_universe.clone();
+    duplicate_columns.columns = vec![FieldId::Id, FieldId::Id];
+    assert_eq!(
+        duplicate_columns.validate().unwrap_err().kind(),
+        QueryFailureCode::InvalidData
+    );
+    let mut impossible_complete_input = valid_universe;
+    impossible_complete_input.basis = UniverseBasis::ProvidedRows;
+    impossible_complete_input.bounded_by_input = true;
+    assert_eq!(
+        impossible_complete_input.validate().unwrap_err().kind(),
+        QueryFailureCode::InvalidData
+    );
+    impossible_complete_input.rows_complete_for_selection = Completeness::Subset;
+    assert!(impossible_complete_input.validate().is_ok());
+
+    let limits = QueryLimits::default();
+    let response = empty_response(Dataset::Sessions, OperationKind::List);
+    let options = QueryOutputOptions {
+        format: OutputFormat::Json,
+        csv_safety: CsvSafety::Spreadsheet,
+        max_output_bytes: limits.max_output_bytes,
+        next_action: RenderedAction {
+            summary: "Inspect the session schema".into(),
+            argv: Vec::new(),
+            required_inputs: Vec::new(),
+        },
+    };
+    assert!(options.validate_for(&response, &limits).is_ok());
+    let mut zero_output = options.clone();
+    zero_output.max_output_bytes = 0;
+    assert_limit(
+        zero_output.validate(&limits).unwrap_err(),
+        LimitKind::OutputBytes,
+    );
+    let mut over_ceiling_output = options.clone();
+    over_ceiling_output.max_output_bytes = limits.max_output_bytes + 1;
+    assert_limit(
+        over_ceiling_output.validate(&limits).unwrap_err(),
+        LimitKind::OutputBytes,
+    );
+    let mut unsupported = options;
+    unsupported.format = OutputFormat::Text;
+    let output_error = unsupported.validate_for(&response, &limits).unwrap_err();
+    assert_eq!(output_error.kind(), QueryFailureCode::UnsupportedOperation);
+    assert_eq!(
+        output_error.recovery(),
+        &RecoveryAction::ConsultSchema {
+            dataset: Dataset::Sessions
+        }
+    );
 }

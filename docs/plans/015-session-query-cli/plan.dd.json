@@ -284,7 +284,7 @@
     },
     {
       "name": "implementation_summary",
-      "value": "Resumed from checkpoint58e5001. Latest delegated contracts9b0a9560 and prooffa792618 are integrated;18 core contract tests and external public SDK smoke passed. PM formatting, enum-documentation correction and compact private error-location storage preserve the public API; workspace all-target/all-feature clippy passes. Exact-source full boot and independent Opus baseline review remain pending; no baseline seal or normal lane release. See assets/verification and assets/team for current receipts; the handover preserves the previous paused checkpoint."
+      "value": "R1/F8 corrections are composed from contracts35b714bf and proof7fbd36d1 with PM-owned workspace/architecture/guide changes. Focused baseline suite passed57 tests, including28 query-contract tests, typed fixture validation and inward/outward dependency fixtures. Timestamp scalar round trips mark supplied provenance unknown and schema declares that loss; equal instants compare independently of basis. Rejected819fc30a remains preserved. Fresh exact-source full boot/external consumer and independent delta review precede seal and normal coder release."
     },
     {
       "name": "key_findings",

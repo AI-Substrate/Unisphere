@@ -1,0 +1,40 @@
+{
+  "subject": "819fc30ae5d721fe2a2100ae9eef5692f10eac63",
+  "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+  "review": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/reviews/baseline-r1-pij-armed-cow.json",
+  "start": "Preserve existing branch; fetch exact819fc30ae5d721fe2a2100ae9eef5692f10eac63 from the plan workspace, then create a NEW work/015-baseline-r1 branch at that subject in your existing clone. Do not reset, replay prior assignments, or discard WIP. Original candidate branches remain preserved.",
+  "decisions": {
+    "F1": "PM adds workspace dependency entries and architecture allowlist/graph proof for unisphere-loader-query and unisphere-output-query. No fake runtime crates; actual implementations remain their allocated lanes.",
+    "F2": "All six datasets declare native_id/harness/adapter/availability with the SAME existing sensitivity and predicate conventions. NativeId stays sensitive; default metadata projections stay safe.",
+    "F3": "Keep behavior tests, no source-text checks or tautological mutation of objects the digest never receives. A known fixed independently calculated digest vector can defend closed preimage/repeated encoding; assert request option changes alter query binding while an actual shared view produces the same source digest. Add true invalid-input and selection boundary cases.",
+    "F4": "Replace unused JSON design bytes with a real typed Rust fixture: pub fn shared_query_fixture() -> Vec<InspectedSource> in testkit/src/query.rs. Preserve representative two-source native observations, initiating user vs tool-response facts, supported clocks and undated/partial source. Remove SHARED_QUERY_FIXTURE and dead shared-v1.json; do NOT add Serialize/Deserialize to raw production evidence just for fixtures. Exercise the fixture via native validation/provenance rejection in testkit library tests and actual external SDK consumer; PM adjusts freeze/read references and baseline check to include testkit.",
+    "F5": "Keep C10 scalar RFC3339 wire timestamps. Add TimestampBasis::SuppliedUnknown (wire supplied_unknown), use it in BOTH Timestamp Deserialize and projected_value_from_json. No input string may fabricate Native. Add FormatLoss::TimestampBasis (wire timestamp_basis) to formats that cannot preserve the basis, including Json/Jsonl for timestamp-bearing datasets; lossy must agree with losses. PM explicitly documents this field-level loss; no native timestamp instant/duration/history fabrication. Native adapters still pass their observed basis explicitly. Compare time bounds by instant, not basis tie-break.",
+    "F6": "QueryRequest validation errors must recover against self.dataset when dataset context is known. Dataset-independent Timestamp/range/Has/SourceSelection errors use one new neutral RecoveryAction::ReadQueryHelp; never name an unrelated dataset. Preserve typed causes and safe fixed messages. QueryRequest::validate public signature stays unchanged; lower-level signatures preferably unchanged. Core coder publishes any necessary exact helper/API change to proof coder before consumption.",
+    "F7": "Sources/messages/events have no Stats operation: set grouping_fields empty. Do not add new Stats support."
+  },
+  "validation": "Both coders SKIP all builds/tests/lint/formatters. PM alone validates composed files after both deliveries. No baseline seal/normal lane release until fresh proof and Opus review.",
+  "forbidden": [
+    ".the-flow-state.json",
+    "the-flow.json",
+    "the-flow.md",
+    "canonical plan/guide/tasks/team/records",
+    "other coder-owned paths",
+    "global settings",
+    "main",
+    "push/merge",
+    "unrelated deletion"
+  ],
+  "delivery": "Commit ONLY owned source paths using harness commit, preserve exact head and write .harness/temp/baseline-r1-delivery.json with source head, files, decisions, unrun checks and friction. Send PM path/head; no self-acceptance.",
+  "owner": "contracts",
+  "root": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/baseline-coders/contracts",
+  "write_paths": [
+    "crates/core/src/query/**"
+  ],
+  "tasks": [
+    "Fix F2 common fields",
+    "Fix F5 timestamp provenance/format capability truth",
+    "Fix F6 contextual or neutral recovery",
+    "Fix F7 unreachable grouping metadata"
+  ],
+  "partner": "pij-glorious-galliform owns all proof and fixture files; send exact API decisions directly. Do not modify proof or manifests."
+}

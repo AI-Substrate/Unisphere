@@ -1,0 +1,30 @@
+docs/plans/015-session-query-cli/assets/backpressure.dd.json
+  h_9e71e8b09f7cf2 9,11-12,17-282,288
+docs/plans/015-session-query-cli/assets/backpressure.dd.md
+  h_9e71e8b09f7cf2 2,12,14-15,21-46
+docs/plans/015-session-query-cli/assets/command-catalog.json
+  h_9e71e8b09f7cf2 38,513
+docs/plans/015-session-query-cli/assets/impl-guide.dd.json
+  h_9e71e8b09f7cf2 9,11-12,18-40,46-47,52-321,325-1032,1037-1051,1057,1059,1064-1081,1085-1347,1352-1381,1387,1389-1398,1400-1404,1409-1445
+docs/plans/015-session-query-cli/assets/impl-guide.dd.md
+  h_9e71e8b09f7cf2 2,12,14-15,23-25,33-34,40-65,71-85,93-95,103,105,111-114,120-138,146-149,157-159,165-173
+docs/plans/015-session-query-cli/assets/verification/guide-authoring-v2.json
+  h_9e71e8b09f7cf2 1-112
+docs/plans/015-session-query-cli/assets/workflows-and-command-reference.md
+  h_9e71e8b09f7cf2 119,581
+docs/plans/015-session-query-cli/plan.dd.json
+  h_9e71e8b09f7cf2 51-52,57-58,63-64,69-70,75-76,81-82,87-88,93-94,99-100,105-106,111-112,117-118,123-124,129-130,135-136,141-142,147-148,153-154,159-160,165-166,171-172,177-178,183-184,189-190
+docs/plans/015-session-query-cli/plan.dd.md
+  h_9e71e8b09f7cf2 62-85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "e1da02513fd509c1d7ffac919a3bdb3f4ffbbd55",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

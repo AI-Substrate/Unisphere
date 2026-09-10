@@ -1,0 +1,38 @@
+docs/plans/015-session-query-cli/assets/backpressure.dd.json
+  h_9e71e8b09f7cf2 11
+docs/plans/015-session-query-cli/assets/backpressure.dd.md
+  h_9e71e8b09f7cf2 14
+docs/plans/015-session-query-cli/assets/reviews/baseline-r2-n1-pij-armed-cow-receipt.json
+  h_9e71e8b09f7cf2 1-64
+docs/plans/015-session-query-cli/assets/reviews/baseline-r2-n1-pij-armed-cow.json
+  h_9e71e8b09f7cf2 1-78
+docs/plans/015-session-query-cli/assets/reviews/baseline-r2-pij-armed-cow-receipt.json
+  h_9e71e8b09f7cf2 1-100
+docs/plans/015-session-query-cli/assets/reviews/baseline-r2-pij-armed-cow.json
+  h_9e71e8b09f7cf2 1-128
+docs/plans/015-session-query-cli/assets/team/baseline-r2-review-packet.json
+  h_9e71e8b09f7cf2 1-71
+docs/plans/015-session-query-cli/assets/team/baseline.dd.json
+  h_9e71e8b09f7cf2 1-142
+docs/plans/015-session-query-cli/assets/team/baseline.dd.md
+  h_9e71e8b09f7cf2 1-21
+docs/plans/015-session-query-cli/assets/team/review-baseline-approved.dd.json
+  h_9e71e8b09f7cf2 1-71
+docs/plans/015-session-query-cli/assets/verification/baseline-proof-4c3c665f.json
+  h_9e71e8b09f7cf2 1-39
+docs/plans/015-session-query-cli/the-flow.json
+  h_9e71e8b09f7cf2 6,181-249,257,266-268,274,285-287,399,416-426
+docs/plans/015-session-query-cli/the-flow.md
+  h_9e71e8b09f7cf2 4,6,10-11,24,40,45,49-53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "99ea782e86fc1ebc4ea09bf8d4e7624dc87dc3bc",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

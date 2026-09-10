@@ -560,6 +560,7 @@ pub fn run(repo: &Path, scratch: &Path) -> ProofResult<()> {
     let revision_root = scratch.join("revisions");
     fs::create_dir_all(&revision_root).map_err(|e| e.to_string())?;
     revisions(&cli, &sdk, &installed, repo, &revision_root)?;
+    super::query::run(&cli, &installed, &scratch.join("queries"))?;
     println!(
         "native proof: all registered dialects SDK/CLI/installed parity; changed/deleted/late sources; partial output without checkpoint"
     );

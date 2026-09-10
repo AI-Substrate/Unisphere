@@ -1,8 +1,10 @@
 //! Explicit, bounded local source discovery and native query input composition.
 //!
 //! Registrations, symbolic roots, stdin bytes and Git capability are injected by
-//! the composition root. This crate never reads ambient environment variables,
-//! scans an implicit current directory, contacts a remote, or enriches saved input.
+//! the composition root. Native loading never discovers ambient roots, scans an
+//! implicit current directory, fetches remote transcripts, or enriches saved input.
+//! The optional [`pij`] identity lookup delegates configured transport/authentication
+//! to the explicitly supplied Pij CLI; it is not a transcript loader.
 #![forbid(unsafe_code)]
 
 pub mod pij;

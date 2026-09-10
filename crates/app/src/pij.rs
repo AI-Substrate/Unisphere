@@ -73,18 +73,17 @@ pub fn run(
         Err(error) => return unisphere_cli::emit_query_failure(&command, &error, stdout, stderr),
     };
     command.request.turn_range = range;
-    let sessions = view.sessions().iter().filter(|session|
+    let mut sessions = view.sessions().iter().filter(|session|
         session.native_id == resolved.native_session_id && session.harness == resolved.harness
-    ).map(|session| session.id).collect::<Vec<_>>();
-    if sessions.is_empty() {
+    );
+    let Some(session_id) = sessions.next().map(|session| session.id) else {
         return unavailable(mode, stderr);
-    }
-    if sessions.len() != 1 {
+    };
+    if sessions.next().is_some() {
         return unisphere_cli::emit_pij_failure("UNI-PIJ-AMBIGUOUS-SESSION",
             "The resolved source contains ambiguous native session membership.",
             "Inspect the explicit source and select one canonical session ID before retrying.", mode, stderr);
     }
-    let session_id = sessions[0];
     match command.request.dataset {
         Dataset::Sources if pending.target == PijTarget::SourceCheck =>
             command.request.operation = Operation::Check { source: source_id },

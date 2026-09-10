@@ -1,0 +1,50 @@
+{
+  "recorded_at": "2026-09-10T09:33:43.027Z",
+  "scope": "Actual built pre-Pij CLI working source; raw JSONL create-new/repeated destination behavior",
+  "runs": [
+    {
+      "argv": [
+        "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/target/debug/unisphere",
+        "messages",
+        "extract",
+        "--repo",
+        "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+        "--harness",
+        "claude-code",
+        "--format",
+        "jsonl",
+        "--output",
+        "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr/selected.jsonl"
+      ],
+      "cwd": "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+      "stdout": "",
+      "stderr": "{\"command\":\"messages.extract\",\"data\":{\"emitted\":4,\"matched\":4},\"next_action\":{\"argv\":[\"unisphere\",\"docs\",\"get\",\"start\",\"--human\"],\"required_inputs\":[],\"summary\":\"Read the bundled workflow before issuing the next query.\"},\"ok\":true,\"v\":1}\n",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/target/debug/unisphere",
+        "messages",
+        "extract",
+        "--repo",
+        "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+        "--harness",
+        "claude-code",
+        "--format",
+        "jsonl",
+        "--output",
+        "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr/selected.jsonl"
+      ],
+      "cwd": "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+      "stdout": "",
+      "stderr": "{\"command\":\"messages.extract\",\"error\":{\"code\":\"UNI-QUERY-OUTPUT\",\"location\":{\"entity\":null,\"field\":null,\"offset\":null,\"source\":null},\"message\":\"Output did not complete; partial bytes must not be treated as a complete result.\",\"reason\":null,\"recovery\":{\"discard_partial\":true,\"kind\":\"choose_new_output\"},\"retryable\":true},\"next_action\":\"Choose a new writable destination and do not accept partial output as complete.\",\"ok\":false,\"v\":1}\n",
+      "exit": 1
+    }
+  ],
+  "file_sha256": "ff3ad04a0b448532b3701d509ac6a354880d5fdb45dec885859e0b9b04c5ef73",
+  "unchanged_after_refusal": true,
+  "rows": 4,
+  "stdout_empty": true,
+  "guidance_records_in_file": 0,
+  "private_payload_emitted": false
+}

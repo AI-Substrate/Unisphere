@@ -44,7 +44,7 @@ fn resolve(executable: &Path) -> Result<ResolvedPijSession, PijLookupError> {
 #[test]
 fn live_and_tombstoned_seats_resolve_only_typed_identity_and_hints() {
     let (_temporary, executable) = program(
-        r#"{"ok":true,"data":{"id":"pij-test-seat","harness":"omp","session":"native-1","cwd":"/synthetic/project","machine":"fixture-host","pid":77,"pane":"%9","tombstonedAt":null}}"#,
+        r#"{"v":2,"ok":true,"data":{"id":"pij-test-seat","harness":"omp","session":"native-1","cwd":"/synthetic/project","machine":"fixture-host","pid":77,"pane":"%9","tombstonedAt":null}}"#,
         0,
     );
     let live = resolve(&executable).unwrap();
@@ -56,7 +56,7 @@ fn live_and_tombstoned_seats_resolve_only_typed_identity_and_hints() {
 
     set_response(
         &executable,
-        r#"{"ok":true,"data":{"id":"pij-test-seat","harness":"omp","session":"native-1","cwd":null,"machine":null,"pid":null,"pane":null,"tombstonedAt":1789000000000}}"#,
+        r#"{"v":2,"ok":true,"data":{"id":"pij-test-seat","harness":"omp","session":"native-1","cwd":null,"machine":null,"pid":null,"pane":null,"tombstonedAt":1789000000000}}"#,
     );
     let retired = resolve(&executable).unwrap();
     assert_eq!(retired.native_session_id, "native-1");
@@ -77,7 +77,7 @@ fn every_call_reads_current_mapping_and_translates_supported_harnesses() {
         set_response(
             &executable,
             &format!(
-                r#"{{"ok":true,"data":{{"id":"{ID}","harness":"{pij_harness}","session":"native-{pij_harness}"}}}}"#
+                r#"{{"v":2,"ok":true,"data":{{"id":"{ID}","harness":"{pij_harness}","session":"native-{pij_harness}"}}}}"#
             ),
         );
         let resolved = resolve(&executable).unwrap();
@@ -87,7 +87,7 @@ fn every_call_reads_current_mapping_and_translates_supported_harnesses() {
 
     set_response(
         &executable,
-        r#"{"ok":true,"data":{"id":"pij-test-seat","harness":"codex","session":"replacement"}}"#,
+        r#"{"v":2,"ok":true,"data":{"id":"pij-test-seat","harness":"codex","session":"replacement"}}"#,
     );
     assert_eq!(
         resolve(&executable).unwrap().native_session_id,
@@ -97,12 +97,12 @@ fn every_call_reads_current_mapping_and_translates_supported_harnesses() {
 
 #[test]
 fn unknown_seat_and_known_seat_without_native_identity_are_distinct() {
-    let (_temporary, executable) = program(r#"{"ok":false,"error":"not_found"}"#, 4);
+    let (_temporary, executable) = program(r#"{"v":2,"ok":false,"error":"not_found"}"#, 4);
     assert_eq!(resolve(&executable), Err(PijLookupError::UnknownSeat));
 
     set_response(
         &executable,
-        r#"{"ok":true,"data":{"id":"pij-test-seat","harness":"omp","session":null}}"#,
+        r#"{"v":2,"ok":true,"data":{"id":"pij-test-seat","harness":"omp","session":null}}"#,
     );
     fs::write(sidecar(&executable, ".status"), "0").unwrap();
     assert_eq!(
@@ -117,10 +117,10 @@ fn malformed_or_mismatched_identity_is_rejected_without_guessing() {
     assert_eq!(resolve(&executable), Err(PijLookupError::InvalidResponse));
 
     for response in [
-        r#"{"ok":true,"data":{"id":"different-seat","harness":"omp","session":"native"}}"#,
-        r#"{"ok":true,"data":{"id":"pij-test-seat","harness":"omp"}}"#,
-        r#"{"ok":true,"data":{"id":"pij-test-seat","harness":7,"session":"native"}}"#,
-        r#"{"ok":true,"data":{"id":"pij-test-seat","harness":"omp","session":"native","cwd":7}}"#,
+        r#"{"v":2,"ok":true,"data":{"id":"different-seat","harness":"omp","session":"native"}}"#,
+        r#"{"v":2,"ok":true,"data":{"id":"pij-test-seat","harness":"omp"}}"#,
+        r#"{"v":2,"ok":true,"data":{"id":"pij-test-seat","harness":7,"session":"native"}}"#,
+        r#"{"v":2,"ok":true,"data":{"id":"pij-test-seat","harness":"omp","session":"native","cwd":7}}"#,
     ] {
         set_response(&executable, response);
         assert_eq!(resolve(&executable), Err(PijLookupError::InvalidResponse));
@@ -128,7 +128,7 @@ fn malformed_or_mismatched_identity_is_rejected_without_guessing() {
 
     set_response(
         &executable,
-        r#"{"ok":true,"data":{"id":"pij-test-seat","harness":"other","session":"native"}}"#,
+        r#"{"v":2,"ok":true,"data":{"id":"pij-test-seat","harness":"other","session":"native"}}"#,
     );
     assert_eq!(
         resolve(&executable),
@@ -151,14 +151,14 @@ fn missing_executable_and_lookup_transport_failure_are_distinct() {
         Err(PijLookupError::MissingExecutable)
     );
 
-    let (_temporary, executable) = program(r#"{"ok":false,"error":"transport"}"#, 1);
+    let (_temporary, executable) = program(r#"{"v":2,"ok":false,"error":"transport"}"#, 1);
     assert_eq!(resolve(&executable), Err(PijLookupError::LookupUnavailable));
 }
 
 #[test]
 fn output_and_elapsed_time_are_bounded() {
     let (_temporary, executable) = program(
-        r#"{"ok":true,"data":{"id":"pij-test-seat","harness":"omp","session":"native"}}"#,
+        r#"{"v":2,"ok":true,"data":{"id":"pij-test-seat","harness":"omp","session":"native"}}"#,
         0,
     );
     assert_eq!(
@@ -239,5 +239,16 @@ fn invalid_input_and_limits_fail_before_process_execution() {
         ),
         Err(PijLookupError::InvalidLimits)
     );
+}
+
+#[test]
+fn absent_or_future_envelope_versions_cannot_resolve_identity() {
+    let (_temporary, executable) = program("", 0);
+    for prefix in ["", "\"v\":3,", "\"v\":\"2\","] {
+        set_response(&executable, &format!(
+            "{{{prefix}\"ok\":true,\"data\":{{\"id\":\"{ID}\",\"harness\":\"omp\",\"session\":\"native\"}}}}"
+        ));
+        assert_eq!(resolve(&executable), Err(PijLookupError::InvalidResponse));
+    }
 }
 

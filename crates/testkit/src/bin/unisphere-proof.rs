@@ -14,6 +14,8 @@ use unisphere_testkit::{fixtures, sealed_command};
 mod collection;
 #[path = "proof/native.rs"]
 mod native;
+#[path = "proof/query.rs"]
+mod query;
 
 type ProofResult<T> = Result<T, String>;
 

@@ -48,6 +48,8 @@ impl PijLookupLimits {
 }
 
 /// One current Pij seat mapping. Callers pin this snapshot for one operation.
+/// Hint and native-ID strings are untrusted external text, not paths to open or
+/// commands to execute. Native source decoding must verify the returned identity.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ResolvedPijSession {
     pub pij_id: String,
@@ -116,6 +118,8 @@ impl std::error::Error for PijLookupError {}
 ///
 /// The supplied executable is the only program invoked directly. Pij retains
 /// ownership of its ordinary daemon address and authentication mechanics.
+/// Supply the real Pij CLI, not a forking wrapper: timeout kills/reaps that process
+/// only. A wrapper descendant retaining stdout can outlive the detached reader.
 pub fn resolve_pij(
     executable: Option<&Path>,
     id: &str,
@@ -224,6 +228,9 @@ fn parse_response(
     let response = response
         .as_object()
         .ok_or(PijLookupError::InvalidResponse)?;
+    if response.get("v").and_then(Value::as_u64) != Some(2) {
+        return Err(PijLookupError::InvalidResponse);
+    }
     let ok = response
         .get("ok")
         .and_then(Value::as_bool)

@@ -1,20 +1,20 @@
 {
-  "recorded_at": "2026-09-10T08:10:36.512Z",
+  "recorded_at": "2026-09-10T09:32:49.159Z",
   "authorization": "Jordan: continue",
-  "source_sha": "771f94a6d478dd50d74b661b2592d67bd0eeaa1a",
+  "source_sha": "d2c702095aac584bb29462127e10c0c9442ea290",
   "previous_pause_lifted": true,
   "cli_peer": "pij-unfortunate-rat",
-  "cli_checkpoint": "f4c8b3570a851f9008183fff3f045d8f30a6307b",
-  "status": "CLI released; corrected source boot reported ready, full stdout truncated",
+  "cli_checkpoint": "10e72f900e744fe6c83ba7601ba0e3570c12a27a",
+  "status": "CLI and resolver candidates integrated; current Pij app/strict-v2 work unrun pending CLI Pij follow-on",
   "review_dispositions": {
     "P1": "closed by independent exact-source review",
     "A5": "resolved by schema-binding-addendum; frozen guide unchanged",
     "P5": "withdrawn by reviewer; original grouping IDs preserved",
-    "P4": "reproduced and corrected; package proof passed; exact boot pending",
-    "P6": "typed outcome metrics; package proof passed; exact boot pending",
-    "P7": "loader security comments restored; package proof passed; exact boot pending",
-    "P2": "CLI pending",
-    "P3": "CLI and existing Git-ai convergence pending"
+    "P4": "Closed in source at771f94a6; regression reproduced/passed; boot observed ready with truncated captured stdout",
+    "P6": "Closed in source at771f94a6; package proof and observed ready boot",
+    "P7": "Closed in source at771f94a6; package proof and observed ready boot",
+    "P2": "Actual built docs route executed under empty PATH/nonexistent HOME",
+    "P3": "All7 examples parse;6 non-Git workflows executed;Git workflow awaits accepted source convergence"
   },
   "interrupted_proof": {
     "command": [
@@ -26,5 +26,25 @@
     "source_sha": "771f94a6d478dd50d74b661b2592d67bd0eeaa1a",
     "result": "Eval capture timed out after240 seconds; no completion output retained; no success claimed",
     "retry_job": "bg_2"
-  }
+  },
+  "extension": {
+    "authority": "Jordan: yep brief it and get a coder on it.",
+    "packet": "assets/extensions/pij-session-resolution/packet.json",
+    "resolver_peer": "pij-bold-parrotfish",
+    "candidate": "ae809f3cd2c49d42f01814e4db91ae5bd6853f7c",
+    "status": "Candidate applied;7 focused process tests passed before strict-v2 correction; app+CLI follow-on pending",
+    "cli_packet": "assets/extensions/pij-session-resolution/cli-packet.json",
+    "sealed_roster_unchanged": true
+  },
+  "merge": {
+    "source": "cf4931ed084d892050d43ed98cfcbb62b0c2fe7e",
+    "approved_by": "pij-female-varl",
+    "status": "Awaiting Jordan typed PROCEED required by Builder; no merge performed"
+  },
+  "current_followups": [
+    "Correct CLI min-duration numeric type (real reproduced invalid argument)",
+    "Add CSV loss/raw warning and coverage/universe to diagnostic summaries",
+    "Preserve typed Pij target and source/session pinning",
+    "Run exact final source composition/installed CLI proof and independent review"
+  ]
 }

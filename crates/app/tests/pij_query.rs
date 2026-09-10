@@ -29,7 +29,7 @@ fn run(root: &Path, args: &[&str]) -> Output {
 }
 
 fn mapping(native: Value, retired: bool) -> Value {
-    json!({"ok":true,"data":{"id":"pij-fixture-seat","harness":"omp","session":native,
+    json!({"v":2,"ok":true,"data":{"id":"pij-fixture-seat","harness":"omp","session":native,
         "tombstonedAt": if retired { json!("2026-09-01T00:00:00Z") } else { Value::Null }}})
 }
 
@@ -79,9 +79,9 @@ fn changed_alias_is_resolved_per_query_and_missing_transcript_is_not_unknown_sea
 fn optional_lookup_failure_categories_do_not_pollute_row_streams() {
     let root=tempfile::tempdir().unwrap();
     let cases=[
-        (json!({"ok":false,"error":"not_found"}),4,"UNI-PIJ-UNKNOWN"),
+        (json!({"v":2,"ok":false,"error":"not_found"}),4,"UNI-PIJ-UNKNOWN"),
         (mapping(Value::Null,false),0,"UNI-PIJ-NATIVE-ID"),
-        (json!({"ok":false,"error":"PRIVATE-DAEMON-ERROR"}),1,"UNI-PIJ-UNAVAILABLE"),
+        (json!({"v":2,"ok":false,"error":"PRIVATE-DAEMON-ERROR"}),1,"UNI-PIJ-UNAVAILABLE"),
     ];
     for (response,exit,code) in cases {
         install_pij(root.path(),response,exit);
@@ -100,7 +100,7 @@ fn optional_lookup_failure_categories_do_not_pollute_row_streams() {
 #[test]
 fn explicit_native_operation_never_invokes_pij() {
     let root=tempfile::tempdir().unwrap(); fixture(root.path(),"native-one");
-    install_pij(root.path(),json!({"ok":false,"error":"must_not_call"}),99);
+    install_pij(root.path(),json!({"v":2,"ok":false,"error":"must_not_call"}),99);
     let output=run(root.path(), &["sessions","list","--repo",".","--harness","oh-my-pi","--json"]);
     assert!(output.status.success(),"{}",String::from_utf8_lossy(&output.stderr));
     assert_eq!(serde_json::from_slice::<Value>(&output.stdout).unwrap()["data"]["emitted"],1);

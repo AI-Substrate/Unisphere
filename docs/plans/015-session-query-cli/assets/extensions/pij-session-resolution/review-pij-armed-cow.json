@@ -1,0 +1,154 @@
+{
+  "record_type": "review",
+  "id": "rv-plan015-pij-session-resolution-pij-armed-cow",
+  "kind": "optional-extension-source-review",
+  "title": "Static read-only review of the bounded optional Pij session resolver",
+  "subject": {
+    "commit": "ae809f3cd2c49d42f01814e4db91ae5bd6853f7c",
+    "subject_line": "Add bounded Pij session resolver",
+    "parent": "771f94a6d478dd50d74b661b2592d67bd0eeaa1a",
+    "authored": "2026-09-10T18:52:42+1000",
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/pij-session-resolution",
+    "branch": "work/015-pij-session-resolution",
+    "diff_from_parent": "4 files, 552 insertions, 0 deletions. crates/loader-query/{Cargo.toml,src/lib.rs,src/pij.rs,tests/pij.rs} and nothing else.",
+    "reviewed_blob_ids": {
+      "crates/loader-query/src/pij.rs": "b116550b482d4324c27bc574f3887c31bd51390e",
+      "crates/loader-query/tests/pij.rs": "2b047ed9291548e163ab331bac869aaad4b67b46",
+      "crates/loader-query/src/lib.rs": "0d80d4d8a4481f386edbacb72380951b45f232d8",
+      "crates/loader-query/Cargo.toml": "78e00c2caa57876c94d0edb184f05e2991777bf2"
+    },
+    "reviewed_sha256": {
+      "crates/loader-query/src/pij.rs": "b91d12e37a918f5b13cd2cb25b67466b893c714aeccb17895f280ec2a9be4cb8",
+      "crates/loader-query/tests/pij.rs": "9ad249d00d252fe3c141f91cd88ec5ac9afe366ffa6c096b39eefadc5c6fc687"
+    },
+    "packet": "docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/packet.json, read from the PM plan workspace /Users/jordanknight/substrate/unisphere/unisphere-session-query-cli. It is not present in the coder worktree at any commit, so I read it where it actually lives and say so rather than reporting it missing."
+  },
+  "verdict": "APPROVE THE SOURCE, STATICALLY. The resolver does what the packet granted, stays inside its fence, and its wire handling is correct against the real Pij daemon rather than merely against its own fixtures. One medium finding, R1, is worth a small follow-on change. Everything else is low or an observation. This is not an acceptance of any composition, and it does not stand in for the exact boot capture I have not seen.",
+  "separation_of_grades": {
+    "what_i_graded": "That the committed source says what it must say, and that what it says matches the external system it talks to.",
+    "what_i_did_not_grade": "Whether it builds, whether the tests pass, and whether the composed application behaves. I ran no build, test, lint or formatter.",
+    "pm_measurement": "The PM reports seven focused process tests passing in a working composition. That is the PM's measurement and I do not restate it as mine. See finding R9 for a count I observed statically that does not match it.",
+    "unobserved": "The exact boot is still running. Nothing here anticipates its result."
+  },
+  "method": "Every claim about the candidate is read from committed bytes via git show at the subject commit. Claims about Pij's wire behaviour are read from the Pij source at /Users/jordanknight/pi-hacking/pij, cited by file and line. I did not invoke the pij CLI: running `pij state` would touch a live daemon and is not mine to do in a read-only review.",
+  "recorded_at": "2026-09-10T09:28:27Z\n",
+  "recorded_at_local": "2026-09-10T19:28:27+1000\n",
+  "reviewer": {
+    "seat": "pij-armed-cow",
+    "role": "independent read-only reviewer",
+    "harness": "OMP",
+    "model_id_as_exposed": "github-copilot/claude-opus-5",
+    "effort_as_exposed": "high",
+    "note": "Model and effort are exposed strings, not a provider attestation."
+  },
+  "verified_against_the_real_pij_wire": {
+    "why_this_section_exists": "A resolver of an external CLI can only be as good as its model of that CLI. Fixtures prove the code agrees with the fixture author. I went to the Pij source so the agreement is with the actual producer.",
+    "unknown_seat": "CORRECT AND EXACT. crates/daemon/src/http/mod.rs:2129-2137 answers an unknown seat with Envelope::refused(\"pij state\", ErrorKind::NotFound, ...). ErrorKind derives rename_all=snake_case (crates/core/src/model.rs:500-508), so NotFound is the wire word not_found. pij.rs:232 compares against exactly that. The route's own doc comment at mod.rs:2106-2116 records that a bare 404 is deliberately unavailable here, so the envelope this code branches on is guaranteed rather than incidental.",
+    "session_null_versus_absent": "THE ASSUMPTION HOLDS, AND I CHECKED IT RATHER THAN ASSUMING IT. pij.rs:251-255 treats explicit null as NativeSessionUnavailable and an absent key as InvalidResponse, which would be a real defect if Pij omitted the field. It does not: StateProjection declares session: Option<String> with NO skip_serializing_if (crates/daemon/src/http/mod.rs:2228-2235), so serde always emits the key and emits null when there is no session. The absent-key branch is unreachable against real Pij and is the conservative answer for anything else. This was the sharpest risk in the module and it is closed.",
+    "harness_mapping_is_total": "CORRECT. Pij's Harness is a closed five-variant enum with rename_all=lowercase whose wire words are exactly claude, copilot, codex, pi, omp (crates/core/src/model.rs:40-64). pij.rs:292-298 covers all five and reserves UnsupportedHarness for a sixth that does not yet exist. That is the right shape: a future harness produces a typed refusal, never a guess.",
+    "exact_identity_binding_is_safe": "CORRECT. SeatId is a transparent newtype, SeatId(pub String) at crates/core/src/model.rs:14, with no normalising FromStr, and the handler does an exact-key registry.get. So data.id echoes the requested id byte for byte on success and the strict equality at pij.rs:247 cannot reject a legitimate lookup. Had Pij accepted prefixes or aliases this check would have broken every abbreviated lookup.",
+    "no_side_effects": "CORRECT against the packet's no-lifecycle-repair rule. The state route's doc at mod.rs:2102-2104 states it writes nothing and enqueues nothing, and crates/cli/src/client.rs contains no daemon auto-start. The lookup is a pure read."
+  },
+  "fence_and_policy": {
+    "owned_paths": "Exactly the four granted paths. No canonical plan, guide, tasks, team or receipt file is touched, and nothing under crates/cli, crates/app, core, SDK, other loaders or adapters.",
+    "manifest": "One line, serde_json.workspace = true under [dependencies], matching the recorded dependency_authorization. No new package. tempfile was already a dev-dependency, so the test file needed no manifest change.",
+    "lib_rs": "Two lines: pub mod pij, and nothing else. forbid(unsafe_code) is retained at lib.rs:6 and the module contains no unsafe.",
+    "architecture_policy_unchanged_and_not_breached": "I checked rather than assumed. The dependency fence at crates/testkit/src/bin/unisphere-arch-check.rs:51-60 already permits serde_json on a unisphere-loader-query normal edge, so no policy fixture needed editing and none was edited. The purity sensor that forbids std::process, std::thread and Instant::now applies only to crates/core/src and unisphere-adapter-* packages (arch-check.rs:308-334); loader-query is outside it, which is also why the crate's pre-existing std::process import was already legal.",
+    "crate_doc_tension": "WORTH A GLANCE, NOT A CHANGE. lib.rs:3-5 says the crate never contacts a remote. The resolver invokes a CLI that talks to a local daemon over its own transport. I read the doc sentence as being about network sources for telemetry, and the module is explicitly optional and caller-supplied, so I am not calling this a contradiction. If the PM wants the crate doc to stay literally true, one clause is enough."
+  },
+  "findings": [
+    {
+      "id": "R1",
+      "severity": "medium",
+      "blocking": false,
+      "title": "The Pij envelope version is never read, so a future payload shape is half-read instead of refused.",
+      "evidence": "Pij's Envelope carries v, currently ENVELOPE_VERSION = 2 (crates/core/src/model.rs:606), and its doc at model.rs:529-531 says v exists so that a reader can refuse a payload from a future it does not understand instead of half-reading it. parse_response reads ok, error and data and never looks at v.",
+      "why_it_matters": "This is the one place where the resolver is less careful than the system it consumes. Today the shapes agree. If Pij ships v=3 with a changed data object, this code will not refuse it; it will pick out whichever fields still parse and return a ResolvedPijSession that looks authoritative. A resolver whose entire job is identity should not be the component that guesses across a version boundary, and the producer has already handed it the means not to.",
+      "suggested_change": "Read v, accept the known version, and return InvalidResponse otherwise. Roughly four lines beside the existing ok check.",
+      "why_not_blocking": "The unit is optional and unconsumed. Nothing today produces a v other than 2."
+    },
+    {
+      "id": "R2",
+      "severity": "low",
+      "blocking": false,
+      "title": "Timeout cleanup kills the direct child only, and the one test that exercises timeout cannot detect the residual.",
+      "what_the_code_does": "On timeout, stop_child (pij.rs:207-210) sends kill and then waits, so the direct child is reaped synchronously before resolve_pij returns. The reader thread is detached and never joined; it unblocks when the pipe's write end closes, sends into a dropped channel, and exits.",
+      "the_residual": "child.kill() is a single-process signal. Any descendant that inherited the stdout pipe keeps the write end open, the detached reader thread stays blocked in read_to_end, and each timed-out call retains a thread, a descriptor and its buffer with nothing to bound the accumulation.",
+      "how_serious_it_actually_is": "Materially less than it first appears, and I checked before saying so. `pij state` starts nothing: there is no daemon auto-start in crates/cli/src/client.rs and the handler writes nothing. With the real binary the direct child is the only process, so kill and wait genuinely close the pipe and the thread terminates. The residual is confined to a wrapper executable that forks, which is a deployment property this module cannot control.",
+      "why_i_am_not_asking_for_code": "A correct fix needs a process-group kill, which needs libc and unsafe, and the crate is forbid(unsafe_code). Command::process_group is safe but killing the group is not. The honest response is a sentence in the module doc saying the bound is on the caller's latency and on retained bytes, and that a forking wrapper leaves a reader thread behind.",
+      "test_gap": "output_and_elapsed_time_are_bounded uses a fixture of `#!/bin/sh\\nexec sleep 1`. The exec means the shell is REPLACED, so there is never a descendant and the test cannot exercise the case it looks like it covers. It asserts only that the caller returns in under 500ms. Dropping the exec, or backgrounding a sleep, would turn it into a test of the property rather than of the latency."
+    },
+    {
+      "id": "R3",
+      "severity": "low",
+      "blocking": false,
+      "title": "The deadline bounds the poll loop, not the whole call.",
+      "evidence": "pij.rs:196-201 returns Timeout only after stop_child has run kill and wait to completion. Total wall time is therefore the deadline plus the reap.",
+      "assessment": "On Unix a SIGKILLed process is reaped promptly and this is invisible; a process in uninterruptible sleep is the exception. Worth one clause in the doc comment on resolve_pij so a caller sizing its own budget is not surprised. No code change wanted."
+    },
+    {
+      "id": "R4",
+      "severity": "low",
+      "blocking": false,
+      "title": "The output limit is proven to trigger, not proven to trigger in the right place.",
+      "evidence": "The bound is read_limit = max_output_bytes + 1 with a strict `bytes.len() > max_output_bytes` comparison (pij.rs:153-155, 173). The test asks for 16 bytes against a response of roughly eighty.",
+      "why_it_matters": "An off-by-one here has two plausible spellings, a >= comparison or a missing saturating_add, and the current test passes under both. A pair of cases at exactly max and exactly max+1 would pin the boundary, and boundaries are where this kind of code actually fails. I read the arithmetic as correct; I am pointing at what the test proves, not at a defect."
+    },
+    {
+      "id": "R5",
+      "severity": "low",
+      "blocking": false,
+      "title": "Two of the three input-validation branches are untested.",
+      "evidence": "pij.rs:125-128 rejects empty, untrimmed and control-bearing ids. invalid_input_and_limits_fail_before_process_execution covers only the empty case; a leading-space id and an id containing a newline are unexercised.",
+      "note": "The test's name is nonetheless earned: passing None and still receiving InvalidInput proves input validation precedes the executable check, and spawn is after that. I checked that before doubting it."
+    },
+    {
+      "id": "R6",
+      "severity": "low",
+      "blocking": false,
+      "title": "The safe-error test is close to a tautology; the type is the real proof.",
+      "evidence": "PijLookupError is a fieldless Copy enum whose code and message return &'static str (pij.rs:61-105). It is structurally incapable of carrying a payload. errors_expose_only_static_safe_codes_and_messages checks one variant and asserts its rendering does not contain the substrings stdout or stderr, which no rendering could ever contain.",
+      "assessment": "No plausible bug fails this test. That is not an argument for a better test, it is an argument that the design already made the test unnecessary: excluding a payload at the type level is stronger than any assertion about one variant's string. If it stays, its value is documentary. I would rather see this than a payload-carrying error with a runtime scrubber."
+    },
+    {
+      "id": "R7",
+      "severity": "low",
+      "blocking": false,
+      "title": "The packet's platform half is not represented, and Windows behaviour is wholly unproven.",
+      "evidence": "The packet asks the error type to distinguish unsupported harness OR PLATFORM. The enum has UnsupportedHarness and no platform case, and its message names only the harness. tests/pij.rs:1 is #![cfg(unix)] while pij.rs itself is not gated, so the module compiles on Windows with zero coverage.",
+      "assessment": "Probably correct to leave alone, since process spawning is not Unix-only and there is no platform condition to report. Worth one recorded line deciding it deliberately rather than leaving the packet clause silently unmet."
+    },
+    {
+      "id": "R8",
+      "severity": "low",
+      "blocking": false,
+      "title": "The trust boundary is validated in one direction only.",
+      "evidence": "The caller's id is checked for emptiness, surrounding whitespace and control characters. The values coming back are not: native_session_id is accepted as any non-empty string (pij.rs:253), and cwd becomes a PathBuf from arbitrary text (pij.rs:256) with no absoluteness or traversal check.",
+      "assessment": "The module is right not to act on these. It performs no filesystem access and the packet keeps cwd and machine as hints. But a success value carrying newline-bearing or traversal-shaped text will be consumed downstream by code that did not read this module. ResolvedPijSession's doc comment describes it as a snapshot to pin and says nothing about the fields being untrusted external text. One doc sentence is the whole fix, and it belongs here rather than in the consumer.",
+      "ownership": "Downstream handling is PM integration scope, not this unit's."
+    },
+    {
+      "id": "R9",
+      "severity": "low",
+      "blocking": false,
+      "title": "The reported test count does not match the committed file.",
+      "evidence": "tests/pij.rs at the subject declares EIGHT #[test] functions, of which SIX execute a real process. The PM reports seven focused process tests passing.",
+      "assessment": "Neither seven nor seven-that-spawn is what the committed file contains. The likeliest explanation is a loose count in prose rather than a stale tree, but a test count is exactly the kind of number that should not be approximate in a delivery note. Worth reconciling before anyone treats the figure as evidence. I am reporting a static census; I ran nothing."
+    }
+  ],
+  "things_i_checked_and_found_right": [
+    "The fixture pins argv exactly, including $# = 3, so an added flag or a shell string would fail every test that uses it. That is a real argv contract test rather than a smoke test.",
+    "Envelope precedence is correct: ok is inspected before exit status, so an unknown seat stays UnknownSeat even though Pij exits non-zero for it, and the test pins that with exit 4.",
+    "No zombie on the success path. The loop only breaks after try_wait returned Some, which has already reaped.",
+    "The reader thread terminates on every path, including thread-spawn failure, where the closure is dropped and the pipe closes.",
+    "The Take is dropped at the end of the read statement, so an over-producing child meets a closed pipe rather than being read forever.",
+    "map_harness maps through HarnessId::new and turns a rejection into InvalidResponse rather than unwrapping. All five constants satisfy the registry_id rules (crates/core/src/query/identity.rs:194-206), so the branch is unreachable by construction. It is still the right call: a library reached from a CLI should not carry a panic for a case it can type."
+  ],
+  "conditions": "None. R1 is worth doing and I would like to see it before this is consumed by anything that matters, but it does not gate an unconsumed optional module.",
+  "explicitly_not_claimed": [
+    "Any CLI or composition acceptance.",
+    "Any statement about build, test, lint or formatter results.",
+    "Any anticipation of the exact boot capture.",
+    "Any Builder receipt or formal allocation outcome; the delivery record itself declares this is neither a sealed roster delivery nor a formal Builder allocation."
+  ]
+}

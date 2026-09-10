@@ -3,8 +3,10 @@
 //! final symlinks are never followed. No content interpretation or cursor storage.
 #![forbid(unsafe_code)]
 
+use sha2::{Digest as _, Sha256};
 use unisphere_core::{
     LoadedBatch, PipelineError, ReadCursor, ReadLimits, SessionLoader, SessionRef, SourceScope,
+    query::{NativeLocator, NativeRecord as QueryNativeRecord},
 };
 
 /// Stateless filesystem implementation of [`SessionLoader`].
@@ -14,6 +16,41 @@ pub struct FileSessionLoader;
 impl FileSessionLoader {
     pub const fn new() -> Self {
         Self
+    }
+}
+
+/// One complete, bounded JSONL generation for immutable query inspection.
+///
+/// Unlike [`ReadCursor`], `revision` identifies every observed physical byte,
+/// including blank records and LF framing. It is not an append checkpoint.
+#[derive(Clone, PartialEq, Eq)]
+pub struct QueryJsonlSnapshot {
+    pub source: SessionRef,
+    pub revision: String,
+    pub input_bytes: usize,
+    pub records: Vec<QueryNativeRecord>,
+}
+
+impl FileSessionLoader {
+    /// Read exactly one current JSONL generation. Capacity stops and incomplete
+    /// tails fail instead of publishing a partial query view.
+    pub fn read_query_snapshot(
+        &self,
+        session: &SessionRef,
+        limits: ReadLimits,
+    ) -> Result<QueryJsonlSnapshot, PipelineError> {
+        #[cfg(unix)]
+        {
+            unix::read_query_snapshot(session, limits)
+        }
+        #[cfg(not(unix))]
+        {
+            let _ = (session, limits);
+            Err(PipelineError::new(
+                unisphere_core::PipelineErrorKind::Unsupported,
+                None,
+            ))
+        }
     }
 }
 
@@ -111,6 +148,43 @@ mod unix {
         cursor: Option<&ReadCursor>,
         limits: ReadLimits,
     ) -> Result<LoadedBatch, PipelineError> {
+        read_framed(session, cursor, limits, None, false)
+    }
+
+    pub(super) fn read_query_snapshot(
+        session: &SessionRef,
+        limits: ReadLimits,
+    ) -> Result<QueryJsonlSnapshot, PipelineError> {
+        let mut digest = Sha256::new();
+        digest.update(b"unisphere.query.jsonl.v1\0");
+        let batch = read_framed(session, None, limits, Some(&mut digest), true)?;
+        let input_bytes = usize::try_from(batch.next_cursor.offset)
+            .map_err(|_| error(PipelineErrorKind::BatchLimit, None))?;
+        let records = batch
+            .records
+            .into_iter()
+            .map(|record| QueryNativeRecord {
+                locator: NativeLocator::Jsonl {
+                    offset: record.offset,
+                },
+                bytes: record.bytes,
+            })
+            .collect();
+        Ok(QueryJsonlSnapshot {
+            source: batch.source,
+            revision: format!("sha256:{:x}", digest.finalize()),
+            input_bytes,
+            records,
+        })
+    }
+
+    fn read_framed(
+        session: &SessionRef,
+        cursor: Option<&ReadCursor>,
+        limits: ReadLimits,
+        mut revision: Option<&mut Sha256>,
+        require_complete: bool,
+    ) -> Result<LoadedBatch, PipelineError> {
         limits.validate()?;
         session.validate()?;
         let offset = cursor.map_or(0, |cursor| cursor.offset);
@@ -124,8 +198,6 @@ mod unix {
                 return Err(error(PipelineErrorKind::Unsupported, Some(offset)));
             }
         }
-        // NOFOLLOW closes the check/open symlink race. NONBLOCK prevents a FIFO
-        // or other special leaf from blocking before its descriptor is inspected.
         let mut file = OpenOptions::new()
             .read(true)
             .custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK)
@@ -165,7 +237,6 @@ mod unix {
             }
         }
         file.seek(SeekFrom::Start(offset)).map_err(read_error)?;
-        // Take freezes the observed boundary: this call never chases an appender.
         let mut reader = BufReader::with_capacity(
             limits.max_record_bytes.min(8192),
             file.take(observed_end - offset),
@@ -178,6 +249,9 @@ mod unix {
         let mut more = false;
         while next < observed_end {
             if physical_records == limits.max_records || consumed == limits.max_batch_bytes {
+                if require_complete {
+                    return Err(error(PipelineErrorKind::BatchLimit, Some(next)));
+                }
                 more = true;
                 break;
             }
@@ -194,14 +268,20 @@ mod unix {
                         .map_err(|_| error(PipelineErrorKind::RecordLimit, Some(next)))?;
                     let end = next.checked_add(length).ok_or_else(changed)?;
                     physical_records += 1;
+                    if let Some(digest) = revision.as_mut() {
+                        digest.update(&bytes);
+                    }
                     if !bytes.iter().all(u8::is_ascii_whitespace) {
-                        bytes.pop(); // Only LF is removed; native CR remains.
-                        records.push(NativeRecord {
+                        bytes.pop();
+                        records.push(unisphere_core::NativeRecord {
                             offset: next,
                             bytes,
                         });
                     }
                     next = end;
+                }
+                Frame::Incomplete if require_complete => {
+                    return Err(error(PipelineErrorKind::InvalidData, Some(next)));
                 }
                 Frame::Incomplete => {
                     incomplete_tail = true;
@@ -210,14 +290,15 @@ mod unix {
                 Frame::Capacity if capacity == limits.max_record_bytes => {
                     return Err(error(PipelineErrorKind::RecordLimit, Some(next)));
                 }
+                Frame::Capacity if require_complete => {
+                    return Err(error(PipelineErrorKind::BatchLimit, Some(next)));
+                }
                 Frame::Capacity => {
                     more = true;
                     break;
                 }
             }
         }
-        // Rotation/removal and observable truncation invalidate the entire call,
-        // not merely its checkpoint. Same-inode rewriting/regrowth is unsupported.
         verify_source(
             reader.get_ref().get_ref(),
             session,

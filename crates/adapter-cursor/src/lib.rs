@@ -5,6 +5,7 @@
 #![forbid(unsafe_code)]
 
 mod ide;
+mod query;
 
 pub use ide::{CursorIdeAdapter, IDE_DESCRIPTOR};
 

@@ -103,6 +103,31 @@ acceptance; the SDK collection service coordinates that boundary. Repeatedly
 polling an unchanged partial tail will not make progress: wait for an external
 append signal or your own scheduling policy when `more=false`.
 
+## Immutable query snapshots
+
+`FileSessionLoader::read_query_snapshot` is the separate full-source path used by
+the local query provider. It reuses the same LF framer, no-follow regular-file
+checks, fixed observed-end boundary and before-publication identity checks as
+`read_batch`, but it does not return or accept an append cursor.
+
+The call must observe the complete file within one `ReadLimits` budget. A record
+or aggregate limit, an incomplete tail, replacement or truncation fails the call;
+no partial query input or checkpoint is returned. Empty files are valid empty
+views. Nonblank physical records become query records with their native byte
+offsets. Blank records do not become invented events, but their bytes still
+participate in the revision and byte budget.
+
+The revision is `sha256:` plus 64 lowercase hexadecimal digits over the literal
+domain `unisphere.query.jsonl.v1\0` followed by every physical source byte in
+order, including LF delimiters, CR and blank records. The path is excluded, so a
+relocated byte-identical source retains the same revision. Any observed byte or
+framing change changes the revision. This is a bounded replacement-view identity,
+not append progress, retained history, exactly-once ingestion or session finality.
+
+The existing `read_batch` cursor behavior is unchanged. Collection callers still
+retain only an accepted `next_cursor`; query callers retain the source revision in
+their immutable view and reopen the source when that evidence changes.
+
 ## Proof
 
 `cargo test -p unisphere-loader-jsonl` exercises synthetic temporary files:

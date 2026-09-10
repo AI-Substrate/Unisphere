@@ -1,6 +1,7 @@
 //! Pure physical-record projection of Oh My Pi JSONL, including its mutable title slot.
 //! No source, sidecar, environment, clock, or output access occurs here.
 #![forbid(unsafe_code)]
+mod query;
 
 use std::collections::BTreeMap;
 
@@ -57,7 +58,7 @@ impl SessionAdapter for OmpAdapter {
             .ok_or_else(|| PipelineError::new(PipelineErrorKind::InvalidInput, None))?;
         let mut batch = MappedBatch::default();
         for native in records {
-            let value = serde_json::from_slice(&native.bytes).map_err(|_| {
+            let value = decode(&native.bytes).map_err(|()| {
                 PipelineError::new(PipelineErrorKind::InvalidData, Some(native.offset))
             })?;
             let mut mapping = Mapping {
@@ -80,6 +81,10 @@ struct Mapping<'a> {
 }
 
 type Attributes = BTreeMap<String, Value>;
+
+fn decode(bytes: &[u8]) -> Result<Value, ()> {
+    serde_json::from_slice(bytes).map_err(|_| ())
+}
 
 impl Mapping<'_> {
     fn diagnostic(&mut self, code: MappingDiagnosticCode) {

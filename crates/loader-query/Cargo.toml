@@ -1,0 +1,19 @@
+[package]
+name = "unisphere-loader-query"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+globset.workspace = true
+unisphere-core.workspace = true
+unisphere-loader-jsonl.workspace = true
+unisphere-loader-snapshot.workspace = true
+
+[target.'cfg(unix)'.dependencies]
+libc.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

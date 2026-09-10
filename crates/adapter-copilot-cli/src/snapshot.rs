@@ -1,6 +1,6 @@
 //! Bounded legacy monolithic JSON projection, not an events.jsonl replay.
 
-use super::{DESCRIPTOR, Mapping};
+use super::{DESCRIPTOR, Mapping, decode_json};
 use serde_json::{Map, Value, json};
 use std::collections::BTreeMap;
 use time::{OffsetDateTime, format_description::well_known::Rfc3339};
@@ -53,8 +53,8 @@ impl SnapshotAdapter for CopilotCliAdapterSnapshot {
         if record.key != "document" || snapshot.revision.is_empty() {
             return Err(PipelineError::new(PipelineErrorKind::InvalidData, None));
         }
-        let value: Value = serde_json::from_slice(&record.bytes)
-            .map_err(|_| PipelineError::new(PipelineErrorKind::InvalidData, None))?;
+        let value = decode_json(&record.bytes)
+            .map_err(|()| PipelineError::new(PipelineErrorKind::InvalidData, None))?;
         let document = value
             .as_object()
             .ok_or_else(|| PipelineError::new(PipelineErrorKind::InvalidData, None))?;

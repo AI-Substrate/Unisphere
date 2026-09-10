@@ -256,3 +256,129 @@ The manifest identifies `replace_projection`, record count, source selection,
 content policy and unknown finality. A revision is an observation of that bounded
 source representation, not producer finality or a global clock. Caller-side
 history, destination transactions and cross-source deduplication remain separate.
+
+## Query supplied session evidence in process
+
+`QueryService<S>` implements `QueryApi` for any injected `S: QuerySource`. The
+source receives a typed `SourceSelection` before it enumerates or reads stores;
+the SDK never discovers HOME, the current directory, Git, native clients or a
+network service on its own. A caller can execute a one-shot request or retain an
+immutable `QueryView` and call `execute_view` repeatedly without another source
+read:
+
+```rust
+use unisphere_sdk::{
+    Dataset, Operation, QueryApi, QueryRequest, QueryService, QuerySource,
+    execute_view,
+};
+
+fn inspect<S: QuerySource>(
+    service: &QueryService<S>,
+    request: &QueryRequest,
+) -> Result<(), unisphere_sdk::QueryFailure> {
+    let response = service.execute(request)?;
+    assert_eq!(response.dataset, Dataset::Sessions);
+
+    let view = service.open_view(request)?;
+    let same_semantics = execute_view(&view, request)?;
+    assert_eq!(same_semantics.query.operation, Operation::List.kind());
+    Ok(())
+}
+# let _ = inspect::<unisphere_testkit::query::FakeQuerySource>;
+```
+
+The public facade re-exports the core query vocabulary. `QuerySource::load`
+accepts only the explicit `QueryScope`, pre-I/O `SourceSelection`, `QueryLimits`
+and derived `ContentAccess`, and returns either a supplied `NativeQueryView` or
+bounded versioned saved input. Concrete discovery/loaders remain separate
+adapters composed by the application.
+
+### Immutable view and typed datasets
+
+`QueryView` owns six typed collections: `SourceRow`, `SessionRow`, `TurnRow`,
+`MessageRow`, `ToolRow` and `EventRow`. These raw in-process evidence rows are
+not serializable. `execute_view` selects the same rows for list, show, tree,
+extract and statistics, then returns only validated `ProjectedRow` values.
+
+Local entity IDs never masquerade as native conversation IDs. Session identity
+is scoped by source, native namespace and participant evidence. Source-only
+fragments remain source/event evidence when session membership is unavailable.
+Initiating request markers create turns; tool-result, injected-context and
+summary records do not. Calls pair with results/progress only by a supported
+native call ID inside the same session/branch. Missing, duplicate or reversed
+evidence remains explicitly incomplete, ambiguous or invalid-clock rather than
+being paired by adjacency or text.
+
+Every view exposes `digest()`, `admitted_scope()`, `source_selection()`,
+`retained_capability()` and `input_basis()`. The digest binds schema and
+reconstruction versions, admitted scope/repository roots, selected source IDs,
+revisions and policy versions, association/read facts, retained fields and saved
+input origin. It deliberately excludes row filters, output columns, page size,
+cursors, result universes, actions and matched/emitted counts. Reopen a view when
+the source revision, admission or required retained capability changes.
+
+### Filters, time, ordering and continuation
+
+Filters are typed: different field/operator groups combine with AND, repeated
+values in one group combine with OR, then exclusions subtract. Literal contains,
+Rust regex and glob matching are distinct and case-sensitive unless
+`ignore_case` is set. Unsupported fields or predicates fail against the dataset
+schema; unknown values do not satisfy positive comparisons. Adapter and harness
+equal/in/exclude predicates additionally become the pre-I/O `SourceSelection`.
+
+`since` is inclusive and `until` exclusive. Date-only values are UTC midnight.
+Sessions, turns and tools default to `started_at`; messages and events use
+`timestamp`. Session creation, first observed event and source-file modification
+are separate facts. Undated rows match a bounded time window only when
+`include_undated` is explicit. Unknown sort values remain last in either
+direction, with stable entity-ID tie-breaking.
+
+List defaults to 50 rows; `limit: Some(0)` means all within `QueryLimits`.
+Continuation tokens contain only a version, view digest, normalized request
+digest, next index and corruption checksum. They carry no paths, content or sort
+payload and are not authorization. Changed request options and changed source
+views produce distinct stale-cursor reasons instead of silently restarting.
+
+Turn/message context expands after matching and stays within each admitted
+session/branch native order. Overlapping windows are unioned; contextual rows
+may therefore fall outside the original time predicate. Every emitted row carries
+the metadata-only `is_context` boolean (`false` for a match, `true` for an added
+neighbour), even when explicit columns omit it. Offline context requires complete
+partition/order/membership metadata rather than silently shortening a window.
+
+### Privacy and saved input
+
+Metadata projection is the default. Native IDs, names/models, paths, message
+text/parts, tool names/commands/arguments/results and reasoning are sensitive.
+A sensitive search authorizes local inspection of only that field; it does not
+authorize emission. Requesting a sensitive column requires `include_content`,
+otherwise `UNI-QUERY-CONTENT-CONSENT` returns a typed
+`UseMetadataOrConsent` recovery. Responses contain approved projections, safe
+coverage, a per-response `ResultUniverse` and a semantic `QueryAction`; they do
+not contain the raw `QueryView`.
+
+Saved `QueryJsonV1` input validates the versioned response envelope, coverage,
+universe, unique row IDs, field types and source revisions. Standalone
+`QueryJsonlV1` rows are always a bounded provided-row universe with unknown
+completeness; EOF is not proof of complete capture. Filtering/list/show can use
+available rows. Statistics remain explicitly input-bounded, while context or
+higher-level reconstruction that needs missing partition evidence returns
+`InputSubset` with `UseCompleteInput`. Neither path triggers live enrichment.
+
+### Statistics and limits
+
+Statistics reduce the full logical matched set before group pagination. Tool
+duration metrics include only finite source-reported or valid paired-clock
+measurements; missing durations are counted separately. Percentiles use exact
+nearest-rank `ceil(p*n)`. Failure-rate denominator is
+`succeeded + failed + cancelled`; cancellation is neither success nor failure,
+and incomplete/unknown calls are excluded. Cumulative usage snapshots contribute
+only the latest compatible native-owned value instead of being summed as replayed
+usage.
+
+`QueryLimits` bound source/input bytes, observations and rows, retained payload,
+patterns and scanned text, context neighbours, branch memberships, cursor size
+and output size. Invalid, zero, overflowing or over-hard-ceiling limits fail
+before source I/O. Bound violations and availability failures carry stable codes,
+safe explanations and typed recovery actions; no diagnostic includes raw source
+payload or a content-bearing filter value.

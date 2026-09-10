@@ -1,10 +1,10 @@
 //! Pure, stateless projection of supplied Codex rollout JSONL records.
 //!
-//! Physical records are not reconstructed turns. Header context is never carried
-//! into later records; usage snapshots and event summaries are never aggregated.
+//! The physical OTLP mapper never carries header context into later records;
+//! query inspection uses only explicit versioned header and turn boundaries.
 #![forbid(unsafe_code)]
 
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, path::PathBuf};
 
 use serde_json::{Map, Value, json};
 use time::{OffsetDateTime, format_description::well_known::Rfc3339};
@@ -12,6 +12,15 @@ use unisphere_core::{
     AdapterCapabilities, AdapterDescriptor, LocationHint, MappedBatch, MappingDiagnostic,
     MappingDiagnosticCode, MappingOptions, NativeRecord, PipelineError, PipelineErrorKind,
     SessionAdapter, SessionRef, TelemetryRecord,
+    query::{
+        AssociationBasis, AssociationExtent, AssociationObservation, AvailabilityCode,
+        AvailabilityIssue, BranchEvidence, BranchLink, ContentAccess, ControlKind, FieldId,
+        InspectedSource, LimitKind, LineageKind, MembershipPolicy, MessageRole, NativeLocator,
+        NativeQueryInput, NativeSequence, Observation, ObservationFacet, ObservationPart, Outcome,
+        PartitionId, QueryAdapter, QueryErrorLocation, QueryFailure, QueryFailureCode, QueryLimits,
+        RecoveryAction, RequestMarker, SessionEvidenceKey, SourcePartition, SourceProblem,
+        SourceRef, SourceViewKind, Timestamp, TimestampBasis, UsageCounters, UsageScope,
+    },
 };
 
 /// Declarative metadata; this mapper never expands or reads the location hint.
@@ -37,6 +46,9 @@ pub const DESCRIPTOR: AdapterDescriptor = AdapterDescriptor {
     },
 };
 
+/// Query reconstruction policy applied to supplied Codex rollout records.
+pub const QUERY_POLICY_VERSION: &str = "codex/query-v1";
+
 /// Maps complete supplied records without filesystem, environment, or clock access.
 #[derive(Debug, Clone, Copy, Default)]
 pub struct CodexAdapter;
@@ -59,7 +71,7 @@ impl SessionAdapter for CodexAdapter {
             .ok_or_else(|| PipelineError::new(PipelineErrorKind::InvalidInput, None))?;
         let mut batch = MappedBatch::default();
         for native in records {
-            let value = serde_json::from_slice(&native.bytes).map_err(|_| {
+            let value = decode_codex_json(&native.bytes).map_err(|_| {
                 PipelineError::new(PipelineErrorKind::InvalidData, Some(native.offset))
             })?;
             let mapping = Mapping {
@@ -77,6 +89,648 @@ impl SessionAdapter for CodexAdapter {
             batch.records.push(mapping.record(value));
         }
         Ok(batch)
+    }
+}
+
+#[derive(Clone)]
+struct CodexQuerySession {
+    key: SessionEvidenceKey,
+    partition: PartitionId,
+}
+
+impl QueryAdapter for CodexAdapter {
+    fn inspect(
+        &self,
+        input: NativeQueryInput<'_>,
+        access: ContentAccess,
+        limits: &QueryLimits,
+    ) -> Result<InspectedSource, QueryFailure> {
+        limits.validate()?;
+        let NativeQueryInput::Records { source, records } = input else {
+            return Err(QueryFailure::new(
+                QueryFailureCode::UnsupportedSource,
+                RecoveryAction::FixSource {
+                    reason: SourceProblem::UnsupportedDialect,
+                    source: None,
+                },
+            ));
+        };
+        if records.len() > limits.max_observations_and_rows {
+            return Err(QueryFailure::limit(LimitKind::ObservationsAndRows));
+        }
+        let input_bytes = records.iter().try_fold(0_usize, |total, record| {
+            total.checked_add(record.bytes.len())
+        });
+        if input_bytes.is_none_or(|bytes| bytes > limits.max_source_bytes) {
+            return Err(QueryFailure::limit(LimitKind::SourceBytes));
+        }
+
+        let mut inspected = InspectedSource {
+            source: source.clone(),
+            partitions: Vec::new(),
+            observations: Vec::with_capacity(records.len()),
+            issues: Vec::new(),
+        };
+        inspected.source.query_policy_version = QUERY_POLICY_VERSION.into();
+        let source_only = PartitionId::derive(source.id, b"codex/source-only/v1");
+        let mut partition_indices = BTreeMap::<String, usize>::new();
+        let mut current_session: Option<CodexQuerySession> = None;
+        let mut current_turn: Option<String> = None;
+        let mut used_source_only = false;
+
+        for record in records {
+            let offset = codex_locator_offset(&record.locator);
+            let value: Value = decode_codex_json(&record.bytes).map_err(|_| {
+                QueryFailure::invalid_data().at(QueryErrorLocation {
+                    source: Some(source.id),
+                    offset,
+                    ..QueryErrorLocation::default()
+                })
+            })?;
+            let mut diagnostics = Vec::new();
+            let Some(object) = value.as_object() else {
+                used_source_only = true;
+                let issue = codex_issue(source.id, offset, None, AvailabilityCode::NotSupported);
+                inspected.issues.push(issue.clone());
+                inspected.observations.push(Observation {
+                    source_ref: SourceRef {
+                        source_id: source.id,
+                        revision: source.revision.clone(),
+                        locator: record.locator.clone(),
+                        subrecord: "unknown".into(),
+                    },
+                    native_record_id: None,
+                    session: None,
+                    branch: BranchEvidence::Unavailable {
+                        partition: source_only,
+                        reason: AvailabilityCode::NotCaptured,
+                    },
+                    parent_ids: Vec::new(),
+                    sequence: codex_sequence(&record.locator),
+                    timestamp: None,
+                    facets: Vec::new(),
+                    diagnostics: vec![issue],
+                });
+                continue;
+            };
+            let kind = codex_string(object, "type").unwrap_or("unknown");
+            let payload = object.get("payload").and_then(Value::as_object);
+            let subtype = payload.and_then(|payload| codex_string(payload, "type"));
+            let timestamp = codex_timestamp(
+                object.get("timestamp"),
+                source.id,
+                offset,
+                &mut diagnostics,
+            );
+
+            let mut header_associations = Vec::new();
+            if kind == "session_meta" {
+                current_turn = None;
+                current_session = payload.and_then(|payload| {
+                    let native_id = codex_string(payload, "id")?;
+                    let partition = PartitionId::derive(source.id, &codex_partition_key(native_id));
+                    let parent_native_id = codex_string(payload, "parent_thread_id").map(str::to_owned);
+                    let fork_native_id = codex_string(payload, "forked_from_id").map(str::to_owned);
+                    let key = SessionEvidenceKey {
+                        namespace: "codex/thread".into(),
+                        native_id: native_id.into(),
+                        participant_id: None,
+                        parent_native_id,
+                        fork_native_id,
+                        membership_basis: MembershipPolicy::ValidatedHeader,
+                    };
+                    let index = if let Some(index) = partition_indices.get(native_id) {
+                        *index
+                    } else {
+                        let index = inspected.partitions.len();
+                        inspected.partitions.push(SourcePartition {
+                            id: partition,
+                            native_session_id: Some(native_id.into()),
+                            participant_id: None,
+                            view: SourceViewKind::Conversation,
+                            membership: MembershipPolicy::ValidatedHeader,
+                            associations: Vec::new(),
+                        });
+                        partition_indices.insert(native_id.into(), index);
+                        index
+                    };
+                    if let Some(cwd) = codex_string(payload, "cwd") {
+                        let association = AssociationObservation {
+                            basis: AssociationBasis::NativeCwd,
+                            path: Some(PathBuf::from(cwd)),
+                            partition,
+                            applies_to: AssociationExtent::Partition,
+                        };
+                        inspected.partitions[index].associations.push(association.clone());
+                        inspected.source.associations.push(association.clone());
+                        header_associations.push(association);
+                    }
+                    Some(CodexQuerySession { key, partition })
+                });
+            }
+            if kind == "turn_context" {
+                current_turn = payload
+                    .and_then(|payload| codex_string(payload, "turn_id"))
+                    .map(str::to_owned);
+            }
+
+            let session = current_session.as_ref().map(|session| session.key.clone());
+            let (partition, branch) = if let Some(session) = current_session.as_ref() {
+                (
+                    session.partition,
+                    BranchEvidence::Linear {
+                        partition: session.partition,
+                    },
+                )
+            } else {
+                used_source_only = true;
+                (
+                    source_only,
+                    BranchEvidence::Unavailable {
+                        partition: source_only,
+                        reason: AvailabilityCode::NotCaptured,
+                    },
+                )
+            };
+            let explicit_turn = payload
+                .and_then(|payload| codex_string(payload, "turn_id"))
+                .or_else(|| {
+                    payload
+                        .and_then(|payload| payload.get("internal_chat_message_metadata_passthrough"))
+                        .and_then(Value::as_object)
+                        .and_then(|metadata| codex_string(metadata, "turn_id"))
+                })
+                .map(str::to_owned);
+            let turn_id = explicit_turn.or_else(|| current_turn.clone());
+            let native_record_id = payload.and_then(codex_native_record_id).map(str::to_owned);
+            let mut facets = Vec::new();
+            match kind {
+                "session_meta" => {
+                    if let (Some(payload), Some(session)) = (payload, current_session.as_ref()) {
+                        let mut lineage = Vec::new();
+                        if let Some(parent) = &session.key.parent_native_id {
+                            lineage.push(BranchLink {
+                                kind: LineageKind::Parent,
+                                target: parent.clone(),
+                            });
+                        }
+                        if let Some(fork) = &session.key.fork_native_id {
+                            lineage.push(BranchLink {
+                                kind: LineageKind::Fork,
+                                target: fork.clone(),
+                            });
+                        }
+                        if let Some(root) = codex_string(payload, "session_id") {
+                            lineage.push(BranchLink {
+                                kind: LineageKind::NativeLink,
+                                target: root.into(),
+                            });
+                        }
+                        facets.push(ObservationFacet::SessionMetadata {
+                            native_id: session.key.native_id.clone(),
+                            name: None,
+                            models: Vec::new(),
+                            created_at: timestamp.clone(),
+                            associations: header_associations,
+                            lineage,
+                        });
+                    } else {
+                        diagnostics.push(codex_issue(
+                            source.id,
+                            offset,
+                            Some(FieldId::NativeId),
+                            AvailabilityCode::NotCaptured,
+                        ));
+                    }
+                }
+                "turn_context" => facets.push(ObservationFacet::Control {
+                    kind: ControlKind::ContextChange,
+                    links: current_turn
+                        .iter()
+                        .map(|turn| BranchLink {
+                            kind: LineageKind::NativeLink,
+                            target: turn.clone(),
+                        })
+                        .collect(),
+                }),
+                "response_item" => inspect_codex_response(
+                    payload,
+                    subtype,
+                    turn_id.as_deref(),
+                    &access,
+                    source.id,
+                    offset,
+                    &mut facets,
+                    &mut diagnostics,
+                ),
+                "event_msg" => inspect_codex_event(
+                    payload,
+                    subtype,
+                    turn_id.as_deref(),
+                    &access,
+                    source.id,
+                    offset,
+                    current_session.as_ref().map(|session| session.key.native_id.as_str()),
+                    &mut facets,
+                    &mut diagnostics,
+                ),
+                "compacted" => facets.push(ObservationFacet::Control {
+                    kind: ControlKind::Compaction,
+                    links: Vec::new(),
+                }),
+                _ => diagnostics.push(codex_issue(
+                    source.id,
+                    offset,
+                    None,
+                    AvailabilityCode::NotSupported,
+                )),
+            }
+
+            inspected.observations.push(Observation {
+                source_ref: SourceRef {
+                    source_id: source.id,
+                    revision: source.revision.clone(),
+                    locator: record.locator.clone(),
+                    subrecord: match subtype {
+                        Some(subtype) => format!("{kind}/{subtype}"),
+                        None => kind.into(),
+                    },
+                },
+                native_record_id,
+                session,
+                branch,
+                parent_ids: Vec::new(),
+                sequence: codex_sequence(&record.locator),
+                timestamp,
+                facets,
+                diagnostics: diagnostics.clone(),
+            });
+            inspected.issues.extend(diagnostics);
+        }
+
+        if used_source_only || inspected.partitions.is_empty() {
+            inspected.partitions.push(SourcePartition {
+                id: source_only,
+                native_session_id: None,
+                participant_id: None,
+                view: SourceViewKind::SourceOnly,
+                membership: MembershipPolicy::Unavailable,
+                associations: Vec::new(),
+            });
+        }
+        inspected.validate(limits)?;
+        Ok(inspected)
+    }
+}
+
+fn decode_codex_json(bytes: &[u8]) -> serde_json::Result<Value> {
+    serde_json::from_slice(bytes)
+}
+
+fn inspect_codex_response(
+    payload: Option<&Map<String, Value>>,
+    subtype: Option<&str>,
+    turn_id: Option<&str>,
+    access: &ContentAccess,
+    source: unisphere_core::query::SourceId,
+    offset: Option<u64>,
+    facets: &mut Vec<ObservationFacet>,
+    diagnostics: &mut Vec<AvailabilityIssue>,
+) {
+    let Some(payload) = payload else {
+        diagnostics.push(codex_issue(source, offset, None, AvailabilityCode::NotCaptured));
+        return;
+    };
+    match subtype {
+        Some("message") => {
+            let role = match codex_string(payload, "role") {
+                Some("user") => MessageRole::User,
+                Some("assistant") => MessageRole::Assistant,
+                Some("system") => MessageRole::System,
+                Some("developer") => MessageRole::Developer,
+                _ => MessageRole::Unknown,
+            };
+            let marker = match role {
+                MessageRole::User => RequestMarker::Initiating,
+                MessageRole::System | MessageRole::Developer => RequestMarker::Injected,
+                _ => RequestMarker::Unknown,
+            };
+            facets.push(ObservationFacet::Message {
+                native_id: codex_string(payload, "id").map(str::to_owned),
+                role,
+                parts: codex_parts(payload.get("content"), access, FieldId::Text),
+                request_marker: marker,
+                turn_id: turn_id.map(str::to_owned),
+            });
+        }
+        Some("reasoning") => {
+            let mut parts = codex_reasoning_parts(payload.get("summary"), access);
+            parts.extend(codex_reasoning_parts(payload.get("content"), access));
+            if payload.get("encrypted_content").is_some_and(|value| !value.is_null()) {
+                parts.push(ObservationPart::Unavailable(AvailabilityCode::NotSupported));
+            }
+            facets.push(ObservationFacet::Message {
+                native_id: codex_string(payload, "id").map(str::to_owned),
+                role: MessageRole::Assistant,
+                parts,
+                request_marker: RequestMarker::Summary,
+                turn_id: turn_id.map(str::to_owned),
+            });
+        }
+        Some("function_call" | "custom_tool_call") => {
+            let Some(call_id) = codex_string(payload, "call_id") else {
+                diagnostics.push(codex_issue(source, offset, Some(FieldId::CallId), AvailabilityCode::NotCaptured));
+                return;
+            };
+            let Some(name) = codex_string(payload, "name") else {
+                diagnostics.push(codex_issue(source, offset, Some(FieldId::ToolName), AvailabilityCode::NotCaptured));
+                return;
+            };
+            let key = if subtype == Some("function_call") { "arguments" } else { "input" };
+            let input = payload.get(key).map_or_else(
+                || vec![ObservationPart::Unavailable(AvailabilityCode::NotCaptured)],
+                |value| vec![codex_retained(access, FieldId::Input, || ObservationPart::Structured(value.clone()))],
+            );
+            facets.push(ObservationFacet::ToolCall {
+                native_call_id: call_id.into(),
+                native_name: name.into(),
+                family: codex_tool_family(name).map(str::to_owned),
+                input,
+                turn_id: turn_id.map(str::to_owned),
+            });
+        }
+        Some("function_call_output" | "custom_tool_call_output") => {
+            let Some(call_id) = codex_string(payload, "call_id") else {
+                diagnostics.push(codex_issue(source, offset, Some(FieldId::CallId), AvailabilityCode::NotCaptured));
+                return;
+            };
+            let output = payload.get("output").map_or_else(
+                || vec![ObservationPart::Unavailable(AvailabilityCode::NotCaptured)],
+                |value| vec![codex_retained(access, FieldId::Output, || ObservationPart::Structured(value.clone()))],
+            );
+            facets.push(ObservationFacet::ToolResult {
+                native_call_id: call_id.into(),
+                native_name: codex_string(payload, "name").map(str::to_owned),
+                output,
+                outcome: Outcome::Unknown,
+                exit_code: None,
+                reported_duration_ms: None,
+                turn_id: turn_id.map(str::to_owned),
+            });
+        }
+        Some("compaction" | "compaction_summary" | "context_compaction") => {
+            facets.push(ObservationFacet::Control {
+                kind: ControlKind::Compaction,
+                links: Vec::new(),
+            });
+        }
+        Some(_) | None => diagnostics.push(codex_issue(
+            source,
+            offset,
+            None,
+            AvailabilityCode::NotSupported,
+        )),
+    }
+}
+
+#[allow(clippy::too_many_arguments)]
+fn inspect_codex_event(
+    payload: Option<&Map<String, Value>>,
+    subtype: Option<&str>,
+    turn_id: Option<&str>,
+    access: &ContentAccess,
+    source: unisphere_core::query::SourceId,
+    offset: Option<u64>,
+    session_id: Option<&str>,
+    facets: &mut Vec<ObservationFacet>,
+    diagnostics: &mut Vec<AvailabilityIssue>,
+) {
+    let Some(payload) = payload else {
+        diagnostics.push(codex_issue(source, offset, None, AvailabilityCode::NotCaptured));
+        return;
+    };
+    match subtype {
+        Some("token_count") => inspect_codex_usage(
+            payload.get("info"),
+            turn_id,
+            session_id,
+            source,
+            offset,
+            facets,
+            diagnostics,
+        ),
+        Some("user_message" | "agent_message" | "agent_reasoning" | "agent_reasoning_raw_content") => {
+            facets.push(ObservationFacet::Control {
+                kind: ControlKind::Summary,
+                links: Vec::new(),
+            });
+        }
+        Some("context_compacted") => facets.push(ObservationFacet::Control {
+            kind: ControlKind::Compaction,
+            links: Vec::new(),
+        }),
+        Some("turn_started" | "task_started" | "turn_complete" | "task_complete" | "turn_aborted") => {
+            facets.push(ObservationFacet::Control {
+                kind: ControlKind::Other,
+                links: Vec::new(),
+            });
+        }
+        Some("exec_command_begin") => {
+            if let Some(call_id) = codex_string(payload, "call_id") {
+                facets.push(ObservationFacet::ToolProgress {
+                    native_call_id: call_id.into(),
+                    parts: Vec::new(),
+                });
+            }
+        }
+        Some("exec_command_end") => {
+            if let Some(call_id) = codex_string(payload, "call_id") {
+                let exit_code = payload.get("exit_code").and_then(Value::as_i64);
+                facets.push(ObservationFacet::ToolResult {
+                    native_call_id: call_id.into(),
+                    native_name: None,
+                    output: payload.get("aggregated_output").map_or_else(
+                        Vec::new,
+                        |_| vec![codex_retained(access, FieldId::Output, || ObservationPart::Unavailable(AvailabilityCode::NotSupported))],
+                    ),
+                    outcome: match exit_code {
+                        Some(0) => Outcome::Succeeded,
+                        Some(_) => Outcome::Failed,
+                        None => Outcome::Unknown,
+                    },
+                    exit_code,
+                    reported_duration_ms: None,
+                    turn_id: turn_id.map(str::to_owned),
+                });
+            }
+        }
+        Some(_) | None => diagnostics.push(codex_issue(
+            source,
+            offset,
+            None,
+            AvailabilityCode::NotSupported,
+        )),
+    }
+}
+
+fn inspect_codex_usage(
+    info: Option<&Value>,
+    turn_id: Option<&str>,
+    session_id: Option<&str>,
+    source: unisphere_core::query::SourceId,
+    offset: Option<u64>,
+    facets: &mut Vec<ObservationFacet>,
+    diagnostics: &mut Vec<AvailabilityIssue>,
+) {
+    let Some(info) = info.and_then(Value::as_object) else { return };
+    for (field, scope, owner) in [
+        ("last_token_usage", UsageScope::Turn, turn_id),
+        ("total_token_usage", UsageScope::CumulativeSnapshot, session_id),
+    ] {
+        let Some(usage) = info.get(field).and_then(Value::as_object) else { continue };
+        let mut count = |native: &str, query_field: FieldId| {
+            usage.get(native).and_then(|value| {
+                let valid = value.as_i64().filter(|value| *value >= 0).map(|value| value as u64);
+                if valid.is_none() {
+                    diagnostics.push(codex_issue(source, offset, Some(query_field), AvailabilityCode::ProjectionMissing));
+                }
+                valid
+            })
+        };
+        let counters = UsageCounters {
+            input_tokens: count("input_tokens", FieldId::InputTokens),
+            output_tokens: count("output_tokens", FieldId::OutputTokens),
+            cache_read_tokens: count("cached_input_tokens", FieldId::CacheReadTokens),
+            cache_write_tokens: count("cache_write_input_tokens", FieldId::CacheWriteTokens),
+        };
+        if counters.input_tokens.is_some()
+            || counters.output_tokens.is_some()
+            || counters.cache_read_tokens.is_some()
+            || counters.cache_write_tokens.is_some()
+        {
+            facets.push(ObservationFacet::Usage {
+                owner: owner.map(str::to_owned),
+                scope,
+                counters,
+            });
+        }
+    }
+}
+
+fn codex_parts(value: Option<&Value>, access: &ContentAccess, field: FieldId) -> Vec<ObservationPart> {
+    let Some(parts) = value.and_then(Value::as_array) else {
+        return vec![ObservationPart::Unavailable(AvailabilityCode::NotCaptured)];
+    };
+    parts
+        .iter()
+        .map(|part| {
+            let text = part
+                .as_object()
+                .and_then(|part| codex_string(part, "text"));
+            match text {
+                Some(text) => codex_retained(access, field, || ObservationPart::Text(text.into())),
+                None => ObservationPart::Unavailable(AvailabilityCode::NotSupported),
+            }
+        })
+        .collect()
+}
+
+fn codex_reasoning_parts(value: Option<&Value>, access: &ContentAccess) -> Vec<ObservationPart> {
+    let Some(parts) = value.and_then(Value::as_array) else { return Vec::new() };
+    parts
+        .iter()
+        .map(|part| {
+            let text = part
+                .as_object()
+                .and_then(|part| codex_string(part, "text"));
+            match text {
+                Some(text) => codex_retained(access, FieldId::Parts, || ObservationPart::Reasoning(text.into())),
+                None => ObservationPart::Unavailable(AvailabilityCode::NotSupported),
+            }
+        })
+        .collect()
+}
+
+fn codex_retained(
+    access: &ContentAccess,
+    field: FieldId,
+    value: impl FnOnce() -> ObservationPart,
+) -> ObservationPart {
+    if access.permits_payload(field) || access.permits_payload(FieldId::Parts) {
+        value()
+    } else {
+        ObservationPart::Unavailable(AvailabilityCode::SensitiveOmitted)
+    }
+}
+
+fn codex_native_record_id(payload: &Map<String, Value>) -> Option<&str> {
+    codex_string(payload, "id").or_else(|| codex_string(payload, "item_id"))
+}
+
+fn codex_string<'a>(object: &'a Map<String, Value>, key: &str) -> Option<&'a str> {
+    object.get(key).and_then(Value::as_str)
+}
+
+fn codex_timestamp(
+    value: Option<&Value>,
+    source: unisphere_core::query::SourceId,
+    offset: Option<u64>,
+    diagnostics: &mut Vec<AvailabilityIssue>,
+) -> Option<Timestamp> {
+    let Some(value) = value else { return None };
+    let parsed = value
+        .as_str()
+        .and_then(|value| Timestamp::parse(value, TimestampBasis::Native).ok());
+    if parsed.is_none() {
+        diagnostics.push(codex_issue(source, offset, Some(FieldId::Timestamp), AvailabilityCode::InvalidClock));
+    }
+    parsed
+}
+
+fn codex_issue(
+    source: unisphere_core::query::SourceId,
+    offset: Option<u64>,
+    field: Option<FieldId>,
+    code: AvailabilityCode,
+) -> AvailabilityIssue {
+    AvailabilityIssue {
+        code,
+        field,
+        source: Some(source),
+        entity: None,
+        offset,
+    }
+}
+
+fn codex_locator_offset(locator: &NativeLocator) -> Option<u64> {
+    match locator {
+        NativeLocator::Jsonl { offset } => Some(*offset),
+        NativeLocator::Snapshot { .. } | NativeLocator::GitNote { .. } => None,
+    }
+}
+
+fn codex_sequence(locator: &NativeLocator) -> NativeSequence {
+    let key = match locator {
+        NativeLocator::Jsonl { offset } => offset.to_be_bytes().to_vec(),
+        NativeLocator::Snapshot { key } => key.as_bytes().to_vec(),
+        NativeLocator::GitNote { note_blob, .. } => note_blob.as_bytes().to_vec(),
+    };
+    NativeSequence { version: 1, key }
+}
+
+fn codex_partition_key(session: &str) -> Vec<u8> {
+    let mut key = Vec::with_capacity(8 + session.len());
+    key.extend_from_slice(&(session.len() as u64).to_le_bytes());
+    key.extend_from_slice(session.as_bytes());
+    key
+}
+
+fn codex_tool_family(name: &str) -> Option<&'static str> {
+    match name {
+        "shell" | "exec_command" | "container.exec" => Some("shell"),
+        "read_file" | "cat" => Some("file-read"),
+        "apply_patch" | "write_file" => Some("file-write"),
+        _ => None,
     }
 }
 

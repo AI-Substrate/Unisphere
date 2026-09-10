@@ -1,0 +1,19 @@
+[package]
+name = "unisphere-query-doc-recipes"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+unisphere-sdk = { path = @SDK_PATH@ }
+serde_json = "1"
+
+[[bin]]
+name = "sdk-schema"
+path = "sdk-schema.rs"
+
+[[bin]]
+name = "sdk-query"
+path = "sdk-query.rs"

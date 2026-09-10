@@ -1,6 +1,7 @@
 //! Pure projection of supplied Pi v3 JSONL tree entries, not a reconstructed chat.
 //! Content is opt-in; extension state, opaque signatures and sidecars are omitted.
 #![forbid(unsafe_code)]
+mod query;
 
 use std::collections::BTreeMap;
 
@@ -57,7 +58,7 @@ impl SessionAdapter for PiAdapter {
             .ok_or_else(|| PipelineError::new(PipelineErrorKind::InvalidInput, None))?;
         let mut batch = MappedBatch::default();
         for native in records {
-            let value: Value = serde_json::from_slice(&native.bytes).map_err(|_| {
+            let value = decode(&native.bytes).map_err(|()| {
                 PipelineError::new(PipelineErrorKind::InvalidData, Some(native.offset))
             })?;
             let mut mapping = Mapping {
@@ -75,6 +76,10 @@ struct Mapping<'a> {
     offset: u64,
     include_content: bool,
     diagnostics: &'a mut Vec<MappingDiagnostic>,
+}
+
+fn decode(bytes: &[u8]) -> Result<Value, ()> {
+    serde_json::from_slice(bytes).map_err(|_| ())
 }
 
 impl Mapping<'_> {

@@ -2,7 +2,9 @@
 
 ## Status and authority
 
-Jordan has nominated **pij-empirical-tiger** as the PM and directed work to continue into implementation. Guide v4 received independent Opus5/high decomposition approval in R3, with the scoped receipt recorded at `team/review-decomposition-approved.dd.json`. Phase dossiers contain 13 tasks and 84 initially unchecked assertions. The PM now implements the shared Rust baseline; coder release still requires its actual proof, independent exact-baseline review and seal. Main will not edit these canonical planning records concurrently.
+**Resume here:** `pm-continuity-handoff.json` is the current PM/coder checkpoint; `verification/baseline-handover-checkpoint.json` records the exercised source pair and proof ceiling. Jordan requested a handover before new work. Both baseline coders were told to hold and preserve their clones. The newer typed-time-field candidate pair is not the pair that passed 18 tests; do not conflate them.
+
+Jordan has nominated **pij-empirical-tiger** as the PM and directed implementation to be delegated to coders. Guide v4 received independent Opus5/high decomposition approval in R3, with the scoped receipt at `team/review-decomposition-approved.dd.json`. Phase dossiers contain 13 tasks and 84 initially unchecked assertions. Two isolated Sol Fast/high assistants implemented core contracts and fakes/proof for the PM-owned baseline; the PM integrates, reviews and executes proof. No baseline seal or normal coder-wave release exists yet. Main will not edit these canonical planning records concurrently.
 
 Subsequent ownership reconciliation confirmed that Tiger remains the sole canonical plan015 writer. Mammal owns a distinct private future-state Distro synthesis that assumes this CLI exists and interviews its owner; this is not a plan015 succession or competing implementation plan. Reptile is Distro's designated eventual coder, with no product allocation yet. The agreed split is recorded in `pm-appointment.json`; the temporary planning-write freeze is resolved.
 

@@ -1,0 +1,26 @@
+# PM-owned wave0 baseline delegation
+
+Jordan explicitly directed PM delegation to OMP GitHub Sol Fast 1M/high coders. This is bounded implementation assistance for the shared baseline, not a claimed sealed Builder wave1 dispatch; that dispatcher requires the very baseline you are helping create. PM retains interface authority, integration, validation, quality acceptance and independent Opus review.
+
+Source commit b652810b7134348da45929079b723daeae30123a. Your clone is an independent ordinary Git clone, not a linked worktree; preserve its recorded branch/root. Answer the actual native canary first, report observed model/harness/effort/root and gaps, then execute this already-granted scope without another approval exchange. Requested settings are not provider attestation.
+
+Read the clone's docs/plans/015-session-query-cli/plan.dd.json, assets/impl-guide.dd.json (C1-C25 and tk-0001), assets/baseline-followups.json, and phase-1 task tk-0001/context brief. Guide decomposition is approved; code/baseline proof is NOT. Do not restart planning, allocate another plan or wait for a future sealed baseline to implement this baseline itself. No broad discovery of private stores or peer session/inbox files.
+
+# Shared contract
+Core QueryApi/QuerySource/QueryAdapter/QueryWriter signatures and C21/C22/C23/C25 DTOs are the shared interface. QuerySource receives SourceSelection before I/O. Coverage contains no ResultUniverse. ViewDigestBasis is closed, immutable and nonrecursive; response universe is separate. F11 requires a closed StaleCursor reason, query binding checked before view binding, with safe cause-specific recovery. Source facts are not serialized projections; field sensitivity and limits are executable core contracts. No whole query engine, native adapters or CLI feature implementation in this assignment.
+
+The contracts coder owns exact Rust declarations/constructors; publish a short API note to the proof coder early so they use the actual surface. Both work from the same agreed guide semantics; any semantic conflict returns to PM, not a private redesign. Proof coder may read the contracts clone's product code after the contracts coder supplies the pointer; never write it.
+
+# Validation and quality
+Skip ALL builds/tests/linters/formatters while these two helpers work concurrently; PM runs them after integration. Write real behavior tests for plausible edge failures, not source-text/default/method-forwarding/mock-echo assertions. No stubs, placeholder success, lint suppression, duplicate schema/name registries or speculative frameworks. Avoid needless allocation/copying; keep raw private data out of Display/Debug/error serialization. Coders deliver candidates; PM may reject or rewrite them.
+
+# Boundaries and handoff
+Only your owned product paths below may be edited, plus .harness/temp/baseline-delivery.json inside your own clone for a handoff. No Cargo manifests/lockfiles/module mounts, canonical plan/guide/task/flow/team records, other clone, main, globals, source stores, pushes/merges or allocation changes. Read-only external pointers below are explicit permission, not a native-root rebind. Use C10 at skill://pij/references/00-routing.md:207-219 for messages. Commit owned code with harness commit and actual pij commit-trailers; do not change global attribution configuration. Return exact commit, files, public symbols, implementation assumptions/risks and the fact that validation was not run. Preserve all work; never label candidate code proven.
+
+# Target — proof coder pij-glorious-galliform
+Workspace /Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/baseline-coders/proof; branch work/015-baseline-proof.
+Write only crates/testkit/src/query.rs, crates/testkit/fixtures/query/shared-v1.json and crates/core/tests/query_contract.rs. Implement useful public FakeQuerySource/FakeQueryApi and a compact synthetic evidence fixture using the exact core contract. Tests must defend baseline behavior: identifier boundary/framing collisions, schema unsupported fields/sensitivity and explicit null versus absent; impossible/overflow limits; projected-content refusal; typed query/source cursor mismatch; view hash immutability under response-only changes and sensitivity to admitted source/retention changes. Keep only meaningful cases; do not pad by repeating defaults.
+
+Contracts coder pij-generous-godfrey owns /Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/baseline-coders/contracts/crates/core/src/query/**. Ask them for the early public API/constructor pointer and read that product code as needed; do not import or modify their clone. Work on fixture cases and behavioral contracts now, then align with the actual API they publish. Do not invent a competing type layout.
+
+Existing normal testkit dependencies are core/serde_json/tempfile; core tests should not depend on testkit (avoid dependency cycles), and PM will add manifests if a genuine need appears. No Cargo/module-mount edits. Source fixture is supplied data, not proof of all native formats or future query behavior. Return candidate commit and exact proof intent; do not run tests/build/lint/formatters.

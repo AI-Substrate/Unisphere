@@ -12,9 +12,14 @@ use std::{
 // dependencies must obey the same boundary even on a machine that never builds them.
 fn allowed(package: &str, dependency: &str, kind: &str) -> bool {
     match (package, kind) {
-        ("unisphere-core", "normal") => matches!(dependency, "serde" | "serde_json"),
+        ("unisphere-core", "normal") => {
+            matches!(dependency, "serde" | "serde_json" | "sha2" | "time")
+        }
         ("unisphere-sdk", "normal") => {
-            matches!(dependency, "unisphere-core" | "serde" | "serde_json")
+            matches!(
+                dependency,
+                "unisphere-core" | "serde" | "serde_json" | "regex" | "globset" | "sha2" | "time"
+            )
         }
         ("unisphere-cli", "normal") => {
             matches!(dependency, "unisphere-core" | "clap" | "serde_json")

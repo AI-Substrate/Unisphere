@@ -47,6 +47,7 @@ pub mod snapshot;
 pub use collection::{Collector, collect_batch};
 pub use snapshot::SnapshotCollector;
 pub use unisphere_core::collection::*;
+pub use unisphere_core::query;
 pub use unisphere_core::{
     MappedSnapshot, NativeSnapshot, SnapshotAdapter, SnapshotCheckpoint, SnapshotCollection,
     SnapshotCollectionApi, SnapshotDiagnostic, SnapshotFormat, SnapshotLimits, SnapshotLoader,

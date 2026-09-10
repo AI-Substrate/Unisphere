@@ -1,0 +1,88 @@
+{
+  "recorded_at": "2026-09-10T02:32:49.613Z",
+  "authority": "Jordan explicitly directed the PM to delegate implementation to coders",
+  "scope": "PM-owned wave0 baseline implementation assistance only; not a sealed wave1 Builder dispatch",
+  "source_sha": "b652810b7134348da45929079b723daeae30123a",
+  "allocation_owner": "external",
+  "allocation_method": "Explicit local non-hardlinked Git clones; authority record is outside both clone roots",
+  "pm": "pij-empirical-tiger",
+  "model": "github-copilot/gpt-5.6-sol-fast",
+  "harness": "omp",
+  "effort": "high",
+  "contracts": {
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/baseline-coders/contracts",
+    "write_paths": [
+      "crates/core/src/query/**"
+    ],
+    "responsibility": "Complete core query DTOs/ports/schema/identity/fingerprint/validation including F11; no runtime query service or adapters",
+    "peer": "pij-generous-godfrey",
+    "branch": "work/015-baseline-contracts",
+    "observed": {
+      "harness": "omp",
+      "model": "github-copilot/gpt-5.6-sol-fast",
+      "effort": "high",
+      "pid": 90738,
+      "native_session": "01a0892a-6eeb-7674-9a87-de34296f962a",
+      "root": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/baseline-coders/contracts"
+    },
+    "canary": {
+      "dispatch": "dispatch-52b4369d06183bafbbd85eba58bdfce2",
+      "command_outcome": "E-RS-CANARY-PENDING at deadline",
+      "recipient_ack": "later exact dispatch acknowledgement",
+      "model_observed": "github-copilot/gpt-5.6-sol-fast",
+      "provider_attestation": false
+    },
+    "latest_candidate": "9b0a9560e99a01956ad91c826381ebe5c3446dfd",
+    "wip": "Worker reports clean beyond latest candidate"
+  },
+  "proof": {
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/baseline-coders/proof",
+    "write_paths": [
+      "crates/testkit/src/query.rs",
+      "crates/testkit/fixtures/query/shared-v1.json",
+      "crates/core/tests/query_contract.rs"
+    ],
+    "responsibility": "Public query fakes, synthetic fixture and meaningful baseline behavior proof against the shared contract; coordinate exact constructors with contracts coder",
+    "peer": "pij-glorious-galliform",
+    "branch": "work/015-baseline-proof",
+    "observed": {
+      "harness": "omp",
+      "model": "github-copilot/gpt-5.6-sol-fast",
+      "effort": "high",
+      "pid": 90780,
+      "native_session": "01a0892a-6ee8-7450-b4ec-071b5c3842eb",
+      "root": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/baseline-coders/proof"
+    },
+    "canary": {
+      "dispatch": "dispatch-4d46c2e98aff630414908345453892e3",
+      "command_outcome": "E-RS-CANARY-PENDING at deadline",
+      "recipient_ack": "later exact dispatch acknowledgement",
+      "packet_sha256": "d556e2da365b04b4b2caa2bff5449084a1f4697c185f2d2bc8f4cfda9b73c9c3",
+      "model_observed": "github-copilot/gpt-5.6-sol-fast",
+      "provider_attestation": false
+    },
+    "latest_candidate": "fa7926189eb965f5d4cd9d8c41984be55b376a22",
+    "wip": "Worker reports clean beyond latest candidate"
+  },
+  "shared_contract": "Reviewed guide C1-C25 plus baseline-followups.json; core coder publishes exact API early to proof coder; no sibling implementation edit",
+  "pm_owned": [
+    "All Cargo manifests/lockfiles",
+    "core/testkit module mounts",
+    "architecture checker",
+    "canonical plan/guide/tasks/review/baseline records",
+    "integration, formatting, validation, quality acceptance and independent review"
+  ],
+  "guardrails": [
+    "No builds/tests/lint/formatters while baseline helpers work concurrently",
+    "No source stores, global settings, push/merge or other workspace edits",
+    "Candidate delivery only; actual baseline proof/review/seal precedes normal Builder coder waves"
+  ],
+  "state": "HOLD acknowledged by both workers for handover; no new implementation",
+  "composed": {
+    "contracts": "067ac04256b9253417543e4a4db8f4c85f0ab0f6",
+    "proof": "39c62092af0ef9c5af1204b78a2217fc6f378608",
+    "core_test_passed": 18,
+    "latest_pair_integrated": false,
+    "baseline_sealed": false
+  }
+}

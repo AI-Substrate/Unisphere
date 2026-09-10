@@ -1,0 +1,38 @@
+{
+  "recorded_at": "2026-09-10T03:15:03.156Z",
+  "scope": "Core baseline contract behavior only",
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+  "command": [
+    "cargo",
+    "test",
+    "--locked",
+    "-p",
+    "unisphere-core",
+    "--test",
+    "query_contract"
+  ],
+  "composed_contracts": "067ac04256b9253417543e4a4db8f4c85f0ab0f6",
+  "composed_proof": "39c62092af0ef9c5af1204b78a2217fc6f378608",
+  "result": {
+    "exit_code": 0,
+    "passed": 18,
+    "failed": 0
+  },
+  "raw_output_reference": "artifact://173",
+  "prior_failure": {
+    "contracts": "859020c0e8ab7bec06477ed8d96c80e929434805",
+    "proof": "e6af083e0055ad07d7fbb9b541664cb58182a97d",
+    "exit_code": 101,
+    "passed": 7,
+    "failed": 1,
+    "failure": "projected explicit null serialized as internal tagged value",
+    "raw_output_reference": "artifact://167"
+  },
+  "not_proven": [
+    "latest9b0a9560/fa792618 pair",
+    "testkit/workspace compilation and lint",
+    "external public SDK smoke",
+    "baseline review/seal",
+    "query service or CLI feature behavior"
+  ]
+}

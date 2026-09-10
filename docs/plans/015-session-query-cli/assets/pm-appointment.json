@@ -8,5 +8,14 @@
   "native_rebound": false,
   "fence": "absolute paths for writes; explicit cwd for all commands",
   "authority": "Plan/guide/user preamble ownership after handoff commit; no product implementation or fan-out yet",
-  "interview": "Exactly one context sentence, then one question sentence per turn, directly to Jordan. Listen to his preamble first."
+  "interview": "Exactly one context sentence, then one question sentence per turn, directly to Jordan. Listen to his preamble first.",
+  "scope_reconciliation": {
+    "canonical_plan015_writer": "pij-empirical-tiger",
+    "distro_pm": "pij-definite-mammal",
+    "distro_scope": "Distinct private future-state synthesis assuming the planned Unisphere CLI exists; interview the CLI owner, not replace the canonical plan.",
+    "distro_designated_coder": "pij-distinct-reptile",
+    "distro_product_allocation": null,
+    "ownership_transfer": false,
+    "agreement": "Tiger and Mammal confirmed the split from Jordan's newer direction; Main independently confirmed the same scope. Plan015 planning writes resume under the existing sole writer; plan014 remains separate."
+  }
 }

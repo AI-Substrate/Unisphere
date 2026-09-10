@@ -1,0 +1,16 @@
+docs/plans/015-session-query-cli/plan.dd.json
+  h_9e71e8b09f7cf2 135,215,229
+docs/plans/015-session-query-cli/plan.dd.md
+  h_9e71e8b09f7cf2 79,135,143
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "526c5fdad51e691d400f2877d698aa1b9f12ce86",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+docs/plans/026-metadata-probes/assets/reviews/plan026-candidate-r10-pij-armed-cow.json
+  h_9e71e8b09f7cf2 1-71
+docs/plans/026-metadata-probes/assets/team/candidate-r6-worker-evidence.json
+  h_9e71e8b09f7cf2 1-66
+docs/plans/026-metadata-probes/assets/team/unit-deliveries.json
+  h_9e71e8b09f7cf2 1-10
+docs/plans/026-metadata-probes/assets/verification/candidate-r6-checks.json
+  h_9e71e8b09f7cf2 1-133
+docs/plans/026-metadata-probes/assets/verification/metadata-compatibility-20255f0b.json
+  h_9e71e8b09f7cf2 1-54
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "36edb1fb52e88f0a8ce8b3a22b0e0881f93cf663",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

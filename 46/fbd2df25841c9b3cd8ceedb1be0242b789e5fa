@@ -1,0 +1,22 @@
+docs/plans/026-metadata-probes/assets/team/dispatch-tk-0002-93b3933ff9c5475854c1c967a2c0133c0517375c.dd.json
+  h_9e71e8b09f7cf2 1-103
+docs/plans/026-metadata-probes/assets/team/dispatch-tk-0002-93b3933ff9c5475854c1c967a2c0133c0517375c.dd.md
+  h_9e71e8b09f7cf2 1-25
+docs/plans/026-metadata-probes/assets/team/packet-tk-0002-93b3933ff9c5475854c1c967a2c0133c0517375c.dd.json
+  h_9e71e8b09f7cf2 1-123
+docs/plans/026-metadata-probes/assets/team/packet-tk-0002-93b3933ff9c5475854c1c967a2c0133c0517375c.dd.md
+  h_9e71e8b09f7cf2 1-26
+docs/plans/026-metadata-probes/assets/team/release-observation.json
+  h_9e71e8b09f7cf2 1-60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "46fbd2df25841c9b3cd8ceedb1be0242b789e5fa",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

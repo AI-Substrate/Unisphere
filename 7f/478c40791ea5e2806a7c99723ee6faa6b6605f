@@ -1,0 +1,24 @@
+docs/plans/026-metadata-probes/assets/reviews/guide-r2-seal-addendum-native.json
+  h_9e71e8b09f7cf2 1-113
+docs/plans/026-metadata-probes/assets/team/baseline.dd.json
+  h_9e71e8b09f7cf2 1-71
+docs/plans/026-metadata-probes/assets/team/baseline.dd.md
+  h_9e71e8b09f7cf2 1-21
+docs/plans/026-metadata-probes/assets/team/coder-scope.json
+  h_9e71e8b09f7cf2 4,34-35,48-52
+docs/plans/026-metadata-probes/assets/team/review-seal-addendum.dd.json
+  h_9e71e8b09f7cf2 1-114
+docs/plans/026-metadata-probes/assets/team/seal-binding-attempt.json
+  h_9e71e8b09f7cf2 1-10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "7f478c40791ea5e2806a7c99723ee6faa6b6605f",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

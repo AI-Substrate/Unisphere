@@ -1,0 +1,28 @@
+docs/plans/026-metadata-probes/assets/reviews/candidate-r1-dispositions.json
+  h_9e71e8b09f7cf2 1-21
+docs/plans/026-metadata-probes/assets/reviews/plan026-candidate-r1-addendum-1-pij-armed-cow.json
+  h_9e71e8b09f7cf2 1-70
+docs/plans/026-metadata-probes/assets/reviews/plan026-candidate-r1-pij-armed-cow.json
+  h_9e71e8b09f7cf2 1-144
+docs/plans/026-metadata-probes/assets/tasks/phase-1/tasks.dd.json
+  h_9e71e8b09f7cf2 38
+docs/plans/026-metadata-probes/assets/tasks/phase-1/tasks.dd.md
+  h_9e71e8b09f7cf2 39
+docs/plans/026-metadata-probes/assets/team/candidate-r1-corrections.json
+  h_9e71e8b09f7cf2 1-44
+docs/plans/026-metadata-probes/assets/team/continuation-status.json
+  h_9e71e8b09f7cf2 12,17,21-22,32,47-58
+docs/plans/026-metadata-probes/assets/verification/candidate-59ca6f58-checks.json
+  h_9e71e8b09f7cf2 1-157
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "1892a8f1906fadf643225d0fc3c6358d2b1f5866",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

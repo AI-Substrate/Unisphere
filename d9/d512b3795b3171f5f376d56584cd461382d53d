@@ -1,0 +1,34 @@
+docs/plans/026-metadata-probes/assets/reviews/plan026-candidate-r2-addendum-1-pij-armed-cow.json
+  h_9e71e8b09f7cf2 1-54
+docs/plans/026-metadata-probes/assets/reviews/plan026-candidate-r2-pij-armed-cow.json
+  h_9e71e8b09f7cf2 1-194
+docs/plans/026-metadata-probes/assets/tasks/phase-1/tasks.dd.json
+  h_9e71e8b09f7cf2 38
+docs/plans/026-metadata-probes/assets/tasks/phase-1/tasks.dd.md
+  h_9e71e8b09f7cf2 39
+docs/plans/026-metadata-probes/assets/team/candidate-r2-corrections.json
+  h_9e71e8b09f7cf2 1-17
+docs/plans/026-metadata-probes/assets/team/continuation-status.json
+  h_9e71e8b09f7cf2 12,17,22,50,52-59
+docs/plans/026-metadata-probes/assets/verification/candidate-667565c8-checks.json
+  h_9e71e8b09f7cf2 1-411
+docs/plans/026-metadata-probes/assets/verification/candidate-667565c8-repro.rs
+  h_9e71e8b09f7cf2 1-157
+docs/plans/026-metadata-probes/assets/verification/candidate-667565c8-workspace-conflict.json
+  h_9e71e8b09f7cf2 1-67
+docs/plans/026-metadata-probes/assets/verification/candidate-667565c8-workspace-explicit-canonical.json
+  h_9e71e8b09f7cf2 1-17
+docs/plans/026-metadata-probes/assets/verification/candidate-667565c8-workspace-positive.json
+  h_9e71e8b09f7cf2 1-78
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "d9d512b3795b3171f5f376d56584cd461382d53d",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

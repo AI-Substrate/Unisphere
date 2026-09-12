@@ -1,0 +1,44 @@
+docs/plans/026-metadata-probes/assets/backpressure.dd.json
+  h_9e71e8b09f7cf2 1-24
+docs/plans/026-metadata-probes/assets/backpressure.dd.md
+  h_9e71e8b09f7cf2 1-27
+docs/plans/026-metadata-probes/assets/impl-guide.dd.json
+  h_9e71e8b09f7cf2 1-85
+docs/plans/026-metadata-probes/assets/impl-guide.dd.md
+  h_9e71e8b09f7cf2 1-105
+docs/plans/026-metadata-probes/assets/implementation-brief.md
+  h_9e71e8b09f7cf2 1-83
+docs/plans/026-metadata-probes/assets/spec-validation.json
+  h_9e71e8b09f7cf2 1-32
+docs/plans/026-metadata-probes/assets/tasks/phase-1/tasks.dd.json
+  h_9e71e8b09f7cf2 1-101
+docs/plans/026-metadata-probes/assets/tasks/phase-1/tasks.dd.md
+  h_9e71e8b09f7cf2 1-159
+docs/plans/026-metadata-probes/assets/team/coder-packet.template.md
+  h_9e71e8b09f7cf2 1-59
+docs/plans/026-metadata-probes/assets/team/model-settings.template.json
+  h_9e71e8b09f7cf2 1-10
+docs/plans/026-metadata-probes/assets/team/reviewer-packet.template.md
+  h_9e71e8b09f7cf2 1-50
+docs/plans/026-metadata-probes/original-ask.md
+  h_9e71e8b09f7cf2 1-11
+docs/plans/026-metadata-probes/plan.dd.json
+  h_9e71e8b09f7cf2 1-190
+docs/plans/026-metadata-probes/plan.dd.md
+  h_9e71e8b09f7cf2 1-185
+docs/plans/026-metadata-probes/the-flow.json
+  h_9e71e8b09f7cf2 1-278
+docs/plans/026-metadata-probes/the-flow.md
+  h_9e71e8b09f7cf2 1-40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "4a24c1ce5dded0698f2febe2e759e65dd3d90999",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

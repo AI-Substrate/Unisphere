@@ -1,0 +1,16 @@
+docs/plans/026-metadata-probes/assets/team/continuation-status.json
+  h_9e71e8b09f7cf2 48
+docs/plans/026-metadata-probes/assets/team/workload-acceptance-supplement.json
+  h_9e71e8b09f7cf2 1-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "2598bea87012be646bccf8c61f594222e648e946",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

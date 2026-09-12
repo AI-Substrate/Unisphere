@@ -1,0 +1,36 @@
+docs/plans/026-metadata-probes/assets/backpressure.dd.json
+  h_9e71e8b09f7cf2 12,36,60,116,136
+docs/plans/026-metadata-probes/assets/backpressure.dd.md
+  h_9e71e8b09f7cf2 14,24,27,32,34
+docs/plans/026-metadata-probes/assets/impl-guide.dd.json
+  h_9e71e8b09f7cf2 11,21,24,27-29,31,51-52,61-63,72-73,82-83,92-94,103,112-113,122-123,132-133,142-144,153-154,163-164,208,259-262,309-310,312,327,365,380,397,426,443,454-455,483,487,515,520,525,530,535
+docs/plans/026-metadata-probes/assets/impl-guide.dd.md
+  h_9e71e8b09f7cf2 14,25,42-53,61-63,72,100-105,115-116,134-138
+docs/plans/026-metadata-probes/assets/probe-policy-matrix.json
+  h_9e71e8b09f7cf2 3,69,79,109,118
+docs/plans/026-metadata-probes/assets/reviews/guide-r1-addendum-pij-armed-cow.json
+  h_9e71e8b09f7cf2 1-93
+docs/plans/026-metadata-probes/assets/reviews/guide-r1-pij-armed-cow.json
+  h_9e71e8b09f7cf2 1-119
+docs/plans/026-metadata-probes/assets/reviews/guide-r2-dispositions.json
+  h_9e71e8b09f7cf2 1-16
+docs/plans/026-metadata-probes/assets/tasks/phase-1/tasks.dd.json
+  h_9e71e8b09f7cf2 117
+docs/plans/026-metadata-probes/assets/tasks/phase-1/tasks.dd.md
+  h_9e71e8b09f7cf2 60
+docs/plans/026-metadata-probes/plan.dd.json
+  h_9e71e8b09f7cf2 70,153
+docs/plans/026-metadata-probes/plan.dd.md
+  h_9e71e8b09f7cf2 62,119
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "e3db5f2add403c28fbc017609d7af4edd0294543",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

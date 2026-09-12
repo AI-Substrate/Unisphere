@@ -1,0 +1,16 @@
+docs/plans/026-metadata-probes/assets/impl-guide.dd.json
+  h_9e71e8b09f7cf2 178-183
+docs/plans/026-metadata-probes/assets/impl-guide.dd.md
+  h_9e71e8b09f7cf2 61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "406bf81f08519c3586564cd747a11814579b817a",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

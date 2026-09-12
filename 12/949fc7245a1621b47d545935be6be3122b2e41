@@ -1,0 +1,32 @@
+docs/plans/026-metadata-probes/assets/reviews/plan026-candidate-r6-pij-armed-cow.json
+  h_9e71e8b09f7cf2 1-99
+docs/plans/026-metadata-probes/assets/reviews/plan026-candidate-r7-addendum-1-pij-armed-cow.json
+  h_9e71e8b09f7cf2 1-51
+docs/plans/026-metadata-probes/assets/reviews/plan026-candidate-r7-git-bridge-pij-armed-cow.json
+  h_9e71e8b09f7cf2 1-70
+docs/plans/026-metadata-probes/assets/tasks/phase-1/tasks.dd.json
+  h_9e71e8b09f7cf2 38
+docs/plans/026-metadata-probes/assets/tasks/phase-1/tasks.dd.md
+  h_9e71e8b09f7cf2 39
+docs/plans/026-metadata-probes/assets/team/candidate-r4-corrections.json
+  h_9e71e8b09f7cf2 1-18
+docs/plans/026-metadata-probes/assets/team/candidate-r4-unit-delivery.json
+  h_9e71e8b09f7cf2 1-8
+docs/plans/026-metadata-probes/assets/team/continuation-status.json
+  h_9e71e8b09f7cf2 12,17-18,23,53-62
+docs/plans/026-metadata-probes/assets/verification/candidate-r4-checks.json
+  h_9e71e8b09f7cf2 1-322
+docs/plans/026-metadata-probes/assets/verification/git-metadata-accounting-47a5e2b5.json
+  h_9e71e8b09f7cf2 1-848
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "12949fc7245a1621b47d545935be6be3122b2e41",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

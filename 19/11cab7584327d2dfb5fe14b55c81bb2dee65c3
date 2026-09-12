@@ -1,0 +1,20 @@
+docs/plans/026-metadata-probes/assets/reviews/nonblocking-followups.json
+  h_9e71e8b09f7cf2 1-22
+docs/plans/026-metadata-probes/assets/team/composition.dd.json
+  h_9e71e8b09f7cf2 11,28-4530
+docs/plans/026-metadata-probes/assets/team/composition.dd.md
+  h_9e71e8b09f7cf2 14,18-20
+docs/plans/026-metadata-probes/assets/verification/composition-76f591fe.json
+  h_9e71e8b09f7cf2 1-4597
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "1911cab7584327d2dfb5fe14b55c81bb2dee65c3",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

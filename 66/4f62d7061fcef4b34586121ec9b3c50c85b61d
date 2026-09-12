@@ -1,0 +1,44 @@
+.harness/records/retro/2026-09-12/001-026-metadata-probes.md
+  h_9e71e8b09f7cf2 1-102
+docs/plans/026-metadata-probes/assets/backpressure.dd.json
+  h_9e71e8b09f7cf2 22,25-26,32,35-36,42,45-46,52,55-56,62,65-66,72,75-76,82,85-86,92,95-96,102,105-106,112,115-116,122,125-126,132,135-136
+docs/plans/026-metadata-probes/assets/backpressure.dd.md
+  h_9e71e8b09f7cf2 23-34
+docs/plans/026-metadata-probes/assets/execution-log.dd.json
+  h_9e71e8b09f7cf2 1-48
+docs/plans/026-metadata-probes/assets/execution-log.dd.md
+  h_9e71e8b09f7cf2 1-23
+docs/plans/026-metadata-probes/assets/reviews/plan026-workload-final-pij-armed-cow.json
+  h_9e71e8b09f7cf2 1-60
+docs/plans/026-metadata-probes/assets/tasks/phase-1/tasks.dd.json
+  h_9e71e8b09f7cf2 36,38,53-54,60,62,77-78,97,103,109,115,121,127,133,139,145,151,157,163,171,177
+docs/plans/026-metadata-probes/assets/tasks/phase-1/tasks.dd.md
+  h_9e71e8b09f7cf2 39-40,56-67,73-74
+docs/plans/026-metadata-probes/assets/team/basis-e9dad1574efa03b111de5768f379426c7e7fc15d1c3a35a1c8aa0f64db798bed.json
+  h_9e71e8b09f7cf2 1-202
+docs/plans/026-metadata-probes/assets/team/basis-ea4bba06900fc2b98085c3debebe5e702d8dbbc6cb3d86bed9c58494e7d0c492.json
+  h_9e71e8b09f7cf2 1-540
+docs/plans/026-metadata-probes/assets/team/continuation-status.json
+  h_9e71e8b09f7cf2 2,7-18,20,25-95,102-104
+docs/plans/026-metadata-probes/assets/team/review-composition-rv-plan026-workload-composition-pij-armed-cow.dd.json
+  h_9e71e8b09f7cf2 1-128
+docs/plans/026-metadata-probes/assets/team/review-composition-rv-plan026-workload-composition-pij-armed-cow.dd.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/026-metadata-probes/assets/verification/workload-summary.json
+  h_9e71e8b09f7cf2 1-243
+docs/plans/026-metadata-probes/plan.dd.json
+  h_9e71e8b09f7cf2 47-49,54-56,61-63,68-70,75-77,82-84,89-91,96-98,103-105,110-112,117-119,124-126,137
+docs/plans/026-metadata-probes/plan.dd.md
+  h_9e71e8b09f7cf2 58-69,77
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "664f62d7061fcef4b34586121ec9b3c50c85b61d",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+docs/plans/026-metadata-probes/assets/tasks/phase-1/tasks.dd.json
+  s_61dfe47e9838df::t_aa9c7023cebed7 26,29-30,87
+docs/plans/026-metadata-probes/assets/tasks/phase-1/tasks.dd.md
+  s_61dfe47e9838df::t_c9ff37784e6dd8 38,50
+docs/plans/026-metadata-probes/assets/team/continuation-status.json
+  s_61dfe47e9838df::t_43d36409f505b5 1-47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "a7450f88093543aee5112a4689e976e6a6ed3034",
+  "prompts": {},
+  "sessions": {
+    "s_61dfe47e9838df": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cbe08128-4097-4473-9f99-71e9415824f6",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

@@ -1,0 +1,48 @@
+Cargo.lock
+  h_9e71e8b09f7cf2 5-18,28-36,87-256,282-293,310-320,352,367-392,402-407,434-439,474-483,490-513,524-546,555,571-582,592-597,604,613-646,659-726,733-738,768-786,793-811,824-855,886-891,941-949,963-986,1014,1047-1058,1065-1070,1077-1087,1106,1142-1156,1268,1352-1363,1414-1508,1515-1532,1542-1567
+Cargo.toml
+  h_9e71e8b09f7cf2 31,42-44
+crates/adapter-claude/src/lib.rs
+  h_9e71e8b09f7cf2 8-10
+crates/adapter-claude/src/prep.rs
+  h_9e71e8b09f7cf2 1-944
+crates/app/Cargo.toml
+  h_9e71e8b09f7cf2 30
+crates/app/src/main.rs
+  h_9e71e8b09f7cf2 87-114
+crates/cli/src/args.rs
+  h_9e71e8b09f7cf2 100-104,113-140,616-628,631,839-860
+crates/cli/src/lib.rs
+  h_9e71e8b09f7cf2 17,25,29
+crates/cli/src/prep.rs
+  h_9e71e8b09f7cf2 1-53
+crates/core/src/lib.rs
+  h_9e71e8b09f7cf2 12
+crates/core/src/prep.rs
+  h_9e71e8b09f7cf2 1-306
+crates/loader-jsonl/src/lib.rs
+  h_9e71e8b09f7cf2 371-419
+crates/loader-jsonl/src/prep.rs
+  h_9e71e8b09f7cf2 1-98
+crates/output-prep/Cargo.toml
+  h_9e71e8b09f7cf2 1-16
+crates/output-prep/src/lib.rs
+  h_9e71e8b09f7cf2 1-368
+crates/sdk/src/lib.rs
+  h_9e71e8b09f7cf2 45
+crates/sdk/src/prep.rs
+  h_9e71e8b09f7cf2 1-322
+crates/testkit/src/bin/unisphere-arch-check.rs
+  h_9e71e8b09f7cf2 45-50,168
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "97a2d081281e2434ed2fe37855f9868eb0824f12",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

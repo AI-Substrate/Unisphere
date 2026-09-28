@@ -1,0 +1,14 @@
+crates/cli/src/sessions.rs
+  h_9e71e8b09f7cf2 114-116
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "ce169007e821b32fce24080cc0614fcb94068341",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

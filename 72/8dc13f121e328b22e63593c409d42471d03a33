@@ -1,0 +1,18 @@
+crates/cli/src/sessions.rs
+  h_9e71e8b09f7cf2 111,113-115
+crates/core/src/collection.rs
+  h_9e71e8b09f7cf2 67-68
+docs/session-loader.md
+  h_9e71e8b09f7cf2 54
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "728dc13f121e328b22e63593c409d42471d03a33",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

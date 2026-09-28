@@ -51,7 +51,7 @@ fn inspect(root: std::path::PathBuf) -> Result<(), unisphere_core::PipelineError
 }
 ```
 
-`ReadLimits` defaults to 128 physical records, 1,048,576 bytes per physical record,
+`ReadLimits` defaults to 128 physical records, 3,145,728 bytes (3 MiB) per physical record,
 and 4,194,304 physical bytes per batch. All limits must be positive;
 `max_batch_bytes >= max_record_bytes`. Validation precedes any Unix storage I/O.
 Limits are caller-selected, not inferred from file size.

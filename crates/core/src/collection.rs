@@ -64,7 +64,8 @@ impl Default for ReadLimits {
     fn default() -> Self {
         Self {
             max_records: 128,
-            max_record_bytes: 1_048_576,
+            // Real Claude transcripts carry image tool results up to ~1.4 MB per line.
+            max_record_bytes: 3 * 1024 * 1024,
             max_batch_bytes: 4_194_304,
         }
     }

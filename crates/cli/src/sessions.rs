@@ -108,10 +108,11 @@ pub fn run_native_export(
         {
             return Err(PipelineError::new(PipelineErrorKind::InvalidInput, None));
         }
+        let defaults = ReadLimits::default();
         let limits = ReadLimits {
-            max_records: command.max_records.unwrap_or(128),
-            max_record_bytes: command.max_record_bytes.unwrap_or(1_048_576),
-            max_batch_bytes: command.max_batch_bytes.unwrap_or(4_194_304),
+            max_records: command.max_records.unwrap_or(defaults.max_records),
+            max_record_bytes: command.max_record_bytes.unwrap_or(defaults.max_record_bytes),
+            max_batch_bytes: command.max_batch_bytes.unwrap_or(defaults.max_batch_bytes),
         };
         limits.validate()?;
         let session = SessionRef {

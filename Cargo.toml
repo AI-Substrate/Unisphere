@@ -28,6 +28,7 @@ unisphere-loader-query = { path = "crates/loader-query" }
 unisphere-output-query = { path = "crates/output-query" }
 unisphere-loader-git = { path = "crates/loader-git" }
 unisphere-adapter-git-ai = { path = "crates/adapter-git-ai" }
+unisphere-output-prep = { path = "crates/output-prep" }
 rusqlite = { version = "0.37", features = ["bundled", "limits", "modern_sqlite"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
@@ -38,3 +39,6 @@ clap = { version = "4", features = ["derive"] }
 tempfile = "3"
 time = { version = "0.3", default-features = false, features = ["std", "parsing", "formatting"] }
 libc = "0.2"
+parquet = { version = "60", default-features = false, features = ["arrow", "snap"] }
+arrow-json = "60"
+arrow-schema = "60"

@@ -14,6 +14,7 @@ mod catalog;
 mod docs;
 pub mod git_notes;
 mod output;
+mod prep;
 mod query;
 pub mod sessions;
 pub mod snapshots;
@@ -21,10 +22,11 @@ pub mod snapshots;
 pub use args::{
     CatalogCommand, CliParseFailure, ConfigCommand, DocsCommand, HelpCommand, NativeExportCommand,
     NativeGitNotesListCommand, NativeRootListCommand, OutputMode, ParsedCommand, PijQueryCommand,
-    PijTarget, QueryCommand, SchemaCommand, diagnostic_mode, parse,
+    PijTarget, PrepCommand, QueryCommand, SchemaCommand, diagnostic_mode, parse,
 };
 pub use catalog::{run_adapters, run_catalog};
 pub use git_notes::{run_git_notes, run_native_git_notes};
+pub use prep::run_prep;
 pub use query::{
     emit_parse_failure, emit_pij_failure, emit_pij_resolution, emit_query_failure, run_docs,
     run_query, run_schema,

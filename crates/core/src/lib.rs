@@ -9,6 +9,7 @@ mod config;
 mod errors;
 pub mod git_notes;
 mod ports;
+pub mod prep;
 pub mod query;
 pub mod snapshot;
 mod snapshot_collection;

@@ -84,6 +84,34 @@ fn main() -> ExitCode {
             }
         },
         ParsedCommand::PijQuery(command) => pij::run(command, &context, &mut stdout, &mut stderr),
+        ParsedCommand::Prep(command) => {
+            let root = command.root.clone().or_else(|| {
+                env::var_os("HOME").map(|home| {
+                    unisphere_sdk::prep::claude_projects_root(std::path::Path::new(&home))
+                })
+            });
+            match root {
+                Some(root) => unisphere_cli::run_prep(
+                    command,
+                    root,
+                    &unisphere_sdk::prep::Preparer::new(
+                        unisphere_loader_jsonl::FileSessionLoader,
+                        unisphere_adapter_claude::ClaudePrepFold,
+                        unisphere_output_prep::ParquetPrepStore::new(command.target.clone()),
+                    ),
+                    &mut stdout,
+                    &mut stderr,
+                ),
+                None => unisphere_cli::session_error(
+                    &mut stderr,
+                    &unisphere_sdk::PipelineError::new(
+                        unisphere_sdk::PipelineErrorKind::InvalidInput,
+                        None,
+                    ),
+                    2,
+                ),
+            }
+        }
         ParsedCommand::Catalog(_)
         | ParsedCommand::NativeRootList(_)
         | ParsedCommand::NativeGitNotesList(_)

@@ -1,0 +1,16 @@
+[package]
+name = "unisphere-output-prep"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Target-directory store for incremental prep: Parquet part files and atomic state"
+
+[dependencies]
+unisphere-core.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+parquet.workspace = true
+arrow-json.workspace = true
+arrow-schema.workspace = true

@@ -1,0 +1,53 @@
+//! `unisphere prep`: render one incremental prep run through the injected port.
+use std::io::Write;
+
+use serde_json::json;
+use unisphere_core::{
+    PipelineError, PipelineErrorKind, ReadLimits,
+    prep::{PrepApi, PrepOptions, PrepRequest},
+};
+
+use crate::{PrepCommand, sessions::session_error};
+
+/// Execute one parsed prep command. `root` is the shell-resolved discovery root.
+pub fn run_prep(
+    command: &PrepCommand,
+    root: std::path::PathBuf,
+    api: &dyn PrepApi,
+    stdout: &mut dyn Write,
+    stderr: &mut dyn Write,
+) -> u8 {
+    let defaults = ReadLimits::default();
+    let request = PrepRequest {
+        target: command.target.clone(),
+        root,
+        options: PrepOptions {
+            include_content: command.include_content,
+        },
+        limits: ReadLimits {
+            max_records: usize::MAX,
+            max_record_bytes: command
+                .max_record_bytes
+                .unwrap_or(defaults.max_record_bytes),
+            max_batch_bytes: command.max_batch_bytes.unwrap_or(16 * 1024 * 1024),
+        },
+        threads: command.threads.unwrap_or(8),
+        modified_since_ns: command.modified_since_ns,
+    };
+    let result = api.prep(&request).and_then(|report| {
+        let failed = report.sources_by_status.get("failed").copied().unwrap_or(0);
+        let value = json!({"ok": true, "command": "prep", "v": 1, "data": report,
+            "next_action": {"summary": "Query TARGET/tables/*/*.parquet with a Parquet SQL engine; keep rows whose generation equals sources.generation.",
+                "argv": ["unisphere", "prep", "--help"], "required_inputs": []}});
+        serde_json::to_writer(&mut *stdout, &value)
+            .ok()
+            .and_then(|()| stdout.write_all(b"\n").ok())
+            .ok_or_else(|| PipelineError::new(PipelineErrorKind::Write, None))?;
+        Ok(failed)
+    });
+    match result {
+        Ok(0) => 0,
+        Ok(_) => 3,
+        Err(error) => session_error(stderr, &error, 1),
+    }
+}

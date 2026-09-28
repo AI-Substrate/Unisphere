@@ -27,6 +27,7 @@ unisphere-loader-query.workspace = true
 unisphere-output-query.workspace = true
 unisphere-loader-git.workspace = true
 unisphere-adapter-git-ai.workspace = true
+unisphere-output-prep.workspace = true
 
 [dev-dependencies]
 unisphere-testkit.workspace = true

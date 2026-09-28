@@ -97,12 +97,45 @@ enum RootCommand {
         #[command(subcommand)]
         command: SchemaSubcommand,
     },
+    /// Incrementally convert native sessions into canonical tables in a target directory.
+    #[command(
+        after_help = "Re-runs read only records appended since the committed cursor; unchanged sources cost one stat. Tables are Parquet under TARGET/tables; query them with any Parquet SQL engine."
+    )]
+    Prep(PrepArgs),
     /// Read version-matched offline operating guides.
     #[command(after_help = "Start: unisphere docs get start --human")]
     Docs {
         #[command(subcommand)]
         command: DocsSubcommand,
     },
+}
+
+#[derive(Args)]
+struct PrepArgs {
+    /// Target directory for state.json and tables/; created if absent.
+    #[arg(long, value_name = "DIR")]
+    target: PathBuf,
+    /// Native root to discover recursively (default: HOME/.claude/projects).
+    #[arg(long, value_name = "DIR")]
+    root: Option<PathBuf>,
+    /// Harness dialect of the root. Only claude-code is implemented.
+    #[arg(long, default_value = "claude-code")]
+    harness: String,
+    /// Opt in to the triggers.content_head column (first 200 characters of each opener).
+    #[arg(long)]
+    include_content: bool,
+    /// Largest physical record accepted, in bytes.
+    #[arg(long, value_name = "BYTES")]
+    max_record_bytes: Option<usize>,
+    /// Native bytes read per bounded batch.
+    #[arg(long, value_name = "BYTES")]
+    max_batch_bytes: Option<usize>,
+    /// Sources read concurrently.
+    #[arg(long, value_name = "N")]
+    threads: Option<usize>,
+    /// Only discover sources modified at or after this RFC 3339 instant.
+    #[arg(long, value_name = "RFC3339")]
+    modified_since: Option<String>,
 }
 
 #[derive(Subcommand)]
@@ -580,8 +613,22 @@ pub struct HelpCommand {
     pub mode: OutputMode,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PrepCommand {
+    pub target: PathBuf,
+    pub root: Option<PathBuf>,
+    pub harness: String,
+    pub include_content: bool,
+    pub max_record_bytes: Option<usize>,
+    pub max_batch_bytes: Option<usize>,
+    pub threads: Option<usize>,
+    pub modified_since_ns: Option<i128>,
+    pub mode: OutputMode,
+}
+
 #[derive(Clone, PartialEq)]
 pub enum ParsedCommand {
+    Prep(PrepCommand),
     Config(ConfigCommand),
     Catalog(CatalogCommand),
     Docs(DocsCommand),
@@ -789,6 +836,28 @@ pub fn parse(args: Vec<OsString>, context: &CliContext) -> Result<ParsedCommand,
         });
     }
     match cli.command.ok_or_else(CliParseFailure::arguments)? {
+        RootCommand::Prep(args) => {
+            if args.harness != "claude-code" || args.threads == Some(0) {
+                return Err(CliParseFailure::arguments());
+            }
+            Ok(ParsedCommand::Prep(PrepCommand {
+                target: absolute(args.target, context)?,
+                root: args.root.map(|root| absolute(root, context)).transpose()?,
+                harness: args.harness,
+                include_content: args.include_content,
+                max_record_bytes: args.max_record_bytes,
+                max_batch_bytes: args.max_batch_bytes,
+                threads: args.threads,
+                modified_since_ns: args
+                    .modified_since
+                    .as_deref()
+                    .map(|value| Timestamp::parse(value, TimestampBasis::SuppliedUnknown))
+                    .transpose()
+                    .map_err(|_| CliParseFailure::arguments())?
+                    .map(|timestamp| timestamp.unix_nanos()),
+                mode: selected_mode,
+            }))
+        }
         RootCommand::Config {
             command: ConfigSubcommand::Check(check),
         } => Ok(ParsedCommand::Config(ConfigCommand {

@@ -5,6 +5,9 @@
 //! attachment, environment, clock, or destination is accessed here.
 #![forbid(unsafe_code)]
 
+mod prep;
+pub use prep::{ClaudePrepFold, PREP_POLICY_VERSION};
+
 use std::{collections::BTreeMap, path::PathBuf};
 
 use serde_json::{Map, Value, json};

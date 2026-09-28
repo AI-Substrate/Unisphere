@@ -368,3 +368,52 @@ mod unix {
         Ok(())
     }
 }
+
+#[cfg(unix)]
+mod prep;
+#[cfg(unix)]
+pub use prep::MAX_PREP_SOURCES;
+
+impl unisphere_core::prep::PrepLoader for FileSessionLoader {
+    fn discover(
+        &self,
+        root: &std::path::Path,
+    ) -> Result<Vec<unisphere_core::prep::PrepSourceStat>, PipelineError> {
+        #[cfg(unix)]
+        {
+            prep::discover(root)
+        }
+        #[cfg(not(unix))]
+        {
+            let _ = root;
+            Err(PipelineError::new(
+                unisphere_core::PipelineErrorKind::Unsupported,
+                None,
+            ))
+        }
+    }
+
+    fn read_batch(
+        &self,
+        session: &SessionRef,
+        cursor: Option<&ReadCursor>,
+        limits: ReadLimits,
+    ) -> Result<LoadedBatch, PipelineError> {
+        SessionLoader::read_batch(self, session, cursor, limits)
+    }
+
+    fn anchor(&self, path: &std::path::Path, offset: u64) -> Result<String, PipelineError> {
+        #[cfg(unix)]
+        {
+            prep::anchor(path, offset)
+        }
+        #[cfg(not(unix))]
+        {
+            let _ = (path, offset);
+            Err(PipelineError::new(
+                unisphere_core::PipelineErrorKind::Unsupported,
+                None,
+            ))
+        }
+    }
+}

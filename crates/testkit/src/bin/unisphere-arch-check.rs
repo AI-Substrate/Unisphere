@@ -42,6 +42,12 @@ fn allowed(package: &str, dependency: &str, kind: &str) -> bool {
                 | "unisphere-output-query"
                 | "unisphere-loader-git"
                 | "unisphere-adapter-git-ai"
+                | "unisphere-output-prep"
+        ),
+        // POC: the prep target store owns the Parquet/Arrow writer dependency.
+        ("unisphere-output-prep", "normal") => matches!(
+            dependency,
+            "unisphere-core" | "serde" | "serde_json" | "parquet" | "arrow-json" | "arrow-schema"
         ),
         ("unisphere-loader-jsonl", "normal") => {
             matches!(dependency, "unisphere-core" | "libc" | "sha2")
@@ -159,6 +165,7 @@ fn check(graph: &Value) -> Result<usize, String> {
                 | "unisphere-output-query"
                 | "unisphere-loader-git"
                 | "unisphere-adapter-git-ai"
+                | "unisphere-output-prep"
         ) {
             return Err(format!("unapproved workspace package {name}"));
         }

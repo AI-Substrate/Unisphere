@@ -42,6 +42,7 @@
 
 pub mod collection;
 mod fs;
+pub mod prep;
 pub mod query;
 mod service;
 pub mod snapshot;

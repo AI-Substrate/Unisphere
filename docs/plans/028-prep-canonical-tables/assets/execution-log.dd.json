@@ -162,6 +162,15 @@
             "../plan.dd.json#acceptance_criteria/ac-0006",
             "backpressure.dd.json#rows/bp-0006"
           ]
+        },
+        {
+          "id": "lg-0010",
+          "at": "2026-09-29T09:36:06+00:00",
+          "text": "a952e35 closes a PM-found gap against dw-0e01 before the phase-2 review: unisphere-proof prep previously covered only the JSON-document snapshot. It now drives a Copilot CLI legacy JSON document, a VS Code mutation journal and a Cursor IDE SQLite store (synthetic state-v1/v2.vscdb generated from the committed synthetic ide.json) through the built and installed CLI; each is prepped, unchanged by an equal-content rewrite, replaced as generation 1 on a content change, and the document and SQLite keys are returned by prep record. Proof passed locally; built and installed step projections are equal. The reviewer was asked to hold on b4958ad until re-verify.",
+          "links": [
+            "tasks/phase-2/tasks.dd.json#done_when/tk-000e",
+            "backpressure.dd.json#rows/bp-0006"
+          ]
         }
       ]
     }

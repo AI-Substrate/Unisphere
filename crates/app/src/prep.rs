@@ -18,7 +18,7 @@ use unisphere_sdk::{
 /// Every harness representation prep interprets. The fold's harness id is the
 /// adapter catalogue descriptor id; catalogued harnesses without a binding are
 /// reported as unsupported sets.
-fn bindings() -> Vec<PrepBinding> {
+pub(crate) fn bindings() -> Vec<PrepBinding> {
     vec![PrepBinding {
         fold: Arc::new(unisphere_adapter_claude::ClaudePrepFold),
         loader: Arc::new(unisphere_loader_jsonl::FileSessionLoader),

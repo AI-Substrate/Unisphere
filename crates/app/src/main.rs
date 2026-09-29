@@ -21,6 +21,7 @@ mod adapters;
 mod git_query;
 mod pij;
 mod prep;
+mod status;
 
 fn main() -> ExitCode {
     let cwd = match env::current_dir() {
@@ -88,6 +89,7 @@ fn main() -> ExitCode {
         ParsedCommand::Prep(command) => prep::run_prep(command, &mut stdout, &mut stderr),
         ParsedCommand::PrepCompact(command) => prep::run_compact(command, &mut stdout, &mut stderr),
         ParsedCommand::PrepRecord(command) => prep::run_record(command, &mut stdout, &mut stderr),
+        ParsedCommand::SessionStatus(command) => status::run(command, &mut stdout, &mut stderr),
         ParsedCommand::Catalog(_)
         | ParsedCommand::NativeRootList(_)
         | ParsedCommand::NativeGitNotesList(_)

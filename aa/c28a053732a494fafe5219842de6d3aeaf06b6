@@ -1,0 +1,41 @@
+crates/core/src/status.rs
+  s_c50a787648743a::t_51751228705115 20-37,221,223-224,235,240-241,256-259
+crates/core/tests/status_contract.rs
+  s_c50a787648743a::t_b51fef4845fd42 10,64-66
+crates/testkit/src/status.rs
+  s_042162115c1f28::t_97ef9a5dcf7622 33-35,40-41,149-156,217-224,327-386
+docs/plans/029-session-status/assets/impl-guide.dd.json
+  s_042162115c1f28::t_eb47b220ae9af6 12,27-28,49-51,138,146,162,278,439-453
+docs/plans/029-session-status/assets/impl-guide.dd.md
+  s_042162115c1f28::t_85a344d8cdedc7 15,25,42,56-57,68,105
+docs/plans/029-session-status/assets/reviews/decomposition-r1.md
+  s_042162115c1f28::t_c5bbd793954e33 1-69
+docs/plans/029-session-status/assets/reviews/decomposition-r1.receipt.dd.json
+  s_042162115c1f28::t_70ac5fdb24858e 1-114
+docs/plans/029-session-status/assets/team/reviewer-decomposition-r2.md
+  s_042162115c1f28::t_a9d42795cfdb8d 1-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "aac28a053732a494fafe5219842de6d3aeaf06b6",
+  "prompts": {},
+  "sessions": {
+    "s_042162115c1f28": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4b3f9ea7-6ca1-47b0-93c3-82069b1452f9",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    },
+    "s_c50a787648743a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1d1f18d3-0079-411e-80f5-4aa75d8f409d",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

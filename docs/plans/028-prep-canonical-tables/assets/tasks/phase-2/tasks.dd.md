@@ -35,14 +35,14 @@ Context brief. Purpose: extend the verified phase-1 prep (d800949) to every cata
 
 | id | title | domain | phase | state | note | receipt | done | success | notes | satisfies | satisfies_toward |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| tk-0007 | Oh My Pi and Pi prep folds | — | ph-62fe | [ ] unchecked | — | — | [tk-0007](tasks.dd.md#done-when) | OmpPrepFold and PiPrepFold interpret v3 session trees into the shared contract with explicit nulls. | Guide v3 unit tk-0007, wave 3, coder lane. | — | [ac-0006](../../../plan.dd.md#acceptance-criteria), [ac-000b](../../../plan.dd.md#acceptance-criteria) |
-| tk-0008 | Codex prep fold | — | ph-62fe | [ ] unchecked | — | — | [tk-0008](tasks.dd.md#done-when) | CodexPrepFold turns rollout JSONL into calls with model and per-call usage, compactions and tool uses. | Guide v3 unit tk-0008, wave 3, coder lane. | — | [ac-0006](../../../plan.dd.md#acceptance-criteria) |
-| tk-0009 | Copilot CLI prep folds | — | ph-62fe | [ ] unchecked | — | — | [tk-0009](tasks.dd.md#done-when) | Events JSONL and legacy snapshot documents land in the shared contract with representation-appropriate identity. | Guide v3 unit tk-0009, wave 3, coder lane. | — | [ac-0006](../../../plan.dd.md#acceptance-criteria) |
-| tk-000a | VS Code Copilot prep fold | — | ph-62fe | [ ] unchecked | — | — | [tk-000a](tasks.dd.md#done-when) | JSON document and journal snapshots fold to the shared contract; journals reduce to their current document first. | Guide v3 unit tk-000a, wave 3, coder lane. | — | [ac-0006](../../../plan.dd.md#acceptance-criteria) |
-| tk-000b | Cursor prep folds | — | ph-62fe | [ ] unchecked | — | — | [tk-000b](tasks.dd.md#done-when) | Cursor transcript JSONL and the IDE SQLite key/value store fold to the shared contract. | Guide v3 unit tk-000b, wave 3, coder lane. | — | [ac-0006](../../../plan.dd.md#acceptance-criteria) |
-| tk-000c | Snapshot prep loader | — | ph-62fe | [ ] unchecked | — | — | [tk-000c](tasks.dd.md#done-when) | SnapshotPrepLoader discovers, stats and reads JSON documents, journals and read-only SQLite for prep, with revision-based change detection. | Guide v3 unit tk-000c, wave 3, coder lane. | — | [ac-0006](../../../plan.dd.md#acceptance-criteria), [ac-000b](../../../plan.dd.md#acceptance-criteria) |
-| tk-000d | CLI phase 2: research recipes, snapshot limits, docs | — | ph-62fe | [ ] unchecked | — | — | [tk-000d](tasks.dd.md#done-when) | Named recipes print a self-contained DuckDB script; snapshot limits are adjustable; the prep topic states coverage. | Guide v3 unit tk-000d, wave 3, coder lane. | [ac-0009](../../../plan.dd.md#acceptance-criteria) | [ac-000c](../../../plan.dd.md#acceptance-criteria), [ac-000d](../../../plan.dd.md#acceptance-criteria) |
-| tk-000e | Phase-2 composition and full-corpus proof (PM) | — | ph-62fe | [ ] unchecked | — | — | [tk-000e](tasks.dd.md#done-when) | Every catalogued harness prepped end to end; assembled proof covers snapshot and SQLite; full-corpus coverage, measurement and recipes evidence; independent review. | Guide v3 unit tk-000e, wave 4. Real-corpus outputs stay in .harness/temp/prep-real; committed evidence is numbers only. | [ac-0006](../../../plan.dd.md#acceptance-criteria), [ac-000c](../../../plan.dd.md#acceptance-criteria), [ac-000d](../../../plan.dd.md#acceptance-criteria) | [ac-0003](../../../plan.dd.md#acceptance-criteria), [ac-0009](../../../plan.dd.md#acceptance-criteria) |
+| tk-0007 | Oh My Pi and Pi prep folds | — | ph-62fe | [x] checked | — | — | [tk-0007](tasks.dd.md#done-when) | OmpPrepFold and PiPrepFold interpret v3 session trees into the shared contract with explicit nulls. | Guide v3 unit tk-0007, wave 3, coder lane. | — | [ac-0006](../../../plan.dd.md#acceptance-criteria), [ac-000b](../../../plan.dd.md#acceptance-criteria) |
+| tk-0008 | Codex prep fold | — | ph-62fe | [x] checked | — | — | [tk-0008](tasks.dd.md#done-when) | CodexPrepFold turns rollout JSONL into calls with model and per-call usage, compactions and tool uses. | Guide v3 unit tk-0008, wave 3, coder lane. | — | [ac-0006](../../../plan.dd.md#acceptance-criteria) |
+| tk-0009 | Copilot CLI prep folds | — | ph-62fe | [x] checked | — | — | [tk-0009](tasks.dd.md#done-when) | Events JSONL and legacy snapshot documents land in the shared contract with representation-appropriate identity. | Guide v3 unit tk-0009, wave 3, coder lane. | — | [ac-0006](../../../plan.dd.md#acceptance-criteria) |
+| tk-000a | VS Code Copilot prep fold | — | ph-62fe | [x] checked | — | — | [tk-000a](tasks.dd.md#done-when) | JSON document and journal snapshots fold to the shared contract; journals reduce to their current document first. | Guide v3 unit tk-000a, wave 3, coder lane. | — | [ac-0006](../../../plan.dd.md#acceptance-criteria) |
+| tk-000b | Cursor prep folds | — | ph-62fe | [x] checked | — | — | [tk-000b](tasks.dd.md#done-when) | Cursor transcript JSONL and the IDE SQLite key/value store fold to the shared contract. | Guide v3 unit tk-000b, wave 3, coder lane. | — | [ac-0006](../../../plan.dd.md#acceptance-criteria) |
+| tk-000c | Snapshot prep loader | — | ph-62fe | [x] checked | — | — | [tk-000c](tasks.dd.md#done-when) | SnapshotPrepLoader discovers, stats and reads JSON documents, journals and read-only SQLite for prep, with revision-based change detection. | Guide v3 unit tk-000c, wave 3, coder lane. | — | [ac-0006](../../../plan.dd.md#acceptance-criteria), [ac-000b](../../../plan.dd.md#acceptance-criteria) |
+| tk-000d | CLI phase 2: research recipes, snapshot limits, docs | — | ph-62fe | [x] checked | — | — | [tk-000d](tasks.dd.md#done-when) | Named recipes print a self-contained DuckDB script; snapshot limits are adjustable; the prep topic states coverage. | Guide v3 unit tk-000d, wave 3, coder lane. | [ac-0009](../../../plan.dd.md#acceptance-criteria) | [ac-000c](../../../plan.dd.md#acceptance-criteria), [ac-000d](../../../plan.dd.md#acceptance-criteria) |
+| tk-000e | Phase-2 composition and full-corpus proof (PM) | — | ph-62fe | [x] checked | — | — | [tk-000e](tasks.dd.md#done-when) | Every catalogued harness prepped end to end; assembled proof covers snapshot and SQLite; full-corpus coverage, measurement and recipes evidence; independent review. | Guide v3 unit tk-000e, wave 4. Real-corpus outputs stay in .harness/temp/prep-real; committed evidence is numbers only. | [ac-0006](../../../plan.dd.md#acceptance-criteria), [ac-000c](../../../plan.dd.md#acceptance-criteria), [ac-000d](../../../plan.dd.md#acceptance-criteria) | [ac-0003](../../../plan.dd.md#acceptance-criteria), [ac-0009](../../../plan.dd.md#acceptance-criteria) |
 
 <a id="done-when"></a>
 
@@ -50,60 +50,60 @@ Context brief. Purpose: extend the verified phase-1 prep (d800949) to every cata
 
 ### tk-0007
 
-| id | assertion | state | pressure |
-| --- | --- | --- | --- |
-| dw-0701 | Synthetic OMP and Pi sessions fold to calls (deduped per native id, usage/model where native), turns with origin (human, peer with pij sender/message id, other), compaction events (compactions Some), tool_uses with outcomes, and SessionFacts; branch membership survives batch splits and checkpoint resume. | [ ] unchecked | [bp-0006](../../backpressure.dd.md#rows) |
-| dw-0702 | Fields the dialect does not record are null, never zero; rows carry no content unless include_content; descriptors report cli_persisted_resume. | [ ] unchecked | [bp-000b](../../backpressure.dd.md#rows) |
+| id | assertion | state | pressure | proven_by |
+| --- | --- | --- | --- | --- |
+| dw-0701 | Synthetic OMP and Pi sessions fold to calls (deduped per native id, usage/model where native), turns with origin (human, peer with pij sender/message id, other), compaction events (compactions Some), tool_uses with outcomes, and SessionFacts; branch membership survives batch splits and checkpoint resume. | [x] checked | [bp-0006](../../backpressure.dd.md#rows) | [lg-0011](../../execution-log.dd.md#entries) |
+| dw-0702 | Fields the dialect does not record are null, never zero; rows carry no content unless include_content; descriptors report cli_persisted_resume. | [x] checked | [bp-000b](../../backpressure.dd.md#rows) | [lg-0011](../../execution-log.dd.md#entries) |
 
 ### tk-0008
 
-| id | assertion | state | pressure |
-| --- | --- | --- | --- |
-| dw-0801 | Synthetic rollouts fold to calls whose model comes from turn_context and whose usage comes from last-turn token counts without double counting cumulative totals; compacted records are compaction events; function/custom/shell tool calls and outputs are tool_uses with exit outcomes; parent/fork ids set parent_session_id; batch split and checkpoint resume are equivalent. | [ ] unchecked | [bp-0006](../../backpressure.dd.md#rows) |
+| id | assertion | state | pressure | proven_by |
+| --- | --- | --- | --- | --- |
+| dw-0801 | Synthetic rollouts fold to calls whose model comes from turn_context and whose usage comes from last-turn token counts without double counting cumulative totals; compacted records are compaction events; function/custom/shell tool calls and outputs are tool_uses with exit outcomes; parent/fork ids set parent_session_id; batch split and checkpoint resume are equivalent. | [x] checked | [bp-0006](../../backpressure.dd.md#rows) | [lg-0011](../../execution-log.dd.md#entries) |
 
 ### tk-0009
 
-| id | assertion | state | pressure |
-| --- | --- | --- | --- |
-| dw-0901 | Synthetic events.jsonl folds to calls with model changes and message/API usage, compactions and tool uses; a synthetic legacy document folds as a Snapshot source with explicit nulls for model and usage and untimed chat rows counted, native_key addressing every row. | [ ] unchecked | [bp-0006](../../backpressure.dd.md#rows) |
+| id | assertion | state | pressure | proven_by |
+| --- | --- | --- | --- | --- |
+| dw-0901 | Synthetic events.jsonl folds to calls with model changes and message/API usage, compactions and tool uses; a synthetic legacy document folds as a Snapshot source with explicit nulls for model and usage and untimed chat rows counted, native_key addressing every row. | [x] checked | [bp-0006](../../backpressure.dd.md#rows) | [lg-0011](../../execution-log.dd.md#entries) |
 
 ### tk-000a
 
-| id | assertion | state | pressure |
-| --- | --- | --- | --- |
-| dw-0a01 | Synthetic document and journal sessions fold to requests/responses as calls with model and native token data where present, tool uses with status, explicit nulls elsewhere; journal reduction equals the equivalent document. | [ ] unchecked | [bp-0006](../../backpressure.dd.md#rows) |
+| id | assertion | state | pressure | proven_by |
+| --- | --- | --- | --- | --- |
+| dw-0a01 | Synthetic document and journal sessions fold to requests/responses as calls with model and native token data where present, tool uses with status, explicit nulls elsewhere; journal reduction equals the equivalent document. | [x] checked | [bp-0006](../../backpressure.dd.md#rows) | [lg-0011](../../execution-log.dd.md#entries) |
 
 ### tk-000b
 
-| id | assertion | state | pressure |
-| --- | --- | --- | --- |
-| dw-0b01 | Synthetic transcripts fold to offset-keyed rows with explicit nulls for ids, timestamps, model and usage; synthetic IDE composer/bubble records fold with model and token data where present and native_key prefixed by the composer id. | [ ] unchecked | [bp-0006](../../backpressure.dd.md#rows) |
+| id | assertion | state | pressure | proven_by |
+| --- | --- | --- | --- | --- |
+| dw-0b01 | Synthetic transcripts fold to offset-keyed rows with explicit nulls for ids, timestamps, model and usage; synthetic IDE composer/bubble records fold with model and token data where present and native_key prefixed by the composer id. | [x] checked | [bp-0006](../../backpressure.dd.md#rows) | [lg-0011](../../execution-log.dd.md#entries) |
 
 ### tk-000c
 
-| id | assertion | state | pressure |
-| --- | --- | --- | --- |
-| dw-0c01 | On temp files: discovery honours accept and counts skipped entries; stat folds SQLite -wal/-shm so WAL-only growth changes size/mtime; read returns one bounded NativeSnapshot whose revision is stable for unchanged content and changes with it; record_at returns the keyed record. | [ ] unchecked | [bp-0006](../../backpressure.dd.md#rows) |
-| dw-0c02 | SQLite is opened read-only while a writer holds the database; nothing is locked, renamed or written. | [ ] unchecked | [bp-000b](../../backpressure.dd.md#rows) |
+| id | assertion | state | pressure | proven_by |
+| --- | --- | --- | --- | --- |
+| dw-0c01 | On temp files: discovery honours accept and counts skipped entries; stat folds SQLite -wal/-shm so WAL-only growth changes size/mtime; read returns one bounded NativeSnapshot whose revision is stable for unchanged content and changes with it; record_at returns the keyed record. | [x] checked | [bp-0006](../../backpressure.dd.md#rows) | [lg-0011](../../execution-log.dd.md#entries) |
+| dw-0c02 | SQLite is opened read-only while a writer holds the database; nothing is locked, renamed or written. | [x] checked | [bp-000b](../../backpressure.dd.md#rows) | [lg-0011](../../execution-log.dd.md#entries) |
 
 ### tk-000d
 
-| id | assertion | state | pressure |
-| --- | --- | --- | --- |
-| dw-0d01 | `unisphere prep recipes` lists every named recipe (consumer brief questions and fleet questions) and `unisphere prep recipe NAME --target DIR` prints `SET file_search_path`, `.read views.sql` and the query; unknown names exit 2 with the valid list. | [ ] unchecked | [bp-0009](../../backpressure.dd.md#rows) |
-| dw-0d02 | `--max-snapshot-bytes` and `--max-snapshot-records` reach PrepReadLimits.snapshot and are validated. | [ ] unchecked | [bp-000c](../../backpressure.dd.md#rows) |
-| dw-0d03 | research-recipes topic registered with the one-line DuckDB command and install note; prep topic states current harness coverage; every example parses. | [ ] unchecked | [bp-000d](../../backpressure.dd.md#rows) |
+| id | assertion | state | pressure | proven_by |
+| --- | --- | --- | --- | --- |
+| dw-0d01 | `unisphere prep recipes` lists every named recipe (consumer brief questions and fleet questions) and `unisphere prep recipe NAME --target DIR` prints `SET file_search_path`, `.read views.sql` and the query; unknown names exit 2 with the valid list. | [x] checked | [bp-0009](../../backpressure.dd.md#rows) | [lg-000a](../../execution-log.dd.md#entries) |
+| dw-0d02 | `--max-snapshot-bytes` and `--max-snapshot-records` reach PrepReadLimits.snapshot and are validated. | [x] checked | [bp-000c](../../backpressure.dd.md#rows) | [lg-0011](../../execution-log.dd.md#entries) |
+| dw-0d03 | research-recipes topic registered with the one-line DuckDB command and install note; prep topic states current harness coverage; every example parses. | [x] checked | [bp-000d](../../backpressure.dd.md#rows) | [lg-0011](../../execution-log.dd.md#entries) |
 
 ### tk-000e
 
-| id | assertion | state | pressure |
-| --- | --- | --- | --- |
-| dw-0e01 | unisphere-proof prep also covers a JSON snapshot, a journal and a SQLite source (unchanged by revision, replaced on change) through the built and installed CLI. | [ ] unchecked | [bp-0006](../../backpressure.dd.md#rows) |
-| dw-0e02 | The catalogue reports cli_persisted_resume for every covered descriptor, and every existing default root is prepped with zero unsupported sets. | [ ] unchecked | [bp-0003](../../backpressure.dd.md#rows) |
-| dw-0e03 | Real-corpus coverage: every harness root on this machine prepped with per-harness sources by status, rows per table and null rates; zero unreadable sources, or each one explained. | [ ] unchecked | [bp-0006](../../backpressure.dd.md#rows) |
-| dw-0e04 | Full-corpus cold, unchanged and append runs across all harnesses report wall time, peak RSS, bytes read and state size with machine load. | [ ] unchecked | [bp-000c](../../backpressure.dd.md#rows) |
-| dw-0e05 | Every shipped recipe runs through `unisphere prep recipe NAME --target DIR \| duckdb` on the synthetic and the real target. | [ ] unchecked | [bp-0009](../../backpressure.dd.md#rows) |
-| dw-0e06 | `harness boot --json` is ready with the extended prep proof. | [ ] unchecked | [bp-000f](../../backpressure.dd.md#rows) |
+| id | assertion | state | pressure | proven_by |
+| --- | --- | --- | --- | --- |
+| dw-0e01 | unisphere-proof prep also covers a JSON snapshot, a journal and a SQLite source (unchanged by revision, replaced on change) through the built and installed CLI. | [x] checked | [bp-0006](../../backpressure.dd.md#rows) | [lg-0010](../../execution-log.dd.md#entries) |
+| dw-0e02 | The catalogue reports cli_persisted_resume for every covered descriptor, and every existing default root is prepped with zero unsupported sets. | [x] checked | [bp-0003](../../backpressure.dd.md#rows) | [lg-0008](../../execution-log.dd.md#entries) |
+| dw-0e03 | Real-corpus coverage: every harness root on this machine prepped with per-harness sources by status, rows per table and null rates; zero unreadable sources, or each one explained. | [x] checked | [bp-0006](../../backpressure.dd.md#rows) | [lg-000f](../../execution-log.dd.md#entries) |
+| dw-0e04 | Full-corpus cold, unchanged and append runs across all harnesses report wall time, peak RSS, bytes read and state size with machine load. | [x] checked | [bp-000c](../../backpressure.dd.md#rows) | [lg-000e](../../execution-log.dd.md#entries) |
+| dw-0e05 | Every shipped recipe runs through `unisphere prep recipe NAME --target DIR \| duckdb` on the synthetic and the real target. | [x] checked | [bp-0009](../../backpressure.dd.md#rows) | [lg-000a](../../execution-log.dd.md#entries) |
+| dw-0e06 | `harness boot --json` is ready with the extended prep proof. | [x] checked | [bp-000f](../../backpressure.dd.md#rows) | [lg-0011](../../execution-log.dd.md#entries) |
 
 <a id="goals"></a>
 

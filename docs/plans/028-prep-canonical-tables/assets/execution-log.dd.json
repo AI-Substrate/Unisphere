@@ -171,6 +171,18 @@
             "tasks/phase-2/tasks.dd.json#done_when/tk-000e",
             "backpressure.dd.json#rows/bp-0006"
           ]
+        },
+        {
+          "id": "lg-0011",
+          "at": "2026-09-29T09:56:23+00:00",
+          "text": "Independent composition review rv-028-composition-p2-r1 APPROVED with 0 findings (reviewer pij-panicky-anteater, github-copilot/claude-sonnet-5.5; subject 19ace79fd493350525323dd5da0cff8e3d3a020c; recorded via harness builder review, assets/team/review-composition-rv-028-composition-p2-r1.dd.json). The reviewer independently re-ran unisphere-proof prep (JSON document, mutation journal and SQLite snapshots through built/installed CLI), 89 phase-2 and 61 phase-1 regression tests, arch-check and the workspace check; verified both prime rulings in code; accepted every measured number and the AC-000c memory reading (wave budget bounds the depth-scaling term; the state held in full scales with source count); accepted composition decisions (a) record limit = batch limit, (b) empty VS Code documents unreadable, (c) prep glob spans directories, (d) compactions_v coalesce for basis none, (e) snapshot record addressing with journal refusal, (f) exit-3-aware proof scripts. Docs (ac-000d): prep topic states per-harness coverage, dialect nulls, incremental discovery, commit waves and limits; research-recipes topic lists the 24 recipes with the one-line DuckDB command; README and docs/cli.md updated; vd-0015 green at 19ace79.",
+          "links": [
+            "team/review-composition-rv-028-composition-p2-r1.dd.json#review",
+            "../plan.dd.json#acceptance_criteria/ac-0006",
+            "../plan.dd.json#acceptance_criteria/ac-0009",
+            "../plan.dd.json#acceptance_criteria/ac-000c",
+            "../plan.dd.json#acceptance_criteria/ac-000d"
+          ]
         }
       ]
     }

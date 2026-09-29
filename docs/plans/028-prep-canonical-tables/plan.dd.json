@@ -80,8 +80,9 @@
         {
           "id": "ac-0006",
           "claim": "Every registered harness: Oh My Pi, Pi, Codex, Copilot CLI (events and legacy snapshot), VS Code Copilot (JSON and journal), Cursor transcript and Cursor IDE land in the same table contract with representation-appropriate change detection (append cursors for JSONL, revision checks for snapshots and SQLite). Fields a harness does not record are explicit nulls with per-source coverage, never estimates.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-0006"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0006",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-000f"
         },
         {
           "id": "ac-0007",
@@ -100,8 +101,9 @@
         {
           "id": "ac-0009",
           "claim": "Research recipes ship: named recipes answer the consumer brief's questions and the prime's fleet questions (idle tax, compaction cadence, peer amplification, subagent fan-out, tool loops, fleet idle-longest, most expensive turns, daily cost by repo/model/harness) through one documented command against external DuckDB. If an optional `unisphere sql` wrapper exists it shells out to an installed engine and fails with a clear, actionable error when none is present; no engine is linked into the build.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-0009"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0009",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-000a"
         },
         {
           "id": "ac-000a",
@@ -120,14 +122,16 @@
         {
           "id": "ac-000c",
           "claim": "Measured at fleet scale on the real corpus: a cold prep of the full local corpus (about 2.9 GB, all harnesses present) and warm unchanged and append re-runs are timed with peak RSS and bytes read, and reported against the POC baseline (Claude: 3.5 s cold, 0.05–0.6 s warm). Memory stays bounded by documented, adjustable limits.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-000c"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000c",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-000e"
         },
         {
           "id": "ac-000d",
           "claim": "Offline documentation: the bundled docs gain a prep topic and a research-recipes topic with tested one-line examples, the table contract, the incremental and generation semantics, and the privacy defaults.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-000d"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000d",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0011"
         }
       ]
     },
@@ -146,11 +150,12 @@
           "id": "ph-62fe",
           "title": "All harnesses and research recipes",
           "brief": "Extend prep to every other registered harness with representation-appropriate change detection and explicit nulls; ship the named research recipes against external DuckDB; full-corpus measurement across harnesses; docs. Ends with independent review.",
-          "state": "unchecked",
+          "state": "checked",
           "depends_on": [
             "ph-ed41"
           ],
-          "tasks": "assets/tasks/phase-2/tasks.dd.json#tasks"
+          "tasks": "assets/tasks/phase-2/tasks.dd.json#tasks",
+          "receipt": "assets/team/review-composition-rv-028-composition-p2-r1.dd.json"
         }
       ]
     },

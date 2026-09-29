@@ -77,8 +77,9 @@
           "mode": "BUILD",
           "tier": "computational",
           "proof": "BUILD→RUN (guide v3): per-harness fold tests on synthetic fixtures (vd-000d…vd-0012), snapshot loader tests incl. SQLite WAL growth (vd-0013), proof-mode extension to snapshot/SQLite (vd-0008); real corpus: python3 docs/plans/028-prep-canonical-tables/assets/proof/coverage.py --scratch .harness/temp/prep-real (vd-0017, numbers only).",
-          "state": "unchecked",
-          "probe": "Synthetic native fixtures exist per adapter (crates/adapter-{omp,pi,copilot-cli,vscode-copilot}/tests/fixtures, adapter-codex/fixtures, adapter-cursor/fixtures); SQLite loader tests crates/loader-snapshot/tests/sqlite.rs; no prep folds outside Claude."
+          "state": "checked",
+          "probe": "Synthetic native fixtures exist per adapter (crates/adapter-{omp,pi,copilot-cli,vscode-copilot}/tests/fixtures, adapter-codex/fixtures, adapter-cursor/fixtures); SQLite loader tests crates/loader-snapshot/tests/sqlite.rs; no prep folds outside Claude.",
+          "receipt": "execution-log.dd.json#entries/lg-000f"
         },
         {
           "id": "bp-0007",
@@ -109,8 +110,9 @@
           "mode": "BUILD",
           "tier": "computational",
           "proof": "BUILD→RUN (guide v2): recipe catalogue tests; then `cargo test --locked -p unisphere-cli --test recipes`; external run `python3 docs/plans/028-prep-canonical-tables/assets/proof/recipes_check.py --scratch .harness/temp/prep-real`. Requires an operator-approved DuckDB CLI install.",
-          "state": "unchecked",
-          "probe": "DuckDB CLI installed 2026-09-29 with Jordan's approval (brew duckdb 1.5.5, /opt/homebrew/bin/duckdb); Python duckdb 1.5.3; POC prep_sql.py ran 30/30 recipes on DuckDB (main scratch/poc-prep-duckdb/recipes-output-duckdb.txt); phase-1 parity already reads views.sql through DuckDB."
+          "state": "checked",
+          "probe": "DuckDB CLI installed 2026-09-29 with Jordan's approval (brew duckdb 1.5.5, /opt/homebrew/bin/duckdb); Python duckdb 1.5.3; POC prep_sql.py ran 30/30 recipes on DuckDB (main scratch/poc-prep-duckdb/recipes-output-duckdb.txt); phase-1 parity already reads views.sql through DuckDB.",
+          "receipt": "execution-log.dd.json#entries/lg-000a"
         },
         {
           "id": "bp-000a",
@@ -141,8 +143,9 @@
           "mode": "EXTEND",
           "tier": "computational",
           "proof": "EXTEND→RUN: port the POC run-all timing captures (/usr/bin/time -l) into docs/plans/028-prep-canonical-tables/assets/proof/measure.py; then `python3 docs/plans/028-prep-canonical-tables/assets/proof/measure.py --scratch .harness/temp/prep-real` (Claude in phase 1, all harnesses in phase 2).",
-          "state": "unchecked",
-          "probe": "POC timings: main scratch/poc-prep-duckdb/run-*-{cold,warm}.time (3.46 s cold full, 0.05–0.62 s unchanged, ~0.5 GB RSS)."
+          "state": "checked",
+          "probe": "POC timings: main scratch/poc-prep-duckdb/run-*-{cold,warm}.time (3.46 s cold full, 0.05–0.62 s unchanged, ~0.5 GB RSS).",
+          "receipt": "execution-log.dd.json#entries/lg-000e"
         },
         {
           "id": "bp-000d",
@@ -151,8 +154,9 @@
           "mode": "EXTEND",
           "tier": "computational",
           "proof": "EXTEND→RUN: register topics in crates/cli/src/docs.rs and bind every one-line example in a parsed manifest (pattern of fixtures/query-docs/example-cases.json); installed docs parity is already iterated by the native proof; then `cargo test --locked -p unisphere-cli --test prep` and `harness boot --json`.",
-          "state": "unchecked",
-          "probe": "Docs registry crates/cli/src/docs.rs:12-120 (12 topics, no prep); example parse test crates/cli/tests/query_frontend.rs:604-625; installed topic parity crates/testkit/src/bin/proof/query.rs:196-224."
+          "state": "checked",
+          "probe": "Docs registry crates/cli/src/docs.rs:12-120 (12 topics, no prep); example parse test crates/cli/tests/query_frontend.rs:604-625; installed topic parity crates/testkit/src/bin/proof/query.rs:196-224.",
+          "receipt": "execution-log.dd.json#entries/lg-0011"
         },
         {
           "id": "bp-000e",

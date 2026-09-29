@@ -113,8 +113,12 @@ impl PrepLoader for SnapshotPrepLoader {
         Err(error(PipelineErrorKind::Unsupported))
     }
 
-    /// The value of the snapshot record whose key is `address.key`, read from a
-    /// fresh bounded snapshot with the default prep limits.
+    /// The native record at `address.key`, read from a fresh bounded snapshot
+    /// with the default prep limits. A key is a snapshot record key
+    /// (`composerData:<id>`), `<record key>#<JSON pointer>` for one value inside
+    /// a JSON record (`document#/chatMessages/3`), or a bare JSON pointer into a
+    /// JSON document (`/requests/0/response/2`). Pointers into a journal's
+    /// reduced document cannot be resolved from raw journal operations.
     fn record_at(
         &self,
         path: &Path,
@@ -126,17 +130,36 @@ impl PrepLoader for SnapshotPrepLoader {
             .as_deref()
             .filter(|key| !key.is_empty())
             .ok_or_else(|| error(PipelineErrorKind::InvalidInput))?;
+        let (record_key, pointer) = match key.split_once('#') {
+            Some((record, pointer)) => (record, Some(pointer)),
+            None if key.starts_with('/') => match self.format {
+                SnapshotFormat::JsonDocument => ("document", Some(key)),
+                _ => return Err(error(PipelineErrorKind::InvalidInput)),
+            },
+            None => (key, None),
+        };
         let snapshot =
             FileSnapshotLoader.read_snapshot(&self.source(path), SnapshotLimits::default())?;
         let record = snapshot
             .records
             .into_iter()
-            .find(|record| record.key == key)
+            .find(|record| record.key == record_key)
             .ok_or_else(|| error(PipelineErrorKind::InvalidInput))?;
-        if record.bytes.len() > max_bytes {
+        let bytes = match pointer {
+            None => record.bytes,
+            Some(pointer) => {
+                let value: serde_json::Value = serde_json::from_slice(&record.bytes)
+                    .map_err(|_| error(PipelineErrorKind::InvalidData))?;
+                let found = value
+                    .pointer(pointer)
+                    .ok_or_else(|| error(PipelineErrorKind::InvalidInput))?;
+                serde_json::to_vec(found).map_err(|_| error(PipelineErrorKind::InvalidData))?
+            }
+        };
+        if bytes.len() > max_bytes {
             return Err(error(PipelineErrorKind::RecordLimit));
         }
-        Ok(record.bytes)
+        Ok(bytes)
     }
 }
 

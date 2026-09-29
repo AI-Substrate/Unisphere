@@ -625,7 +625,7 @@ fn run() -> ProofResult<()> {
             "explicit Claude JSONL projection; not lossless or final completeness"
         }
         Some("prep") => {
-            "incremental Claude prep over synthetic sources: built/installed CLI and an external SDK consumer with its own store; not real-corpus parity or other harnesses"
+            "incremental Claude JSONL and a revisioned Copilot CLI legacy JSON snapshot over synthetic sources through the built/installed CLI, Claude through an external SDK consumer with its own store; not real-corpus parity or the other folds"
         }
         _ => "configuration foundation",
     };

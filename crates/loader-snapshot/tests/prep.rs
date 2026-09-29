@@ -406,3 +406,44 @@ fn record_at_returns_exactly_one_value_by_snapshot_key() {
         b"{\"type\":1}"
     );
 }
+
+#[test]
+fn record_at_resolves_json_pointers_inside_document_records() {
+    let directory = TempDir::new().unwrap();
+    let path = directory.path().join("session.json");
+    fs::write(
+        &path,
+        br#"{"requests":[{"response":[{"k":"a"},{"k":"b"}]}]}"#,
+    )
+    .unwrap();
+    let document = SnapshotPrepLoader::new(SnapshotFormat::JsonDocument);
+    let at = |key: &str| NativeAddress {
+        offset: None,
+        key: Some(key.to_owned()),
+    };
+    // Bare pointer (VS Code rows) and record#pointer (Copilot legacy rows) address the same value.
+    for key in ["/requests/0/response/1", "document#/requests/0/response/1"] {
+        assert_eq!(
+            document.record_at(&path, &at(key), 64).unwrap(),
+            br#"{"k":"b"}"#
+        );
+    }
+    assert_eq!(
+        document
+            .record_at(&path, &at("/requests/9"), 64)
+            .unwrap_err()
+            .kind(),
+        PipelineErrorKind::InvalidInput
+    );
+    // A journal's operations are raw; a pointer into its reduced document is not fetchable.
+    let journal_path = directory.path().join("session.jsonl");
+    fs::write(&journal_path, b"{\"kind\":0}\n").unwrap();
+    let journal = SnapshotPrepLoader::new(SnapshotFormat::JsonJournal);
+    assert_eq!(
+        journal
+            .record_at(&journal_path, &at("/requests/0"), 64)
+            .unwrap_err()
+            .kind(),
+        PipelineErrorKind::InvalidInput
+    );
+}

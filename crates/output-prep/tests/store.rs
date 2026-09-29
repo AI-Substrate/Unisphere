@@ -614,6 +614,7 @@ fn views(target: &Path) -> BTreeMap<&'static str, Vec<String>> {
                 });
             let context = after.and_then(|c| {
                 let cache_write = match (c.cw_1h, c.cw_5m) {
+                    (None, None) if c.cache_write_basis == CacheWriteBasis::None => Some(0),
                     (None, None) => None,
                     (a, b) => Some(a.unwrap_or(0) + b.unwrap_or(0)),
                 };

@@ -216,6 +216,95 @@ fn scenario(repo: &Path, binary: &Path, dir: &Path) -> ProofResult<Vec<Value>> {
     Ok(steps)
 }
 
+/// Snapshot representation through the same CLI: a synthetic Copilot CLI legacy
+/// document (JSON snapshot) is unchanged by revision, replaced on a content
+/// change, and its rows are addressable by `<record key>#<JSON pointer>`.
+fn snapshot_scenario(repo: &Path, binary: &Path, dir: &Path) -> ProofResult<Vec<Value>> {
+    let sandbox = dir.join("sandbox");
+    let root = dir.join("legacy-root");
+    let target = dir.join("legacy-target");
+    let _ = fs::remove_dir_all(&root);
+    fs::create_dir_all(&root).map_err(|e| e.to_string())?;
+    let document = root.join("legacy-0001.json");
+    fs::copy(
+        repo.join("crates/adapter-copilot-cli/tests/fixtures/prep/legacy-0001.json"),
+        &document,
+    )
+    .map_err(|e| e.to_string())?;
+    let mut args = strings(&["prep", "--target"]);
+    args.push(target.as_os_str().into());
+    let mut spec = OsString::from("copilot-cli-snapshot:demo=");
+    spec.push(&root);
+    args.push("--root".into());
+    args.push(spec);
+    args.extend(strings(&["--no-default-roots", "--json"]));
+    let mut steps = Vec::new();
+    let mut step = |label: &str| -> ProofResult<Value> {
+        let (code, value) = prep_json(binary, &sandbox, &args)?;
+        if code != 0 {
+            return Err(format!("{label}: exit {code}: {value}"));
+        }
+        steps.push(project(&value));
+        Ok(value)
+    };
+    let cold = step("snapshot cold")?;
+    expect(
+        cold["data"]["sets"][0]["supported"] == true
+            && cold["data"]["sets"][0]["by_status"]["new"] == 1
+            && cold["data"]["rows_written"]["triggers"].as_u64() > Some(0),
+        "snapshot source is prepped",
+        &cold,
+    )?;
+    // Same bytes, new mtime: re-read, equal revision, nothing committed.
+    let bytes = fs::read(&document).map_err(|e| e.to_string())?;
+    fs::write(&document, &bytes).map_err(|e| e.to_string())?;
+    let touched = step("snapshot touched")?;
+    expect(
+        touched["data"]["sets"][0]["by_status"]["unchanged"] == 1
+            && touched["data"]["rows_written"]["triggers"] == 0
+            && touched["data"]["rows_written"]["calls"] == 0,
+        "equal revision is unchanged",
+        &touched,
+    )?;
+    let mut changed: Value = serde_json::from_slice(&bytes).map_err(|e| e.to_string())?;
+    changed["chatMessages"]
+        .as_array_mut()
+        .ok_or("fixture has no chatMessages")?
+        .push(json!({"role": "user", "content": "placeholder appended prompt"}));
+    fs::write(&document, changed.to_string()).map_err(|e| e.to_string())?;
+    let replaced = step("snapshot changed")?;
+    expect(
+        replaced["data"]["sources"].as_array().is_some_and(|s| {
+            s.iter().any(|s| {
+                s["status"]["status"] == "replaced"
+                    && s["status"]["reason"] == "revision"
+                    && s["generation"] == 1
+            })
+        }),
+        "changed snapshot starts generation 1",
+        &replaced,
+    )?;
+    let mut record = strings(&["prep", "record", "--target"]);
+    record.push(target.as_os_str().into());
+    record.extend(strings(&[
+        "--source",
+        "copilot-cli-snapshot/demo/legacy-0001.json",
+        "--key",
+        "document#/chatMessages/0",
+        "--include-content",
+        "--json",
+    ]));
+    let (code, value) = prep_json(binary, &sandbox, &record)?;
+    if code != 0
+        || value["data"]["record"]
+            .as_str()
+            .is_none_or(|r| !r.contains("\"role\""))
+    {
+        return Err(format!("snapshot record fetch: exit {code}: {value}"));
+    }
+    Ok(steps)
+}
+
 fn consumer(repo: &Path, scratch: &Path) -> ProofResult<PathBuf> {
     let project = scratch.join("prep-consumer");
     fs::create_dir_all(project.join("src")).map_err(|e| e.to_string())?;
@@ -284,8 +373,14 @@ pub fn run(repo: &Path, scratch: &Path) -> ProofResult<()> {
         .join(format!("unisphere{}", env::consts::EXE_SUFFIX));
     require_file(&built)?;
     require_file(&installed)?;
-    let from_built = scenario(repo, &built, &scratch.join("built"))?;
-    let from_installed = scenario(repo, &installed, &scratch.join("installed"))?;
+    let mut from_built = scenario(repo, &built, &scratch.join("built"))?;
+    let mut from_installed = scenario(repo, &installed, &scratch.join("installed"))?;
+    from_built.extend(snapshot_scenario(repo, &built, &scratch.join("built"))?);
+    from_installed.extend(snapshot_scenario(
+        repo,
+        &installed,
+        &scratch.join("installed"),
+    )?);
     if from_built != from_installed {
         return Err(format!(
             "built and installed CLI disagree:\n{}\n{}",

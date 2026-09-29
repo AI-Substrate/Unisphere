@@ -19,7 +19,19 @@ Limits: `--max-record-bytes` (default 3145728), `--max-batch-bytes` (default 167
 
 ## Harness coverage in this build
 
-The prep harness key is the adapter-catalogue descriptor id. In this build only `claude-code` has a prep binding: its JSONL transcripts (main sessions and `subagents/` sidechains) are folded incrementally. Roots of every other catalogued descriptor (`codex`, `oh-my-pi`, `pi`, `copilot-cli`, `copilot-cli-snapshot`, `cursor-transcript`, `cursor-ide`, `vscode-copilot`, `git-ai`) are reported `unsupported`, with their sources counted, until their folds land. `unisphere adapters list --json` reports `cli_persisted_resume: true` for exactly the descriptors prep resumes.
+The prep harness key is the adapter-catalogue descriptor id. Every catalogued session descriptor has a prep binding; `unisphere adapters list --json` reports `cli_persisted_resume: true` for exactly those. `git-ai` has no session root and no fold: an explicit `--root git-ai=DIR` is reported `unsupported` with its sources counted.
+
+- Append-only JSONL, folded incrementally from the committed offset: `claude-code` (main sessions and `subagents/` sidechains), `oh-my-pi`, `pi`, `codex`, `copilot-cli` (`*/events.jsonl`) and `cursor-transcript`. A rewrite before the committed offset (Oh My Pi rewrites a session's title line in place) replaces the source with a new generation. Oh My Pi subagent transcripts (`<project>/<parent>/<agent>.jsonl`) are outside the session pattern and are not prepped in this build.
+- Snapshots, re-read whole when their stat changes and folded only when their revision changes (a changed revision is a new generation; an equal one is `unchanged`): `copilot-cli-snapshot` and `vscode-copilot` JSON documents, `vscode-copilot` mutation journals (replayed to the current document first), and `cursor-ide` SQLite databases (`cursorDiskKV`; `-wal`/`-shm`/`-journal` siblings count toward the database's stat).
+
+Dialect limits, all recorded as null rather than estimated:
+
+- Only Claude records a 1 h/5 m cache-write split. Copilot CLI records an aggregate: every conversation call names the documented fallback in `cache_write_basis` (main → `fallback_1h`, subagent → `fallback_5m`), taken from the first sighting of the call, and its cache-write columns stay null until a usage record is folded. Codex splits likewise when it records writes; otherwise basis is `none` with null cache-write columns.
+- VS Code Copilot records one call per request with the requested `modelId` (often `auto`), prompt and completion tokens only, no cache counters, no tool input/output/duration and no compaction or model-switch marker. A document or journal with an unknown schema version is reported unreadable.
+- Cursor IDE facts are per database, not per composer: one `state.vscdb` is one source. IDE calls have null model, and an all-zero native `tokenCount` is not recorded.
+- Dialects without a native compaction marker (VS Code Copilot, Cursor) have null compaction counts; a fully read Claude source with no marker has zero.
+
+`prep record` addresses a snapshot row by its `native_key`: a SQLite key (`bubbleId:<composer>:<bubble>`), a JSON pointer into the document (`/requests/0/response/2`), or `<record key>#<JSON pointer>` (`document#/chatMessages/3`). Journal rows are addressed in the replayed document, so their pointers cannot be fetched from the journal file; `prep record` refuses them as invalid input.
 
 ## Table contract
 

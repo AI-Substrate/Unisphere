@@ -3,7 +3,7 @@
   "kind": "flight-plan",
   "slug": "prep-canonical-tables",
   "nav": {
-    "now": "post-flight",
+    "now": "ship",
     "next": null
   },
   "created_at": "2026-09-29T04:11:32.808Z",
@@ -592,6 +592,28 @@
           "comments"
         ]
       }
+    },
+    {
+      "id": "UPD-019",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-29T10:09:31.380Z",
+      "details": {
+        "node": "post-flight",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "CUR-008",
+      "kind": "cursor-moved",
+      "origin": "engine",
+      "fired_at": "2026-09-29T10:09:53.413Z",
+      "details": {
+        "from": "post-flight",
+        "to": "ship"
+      }
     }
   ],
   "nodes": [
@@ -765,7 +787,15 @@
       "zone": "postflight",
       "dd_link": {
         "address": "docs/plans/archive/028-prep-canonical-tables/plan.dd.json",
-        "check": "plan-validate"
+        "check": "plan-validate",
+        "basis_sha": "9c3c8d1706da8ffb28dc85a0bc8b2aa62588b5cddd504b1c5bf1a44f27380c2a",
+        "reading": {
+          "status": "complete",
+          "terminal": 1,
+          "total": 1,
+          "incomplete": [],
+          "at": "2026-09-29T10:09:53.413Z"
+        }
       },
       "instructions": [
         "Close out the flight BEFORE any ship: every phase and review is done; the terminal harness harvest fires at this edge, then the plan folder is archived — this stage runs whether or not the work ever ships.",
@@ -780,9 +810,15 @@
           "text": "/Users/jordanknight/substrate/unisphere/preserved/028-prep-canonical-tables/0f070327-02f9-4ff4-b536-a601e110033c/receipt/preservation.dd.json",
           "source": "agent",
           "kind": "builder-preservation"
+        },
+        {
+          "at": "2026-09-29T10:09:31.380Z",
+          "text": "/Users/jordanknight/substrate/unisphere/preserved/028-prep-canonical-tables/0ca63312-cb54-48e5-9eac-004ecd67eb62/receipt/preservation.dd.json",
+          "source": "agent",
+          "kind": "builder-preservation"
         }
       ],
-      "modified_at": "2026-09-29T10:07:52.207Z"
+      "modified_at": "2026-09-29T10:09:31.380Z"
     },
     {
       "id": "ship",

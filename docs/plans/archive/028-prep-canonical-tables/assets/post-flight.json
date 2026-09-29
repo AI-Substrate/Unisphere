@@ -1,17 +1,17 @@
 {
-  "recorded_at": "2026-09-29T10:07:52.082Z",
+  "recorded_at": "2026-09-29T10:09:31.253Z",
   "composed_sha": "19ace79fd493350525323dd5da0cff8e3d3a020c",
   "composition": {
-    "path": "docs/plans/028-prep-canonical-tables/assets/team/composition.dd.json",
+    "path": "docs/plans/archive/028-prep-canonical-tables/assets/team/composition.dd.json",
     "sha256": "69abd3f8f7c796a3fd6feb6a005adff4697331c3c4ffd27a109f1595343c5c46"
   },
   "review": {
-    "path": "docs/plans/028-prep-canonical-tables/assets/team/review-composition-rv-028-composition-p2-r1.dd.json",
+    "path": "docs/plans/archive/028-prep-canonical-tables/assets/team/review-composition-rv-028-composition-p2-r1.dd.json",
     "sha256": "9ceedce7b5ff5285e0ada7014d60d2f84000a7b6c968fc4004c18f40707e1177"
   },
   "flow": "/Users/jordanknight/substrate/unisphere/unisphere-prep/docs/plans/archive/028-prep-canonical-tables/the-flow.json",
   "archive": "/Users/jordanknight/substrate/unisphere/unisphere-prep/docs/plans/archive/028-prep-canonical-tables",
-  "survivor": "/Users/jordanknight/substrate/unisphere/preserved/028-prep-canonical-tables/0f070327-02f9-4ff4-b536-a601e110033c",
+  "survivor": "/Users/jordanknight/substrate/unisphere/preserved/028-prep-canonical-tables/0ca63312-cb54-48e5-9eac-004ecd67eb62",
   "shipping_authorized": false,
   "chores": [
     {
@@ -121,15 +121,15 @@
       "category": "observation"
     },
     {
-      "path": "docs/plans/028-prep-canonical-tables/assets/telemetry.json",
+      "path": "docs/plans/archive/028-prep-canonical-tables/assets/telemetry.json",
       "category": "telemetry"
     },
     {
-      "path": "docs/plans/028-prep-canonical-tables/assets/post-flight.md",
+      "path": "docs/plans/archive/028-prep-canonical-tables/assets/post-flight.md",
       "category": "report"
     },
     {
-      "path": "docs/plans/028-prep-canonical-tables/assets/reviews/composition-p2-r1.md",
+      "path": "docs/plans/archive/028-prep-canonical-tables/assets/reviews/composition-p2-r1.md",
       "category": "report"
     }
   ]

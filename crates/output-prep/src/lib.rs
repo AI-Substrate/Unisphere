@@ -67,7 +67,8 @@ const SNAPSHOTS: [&str; 2] = ["sources", "sessions"];
 pub struct ParquetPrepStore {
     target: PathBuf,
     /// Held for the store's lifetime; dropping it releases the target.
-    _lock: File,
+    /// `None` for a read-only store, which refuses every write.
+    lock: Option<File>,
 }
 
 impl ParquetPrepStore {
@@ -84,8 +85,24 @@ impl ParquetPrepStore {
         lock.try_lock().map_err(write_error)?;
         Ok(Self {
             target,
-            _lock: lock,
+            lock: Some(lock),
         })
+    }
+
+    /// Open an existing `target` for reading committed state only: nothing is
+    /// created, no lock is taken, and `load`/`commit`/`compact` are refused.
+    pub fn open_read_only(target: PathBuf) -> Result<Self, PipelineError> {
+        if !target.join(STATE).is_file() {
+            return Err(PipelineError::new(PipelineErrorKind::InvalidInput, None));
+        }
+        Ok(Self { target, lock: None })
+    }
+
+    fn writable(&self) -> Result<(), PipelineError> {
+        self.lock
+            .as_ref()
+            .map(|_| ())
+            .ok_or_else(|| write_error(()))
     }
 }
 
@@ -454,6 +471,7 @@ impl unisphere_core::prep::PrepStore for ParquetPrepStore {
     }
 
     fn load(&self) -> Result<PrepLoaded, PipelineError> {
+        self.writable()?;
         let state = self.read_state()?;
         // Restore projections first: until then `views.sql` may still name
         // parts a finished compaction left for deletion.
@@ -467,6 +485,7 @@ impl unisphere_core::prep::PrepStore for ParquetPrepStore {
     }
 
     fn commit(&self, rows: &PrepRows, state: &PrepState) -> Result<PrepCommit, PipelineError> {
+        self.writable()?;
         let mut commit = PrepCommit::default();
         let mut state = state.clone();
         let name = format!("run-{:06}.parquet", state.runs);
@@ -496,6 +515,7 @@ impl unisphere_core::prep::PrepStore for ParquetPrepStore {
     }
 
     fn compact(&self) -> Result<PrepCompactReport, PipelineError> {
+        self.writable()?;
         let mut report = PrepCompactReport {
             target: self.target.clone(),
             ..PrepCompactReport::default()

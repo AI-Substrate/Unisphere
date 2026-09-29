@@ -1,0 +1,156 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "composition",
+      "value": {
+        "record_type": "composition",
+        "id": "e77187d7-30a4-47d6-aaaf-7baae4ee41e4",
+        "recorded_at": "2026-09-29T05:17:38.397Z",
+        "baseline": {
+          "path": "docs/plans/028-prep-canonical-tables/assets/team/baseline.dd.json",
+          "sha256": "7fcd6b09bb717c5b60718ab9253df59ffe47a66e2bc28209bf0571d3f9ba46e2"
+        },
+        "units": [
+          {
+            "unit_id": "tk-0003",
+            "peer_id": "pij-yodelling-hyena",
+            "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-028-tk0003",
+            "commit_sha": "8eff088ab5b8639e30dfabd793e06fe6180633b1",
+            "packet_sha256": "1b942625e02601d7f11dfb42990d4973acf7500c6d2b888c9437f69157e12e38",
+            "baseline_sha": "3f39e1b4b47776e9b89464a604192aaedddf99ea"
+          },
+          {
+            "unit_id": "tk-0004",
+            "peer_id": "pij-slimline-guineafowl",
+            "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-028-tk0004",
+            "commit_sha": "f04f24e2705b33a5babca3d98981e82de1cbb642",
+            "packet_sha256": "b1c4f889d9b8abacb7b34fb0f647a14c91e11d1dd08e8391d7f0e0765a9b97cc",
+            "baseline_sha": "3f39e1b4b47776e9b89464a604192aaedddf99ea"
+          },
+          {
+            "unit_id": "tk-0002",
+            "peer_id": "pij-marxist-gerbil",
+            "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-028-tk0002",
+            "commit_sha": "548c353c6829637ac48c165271d523b0dc05ccbb",
+            "packet_sha256": "b1c43f2bd2a4b45eb3e9633d3b961b8c7d292fd4cc28f8cd3976b397a558e291",
+            "baseline_sha": "3f39e1b4b47776e9b89464a604192aaedddf99ea"
+          },
+          {
+            "unit_id": "tk-0005",
+            "peer_id": "pij-northern-renfri",
+            "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-028-tk0005",
+            "commit_sha": "c8daaae8d7531e158bf5b9b362e1879e94d14827",
+            "packet_sha256": "42e931535421b547770ced5bf96ea510602c6a6c8521e6e567fd26276e4acdbd",
+            "baseline_sha": "3f39e1b4b47776e9b89464a604192aaedddf99ea"
+          }
+        ],
+        "integration_sha": "67bd121e68ee27d4a2cb152a9e0d803333a31376",
+        "integration_method": "replayed",
+        "files": [],
+        "checks": [],
+        "warnings": [
+          {
+            "file": "<guide:capabilities/cp-0006/owner>",
+            "owning_unit": "ph-62fe",
+            "stage": "guide",
+            "code": "capability-owner",
+            "message": "Observable owner ph-62fe does not name a declared implementation unit.",
+            "next_action": "Review capabilities/cp-0006/owner with the named unit and update the ownership guidance if useful; this warning does not block work."
+          },
+          {
+            "file": "<guide:capabilities/cp-0009/owner>",
+            "owning_unit": "ph-62fe",
+            "stage": "guide",
+            "code": "capability-owner",
+            "message": "Observable owner ph-62fe does not name a declared implementation unit.",
+            "next_action": "Review capabilities/cp-0009/owner with the named unit and update the ownership guidance if useful; this warning does not block work."
+          },
+          {
+            "file": "<guide:capabilities/cp-000c/owner>",
+            "owning_unit": "ph-62fe",
+            "stage": "guide",
+            "code": "capability-owner",
+            "message": "Observable owner ph-62fe does not name a declared implementation unit.",
+            "next_action": "Review capabilities/cp-000c/owner with the named unit and update the ownership guidance if useful; this warning does not block work."
+          },
+          {
+            "file": "<guide:capabilities/cp-0006/owner>",
+            "owning_unit": "ph-62fe",
+            "stage": "guide",
+            "code": "capability-owner",
+            "message": "Observable owner ph-62fe does not name a declared implementation unit.",
+            "next_action": "Review capabilities/cp-0006/owner with the named unit and update the ownership guidance if useful; this warning does not block work."
+          },
+          {
+            "file": "<guide:capabilities/cp-0009/owner>",
+            "owning_unit": "ph-62fe",
+            "stage": "guide",
+            "code": "capability-owner",
+            "message": "Observable owner ph-62fe does not name a declared implementation unit.",
+            "next_action": "Review capabilities/cp-0009/owner with the named unit and update the ownership guidance if useful; this warning does not block work."
+          },
+          {
+            "file": "<guide:capabilities/cp-000c/owner>",
+            "owning_unit": "ph-62fe",
+            "stage": "guide",
+            "code": "capability-owner",
+            "message": "Observable owner ph-62fe does not name a declared implementation unit.",
+            "next_action": "Review capabilities/cp-000c/owner with the named unit and update the ownership guidance if useful; this warning does not block work."
+          },
+          {
+            "file": "crates/output-prep/src/compact.rs",
+            "owning_unit": "unmapped",
+            "stage": "delivery",
+            "unit_id": "tk-0004"
+          },
+          {
+            "file": "crates/output-prep/src/lib.rs",
+            "owning_unit": "unmapped",
+            "stage": "delivery",
+            "unit_id": "tk-0004"
+          },
+          {
+            "file": "crates/output-prep/src/schema.rs",
+            "owning_unit": "unmapped",
+            "stage": "delivery",
+            "unit_id": "tk-0004"
+          },
+          {
+            "file": "crates/output-prep/src/views.rs",
+            "owning_unit": "unmapped",
+            "stage": "delivery",
+            "unit_id": "tk-0004"
+          },
+          {
+            "file": "crates/adapter-claude/tests/fixtures/prep/-Users-dev-demo/sess-0001.jsonl",
+            "owning_unit": "unmapped",
+            "stage": "delivery",
+            "unit_id": "tk-0002"
+          },
+          {
+            "file": "crates/adapter-claude/tests/fixtures/prep/-Users-dev-demo/sess-0001/subagents/agent-a1.jsonl",
+            "owning_unit": "unmapped",
+            "stage": "delivery",
+            "unit_id": "tk-0002"
+          },
+          {
+            "file": "crates/app/src/main.rs",
+            "owning_unit": "tk-0006",
+            "stage": "delivery",
+            "unit_id": "tk-0005"
+          },
+          {
+            "file": "crates/cli/src/query.rs",
+            "owning_unit": "unmapped",
+            "stage": "delivery",
+            "unit_id": "tk-0005"
+          }
+        ]
+      }
+    }
+  ],
+  "references": []
+}

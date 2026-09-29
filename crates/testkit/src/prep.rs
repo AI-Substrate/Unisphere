@@ -94,8 +94,11 @@ impl MemoryPrepStore {
                 if !current(&call.source, call.generation) {
                     continue;
                 }
+                // A call with neither id stays its own row.
+                let keyed = call.msg_id.is_some() || call.request_id.is_some();
                 let same = |c: &&mut PrepCallRow| {
-                    c.source == call.source
+                    keyed
+                        && c.source == call.source
                         && c.generation == call.generation
                         && c.msg_id == call.msg_id
                         && c.request_id == call.request_id

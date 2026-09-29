@@ -116,7 +116,7 @@ fn catalog_json_is_static_under_hostile_environment() {
         entry["capabilities"]["cursor_source_assumption"],
         "append_only"
     );
-    assert_eq!(entry["capabilities"]["cli_persisted_resume"], false);
+    assert_eq!(entry["capabilities"]["cli_persisted_resume"], true);
     assert_eq!(
         entry["capabilities"]["delayed_revision_reconciliation"],
         false

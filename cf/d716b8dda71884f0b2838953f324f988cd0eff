@@ -1,0 +1,22 @@
+docs/plans/028-prep-canonical-tables/assets/impl-guide.dd.json
+  h_9e71e8b09f7cf2 12,493,535,576,617,658,698,752,865
+docs/plans/028-prep-canonical-tables/assets/impl-guide.dd.md
+  h_9e71e8b09f7cf2 15,68-74,85
+docs/plans/028-prep-canonical-tables/assets/team/reviewer-decomposition-p2-r2.md
+  h_9e71e8b09f7cf2 1-22
+docs/plans/028-prep-canonical-tables/the-flow.json
+  h_9e71e8b09f7cf2 284-306,404,417-426
+docs/plans/028-prep-canonical-tables/the-flow.md
+  h_9e71e8b09f7cf2 4,6,14,36,49-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "cfd716b8dda71884f0b2838953f324f988cd0eff",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

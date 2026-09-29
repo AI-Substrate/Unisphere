@@ -1,0 +1,226 @@
+{
+  "dd": {
+    "schema": "builder/plan"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "unisphere prep: incremental canonical tables for agent research",
+        "slug": "prep-canonical-tables",
+        "ordinal": 28,
+        "status": "ready",
+        "summary": "Convert-once, research-many: incremental idempotent `unisphere prep` into versioned Parquet tables for every harness, researched with external DuckDB recipes. Based on the measured POC (exact RCA parity).",
+        "backpressure": "assets/backpressure.dd.json#rows"
+      }
+    },
+    {
+      "name": "summary",
+      "value": "Give Unisphere a convert-once, research-many path. `unisphere prep --target DIR` converts every registered agent harness's native sessions into a versioned set of canonical tables in a caller-chosen directory. Re-running it is idempotent and incremental: it reads only records appended since the last committed cursor, supersedes replaced or rewritten sources without duplicates, and never fails on live, growing transcripts. Agents then research the tables with an external analytical engine (DuckDB over Parquet) using shipped, named recipes. The immediate consumer is a Claude cost-explosion RCA that Unisphere's whole-file query path could not serve at fleet scale; the POC on this branch's base reproduced that RCA's hand-written parser exactly in 2.5–3.5 s over 2.3–2.9 GB. This plan turns the POC into a product: SDK-first, CLI at parity with the SDK, every harness, typed facts, honest coverage."
+    },
+    {
+      "name": "goals",
+      "value": [
+        "An agent can turn a whole machine's agent history into queryable, cost-correct tables in seconds, and keep them current with near-free re-runs.",
+        "Cost research answers are trustworthy: usage is deduplicated by native identity, cache TTL classes are separated, and synthetic or duplicate records never inflate totals.",
+        "Every registered harness lands in one table contract, with explicit unknown/unsupported columns rather than silent gaps.",
+        "The CLI can do what the SDK can: persisted incremental resume is a first-class CLI capability, composed from public SDK ports that other consumers (Flowspace3) can reuse.",
+        "Research is cheap to start: named recipes answer the RCA and fleet questions, and every expensive row carries an address back to its native record for content drill-down with explicit opt-in."
+      ]
+    },
+    {
+      "name": "non_goals",
+      "value": [
+        "Embedding an analytical engine (DuckDB, DataFusion, chDB) in the Rust build. Measured cost: DataFusion +367 s clean build / 125 MB; bundled DuckDB +127 s / 41 MB. An optional embedded feature is a later, separate decision.",
+        "Replacing or deleting the existing query CLI in this plan; its future (re-based on prepped tables, or kept for single-source inspection) is decided after prep lands.",
+        "A daemon, watcher, server, or automatic scheduling. Freshness comes from re-running prep.",
+        "Exactly-once delivery to any external sink, lossless archival of native bytes, or content capture by default.",
+        "Semantic/vector search, pricing tables as authoritative truth, or any write to a native store.",
+        "Remote publication: push, PR, merge and main landing need their own operator approval."
+      ]
+    },
+    {
+      "name": "acceptance_criteria",
+      "value": [
+        {
+          "id": "ac-0001",
+          "claim": "Incremental and idempotent: `unisphere prep --target DIR` over explicit or default roots publishes tables atomically. A re-run with nothing changed reads zero body bytes and writes zero rows. Appended sources contribute only records after the committed cursor. Replaced, truncated, or same-size rewritten sources start a new generation and the canonical views never contain rows from a superseded generation. A crash mid-run leaves the previous publication intact and the next run recovers without duplicates.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0002",
+          "claim": "Live files never fail: a source being appended during the run is committed to its last complete line; the partial tail is reported (bytes pending) and picked up by the next run. Proven with a concurrent non-line-aligned writer and on the real live fleet.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0003",
+          "claim": "CLI and SDK parity: prep is composed from public SDK/core ports (loader, pure fold, store) with no CLI-only semantics; an external SDK consumer can run the same incremental prep in-process with its own store. The core/SDK ports carry no Parquet, SQLite or engine dependency. The adapter catalogue reports persisted resume as supported for every harness prep covers.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0004",
+          "claim": "Claude cost correctness: calls are deduplicated on (message.id, requestId) with the per-field maximum; cache writes are split into 1 h and 5 m classes (with the documented fallback); `<synthetic>` records become limit events, not calls. The file-F and all four window totals in the consumer's use-case brief, and every reference call row, reproduce exactly against the reference parser; any divergence is explained and accepted by the reviewer, not rounded.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0005",
+          "claim": "Typed facts, not blobs: compaction boundaries (trigger, pre/post tokens, duration), recaps, scheduled/loop fires, limit notices (with parsed reset instants where the source allows), and queue operations are typed events. Turns carry the opening record's origin (human, peer with sender and Pij message identity, task notification, auto-continuation). Sidechains link to their parent session. Tool uses are a table (native name, family, input hash, result size, outcome, duration where native).",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0006",
+          "claim": "Every registered harness: Oh My Pi, Pi, Codex, Copilot CLI (events and legacy snapshot), VS Code Copilot (JSON and journal), Cursor transcript and Cursor IDE land in the same table contract with representation-appropriate change detection (append cursors for JSONL, revision checks for snapshots and SQLite). Fields a harness does not record are explicit nulls with per-source coverage, never estimates.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0007",
+          "claim": "Honest coverage: every run reports per-source outcome (unchanged, appended, replaced, new, skipped, unreadable, unsupported) and counts skipped symlinks and hidden entries; extra roots (for example a second Claude account under ~/.claude-alt) are explicit inputs. Nothing is silently excluded.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0008",
+          "claim": "A versioned, documented table contract: schema version, per-source adapter policy version, generation semantics and canonical views are specified; an external engine reads the published Parquet without per-engine schema declarations. A compaction command rewrites the current generation and removes superseded parts without changing any view result.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0009",
+          "claim": "Research recipes ship: named recipes answer the consumer brief's questions and the prime's fleet questions (idle tax, compaction cadence, peer amplification, subagent fan-out, tool loops, fleet idle-longest, most expensive turns, daily cost by repo/model/harness) through one documented command against external DuckDB. If an optional `unisphere sql` wrapper exists it shells out to an installed engine and fails with a clear, actionable error when none is present; no engine is linked into the build.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-000a",
+          "claim": "Contexts are gold, cheaply: expensive-turn and call rows carry a native address (path plus byte offset) so an agent can fetch exactly that record with explicit content opt-in, without re-reading the transcript.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-000b",
+          "claim": "Privacy and safety: metadata-only by default; any content column needs explicit opt-in and is absent otherwise. Native stores are opened read-only and never locked, renamed or written; tests and committed fixtures contain no real prompts, bodies or private identifiers.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-000c",
+          "claim": "Measured at fleet scale on the real corpus: a cold prep of the full local corpus (about 2.9 GB, all harnesses present) and warm unchanged and append re-runs are timed with peak RSS and bytes read, and reported against the POC baseline (Claude: 3.5 s cold, 0.05–0.6 s warm). Memory stays bounded by documented, adjustable limits.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-000d",
+          "claim": "Offline documentation: the bundled docs gain a prep topic and a research-recipes topic with tested one-line examples, the table contract, the incremental and generation semantics, and the privacy defaults.",
+          "state": "unchecked"
+        }
+      ]
+    },
+    {
+      "name": "phases",
+      "value": [
+        {
+          "id": "ph-ed41",
+          "title": "Claude prep hardened to product",
+          "brief": "Harden the POC's Claude prep into product code: ports and contract, cost correctness proven against the reference parser, typed events/turns/tool uses, generations and compaction, live-file safety, coverage report, CLI/SDK parity, docs. Ends with real-corpus parity and an independent review.",
+          "state": "unchecked",
+          "tasks": "assets/tasks/phase-1/tasks.dd.json#tasks"
+        },
+        {
+          "id": "ph-62fe",
+          "title": "All harnesses and research recipes",
+          "brief": "Extend prep to every other registered harness with representation-appropriate change detection and explicit nulls; ship the named research recipes against external DuckDB; full-corpus measurement across harnesses; docs. Ends with independent review.",
+          "state": "unchecked",
+          "depends_on": [
+            "ph-ed41"
+          ],
+          "tasks": "assets/tasks/phase-2/tasks.dd.json#tasks"
+        }
+      ]
+    },
+    {
+      "name": "tasks",
+      "value": []
+    },
+    {
+      "name": "done_when",
+      "value": {}
+    },
+    {
+      "name": "research_context",
+      "value": "POC (measured, 2026-09-28/29): scratch/poc-prep-duckdb/FINDINGS.md in the main checkout — exact parity with the consumer's extract.py over 55,607 calls; cold 2.45–3.46 s over 2.3–2.9 GB at ~0.5 GB RSS (8 threads); unchanged re-run 0 bytes/0 rows in 0.05–0.6 s; DuckDB and DataFusion tied on answers and speed, SQLite 10–40× slower on aggregate views; gaps: tool_uses table, other harnesses, symlinked roots, generation compaction, OTLP export lacks requestId/TTL split/subtypes/origin. Consumer oracle: ~/games/unasphere/scratch/unisphere-feedback/usecase-brief.md (14 questions, reference numbers, dedupe rules). Engine research: scratch/poc-prep-duckdb/engine-research-perplexity.md (its DataFusion build-cost claim was measured wrong). Founding brief (flowspace3 scratch/brief-harness-telemetry-standardiser.md) already required 'what is new since cursor X' with trustworthy dedupe keys; Flowspace3's incremental-seam brief is a second consumer of the same fold."
+    },
+    {
+      "name": "testing_strategy",
+      "value": {
+        "approach": "Pure fold contract tests per harness on synthetic fixtures; loader/store tests for cursor, generation, crash recovery and live tails; an external SDK consumer and the installed CLI exercise the same prep. Existing native/query/Git/Pij tests stay green; harness checks and boot remain the gate.",
+        "real_workload": "Parity against the consumer's reference parser on the real Claude corpus (copies of extract.py run outside Git), then a full-corpus cold/warm/append run over all harnesses on this machine, numbers only in committed evidence."
+      }
+    },
+    {
+      "name": "documentation_strategy",
+      "value": {
+        "approach": "New bundled topics for prep and research recipes; table-contract reference; SDK doc for the fold/store ports; README quick start. Examples are executed in tests.",
+        "location": "crates/cli/docs bundled topics, docs/, README."
+      }
+    },
+    {
+      "name": "risks_assumptions",
+      "value": "Native dialects change without notice; per-source policy versions must force regeneration rather than silently mixing semantics. The unchanged check trusts (identity, size, mtime); a same-size, same-mtime in-place rewrite is caught only at next growth by the anchor digest — document or close. Fold state that remembers every committed call key grows with history (2.9 MB for 471 sources in the POC). Snapshot and SQLite stores have no append cursor, so their change detection is revision-based and may re-read whole sources. External DuckDB must be present for recipes; its absence must degrade clearly. Real-corpus proofs read private data: outputs stay in gitignored scratch and committed evidence is numbers only."
+    },
+    {
+      "name": "open_questions",
+      "value": []
+    },
+    {
+      "name": "workshop_opportunities",
+      "value": []
+    },
+    {
+      "name": "clarifications",
+      "value": [
+        {
+          "question": "Which analytical engine?",
+          "answer": "External DuckDB over published Parquet is primary. No engine is linked into the Rust build in this plan. Alternatives recorded: embedded DuckDB behind a feature flag (+127 s build, 41 MB) and SQLite via the existing rusqlite dependency; DataFusion embedding measured worst (+367 s, 125 MB) and is not recommended.",
+          "source": "POC FINDINGS.md, measured 2026-09-29; prime recommendation to Jordan"
+        },
+        {
+          "question": "Base and reuse of POC code?",
+          "answer": "The plan branch is based on poc/prep-duckdb @ 0c4dbdf (includes the 3 MiB per-record default fix 728dc13). POC code is a starting point to review and harden, not accepted product code; the guide decides what is kept.",
+          "source": "Prime allocation decision"
+        },
+        {
+          "question": "Seats and models?",
+          "answer": "PM and coders: OMP github-copilot/claude-opus-5.5. Independent reviewer: Claude Sonnet 5.5, being added to the GitHub Copilot catalog by Jordan; only reviewer dispatch waits for it.",
+          "source": "Jordan, 2026-09-29"
+        },
+        {
+          "question": "Order of harness coverage?",
+          "answer": "Claude first (the RCA consumer), hardened to product and proven against the reference parser; then every other registered harness in phase 2. The existing query CLI is untouched in this plan.",
+          "source": "Prime; consumer brief"
+        }
+      ]
+    },
+    {
+      "name": "planning_seam",
+      "value": []
+    },
+    {
+      "name": "gate_matrix",
+      "value": []
+    },
+    {
+      "name": "implementation_summary",
+      "value": ""
+    },
+    {
+      "name": "key_findings",
+      "value": []
+    },
+    {
+      "name": "acceptance_coverage",
+      "value": []
+    },
+    {
+      "name": "risks",
+      "value": []
+    },
+    {
+      "name": "execution_guardrails",
+      "value": []
+    }
+  ]
+}

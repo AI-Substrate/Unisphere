@@ -1,0 +1,48 @@
+docs/plans/028-prep-canonical-tables/assets/team/dispatch-tk-0002-3f39e1b4b47776e9b89464a604192aaedddf99ea.dd.json
+  h_9e71e8b09f7cf2 1-130
+docs/plans/028-prep-canonical-tables/assets/team/dispatch-tk-0002-3f39e1b4b47776e9b89464a604192aaedddf99ea.dd.md
+  h_9e71e8b09f7cf2 1-25
+docs/plans/028-prep-canonical-tables/assets/team/dispatch-tk-0003-3f39e1b4b47776e9b89464a604192aaedddf99ea.dd.json
+  h_9e71e8b09f7cf2 1-130
+docs/plans/028-prep-canonical-tables/assets/team/dispatch-tk-0003-3f39e1b4b47776e9b89464a604192aaedddf99ea.dd.md
+  h_9e71e8b09f7cf2 1-25
+docs/plans/028-prep-canonical-tables/assets/team/dispatch-tk-0004-3f39e1b4b47776e9b89464a604192aaedddf99ea.dd.json
+  h_9e71e8b09f7cf2 1-130
+docs/plans/028-prep-canonical-tables/assets/team/dispatch-tk-0004-3f39e1b4b47776e9b89464a604192aaedddf99ea.dd.md
+  h_9e71e8b09f7cf2 1-25
+docs/plans/028-prep-canonical-tables/assets/team/dispatch-tk-0005-3f39e1b4b47776e9b89464a604192aaedddf99ea.dd.json
+  h_9e71e8b09f7cf2 1-130
+docs/plans/028-prep-canonical-tables/assets/team/dispatch-tk-0005-3f39e1b4b47776e9b89464a604192aaedddf99ea.dd.md
+  h_9e71e8b09f7cf2 1-25
+docs/plans/028-prep-canonical-tables/assets/team/packet-tk-0002-3f39e1b4b47776e9b89464a604192aaedddf99ea.dd.json
+  h_9e71e8b09f7cf2 1-102
+docs/plans/028-prep-canonical-tables/assets/team/packet-tk-0002-3f39e1b4b47776e9b89464a604192aaedddf99ea.dd.md
+  h_9e71e8b09f7cf2 1-26
+docs/plans/028-prep-canonical-tables/assets/team/packet-tk-0003-3f39e1b4b47776e9b89464a604192aaedddf99ea.dd.json
+  h_9e71e8b09f7cf2 1-107
+docs/plans/028-prep-canonical-tables/assets/team/packet-tk-0003-3f39e1b4b47776e9b89464a604192aaedddf99ea.dd.md
+  h_9e71e8b09f7cf2 1-26
+docs/plans/028-prep-canonical-tables/assets/team/packet-tk-0004-3f39e1b4b47776e9b89464a604192aaedddf99ea.dd.json
+  h_9e71e8b09f7cf2 1-101
+docs/plans/028-prep-canonical-tables/assets/team/packet-tk-0004-3f39e1b4b47776e9b89464a604192aaedddf99ea.dd.md
+  h_9e71e8b09f7cf2 1-26
+docs/plans/028-prep-canonical-tables/assets/team/packet-tk-0005-3f39e1b4b47776e9b89464a604192aaedddf99ea.dd.json
+  h_9e71e8b09f7cf2 1-109
+docs/plans/028-prep-canonical-tables/assets/team/packet-tk-0005-3f39e1b4b47776e9b89464a604192aaedddf99ea.dd.md
+  h_9e71e8b09f7cf2 1-26
+docs/plans/028-prep-canonical-tables/the-flow.json
+  h_9e71e8b09f7cf2 6,150-159
+docs/plans/028-prep-canonical-tables/the-flow.md
+  h_9e71e8b09f7cf2 4,41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "1f2e173416bff374aa4175b994623fc12c8f4689",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

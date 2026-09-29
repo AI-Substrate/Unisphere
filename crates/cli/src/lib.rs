@@ -18,13 +18,14 @@ mod prep;
 mod query;
 pub mod sessions;
 pub mod snapshots;
+mod status;
 
 pub use args::{
     CatalogCommand, CliParseFailure, ConfigCommand, DocsCommand, HelpCommand, NativeExportCommand,
     NativeGitNotesListCommand, NativeRootListCommand, OutputMode, PREP_DEFAULT_BATCH_BYTES,
     PREP_DEFAULT_THREADS, ParsedCommand, PijQueryCommand, PijTarget, PrepCommand,
-    PrepCompactCommand, PrepRecordCommand, PrepRoot, QueryCommand, SchemaCommand, diagnostic_mode,
-    parse,
+    PrepCompactCommand, PrepRecordCommand, PrepRoot, QueryCommand, SchemaCommand,
+    SessionStatusCommand, diagnostic_mode, parse,
 };
 pub use catalog::{run_adapters, run_catalog};
 pub use git_notes::{run_git_notes, run_native_git_notes};
@@ -35,6 +36,7 @@ pub use query::{
 };
 pub use sessions::{run_native_export, run_native_list, run_sessions, session_error};
 pub use snapshots::{run_native_snapshot_export, run_snapshot_sessions};
+pub use status::run_status;
 pub use unisphere_core::{AdapterCapabilities, AdapterDescriptor, LocationHint};
 
 use output::Response;

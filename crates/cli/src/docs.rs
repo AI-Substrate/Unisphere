@@ -117,6 +117,13 @@ static TOPICS: &[DocTopic] = &[
         text: include_str!("../docs/prep.md"),
         related: &["privacy-and-coverage", "sdk", "find-sessions"],
     },
+    DocTopic {
+        id: "session-status",
+        title: "Session status",
+        summary: "General facts about a live session by Pij seat, tmux pane or session id, each with its basis.",
+        text: include_str!("../docs/session-status.md"),
+        related: &["sdk", "prep", "troubleshooting"],
+    },
 ];
 
 pub(crate) const fn topics() -> &'static [DocTopic] {

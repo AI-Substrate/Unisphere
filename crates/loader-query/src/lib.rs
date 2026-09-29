@@ -5,9 +5,12 @@
 //! implicit current directory, fetches remote transcripts, or enriches saved input.
 //! The optional [`pij`] identity lookup delegates configured transport/authentication
 //! to the explicitly supplied Pij CLI; it is not a transcript loader.
+//! [`status_target`] resolves session-status Pij/pane queries to explicit targets
+//! through injected command, process and filesystem ports.
 #![forbid(unsafe_code)]
 
 pub mod pij;
+pub mod status_target;
 
 use globset::{GlobBuilder, GlobMatcher};
 use std::{

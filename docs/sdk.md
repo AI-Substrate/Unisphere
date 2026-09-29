@@ -333,6 +333,63 @@ let folded = fold_source(
 # Ok(()) }
 ```
 
+## Session status for an explicit target
+
+`unisphere_core::status` defines one harness-neutral, serde `SessionStatus`
+(`schema_version` 1) and two ports: `SessionStatusApi::status(&StatusTarget,
+now_ms)` for an explicit target, and `TargetResolver::resolve(&StatusQuery)` for
+Pij seats and tmux panes. `unisphere_sdk::status::StatusService::new(bindings,
+roots)` implements `SessionStatusApi` over the same `PrepBinding` fold as prep
+and never calls Pij, tmux or process lookups; time is always the caller's
+`now_ms`. An embedding application keeps an opaque `StatusCursor` so a re-status
+reads only appended bytes:
+
+```rust
+use unisphere_core::status::StatusTarget;
+use unisphere_sdk::status::StatusService; // StatusCursor lives beside it
+
+# fn run(service: &StatusService, now_ms: i64) -> Result<(), unisphere_core::status::StatusFailure> {
+let target = StatusTarget {
+    harness: "claude-code".into(),
+    session_id: "b9cf6f3c-2a9f-4f14-a012-80cba68f831e".into(),
+    transcript: None, // discovered under the roots by file stem
+};
+let (status, cursor) = service.status_incremental(&target, None, now_ms)?;
+// later: only appended bytes are read; keep the old cursor on error
+let (status, cursor) = service.status_incremental(&target, Some(&cursor), now_ms)?;
+# Ok(()) }
+```
+
+`status.target.transcript` is the file read. A shrink, replacement, anchor
+mismatch or a cursor for another target refolds cold and names the reason in
+`status.source.reset`; an incremental result equals a cold one except `source`.
+Every fact is `{value, basis}` with basis `native`, `derived`, `table`
+(`context.window_table` names the versioned table, `model-windows@1`) or
+`mtime_fallback`, or absent and named in `unknown` (the closed
+`UNKNOWN_FACTS` vocabulary); an unrecorded fact is never 0. Definitions:
+
+| Fact | Definition |
+|---|---|
+| `model.current` | Latest main-chain, non-synthetic call's model |
+| `model.pending_switch` | A `/model` switch recorded after that call |
+| `context.used_tokens` | Latest main-chain call input + cache read + cache write |
+| `context.window_tokens` | Native when recorded, else `model-windows@1`, else unknown; `percent` only when both are known |
+| `last_call.ttl_bucket` / `cache_warm` | `1h`/`5m` from the last call's cache-write split; warm while `now_ms` − last call < TTL |
+| `timeline.last_updated_ms` | Latest native event, else transcript mtime (`mtime_fallback`); `idle_seconds` from it |
+| `turns` | Total and last-hour turns, each by origin |
+| `compaction` | Manual/auto counts (Claude: no markers is 0) and the last compaction |
+
+Failures are typed `StatusFailure { kind, message }` with a stable `code()` and
+`recovery()`; messages never carry transcript content. Pij/pane resolution is the
+CLI's `unisphere_loader_query::status_target::StatusTargetResolver::new(runner,
+procs, fs, home)`, built on injected `CommandRunner`, `ProcessTable` and
+`StatusFs` ports (`SystemCommandRunner`, `PsProcessTable`, `SystemFs` are the
+system adapters). The equivalent command is:
+
+```sh
+unisphere sessions status --session b9cf6f3c-2a9f-4f14-a012-80cba68f831e --harness claude-code --json
+```
+
 ## Query supplied session evidence in process
 
 `QueryService<S>` implements `QueryApi` for any injected `S: QuerySource`. The

@@ -5,7 +5,8 @@ use std::{
 };
 
 use clap::{
-    Args, ColorChoice, CommandFactory, FromArgMatches, Parser, Subcommand, error::ErrorKind,
+    ArgMatches, Args, ColorChoice, CommandFactory, FromArgMatches, Parser, Subcommand,
+    error::ErrorKind,
 };
 use unisphere_core::query::{
     AdapterId, ContextWindow, CsvSafety, Dataset, EntityId, FieldId, FieldValue, Filter, HarnessId,
@@ -19,6 +20,7 @@ use unisphere_core::{
         DEFAULT_ROOT_LABEL, NativeAddress, PrepCompactRequest, PrepOptions, PrepReadLimits,
         PrepRecordRequest, PrepRequest, PrepSourceSet, derived_root_label,
     },
+    status::{StatusQuery, StatusTarget},
 };
 
 use crate::CliContext;
@@ -235,6 +237,11 @@ enum SessionsSubcommand {
     Extract(QueryArgs),
     /// Export one explicit native source as OTLP JSONL.
     Export(NativeExportArgs),
+    /// General facts about live sessions by Pij seat, tmux pane or native session id.
+    #[command(
+        after_help = "Repeat --pij, --pane and --session in one call; results follow argv order. Each --session needs a --harness: one --harness applies to every --session, otherwise give one per --session in the same order.\nGuide: unisphere docs get session-status --human"
+    )]
+    Status(SessionStatusArgs),
 }
 
 #[derive(Subcommand)]
@@ -312,6 +319,22 @@ struct SessionListArgs {
     command_timeout_ms: Option<u64>,
     #[command(flatten)]
     query: QueryArgs,
+}
+
+#[derive(Args)]
+struct SessionStatusArgs {
+    /// Pij seat id (repeatable).
+    #[arg(long, value_name = "ID")]
+    pij: Vec<String>,
+    /// tmux pane id such as %3 (repeatable).
+    #[arg(long, value_name = "%N")]
+    pane: Vec<String>,
+    /// Native session id (repeatable); paired with --harness.
+    #[arg(long, value_name = "ID")]
+    session: Vec<String>,
+    /// Adapter id of the --session harness, e.g. claude-code.
+    #[arg(long, value_name = "HARNESS")]
+    harness: Vec<String>,
 }
 
 impl SessionListArgs {
@@ -659,6 +682,13 @@ pub struct HelpCommand {
     pub mode: OutputMode,
 }
 
+/// Parsed `unisphere sessions status`: queries in argv order.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SessionStatusCommand {
+    pub queries: Vec<StatusQuery>,
+    pub mode: OutputMode,
+}
+
 /// One explicit `--root HARNESS[:LABEL]=DIR` set. `label: None` derives
 /// [`derived_root_label`] from the absolute directory.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -788,6 +818,7 @@ pub enum ParsedCommand {
     NativeGitNotesList(NativeGitNotesListCommand),
     NativeExport(NativeExportCommand),
     Help(HelpCommand),
+    SessionStatus(SessionStatusCommand),
     Version { mode: OutputMode },
 }
 
@@ -950,6 +981,16 @@ impl CliParseFailure {
         }
     }
 
+    fn status_target() -> Self {
+        Self {
+            code: "UNI-CLI-STATUS-TARGET",
+            message: "`sessions status` needs at least one well-formed --pij ID, --pane %N or --session ID with a matching --harness.",
+            next_action: "Give --pij ID, --pane %N (e.g. %3) or --session ID --harness HARNESS; one --harness applies to every --session, otherwise give one --harness per --session.",
+            alternatives: Vec::new(),
+            retryable: false,
+        }
+    }
+
     fn prep_root() -> Self {
         Self {
             code: "UNI-CLI-PREP-ROOT",
@@ -1094,6 +1135,20 @@ pub fn parse(args: Vec<OsString>, context: &CliContext) -> Result<ParsedCommand,
         RootCommand::Sessions { command } => match command {
             SessionsSubcommand::List(args) => session_list(args, context, selected_mode),
             SessionsSubcommand::Show(args) => session_show_command(args, context, selected_mode),
+            SessionsSubcommand::Status(args) => {
+                let mode = if cli.human {
+                    OutputMode::Human
+                } else if cli.json || !context.stdout_is_terminal {
+                    OutputMode::Json
+                } else {
+                    OutputMode::Human
+                };
+                let status = matches
+                    .subcommand_matches("sessions")
+                    .and_then(|sessions| sessions.subcommand_matches("status"))
+                    .ok_or_else(CliParseFailure::arguments)?;
+                session_status(args, status, mode)
+            }
             SessionsSubcommand::Tree(args) => {
                 let session = parse_entity(&args.entity)?;
                 query_command(
@@ -2189,6 +2244,79 @@ impl QueryArgs {
             || self.output.is_some()
             || self.max_output_bytes.is_some()
     }
+}
+
+/// `sessions status` queries in argv order. One `--harness` applies to every
+/// `--session`; otherwise the i-th `--harness` pairs with the i-th `--session`.
+fn session_status(
+    args: SessionStatusArgs,
+    matches: &ArgMatches,
+    mode: OutputMode,
+) -> Result<ParsedCommand, CliParseFailure> {
+    let invalid = CliParseFailure::status_target;
+    let identifier = |value: &str| {
+        !value.is_empty()
+            && !value.starts_with('-')
+            && !value.chars().any(|c| c.is_whitespace() || c.is_control())
+    };
+    let harness_id = |value: &str| {
+        !value.is_empty()
+            && value
+                .bytes()
+                .all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || b"._-".contains(&b))
+    };
+    let pane = |value: &str| {
+        value
+            .strip_prefix('%')
+            .is_some_and(|digits| !digits.is_empty() && digits.bytes().all(|b| b.is_ascii_digit()))
+    };
+    if !args.pij.iter().all(|id| identifier(id))
+        || !args.pane.iter().all(|id| pane(id))
+        || !args.session.iter().all(|id| identifier(id))
+        || !args.harness.iter().all(|id| harness_id(id))
+    {
+        return Err(invalid());
+    }
+    let harnesses = match (args.harness.len(), args.session.len()) {
+        (0, 0) => Vec::new(),
+        (1, sessions) if sessions > 0 => vec![args.harness[0].clone(); sessions],
+        (harnesses, sessions) if harnesses == sessions => args.harness.clone(),
+        _ => return Err(invalid()),
+    };
+    let indices = |id: &str| matches.indices_of(id).into_iter().flatten();
+    let mut ordered: Vec<(usize, StatusQuery)> = Vec::new();
+    ordered.extend(
+        indices("pij")
+            .zip(args.pij)
+            .map(|(at, id)| (at, StatusQuery::Pij(id))),
+    );
+    ordered.extend(
+        indices("pane")
+            .zip(args.pane)
+            .map(|(at, pane)| (at, StatusQuery::Pane(pane))),
+    );
+    ordered.extend(
+        indices("session")
+            .zip(args.session.into_iter().zip(harnesses))
+            .map(|(at, (session_id, harness))| {
+                (
+                    at,
+                    StatusQuery::Target(StatusTarget {
+                        harness,
+                        session_id,
+                        transcript: None,
+                    }),
+                )
+            }),
+    );
+    if ordered.is_empty() {
+        return Err(invalid());
+    }
+    ordered.sort_by_key(|(at, _)| *at);
+    Ok(ParsedCommand::SessionStatus(SessionStatusCommand {
+        queries: ordered.into_iter().map(|(_, query)| query).collect(),
+        mode,
+    }))
 }
 
 /// Select diagnostic/presentation mode before argv is moved into [`parse`].

@@ -280,6 +280,43 @@ and request; `run_prep` takes the merged `Vec<PrepSourceSet>` and an injected
 `&dyn PrepApi` and holds no prep semantics. `unisphere docs get prep` is the
 offline guide.
 
+## Session status
+
+`unisphere sessions status` returns general facts about live sessions — current
+model and pending switch, context used of window and percent, created, last
+updated and idle time, last call tokens with cache state, turns (total and last
+hour by origin) and compactions — in one harness-neutral, versioned
+`SessionStatus` shape. Queries repeat and mix; results follow argv order:
+
+```sh
+unisphere sessions status --pij pij-able-stoat --pane %3 --human
+unisphere sessions status --session b9cf6f3c-2a9f-4f14-a012-80cba68f831e --harness claude-code --json
+unisphere sessions status --harness claude-code --session b9cf6f3c-2a9f-4f14-a012-80cba68f831e --session dd54bc01-c29b-43b2-8780-f376060424d3
+```
+
+`--pij ID` reads `pij list --json` and requires the seat's recorded process
+`(pid, proc_start)` to be running. `--pane %N` combines live Pij seats on that
+pane with a native lookup (tmux pane process → bounded child walk → the
+harness's own session record; Claude Code: `~/.claude/sessions/<pid>.json`); the
+first answer is the target and every other distinct answer is returned in
+`resolved.conflicts`. `--session ID --harness H` is explicit: one `--harness`
+covers every `--session`, otherwise one per `--session` in order. Each result
+carries `resolved` (query, target with the transcript read, Pij id, pane, basis
+`explicit`/`pij_registry`/`native_pane`, conflicts) and every fact names its
+basis (`native`, `derived`, `table`, `mtime_fallback`) or is listed in `unknown`.
+
+JSON is the default when stdout is not a terminal. The envelope command is
+`sessions.status`; `data.results` holds one `{"ok": true, "query", "status"}` or
+`{"ok": false, "query", "resolved", "error"}` per query, and `data.failed`
+counts failures. Unknown seat, seat without a session, dead binding, pane not
+found and unsupported harness are distinct `UNI-STATUS-*` codes. Exit 0 when
+every query answered, 3 when any failed, 2 for invalid arguments. Claude Code is
+supported; other harnesses return `UNI-STATUS-UNSUPPORTED-HARNESS` for that
+query. `run_status` takes the parsed `SessionStatusCommand`, an injected
+`&dyn SessionStatusApi`, an injected `&dyn TargetResolver` and `now_ms`, and
+holds no status semantics. `unisphere docs get session-status` is the offline
+guide with every fact's definition.
+
 ## Git Notes attribution
 
 ```sh

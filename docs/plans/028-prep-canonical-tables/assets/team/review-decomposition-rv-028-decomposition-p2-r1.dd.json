@@ -1,0 +1,73 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "review",
+      "value": {
+        "record_type": "review",
+        "id": "rv-028-decomposition-p2-r1",
+        "recorded_at": "2026-09-29T07:13:22+00:00",
+        "scope": "decomposition",
+        "subject_sha": "f82d7b502712dcabad8b7ba66043e4fa47600267",
+        "plan": {
+          "path": "docs/plans/028-prep-canonical-tables/plan.dd.json",
+          "sha256": "7da3d4a4d05949ddba02368c80dbe145189a63214c43bd0335c381e36ce64e46"
+        },
+        "guide": {
+          "path": "docs/plans/028-prep-canonical-tables/assets/impl-guide.dd.json",
+          "sha256": "5ae69d772341f1753534f4f4dfee301a912155e7f4e2b9f11522dbd3f65864a4"
+        },
+        "reviewer_id": "pij-panicky-anteater",
+        "requested": {
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-sonnet-5.5",
+          "source": {
+            "harness": "guide",
+            "model": "guide"
+          }
+        },
+        "observed": {
+          "peer_id": "pij-panicky-anteater",
+          "root": "/Users/jordanknight/substrate/unisphere/unisphere-028-review",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/claude-sonnet-5.5",
+          "native_session": "01a0eb71-0bdc-74bd-97d4-6f85f7527e72",
+          "pid": 53353,
+          "argv": [
+            "omp",
+            "--auto-approve",
+            "--model",
+            "github-copilot/claude-sonnet-5.5"
+          ],
+          "evidence": [
+            "git -C unisphere-028-review log -1 --format=%H (f82d7b502712dcabad8b7ba66043e4fa47600267) matched git -C unisphere-prep log -1 -- reviewer-decomposition-p2-r1.md",
+            "sha256sum of plan.dd.json, assets/impl-guide.dd.json, assets/tasks/phase-2/tasks.dd.json — all three match packet bindings",
+            "ran harness builder guide docs/plans/028-prep-canonical-tables --check -> status ok, 26 write-overlap warnings; grouped by file, confirmed exactly 13 files each pairing one phase-1 historical unit (tk-0005/tk-0006) with one phase-2 unit (tk-000d/tk-000e), no phase-2-vs-phase-2 collision",
+            "read full JSON for units tk-0007 through tk-000e (paths, reads, depends_on, wave) confirming zero cross-lane reads at wave 3",
+            "read crates/core/src/snapshot.rs and crates/loader-snapshot/src/unix.rs (existing, pre-plan SnapshotFormat/NativeSnapshot/SnapshotRecord/SnapshotLoader machinery already used by the query command) to verify contract sufficiency for the 7 phase-2 lanes",
+            "confirmed no phase-2 fold/loader source files exist yet in crates/adapter-{omp,pi,codex,copilot-cli,vscode-copilot,cursor} or crates/loader-snapshot (correct pre-coding state)",
+            "ran: cargo check --locked --workspace -> clean, no regression from phase-1 composed baseline",
+            "directly tested the tk-000d recipe-pipe mechanism with the installed duckdb 1.5.5: wrote a real Parquet file + views.sql with a relative read_parquet path, piped the exact documented script shape (SET file_search_path=...; .read views.sql; query) into duckdb from an unrelated cwd (/), confirmed it resolves and returns correct rows",
+            "read backpressure.dd.json refresh: certainty upgraded Partial->Confident given phase-1 landed and DuckDB now installed (rk-0007 resolved)"
+          ],
+          "gaps": [
+            "No provider-side attestation available beyond the harness-reported model string.",
+            "No phase-2 fold/loader code exists yet to run (correct for a decomposition review) — behavioral verification of each lane's actual fold logic is deferred to composition review.",
+            "Did not re-run harness checks/boot (no code changed since phase-1 composition; relied on my own cargo check plus the unchanged, previously-verified phase-1 test suite)."
+          ]
+        },
+        "verdict": "approved",
+        "report": {
+          "path": "docs/plans/028-prep-canonical-tables/assets/reviews/decomposition-p2-r1.md",
+          "sha256": "37648be3949d021cacb9c35ab8e432ecb167f97f1fd9f772cf673647d47c7a59"
+        },
+        "findings": []
+      }
+    }
+  ],
+  "references": []
+}

@@ -1,0 +1,136 @@
+{
+  "recorded_at": "2026-09-29T10:07:52.082Z",
+  "composed_sha": "19ace79fd493350525323dd5da0cff8e3d3a020c",
+  "composition": {
+    "path": "docs/plans/028-prep-canonical-tables/assets/team/composition.dd.json",
+    "sha256": "69abd3f8f7c796a3fd6feb6a005adff4697331c3c4ffd27a109f1595343c5c46"
+  },
+  "review": {
+    "path": "docs/plans/028-prep-canonical-tables/assets/team/review-composition-rv-028-composition-p2-r1.dd.json",
+    "sha256": "9ceedce7b5ff5285e0ada7014d60d2f84000a7b6c968fc4004c18f40707e1177"
+  },
+  "flow": "/Users/jordanknight/substrate/unisphere/unisphere-prep/docs/plans/archive/028-prep-canonical-tables/the-flow.json",
+  "archive": "/Users/jordanknight/substrate/unisphere/unisphere-prep/docs/plans/archive/028-prep-canonical-tables",
+  "survivor": "/Users/jordanknight/substrate/unisphere/preserved/028-prep-canonical-tables/0f070327-02f9-4ff4-b536-a601e110033c",
+  "shipping_authorized": false,
+  "chores": [
+    {
+      "id": "backpressure",
+      "status": "done",
+      "comments": [
+        {
+          "at": "2026-09-29T04:31:49.080Z",
+          "text": "decision:route hook:pre-coding verb:backpressure (skill://eng-harness-flow references/stages/backpressure.md executed) result:assets/backpressure.dd.json 15 rows (EXISTS 2, EXTEND 5, BUILD 8, ABSENT 0), 8 sensors, certainty Partial; AC pressure links written basis_sha256:e1872f2cc578e37b275fad3b3057c05b38ed9f7e719de360696c32bbcf5d6f86 time:2026-09-29T04:31:48Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ]
+    },
+    {
+      "id": "boot-1",
+      "status": "done",
+      "comments": [
+        {
+          "at": "2026-09-29T05:07:39.483Z",
+          "text": "decision:route hook:pre-flight phase:ph-ed41 verb:boot (skill://eng-harness-flow references/stages/boot.md) ran 'harness boot --json' at 1a46a86 (sealed baseline 3f39e1b + records): status ok, ready:true, scope configuration-native-sessions-and-git-notes; verdict SLOW (all stages pass, boot well over 45s: checks + 6 proof modes); prep has no boot proof mode yet (tk-0006 adds it). time:2026-09-29T05:07:39Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ]
+    },
+    {
+      "id": "observe-1",
+      "status": "done",
+      "comments": [
+        {
+          "at": "2026-09-29T07:04:27.918Z",
+          "text": "decision:done captures: harness observe DL-001 (builder compose one-roster-per-baseline), DL-002 (plan worktree lacks local ddocs), DL-003 (dispatch --bin omp refused by pij-rs; shim), DL-004 (machine load 128-193; flaky git_query under load), WIN-001 (deterministic prep proofs); drained to .harness/records/retro/2026-09-29/001-028-prep-canonical-tables-phase-1.md time:2026-09-29T07:04:27Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ]
+    },
+    {
+      "id": "retro-1",
+      "status": "done",
+      "comments": [
+        {
+          "at": "2026-09-29T07:04:28.294Z",
+          "text": "decision:route hook:post-coding verb:retro --drain (skill://eng-harness-flow references/stages/retro.md) bucket pij-native-tick: 5 entries saved all (disposition kept) to .harness/records/retro/2026-09-29/001-028-prep-canonical-tables-phase-1.md, bucket cleared; harness-itself entries DL-001 and DL-003 offered as upstream issues to the operator via the prime; highest value DL-003. time:2026-09-29T07:04:27Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ]
+    },
+    {
+      "id": "retro-harvest",
+      "status": "done",
+      "comments": [
+        {
+          "at": "2026-09-29T10:03:24.023Z",
+          "text": "decision:route hook:post-flight verb:retro --harvest + improve (skill .pi/skills/eng-harness-flow references/stages/retro.md, followed inline) harness retro insights --plan 028-prep-canonical-tables --json: 2 records, 15 entries, 15 open, buffer_pending 0, malformed 0; top cluster [difficulty/harness-itself] 9 open (proof_gap true); lifecycle unchanged (no marks). Improve offer: highest leverage = per-phase baselines/composition receipts in Builder (DL-001/DL-003 cluster), held for the operator's upstream-issue decision via the prime; repo-local encoding offered = run the numbers-only real-corpus coverage/measure scripts at lane delivery (DL-009). Closeout note assets/post-flight.md. time:2026-09-29T10:03:23Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ]
+    },
+    {
+      "id": "boot-2",
+      "status": "done",
+      "comments": [
+        {
+          "at": "2026-09-29T07:27:45.761Z",
+          "text": "decision:route hook:pre-flight phase:ph-62fe verb:boot ran 'harness boot --json' at 311f337/cfd716b lineage (phase-2 sealed baseline + records): status ok, ready:true, proofs composition, sdk-consumer, installed-cli, collection, native, git-notes, prep all passed; verdict SLOW (well over 45 s under load avg ~100). time:2026-09-29T07:27:37Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ]
+    },
+    {
+      "id": "observe-2",
+      "status": "done",
+      "comments": [
+        {
+          "at": "2026-09-29T09:59:38.913Z",
+          "text": "decision:done captures: harness observe DL-001..DL-007 in bucket pij-native-tick (advance gate across re-seal, dispatch readiness E471, second-phase import E472, guide drift beyond meta.updated, on-track directory prefixes, receipt custody, phase receipt plan drift) plus coder buckets (tk-0007/tk-000a/tk-000d on-track, tk-000b packet map); drained to .harness/records/retro/2026-09-29/002-028-prep-canonical-tables-phase-2.md time:2026-09-29T09:59:38Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ]
+    },
+    {
+      "id": "retro-2",
+      "status": "done",
+      "comments": [
+        {
+          "at": "2026-09-29T09:59:39.237Z",
+          "text": "decision:route hook:post-coding verb:retro --drain (skill://eng-harness-flow references/stages/retro.md) bucket pij-native-tick: 10 entries saved all (disposition kept: 7 harness-itself, 2 plan, 1 win) to .harness/records/retro/2026-09-29/002-028-prep-canonical-tables-phase-2.md, bucket cleared; harness-itself entries held for the operator's upstream-issue decision via the prime; highest value DL-001/DL-003 (per-phase baselines and receipts). time:2026-09-29T09:59:38Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "path": ".harness/records/retro/2026-09-29/001-028-prep-canonical-tables-phase-1.md",
+      "category": "observation"
+    },
+    {
+      "path": ".harness/records/retro/2026-09-29/002-028-prep-canonical-tables-phase-2.md",
+      "category": "observation"
+    },
+    {
+      "path": "docs/plans/028-prep-canonical-tables/assets/telemetry.json",
+      "category": "telemetry"
+    },
+    {
+      "path": "docs/plans/028-prep-canonical-tables/assets/post-flight.md",
+      "category": "report"
+    },
+    {
+      "path": "docs/plans/028-prep-canonical-tables/assets/reviews/composition-p2-r1.md",
+      "category": "report"
+    }
+  ]
+}

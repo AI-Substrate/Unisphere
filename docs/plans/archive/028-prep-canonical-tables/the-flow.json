@@ -580,6 +580,18 @@
         "from": "known",
         "to": "done"
       }
+    },
+    {
+      "id": "UPD-018",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-29T10:07:52.207Z",
+      "details": {
+        "node": "post-flight",
+        "fields": [
+          "comments"
+        ]
+      }
     }
   ],
   "nodes": [
@@ -674,7 +686,7 @@
         "review-1"
       ],
       "dd_link": {
-        "address": "docs/plans/028-prep-canonical-tables/assets/tasks/phase-1/tasks.dd.json#tasks",
+        "address": "docs/plans/archive/028-prep-canonical-tables/assets/tasks/phase-1/tasks.dd.json#tasks",
         "basis_sha": "bf2ffb3b1304198da6e7795f5367164f6d552768de2c7ad5dd8847f239dce844",
         "reading": {
           "status": "complete",
@@ -752,7 +764,7 @@
       ],
       "zone": "postflight",
       "dd_link": {
-        "address": "docs/plans/028-prep-canonical-tables/plan.dd.json",
+        "address": "docs/plans/archive/028-prep-canonical-tables/plan.dd.json",
         "check": "plan-validate"
       },
       "instructions": [
@@ -761,7 +773,16 @@
         "Whole-plan completion gates this node's EXIT after closeout evidence: harness plan validate <archived plan> --complete must be green. Never pre-check closeout to leave an earlier review.",
         "If the gate refuses and departing anyway is the HUMAN's decision, they pass --force — it records a defended override. An agent may not force a dd gate on its own judgment.",
         "Tidy is separate: harness builder tidy <allocation> --preservation <receipt> re-verifies ownership, runtime release and surviving bytes/refs; external ownership or idle-only evidence cannot authorize removal."
-      ]
+      ],
+      "comments": [
+        {
+          "at": "2026-09-29T10:07:52.207Z",
+          "text": "/Users/jordanknight/substrate/unisphere/preserved/028-prep-canonical-tables/0f070327-02f9-4ff4-b536-a601e110033c/receipt/preservation.dd.json",
+          "source": "agent",
+          "kind": "builder-preservation"
+        }
+      ],
+      "modified_at": "2026-09-29T10:07:52.207Z"
     },
     {
       "id": "ship",
@@ -965,7 +986,7 @@
       ],
       "command": "/builder 6 implement",
       "dd_link": {
-        "address": "docs/plans/028-prep-canonical-tables/assets/tasks/phase-2/tasks.dd.json#tasks",
+        "address": "docs/plans/archive/028-prep-canonical-tables/assets/tasks/phase-2/tasks.dd.json#tasks",
         "basis_sha": "e8703dc636521ead48df6cb29bc082266bb725d89965974f8a6ca3532fb11b01",
         "reading": {
           "status": "complete",
@@ -1134,5 +1155,5 @@
       "ran_at": "2026-09-29T07:09:00.974Z"
     }
   ],
-  "plan_dir": "docs/plans/028-prep-canonical-tables"
+  "plan_dir": "docs/plans/archive/028-prep-canonical-tables"
 }

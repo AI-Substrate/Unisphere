@@ -9,7 +9,7 @@
         "title": "Prep canonical tables: sealed ports, pure folds, one incremental engine",
         "plan": "../plan.dd.json#meta",
         "version": 3,
-        "updated": "2026-09-29 — v3: phase 2 roster (7 coder lanes + PM composition) sealed on the verified phase-1 composition d800949 (composition review rv-028-composition-p1-r1 approved); phase-1 units kept as delivered PM units. v2: decomposition review r1 F-01/F-02/F-03 and baseline deltas."
+        "updated": "2026-09-29 — v3: phase 2 roster (7 coder lanes + PM composition) sealed on the verified phase-1 composition d800949 (composition review rv-028-composition-p1-r1 approved); phase-1 units kept as delivered PM units; phase-2 lanes depend only on the sealed contract unit tk-0001 (the phase-1 reference code they read is already in the sealed source), which builder readiness requires. v2: decomposition review r1 F-01/F-02/F-03 and baseline deltas."
       }
     },
     {
@@ -490,9 +490,7 @@
           ],
           "interface": "OmpPrepFold (harness \"oh-my-pi\") and PiPrepFold (harness \"pi\"): PrepFold (kind Append, pattern \"*/*.jsonl\").",
           "depends_on": [
-            "tk-0001",
-            "tk-0002",
-            "tk-0006"
+            "tk-0001"
           ],
           "wave": 3,
           "acceptance": [
@@ -534,9 +532,7 @@
           ],
           "interface": "CodexPrepFold (harness \"codex\"): PrepFold (kind Append, pattern \"????/??/??/rollout-*.jsonl\").",
           "depends_on": [
-            "tk-0001",
-            "tk-0002",
-            "tk-0006"
+            "tk-0001"
           ],
           "wave": 3,
           "acceptance": [
@@ -577,9 +573,7 @@
           ],
           "interface": "CopilotCliPrepFold (harness \"copilot-cli\", kind Append, pattern \"*/events.jsonl\") and CopilotCliLegacyPrepFold (harness \"copilot-cli-snapshot\", kind Snapshot, JSON document, pattern \"*.json\").",
           "depends_on": [
-            "tk-0001",
-            "tk-0002",
-            "tk-0006"
+            "tk-0001"
           ],
           "wave": 3,
           "acceptance": [
@@ -620,9 +614,7 @@
           ],
           "interface": "VsCodeCopilotPrepFold (harness \"vscode-copilot\") for JsonDocument (\"*/chatSessions/*.json\") and JsonJournal (\"*/chatSessions/*.jsonl\") snapshots: two folds (one per format) sharing the harness id.",
           "depends_on": [
-            "tk-0001",
-            "tk-0002",
-            "tk-0006"
+            "tk-0001"
           ],
           "wave": 3,
           "acceptance": [
@@ -663,9 +655,7 @@
           ],
           "interface": "CursorTranscriptPrepFold (harness \"cursor-transcript\", kind Append, pattern \"*/agent-transcripts/**/*.jsonl\") and CursorIdePrepFold (harness \"cursor-ide\", kind Snapshot, SqliteKeyValue cursorDiskKV, pattern \"state.vscdb\").",
           "depends_on": [
-            "tk-0001",
-            "tk-0002",
-            "tk-0006"
+            "tk-0001"
           ],
           "wave": 3,
           "acceptance": [
@@ -705,9 +695,7 @@
           ],
           "interface": "SnapshotPrepLoader::new(format: SnapshotFormat) -> Self; impl PrepLoader (kind Snapshot).",
           "depends_on": [
-            "tk-0001",
-            "tk-0003",
-            "tk-0006"
+            "tk-0001"
           ],
           "wave": 3,
           "acceptance": [
@@ -761,10 +749,7 @@
           ],
           "interface": "run_prep_recipes(&PrepRecipesCommand, stdout, stderr) -> u8; run_prep_recipe(&PrepRecipeCommand, stdout, stderr) -> u8; ParsedCommand::{PrepRecipes, PrepRecipe}.",
           "depends_on": [
-            "tk-0001",
-            "tk-0004",
-            "tk-0005",
-            "tk-0006"
+            "tk-0001"
           ],
           "wave": 3,
           "acceptance": [
@@ -877,7 +862,7 @@
           "impl-guide.dd.json#checks/vd-0009",
           "impl-guide.dd.json#checks/vd-0007"
         ],
-        "receipt": "team/baseline-p2.dd.json"
+        "receipt": "team/baseline-p2r2.dd.json"
       }
     },
     {

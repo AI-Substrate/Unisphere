@@ -281,6 +281,29 @@
         "from": "known",
         "to": "done"
       }
+    },
+    {
+      "id": "STA-006",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-29T07:15:36.140Z",
+      "details": {
+        "node": "review-1",
+        "from": "assumed",
+        "to": "done"
+      }
+    },
+    {
+      "id": "UPD-007",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-29T07:15:50.190Z",
+      "details": {
+        "node": "review-1",
+        "fields": [
+          "comments"
+        ]
+      }
     }
   ],
   "nodes": [
@@ -378,7 +401,7 @@
       "id": "review-1",
       "type": "review",
       "label": "Review: P1",
-      "status": "assumed",
+      "status": "done",
       "command": "/builder 7 review",
       "next": [
         "phase-2"
@@ -391,7 +414,16 @@
         "Review the exact composed artifact and current plan/guide basis. Record an independent composition ReviewReceipt with harness builder review <plan> --receipt <path>; unavailable review stays unfulfilled.",
         "Close only criteria proven by observed receipts through node_modules/.bin/ddocs. Whole-plan --complete is not a review-exit gate: closeout work is still future work."
       ],
-      "modified_at": "2026-09-29T04:49:47.431Z"
+      "modified_at": "2026-09-29T07:15:50.190Z",
+      "ran_at": "2026-09-29T07:15:36.140Z",
+      "comments": [
+        {
+          "at": "2026-09-29T07:15:50.190Z",
+          "text": "Phase-1 composition review approved (rv-028-composition-p1-r1). Guide v3 sealed for phase 2 (baseline-p2, f82d7b5); builder advance to phase-2 is refused until the phase-2 composition verifies against baseline-p2 (tooling: gate compares the current baseline). Phase-2 dispatch proceeds from review-1; nav advances once compose --verify passes. 2026-09-29T07:15:50Z",
+          "source": "agent",
+          "kind": "note"
+        }
+      ]
     },
     {
       "id": "post-flight",

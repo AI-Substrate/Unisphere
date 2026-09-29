@@ -1,0 +1,30 @@
+docs/plans/028-prep-canonical-tables/assets/backpressure.dd.json
+  h_9e71e8b09f7cf2 11-12,79,113
+docs/plans/028-prep-canonical-tables/assets/backpressure.dd.md
+  h_9e71e8b09f7cf2 14-15,28,31
+docs/plans/028-prep-canonical-tables/assets/impl-guide.dd.json
+  h_9e71e8b09f7cf2 11-12,33,41,101,111-112,139,174,183,229,259,264,299,304,333,338,375,459-863,880,1213-1224,1242,1244-1250,1253-1256,1320-1336,1340-1341
+docs/plans/028-prep-canonical-tables/assets/impl-guide.dd.md
+  h_9e71e8b09f7cf2 14-15,25,34,47,50,53-54,63-66,68-75,85,133,142-144,169-173
+docs/plans/028-prep-canonical-tables/assets/tasks/phase-2/tasks.dd.json
+  h_9e71e8b09f7cf2 9,11-12,17,21-130,134-253
+docs/plans/028-prep-canonical-tables/assets/tasks/phase-2/tasks.dd.md
+  h_9e71e8b09f7cf2 2,12,15,17,30,36-45,51-106
+docs/plans/028-prep-canonical-tables/assets/team/reviewer-decomposition-p2-r1.md
+  h_9e71e8b09f7cf2 1-46
+docs/plans/028-prep-canonical-tables/the-flow.json
+  h_9e71e8b09f7cf2 251-283,703-723
+docs/plans/028-prep-canonical-tables/the-flow.md
+  h_9e71e8b09f7cf2 4,22,59-61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "f82d7b502712dcabad8b7ba66043e4fa47600267",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

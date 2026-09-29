@@ -1,0 +1,16 @@
+.gitignore
+  h_9e71e8b09f7cf2 28-30
+SECURITY.md
+  h_9e71e8b09f7cf2 1-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "61ac0b8b88f957ee34184f94fc3487d033c97c31",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

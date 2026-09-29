@@ -53,6 +53,8 @@ pub fn run(command: &SessionStatusCommand, stdout: &mut dyn Write, stderr: &mut 
     );
     let now_ms = SystemTime::now()
         .duration_since(UNIX_EPOCH)
-        .map_or(0, |elapsed| i64::try_from(elapsed.as_millis()).unwrap_or(i64::MAX));
+        .map_or(0, |elapsed| {
+            i64::try_from(elapsed.as_millis()).unwrap_or(i64::MAX)
+        });
     unisphere_cli::run_status(command, &service, &resolver, now_ms, stdout, stderr)
 }

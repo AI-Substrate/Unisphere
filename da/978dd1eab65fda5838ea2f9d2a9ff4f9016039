@@ -1,0 +1,22 @@
+docs/plans/028-prep-canonical-tables/assets/reviews/composition-p2-r1.md
+  h_9e71e8b09f7cf2 1-84
+docs/plans/028-prep-canonical-tables/assets/reviews/composition-p2-r1.receipt.dd.json
+  h_9e71e8b09f7cf2 1-93
+docs/plans/028-prep-canonical-tables/assets/team/basis-6d5131283c31d68f121b0c24701f641705f19af72a966ed4aac159477eaeac6d.json
+  h_9e71e8b09f7cf2 1-1346
+docs/plans/028-prep-canonical-tables/assets/team/review-composition-rv-028-composition-p2-r1.dd.json
+  h_9e71e8b09f7cf2 1-122
+docs/plans/028-prep-canonical-tables/assets/team/review-composition-rv-028-composition-p2-r1.dd.md
+  h_9e71e8b09f7cf2 1-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "da978dd1eab65fda5838ea2f9d2a9ff4f9016039",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

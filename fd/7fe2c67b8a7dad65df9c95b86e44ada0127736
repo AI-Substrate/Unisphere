@@ -1,0 +1,21 @@
+docs/plans/028-prep-canonical-tables/assets/execution-log.dd.json
+  s_042162115c1f28::t_66dc9586473499 89-125,129
+docs/plans/028-prep-canonical-tables/assets/execution-log.dd.md
+  s_042162115c1f28::t_ebd40e3259f5d1 29-32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "fd7fe2c67b8a7dad65df9c95b86e44ada0127736",
+  "prompts": {},
+  "sessions": {
+    "s_042162115c1f28": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4b3f9ea7-6ca1-47b0-93c3-82069b1452f9",
+        "model": "unknown"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

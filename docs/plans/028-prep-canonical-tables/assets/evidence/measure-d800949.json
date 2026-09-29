@@ -1,0 +1,263 @@
+{
+ "subject_sha": "d80094913d16f68cefbca128015531c5aa3fc197",
+ "poc_baseline": {
+  "claude_cold_s": 3.46,
+  "claude_unchanged_s": [
+   0.05,
+   0.62
+  ],
+  "claude_peak_rss_mb": 507
+ },
+ "extra_args": [],
+ "load_average_before": [
+  45.3,
+  53.4,
+  66.9
+ ],
+ "cold": {
+  "exit": 0,
+  "wall_s": 3.948,
+  "peak_rss_mb": 803.4,
+  "bytes_read": 2979696694,
+  "rows_written": {
+   "calls": 122248,
+   "events": 61577,
+   "tool_uses": 220714,
+   "triggers": 22865,
+   "turns": 21009
+  },
+  "sources_by_status": {
+   "new": 478,
+   "unsupported": 8
+  },
+  "discovery_skipped": {
+   "symlinks": 3,
+   "hidden": 0,
+   "unreadable_entries": 0
+  },
+  "pending_tail_bytes": 0,
+  "sets": [
+   [
+    "claude-code",
+    "default",
+    true,
+    478
+   ],
+   [
+    "codex",
+    "default",
+    false,
+    0
+   ],
+   [
+    "oh-my-pi",
+    "default",
+    false,
+    0
+   ],
+   [
+    "pi",
+    "default",
+    false,
+    0
+   ],
+   [
+    "copilot-cli",
+    "default",
+    false,
+    0
+   ],
+   [
+    "cursor-transcript",
+    "default",
+    false,
+    0
+   ],
+   [
+    "vscode-copilot",
+    "default",
+    false,
+    0
+   ],
+   [
+    "cursor-ide",
+    "default",
+    false,
+    0
+   ],
+   [
+    "copilot-cli-snapshot",
+    "default",
+    false,
+    0
+   ]
+  ],
+  "state_json_bytes": 5572308
+ },
+ "unchanged": {
+  "exit": 0,
+  "wall_s": 0.683,
+  "peak_rss_mb": 66.0,
+  "bytes_read": 0,
+  "rows_written": {
+   "calls": 0,
+   "events": 0,
+   "tool_uses": 0,
+   "triggers": 0,
+   "turns": 0
+  },
+  "sources_by_status": {
+   "unchanged": 478,
+   "unsupported": 8
+  },
+  "discovery_skipped": {
+   "symlinks": 3,
+   "hidden": 0,
+   "unreadable_entries": 0
+  },
+  "pending_tail_bytes": 0,
+  "sets": [
+   [
+    "claude-code",
+    "default",
+    true,
+    478
+   ],
+   [
+    "codex",
+    "default",
+    false,
+    0
+   ],
+   [
+    "oh-my-pi",
+    "default",
+    false,
+    0
+   ],
+   [
+    "pi",
+    "default",
+    false,
+    0
+   ],
+   [
+    "copilot-cli",
+    "default",
+    false,
+    0
+   ],
+   [
+    "cursor-transcript",
+    "default",
+    false,
+    0
+   ],
+   [
+    "vscode-copilot",
+    "default",
+    false,
+    0
+   ],
+   [
+    "cursor-ide",
+    "default",
+    false,
+    0
+   ],
+   [
+    "copilot-cli-snapshot",
+    "default",
+    false,
+    0
+   ]
+  ],
+  "state_json_bytes": 5572308
+ },
+ "append": {
+  "exit": 0,
+  "wall_s": 0.208,
+  "peak_rss_mb": 82.7,
+  "bytes_read": 85790,
+  "rows_written": {
+   "calls": 6,
+   "events": 0,
+   "tool_uses": 13,
+   "triggers": 0,
+   "turns": 0
+  },
+  "sources_by_status": {
+   "appended": 2,
+   "unchanged": 476,
+   "unsupported": 8
+  },
+  "discovery_skipped": {
+   "symlinks": 3,
+   "hidden": 0,
+   "unreadable_entries": 0
+  },
+  "pending_tail_bytes": 0,
+  "sets": [
+   [
+    "claude-code",
+    "default",
+    true,
+    478
+   ],
+   [
+    "codex",
+    "default",
+    false,
+    0
+   ],
+   [
+    "oh-my-pi",
+    "default",
+    false,
+    0
+   ],
+   [
+    "pi",
+    "default",
+    false,
+    0
+   ],
+   [
+    "copilot-cli",
+    "default",
+    false,
+    0
+   ],
+   [
+    "cursor-transcript",
+    "default",
+    false,
+    0
+   ],
+   [
+    "vscode-copilot",
+    "default",
+    false,
+    0
+   ],
+   [
+    "cursor-ide",
+    "default",
+    false,
+    0
+   ],
+   [
+    "copilot-cli-snapshot",
+    "default",
+    false,
+    0
+   ]
+  ],
+  "state_json_bytes": 5572520
+ },
+ "load_average_after": [
+  39.3,
+  50.2,
+  64.7
+ ]
+}

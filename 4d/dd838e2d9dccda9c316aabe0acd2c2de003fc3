@@ -1,0 +1,35 @@
+crates/core/src/status.rs
+  s_042162115c1f28::t_3a6716844a0f64 1-326
+crates/testkit/src/status.rs
+  s_042162115c1f28::t_191d41f41ffb84 1-303
+  s_042162115c1f28::t_32342a9ecaaef2 304-306
+  s_042162115c1f28::t_0c0a0cb9f65069 307-310
+crates/core/tests/status_contract.rs
+  s_042162115c1f28::t_58b3ac0214bb47 1-136
+  s_042162115c1f28::t_1ca043c17c8c41 137-139
+  s_042162115c1f28::t_9458bae4bb7296 140-141
+crates/testkit/src/lib.rs
+  s_042162115c1f28::t_8262157223f9d8 12
+docs/plans/029-session-status/assets/impl-guide.dd.json
+  s_042162115c1f28::t_e727917d478d75 26,119,125
+docs/plans/029-session-status/assets/impl-guide.dd.md
+  s_042162115c1f28::t_53c4071772804d 25,56
+crates/core/src/lib.rs
+  s_042162115c1f28::t_14ac82c6fd91a8 16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "4ddd838e2d9dccda9c316aabe0acd2c2de003fc3",
+  "prompts": {},
+  "sessions": {
+    "s_042162115c1f28": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4b3f9ea7-6ca1-47b0-93c3-82069b1452f9",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

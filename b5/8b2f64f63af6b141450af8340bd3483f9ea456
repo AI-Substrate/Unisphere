@@ -1,0 +1,16 @@
+docs/plans/archive/028-prep-canonical-tables/the-flow.json
+  h_9e71e8b09f7cf2 617-639,805,842-847,850-851
+docs/plans/archive/028-prep-canonical-tables/the-flow.md
+  h_9e71e8b09f7cf2 4,6,17,65
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "b58b2f64f63af6b141450af8340bd3483f9ea456",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

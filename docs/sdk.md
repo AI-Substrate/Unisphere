@@ -257,6 +257,82 @@ content policy and unknown finality. A revision is an observation of that bounde
 source representation, not producer finality or a global clock. Caller-side
 history, destination transactions and cross-source deduplication remain separate.
 
+## Prepare canonical tables in process
+
+`unisphere prep` is composed from public ports, so an external consumer runs the
+same incremental prep in process with its own store. `unisphere_sdk::prep`
+re-exports the `core::prep` contract: `PrepLoader` (read-only discovery, stat,
+bounded reads to the last complete LF, anchors, `record_at`), the pure
+`PrepFold`/`PrepFoldSession`, and `PrepStore` (`state`, `load`, `commit` rows
+before state, `compact`). Core and SDK carry no Parquet, SQLite or engine
+dependency; `unisphere-output-prep`'s `ParquetPrepStore` is one store, and any
+`PrepStore` — including an in-memory one — is another.
+
+```rust
+use std::sync::Arc;
+use unisphere_sdk::prep::{
+    PrepApi, PrepBinding, PrepOptions, PrepReadLimits, PrepRequest, PrepSourceSet, Preparer,
+};
+use unisphere_sdk::{ReadLimits, SnapshotLimits};
+use unisphere_adapter_claude::ClaudePrepFold;
+use unisphere_loader_jsonl::FileSessionLoader;
+
+# fn run(my_store: impl unisphere_sdk::prep::PrepStore) -> Result<(), unisphere_sdk::PipelineError> {
+let preparer = Preparer::new(
+    vec![PrepBinding { fold: Arc::new(ClaudePrepFold), loader: Arc::new(FileSessionLoader) }],
+    my_store,
+);
+let report = preparer.prep(&PrepRequest {
+    target: "/explicit/target".into(),
+    roots: vec![PrepSourceSet {
+        harness: "claude-code".into(),
+        label: "default".into(),
+        root: "/home/me/.claude/projects".into(),
+    }],
+    options: PrepOptions::default(), // metadata only
+    limits: PrepReadLimits {
+        read: ReadLimits { max_records: usize::MAX, ..ReadLimits::default() },
+        snapshot: SnapshotLimits::default(),
+    },
+    threads: 4,
+    modified_since_ns: None,
+})?;
+// report.sets: per-set coverage; report.sources: every source neither unchanged nor skipped.
+# Ok(()) }
+```
+
+`Preparer` owns every prep decision: root binding by harness (an unbound harness
+is reported `supported: false` with its sources `unsupported`), change detection
+into `new`/`unchanged`/`appended`/`replaced{reason}`/`skipped`/`unreadable`/
+`missing`, generations, pending tails, bounded parallelism and the content gate on
+`record`. The CLI builds the same `PrepRequest` and renders the returned
+`PrepReport`; the equivalent command is:
+
+```sh
+unisphere prep --target /explicit/target --harness claude-code --threads 4
+```
+
+`fold_source` is the single-source fold `prep` itself runs, without a store or
+target directory — for example, live session status from `SessionFacts`:
+
+```rust
+use unisphere_sdk::prep::{fold_source, PrepLoader, PrepOptions, PrepReadLimits, PrepSourceSet};
+use unisphere_adapter_claude::ClaudePrepFold;
+use unisphere_loader_jsonl::FileSessionLoader;
+
+# fn run(set: PrepSourceSet, limits: PrepReadLimits) -> Result<(), unisphere_sdk::PipelineError> {
+let loader = FileSessionLoader;
+let stat = loader.stat(&set.root, &set.root.join("project/session.jsonl"))?;
+let folded = fold_source(
+    &loader, &ClaudePrepFold, &stat, &set.source_key(&stat.file),
+    0, None, PrepOptions::default(), limits,
+    &mut |rows| { /* this batch's calls/turns/triggers/events/tool_uses */ },
+)?;
+// folded.facts: SessionFacts; keep folded.cursor + folded.checkpoint as a
+// PrepResume to continue from the last complete record next time.
+# Ok(()) }
+```
+
 ## Query supplied session evidence in process
 
 `QueryService<S>` implements `QueryApi` for any injected `S: QuerySource`. The

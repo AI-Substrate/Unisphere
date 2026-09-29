@@ -562,7 +562,7 @@ pub fn emit_pij_resolution(
     stderr.flush()
 }
 
-fn safe_human_identifier(value: &str) -> String {
+pub(crate) fn safe_human_identifier(value: &str) -> String {
     let mut safe = String::with_capacity(value.len());
     for character in value.chars() {
         let code = u32::from(character);

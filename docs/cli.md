@@ -1,8 +1,10 @@
 # Unisphere CLI
 
-Unisphere queries versioned local agent evidence through injected SDK ports and
-retains explicit native OTLP export. It starts no daemon, remote service, model
-service, index, or implicit HOME scan. Query output is not OTLP and snapshot
+Unisphere queries versioned local agent evidence through injected SDK ports,
+retains explicit native OTLP export and prepares incremental research tables.
+It starts no daemon, remote service, model service or index. Only `prep` reads the
+adapter catalogue's default roots under HOME, reports them per set, and
+`--no-default-roots` disables that. Query output is not OTLP and snapshot
 exports are current replacement projections, not persistent history or source
 finality.
 
@@ -55,6 +57,12 @@ unisphere tools list|stats|extract SCOPE [QUERY OPTIONS]
 unisphere tools show CALL SCOPE [QUERY OPTIONS]
 unisphere events list|extract SCOPE [QUERY OPTIONS]
 unisphere events show EVENT SCOPE [QUERY OPTIONS]
+
+unisphere prep --target DIR [--root HARNESS[:LABEL]=DIR]... [--harness H]...
+    [--no-default-roots] [--include-content] [--max-record-bytes N]
+    [--max-batch-bytes N] [--threads N] [--modified-since RFC3339]
+unisphere prep compact --target DIR
+unisphere prep record --target DIR --source KEY (--offset N | --key K) --include-content
 ```
 
 A query scope is exactly one of:
@@ -194,6 +202,7 @@ location hints are not installation detection or source discovery.
 | 0 | Completed command, including help/version and a legitimate zero-match query |
 | 1 | Source, query, serialization, publication, or destination failure |
 | 2 | Invalid arguments or an invalid native/query route |
+| 3 | `prep` committed but at least one source was unreadable |
 
 JSON command output is one versioned envelope ending in LF. Query JSONL is one
 versioned row per line. CSV has one header and row stream. Text/Markdown and OTLP
@@ -207,7 +216,8 @@ data into success.
 
 ```text
 ParsedCommand::Config | Catalog | Docs | Schema | Query(QueryCommand)
-  | NativeRootList | NativeGitNotesList | NativeExport | Help | Version
+  | NativeRootList | NativeGitNotesList | NativeExport
+  | Prep(PrepCommand) | PrepCompact | PrepRecord | Help | Version
 ```
 
 `QueryCommand` owns a validated `QueryRequest`, output format/CSV policy,
@@ -219,8 +229,9 @@ remain in `QueryApi`; CLI serialization remains in `QueryWriter`.
 
 Typed execution entrypoints are `run_config`, `run_catalog`, `run_help`,
 `run_version`, `run_native_list`, `run_native_export`,
-`run_native_snapshot_export`, `run_query`, `emit_query_failure`, `run_docs`, and
-`run_schema`. `emit_query_failure` keeps initialization failures on the same safe
+`run_native_snapshot_export`, `run_query`, `emit_query_failure`, `run_docs`,
+`run_schema`, `run_prep`, `run_prep_compact`, and `run_prep_record`.
+`emit_query_failure` keeps initialization failures on the same safe
 diagnostic channel without constructing a fake query response. Call
 `diagnostic_mode(&args, stdout_is_terminal)` before moving argv into `parse` when
 a parse failure must be rendered. These entrypoints consume parsed DTOs and never
@@ -229,6 +240,45 @@ inspect argv. The older `run`, `run_adapters`, `run_sessions`, and
 root parser and typed execution. New application composition parses once and
 dispatches `ParsedCommand`; `requested_session_adapter` was removed with no
 raw-argv compatibility shim.
+
+## Prep canonical tables
+
+`unisphere prep` incrementally folds native sessions into canonical metadata
+tables under an explicit target. The composition root adds the adapter
+catalogue's default root (label `default`) for every harness admitted by
+`--harness`, unless `--no-default-roots`, then every explicit
+`--root HARNESS[:LABEL]=DIR`; an unlabelled root gets `root-<8 hex of
+sha256(DIR)>`. Sources are keyed `<harness>/<label>/<relative path>`.
+
+```sh
+unisphere prep --target /absolute/prep --human
+unisphere prep --target /absolute/prep --root claude-code:alt=/home/me/.claude-alt/projects --json
+unisphere prep --target /absolute/prep --no-default-roots --root claude-code=/absolute/archive --modified-since 2026-01-01T00:00:00Z
+unisphere prep compact --target /absolute/prep
+unisphere prep record --target /absolute/prep --source claude-code/default/project/session.jsonl --offset 0 --include-content
+```
+
+Re-runs read only records after each source's committed cursor, stop at the last
+complete LF (the remainder is a reported pending tail) and commit nothing when
+nothing changed. A rotated, truncated or rewritten source, a changed snapshot
+revision, fold policy, table schema or set root starts a new generation. Every
+run reports, per set, discovered sources, counts by status (`new`, `unchanged`,
+`appended`, `replaced`, `skipped`, `unreadable`, `unsupported`, `missing`) and
+skipped symlinks, hidden and unreadable entries; JSON `data.sources` lists every
+source that is neither unchanged nor skipped. Unreadable sources keep their
+previous committed state and make the exit 3.
+
+Output is `TARGET/state.json`, Parquet parts under `TARGET/tables/` and DuckDB view
+definitions in `TARGET/views.sql` (`calls_v`, `turns_v`, `triggers_v`, `events_v`,
+`compactions_v`, `tool_uses_v`, `sources_v`, `sessions_v`). Tables are
+metadata-only unless `--include-content` adds `triggers.content_head`.
+`prep record` emits one native record and is refused (exit 2) without
+`--include-content`. Native stores are opened read-only. Envelopes use commands
+`prep`, `prep.compact` and `prep.record`. `PrepCommand::explicit_sets`,
+`wants_default_root` and `request` give embedding applications the parsed roots
+and request; `run_prep` takes the merged `Vec<PrepSourceSet>` and an injected
+`&dyn PrepApi` and holds no prep semantics. `unisphere docs get prep` is the
+offline guide.
 
 ## Git Notes attribution
 

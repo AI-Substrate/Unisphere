@@ -110,6 +110,13 @@ static TOPICS: &[DocTopic] = &[
             "privacy-and-coverage",
         ],
     },
+    DocTopic {
+        id: "prep",
+        title: "Prep canonical tables",
+        summary: "Incrementally fold native sessions into canonical Parquet tables and query their views.",
+        text: include_str!("../docs/prep.md"),
+        related: &["privacy-and-coverage", "sdk", "find-sessions"],
+    },
 ];
 
 pub(crate) const fn topics() -> &'static [DocTopic] {

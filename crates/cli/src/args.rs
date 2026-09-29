@@ -13,6 +13,13 @@ use unisphere_core::query::{
     QueryRequest, QueryScope, RecoveryAction, SavedFormat, SortDirection, SortKey, SourceId,
     SourceSelector, TimeWindow, Timestamp, TimestampBasis, schema,
 };
+use unisphere_core::{
+    ReadLimits, SnapshotLimits,
+    prep::{
+        DEFAULT_ROOT_LABEL, NativeAddress, PrepCompactRequest, PrepOptions, PrepReadLimits,
+        PrepRecordRequest, PrepRequest, PrepSourceSet, derived_root_label,
+    },
+};
 
 use crate::CliContext;
 
@@ -97,9 +104,9 @@ enum RootCommand {
         #[command(subcommand)]
         command: SchemaSubcommand,
     },
-    /// Incrementally convert native sessions into canonical tables in a target directory.
+    /// Incrementally convert native sessions into canonical metadata tables in a target directory.
     #[command(
-        after_help = "Re-runs read only records appended since the committed cursor; unchanged sources cost one stat. Tables are Parquet under TARGET/tables; query them with any Parquet SQL engine."
+        after_help = "Roots: catalogue default roots for every harness (or each --harness) unless --no-default-roots, plus every explicit --root HARNESS[:LABEL]=DIR. Re-runs read only records appended since the committed cursor; unchanged sources cost one stat. Tables are Parquet under TARGET/tables; load TARGET/views.sql in DuckDB. Metadata only unless --include-content.\nGuide: unisphere docs get prep --human"
     )]
     Prep(PrepArgs),
     /// Read version-matched offline operating guides.
@@ -111,31 +118,70 @@ enum RootCommand {
 }
 
 #[derive(Args)]
+#[command(args_conflicts_with_subcommands = true, subcommand_negates_reqs = true)]
 struct PrepArgs {
-    /// Target directory for state.json and tables/; created if absent.
-    #[arg(long, value_name = "DIR")]
-    target: PathBuf,
-    /// Native root to discover recursively (default: HOME/.claude/projects).
-    #[arg(long, value_name = "DIR")]
-    root: Option<PathBuf>,
-    /// Harness dialect of the root. Only claude-code is implemented.
-    #[arg(long, default_value = "claude-code")]
-    harness: String,
-    /// Opt in to the triggers.content_head column (first 200 characters of each opener).
+    #[command(subcommand)]
+    command: Option<PrepSubcommand>,
+    /// Target directory for state.json, tables/ and views.sql; created if absent.
+    #[arg(long, value_name = "DIR", required = true)]
+    target: Option<PathBuf>,
+    /// Explicit native root (repeatable). LABEL defaults to root-<8 hex of sha256(DIR)>.
+    #[arg(long = "root", value_name = "HARNESS[:LABEL]=DIR")]
+    roots: Vec<String>,
+    /// Restrict the run to this harness (repeatable); explicit roots must match.
+    #[arg(long = "harness", value_name = "HARNESS")]
+    harnesses: Vec<String>,
+    /// Use only explicit --root sets; skip the adapter catalogue's default roots.
+    #[arg(long)]
+    no_default_roots: bool,
+    /// Opt in to content columns (triggers.content_head); absent otherwise.
     #[arg(long)]
     include_content: bool,
-    /// Largest physical record accepted, in bytes.
-    #[arg(long, value_name = "BYTES")]
+    /// Largest physical native record accepted, in bytes.
+    #[arg(long, value_name = "N")]
     max_record_bytes: Option<usize>,
-    /// Native bytes read per bounded batch.
-    #[arg(long, value_name = "BYTES")]
+    /// Native bytes read per bounded batch; at least --max-record-bytes.
+    #[arg(long, value_name = "N")]
     max_batch_bytes: Option<usize>,
-    /// Sources read concurrently.
+    /// Sources read concurrently (at least 1).
     #[arg(long, value_name = "N")]
     threads: Option<usize>,
-    /// Only discover sources modified at or after this RFC 3339 instant.
+    /// Scope: sources last modified before this RFC 3339 instant are reported skipped, not read.
     #[arg(long, value_name = "RFC3339")]
     modified_since: Option<String>,
+}
+
+#[derive(Subcommand)]
+enum PrepSubcommand {
+    /// Rewrite current-generation rows into fewer parts without changing any canonical view.
+    Compact {
+        /// Existing prep target directory.
+        #[arg(long, value_name = "DIR")]
+        target: PathBuf,
+    },
+    /// Fetch exactly one native record by its address in a prepped source (content; opt-in).
+    Record {
+        /// Existing prep target directory.
+        #[arg(long, value_name = "DIR")]
+        target: PathBuf,
+        /// Source key `<harness>/<label>/<file>` from the sources table.
+        #[arg(long, value_name = "KEY")]
+        source: String,
+        /// Byte offset of the record (append sources: native_offset).
+        #[arg(
+            long,
+            value_name = "N",
+            required_unless_present = "key",
+            conflicts_with = "key"
+        )]
+        offset: Option<u64>,
+        /// Snapshot key of the record (snapshot sources: native_key).
+        #[arg(long, value_name = "K")]
+        key: Option<String>,
+        /// Required: the record is native content.
+        #[arg(long)]
+        include_content: bool,
+    },
 }
 
 #[derive(Subcommand)]
@@ -613,22 +659,125 @@ pub struct HelpCommand {
     pub mode: OutputMode,
 }
 
+/// One explicit `--root HARNESS[:LABEL]=DIR` set. `label: None` derives
+/// [`derived_root_label`] from the absolute directory.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PrepRoot {
+    pub harness: String,
+    pub label: Option<String>,
+    pub root: PathBuf,
+}
+
+impl PrepRoot {
+    /// The source set this explicit root contributes to a [`PrepRequest`].
+    pub fn source_set(&self) -> PrepSourceSet {
+        PrepSourceSet {
+            harness: self.harness.clone(),
+            label: self
+                .label
+                .clone()
+                .unwrap_or_else(|| derived_root_label(&self.root)),
+            root: self.root.clone(),
+        }
+    }
+}
+
+/// Parsed `unisphere prep`. Default-root resolution belongs to the composition
+/// root: it adds catalogue roots for [`PrepCommand::wants_default_root`] harnesses
+/// unless `no_default_roots`, then appends [`PrepCommand::explicit_sets`].
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PrepCommand {
     pub target: PathBuf,
-    pub root: Option<PathBuf>,
-    pub harness: String,
-    pub include_content: bool,
-    pub max_record_bytes: Option<usize>,
-    pub max_batch_bytes: Option<usize>,
-    pub threads: Option<usize>,
+    /// Explicit roots in argv order; harness/label and harness/directory are unique.
+    pub roots: Vec<PrepRoot>,
+    /// `--harness` filters, sorted and unique; empty means every harness.
+    pub harnesses: Vec<String>,
+    pub no_default_roots: bool,
+    pub options: PrepOptions,
+    /// Validated read bounds (defaults applied).
+    pub limits: PrepReadLimits,
+    pub threads: usize,
     pub modified_since_ns: Option<i128>,
     pub mode: OutputMode,
+}
+
+/// Default `--max-batch-bytes`.
+pub const PREP_DEFAULT_BATCH_BYTES: usize = 16 * 1024 * 1024;
+/// Default `--threads`.
+pub const PREP_DEFAULT_THREADS: usize = 8;
+
+impl PrepCommand {
+    /// Whether the catalogue default root of `harness` belongs to this run.
+    pub fn wants_default_root(&self, harness: &str) -> bool {
+        !self.no_default_roots && self.selects(harness)
+    }
+
+    /// Whether `--harness` filters admit `harness` (no filter admits all).
+    pub fn selects(&self, harness: &str) -> bool {
+        self.harnesses.is_empty() || self.harnesses.iter().any(|value| value == harness)
+    }
+
+    /// Explicit `--root` sets in argv order.
+    pub fn explicit_sets(&self) -> Vec<PrepSourceSet> {
+        self.roots.iter().map(PrepRoot::source_set).collect()
+    }
+
+    /// The port request for shell-resolved `roots`.
+    pub fn request(&self, roots: Vec<PrepSourceSet>) -> PrepRequest {
+        PrepRequest {
+            target: self.target.clone(),
+            roots,
+            options: self.options,
+            limits: self.limits,
+            threads: self.threads,
+            modified_since_ns: self.modified_since_ns,
+        }
+    }
+}
+
+/// Parsed `unisphere prep compact`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PrepCompactCommand {
+    pub target: PathBuf,
+    pub mode: OutputMode,
+}
+
+impl PrepCompactCommand {
+    pub fn request(&self) -> PrepCompactRequest {
+        PrepCompactRequest {
+            target: self.target.clone(),
+        }
+    }
+}
+
+/// Parsed `unisphere prep record`; the parser refuses it without `--include-content`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PrepRecordCommand {
+    pub target: PathBuf,
+    pub source: String,
+    pub address: NativeAddress,
+    pub include_content: bool,
+    pub max_bytes: usize,
+    pub mode: OutputMode,
+}
+
+impl PrepRecordCommand {
+    pub fn request(&self) -> PrepRecordRequest {
+        PrepRecordRequest {
+            target: self.target.clone(),
+            source: self.source.clone(),
+            address: self.address.clone(),
+            include_content: self.include_content,
+            max_bytes: self.max_bytes,
+        }
+    }
 }
 
 #[derive(Clone, PartialEq)]
 pub enum ParsedCommand {
     Prep(PrepCommand),
+    PrepCompact(PrepCompactCommand),
+    PrepRecord(PrepRecordCommand),
     Config(ConfigCommand),
     Catalog(CatalogCommand),
     Docs(DocsCommand),
@@ -791,6 +940,46 @@ impl CliParseFailure {
         }
     }
 
+    fn prep_content() -> Self {
+        Self {
+            code: "UNI-CLI-PREP-CONTENT",
+            message: "`prep record` emits one native record, which is content; it requires explicit --include-content.",
+            next_action: "Re-run the same `unisphere prep record` command with --include-content only if emitting that native record is intended; prepped tables stay metadata-only either way.",
+            alternatives: Vec::new(),
+            retryable: false,
+        }
+    }
+
+    fn prep_root() -> Self {
+        Self {
+            code: "UNI-CLI-PREP-ROOT",
+            message: "An explicit prep root is malformed, reuses a harness/label or harness/directory, or uses the reserved label `default`.",
+            next_action: "Write each root once as --root HARNESS=DIR or --root HARNESS:LABEL=DIR; HARNESS and LABEL use lowercase letters, digits, '.', '_' or '-', and `default` names only the catalogue root.",
+            alternatives: Vec::new(),
+            retryable: false,
+        }
+    }
+
+    fn prep_scope() -> Self {
+        Self {
+            code: "UNI-CLI-PREP-SCOPE",
+            message: "The prep root selection is empty or contradicts --harness.",
+            next_action: "Give at least one --root with --no-default-roots, and list the harness of every explicit --root in --harness when --harness is used.",
+            alternatives: Vec::new(),
+            retryable: false,
+        }
+    }
+
+    fn prep_limits() -> Self {
+        Self {
+            code: "UNI-CLI-PREP-LIMITS",
+            message: "Prep limits must be positive, --max-batch-bytes at least --max-record-bytes, and --modified-since an RFC 3339 instant.",
+            next_action: "Choose --threads N >= 1, --max-record-bytes N >= 1, --max-batch-bytes N >= --max-record-bytes, and --modified-since like 2026-01-31T00:00:00Z.",
+            alternatives: Vec::new(),
+            retryable: false,
+        }
+    }
+
     pub const fn code(&self) -> &'static str {
         self.code
     }
@@ -836,28 +1025,7 @@ pub fn parse(args: Vec<OsString>, context: &CliContext) -> Result<ParsedCommand,
         });
     }
     match cli.command.ok_or_else(CliParseFailure::arguments)? {
-        RootCommand::Prep(args) => {
-            if args.harness != "claude-code" || args.threads == Some(0) {
-                return Err(CliParseFailure::arguments());
-            }
-            Ok(ParsedCommand::Prep(PrepCommand {
-                target: absolute(args.target, context)?,
-                root: args.root.map(|root| absolute(root, context)).transpose()?,
-                harness: args.harness,
-                include_content: args.include_content,
-                max_record_bytes: args.max_record_bytes,
-                max_batch_bytes: args.max_batch_bytes,
-                threads: args.threads,
-                modified_since_ns: args
-                    .modified_since
-                    .as_deref()
-                    .map(|value| Timestamp::parse(value, TimestampBasis::SuppliedUnknown))
-                    .transpose()
-                    .map_err(|_| CliParseFailure::arguments())?
-                    .map(|timestamp| timestamp.unix_nanos()),
-                mode: selected_mode,
-            }))
-        }
+        RootCommand::Prep(args) => prep_command(args, context, selected_mode),
         RootCommand::Config {
             command: ConfigSubcommand::Check(check),
         } => Ok(ParsedCommand::Config(ConfigCommand {
@@ -991,6 +1159,142 @@ pub fn parse(args: Vec<OsString>, context: &CliContext) -> Result<ParsedCommand,
             selected_mode,
         ),
     }
+}
+
+fn prep_command(
+    args: PrepArgs,
+    context: &CliContext,
+    mode: OutputMode,
+) -> Result<ParsedCommand, CliParseFailure> {
+    let default_record_bytes = ReadLimits::default().max_record_bytes;
+    match args.command {
+        Some(PrepSubcommand::Compact { target }) => {
+            return Ok(ParsedCommand::PrepCompact(PrepCompactCommand {
+                target: prep_path(target, context)?,
+                mode,
+            }));
+        }
+        Some(PrepSubcommand::Record {
+            target,
+            source,
+            offset,
+            key,
+            include_content,
+        }) => {
+            if !include_content {
+                return Err(CliParseFailure::prep_content());
+            }
+            if source.is_empty() || key.as_ref().is_some_and(String::is_empty) {
+                return Err(CliParseFailure::arguments());
+            }
+            return Ok(ParsedCommand::PrepRecord(PrepRecordCommand {
+                target: prep_path(target, context)?,
+                source,
+                address: NativeAddress { offset, key },
+                include_content,
+                max_bytes: default_record_bytes,
+                mode,
+            }));
+        }
+        None => {}
+    }
+    let target = prep_path(args.target.ok_or_else(CliParseFailure::arguments)?, context)?;
+    let mut harnesses = Vec::with_capacity(args.harnesses.len());
+    for harness in args.harnesses {
+        if !prep_name(&harness) {
+            return Err(CliParseFailure::prep_scope());
+        }
+        harnesses.push(harness);
+    }
+    harnesses.sort_unstable();
+    harnesses.dedup();
+    let mut roots: Vec<PrepRoot> = Vec::with_capacity(args.roots.len());
+    for value in &args.roots {
+        let root = prep_root(value, context)?;
+        if !harnesses.is_empty() && !harnesses.contains(&root.harness) {
+            return Err(CliParseFailure::prep_scope());
+        }
+        let set = root.source_set();
+        if roots.iter().any(|seen| {
+            seen.harness == root.harness
+                && (seen.source_set().label == set.label || seen.root == root.root)
+        }) {
+            return Err(CliParseFailure::prep_root());
+        }
+        roots.push(root);
+    }
+    if args.no_default_roots && roots.is_empty() {
+        return Err(CliParseFailure::prep_scope());
+    }
+    let read = ReadLimits {
+        max_records: usize::MAX,
+        max_record_bytes: args.max_record_bytes.unwrap_or(default_record_bytes),
+        max_batch_bytes: args.max_batch_bytes.unwrap_or(PREP_DEFAULT_BATCH_BYTES),
+    };
+    let threads = args.threads.unwrap_or(PREP_DEFAULT_THREADS);
+    if threads == 0 || read.validate().is_err() {
+        return Err(CliParseFailure::prep_limits());
+    }
+    let modified_since_ns = args
+        .modified_since
+        .as_deref()
+        .map(|value| Timestamp::parse(value, TimestampBasis::SuppliedUnknown))
+        .transpose()
+        .map_err(|_| CliParseFailure::prep_limits())?
+        .map(|timestamp| timestamp.unix_nanos());
+    Ok(ParsedCommand::Prep(PrepCommand {
+        target,
+        roots,
+        harnesses,
+        no_default_roots: args.no_default_roots,
+        options: PrepOptions {
+            include_content: args.include_content,
+        },
+        limits: PrepReadLimits {
+            read,
+            snapshot: SnapshotLimits::default(),
+        },
+        threads,
+        modified_since_ns,
+        mode,
+    }))
+}
+
+/// `HARNESS[:LABEL]=DIR`; DIR is made absolute and lexically normalised so the
+/// derived label (and every source key) is stable across spellings.
+fn prep_root(value: &str, context: &CliContext) -> Result<PrepRoot, CliParseFailure> {
+    let (name, dir) = value
+        .split_once('=')
+        .ok_or_else(CliParseFailure::prep_root)?;
+    let (harness, label) = match name.split_once(':') {
+        Some((harness, label)) => (harness, Some(label)),
+        None => (name, None),
+    };
+    if !prep_name(harness)
+        || label.is_some_and(|label| !prep_name(label) || label == DEFAULT_ROOT_LABEL)
+        || dir.is_empty()
+    {
+        return Err(CliParseFailure::prep_root());
+    }
+    Ok(PrepRoot {
+        harness: harness.to_owned(),
+        label: label.map(str::to_owned),
+        root: prep_path(PathBuf::from(dir), context)?,
+    })
+}
+
+/// Harness ids and labels are source-key segments: `[a-z0-9._-]+`, not starting
+/// with `.` or `-`.
+fn prep_name(value: &str) -> bool {
+    !value.is_empty()
+        && !value.starts_with(['.', '-'])
+        && value
+            .bytes()
+            .all(|byte| matches!(byte, b'a'..=b'z' | b'0'..=b'9' | b'.' | b'_' | b'-'))
+}
+
+fn prep_path(path: PathBuf, context: &CliContext) -> Result<PathBuf, CliParseFailure> {
+    Ok(absolute(path, context)?.components().collect())
 }
 
 enum QueryLeaf {

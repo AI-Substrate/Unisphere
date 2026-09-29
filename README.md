@@ -119,6 +119,19 @@ This reads an explicit local notes ref without modifying the source or fetching.
 Metadata is the default; human strings/custom attributes/legacy messages require
 `--include-content`. Attribution is not a complete conversation or token ledger.
 
+For research, `prep` incrementally folds every session under the catalogue's
+default roots (plus any explicit `--root`) into canonical metadata tables:
+
+```sh
+unisphere prep --target $HOME/unisphere-prep --human
+unisphere prep --target $HOME/unisphere-prep --root claude-code:alt=$HOME/.claude-alt/projects
+```
+
+Re-runs read only appended records; unchanged sources cost one `stat`. Every
+run reports per-source status and skipped symlinks/hidden entries. Query the
+Parquet tables through the canonical views in `TARGET/views.sql` with an external
+DuckDB; `unisphere docs get prep --human` has the table contract.
+
 See the [CLI reference](docs/cli.md) for limits, native session selectors,
 configuration inspection, output envelopes and exit codes. For example,
 `unisphere config check --json` inspects configuration without reading sessions.
@@ -231,9 +244,10 @@ Unisphere deliberately leaves those choices to the caller.
 
 - Metadata-only is the default, **not anonymity**: paths, IDs, model and kind may remain.
 - Content is opt-in; sidecars, attachments and referenced artifacts are not opened implicitly.
-- JSONL CLI reruns start at byte zero. SDK byte cursors assume the documented source behavior.
+- JSONL export reruns start at byte zero. SDK byte cursors assume the documented source behavior.
+- `unisphere prep` persists per-source cursors and fold checkpoints in its target for harnesses with a prep binding (Claude Code in this release); others are reported `unsupported`.
 - Snapshot exports describe a complete current replacement projection, not retained revision history.
-- No persisted CLI resume, lossless raw archive, exactly-once ingestion or session-finality guarantee is made.
+- No lossless raw archive, exactly-once ingestion or session-finality guarantee is made.
 
 Read the [full fidelity assessment](docs/fidelity.md) before treating an export as
 a complete transcript or aggregating native usage snapshots.

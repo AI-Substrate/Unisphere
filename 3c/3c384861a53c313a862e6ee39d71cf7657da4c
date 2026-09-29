@@ -1,0 +1,21 @@
+docs/plans/029-session-status/plan.dd.json
+  s_042162115c1f28::t_46392f6a38fb32 69,160-169
+docs/plans/029-session-status/plan.dd.md
+  s_042162115c1f28::t_5f8a839480cc73 61,141-142
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "3c3c384861a53c313a862e6ee39d71cf7657da4c",
+  "prompts": {},
+  "sessions": {
+    "s_042162115c1f28": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4b3f9ea7-6ca1-47b0-93c3-82069b1452f9",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

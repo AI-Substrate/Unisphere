@@ -1,0 +1,66 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "review",
+      "value": {
+        "record_type": "review",
+        "id": "rv-028-decomposition-p2-r2",
+        "recorded_at": "2026-09-29T07:19:08+00:00",
+        "scope": "decomposition",
+        "subject_sha": "cfd716b8dda71884f0b2838953f324f988cd0eff",
+        "plan": {
+          "path": "docs/plans/028-prep-canonical-tables/plan.dd.json",
+          "sha256": "7da3d4a4d05949ddba02368c80dbe145189a63214c43bd0335c381e36ce64e46"
+        },
+        "guide": {
+          "path": "docs/plans/028-prep-canonical-tables/assets/impl-guide.dd.json",
+          "sha256": "c6b8c852ae59839b1f383d0387625c32ab1be79fe0b2bc5b6dd31a373ef27a3a"
+        },
+        "reviewer_id": "pij-panicky-anteater",
+        "requested": {
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-sonnet-5.5",
+          "source": {
+            "harness": "guide",
+            "model": "guide"
+          }
+        },
+        "observed": {
+          "peer_id": "pij-panicky-anteater",
+          "root": "/Users/jordanknight/substrate/unisphere/unisphere-028-review",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/claude-sonnet-5.5",
+          "native_session": "01a0eb71-0bdc-74bd-97d4-6f85f7527e72",
+          "pid": 53353,
+          "argv": ["omp", "--auto-approve", "--model", "github-copilot/claude-sonnet-5.5"],
+          "evidence": [
+            "git -C unisphere-028-review log -1 --format=%H (cfd716b8dda71884f0b2838953f324f988cd0eff) matched git -C unisphere-prep log -1 -- reviewer-decomposition-p2-r2.md",
+            "sha256sum of plan.dd.json (unchanged from r1) and assets/impl-guide.dd.json (new rev) match packet bindings exactly",
+            "ran harness builder guide docs/plans/028-prep-canonical-tables --check -> status ok, 26 write-overlap + 9 read-owner = 35 warnings, matching claim exactly",
+            "read units[tk-0007..tk-000d].depends_on directly from JSON: every one is now exactly [\"tk-0001\"] (was [tk-0001,tk-0002/3/4/5,tk-0006])",
+            "confirmed reads arrays and wave numbers byte-identical to round 1 (still wave 3 for lanes, wave 4 for tk-000e depending on all 7 lane ids, unchanged)",
+            "listed all 9 read-owner warnings individually: 5 for tk-0002 (adapter-claude reference, lanes tk-0007..tk-000b), 1 for tk-0003 (tk-000c), 2 for tk-0004/tk-0005 (tk-000d) - matches the reads-not-in-depends_on pattern exactly",
+            "confirmed on disk: team/baseline-p2.dd.json (round-1 seal receipt) still present untouched; new binding points to team/baseline-p2r2.dd.json (not yet created, consistent with immutable-seal-receipt, new-filename-on-reseal claim)",
+            "ran: cargo check --locked --workspace -> clean, no code changed"
+          ],
+          "gaps": [
+            "No provider-side attestation available beyond the harness-reported model string.",
+            "Did not independently verify the harness builder dispatch E471 failure mode myself (no dispatcher invocation available in read-only review clone); relied on the PM's stated error code/message and verified the fix's correctness from first principles plus the unchanged reads/wave graph."
+          ]
+        },
+        "verdict": "approved",
+        "report": {
+          "path": "docs/plans/028-prep-canonical-tables/assets/reviews/decomposition-p2-r2.md",
+          "sha256": "1502e4a7ceb6ccfa6da54b019be31c4198d8ff9d1523f3aef225d54187abbe17"
+        },
+        "findings": []
+      }
+    }
+  ],
+  "references": []
+}

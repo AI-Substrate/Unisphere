@@ -216,24 +216,93 @@ fn scenario(repo: &Path, binary: &Path, dir: &Path) -> ProofResult<Vec<Value>> {
     Ok(steps)
 }
 
-/// Snapshot representation through the same CLI: a synthetic Copilot CLI legacy
-/// document (JSON snapshot) is unchanged by revision, replaced on a content
-/// change, and its rows are addressable by `<record key>#<JSON pointer>`.
-fn snapshot_scenario(repo: &Path, binary: &Path, dir: &Path) -> ProofResult<Vec<Value>> {
+/// One snapshot representation driven through the CLI: prepped by revision,
+/// unchanged when rewritten with equal content, a new generation when changed.
+struct SnapshotCase {
+    harness: &'static str,
+    /// Source path below the root.
+    file: &'static str,
+    /// Synthetic repository fixture holding the first revision.
+    first: &'static str,
+    /// The changed revision's bytes, from the first revision's.
+    changed: fn(&Path, &[u8]) -> ProofResult<Vec<u8>>,
+    /// A native key whose record `prep record` must return, and a fragment of it.
+    record: Option<(&'static str, &'static str)>,
+}
+
+const SNAPSHOT_CASES: [SnapshotCase; 3] = [
+    // Whole JSON document (Copilot CLI legacy session).
+    SnapshotCase {
+        harness: "copilot-cli-snapshot",
+        file: "legacy-0001.json",
+        first: "crates/adapter-copilot-cli/tests/fixtures/prep/legacy-0001.json",
+        changed: |_, bytes| {
+            let mut document: Value = serde_json::from_slice(bytes).map_err(|e| e.to_string())?;
+            document["chatMessages"]
+                .as_array_mut()
+                .ok_or("fixture has no chatMessages")?
+                .push(json!({"role": "user", "content": "placeholder appended prompt"}));
+            Ok(document.to_string().into_bytes())
+        },
+        record: Some(("document#/chatMessages/0", "\"role\"")),
+    },
+    // Native mutation journal (VS Code Copilot), replayed to its document.
+    SnapshotCase {
+        harness: "vscode-copilot",
+        file: "ws-0001/chatSessions/sess-prep.jsonl",
+        first: "crates/adapter-vscode-copilot/tests/fixtures/prep/ws-0001/chatSessions/sess-prep.jsonl",
+        changed: |_, bytes| {
+            let mut journal = bytes.to_vec();
+            journal.extend_from_slice(
+                b"{\"kind\":1,\"k\":[\"customTitle\"],\"v\":\"placeholder changed title\"}\n",
+            );
+            Ok(journal)
+        },
+        record: None,
+    },
+    // SQLite key/value store (Cursor IDE); the change adds a row.
+    SnapshotCase {
+        harness: "cursor-ide",
+        file: "state.vscdb",
+        first: "crates/testkit/fixtures/prep-snapshots/state-v1.vscdb",
+        changed: |repo, _| {
+            fs::read(repo.join("crates/testkit/fixtures/prep-snapshots/state-v2.vscdb"))
+                .map_err(|e| e.to_string())
+        },
+        record: Some(("bubbleId:c-main:u1", "\"bubbleId\"")),
+    },
+];
+
+/// Every snapshot representation through the same CLI: a JSON document, a
+/// mutation journal and a SQLite store are each prepped, unchanged by an
+/// equal-content rewrite, replaced as generation 1 on a content change, and
+/// (where the native key is fetchable) addressable by `prep record`.
+fn snapshot_scenarios(repo: &Path, binary: &Path, dir: &Path) -> ProofResult<Vec<Value>> {
+    let mut steps = Vec::new();
+    for case in &SNAPSHOT_CASES {
+        steps.extend(snapshot_case(repo, binary, dir, case)?);
+    }
+    Ok(steps)
+}
+
+fn snapshot_case(
+    repo: &Path,
+    binary: &Path,
+    dir: &Path,
+    case: &SnapshotCase,
+) -> ProofResult<Vec<Value>> {
     let sandbox = dir.join("sandbox");
-    let root = dir.join("legacy-root");
-    let target = dir.join("legacy-target");
+    let root = dir.join(format!("{}-root", case.harness));
+    let target = dir.join(format!("{}-target", case.harness));
     let _ = fs::remove_dir_all(&root);
-    fs::create_dir_all(&root).map_err(|e| e.to_string())?;
-    let document = root.join("legacy-0001.json");
-    fs::copy(
-        repo.join("crates/adapter-copilot-cli/tests/fixtures/prep/legacy-0001.json"),
-        &document,
-    )
-    .map_err(|e| e.to_string())?;
+    let source = root.join(case.file);
+    fs::create_dir_all(source.parent().ok_or("source has no parent")?)
+        .map_err(|e| e.to_string())?;
+    let first = fs::read(repo.join(case.first)).map_err(|e| e.to_string())?;
+    fs::write(&source, &first).map_err(|e| e.to_string())?;
     let mut args = strings(&["prep", "--target"]);
     args.push(target.as_os_str().into());
-    let mut spec = OsString::from("copilot-cli-snapshot:demo=");
+    let mut spec = OsString::from(format!("{}:demo=", case.harness));
     spec.push(&root);
     args.push("--root".into());
     args.push(spec);
@@ -242,37 +311,34 @@ fn snapshot_scenario(repo: &Path, binary: &Path, dir: &Path) -> ProofResult<Vec<
     let mut step = |label: &str| -> ProofResult<Value> {
         let (code, value) = prep_json(binary, &sandbox, &args)?;
         if code != 0 {
-            return Err(format!("{label}: exit {code}: {value}"));
+            return Err(format!("{} {label}: exit {code}: {value}", case.harness));
         }
         steps.push(project(&value));
         Ok(value)
     };
-    let cold = step("snapshot cold")?;
+    let rows = |value: &Value| -> u64 {
+        value["data"]["rows_written"]
+            .as_object()
+            .map_or(0, |rows| rows.values().filter_map(Value::as_u64).sum())
+    };
+    let cold = step("cold")?;
     expect(
         cold["data"]["sets"][0]["supported"] == true
             && cold["data"]["sets"][0]["by_status"]["new"] == 1
-            && cold["data"]["rows_written"]["triggers"].as_u64() > Some(0),
+            && rows(&cold) > 0,
         "snapshot source is prepped",
         &cold,
     )?;
-    // Same bytes, new mtime: re-read, equal revision, nothing committed.
-    let bytes = fs::read(&document).map_err(|e| e.to_string())?;
-    fs::write(&document, &bytes).map_err(|e| e.to_string())?;
-    let touched = step("snapshot touched")?;
+    // Same bytes, new mtime: re-read, equal revision, nothing written.
+    fs::write(&source, &first).map_err(|e| e.to_string())?;
+    let touched = step("touched")?;
     expect(
-        touched["data"]["sets"][0]["by_status"]["unchanged"] == 1
-            && touched["data"]["rows_written"]["triggers"] == 0
-            && touched["data"]["rows_written"]["calls"] == 0,
+        touched["data"]["sets"][0]["by_status"]["unchanged"] == 1 && rows(&touched) == 0,
         "equal revision is unchanged",
         &touched,
     )?;
-    let mut changed: Value = serde_json::from_slice(&bytes).map_err(|e| e.to_string())?;
-    changed["chatMessages"]
-        .as_array_mut()
-        .ok_or("fixture has no chatMessages")?
-        .push(json!({"role": "user", "content": "placeholder appended prompt"}));
-    fs::write(&document, changed.to_string()).map_err(|e| e.to_string())?;
-    let replaced = step("snapshot changed")?;
+    fs::write(&source, (case.changed)(repo, &first)?).map_err(|e| e.to_string())?;
+    let replaced = step("changed")?;
     expect(
         replaced["data"]["sources"].as_array().is_some_and(|s| {
             s.iter().any(|s| {
@@ -284,23 +350,23 @@ fn snapshot_scenario(repo: &Path, binary: &Path, dir: &Path) -> ProofResult<Vec<
         "changed snapshot starts generation 1",
         &replaced,
     )?;
-    let mut record = strings(&["prep", "record", "--target"]);
-    record.push(target.as_os_str().into());
-    record.extend(strings(&[
-        "--source",
-        "copilot-cli-snapshot/demo/legacy-0001.json",
-        "--key",
-        "document#/chatMessages/0",
-        "--include-content",
-        "--json",
-    ]));
-    let (code, value) = prep_json(binary, &sandbox, &record)?;
-    if code != 0
-        || value["data"]["record"]
-            .as_str()
-            .is_none_or(|r| !r.contains("\"role\""))
-    {
-        return Err(format!("snapshot record fetch: exit {code}: {value}"));
+    if let Some((key, fragment)) = case.record {
+        let mut record = strings(&["prep", "record", "--target"]);
+        record.push(target.as_os_str().into());
+        record.push("--source".into());
+        record.push(format!("{}/demo/{}", case.harness, case.file).into());
+        record.extend(strings(&["--key", key, "--include-content", "--json"]));
+        let (code, value) = prep_json(binary, &sandbox, &record)?;
+        if code != 0
+            || value["data"]["record"]
+                .as_str()
+                .is_none_or(|r| !r.contains(fragment))
+        {
+            return Err(format!(
+                "{} record fetch: exit {code}: {value}",
+                case.harness
+            ));
+        }
     }
     Ok(steps)
 }
@@ -375,8 +441,8 @@ pub fn run(repo: &Path, scratch: &Path) -> ProofResult<()> {
     require_file(&installed)?;
     let mut from_built = scenario(repo, &built, &scratch.join("built"))?;
     let mut from_installed = scenario(repo, &installed, &scratch.join("installed"))?;
-    from_built.extend(snapshot_scenario(repo, &built, &scratch.join("built"))?);
-    from_installed.extend(snapshot_scenario(
+    from_built.extend(snapshot_scenarios(repo, &built, &scratch.join("built"))?);
+    from_installed.extend(snapshot_scenarios(
         repo,
         &installed,
         &scratch.join("installed"),

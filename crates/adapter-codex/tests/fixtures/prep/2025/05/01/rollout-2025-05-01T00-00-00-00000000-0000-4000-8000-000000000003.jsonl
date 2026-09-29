@@ -1,0 +1,5 @@
+{"id":"legacy-thread","timestamp":"2025-05-01T00:00:00.000Z","instructions":null}
+{"record_type":"state"}
+{"type":"message","role":"user","content":[{"type":"input_text","text":"synthetic"}]}
+{"type":"function_call","name":"shell","arguments":"{\"command\":[\"x\"]}","call_id":"legacy-call"}
+{"type":"function_call_output","call_id":"legacy-call","output":"{\"output\":\"x\",\"metadata\":{\"exit_code\":1,\"duration_seconds\":0.1}}"}

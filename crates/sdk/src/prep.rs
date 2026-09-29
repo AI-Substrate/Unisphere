@@ -96,18 +96,52 @@ pub fn fold_source(
         generation,
         resume.map(|resume| &resume.checkpoint),
     )?;
-    let mut cursor = resume.map(|resume| resume.cursor.clone());
-    let start = cursor.as_ref().map_or(0, |cursor| cursor.offset);
-    let mut result = SourceFold {
+    let advanced = advance(
+        loader,
+        session.as_mut(),
+        stat,
+        resume.map(|resume| resume.cursor.clone()),
+        options,
+        limits,
+        sink,
+    )?;
+    Ok(SourceFold {
         checkpoint: session.checkpoint(),
-        facts: SessionFacts::default(),
-        cursor: None,
-        anchor: None,
-        revision: None,
-        bytes_read: 0,
-        pending_tail_bytes: 0,
-        rows: 0,
-    };
+        facts: session.facts(),
+        cursor: advanced.cursor,
+        anchor: advanced.anchor,
+        revision: advanced.revision,
+        bytes_read: advanced.bytes_read,
+        pending_tail_bytes: advanced.pending_tail_bytes,
+        rows: advanced.rows,
+    })
+}
+
+/// Where [`advance`] left a source: [`SourceFold`] without the fold's state.
+#[derive(Debug, Default)]
+pub(crate) struct Advanced {
+    pub cursor: Option<ReadCursor>,
+    pub anchor: Option<String>,
+    pub revision: Option<String>,
+    pub bytes_read: u64,
+    pub pending_tail_bytes: u64,
+    pub rows: u64,
+}
+
+/// Feed one source from `cursor` (or the start) to its last complete record
+/// into an already open `session`, handing every batch's rows to `sink`. On
+/// error the session may have folded part of the input and must be discarded.
+pub(crate) fn advance(
+    loader: &dyn PrepLoader,
+    session: &mut dyn PrepFoldSession,
+    stat: &PrepSourceStat,
+    mut cursor: Option<ReadCursor>,
+    options: PrepOptions,
+    limits: PrepReadLimits,
+    sink: &mut dyn FnMut(PrepRows),
+) -> Result<Advanced, PipelineError> {
+    let start = cursor.as_ref().map_or(0, |cursor| cursor.offset);
+    let mut result = Advanced::default();
     loop {
         let batch = loader.read(stat, cursor.as_ref(), limits)?;
         result.bytes_read += batch.bytes_read;
@@ -140,8 +174,6 @@ pub fn fold_source(
         }
     }
     result.cursor = cursor;
-    result.checkpoint = session.checkpoint();
-    result.facts = session.facts();
     Ok(result)
 }
 

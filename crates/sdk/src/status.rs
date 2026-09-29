@@ -1,30 +1,34 @@
 //! Session status for one explicit target over the Plan 028 fold.
 //!
 //! [`StatusService`] binds harness folds and loaders ([`PrepBinding`]) and the
-//! configured discovery roots, finds the target's transcript, folds it with
-//! [`fold_source`] and derives every [`SessionStatus`] fact purely from the
-//! fold's [`SessionFacts`], the accumulated call/turn/event rows and the
-//! injected `now_ms`. It never calls Pij, tmux or any process, and never reads
-//! a clock.
+//! configured discovery roots, finds the target's transcript, folds it like
+//! [`fold_source`](crate::prep::fold_source) and derives every
+//! [`SessionStatus`] fact purely from the fold's [`SessionFacts`], the
+//! accumulated call/turn/event rows and the injected `now_ms`. It never calls
+//! Pij, tmux or any process, and never reads a clock.
 //!
-//! [`StatusService::status_incremental`] returns an opaque [`StatusCursor`]:
-//! handing it back reads only appended complete records. A shrink, identity
-//! change, prefix rewrite or a cursor for another target refolds cold and names
-//! the reason in [`SourceStatus::reset`]. Apart from `source`, an incremental
-//! result equals the cold result for the same bytes and `now_ms`.
+//! [`StatusService::status_incremental`] returns an opaque [`StatusCursor`]
+//! that keeps the fold open: handing it back reads and folds only appended
+//! complete records, so a warm call costs the appended bytes, not the history.
+//! A shrink, identity change, prefix rewrite, a cursor for another target or
+//! one already resumed refolds cold and names the reason in
+//! [`SourceStatus::reset`]. Apart from `source`, an incremental result equals
+//! the cold result for the same bytes and `now_ms`.
 
 use std::{
     collections::BTreeMap,
+    fmt,
     path::{Path, PathBuf},
+    sync::{Arc, Mutex, PoisonError},
 };
 
 use globset::{Glob, GlobMatcher};
 use unisphere_core::{PipelineError, ReadCursor, ReadLimits, SnapshotLimits};
 
 use crate::prep::{
-    CallSighting, PrepBinding, PrepCallRow, PrepEventKind, PrepOptions, PrepReadLimits, PrepResume,
-    PrepRows, PrepSourceKind, PrepSourceSet, PrepSourceStat, SessionFacts, derived_root_label,
-    fold_source,
+    CallSighting, PrepBinding, PrepCallRow, PrepEventKind, PrepFoldSession, PrepOptions,
+    PrepReadLimits, PrepRows, PrepSourceKind, PrepSourceSet, PrepSourceStat, SessionFacts, advance,
+    derived_root_label,
 };
 
 pub use unisphere_core::status::*;
@@ -290,7 +294,8 @@ fn derive(
         .filter(|(_, window)| *window > 0)
         .map(|(used, window)| (used as f64 / window as f64 * 1000.0).round() / 10.0);
     status.context = ContextStatus {
-        used_tokens: used.map(|used| Fact::new(used, Basis::Native)),
+        // The fold's total sums input, cache reads and cache writes.
+        used_tokens: used.map(|used| Fact::new(used, Basis::Derived)),
         window_tokens: window.map(|window| Fact::new(window, Basis::Table)),
         window_table: window.map(|_| MODEL_WINDOWS_TABLE.to_owned()),
         percent,
@@ -417,21 +422,49 @@ fn derive(
 // Service
 // ---------------------------------------------------------------------------
 
-/// Opaque, caller-held position of one target's transcript: the fold's resume
-/// point, the source's observed stat and anchor, the fold's facts and the
-/// bounded row accumulators. Hand it back to read only appended bytes.
-#[derive(Debug, Clone, PartialEq)]
+/// Opaque, caller-held position of one target's transcript: the source's
+/// observed stat and anchor, the read cursor after the last complete record,
+/// the open fold there, its facts and the bounded row accumulators. Hand it
+/// back to read only appended bytes.
+///
+/// Resuming moves the open fold into the returned cursor, so a cursor (and
+/// every clone of it) resumes appended input once; handing back a cursor that
+/// was already resumed, or one whose resume failed, refolds cold with reset
+/// `spent`. Returning an unchanged source does not use the fold up.
+#[derive(Debug, Clone)]
 pub struct StatusCursor {
     target: StatusTarget,
     policy: String,
     root: PathBuf,
     label: String,
     stat: PrepSourceStat,
-    /// Append: cursor after the last complete record and the checkpoint there.
-    resume: Option<PrepResume>,
+    /// Append: after the last complete record, where `fold` stands.
+    cursor: Option<ReadCursor>,
     anchor: Option<String>,
+    fold: LiveFold,
     facts: SessionFacts,
     acc: Accumulated,
+}
+
+/// The open fold session at a cursor's position, shared by the cursor's clones
+/// and taken by the first resume.
+#[derive(Clone, Default)]
+struct LiveFold(Arc<Mutex<Option<Box<dyn PrepFoldSession>>>>);
+
+impl LiveFold {
+    fn new(session: Box<dyn PrepFoldSession>) -> Self {
+        Self(Arc::new(Mutex::new(Some(session))))
+    }
+
+    fn take(&self) -> Option<Box<dyn PrepFoldSession>> {
+        self.0.lock().unwrap_or_else(PoisonError::into_inner).take()
+    }
+}
+
+impl fmt::Debug for LiveFold {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str("LiveFold")
+    }
 }
 
 /// One located transcript and the binding that reads it.
@@ -515,7 +548,7 @@ impl StatusService {
                 return Ok(finish(prior.clone(), target, 0, now_ms, None));
             }
             if stat.kind == PrepSourceKind::Append {
-                let offset = prior.resume.as_ref().map_or(0, |r| r.cursor.offset);
+                let offset = prior.cursor.as_ref().map_or(0, |cursor| cursor.offset);
                 if prior.stat.identity != stat.identity {
                     reset = Some("rotated");
                 } else if stat.size < offset {
@@ -526,54 +559,64 @@ impl StatusService {
                         .loader
                         .anchor(stat, offset)
                         .map_err(read_failure)?;
-                    if prior.anchor.as_deref() == Some(anchor.as_str()) {
-                        resume = Some(prior);
-                    } else {
+                    if prior.anchor.as_deref() != Some(anchor.as_str()) {
                         reset = Some("anchor");
+                    } else if let Some(session) = prior.fold.take() {
+                        resume = Some((prior, session));
+                    } else {
+                        reset = Some("spent");
                     }
                 }
             }
         }
 
-        let mut acc = resume.map(|prior| prior.acc.clone()).unwrap_or_default();
-        let from = resume.and_then(|prior| {
-            prior.resume.as_ref().map(|r| PrepResume {
-                cursor: ReadCursor {
+        let (mut acc, mut session, from) = match resume {
+            Some((prior, session)) => (
+                prior.acc.clone(),
+                session,
+                prior.cursor.as_ref().map(|cursor| ReadCursor {
                     source: stat.path.clone(),
                     identity: stat.identity.clone(),
-                    offset: r.cursor.offset,
-                },
-                checkpoint: r.checkpoint.clone(),
-            })
-        });
-        let source = format!("{}/{}/{}", target.harness, located.label, stat.file);
-        let folded = fold_source(
+                    offset: cursor.offset,
+                }),
+            ),
+            None => {
+                let fold = located.binding.fold.as_ref();
+                let source = format!("{}/{}/{}", target.harness, located.label, stat.file);
+                let session = fold
+                    .open(&fold.describe(&stat.file), &source, 0, None)
+                    .map_err(read_failure)?;
+                (Accumulated::default(), session, None)
+            }
+        };
+        let advanced = advance(
             located.binding.loader.as_ref(),
-            located.binding.fold.as_ref(),
+            session.as_mut(),
             stat,
-            &source,
-            0,
-            from.as_ref(),
+            from,
             PrepOptions::default(),
             self.limits,
             &mut |rows| acc.apply(&rows),
         )
         .map_err(read_failure)?;
+        let facts = session.facts();
         let next = StatusCursor {
             target: target.clone(),
             policy: located.binding.fold.policy().to_owned(),
             root: located.root,
             label: located.label,
             stat: located.stat.clone(),
-            resume: folded.cursor.map(|cursor| PrepResume {
-                cursor,
-                checkpoint: folded.checkpoint,
-            }),
-            anchor: folded.anchor,
-            facts: folded.facts,
+            // A snapshot is refolded whole on every change.
+            fold: match located.stat.kind {
+                PrepSourceKind::Append => LiveFold::new(session),
+                PrepSourceKind::Snapshot => LiveFold::default(),
+            },
+            cursor: advanced.cursor,
+            anchor: advanced.anchor,
+            facts,
             acc,
         };
-        Ok(finish(next, target, folded.bytes_read, now_ms, reset))
+        Ok(finish(next, target, advanced.bytes_read, now_ms, reset))
     }
 
     /// The cursor's source, if its binding still exists and the path still stats.
@@ -728,7 +771,7 @@ fn finish(
         cursor.stat.mtime_ns,
         now_ms,
     );
-    let offset = cursor.resume.as_ref().map_or(0, |r| r.cursor.offset);
+    let offset = cursor.cursor.as_ref().map_or(0, |cursor| cursor.offset);
     status.source = SourceStatus {
         bytes_read,
         pending_tail_bytes: match cursor.stat.kind {

@@ -1,12 +1,21 @@
 //! StatusService on the scripted fold and in-memory loader: every fact
 //! definition, cursor reuse and visible resets. No clock, no filesystem.
 
-use std::{path::PathBuf, sync::Arc};
+use std::{
+    path::PathBuf,
+    sync::{
+        Arc,
+        atomic::{AtomicU64, Ordering},
+    },
+};
 
 use serde_json::{Value, json};
 use unisphere_sdk::{
-    StatusCursor, StatusService,
-    prep::{PrepBinding, PrepSourceKind, PrepSourceSet},
+    PipelineError, StatusCursor, StatusService,
+    prep::{
+        PrepBinding, PrepCheckpoint, PrepFold, PrepFoldSession, PrepInput, PrepOptions, PrepRows,
+        PrepSourceKind, PrepSourceMeta, PrepSourceSet, SessionFacts,
+    },
     status::{
         Basis, MODEL_WINDOWS_TABLE, SessionStatus, SessionStatusApi, SourceStatus,
         StatusFailureKind, StatusTarget, UNKNOWN_FACTS,
@@ -193,7 +202,7 @@ fn context_used_of_table_window_with_percent() {
     let status = context_status("claude-opus-5-5", 250_000);
     let context = &status.context;
     let used = context.used_tokens.as_ref().unwrap();
-    assert_eq!((used.value, used.basis), (250_000, Basis::Native));
+    assert_eq!((used.value, used.basis), (250_000, Basis::Derived));
     let window = context.window_tokens.as_ref().unwrap();
     assert_eq!((window.value, window.basis), (1_000_000, Basis::Table));
     assert_eq!(context.window_table.as_deref(), Some(MODEL_WINDOWS_TABLE));
@@ -535,6 +544,131 @@ fn incremental_equals_cold_and_reads_only_appended_bytes() {
     assert_eq!(again.source.bytes_read, 0);
     assert_eq!(again.source.reset, None);
     assert_eq!(facts_only(again), facts_only(status));
+}
+
+/// [`ScriptedFold`] that counts opens, checkpoints and records folded.
+#[derive(Default)]
+struct Counts {
+    opens: AtomicU64,
+    checkpoints: AtomicU64,
+    records: AtomicU64,
+}
+
+struct CountingFold(ScriptedFold, Arc<Counts>);
+struct CountingSession(Box<dyn PrepFoldSession>, Arc<Counts>);
+
+impl PrepFold for CountingFold {
+    fn harness(&self) -> &'static str {
+        self.0.harness()
+    }
+    fn policy(&self) -> &'static str {
+        self.0.policy()
+    }
+    fn kind(&self) -> PrepSourceKind {
+        self.0.kind()
+    }
+    fn pattern(&self) -> &'static str {
+        self.0.pattern()
+    }
+    fn describe(&self, file: &str) -> PrepSourceMeta {
+        self.0.describe(file)
+    }
+    fn open(
+        &self,
+        meta: &PrepSourceMeta,
+        source: &str,
+        generation: u32,
+        saved: Option<&PrepCheckpoint>,
+    ) -> Result<Box<dyn PrepFoldSession>, PipelineError> {
+        self.1.opens.fetch_add(1, Ordering::Relaxed);
+        let inner = self.0.open(meta, source, generation, saved)?;
+        Ok(Box::new(CountingSession(inner, self.1.clone())))
+    }
+}
+
+impl PrepFoldSession for CountingSession {
+    fn fold(&mut self, input: &PrepInput, options: PrepOptions) -> Result<PrepRows, PipelineError> {
+        if let PrepInput::Records(records) = input {
+            self.1
+                .records
+                .fetch_add(records.len() as u64, Ordering::Relaxed);
+        }
+        self.0.fold(input, options)
+    }
+    fn checkpoint(&self) -> PrepCheckpoint {
+        self.1.checkpoints.fetch_add(1, Ordering::Relaxed);
+        self.0.checkpoint()
+    }
+    fn facts(&self) -> SessionFacts {
+        self.0.facts()
+    }
+}
+
+#[test]
+fn warm_work_is_the_appended_records_not_the_history() {
+    let counts = Arc::new(Counts::default());
+    let loader = Arc::new(MemoryLoader::new(PrepSourceKind::Append, ROOT));
+    let service = StatusService::new(
+        vec![PrepBinding {
+            fold: Arc::new(CountingFold(ScriptedFold::new(HARNESS), counts.clone())),
+            loader: loader.clone(),
+        }],
+        vec![PrepSourceSet {
+            harness: HARNESS.into(),
+            label: "default".into(),
+            root: PathBuf::from(ROOT),
+        }],
+    );
+    let history: Vec<Value> = (0..500)
+        .map(|i| call(T0 + i * 1_000, "claude-opus-5"))
+        .collect();
+    loader.append(FILE, &lines(&history));
+    let (_, mut cursor) = service.status_incremental(&target("s1"), None, T0).unwrap();
+    assert_eq!(counts.records.load(Ordering::Relaxed), 500);
+
+    for i in 0..20 {
+        let (opens, records, reads) = (
+            counts.opens.load(Ordering::Relaxed),
+            counts.records.load(Ordering::Relaxed),
+            loader.reads(),
+        );
+        let appended = lines(&[call(T0 + 600_000 + i * 1_000, "claude-fable-5")]);
+        loader.append(FILE, &appended);
+        let (status, next) = service
+            .status_incremental(&target("s1"), Some(&cursor), T0)
+            .unwrap();
+        assert_eq!(status.source.reset, None);
+        assert_eq!(status.source.bytes_read, appended.len() as u64);
+        assert_eq!(status.calls.total, 501 + i as u64);
+        // The open fold is resumed: no reopen, no checkpoint round trip, and
+        // only the appended record is read and folded.
+        assert_eq!(counts.opens.load(Ordering::Relaxed), opens);
+        assert_eq!(counts.records.load(Ordering::Relaxed), records + 1);
+        assert_eq!(loader.reads(), reads + 1);
+        cursor = next;
+    }
+    assert_eq!(counts.opens.load(Ordering::Relaxed), 1);
+    assert_eq!(counts.checkpoints.load(Ordering::Relaxed), 0);
+}
+
+#[test]
+fn a_cursor_resumed_once_refolds_visibly_when_handed_back_again() {
+    let f = fixture();
+    f.append(FILE, &[call(T0, "claude-opus-5")]);
+    let (_, first) = f.next("s1", None, T0);
+    // Unchanged status keeps the fold: the clone still resumes.
+    let (_, unchanged) = f.next("s1", Some(&first), T0);
+    f.append(FILE, &[call(T0 + 1_000, "claude-fable-5")]);
+    let (status, _) = f.next("s1", Some(&unchanged), T0);
+    assert_eq!(status.source.reset, None);
+
+    // `first` shares the fold that was just advanced, so it cannot resume.
+    f.append(FILE, &[call(T0 + 2_000, "claude-opus-5")]);
+    let (status, _) = f.next("s1", Some(&first), T0);
+    let cold = f.cold("s1", T0);
+    assert_eq!(status.source.reset.as_deref(), Some("spent"));
+    assert_eq!(status.source.bytes_read, cold.source.bytes_read);
+    assert_eq!(facts_only(status), facts_only(cold));
 }
 
 #[test]

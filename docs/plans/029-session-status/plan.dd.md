@@ -158,7 +158,7 @@ _No entries._
 
 ## Implementation Summary
 
-Operator rulings after composition (2026-09-30, Jordan via pij-far-jackal): (1) ac-0001 pane budget accepted as about 50 ms, bounded by one ps call (measured native median 28-54 ms, ps alone ~44 ms); vd-0008 now fails only above 75 ms median. (2) Branch push approved and done at 0d48d80 for Pij Plan 157. (3) Scope addition: session status must build and work on macOS, Linux and Windows; pane lookup returns a clean unsupported-platform failure where tmux/ps do not exist; proven by ubuntu container/CI and windows-latest CI.
+Operator rulings after composition (2026-09-30, Jordan via pij-far-jackal): (1) ac-0001 pane budget accepted as about 50 ms, bounded by one ps call (measured native median 28-54 ms, ps alone ~44 ms); vd-0008 now fails only above 75 ms median. (2) Branch push approved and done at 0d48d80 for Pij Plan 157. (3) Scope addition: session status must work on macOS and Linux (proven in an ubuntu:24.04 container and ubuntu CI). Windows was requested then dropped the same day (Jordan): no new Windows work; existing Unisphere Windows behaviour is kept. core::status::StatusFailureKind::UnsupportedPlatform remains in the contract, unused.
 
 <a id="key-findings"></a>
 

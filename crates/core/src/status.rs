@@ -17,6 +17,24 @@ pub const STATUS_SCHEMA_VERSION: u32 = 1;
 /// Version label of the model → context-window table used for `Basis::Table`.
 pub const MODEL_WINDOWS_TABLE: &str = "model-windows@1";
 
+/// The closed vocabulary of [`SessionStatus::unknown`] names. An empty status
+/// lists all of them; the SDK removes each name as it fills that fact.
+pub const UNKNOWN_FACTS: &[&str] = &[
+    "model.current",
+    "model.pending_switch",
+    "context.used_tokens",
+    "context.window_tokens",
+    "context.percent",
+    "last_call",
+    "last_call.ttl_bucket",
+    "last_call.cache_warm",
+    "last_call.stop_reason",
+    "timeline.created_ms",
+    "timeline.last_updated_ms",
+    "compaction.counts",
+    "compaction.last",
+];
+
 /// Where a fact came from.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -200,8 +218,10 @@ pub struct SourceStatus {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SessionStatus {
     pub schema_version: u32,
+    /// The SDK fills this, including the transcript path it actually read.
     pub target: StatusTarget,
-    /// Filled by the CLI layer when the query was a Pij id or pane.
+    /// Filled by the CLI layer for every query (basis `explicit` for
+    /// `--session`); `None` from the SDK.
     pub resolved: Option<Resolved>,
     pub model: ModelStatus,
     pub context: ContextStatus,
@@ -212,12 +232,13 @@ pub struct SessionStatus {
     pub calls: CallCounts,
     pub limits_seen: Vec<LimitSeen>,
     pub source: SourceStatus,
-    /// Dotted names of facts this harness/session cannot supply.
+    /// Facts this harness/session cannot supply; names from [`UNKNOWN_FACTS`].
     pub unknown: Vec<String>,
 }
 
 impl SessionStatus {
-    /// An empty status for `target`: every fact unknown until filled.
+    /// An empty status for `target`: every fact unknown (all of
+    /// [`UNKNOWN_FACTS`]) until filled.
     pub fn empty(target: StatusTarget) -> Self {
         Self {
             schema_version: STATUS_SCHEMA_VERSION,
@@ -232,7 +253,10 @@ impl SessionStatus {
             calls: CallCounts::default(),
             limits_seen: Vec::new(),
             source: SourceStatus::default(),
-            unknown: Vec::new(),
+            unknown: UNKNOWN_FACTS
+                .iter()
+                .map(|name| (*name).to_owned())
+                .collect(),
         }
     }
 }

@@ -9,7 +9,7 @@
         "title": "Session status: one harness-neutral fact shape over the Plan 028 fold",
         "plan": "../plan.dd.json#meta",
         "version": 1,
-        "updated": "2026-09-29 initial; phase 1 (Claude) only. Phase 2 (OMP, Codex) is guide v2 on the phase-1 composed SHA after Plan 028 phase-2 folds exist."
+        "updated": "2026-09-29 r1 dispositions: F-01 roots on StatusService::new + transcript rule; F-02 ScriptedFold sighting/msg_id + baseline test (vd-000a); F-03 status_incremental takes Option<&StatusCursor>, target-changed reset; F-04 SDK fills target, CLI always fills resolved; F-05 UNKNOWN_FACTS closed vocabulary; F-06 cp-0001 proofs; F-07 negative/missing totals are unknown, compact accumulators."
       }
     },
     {
@@ -24,8 +24,8 @@
           "SessionStatus {schema_version, target, resolved: Option<Resolved>, model: ModelStatus {current: Option<Fact<String>>, current_at_ms: Option<i64>, pending_switch: Option<ModelSwitchStatus {requested: String, at_ms: Option<i64>}>, history: Vec<ModelSpan {model, first_ms, last_ms, calls}>}, context: ContextStatus {used_tokens: Option<Fact<u64>>, window_tokens: Option<Fact<u64>>, window_table: Option<String>, percent: Option<f64>, display: Option<String> (\"250k of 1M (25%)\")}, last_call: Option<LastCall {at_ms, input, output, cache_read, cache_write_1h, cache_write_5m (all Option<u64>), ttl_bucket: Option<Fact<String>> (\"1h\"|\"5m\"), cache_warm: Option<Fact<bool>>, stop_reason: Option<String>}>, timeline: Timeline {created_ms: Option<Fact<i64>>, last_updated_ms: Option<Fact<i64>>, idle_seconds: Option<u64>}, turns: TurnStatus {total, last_hour_total, by_origin: BTreeMap<String,u64>, last_hour_by_origin: BTreeMap<String,u64>}, compaction: CompactionStatus {counts: Option<CompactionCounts>, last: Option<CompactionSample>}, calls: CallCounts {total, sidechain}, limits_seen: Vec<LimitSeen {kind, at_ms, resets_at}>, source: SourceStatus {bytes_read, pending_tail_bytes, reset: Option<String>}, unknown: Vec<String>}. CompactionCounts/CompactionSample are re-used from core::prep.",
           "trait SessionStatusApi: Send + Sync { fn status(&self, target: &StatusTarget, now_ms: i64) -> Result<SessionStatus, StatusFailure>; } trait TargetResolver: Send + Sync { fn resolve(&self, query: &StatusQuery) -> Result<Resolved, StatusFailure>; }",
           "StatusFailure {kind: StatusFailureKind, message} with code() and recovery() per kind: UNI-STATUS-UNSUPPORTED-HARNESS, UNI-STATUS-TRANSCRIPT-NOT-FOUND, UNI-STATUS-READ, UNI-STATUS-PIJ-UNAVAILABLE, UNI-STATUS-PIJ-UNKNOWN-SEAT, UNI-STATUS-PIJ-NO-SESSION, UNI-STATUS-DEAD-BINDING, UNI-STATUS-PANE-NOT-FOUND. Messages never carry transcript content.",
-          "SDK (crates/sdk/src/status.rs): StatusService::new(bindings: Vec<PrepBinding>) implements SessionStatusApi, plus the embedding op `fn status_incremental(&self, target: &StatusTarget, cursor: Option<StatusCursor>, now_ms: i64) -> Result<(SessionStatus, StatusCursor), StatusFailure>`. StatusCursor is opaque, Clone + Send (PrepResume + stat identity/anchor + call/turn accumulators). Reads stop at the last complete record; shrink, identity change or anchor mismatch refolds cold and sets source.reset. Transcript default location for a (harness, session_id) with no path comes from the binding loader discovery under the catalogue root.",
-          "Definitions: current model = latest main-chain non-synthetic call model; pending_switch = SessionFacts.last_model_switch newer than that call; used_tokens = latest_context.total (native); window = native when recorded else model-windows@1 table else unknown; percent only when both known; ttl_bucket from last call write split (derived); cache_warm = now - last call < ttl (derived); last_updated = last_event_ms (native) else transcript mtime (mtime_fallback); Claude compaction count with zero markers = 0."
+          "SDK (crates/sdk/src/status.rs): StatusService::new(bindings: Vec<PrepBinding>, roots: Vec<PrepSourceSet>) implements SessionStatusApi, plus the embedding op `fn status_incremental(&self, target: &StatusTarget, cursor: Option<&StatusCursor>, now_ms: i64) -> Result<(SessionStatus, StatusCursor), StatusFailure>`. The caller keeps its cursor on error. StatusCursor is opaque, Clone + Send + Sync, compact (PrepResume, stat identity/anchor, target, and bounded accumulators: model spans, turn (started_ms, origin) pairs, last-call row, limit notices). Transcript rule: an explicit transcript path is read under the configured root that contains it, else under its parent directory as root; with no path, the SDK discovers under the roots for that harness and matches the file stem to session_id (Claude: <session_id>.jsonl), else TranscriptNotFound. Reads stop at the last complete record; shrink, identity change, anchor mismatch or a cursor for a different target refolds cold and sets source.reset (rotated|truncated|anchor|target-changed). incremental == cold for every field except source.",
+          "Definitions: current model = latest main-chain non-synthetic call model; pending_switch = SessionFacts.last_model_switch newer than that call; used_tokens = latest_context.total (native); window = native when recorded else model-windows@1 table else unknown; percent only when both known; ttl_bucket from last call write split (derived); cache_warm = now - last call < ttl (derived); last_updated = last_event_ms (native) else transcript mtime (mtime_fallback); Claude compaction count with zero markers = 0. ContextSample.total (i64) negative or missing maps to unknown. The SDK fills SessionStatus.target, including the transcript path read; the CLI always fills resolved (basis explicit for --session) and copies target.transcript into it. unknown uses only core::status::UNKNOWN_FACTS names (empty status lists all; the SDK removes each as filled)."
         ]
       }
     },
@@ -46,7 +46,9 @@
           "path": "argv --pij/--pane/--session+--harness -> StatusQuery -> StatusTargetResolver (pij list + proc liveness | tmux pane -> child harness pid -> harness session record) -> Resolved -> SessionStatusApi",
           "proof": [
             "impl-guide.dd.json#checks/vd-0003",
-            "impl-guide.dd.json#checks/vd-0006"
+            "impl-guide.dd.json#checks/vd-0004",
+            "impl-guide.dd.json#checks/vd-0006",
+            "impl-guide.dd.json#checks/vd-0008"
           ]
         },
         {
@@ -133,6 +135,7 @@
           ],
           "proof": [
             "impl-guide.dd.json#checks/vd-0001",
+            "impl-guide.dd.json#checks/vd-000a",
             "impl-guide.dd.json#checks/vd-0005"
           ]
         },
@@ -140,7 +143,7 @@
           "id": "tk-0002",
           "name": "SDK StatusService",
           "role": "coder",
-          "responsibility": "StatusService over PrepBinding + fold_source: status and status_incremental, cursor reset rules, call/turn accumulators, pure derivation of every fact per architecture definitions, model-windows@1 table, unknown list. Synthetic tests: model switch mid-session reports new model and pending switch; compaction counts and last compaction; last-hour turns by origin with injected now; TTL/warm; mtime fallback labelled; incremental == cold result; shrink/replace resets visibly; partial tail never errors.",
+          "responsibility": "StatusService over PrepBinding + fold_source: status and status_incremental, cursor reset rules, call/turn accumulators, pure derivation of every fact per architecture definitions, model-windows@1 table, unknown list. Synthetic tests: model switch mid-session reports new model and pending switch; compaction counts and last compaction; last-hour turns by origin with injected now; TTL/warm; mtime fallback labelled; incremental == cold result; shrink/replace resets visibly; partial tail never errors. Also: update sightings of the latest call merge per field (max) so last_call reflects the final sighting; cursor for another target resets visibly.",
           "paths": [
             "crates/sdk/src/status.rs",
             "crates/sdk/src/lib.rs",
@@ -156,7 +159,7 @@
               ]
             }
           ],
-          "interface": "StatusService::new(Vec<PrepBinding>); impl SessionStatusApi; status_incremental(target, Option<StatusCursor>, now_ms) -> Result<(SessionStatus, StatusCursor), StatusFailure>.",
+          "interface": "StatusService::new(Vec<PrepBinding>, Vec<PrepSourceSet>); impl SessionStatusApi; status_incremental(&StatusTarget, Option<&StatusCursor>, now_ms) -> Result<(SessionStatus, StatusCursor), StatusFailure>.",
           "depends_on": [
             "tk-0001"
           ],
@@ -272,6 +275,7 @@
         ],
         "proof": [
           "impl-guide.dd.json#checks/vd-0001",
+          "impl-guide.dd.json#checks/vd-000a",
           "impl-guide.dd.json#checks/vd-0005"
         ],
         "receipt": "team/baseline.dd.json"
@@ -432,6 +436,21 @@
           ],
           "cwd": ".",
           "timeout_ms": 3600000
+        },
+        {
+          "id": "vd-000a",
+          "description": "Baseline fake: ScriptedFold steps (call first/update with msg_id, turn, event, partial facts), checkpoint resume, FAIL.",
+          "command": "cargo",
+          "args": [
+            "test",
+            "--locked",
+            "-p",
+            "unisphere-testkit",
+            "--lib",
+            "status"
+          ],
+          "cwd": ".",
+          "timeout_ms": 900000
         }
       ]
     },

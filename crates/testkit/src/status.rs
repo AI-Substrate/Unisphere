@@ -30,12 +30,15 @@ fn error(kind: PipelineErrorKind) -> PipelineError {
 /// every row and fact without a real dialect:
 ///
 /// - `{"call": {"ts_ms", "model", "input", "cw_1h", "cw_5m", "cache_read",
-///   "output", "stop_reason", "sidechain", "turn_no"}}` → one `first` call row
+///   "output", "stop_reason", "sidechain", "turn_no", "sighting", "msg_id"}}`
+///   → one call row; `sighting` is `first` (default) or `update`, and `msg_id`
+///   defaults to `msg-<offset>` (repeat it with `update` to model a re-sighting)
 /// - `{"turn": {"turn_no", "ts_ms", "origin"}}` → one turn row (origin in the
 ///   kebab-case `TurnOrigin` vocabulary)
 /// - `{"event": {"ts_ms", "kind", "subkind", "trigger", "model", "pre_tokens",
 ///   "post_tokens", "resets_at"}}` → one event row (`kind` in `PrepEventKind`)
-/// - `{"facts": <SessionFacts>}` → replaces the session facts wholesale
+/// - `{"facts": <partial SessionFacts>}` → replaces the session facts with the
+///   given fields laid over the defaults
 /// - `FAIL` → the batch fails with `InvalidData`
 ///
 /// Missing fields are null. The checkpoint carries the current facts, so a
@@ -143,8 +146,14 @@ impl PrepFoldSession for ScriptedSession {
                     generation: self.generation,
                     native_offset: offset,
                     native_key: None,
-                    sighting: CallSighting::First,
-                    msg_id: Some(format!("msg-{}", record.offset)),
+                    sighting: match c.get("sighting").and_then(Value::as_str) {
+                        None | Some("first") => CallSighting::First,
+                        Some("update") => CallSighting::Update,
+                        Some(_) => return Err(error(PipelineErrorKind::InvalidData)),
+                    },
+                    msg_id: Some(
+                        text(c, "msg_id").unwrap_or_else(|| format!("msg-{}", record.offset)),
+                    ),
                     request_id: None,
                     ts: None,
                     ts_ms: int(c, "ts_ms"),
@@ -205,7 +214,14 @@ impl PrepFoldSession for ScriptedSession {
                     body_key: None,
                 });
             } else if let Some(f) = step.get("facts") {
-                self.facts = serde_json::from_value(f.clone())
+                // Partial facts are laid over the defaults.
+                let mut merged = serde_json::to_value(SessionFacts::default())
+                    .map_err(|_| error(PipelineErrorKind::InvalidData))?;
+                let (Some(base), Some(given)) = (merged.as_object_mut(), f.as_object()) else {
+                    return Err(error(PipelineErrorKind::InvalidData));
+                };
+                base.extend(given.clone());
+                self.facts = serde_json::from_value(merged)
                     .map_err(|_| error(PipelineErrorKind::InvalidData))?;
             } else {
                 return Err(error(PipelineErrorKind::InvalidData));
@@ -306,5 +322,65 @@ impl TargetResolver for FakeTargetResolver {
                 };
                 Err(StatusFailure::new(kind, "no fake resolution"))
             })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use unisphere_core::NativeRecord;
+
+    use super::*;
+
+    fn records(lines: &[&str]) -> PrepInput {
+        let mut offset = 0;
+        PrepInput::Records(
+            lines
+                .iter()
+                .map(|line| {
+                    let record = NativeRecord {
+                        offset,
+                        bytes: line.as_bytes().to_vec(),
+                    };
+                    offset += line.len() as u64 + 1;
+                    record
+                })
+                .collect(),
+        )
+    }
+
+    #[test]
+    fn scripted_steps_emit_rows_facts_and_resume() {
+        let fold = ScriptedFold::new("claude-code");
+        let meta = fold.describe("s.jsonl");
+        let mut session = fold.open(&meta, "src", 1, None).unwrap();
+        let rows = session
+            .fold(
+                &records(&[
+                    r#"{"call": {"ts_ms": 10, "model": "m1", "input": 5, "msg_id": "a"}}"#,
+                    r#"{"call": {"ts_ms": 11, "model": "m1", "output": 9, "msg_id": "a", "sighting": "update"}}"#,
+                    r#"{"turn": {"turn_no": 1, "ts_ms": 9, "origin": "peer"}}"#,
+                    r#"{"event": {"ts_ms": 12, "kind": "compaction", "trigger": "auto", "pre_tokens": 100}}"#,
+                    r#"{"facts": {"records": 4, "calls": 1, "turns": 1}}"#,
+                ]),
+                PrepOptions::default(),
+            )
+            .unwrap();
+        assert_eq!(rows.calls.len(), 2);
+        assert_eq!(rows.calls[1].sighting, CallSighting::Update);
+        assert_eq!(rows.calls[1].msg_id.as_deref(), Some("a"));
+        assert_eq!(rows.turns[0].origin, TurnOrigin::Peer);
+        assert_eq!(rows.events[0].kind, PrepEventKind::Compaction);
+        assert_eq!(session.facts().calls, 1);
+
+        let resumed = fold
+            .open(&meta, "src", 1, Some(&session.checkpoint()))
+            .unwrap();
+        assert_eq!(resumed.facts(), session.facts());
+        let mut failing = fold.open(&meta, "src", 1, None).unwrap();
+        assert!(
+            failing
+                .fold(&records(&["FAIL"]), PrepOptions::default())
+                .is_err()
+        );
     }
 }

@@ -7,7 +7,7 @@ use serde_json::{Value, json};
 use unisphere_core::status::{
     Basis, CompactionCounts, Fact, MODEL_WINDOWS_TABLE, ResolveBasis, Resolved,
     STATUS_SCHEMA_VERSION, SessionStatus, StatusFailure, StatusFailureKind, StatusQuery,
-    StatusTarget,
+    StatusTarget, UNKNOWN_FACTS,
 };
 
 fn target() -> StatusTarget {
@@ -61,6 +61,9 @@ fn empty_status_is_unknown_not_zero() {
     assert_eq!(value["compaction"]["counts"], Value::Null);
     assert_eq!(value["last_call"], Value::Null);
     assert_eq!(value["timeline"]["last_updated_ms"], Value::Null);
+    assert_eq!(status.unknown, UNKNOWN_FACTS);
+    let distinct: std::collections::BTreeSet<_> = UNKNOWN_FACTS.iter().collect();
+    assert_eq!(distinct.len(), UNKNOWN_FACTS.len());
 }
 
 #[test]

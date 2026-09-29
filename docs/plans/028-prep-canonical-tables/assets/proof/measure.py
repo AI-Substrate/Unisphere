@@ -83,7 +83,9 @@ def main():
     with open(out, "w") as f:
         json.dump(result, f, indent=1)
     print(json.dumps(result))
-    failed = any(result[k].get("exit") not in (0,) for k in ("cold", "unchanged", "append"))
+    # Exit 3 completes the run with some source reported unreadable; each run's
+    # per-status counts above keep that visible.
+    failed = any(result[k].get("exit") not in (0, 3) for k in ("cold", "unchanged", "append"))
     sys.exit(1 if failed else 0)
 
 

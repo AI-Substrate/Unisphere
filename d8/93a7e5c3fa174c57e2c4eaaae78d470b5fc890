@@ -1,0 +1,14 @@
+docs/plans/028-prep-canonical-tables/assets/team/reviewer-composition-p2-r1.md
+  h_9e71e8b09f7cf2 1-90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "d893a7e5c3fa174c57e2c4eaaae78d470b5fc890",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

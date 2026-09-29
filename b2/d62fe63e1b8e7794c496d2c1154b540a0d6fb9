@@ -1,0 +1,19 @@
+.harness/government/spine.md
+  s_042162115c1f28::t_42b273fed47077 22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "b2d62fe63e1b8e7794c496d2c1154b540a0d6fb9",
+  "prompts": {},
+  "sessions": {
+    "s_042162115c1f28": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4b3f9ea7-6ca1-47b0-93c3-82069b1452f9",
+        "model": "unknown"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

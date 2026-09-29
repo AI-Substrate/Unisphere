@@ -5,8 +5,10 @@ Builds the release binary, then times against the real local corpus:
   cold      fresh target, every harness root prep covers
   unchanged immediate re-run
   append    re-run after --settle seconds of natural live growth
-Each run records wall seconds, peak RSS (from /usr/bin/time -l), bytes read,
-rows written, per-status source counts, pending tail bytes and state.json size.
+Each run records wall and CPU seconds, peak RSS and memory footprint (from
+/usr/bin/time -l), bytes read, commits, directories listed and reused by
+discovery, rows written, per-status source counts, pending tail bytes and
+state.json size.
 Outputs go only to --scratch (gitignored); prints one JSON summary.
 
   python3 docs/plans/028-prep-canonical-tables/assets/proof/measure.py --scratch .harness/temp/prep-real
@@ -29,6 +31,8 @@ def run(binary, target, extra):
     proc = subprocess.run(argv, capture_output=True, text=True)
     wall = time.monotonic() - started
     rss = re.search(r"(\d+)\s+maximum resident set size", proc.stderr)
+    footprint = re.search(r"(\d+)\s+peak memory footprint", proc.stderr)
+    cpu = re.search(r"([\d.]+) real\s+([\d.]+) user\s+([\d.]+) sys", proc.stderr)
     try:
         report = json.loads(proc.stdout.splitlines()[-1])["data"]
     except (IndexError, KeyError, json.JSONDecodeError):
@@ -45,6 +49,12 @@ def run(binary, target, extra):
         "exit": proc.returncode,
         "wall_s": round(wall, 3),
         "peak_rss_mb": round(int(rss.group(1)) / 1_048_576, 1) if rss else None,
+        "peak_footprint_mb": round(int(footprint.group(1)) / 1_048_576, 1) if footprint else None,
+        "user_s": float(cpu.group(2)) if cpu else None,
+        "sys_s": float(cpu.group(3)) if cpu else None,
+        "commits": report.get("commits"),
+        "dirs_listed": sum(s.get("dirs_listed", 0) for s in report["sets"]),
+        "dirs_reused": sum(s.get("dirs_reused", 0) for s in report["sets"]),
         "bytes_read": report["bytes_read"],
         "rows_written": report["rows_written"],
         "sources_by_status": by_status,

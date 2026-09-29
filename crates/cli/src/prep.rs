@@ -231,10 +231,11 @@ fn human_report(out: &mut dyn Write, report: &PrepReport, unreadable: u64) -> io
     }
     writeln!(
         out,
-        "Read {} native bytes; rows written: {}; {} part(s) committed.",
+        "Read {} native bytes; rows written: {}; {} part(s) committed in {} commit(s).",
         report.bytes_read,
         table_counts(&report.rows_written),
-        report.commit.parts_written.len()
+        report.commit.parts_written.len(),
+        report.commits
     )?;
     let tails: Vec<&PrepSourceOutcome> = report
         .sources
@@ -324,8 +325,12 @@ fn human_set(out: &mut dyn Write, set: &PrepSetReport) -> io::Result<()> {
     }
     writeln!(
         out,
-        "  discovery skipped: symlinks {}, hidden {}, unreadable entries {}",
-        set.skipped.symlinks, set.skipped.hidden, set.skipped.unreadable_entries
+        "  discovery skipped: symlinks {}, hidden {}, unreadable entries {}; directories listed {}, reused {}",
+        set.skipped.symlinks,
+        set.skipped.hidden,
+        set.skipped.unreadable_entries,
+        set.dirs_listed,
+        set.dirs_reused
     )
 }
 

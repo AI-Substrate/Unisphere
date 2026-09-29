@@ -15,7 +15,10 @@ use tempfile::TempDir;
 use unisphere_core::{
     PipelineErrorKind, ReadCursor, ReadLimits, SnapshotFormat, SnapshotLimits, SnapshotRecord,
     SourceIdentity,
-    prep::{NativeAddress, PrepInput, PrepLoader, PrepReadLimits, PrepSkipCounts, PrepSourceKind},
+    prep::{
+        NativeAddress, PrepDirIndex, PrepInput, PrepLoader, PrepReadLimits, PrepSkipCounts,
+        PrepSourceKind,
+    },
 };
 use unisphere_loader_snapshot::SnapshotPrepLoader;
 
@@ -84,7 +87,7 @@ fn discovery_honours_accept_counts_skips_and_hides_sqlite_sidecars() {
     fs::set_permissions(root.join("locked"), fs::Permissions::from_mode(0o000)).unwrap();
 
     let accept = |file: &str| file.ends_with(".vscdb");
-    let found = sqlite_loader().discover(root, &accept);
+    let found = sqlite_loader().discover(root, &accept, &PrepDirIndex::new());
     fs::set_permissions(root.join("locked"), fs::Permissions::from_mode(0o755)).unwrap();
     let found = found.unwrap();
     let files: Vec<_> = found.sources.iter().map(|s| s.file.as_str()).collect();
@@ -107,13 +110,17 @@ fn discovery_honours_accept_counts_skips_and_hides_sqlite_sidecars() {
     // Non-SQLite formats treat sidecar-looking names as ordinary candidates.
     let journal = SnapshotPrepLoader::new(SnapshotFormat::JsonJournal);
     let found = journal
-        .discover(root, &|file| file.starts_with("global"))
+        .discover(
+            root,
+            &|file| file.starts_with("global"),
+            &PrepDirIndex::new(),
+        )
         .unwrap();
     assert_eq!(found.sources.len(), 4);
 
     assert_eq!(
         sqlite_loader()
-            .discover(Path::new("relative"), &accept)
+            .discover(Path::new("relative"), &accept, &PrepDirIndex::new())
             .unwrap_err()
             .kind(),
         PipelineErrorKind::InvalidInput

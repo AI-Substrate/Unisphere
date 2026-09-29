@@ -152,6 +152,9 @@ struct PrepArgs {
     /// Sources read concurrently (at least 1).
     #[arg(long, value_name = "N")]
     threads: Option<usize>,
+    /// Expected new native bytes read, folded and committed per wave (at least 1).
+    #[arg(long, value_name = "N")]
+    max_run_bytes: Option<u64>,
     /// Scope: sources last modified before this RFC 3339 instant are reported skipped, not read.
     #[arg(long, value_name = "RFC3339")]
     modified_since: Option<String>,
@@ -714,6 +717,8 @@ pub struct PrepCommand {
     /// Validated read bounds (defaults applied).
     pub limits: PrepReadLimits,
     pub threads: usize,
+    /// Commit wave budget in expected new native bytes.
+    pub max_run_bytes: u64,
     pub modified_since_ns: Option<i128>,
     pub mode: OutputMode,
 }
@@ -722,6 +727,8 @@ pub struct PrepCommand {
 pub const PREP_DEFAULT_BATCH_BYTES: usize = 16 * 1024 * 1024;
 /// Default `--threads`.
 pub const PREP_DEFAULT_THREADS: usize = 8;
+/// Default `--max-run-bytes`: 256 MiB of expected new input per commit wave.
+pub const PREP_DEFAULT_RUN_BYTES: u64 = 256 * 1024 * 1024;
 
 impl PrepCommand {
     /// Whether the catalogue default root of `harness` belongs to this run.
@@ -747,6 +754,7 @@ impl PrepCommand {
             options: self.options,
             limits: self.limits,
             threads: self.threads,
+            max_run_bytes: self.max_run_bytes,
             modified_since_ns: self.modified_since_ns,
         }
     }
@@ -1009,8 +1017,8 @@ impl CliParseFailure {
     fn prep_limits() -> Self {
         Self {
             code: "UNI-CLI-PREP-LIMITS",
-            message: "Prep limits must be positive, --max-batch-bytes at least --max-record-bytes, and --modified-since an RFC 3339 instant; --max-snapshot-bytes and --max-snapshot-records must be positive.",
-            next_action: "Choose --threads N >= 1, --max-record-bytes N >= 1, --max-batch-bytes N >= --max-record-bytes, --max-snapshot-bytes N >= 1, --max-snapshot-records N >= 1, and --modified-since like 2026-01-31T00:00:00Z.",
+            message: "Prep limits (including --threads and --max-run-bytes) must be positive, --max-batch-bytes at least --max-record-bytes, and --modified-since an RFC 3339 instant; --max-snapshot-bytes and --max-snapshot-records must be positive.",
+            next_action: "Choose --threads N >= 1, --max-run-bytes N >= 1, --max-record-bytes N >= 1, --max-batch-bytes N >= --max-record-bytes, --max-snapshot-bytes N >= 1, --max-snapshot-records N >= 1, and --modified-since like 2026-01-31T00:00:00Z.",
             alternatives: Vec::new(),
             retryable: false,
         }
@@ -1281,6 +1289,7 @@ fn prep_command(
         max_batch_bytes,
     };
     let threads = args.threads.unwrap_or(PREP_DEFAULT_THREADS);
+    let max_run_bytes = args.max_run_bytes.unwrap_or(PREP_DEFAULT_RUN_BYTES);
     let default_snapshot = SnapshotLimits::default();
     let max_snapshot_bytes = args
         .max_snapshot_bytes
@@ -1293,7 +1302,11 @@ fn prep_command(
         max_record_bytes: default_snapshot.max_record_bytes.min(max_snapshot_bytes),
         max_snapshot_bytes,
     };
-    if threads == 0 || read.validate().is_err() || snapshot.validate().is_err() {
+    if threads == 0
+        || max_run_bytes == 0
+        || read.validate().is_err()
+        || snapshot.validate().is_err()
+    {
         return Err(CliParseFailure::prep_limits());
     }
     let modified_since_ns = args
@@ -1313,6 +1326,7 @@ fn prep_command(
         },
         limits: PrepReadLimits { read, snapshot },
         threads,
+        max_run_bytes,
         modified_since_ns,
         mode,
     }))

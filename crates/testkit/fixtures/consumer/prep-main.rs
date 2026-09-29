@@ -66,6 +66,7 @@ fn run(root: PathBuf, main_file: PathBuf) -> Result<Value, PipelineError> {
         options: PrepOptions::default(),
         limits: limits(),
         threads: 2,
+        max_run_bytes: 1 << 30,
         modified_since_ns: None,
     };
     let mut runs = Vec::new();

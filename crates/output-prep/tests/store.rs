@@ -101,6 +101,7 @@ fn next_state(store: &impl PrepStore, runs: u64, sources: &[(&str, u32)]) -> Pre
                 label: "default".into(),
                 root: PathBuf::from("/native"),
                 policy: "test-fold/1".into(),
+                discovery: BTreeMap::new(),
             },
         )]),
         sources: sources

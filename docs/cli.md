@@ -61,7 +61,7 @@ unisphere events show EVENT SCOPE [QUERY OPTIONS]
 unisphere prep --target DIR [--root HARNESS[:LABEL]=DIR]... [--harness H]...
     [--no-default-roots] [--include-content] [--max-record-bytes N]
     [--max-batch-bytes N] [--max-snapshot-bytes N] [--max-snapshot-records N]
-    [--threads N] [--modified-since RFC3339]
+    [--threads N] [--max-run-bytes N] [--modified-since RFC3339]
 unisphere prep compact --target DIR
 unisphere prep record --target DIR --source KEY (--offset N | --key K) --include-content
 unisphere prep recipes

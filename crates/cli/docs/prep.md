@@ -8,6 +8,10 @@ How do I turn every local agent session into research-ready tables once, then ke
 
 `unisphere prep --target DIR` folds native sessions into canonical metadata tables under `DIR`. A re-run reads only records appended since the committed cursor; an unchanged source costs one `stat` and a run where nothing changed commits nothing.
 
+Discovery is incremental too. Each committed run records every directory it listed under a root (its identity and mtime, subdirectories and accepted files); the next run re-lists only directories whose mtime or identity changed (adding, removing or renaming an entry always changes its directory's mtime) and `stat`s every known source directly. A directory modified within 2 seconds of being listed is listed again next run, so a change inside the filesystem's timestamp granularity is never missed. Each set reports `dirs_listed` and `dirs_reused`. The index is saved only by a run that commits, so a run where nothing changed re-lists the same changed directories next time.
+
+A run reads, folds and commits in waves: sources are taken in order while their expected new input (the appended tail of a resumable source, otherwise its whole size; zero when unchanged) fits `--max-run-bytes` (default 268435456; a larger single source is a wave of its own). Each wave that changed anything is one durable commit (`commits` in the report; `run` counts commits), so the rows held in memory are bounded by the wave, and a failure after a commit keeps every earlier wave. Peak memory is the committed state (`state.json`, parsed) held in full plus one wave in flight; lower `--max-run-bytes` or `--threads` to lower it, at the cost of more commits.
+
 Roots are explicit and reported:
 
 - Every harness's adapter-catalogue default root, labelled `default`, unless `--no-default-roots`. `--harness H` (repeatable) restricts the run to those harnesses.
@@ -15,7 +19,7 @@ Roots are explicit and reported:
 - Every source is keyed `<harness>/<label>/<path relative to the root>` in every table.
 - A root whose harness has no prep binding in this build is reported `unsupported` with its sources counted, never silently dropped.
 
-Limits: `--max-batch-bytes` (default 16777216), `--max-record-bytes` (default: the batch limit, never above it; a larger record makes its source `unreadable` with a retry hint), `--threads` (default 8). Snapshot sources (whole documents, journals and databases) are bounded by `--max-snapshot-bytes` (default 67108864) and `--max-snapshot-records` (default 100000); a snapshot exceeding either bound is not folded and its source keeps its previous committed rows. `--modified-since RFC3339` reports older sources `skipped`: not read, committed rows and state kept.
+Limits: `--max-batch-bytes` (default 16777216), `--max-record-bytes` (default: the batch limit, never above it; a larger record makes its source `unreadable` with a retry hint), `--threads` (default 8), `--max-run-bytes` (default 268435456; see above). Snapshot sources (whole documents, journals and databases) are bounded by `--max-snapshot-bytes` (default 67108864) and `--max-snapshot-records` (default 100000); a snapshot exceeding either bound is not folded and its source keeps its previous committed rows. `--modified-since RFC3339` reports older sources `skipped`: not read, committed rows and state kept.
 
 ## Harness coverage in this build
 

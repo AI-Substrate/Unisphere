@@ -159,6 +159,8 @@ fn report(unreadable: bool) -> PrepReport {
                     hidden: 5,
                     unreadable_entries: 1,
                 },
+                dirs_listed: 2,
+                dirs_reused: 9,
                 by_status,
             },
             PrepSetReport {
@@ -169,6 +171,8 @@ fn report(unreadable: bool) -> PrepReport {
                 supported: false,
                 discovered: 4,
                 skipped: PrepSkipCounts::default(),
+                dirs_listed: 0,
+                dirs_reused: 0,
                 by_status: BTreeMap::from([("unsupported".to_owned(), 4)]),
             },
         ],
@@ -185,6 +189,7 @@ fn report(unreadable: bool) -> PrepReport {
             parts_written: vec!["tables/calls/p1.parquet".into()],
             ..PrepCommit::default()
         },
+        commits: 1,
         sources,
     }
 }
@@ -222,6 +227,8 @@ fn frozen_argv_parses_into_the_port_request() {
         "50",
         "--threads",
         "3",
+        "--max-run-bytes",
+        "65536",
         "--modified-since",
         "2026-01-01T00:00:00Z",
         "--human",
@@ -283,6 +290,7 @@ fn frozen_argv_parses_into_the_port_request() {
         "one snapshot record is bounded by the snapshot"
     );
     assert_eq!(request.threads, 3);
+    assert_eq!(request.max_run_bytes, 65_536);
     assert_eq!(request.modified_since_ns, Some(1_767_225_600_000_000_000));
 }
 
@@ -296,6 +304,7 @@ fn defaults_are_metadata_only_with_catalogue_roots_for_every_harness() {
     assert_eq!(request.limits.read.max_record_bytes, 16 * 1024 * 1024);
     assert_eq!(request.limits.read.max_batch_bytes, 16 * 1024 * 1024);
     assert_eq!(request.threads, 8);
+    assert_eq!(request.max_run_bytes, 256 * 1024 * 1024);
     assert_eq!(request.limits.snapshot, SnapshotLimits::default());
     assert_eq!(request.modified_since_ns, None);
 
@@ -383,6 +392,7 @@ fn invalid_combinations_exit_2_before_any_port_call() {
         (&["--root", "claude-code="], "UNI-CLI-PREP-ROOT"),
         (&["--root", ".hidden=/a"], "UNI-CLI-PREP-ROOT"),
         (&["--threads", "0"], "UNI-CLI-PREP-LIMITS"),
+        (&["--max-run-bytes", "0"], "UNI-CLI-PREP-LIMITS"),
         (&["--max-record-bytes", "0"], "UNI-CLI-PREP-LIMITS"),
         (
             &["--max-record-bytes", "10", "--max-batch-bytes", "9"],

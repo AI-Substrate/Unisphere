@@ -9,16 +9,13 @@ use std::path::Path;
 use unisphere_core::{
     PipelineError, PipelineErrorKind, SnapshotFormat, SnapshotLimits, SnapshotLoader, SnapshotRef,
     prep::{
-        NativeAddress, PrepBatch, PrepDiscovery, PrepInput, PrepLoader, PrepReadLimits,
-        PrepSourceKind, PrepSourceStat,
+        NativeAddress, PrepBatch, PrepDirIndex, PrepDiscovery, PrepInput, PrepLoader,
+        PrepReadLimits, PrepSourceKind, PrepSourceStat,
     },
 };
 
 use crate::FileSnapshotLoader;
 
-/// Upper bound on discovered candidates; exceeding it fails instead of truncating.
-#[cfg(unix)]
-const MAX_PREP_SOURCES: usize = 100_000;
 /// SQLite files that belong to a database rather than being sources themselves.
 #[cfg(unix)]
 const SQLITE_SIDECARS: [&str; 3] = ["-wal", "-shm", "-journal"];
@@ -62,12 +59,13 @@ impl PrepLoader for SnapshotPrepLoader {
         &self,
         root: &Path,
         accept: &dyn Fn(&str) -> bool,
+        previous: &PrepDirIndex,
     ) -> Result<PrepDiscovery, PipelineError> {
         #[cfg(unix)]
-        return unix::discover(root, accept, self.sqlite());
+        return unix::discover(root, accept, previous, self.sqlite());
         #[cfg(not(unix))]
         {
-            let _ = (root, accept);
+            let _ = (root, accept, previous);
             Err(error(PipelineErrorKind::Unsupported))
         }
     }
@@ -174,10 +172,13 @@ mod unix {
 
     use unisphere_core::{
         PipelineError, PipelineErrorKind, SourceIdentity,
-        prep::{PrepDiscovery, PrepSourceKind, PrepSourceStat},
+        prep::{
+            PrepDirEntry, PrepDirIndex, PrepDiscovery, PrepSourceKind, PrepSourceStat, PrepWalkFs,
+            walk_prep_root,
+        },
     };
 
-    use super::{MAX_PREP_SOURCES, SQLITE_SIDECARS, error};
+    use super::{SQLITE_SIDECARS, error};
 
     fn mtime_ns(metadata: &Metadata) -> i128 {
         i128::from(metadata.mtime()) * 1_000_000_000 + i128::from(metadata.mtime_nsec())
@@ -221,81 +222,76 @@ mod unix {
         }
     }
 
+    /// The real filesystem for [`walk_prep_root`]; SQLite sidecars are part of
+    /// their database, never candidates.
+    struct Filesystem {
+        sqlite: bool,
+    }
+
+    impl PrepWalkFs for Filesystem {
+        fn dir(&self, path: &Path) -> std::io::Result<Option<(SourceIdentity, i128)>> {
+            let metadata = fs::symlink_metadata(path)?;
+            Ok(metadata
+                .is_dir()
+                .then(|| (identity(&metadata), mtime_ns(&metadata))))
+        }
+
+        fn list(&self, path: &Path) -> Option<Vec<PrepDirEntry>> {
+            let entries = fs::read_dir(path).ok()?;
+            Some(
+                entries
+                    .filter_map(|entry| self.list_entry(entry.ok()))
+                    .collect(),
+            )
+        }
+
+        fn source(&self, path: &Path, file: String) -> Option<PrepSourceStat> {
+            let metadata = fs::symlink_metadata(path).ok()?;
+            metadata
+                .is_file()
+                .then(|| stat_of(path, file, &metadata, self.sqlite))
+        }
+
+        fn now_ns(&self) -> i128 {
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .map_or(0, |elapsed| elapsed.as_nanos() as i128)
+        }
+    }
+
+    impl Filesystem {
+        /// Directories, regular files and symlinks by name; other kinds and
+        /// (visible) SQLite sidecars are left out.
+        fn list_entry(&self, entry: Option<fs::DirEntry>) -> Option<PrepDirEntry> {
+            let Some(entry) = entry else {
+                return Some(PrepDirEntry::Unreadable);
+            };
+            let Ok(name) = entry.file_name().into_string() else {
+                return Some(PrepDirEntry::Unreadable);
+            };
+            let Ok(kind) = entry.file_type() else {
+                return Some(PrepDirEntry::Untyped(name));
+            };
+            if kind.is_symlink() {
+                Some(PrepDirEntry::Symlink(name))
+            } else if kind.is_dir() {
+                Some(PrepDirEntry::Dir(name))
+            } else {
+                let sidecar = self.sqlite
+                    && !name.starts_with('.')
+                    && SQLITE_SIDECARS.iter().any(|s| name.ends_with(s));
+                (kind.is_file() && !sidecar).then_some(PrepDirEntry::File(name))
+            }
+        }
+    }
+
     pub(super) fn discover(
         root: &Path,
         accept: &dyn Fn(&str) -> bool,
+        previous: &PrepDirIndex,
         sqlite: bool,
     ) -> Result<PrepDiscovery, PipelineError> {
-        let read = |_| error(PipelineErrorKind::Read);
-        if !root.is_absolute() || !fs::symlink_metadata(root).map_err(read)?.is_dir() {
-            return Err(error(PipelineErrorKind::InvalidInput));
-        }
-        let mut found = PrepDiscovery::default();
-        let mut stack = vec![root.to_path_buf()];
-        while let Some(dir) = stack.pop() {
-            // The root must be readable; a subdirectory failing mid-walk is counted.
-            let entries = match fs::read_dir(&dir) {
-                Ok(entries) => entries,
-                Err(failure) if dir == root => return Err(read(failure)),
-                Err(_) => {
-                    found.skipped.unreadable_entries += 1;
-                    continue;
-                }
-            };
-            for entry in entries {
-                let Ok(entry) = entry else {
-                    found.skipped.unreadable_entries += 1;
-                    continue;
-                };
-                let name = entry.file_name();
-                let Some(name) = name.to_str() else {
-                    // Not keyable as a `/`-separated UTF-8 relative path.
-                    found.skipped.unreadable_entries += 1;
-                    continue;
-                };
-                if name.starts_with('.') {
-                    found.skipped.hidden += 1;
-                    continue;
-                }
-                let Ok(kind) = entry.file_type() else {
-                    found.skipped.unreadable_entries += 1;
-                    continue;
-                };
-                let path = entry.path();
-                if kind.is_symlink() {
-                    found.skipped.symlinks += 1;
-                } else if kind.is_dir() {
-                    stack.push(path);
-                } else if kind.is_file() {
-                    // Sidecars are folded into their database's stat, not sources.
-                    if sqlite && SQLITE_SIDECARS.iter().any(|s| name.ends_with(s)) {
-                        continue;
-                    }
-                    let Some(file) = path
-                        .strip_prefix(root)
-                        .ok()
-                        .and_then(Path::to_str)
-                        .map(str::to_owned)
-                    else {
-                        found.skipped.unreadable_entries += 1;
-                        continue;
-                    };
-                    if !accept(&file) {
-                        continue;
-                    }
-                    let Ok(metadata) = fs::symlink_metadata(&path) else {
-                        found.skipped.unreadable_entries += 1;
-                        continue;
-                    };
-                    if found.sources.len() == MAX_PREP_SOURCES {
-                        return Err(error(PipelineErrorKind::ListingLimit));
-                    }
-                    found.sources.push(stat_of(&path, file, &metadata, sqlite));
-                }
-            }
-        }
-        found.sources.sort_unstable_by(|a, b| a.file.cmp(&b.file));
-        Ok(found)
+        walk_prep_root(&Filesystem { sqlite }, root, accept, previous)
     }
 
     pub(super) fn stat(

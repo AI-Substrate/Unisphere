@@ -50,6 +50,40 @@ use unisphere_core::{
 };
 
 use compact::{Current, Pos};
+
+/// A [`PrepState`] as published with its part list replaced; serialises exactly
+/// like the state itself.
+#[derive(Serialize)]
+struct Published<'a> {
+    table_schema_version: u32,
+    checkpoint_format: u32,
+    runs: u64,
+    parts: &'a [String],
+    sets: &'a std::collections::BTreeMap<String, unisphere_core::prep::PrepSetState>,
+    sources: &'a std::collections::BTreeMap<String, unisphere_core::prep::PrepSourceState>,
+}
+
+impl<'a> Published<'a> {
+    fn of(state: &'a PrepState, parts: &'a [String]) -> Self {
+        // Exhaustive: a new state field fails to compile here until published.
+        let PrepState {
+            table_schema_version,
+            checkpoint_format,
+            runs,
+            parts: _,
+            sets,
+            sources,
+        } = state;
+        Self {
+            table_schema_version: *table_schema_version,
+            checkpoint_format: *checkpoint_format,
+            runs: *runs,
+            parts,
+            sets,
+            sources,
+        }
+    }
+}
 pub use views::VIEWS;
 
 pub const FACT_TABLES: [&str; 5] = ["calls", "turns", "triggers", "events", "tool_uses"];
@@ -359,8 +393,8 @@ impl ParquetPrepStore {
     }
 
     /// Replace `state.json` atomically; this is the publication point.
-    fn publish_state(&self, state: &PrepState) -> Result<u64, PipelineError> {
-        let bytes = serde_json::to_vec(state).map_err(write_error)?;
+    fn publish_state(&self, state: &PrepState, parts: &[String]) -> Result<u64, PipelineError> {
+        let bytes = serde_json::to_vec(&Published::of(state, parts)).map_err(write_error)?;
         write_atomic(&self.target.join(STATE), &bytes)?;
         fsync_dir(&self.target)?;
         Ok(bytes.len() as u64)
@@ -546,15 +580,15 @@ impl unisphere_core::prep::PrepStore for ParquetPrepStore {
     fn commit(&self, rows: &PrepRows, state: &PrepState) -> Result<PrepCommit, PipelineError> {
         self.writable()?;
         let mut commit = PrepCommit::default();
-        let mut state = state.clone();
+        // Only the part list changes; the (large) state itself is never copied.
+        let mut parts = state.parts.clone();
         let name = format!("run-{:06}.parquet", state.runs);
         macro_rules! part {
             ($table:literal, $rows:expr) => {
                 // A table without any committed part gets an empty one, so every
                 // view reads at least one self-describing file.
-                if !$rows.is_empty() || parts_of(&state.parts, $table).is_empty() {
-                    let (relative, bytes) =
-                        self.write_part($table, &name, $rows, &mut state.parts)?;
+                if !$rows.is_empty() || parts_of(&parts, $table).is_empty() {
+                    let (relative, bytes) = self.write_part($table, &name, $rows, &mut parts)?;
                     commit.bytes_written += bytes;
                     commit.parts_written.push(relative);
                 }
@@ -565,11 +599,11 @@ impl unisphere_core::prep::PrepStore for ParquetPrepStore {
         part!("triggers", &rows.triggers);
         part!("events", &rows.events);
         part!("tool_uses", &rows.tool_uses);
-        let (bytes, snapshot_rows) = self.write_snapshots(&state)?;
+        let (bytes, snapshot_rows) = self.write_snapshots(state)?;
         commit.bytes_written += bytes;
         commit.snapshot_rows = snapshot_rows;
-        commit.bytes_written += self.publish_state(&state)?;
-        commit.bytes_written += self.publish_views(&state.parts)?;
+        commit.bytes_written += self.publish_state(state, &parts)?;
+        commit.bytes_written += self.publish_views(&parts)?;
         Ok(commit)
     }
 
@@ -605,7 +639,7 @@ impl unisphere_core::prep::PrepStore for ParquetPrepStore {
         report.parts_before = old.len() as u64;
         report.parts_after = parts.len() as u64;
         state.parts = parts;
-        self.publish_state(&state)?;
+        self.publish_state(&state, &state.parts)?;
         self.publish_views(&state.parts)?;
         self.remove_unreferenced(&state.parts)?;
         Ok(report)

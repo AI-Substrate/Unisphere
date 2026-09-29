@@ -195,6 +195,7 @@ fn state_round_trips_with_checkpoint_and_facts() {
             label: "default".into(),
             root: PathBuf::from("/h/.claude/projects"),
             policy: "claude-code/prep-v3".into(),
+            discovery: BTreeMap::new(),
         },
     );
     let state = PrepState {

@@ -44,8 +44,8 @@ test('failed product checks preserve exit/stdout/stderr and never start smoke', 
   assert.equal(verdict.error.details.stderr, 'failure');
 });
 
-test('native, Git Notes and prep proof failures prevent readiness and preserve evidence', async () => {
-  for (const mode of ['native', 'git-notes', 'prep']) {
+test('native, Git Notes, prep and status proof failures prevent readiness and preserve evidence', async () => {
+  for (const mode of ['native', 'git-notes', 'prep', 'status']) {
     const verdict = await runBoot(context(async (_command, args) => {
       if (args.at(-1) === mode) {
         return { ok: false, code: 19, stdout: 'proof-out', stderr: 'proof-error' };
@@ -62,7 +62,7 @@ test('native, Git Notes and prep proof failures prevent readiness and preserve e
 test('successful quality and assembled proofs establish scoped readiness', async () => {
   const verdict = await runBoot(context(async () => good));
   assert.equal(verdict.data.ready, true);
-  assert.deepEqual(verdict.data.proofs.map(proof => proof.name), ['composition', 'sdk-consumer', 'installed-cli', 'collection', 'native', 'git-notes', 'prep']);
+  assert.deepEqual(verdict.data.proofs.map(proof => proof.name), ['composition', 'sdk-consumer', 'installed-cli', 'collection', 'native', 'git-notes', 'prep', 'status']);
 });
 
 test('a real harness child failure is not laundered into readiness', () => {

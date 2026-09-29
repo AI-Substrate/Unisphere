@@ -22,6 +22,8 @@ mod native;
 mod prep;
 #[path = "proof/query.rs"]
 mod query;
+#[path = "proof/status.rs"]
+mod status;
 
 type ProofResult<T> = Result<T, String>;
 
@@ -584,7 +586,7 @@ fn installed_cli(repo: &Path, scratch: &Path) -> ProofResult<()> {
 fn run() -> ProofResult<()> {
     let mut args = env::args_os().skip(1);
     let mode = args.next().ok_or(
-        "usage: unisphere-proof composition|sdk-consumer|installed-cli|collection|native|git-notes|prep [--repo ROOT]",
+        "usage: unisphere-proof composition|sdk-consumer|installed-cli|collection|native|git-notes|prep|status [--repo ROOT]",
     )?;
     let repo = match args.next().as_deref() {
         None => env::current_dir().map_err(|e| e.to_string())?,
@@ -611,6 +613,7 @@ fn run() -> ProofResult<()> {
         Some("native") => native::run(&repo, scratch.path()),
         Some("git-notes") => git_notes::run(&repo, scratch.path()),
         Some("prep") => prep::run(&repo, scratch.path()),
+        Some("status") => status::run(&repo, scratch.path()),
         _ => Err("unknown proof command".into()),
     };
     result?;
@@ -626,6 +629,9 @@ fn run() -> ProofResult<()> {
         }
         Some("prep") => {
             "incremental Claude prep over synthetic sources: built/installed CLI and an external SDK consumer with its own store; not real-corpus parity or other harnesses"
+        }
+        Some("status") => {
+            "session status for a synthetic Claude session: built/installed CLI and an external SDK consumer with a caller-held cursor; not real sessions or other harnesses"
         }
         _ => "configuration foundation",
     };

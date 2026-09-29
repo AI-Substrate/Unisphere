@@ -1,0 +1,20 @@
+.harness/records/retro/2026-09-29/003-028-prep-canonical-tables-post-flight.md
+  h_9e71e8b09f7cf2 1-50
+docs/plans/archive/028-prep-canonical-tables/assets/post-flight.json
+  h_9e71e8b09f7cf2 2,5,9,14,124,128,132
+docs/plans/archive/028-prep-canonical-tables/the-flow.json
+  h_9e71e8b09f7cf2 6,595-616,790-798,813-818,821
+docs/plans/archive/028-prep-canonical-tables/the-flow.md
+  h_9e71e8b09f7cf2 4,17,40,64
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "e860a72a4dd7fd29c1f338869d83a3eaaaafda36",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

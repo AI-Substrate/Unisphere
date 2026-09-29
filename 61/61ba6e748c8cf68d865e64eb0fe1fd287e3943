@@ -1,0 +1,19 @@
+crates/cli/docs/prep.md
+  s_1147ff4bcaac42::t_72dce87dcd257d 30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "6161ba6e748c8cf68d865e64eb0fe1fd287e3943",
+  "prompts": {},
+  "sessions": {
+    "s_1147ff4bcaac42": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0066626e-58fc-454c-bc72-e3bb81d2a6b3",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

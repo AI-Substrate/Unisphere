@@ -614,6 +614,29 @@
         "from": "post-flight",
         "to": "ship"
       }
+    },
+    {
+      "id": "UPD-020",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-29T10:10:41.284Z",
+      "details": {
+        "node": "post-flight",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-017",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-29T10:10:41.444Z",
+      "details": {
+        "node": "post-flight",
+        "from": "assumed",
+        "to": "done"
+      }
     }
   ],
   "nodes": [
@@ -779,7 +802,7 @@
       "id": "post-flight",
       "type": "post-flight",
       "label": "Post-flight",
-      "status": "assumed",
+      "status": "done",
       "command": "/builder 7b post-flight",
       "next": [
         "ship"
@@ -816,9 +839,16 @@
           "text": "/Users/jordanknight/substrate/unisphere/preserved/028-prep-canonical-tables/0ca63312-cb54-48e5-9eac-004ecd67eb62/receipt/preservation.dd.json",
           "source": "agent",
           "kind": "builder-preservation"
+        },
+        {
+          "at": "2026-09-29T10:10:41.284Z",
+          "text": "complete: closeout note assets/post-flight.md; harness builder close archived the plan (75c94ac) with preservation refreshed at /Users/jordanknight/substrate/unisphere/preserved/028-prep-canonical-tables/0ca63312-cb54-48e5-9eac-004ecd67eb62; harness plan validate --complete 0 errors 0 warnings 0 open; harvest chore receipted; exit via harness builder advance --now ship. Shipping not authorized. time:2026-09-29T10:10:41Z",
+          "source": "agent",
+          "kind": "validation"
         }
       ],
-      "modified_at": "2026-09-29T10:09:31.380Z"
+      "modified_at": "2026-09-29T10:10:41.444Z",
+      "ran_at": "2026-09-29T10:10:41.444Z"
     },
     {
       "id": "ship",

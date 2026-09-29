@@ -1,0 +1,14 @@
+docs/plans/028-prep-canonical-tables/assets/team/reviewer-decomposition-r1.md
+  h_9e71e8b09f7cf2 1-47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "d37b43180a35602b064400e31a14413d9c229b83",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

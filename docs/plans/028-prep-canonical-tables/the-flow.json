@@ -3,7 +3,7 @@
   "kind": "flight-plan",
   "slug": "prep-canonical-tables",
   "nav": {
-    "now": "research",
+    "now": "impl-guide",
     "next": null
   },
   "created_at": "2026-09-29T04:11:32.808Z",
@@ -25,6 +25,53 @@
       "details": {
         "kind": "flight-plan",
         "slug": "prep-canonical-tables"
+      }
+    },
+    {
+      "id": "CUR-001",
+      "kind": "cursor-moved",
+      "origin": "engine",
+      "fired_at": "2026-09-29T04:21:45.188Z",
+      "details": {
+        "from": "research",
+        "to": "plan"
+      }
+    },
+    {
+      "id": "UPD-001",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-29T04:31:49.080Z",
+      "details": {
+        "node": "backpressure",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-001",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-29T04:31:49.263Z",
+      "details": {
+        "node": "backpressure",
+        "from": "known",
+        "to": "done",
+        "chore": {
+          "kind": "command",
+          "importance": "optional"
+        }
+      }
+    },
+    {
+      "id": "CUR-002",
+      "kind": "cursor-moved",
+      "origin": "engine",
+      "fired_at": "2026-09-29T04:31:49.773Z",
+      "details": {
+        "from": "plan",
+        "to": "impl-guide"
       }
     }
   ],
@@ -169,7 +216,7 @@
       "id": "backpressure",
       "type": "backpressure",
       "label": "Backpressure survey",
-      "status": "known",
+      "status": "done",
       "branch_of": "plan",
       "next": [
         "plan"
@@ -186,7 +233,17 @@
         "On done, receipt first, status second: harness flow comment --path <flow-path> --node backpressure --kind validation --source agent --text \"decision:<…> verdict:<…> time:<…> basis_sha256:<full SHA-256 of the plan file>\" THEN harness flow status --path <flow-path> --node backpressure --to done. Mandatory unless the human declines — a decline is: harness flow comment --path <flow-path> --node backpressure --kind decision --source user --text \"<their verbatim words>\" THEN harness flow status --path <flow-path> --node backpressure --to skipped; never a narrated skip.",
         "Basis is the LATEST plan: on each guided entry recompute the plan file's SHA-256 — a mismatch with (or absence of) the recorded basis_sha256 re-opens this seam via a deterministic new chore, id backpressure-<first 12 hex of that SHA-256> (full hash in its receipt; same bytes re-use this node + receipt, changed bytes create exactly one new node; never resurrect this one — D5).",
         "Router missing, or envelope noop/UNAVAILABLE → same two calls with the detection receipt/envelope as the text: harness flow comment --path <flow-path> --node backpressure --kind validation --source agent --text \"decision:unavailable reason:<…> time:<…>\" THEN harness flow status --path <flow-path> --node backpressure --to done — a completed attempt, not a skip."
-      ]
+      ],
+      "comments": [
+        {
+          "at": "2026-09-29T04:31:49.080Z",
+          "text": "decision:route hook:pre-coding verb:backpressure (skill://eng-harness-flow references/stages/backpressure.md executed) result:assets/backpressure.dd.json 15 rows (EXISTS 2, EXTEND 5, BUILD 8, ABSENT 0), 8 sensors, certainty Partial; AC pressure links written basis_sha256:e1872f2cc578e37b275fad3b3057c05b38ed9f7e719de360696c32bbcf5d6f86 time:2026-09-29T04:31:48Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "modified_at": "2026-09-29T04:31:49.263Z",
+      "ran_at": "2026-09-29T04:31:49.263Z"
     },
     {
       "id": "boot-1",

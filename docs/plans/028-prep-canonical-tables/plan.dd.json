@@ -45,67 +45,80 @@
         {
           "id": "ac-0001",
           "claim": "Incremental and idempotent: `unisphere prep --target DIR` over explicit or default roots publishes tables atomically. A re-run with nothing changed reads zero body bytes and writes zero rows. Appended sources contribute only records after the committed cursor. Replaced, truncated, or same-size rewritten sources start a new generation and the canonical views never contain rows from a superseded generation. A crash mid-run leaves the previous publication intact and the next run recovers without duplicates.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0001"
         },
         {
           "id": "ac-0002",
           "claim": "Live files never fail: a source being appended during the run is committed to its last complete line; the partial tail is reported (bytes pending) and picked up by the next run. Proven with a concurrent non-line-aligned writer and on the real live fleet.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0002"
         },
         {
           "id": "ac-0003",
           "claim": "CLI and SDK parity: prep is composed from public SDK/core ports (loader, pure fold, store) with no CLI-only semantics; an external SDK consumer can run the same incremental prep in-process with its own store. The core/SDK ports carry no Parquet, SQLite or engine dependency. The adapter catalogue reports persisted resume as supported for every harness prep covers.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0003"
         },
         {
           "id": "ac-0004",
           "claim": "Claude cost correctness: calls are deduplicated on (message.id, requestId) with the per-field maximum; cache writes are split into 1 h and 5 m classes (with the documented fallback); `<synthetic>` records become limit events, not calls. The file-F and all four window totals in the consumer's use-case brief, and every reference call row, reproduce exactly against the reference parser; any divergence is explained and accepted by the reviewer, not rounded.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0004"
         },
         {
           "id": "ac-0005",
           "claim": "Typed facts, not blobs: compaction boundaries (trigger, pre/post tokens, duration), recaps, scheduled/loop fires, limit notices (with parsed reset instants where the source allows), and queue operations are typed events. Turns carry the opening record's origin (human, peer with sender and Pij message identity, task notification, auto-continuation). Sidechains link to their parent session. Tool uses are a table (native name, family, input hash, result size, outcome, duration where native).",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0005"
         },
         {
           "id": "ac-0006",
           "claim": "Every registered harness: Oh My Pi, Pi, Codex, Copilot CLI (events and legacy snapshot), VS Code Copilot (JSON and journal), Cursor transcript and Cursor IDE land in the same table contract with representation-appropriate change detection (append cursors for JSONL, revision checks for snapshots and SQLite). Fields a harness does not record are explicit nulls with per-source coverage, never estimates.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0006"
         },
         {
           "id": "ac-0007",
           "claim": "Honest coverage: every run reports per-source outcome (unchanged, appended, replaced, new, skipped, unreadable, unsupported) and counts skipped symlinks and hidden entries; extra roots (for example a second Claude account under ~/.claude-alt) are explicit inputs. Nothing is silently excluded.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0007"
         },
         {
           "id": "ac-0008",
           "claim": "A versioned, documented table contract: schema version, per-source adapter policy version, generation semantics and canonical views are specified; an external engine reads the published Parquet without per-engine schema declarations. A compaction command rewrites the current generation and removes superseded parts without changing any view result.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0008"
         },
         {
           "id": "ac-0009",
           "claim": "Research recipes ship: named recipes answer the consumer brief's questions and the prime's fleet questions (idle tax, compaction cadence, peer amplification, subagent fan-out, tool loops, fleet idle-longest, most expensive turns, daily cost by repo/model/harness) through one documented command against external DuckDB. If an optional `unisphere sql` wrapper exists it shells out to an installed engine and fails with a clear, actionable error when none is present; no engine is linked into the build.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0009"
         },
         {
           "id": "ac-000a",
           "claim": "Contexts are gold, cheaply: expensive-turn and call rows carry a native address (path plus byte offset) so an agent can fetch exactly that record with explicit content opt-in, without re-reading the transcript.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000a"
         },
         {
           "id": "ac-000b",
           "claim": "Privacy and safety: metadata-only by default; any content column needs explicit opt-in and is absent otherwise. Native stores are opened read-only and never locked, renamed or written; tests and committed fixtures contain no real prompts, bodies or private identifiers.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000b"
         },
         {
           "id": "ac-000c",
           "claim": "Measured at fleet scale on the real corpus: a cold prep of the full local corpus (about 2.9 GB, all harnesses present) and warm unchanged and append re-runs are timed with peak RSS and bytes read, and reported against the POC baseline (Claude: 3.5 s cold, 0.05–0.6 s warm). Memory stays bounded by documented, adjustable limits.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000c"
         },
         {
           "id": "ac-000d",
           "claim": "Offline documentation: the bundled docs gain a prep topic and a research-recipes topic with tested one-line examples, the table contract, the incremental and generation semantics, and the privacy defaults.",
-          "state": "unchecked"
+          "state": "unchecked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000d"
         }
       ]
     },

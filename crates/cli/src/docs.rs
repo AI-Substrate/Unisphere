@@ -115,7 +115,14 @@ static TOPICS: &[DocTopic] = &[
         title: "Prep canonical tables",
         summary: "Incrementally fold native sessions into canonical Parquet tables and query their views.",
         text: include_str!("../docs/prep.md"),
-        related: &["privacy-and-coverage", "sdk", "find-sessions"],
+        related: &["research-recipes", "privacy-and-coverage", "sdk"],
+    },
+    DocTopic {
+        id: "research-recipes",
+        title: "Research recipes over prep tables",
+        summary: "Answer usage, idle, compaction and fleet questions with named DuckDB recipes over the prep views.",
+        text: include_str!("../docs/research-recipes.md"),
+        related: &["prep", "privacy-and-coverage", "tool-analysis"],
     },
 ];
 

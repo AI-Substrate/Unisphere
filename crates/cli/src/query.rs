@@ -780,7 +780,7 @@ pub fn emit_parse_failure(
     if result.is_ok() { 2 } else { 1 }
 }
 
-fn emit_static_error(
+pub(crate) fn emit_static_error(
     command: &str,
     code: &str,
     message: &str,
@@ -802,7 +802,9 @@ fn emit_static_error(
         }
         OutputMode::Human => {
             writeln!(stderr, "{code}: {message}\nRetryable: false")?;
-            writeln!(stderr, "Valid alternatives: {}", alternatives.join(", "))?;
+            if !alternatives.is_empty() {
+                writeln!(stderr, "Valid alternatives: {}", alternatives.join(", "))?;
+            }
             writeln!(stderr, "Next: {action}")?;
         }
     }

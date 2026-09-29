@@ -15,7 +15,11 @@ Roots are explicit and reported:
 - Every source is keyed `<harness>/<label>/<path relative to the root>` in every table.
 - A root whose harness has no prep binding in this build is reported `unsupported` with its sources counted, never silently dropped.
 
-Limits: `--max-record-bytes` (default 3145728), `--max-batch-bytes` (default 16777216, at least the record limit), `--threads` (default 8). `--modified-since RFC3339` reports older sources `skipped`: not read, committed rows and state kept.
+Limits: `--max-record-bytes` (default 3145728), `--max-batch-bytes` (default 16777216, at least the record limit), `--threads` (default 8). Snapshot sources (whole documents, journals and databases) are bounded by `--max-snapshot-bytes` (default 67108864) and `--max-snapshot-records` (default 100000); a snapshot exceeding either bound is not folded and its source keeps its previous committed rows. `--modified-since RFC3339` reports older sources `skipped`: not read, committed rows and state kept.
+
+## Harness coverage in this build
+
+The prep harness key is the adapter-catalogue descriptor id. In this build only `claude-code` has a prep binding: its JSONL transcripts (main sessions and `subagents/` sidechains) are folded incrementally. Roots of every other catalogued descriptor (`codex`, `oh-my-pi`, `pi`, `copilot-cli`, `copilot-cli-snapshot`, `cursor-transcript`, `cursor-ide`, `vscode-copilot`, `git-ai`) are reported `unsupported`, with their sources counted, until their folds land. `unisphere adapters list --json` reports `cli_persisted_resume: true` for exactly the descriptors prep resumes.
 
 ## Table contract
 
@@ -89,15 +93,21 @@ unisphere prep --target $TARGET --root claude-code:alt=$HOME/.claude-alt/project
 unisphere prep --target $TARGET --no-default-roots --root claude-code=$HOME/archive/projects
 unisphere prep --target $TARGET --modified-since 2026-01-01T00:00:00Z --threads 4
 unisphere prep --target $TARGET --max-record-bytes 8388608 --max-batch-bytes 33554432
+unisphere prep --target $TARGET --max-snapshot-bytes 134217728 --max-snapshot-records 200000
 unisphere prep --target $TARGET --include-content
 unisphere prep compact --target $TARGET
 unisphere prep record --target $TARGET --source claude-code/default/project/session.jsonl --offset 0 --include-content
 ```
 
-Query the views with an external DuckDB:
+Query the views with an external DuckDB, or print a named research recipe (see `unisphere docs get research-recipes`):
 
 ```text
 cd $TARGET && duckdb -init views.sql -c "SELECT model, count(*) AS calls, sum(output) AS output FROM calls_v GROUP BY model ORDER BY calls DESC"
 ```
 
-**Next step:** run `unisphere prep --target DIR --human`, then open `DIR/views.sql` in DuckDB.
+```sh
+unisphere prep recipes --human
+unisphere prep recipe daily --target $TARGET | duckdb
+```
+
+**Next step:** run `unisphere prep --target DIR --human`, then `unisphere prep recipe daily --target DIR | duckdb`.

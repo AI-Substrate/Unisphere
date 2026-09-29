@@ -143,6 +143,12 @@ struct PrepArgs {
     /// Native bytes read per bounded batch; at least --max-record-bytes.
     #[arg(long, value_name = "N")]
     max_batch_bytes: Option<usize>,
+    /// Largest whole snapshot source (document, journal or database) read, in bytes.
+    #[arg(long, value_name = "N")]
+    max_snapshot_bytes: Option<usize>,
+    /// Most records one snapshot source may contain.
+    #[arg(long, value_name = "N")]
+    max_snapshot_records: Option<usize>,
     /// Sources read concurrently (at least 1).
     #[arg(long, value_name = "N")]
     threads: Option<usize>,
@@ -181,6 +187,17 @@ enum PrepSubcommand {
         /// Required: the record is native content.
         #[arg(long)]
         include_content: bool,
+    },
+    /// List the bundled DuckDB research recipes over the canonical views.
+    Recipes,
+    /// Print one recipe as a DuckDB script: `unisphere prep recipe NAME --target DIR | duckdb`.
+    Recipe {
+        /// Recipe name from `unisphere prep recipes`.
+        #[arg(value_name = "NAME")]
+        name: String,
+        /// Existing prep target directory.
+        #[arg(long, value_name = "DIR")]
+        target: PathBuf,
     },
 }
 
@@ -773,11 +790,30 @@ impl PrepRecordCommand {
     }
 }
 
+/// Parsed `unisphere prep recipes`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PrepRecipesCommand {
+    pub mode: OutputMode,
+}
+
+/// Parsed `unisphere prep recipe NAME --target DIR`. `name` is resolved by
+/// [`crate::run_prep_recipe`], which refuses unknown names with the valid list.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PrepRecipeCommand {
+    pub name: String,
+    /// Absolute, lexically normalised target directory.
+    pub target: PathBuf,
+    /// Diagnostic format only; the script is always written raw.
+    pub mode: OutputMode,
+}
+
 #[derive(Clone, PartialEq)]
 pub enum ParsedCommand {
     Prep(PrepCommand),
     PrepCompact(PrepCompactCommand),
     PrepRecord(PrepRecordCommand),
+    PrepRecipes(PrepRecipesCommand),
+    PrepRecipe(PrepRecipeCommand),
     Config(ConfigCommand),
     Catalog(CatalogCommand),
     Docs(DocsCommand),
@@ -973,8 +1009,8 @@ impl CliParseFailure {
     fn prep_limits() -> Self {
         Self {
             code: "UNI-CLI-PREP-LIMITS",
-            message: "Prep limits must be positive, --max-batch-bytes at least --max-record-bytes, and --modified-since an RFC 3339 instant.",
-            next_action: "Choose --threads N >= 1, --max-record-bytes N >= 1, --max-batch-bytes N >= --max-record-bytes, and --modified-since like 2026-01-31T00:00:00Z.",
+            message: "Prep limits must be positive, --max-batch-bytes at least --max-record-bytes, and --modified-since an RFC 3339 instant; --max-snapshot-bytes and --max-snapshot-records must be positive.",
+            next_action: "Choose --threads N >= 1, --max-record-bytes N >= 1, --max-batch-bytes N >= --max-record-bytes, --max-snapshot-bytes N >= 1, --max-snapshot-records N >= 1, and --modified-since like 2026-01-31T00:00:00Z.",
             alternatives: Vec::new(),
             retryable: false,
         }
@@ -1196,6 +1232,16 @@ fn prep_command(
                 mode,
             }));
         }
+        Some(PrepSubcommand::Recipes) => {
+            return Ok(ParsedCommand::PrepRecipes(PrepRecipesCommand { mode }));
+        }
+        Some(PrepSubcommand::Recipe { name, target }) => {
+            return Ok(ParsedCommand::PrepRecipe(PrepRecipeCommand {
+                name,
+                target: prep_path(target, context)?,
+                mode,
+            }));
+        }
         None => {}
     }
     let target = prep_path(args.target.ok_or_else(CliParseFailure::arguments)?, context)?;
@@ -1232,7 +1278,19 @@ fn prep_command(
         max_batch_bytes: args.max_batch_bytes.unwrap_or(PREP_DEFAULT_BATCH_BYTES),
     };
     let threads = args.threads.unwrap_or(PREP_DEFAULT_THREADS);
-    if threads == 0 || read.validate().is_err() {
+    let default_snapshot = SnapshotLimits::default();
+    let max_snapshot_bytes = args
+        .max_snapshot_bytes
+        .unwrap_or(default_snapshot.max_snapshot_bytes);
+    let snapshot = SnapshotLimits {
+        max_records: args
+            .max_snapshot_records
+            .unwrap_or(default_snapshot.max_records),
+        // One record never exceeds the snapshot holding it.
+        max_record_bytes: default_snapshot.max_record_bytes.min(max_snapshot_bytes),
+        max_snapshot_bytes,
+    };
+    if threads == 0 || read.validate().is_err() || snapshot.validate().is_err() {
         return Err(CliParseFailure::prep_limits());
     }
     let modified_since_ns = args
@@ -1250,10 +1308,7 @@ fn prep_command(
         options: PrepOptions {
             include_content: args.include_content,
         },
-        limits: PrepReadLimits {
-            read,
-            snapshot: SnapshotLimits::default(),
-        },
+        limits: PrepReadLimits { read, snapshot },
         threads,
         modified_since_ns,
         mode,

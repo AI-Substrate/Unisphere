@@ -216,6 +216,10 @@ fn frozen_argv_parses_into_the_port_request() {
         "1024",
         "--max-batch-bytes",
         "4096",
+        "--max-snapshot-bytes",
+        "1048576",
+        "--max-snapshot-records",
+        "50",
         "--threads",
         "3",
         "--modified-since",
@@ -269,7 +273,15 @@ fn frozen_argv_parses_into_the_port_request() {
     assert!(request.options.include_content);
     assert_eq!(request.limits.read.max_record_bytes, 1024);
     assert_eq!(request.limits.read.max_batch_bytes, 4096);
-    assert_eq!(request.limits.snapshot, SnapshotLimits::default());
+    assert_eq!(
+        request.limits.snapshot,
+        SnapshotLimits {
+            max_records: 50,
+            max_record_bytes: 1_048_576,
+            max_snapshot_bytes: 1_048_576,
+        },
+        "one snapshot record is bounded by the snapshot"
+    );
     assert_eq!(request.threads, 3);
     assert_eq!(request.modified_since_ns, Some(1_767_225_600_000_000_000));
 }
@@ -284,6 +296,7 @@ fn defaults_are_metadata_only_with_catalogue_roots_for_every_harness() {
     assert_eq!(request.limits.read.max_record_bytes, 3 * 1024 * 1024);
     assert_eq!(request.limits.read.max_batch_bytes, 16 * 1024 * 1024);
     assert_eq!(request.threads, 8);
+    assert_eq!(request.limits.snapshot, SnapshotLimits::default());
     assert_eq!(request.modified_since_ns, None);
 
     let filtered = prep(&[
@@ -348,6 +361,8 @@ fn invalid_combinations_exit_2_before_any_port_call() {
             "UNI-CLI-PREP-LIMITS",
         ),
         (&["--modified-since", "yesterday"], "UNI-CLI-PREP-LIMITS"),
+        (&["--max-snapshot-bytes", "0"], "UNI-CLI-PREP-LIMITS"),
+        (&["--max-snapshot-records", "0"], "UNI-CLI-PREP-LIMITS"),
     ];
     for (extra, code) in cases {
         let mut values = vec!["unisphere", "prep", "--target", "/t"];
@@ -724,7 +739,8 @@ fn compact_and_record_render_their_reports() {
     assert!(String::from_utf8(stderr).unwrap().starts_with("Next: "));
 }
 
-/// `unisphere …` lines inside ```sh fences, with `$TARGET`/`$HOME` bound.
+/// `unisphere …` argv inside ```sh fences, with `$TARGET`/`$HOME` bound, up to
+/// the first `|` (the external engine).
 fn documented_examples(markdown: &str) -> Vec<Vec<OsString>> {
     let mut examples = Vec::new();
     let mut in_sh = false;
@@ -739,7 +755,13 @@ fn documented_examples(markdown: &str) -> Vec<Vec<OsString>> {
                 .replace("$TARGET", "/fixtures/prep-target")
                 .replace("$HOME", "/fixtures/home");
             assert!(!bound.contains('$'), "unbound placeholder in {trimmed:?}");
-            examples.push(bound.split_whitespace().map(OsString::from).collect());
+            examples.push(
+                bound
+                    .split_whitespace()
+                    .take_while(|word| *word != "|")
+                    .map(OsString::from)
+                    .collect(),
+            );
         }
     }
     examples
@@ -757,7 +779,7 @@ fn prep_topic_is_registered_and_every_documented_example_parses() {
     assert_eq!(value["data"]["text"], PREP_TOPIC);
 
     for (name, markdown, minimum) in [
-        ("prep topic", PREP_TOPIC, 10),
+        ("prep topic", PREP_TOPIC, 13),
         ("README.md", README, 1),
         ("docs/cli.md", CLI_GUIDE, 3),
         ("docs/sdk.md", SDK_GUIDE, 1),

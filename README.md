@@ -130,7 +130,10 @@ unisphere prep --target $HOME/unisphere-prep --root claude-code:alt=$HOME/.claud
 Re-runs read only appended records; unchanged sources cost one `stat`. Every
 run reports per-source status and skipped symlinks/hidden entries. Query the
 Parquet tables through the canonical views in `TARGET/views.sql` with an external
-DuckDB; `unisphere docs get prep --human` has the table contract.
+DuckDB; `unisphere docs get prep --human` has the table contract. Named research
+recipes print ready-to-run DuckDB scripts, for example
+`unisphere prep recipe daily --target DIR | duckdb`; see
+`unisphere docs get research-recipes --human`.
 
 See the [CLI reference](docs/cli.md) for limits, native session selectors,
 configuration inspection, output envelopes and exit codes. For example,

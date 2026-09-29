@@ -23,7 +23,7 @@
           "StatusTarget {harness: String (adapter id, e.g. \"claude-code\"), session_id: String, transcript: Option<PathBuf>}. StatusQuery = Target(StatusTarget) | Pij(String) | Pane(String). ResolveBasis = explicit | pij_registry | native_pane. Resolved {query, target, pij_id: Option<String>, pane: Option<String>, basis, conflicts: Vec<ResolveConflict {basis, target}>}.",
           "SessionStatus {schema_version, target, resolved: Option<Resolved>, model: ModelStatus {current: Option<Fact<String>>, current_at_ms: Option<i64>, pending_switch: Option<ModelSwitchStatus {requested: String, at_ms: Option<i64>}>, history: Vec<ModelSpan {model, first_ms, last_ms, calls}>}, context: ContextStatus {used_tokens: Option<Fact<u64>>, window_tokens: Option<Fact<u64>>, window_table: Option<String>, percent: Option<f64>, display: Option<String> (\"250k of 1M (25%)\")}, last_call: Option<LastCall {at_ms, input, output, cache_read, cache_write_1h, cache_write_5m (all Option<u64>), ttl_bucket: Option<Fact<String>> (\"1h\"|\"5m\"), cache_warm: Option<Fact<bool>>, stop_reason: Option<String>}>, timeline: Timeline {created_ms: Option<Fact<i64>>, last_updated_ms: Option<Fact<i64>>, idle_seconds: Option<u64>}, turns: TurnStatus {total, last_hour_total, by_origin: BTreeMap<String,u64>, last_hour_by_origin: BTreeMap<String,u64>}, compaction: CompactionStatus {counts: Option<CompactionCounts>, last: Option<CompactionSample>}, calls: CallCounts {total, sidechain}, limits_seen: Vec<LimitSeen {kind, at_ms, resets_at}>, source: SourceStatus {bytes_read, pending_tail_bytes, reset: Option<String>}, unknown: Vec<String>}. CompactionCounts/CompactionSample are re-used from core::prep.",
           "trait SessionStatusApi: Send + Sync { fn status(&self, target: &StatusTarget, now_ms: i64) -> Result<SessionStatus, StatusFailure>; } trait TargetResolver: Send + Sync { fn resolve(&self, query: &StatusQuery) -> Result<Resolved, StatusFailure>; }",
-          "StatusFailure {code, message, recovery} with codes: UNI-STATUS-UNSUPPORTED-HARNESS, UNI-STATUS-TRANSCRIPT-NOT-FOUND, UNI-STATUS-READ, UNI-STATUS-PIJ-UNAVAILABLE, UNI-STATUS-PIJ-UNKNOWN-SEAT, UNI-STATUS-PIJ-NO-SESSION, UNI-STATUS-DEAD-BINDING, UNI-STATUS-PANE-NOT-FOUND.",
+          "StatusFailure {kind: StatusFailureKind, message} with code() and recovery() per kind: UNI-STATUS-UNSUPPORTED-HARNESS, UNI-STATUS-TRANSCRIPT-NOT-FOUND, UNI-STATUS-READ, UNI-STATUS-PIJ-UNAVAILABLE, UNI-STATUS-PIJ-UNKNOWN-SEAT, UNI-STATUS-PIJ-NO-SESSION, UNI-STATUS-DEAD-BINDING, UNI-STATUS-PANE-NOT-FOUND. Messages never carry transcript content.",
           "SDK (crates/sdk/src/status.rs): StatusService::new(bindings: Vec<PrepBinding>) implements SessionStatusApi, plus the embedding op `fn status_incremental(&self, target: &StatusTarget, cursor: Option<StatusCursor>, now_ms: i64) -> Result<(SessionStatus, StatusCursor), StatusFailure>`. StatusCursor is opaque, Clone + Send (PrepResume + stat identity/anchor + call/turn accumulators). Reads stop at the last complete record; shrink, identity change or anchor mismatch refolds cold and sets source.reset. Transcript default location for a (harness, session_id) with no path comes from the binding loader discovery under the catalogue root.",
           "Definitions: current model = latest main-chain non-synthetic call model; pending_switch = SessionFacts.last_model_switch newer than that call; used_tokens = latest_context.total (native); window = native when recorded else model-windows@1 table else unknown; percent only when both known; ttl_bucket from last call write split (derived); cache_warm = now - last call < ttl (derived); last_updated = last_event_ms (native) else transcript mtime (mtime_fallback); Claude compaction count with zero markers = 0."
         ]
@@ -116,14 +116,13 @@
           "id": "tk-0001",
           "name": "Status contract baseline",
           "role": "pm",
-          "responsibility": "core::status DTOs, ports, failures and serde fixture tests; testkit FakeStatusApi, FakeTargetResolver and a scripted Claude-like PrepFold/PrepLoader fake emitting calls/turns/events + SessionFacts; arch-check rule forbidding rusqlite/libsqlite3-sys/parquet/arrow in the normal graphs of core, sdk, loader-jsonl and adapter-claude.",
+          "responsibility": "core::status DTOs, ports, failures and serde fixture tests; testkit ScriptedFold (one JSON step per record -> call/turn/event rows or SessionFacts), FakeStatusApi and FakeTargetResolver. The no-rusqlite/parquet/arrow rule for core, sdk, loader-jsonl and adapter-claude is already enforced by the closed arch-check allowlist (vd-0005); no sensor change.",
           "paths": [
             "crates/core/src/status.rs",
             "crates/core/src/lib.rs",
             "crates/core/tests/status_contract.rs",
             "crates/testkit/src/status.rs",
-            "crates/testkit/src/lib.rs",
-            "crates/testkit/src/bin/unisphere-arch-check.rs"
+            "crates/testkit/src/lib.rs"
           ],
           "reads": [],
           "interface": "core::status as in architecture.contracts; testkit::status fakes.",

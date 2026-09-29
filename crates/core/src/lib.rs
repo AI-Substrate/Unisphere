@@ -13,6 +13,7 @@ pub mod prep;
 pub mod query;
 pub mod snapshot;
 mod snapshot_collection;
+pub mod status;
 pub use catalog::{AdapterCapabilities, AdapterDescriptor, LocationHint};
 pub use collection::*;
 pub use git_notes::*;

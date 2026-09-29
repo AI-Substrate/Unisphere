@@ -1,0 +1,28 @@
+docs/plans/028-prep-canonical-tables/assets/backpressure.dd.json
+  h_9e71e8b09f7cf2 9,11-12,17-168,172-229,231
+docs/plans/028-prep-canonical-tables/assets/backpressure.dd.md
+  h_9e71e8b09f7cf2 2,12,14,21-37,43-52
+docs/plans/028-prep-canonical-tables/assets/impl-guide.dd.json
+  h_9e71e8b09f7cf2 9,11-12,18-19,21-34,42,51-52,54-56,63,65-67,73-128,130,132-187,197,199,201-209,212,215-217,219-223,227,229,231-233,239-241,245,251-253,257-258,262,264,266-270,276-278,282,288-292,295-298,302-378,380,382-394,400-402,408,414-428,432,436-438,442-447,450-457,465-467,470-472,482,492-493,499-500,509-510,512-517,520,524-525,527-532,535,539-540,542-547,550,554-611,613-620,623-817,824,826-827,829,832-835,838-839,846,848-850,852,855-856,865-866,870-916
+docs/plans/028-prep-canonical-tables/assets/impl-guide.dd.md
+  h_9e71e8b09f7cf2 2,12,15,23-25,34,42-54,62-67,75-76,87,95-96,104-125,133-136,144-146,154-164
+docs/plans/028-prep-canonical-tables/plan.dd.json
+  h_9e71e8b09f7cf2 48-49,54-55,60-61,66-67,72-73,78-79,84-85,90-91,96-97,102-103,108-109,114-115,120-121
+docs/plans/028-prep-canonical-tables/plan.dd.md
+  h_9e71e8b09f7cf2 59-71
+docs/plans/028-prep-canonical-tables/the-flow.json
+  h_9e71e8b09f7cf2 6,29-75,219,236-246
+docs/plans/028-prep-canonical-tables/the-flow.md
+  h_9e71e8b09f7cf2 4,20,37,41-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "597095e0d769d9733a5556fa9b8fdf4e142e11da",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

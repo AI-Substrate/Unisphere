@@ -1,0 +1,14 @@
+crates/sdk/src/prep.rs
+  h_9e71e8b09f7cf2 99-108,110-144
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "42034b557d9af0cd8c944aea4b9f97ea2dd366ee",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

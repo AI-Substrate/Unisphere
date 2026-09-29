@@ -1383,7 +1383,7 @@ fn tool_outcome(data: &Map<String, Value>) -> Outcome {
     }
 }
 
-fn tool_family(name: &str) -> Option<&'static str> {
+pub(crate) fn tool_family(name: &str) -> Option<&'static str> {
     match name {
         "bash" | "shell" | "run_terminal_command" => Some("shell"),
         "read_file" | "view" => Some("file-read"),

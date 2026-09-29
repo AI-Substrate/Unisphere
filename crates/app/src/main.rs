@@ -20,6 +20,7 @@ use unisphere_sdk::{Inspector, StdConfigReader};
 mod adapters;
 mod git_query;
 mod pij;
+mod prep;
 
 fn main() -> ExitCode {
     let cwd = match env::current_dir() {
@@ -84,32 +85,9 @@ fn main() -> ExitCode {
             }
         },
         ParsedCommand::PijQuery(command) => pij::run(command, &context, &mut stdout, &mut stderr),
-        ParsedCommand::Prep(command) => {
-            // Compile-level adaptation for tk-0005; tk-0006 owns the bindings table
-            // and catalogue default roots.
-            let mut roots = Vec::new();
-            if command.wants_default_root("claude-code")
-                && let Some(home) = env::var_os("HOME")
-            {
-                roots.push(unisphere_sdk::prep::default_set(
-                    "claude-code",
-                    unisphere_sdk::prep::claude_projects_root(std::path::Path::new(&home)),
-                ));
-            }
-            roots.extend(command.explicit_sets());
-            match prep_api(&command.target) {
-                Ok(api) => unisphere_cli::run_prep(command, roots, &api, &mut stdout, &mut stderr),
-                Err(error) => unisphere_cli::session_error(&mut stderr, &error, 1),
-            }
-        }
-        ParsedCommand::PrepCompact(command) => match prep_api(&command.target) {
-            Ok(api) => unisphere_cli::run_prep_compact(command, &api, &mut stdout, &mut stderr),
-            Err(error) => unisphere_cli::session_error(&mut stderr, &error, 1),
-        },
-        ParsedCommand::PrepRecord(command) => match prep_api(&command.target) {
-            Ok(api) => unisphere_cli::run_prep_record(command, &api, &mut stdout, &mut stderr),
-            Err(error) => unisphere_cli::session_error(&mut stderr, &error, 1),
-        },
+        ParsedCommand::Prep(command) => prep::run_prep(command, &mut stdout, &mut stderr),
+        ParsedCommand::PrepCompact(command) => prep::run_compact(command, &mut stdout, &mut stderr),
+        ParsedCommand::PrepRecord(command) => prep::run_record(command, &mut stdout, &mut stderr),
         ParsedCommand::Catalog(_)
         | ParsedCommand::NativeRootList(_)
         | ParsedCommand::NativeGitNotesList(_)
@@ -118,21 +96,6 @@ fn main() -> ExitCode {
         }
     };
     ExitCode::from(exit)
-}
-
-fn prep_api(
-    target: &std::path::Path,
-) -> Result<
-    unisphere_sdk::prep::Preparer<unisphere_output_prep::ParquetPrepStore>,
-    unisphere_sdk::PipelineError,
-> {
-    Ok(unisphere_sdk::prep::Preparer::new(
-        vec![unisphere_sdk::prep::PrepBinding {
-            fold: std::sync::Arc::new(unisphere_adapter_claude::ClaudePrepFold),
-            loader: std::sync::Arc::new(unisphere_loader_jsonl::FileSessionLoader),
-        }],
-        unisphere_output_prep::ParquetPrepStore::open(target.to_path_buf())?,
-    ))
 }
 
 fn query_source(

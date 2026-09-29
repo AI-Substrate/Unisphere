@@ -53,7 +53,7 @@ const ADAPTERS: [AdapterRegistration; 10] = [
                 output_formats: &["otlp-jsonl"],
                 sdk_caller_owned_cursor: true,
                 cursor_source_assumption: "append_only",
-                cli_persisted_resume: false,
+                cli_persisted_resume: true,
                 delayed_revision_reconciliation: false,
                 lossless_archive: false,
             },
@@ -476,6 +476,14 @@ fn invalid_native(stderr: &mut dyn Write) -> u8 {
         &PipelineError::new(PipelineErrorKind::InvalidInput, None),
         2,
     )
+}
+
+/// Every catalogued descriptor id with its location hints (prep default roots).
+pub fn catalogue_locations() -> Vec<(&'static str, &'static [LocationHint])> {
+    ADAPTERS
+        .iter()
+        .map(|entry| (entry.descriptor.id, entry.descriptor.locations))
+        .collect()
 }
 
 pub fn run(

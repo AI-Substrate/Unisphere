@@ -71,11 +71,14 @@ def main():
     os.makedirs(scratch, exist_ok=True)
     if args.threads:
         extra = [*extra, "--threads", str(args.threads)]
-    result = {"subject_sha": sha, "poc_baseline": POC_BASELINE, "extra_args": extra}
+    # Wall time and RSS depend on concurrent machine load; record it with every run.
+    result = {"subject_sha": sha, "poc_baseline": POC_BASELINE, "extra_args": extra,
+              "load_average_before": [round(v, 1) for v in os.getloadavg()]}
     result["cold"] = run(binary, target, extra)
     result["unchanged"] = run(binary, target, extra)
     time.sleep(args.settle)
     result["append"] = run(binary, target, extra)
+    result["load_average_after"] = [round(v, 1) for v in os.getloadavg()]
     out = os.path.join(scratch, f"measure-{int(time.time())}.json")
     with open(out, "w") as f:
         json.dump(result, f, indent=1)

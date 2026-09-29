@@ -123,6 +123,45 @@
             "../plan.dd.json#acceptance_criteria/ac-000c",
             "backpressure.dd.json#rows/bp-000c"
           ]
+        },
+        {
+          "id": "lg-000c",
+          "at": "2026-09-29T09:22:28+00:00",
+          "text": "Prime rulings on the lg-000b findings (pij-suspicious-meadowlark): (A) commit waves with an adjustable --max-run-bytes; (1) incremental discovery keeping glob semantics (persisted per-directory mtime/entry index, re-list only changed directories, stat known sources directly), both in the same guide revision, re-verify and review. Convergence: Plan 029's crate-private fold_source read-loop extraction (b9c86e67, sdk/src/prep.rs only) applied cleanly as 42034b5 before these changes so 029 rebases onto 028's ownership.",
+          "links": [
+            "impl-guide.dd.json#meta",
+            "../plan.dd.json#acceptance_criteria/ac-000c"
+          ]
+        },
+        {
+          "id": "lg-000d",
+          "at": "2026-09-29T09:22:28+00:00",
+          "text": "8428dc4 incremental discovery and commit waves. Discovery: core walk_prep_root with a PrepWalkFs port (both loaders), PrepLoader::discover takes the previous index, PrepSetState.discovery holds each binding's index, racy directories (mtime within 2 s of listing) are never reused; a real-filesystem test proves a new file deep in an unchanged tree lists one directory, an unchanged tree lists none, a replaced subtree is found through its parent and results equal a full walk. Waves: PrepRequest.max_run_bytes (default 256 MiB) bounds rows per durable commit; tests prove budgets split waves, equal a single wave, and a failure after a committed wave keeps it. The SDK now moves the committed state and the Parquet store publishes it through a borrowed view instead of cloning it. Default chosen from the real corpus: 1 GiB gave 14 commits at 2.2 GB peak RSS, 256 MiB 57 commits at 1.9 GB, 64 MiB 225 commits at 2.3 GB (per-commit state rewrites dominate below that). Guide delta recorded in meta.updated (dfb8bf8).",
+          "links": [
+            "impl-guide.dd.json#meta",
+            "../plan.dd.json#acceptance_criteria/ac-000c",
+            "backpressure.dd.json#rows/bp-000c"
+          ]
+        },
+        {
+          "id": "lg-000e",
+          "at": "2026-09-29T09:22:28+00:00",
+          "text": "vd-000b at dfb8bf8 (assets/evidence/measure-dfb8bf8.json; load average 73.4 before, 86.8 after): cold 13.99 GB read in 30.6 s wall / 33.0 s user CPU, 57 commits, peak RSS 1,759 MB (footprint 1,408 MB), 14,707 directories listed, state.json 58.6 MB; unchanged re-run 1.42 s wall / 0.42 s user CPU, 0 directories listed and 14,707 reused, 600 MB RSS, 13.8 MB read from 1 live-appended source; append re-run after 60 s 0.66 s wall, 1 directory listed. Before the rulings (lg-000b): cold 3.97 GB peak RSS, unchanged 49.5 s. POC baseline: Claude 3.46 s cold / 507 MB, 0.05-0.62 s warm; this is the all-harness corpus (14 GB, 5,423 sources) under shared-machine load.",
+          "links": [
+            "../plan.dd.json#acceptance_criteria/ac-000c",
+            "backpressure.dd.json#rows/bp-000c"
+          ]
+        },
+        {
+          "id": "lg-000f",
+          "at": "2026-09-29T09:22:28+00:00",
+          "text": "Re-proofs at the final code: vd-0017 coverage at dfb8bf8 (coverage-dfb8bf8.json) 9/9 sets supported, 5,423 discovered, 2 unreadable UNI-DATA (empty VS Code documents), 25.5 s; vd-000a parity at dfb8bf8 (parity-dfb8bf8.json) unchanged from phase 1: 55,607/55,607 call rows, 0 usage/model/turn/trigger/sender mismatches, same accepted divergences (10 window-first gaps, 522 rounding ties, 2 symlinked-source rows); vd-0016 live at 4074389 (live-4074389.json) copy writer 344 runs during writes on a 221.6 MB transcript, 0 failed, 338 reporting pending tails, final totals equal a fresh prep; fleet 10 runs over all harnesses, 0 failed, 2 statically unreadable sources in every run, warm runs 0.49-0.58 s. live.py and measure.py now accept exit 3 with the unreadable count recorded (live requires it to stay equal across runs).",
+          "links": [
+            "../plan.dd.json#acceptance_criteria/ac-0002",
+            "../plan.dd.json#acceptance_criteria/ac-0004",
+            "../plan.dd.json#acceptance_criteria/ac-0006",
+            "backpressure.dd.json#rows/bp-0006"
+          ]
         }
       ]
     }

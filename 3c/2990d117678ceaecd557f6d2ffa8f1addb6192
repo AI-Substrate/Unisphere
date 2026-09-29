@@ -1,0 +1,19 @@
+docs/plans/028-prep-canonical-tables/assets/proof/recipes_check.py
+  s_d4c19170f54fa1::t_ba39d0a9837c2d 1-84
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "3c2990d117678ceaecd557f6d2ffa8f1addb6192",
+  "prompts": {},
+  "sessions": {
+    "s_d4c19170f54fa1": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2a7f66ec-9e28-4e00-a898-5396f062ca79",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

@@ -937,7 +937,7 @@ fn ide_facets(
     facets
 }
 
-fn tool_family(name: &str) -> Option<&'static str> {
+pub(crate) fn tool_family(name: &str) -> Option<&'static str> {
     match name {
         "read_file" | "readFile" => Some("file-read"),
         "write_file" | "edit_file" | "apply_patch" => Some("file-write"),

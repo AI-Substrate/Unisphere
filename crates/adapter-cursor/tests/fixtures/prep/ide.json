@@ -1,0 +1,14 @@
+[
+  {"key": "agentKv:unrelated", "value": {"note": "SYNTHETIC-TEXT"}},
+  {"key": "bubbleId:c-main:u1", "value": {"_v": 3, "bubbleId": "u1", "type": 1, "requestId": "req-1", "createdAt": "2026-01-01T00:00:01Z", "modelInfo": {"modelName": "model-a"}, "tokenCount": {"inputTokens": 0, "outputTokens": 0}, "text": "SYNTHETIC-TEXT  first prompt"}},
+  {"key": "bubbleId:c-main:a1", "value": {"_v": 3, "bubbleId": "a1", "type": 2, "requestId": "", "createdAt": "2026-01-01T00:00:02.500Z", "modelInfo": {"modelName": "model-a"}, "tokenCount": {"inputTokens": 120, "outputTokens": 30}, "text": "SYNTHETIC-TEXT", "thinking": {"text": "SYNTHETIC-TEXT"}}},
+  {"key": "bubbleId:c-main:a2", "value": {"_v": 3, "bubbleId": "a2", "type": 2, "capabilityType": 15, "createdAt": "2026-01-01T00:00:04Z", "tokenCount": {"inputTokens": 0, "outputTokens": 0}, "toolFormerData": {"name": "read_file", "toolCallId": "call-1", "modelCallId": "mc-1", "status": "completed", "params": {"path": "SYNTHETIC-TEXT"}, "result": "SYNTHETIC-TEXT"}}},
+  {"key": "bubbleId:c-main:s1", "value": {"_v": 3, "bubbleId": "s1", "type": 2, "capabilityType": 22, "createdAt": "2026-01-01T00:00:05Z", "text": "SYNTHETIC-TEXT summary"}},
+  {"key": "bubbleId:c-main:u2", "value": {"_v": 3, "bubbleId": "u2", "type": 1, "requestId": "req-2", "createdAt": "2026-01-01T00:00:10Z", "modelInfo": {"modelName": "model-b"}, "text": "SYNTHETIC-TEXT second"}},
+  {"key": "bubbleId:c-main:a3", "value": {"_v": 3, "bubbleId": "a3", "type": 2, "capabilityType": 15, "toolFormerData": {"name": "run_terminal_cmd", "toolCallId": "call-2", "status": "error", "rawArgs": "{\"command\":\"SYNTHETIC-TEXT\"}", "error": {"detail": "SYNTHETIC-TEXT"}}}},
+  {"key": "bubbleId:c-main:orphan", "value": {"_v": 3, "bubbleId": "orphan", "type": 2, "createdAt": "2026-01-02T00:00:00Z"}},
+  {"key": "bubbleId:c-sub:b1", "value": {"_v": 3, "bubbleId": "b1", "type": 2, "capabilityType": 15, "createdAt": "2026-01-01T00:01:05Z", "tokenCount": {"inputTokens": 50, "outputTokens": 5}, "toolFormerData": {"name": "edit_file", "toolCallId": "call-3", "status": "cancelled", "params": {"path": "SYNTHETIC-TEXT"}}}},
+  {"key": "composerData:c-main", "value": {"_v": 3, "composerId": "c-main", "createdAt": 1767225600000, "modelConfig": {"modelName": "model-config", "maxMode": false}, "usageData": {}, "subagentComposerIds": ["c-sub"], "text": "SYNTHETIC-TEXT", "fullConversationHeadersOnly": [{"bubbleId": "u1", "type": 1}, {"bubbleId": "a1", "type": 2}, {"bubbleId": "a2", "type": 2}, {"bubbleId": "s1", "type": 2}, {"bubbleId": "u2", "type": 1}, {"bubbleId": "a3", "type": 2}, {"bubbleId": "missing", "type": 2}]}},
+  {"key": "composerData:c-old", "value": {"_v": 1, "composerId": "c-old", "fullConversationHeadersOnly": []}},
+  {"key": "composerData:c-sub", "value": {"_v": 3, "composerId": "c-sub", "createdAt": 1767225660000, "fullConversationHeadersOnly": [{"bubbleId": "b1", "type": 2}]}}
+]

@@ -7,7 +7,10 @@ runs repeatedly against it. Every run must exit 0; pending tails must be
 reported; the final incremental canonical totals must equal a fresh prep of the
 completed copy.
 Part B (real fleet): repeated prep over the real default roots while sessions
-are live; every run must exit 0 with zero unreadable sources.
+are live; every run must complete (exit 0, or 3 when a source is unreadable)
+and live writing must never make a source unreadable: every run reports the
+same unreadable count as the first (statically unreadable sources, such as
+empty VS Code documents, are counted, not hidden).
 
   python3 docs/plans/028-prep-canonical-tables/assets/proof/live.py --scratch .harness/temp/prep-real
 """
@@ -135,7 +138,9 @@ def part_b(binary, scratch, runs, interval):
             "pending_tail_bytes": report["pending_tail_bytes"] if report else None,
         })
         time.sleep(interval)
-    return {"runs": rows, "failed_runs": sum(r["exit"] != 0 or r["unreadable"] != 0 for r in rows)}
+    static = rows[0]["unreadable"] if rows else 0
+    failed = sum(r["exit"] not in (0, 3) or r["unreadable"] != static for r in rows)
+    return {"runs": rows, "static_unreadable": static, "failed_runs": failed}
 
 
 def main():

@@ -832,7 +832,7 @@ fn counter(value: Option<&Value>) -> Option<u64> {
     value?.as_i64().and_then(|value| u64::try_from(value).ok())
 }
 
-fn tool_family(name: &str) -> Option<&'static str> {
+pub(crate) fn tool_family(name: &str) -> Option<&'static str> {
     match name {
         "bash" | "shell" | "exec" | "python" => Some("shell"),
         "read" => Some("file-read"),

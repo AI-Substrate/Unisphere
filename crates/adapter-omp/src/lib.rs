@@ -1,7 +1,9 @@
 //! Pure physical-record projection of Oh My Pi JSONL, including its mutable title slot.
 //! No source, sidecar, environment, clock, or output access occurs here.
 #![forbid(unsafe_code)]
+mod prep;
 mod query;
+pub use prep::{OmpPrepFold, PREP_POLICY_VERSION};
 pub use query::POLICY_VERSION;
 
 use std::collections::BTreeMap;
@@ -31,7 +33,7 @@ pub const DESCRIPTOR: AdapterDescriptor = AdapterDescriptor {
         output_formats: &["otlp-jsonl"],
         sdk_caller_owned_cursor: true,
         cursor_source_assumption: "Append-only entries in the same source generation; in-place title-slot changes before the cursor are not refreshed",
-        cli_persisted_resume: false,
+        cli_persisted_resume: true,
         delayed_revision_reconciliation: false,
         lossless_archive: false,
     },

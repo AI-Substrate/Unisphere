@@ -1,7 +1,9 @@
 //! Pure projection of supplied Pi v3 JSONL tree entries, not a reconstructed chat.
 //! Content is opt-in; extension state, opaque signatures and sidecars are omitted.
 #![forbid(unsafe_code)]
+mod prep;
 mod query;
+pub use prep::{PREP_POLICY_VERSION, PiPrepFold};
 pub use query::POLICY_VERSION;
 
 use std::collections::BTreeMap;
@@ -31,7 +33,7 @@ pub const DESCRIPTOR: AdapterDescriptor = AdapterDescriptor {
         output_formats: &["otlp-jsonl"],
         sdk_caller_owned_cursor: true,
         cursor_source_assumption: "append_only",
-        cli_persisted_resume: false,
+        cli_persisted_resume: true,
         delayed_revision_reconciliation: false,
         lossless_archive: false,
     },

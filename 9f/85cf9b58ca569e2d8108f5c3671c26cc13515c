@@ -1,0 +1,14 @@
+docs/plans/028-prep-canonical-tables/assets/telemetry.json
+  h_9e71e8b09f7cf2 1-25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "9f85cf9b58ca569e2d8108f5c3671c26cc13515c",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

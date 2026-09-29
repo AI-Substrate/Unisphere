@@ -211,11 +211,15 @@ fn context_used_of_table_window_with_percent() {
     let older = context_status("claude-3-5-sonnet-20241022", 150_000);
     assert_eq!(older.context.window_tokens.unwrap().value, 200_000);
     assert_eq!(older.context.percent, Some(75.0));
+
+    let sonnet = context_status("claude-sonnet-5-5", 90_000);
+    let window = sonnet.context.window_tokens.unwrap();
+    assert_eq!((window.value, window.basis), (1_000_000, Basis::Table));
 }
 
 #[test]
 fn unlisted_model_or_negative_total_is_unknown_never_zero() {
-    let status = context_status("claude-sonnet-5-5", 90_000);
+    let status = context_status("claude-mythic-9", 90_000);
     assert_eq!(status.context.used_tokens.as_ref().unwrap().value, 90_000);
     assert_eq!(status.context.window_tokens, None);
     assert_eq!(status.context.window_table, None);

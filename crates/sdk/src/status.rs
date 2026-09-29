@@ -40,10 +40,12 @@ const SYNTHETIC_MODEL: &str = "<synthetic>";
 
 /// `model-windows@1` ([`MODEL_WINDOWS_TABLE`]): context window by model id. The
 /// longest entry that equals the id, or is followed in it by `-`, wins.
-/// 1M entries are backed by observed main-chain contexts above 200k.
+/// 1M entries are backed by observed main-chain contexts above 200k, except
+/// `claude-sonnet-5`, which the github-copilot model catalog lists at 1M.
 const MODEL_WINDOWS: &[(&str, u64)] = &[
     ("claude-opus-5", 1_000_000),
     ("claude-fable-5", 1_000_000),
+    ("claude-sonnet-5", 1_000_000),
     ("claude-opus-4-8", 1_000_000),
     ("claude-haiku-4-5", 200_000),
     ("claude-3", 200_000),

@@ -1,0 +1,37 @@
+crates/testkit/src/lib.rs
+  s_61dfe47e9838df::t_5ce0f66e4946f8 9
+docs/plans/028-prep-canonical-tables/assets/reviews/decomposition-r1.md
+  s_64bddefb25e16a::t_b3022e2bb9cc18 1-51
+docs/plans/028-prep-canonical-tables/assets/team/basis-bafc934ed01117b6149aba0322f11c4e9fe32cc2a678284a3e7d7909caca1d82.json
+  s_64bddefb25e16a::t_beaa06110b8228 1-922
+docs/plans/028-prep-canonical-tables/assets/team/basis-e1872f2cc578e37b275fad3b3057c05b38ed9f7e719de360696c32bbcf5d6f86.json
+  s_64bddefb25e16a::t_3079ee5041ba5d 1-239
+docs/plans/028-prep-canonical-tables/assets/team/review-decomposition-rv-028-decomposition-r1.dd.json
+  s_64bddefb25e16a::t_ddce254a0fe43c 1-95
+docs/plans/028-prep-canonical-tables/assets/team/review-decomposition-rv-028-decomposition-r1.dd.md
+  s_64bddefb25e16a::t_804a8a0afec73e 1-24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "3f39e1b4b47776e9b89464a604192aaedddf99ea",
+  "prompts": {},
+  "sessions": {
+    "s_61dfe47e9838df": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cbe08128-4097-4473-9f99-71e9415824f6",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    },
+    "s_64bddefb25e16a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56206875-f7f5-44a6-8617-82b9804f76c7",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

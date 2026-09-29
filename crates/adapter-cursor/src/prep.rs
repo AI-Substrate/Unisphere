@@ -23,8 +23,10 @@
 //!   when its `modelInfo.modelName` differs from the composer's previous
 //!   request, a `model_switch`; an assistant bubble is a call (bubble id as
 //!   `msg_id`, its own `requestId`, `modelInfo` model and `tokenCount`
-//!   input/output where present, cache columns null) and its `toolFormerData`
-//!   a use plus, once terminal, a result with the native outcome. `usageData`
+//!   input/output, cache columns null) and its `toolFormerData` a use plus,
+//!   once terminal, a result with the native outcome. The writer stores 0/0 on
+//!   bubbles it did not meter, so a `tokenCount` without a non-zero counter is
+//!   not recorded (null), never a free call. `usageData`
 //!   has no proven token scope and is not mapped. Turns are numbered across
 //!   the whole database; a composer's first call without an opener opens a
 //!   `start` turn. `gap_ms` is measured within one composer. Composers listed
@@ -757,6 +759,11 @@ impl IdeWalk<'_> {
                 .and_then(Value::as_i64)
                 .filter(|n| *n >= 0)
         };
+        // The writer stores 0/0 on bubbles it did not meter.
+        let (input, output) = match (count("inputTokens"), count("outputTokens")) {
+            (None | Some(0), None | Some(0)) => (None, None),
+            recorded => recorded,
+        };
         let call = PrepCallRow {
             native_key: Some(key.to_owned()),
             msg_id: Some(bubble_id.to_owned()),
@@ -764,8 +771,8 @@ impl IdeWalk<'_> {
             ts: stamp.map(|s| s.ts.clone()),
             ts_ms,
             model: model_name(bubble.get("modelInfo")),
-            input: count("inputTokens"),
-            output: count("outputTokens"),
+            input,
+            output,
             is_sidechain: composer.sidechain,
             gap_ms,
             turn_no: Some(self.turn_no),

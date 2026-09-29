@@ -165,7 +165,7 @@ _No entries._
 
 ## Implementation Summary
 
-_Empty._
+Delivered in two phases, each verified (vd-0008, vd-0015) and independently approved by pij-panicky-anteater (github-copilot/claude-sonnet-5.5). Phase 1 (verified d800949, rv-028-composition-p1-r1): Claude prep hardened to product with exact real-corpus parity (55,607/55,607 call rows). Phase 2 (verified 19ace79fd493350525323dd5da0cff8e3d3a020c, rv-028-composition-p2-r1, 0 findings): every catalogued session harness bound (append JSONL folds; JSON document, mutation journal and SQLite snapshot folds), 24 DuckDB research recipes, docs, and composition changes under prime rulings: incremental discovery (per-directory mtime index) and commit waves (--max-run-bytes, default 256 MiB). Full corpus (14 GB, 5,423 sources, load 73-109): cold 30.6 s / 1.76 GB peak RSS; unchanged re-run 1.42 s with 0 of 14,707 directories listed. All 13 ACs checked with execution-log proof. Open and deferred items, remaining human calls (ship; upstream issues) and the highest-leverage improvement are recorded in assets/post-flight.md.
 
 <a id="key-findings"></a>
 

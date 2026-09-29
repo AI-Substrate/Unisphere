@@ -415,6 +415,33 @@
         "from": "review-2",
         "to": "post-flight"
       }
+    },
+    {
+      "id": "UPD-011",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-29T10:03:24.023Z",
+      "details": {
+        "node": "retro-harvest",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-010",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-29T10:03:24.188Z",
+      "details": {
+        "node": "retro-harvest",
+        "from": "known",
+        "to": "done",
+        "chore": {
+          "kind": "command",
+          "importance": "recommended"
+        }
+      }
     }
   ],
   "nodes": [
@@ -704,7 +731,7 @@
       "id": "retro-harvest",
       "type": "harness-retro",
       "label": "Retro: post-flight (harvest)",
-      "status": "known",
+      "status": "done",
       "branch_of": "post-flight",
       "next": [
         "post-flight"
@@ -718,7 +745,17 @@
         "Post-flight seam: the terminal long-horizon harvest — fold this flight's learnings into durable memory at the pre-ship close-out, BEFORE the plan folder archives (so it runs even on work that never ships).",
         "Run /eng-harness-flow --hook post-flight --json — a REAL invocation; narrate its envelope verbatim.",
         "On done, receipt first, status second: harness flow comment --path <flow-path> --node retro-harvest --kind validation --source agent --text \"verdict:<…> time:<…>\" (router missing / envelope noop/UNAVAILABLE → text \"decision:unavailable reason:<…> time:<…>\" — a completed attempt, not a skip) THEN harness flow status --path <flow-path> --node retro-harvest --to done. Mandatory unless the human declines — a decline is: harness flow comment --path <flow-path> --node retro-harvest --kind decision --source user --text \"<their verbatim words>\" THEN harness flow status --path <flow-path> --node retro-harvest --to skipped."
-      ]
+      ],
+      "comments": [
+        {
+          "at": "2026-09-29T10:03:24.023Z",
+          "text": "decision:route hook:post-flight verb:retro --harvest + improve (skill .pi/skills/eng-harness-flow references/stages/retro.md, followed inline) harness retro insights --plan 028-prep-canonical-tables --json: 2 records, 15 entries, 15 open, buffer_pending 0, malformed 0; top cluster [difficulty/harness-itself] 9 open (proof_gap true); lifecycle unchanged (no marks). Improve offer: highest leverage = per-phase baselines/composition receipts in Builder (DL-001/DL-003 cluster), held for the operator's upstream-issue decision via the prime; repo-local encoding offered = run the numbers-only real-corpus coverage/measure scripts at lane delivery (DL-009). Closeout note assets/post-flight.md. time:2026-09-29T10:03:23Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "modified_at": "2026-09-29T10:03:24.188Z",
+      "ran_at": "2026-09-29T10:03:24.188Z"
     },
     {
       "id": "phase-2",

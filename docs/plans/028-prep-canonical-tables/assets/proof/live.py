@@ -56,9 +56,15 @@ def totals(target):
 
 
 def part_a(binary, scratch, seed):
-    files = glob.glob(os.path.expanduser("~/.claude/projects/*/*.jsonl"))
-    source = max(files, key=os.path.getsize)
-    data = open(source, "rb").read()
+    sizes = []
+    for path in glob.glob(os.path.expanduser("~/.claude/projects/*/*.jsonl")):
+        try:
+            info = os.lstat(path)  # symlinks and vanished files are not candidates
+        except FileNotFoundError:
+            continue
+        if not os.path.islink(path):
+            sizes.append((info.st_size, path))
+    data = open(max(sizes)[1], "rb").read()
     root = os.path.join(scratch, "live-root")
     shutil.rmtree(root, ignore_errors=True)
     os.makedirs(os.path.join(root, "p"))

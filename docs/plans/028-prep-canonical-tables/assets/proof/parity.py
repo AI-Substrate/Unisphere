@@ -175,8 +175,11 @@ def main():
           sum(CASE WHEN r.trigger <> m.trigger THEN 1 ELSE 0 END),
           sum(CASE WHEN coalesce(r.sender, '') <> m.sender THEN 1 ELSE 0 END),
           sum(CASE WHEN r.gap_s = -1 AND m.gap_ms <> -1 THEN 1 ELSE 0 END),
-          sum(CASE WHEN r.gap_s <> -1 AND abs(r.gap_s * 1000 - m.gap_ms) > 50 THEN 1 ELSE 0 END),
-          sum(CASE WHEN r.gap_s <> -1 AND abs(r.gap_s * 1000 - m.gap_ms) <= 50 AND r.gap_s <> m.gap_s THEN 1 ELSE 0 END)
+          -- The reference rounds a float to 0.1 s; prep keeps integer ms. A difference of
+          -- at most 50 ms (+ float noise) is that rounding, never a different gap.
+          sum(CASE WHEN r.gap_s <> -1 AND abs(r.gap_s * 1000 - m.gap_ms) > 50.001 THEN 1 ELSE 0 END),
+          sum(CASE WHEN r.gap_s <> -1 AND abs(r.gap_s * 1000 - m.gap_ms) <= 50.001 AND r.gap_s * 1000 <> m.gap_ms
+                   AND abs(r.gap_s * 1000 - m.gap_ms) >= 49.999 THEN 1 ELSE 0 END)
           {j}""")))
     result["trigger_mismatch_pairs"] = [list(r) for r in con.execute(
         f"SELECT r.trigger, m.trigger, count(*) {j} WHERE r.trigger <> m.trigger GROUP BY 1, 2 ORDER BY 3 DESC").fetchall()]
@@ -196,6 +199,24 @@ def main():
         SELECT r.kind, r.n, p.n FROM (SELECT kind, count(*) n FROM ref_hidden GROUP BY 1) r LEFT JOIN
           (SELECT CASE kind WHEN 'recap' THEN 'recap' ELSE 'synthetic' END AS kind, count(*) n FROM mine_events
            WHERE kind IN ('recap', 'limit_notice') AND {X} GROUP BY 1) p USING (kind) ORDER BY 1""").fetchall()]
+    # Rows only the reference has: attribute each to whether its source path crosses
+    # a symlink (prep never follows symlinks; it counts them in skipped.symlinks).
+    root = os.path.expanduser("~/.claude/projects")
+
+    def via_symlink(rel):
+        parts = rel.split("/")
+        return any(os.path.islink(os.path.join(root, *parts[:i])) for i in range(1, len(parts) + 1))
+
+    only = con.execute(f"""
+        SELECT 'trigger', r.file FROM ref_trig r WHERE NOT EXISTS (SELECT 1 FROM mine_trig t WHERE t.file = r.file AND t.ts = r.ts_utc)
+        UNION ALL
+        SELECT 'synthetic', r.file FROM ref_hidden r WHERE r.kind = 'synthetic' AND NOT EXISTS (
+          SELECT 1 FROM mine_events e WHERE e.file = r.file AND e.ts = r.ts_utc AND e.kind = 'limit_notice')""").fetchall()
+    result["reference_only_rows"] = {
+        "total": len(only),
+        "from_symlinked_sources": sum(via_symlink(f) for _, f in only),
+        "by_kind": {k: sum(1 for kind, _ in only if kind == k) for k in ("trigger", "synthetic")},
+    }
     out = os.path.join(scratch, f"parity-{int(time.time())}.json")
     with open(out, "w") as fh:
         json.dump(result, fh, indent=1)
@@ -204,7 +225,9 @@ def main():
     exact = (all(v["prep_equals_reference_now"] is not False for v in agg.values())
              and agg["file_f"]["prep_equals_brief"]
              and result["call_rows"]["reference"] == result["call_rows"]["joined_on_file_ts"]
-             and not any(mism[k] for k in ("usage", "model", "call_in_turn", "trigger", "sender", "gap_beyond_rounding")))
+             and not any(mism[k] for k in ("usage", "model", "call_in_turn", "trigger", "sender", "gap_beyond_rounding"))
+             and result["triggers_multiset"]["prep_only"] == 0
+             and result["reference_only_rows"]["total"] == result["reference_only_rows"]["from_symlinked_sources"])
     sys.exit(0 if exact else 1)
 
 

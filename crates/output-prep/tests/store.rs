@@ -878,30 +878,14 @@ fn failure_before_the_state_rename_keeps_the_previous_publication() {
     }
 }
 
-/// calls_v as the sealed in-memory reference store computes it.
+/// calls_v as the sealed in-memory reference store computes it (id-less calls
+/// stay separate rows in both).
 fn canonical_calls(memory: &MemoryPrepStore) -> Vec<String> {
-    // The memory store merges every id-less call of a generation into one;
-    // views.sql keeps each as its own row, so those compare as committed.
-    let all = memory.all_rows().calls;
-    let canonical = memory.canonical().calls;
-    let mut rows: Vec<String> = canonical
+    let mut rows: Vec<String> = memory
+        .canonical()
+        .calls
         .iter()
-        .flat_map(|call| {
-            if call.msg_id.is_none() && call.request_id.is_none() {
-                all.iter()
-                    .filter(|r| {
-                        r.source == call.source
-                            && r.generation == call.generation
-                            && r.msg_id.is_none()
-                            && r.request_id.is_none()
-                    })
-                    .cloned()
-                    .collect::<Vec<_>>()
-            } else {
-                vec![call.clone()]
-            }
-        })
-        .map(|c| strip_nulls(&json_without(&c, &["sighting"])).to_string())
+        .map(|c| strip_nulls(&json_without(c, &["sighting"])).to_string())
         .collect();
     rows.sort();
     rows

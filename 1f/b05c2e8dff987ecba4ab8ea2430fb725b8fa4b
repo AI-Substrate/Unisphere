@@ -1,0 +1,33 @@
+crates/output-prep/tests/store.rs
+  s_b77fcc140bc8c3::t_12074e09c6d316 881-882,884-886,888
+docs/plans/028-prep-canonical-tables/assets/proof/live.py
+  s_f57bd301d9b71a::t_b691727e51ba97 59-67
+docs/plans/028-prep-canonical-tables/assets/team/composition.dd.json
+  s_f57bd301d9b71a::t_dc78e4ce4613f8 11,52-4575,4672-4676,4678-4679
+docs/plans/028-prep-canonical-tables/assets/team/composition.dd.md
+  s_f57bd301d9b71a::t_6df90ab96667c0 14,18-20,22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "1fb05c2e8dff987ecba4ab8ea2430fb725b8fa4b",
+  "prompts": {},
+  "sessions": {
+    "s_b77fcc140bc8c3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d32c91bc-1a9a-4904-a6f0-8f7bec4daf6b",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    },
+    "s_f57bd301d9b71a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d0451601-48e2-477c-8598-4f8e2fe7c20e",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

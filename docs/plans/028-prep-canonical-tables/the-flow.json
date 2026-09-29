@@ -3,7 +3,7 @@
   "kind": "flight-plan",
   "slug": "prep-canonical-tables",
   "nav": {
-    "now": "impl-guide",
+    "now": "phase-1",
     "next": null
   },
   "created_at": "2026-09-29T04:11:32.808Z",
@@ -146,6 +146,16 @@
         "fields": [
           "next"
         ]
+      }
+    },
+    {
+      "id": "CUR-003",
+      "kind": "cursor-moved",
+      "origin": "engine",
+      "fired_at": "2026-09-29T04:57:25.727Z",
+      "details": {
+        "from": "impl-guide",
+        "to": "phase-1"
       }
     }
   ],

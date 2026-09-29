@@ -1,0 +1,130 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "dispatch",
+      "value": {
+        "record_type": "dispatch",
+        "id": "dispatch-tk-0003-3f39e1b4b47776e9b89464a604192aaedddf99ea",
+        "recorded_at": "2026-09-29T04:59:31.842Z",
+        "unit_id": "tk-0003",
+        "packet": {
+          "path": "docs/plans/028-prep-canonical-tables/assets/team/packet-tk-0003-3f39e1b4b47776e9b89464a604192aaedddf99ea.dd.json",
+          "sha256": "1b942625e02601d7f11dfb42990d4973acf7500c6d2b888c9437f69157e12e38"
+        },
+        "baseline": {
+          "path": "docs/plans/028-prep-canonical-tables/assets/team/baseline.dd.json",
+          "sha256": "7fcd6b09bb717c5b60718ab9253df59ffe47a66e2bc28209bf0571d3f9ba46e2"
+        },
+        "allocation": {
+          "path": "/Users/jordanknight/substrate/unisphere/unishpere-main/.git/builder/allocations/allocation-al-031-619d9824-9b2e-48a4-8f1b-5aea0783d637.dd.json",
+          "sha256": "84740c29656f28c91d5aaadb739e4388c05cc9e76bf5c5fc34c7d77c0ac77924"
+        },
+        "requested": {
+          "role": "coder",
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5.5",
+          "source": {
+            "harness": "guide",
+            "model": "guide"
+          }
+        },
+        "observed": {
+          "peer_id": "pij-yodelling-hyena",
+          "root": "/Users/jordanknight/substrate/unisphere/unisphere-028-tk0003",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5.5",
+          "native_session": "01a0eb88-4288-75ab-906f-8ee7c391097d",
+          "pid": 72690,
+          "evidence": [
+            "pij-rs state: {\"id\":\"pij-yodelling-hyena\",\"liveness\":\"active\",\"cwd\":\"/Users/jordanknight/substrate/unisphere/unisphere-028-tk0003\",\"harness\":\"omp\",\"boundModel\":\"github-copilot/claude-opus-5.5\",\"effort\":null,\"pid\":72690,\"procStart\":20260929145929,\"parent\":\"pij-native-tick\"}",
+            "pij-rs list: {\"id\":\"pij-yodelling-hyena\",\"session\":\"01a0eb88-4288-75ab-906f-8ee7c391097d\",\"folder\":\"/Users/jordanknight/substrate/unisphere/unisphere-028-tk0003\",\"proc\":{\"pid\":72690,\"proc_start\":20260929145929},\"harness\":\"omp\",\"model\":\"github-copilot/claude-opus-5.5\"}",
+            "plan root HEAD at dispatch: 1a46a8684ab561fce65f21324844527999599a55 (sealed source 3f39e1b4b47776e9b89464a604192aaedddf99ea, a descendant: receipts/evidence committed after the seal)"
+          ],
+          "gaps": [
+            "Provider-served inference identity is unverified; these observations bind launch/session configuration only.",
+            "Native public state does not expose process argv or environment.",
+            "Effective effort is unverified; no effort override was observed."
+          ]
+        },
+        "seed_files": [
+          {
+            "path": "docs/plans/028-prep-canonical-tables/plan.dd.json",
+            "sha256": "e1872f2cc578e37b275fad3b3057c05b38ed9f7e719de360696c32bbcf5d6f86"
+          },
+          {
+            "path": "docs/plans/028-prep-canonical-tables/plan.dd.md",
+            "sha256": "b316f557389068cc6e45dd343389fb4818c27e13827279197a8617bde5bffb60"
+          },
+          {
+            "path": "docs/plans/028-prep-canonical-tables/assets/impl-guide.dd.json",
+            "sha256": "34d67d70b4f3a8fcbc4a59bd93696c62ca7653533da0d1a85a951fa0d59d8dba"
+          },
+          {
+            "path": "docs/plans/028-prep-canonical-tables/assets/impl-guide.dd.md",
+            "sha256": "cd4fe313a86d74081306baf0a46cc93757adef624163b6ac1b5df792685f649f"
+          },
+          {
+            "path": "docs/plans/028-prep-canonical-tables/assets/team/baseline.dd.json",
+            "sha256": "7fcd6b09bb717c5b60718ab9253df59ffe47a66e2bc28209bf0571d3f9ba46e2"
+          },
+          {
+            "path": "docs/plans/028-prep-canonical-tables/assets/team/baseline.dd.md",
+            "sha256": "a683b0f3b1bcae730eaaad63841a163a382967da5cbd93ce4391e753113a11f8"
+          },
+          {
+            "path": "docs/plans/028-prep-canonical-tables/assets/team/review-decomposition-rv-028-decomposition-r2.dd.json",
+            "sha256": "1c48bc480ed6509bbd4f7a9e7be3f7d45282005241da5d33aa903d46cb9848df"
+          },
+          {
+            "path": "docs/plans/028-prep-canonical-tables/assets/team/review-decomposition-rv-028-decomposition-r2.dd.md",
+            "sha256": "ca9ed0b8279a83d100e7bab9fe7cfdad3ba6c47e0b1116619b4d63d5073c1b73"
+          },
+          {
+            "path": "docs/plans/028-prep-canonical-tables/assets/team/packet-tk-0003-3f39e1b4b47776e9b89464a604192aaedddf99ea.dd.json",
+            "sha256": "1b942625e02601d7f11dfb42990d4973acf7500c6d2b888c9437f69157e12e38"
+          },
+          {
+            "path": "docs/plans/028-prep-canonical-tables/assets/team/packet-tk-0003-3f39e1b4b47776e9b89464a604192aaedddf99ea.dd.md",
+            "sha256": "f2422f32f78b9af96de79902771333038490e865c921c57bbaffedbc1d395cc4"
+          }
+        ],
+        "warnings": [
+          {
+            "file": "<guide:capabilities/cp-0006/owner>",
+            "owning_unit": "ph-62fe",
+            "stage": "guide",
+            "code": "capability-owner",
+            "message": "Observable owner ph-62fe does not name a declared implementation unit.",
+            "next_action": "Review capabilities/cp-0006/owner with the named unit and update the ownership guidance if useful; this warning does not block work."
+          },
+          {
+            "file": "<guide:capabilities/cp-0009/owner>",
+            "owning_unit": "ph-62fe",
+            "stage": "guide",
+            "code": "capability-owner",
+            "message": "Observable owner ph-62fe does not name a declared implementation unit.",
+            "next_action": "Review capabilities/cp-0009/owner with the named unit and update the ownership guidance if useful; this warning does not block work."
+          },
+          {
+            "file": "<guide:capabilities/cp-000c/owner>",
+            "owning_unit": "ph-62fe",
+            "stage": "guide",
+            "code": "capability-owner",
+            "message": "Observable owner ph-62fe does not name a declared implementation unit.",
+            "next_action": "Review capabilities/cp-000c/owner with the named unit and update the ownership guidance if useful; this warning does not block work."
+          }
+        ],
+        "delivery": {
+          "message_id": "1eedcc97-6992-48a2-9b45-1251a5e8be96",
+          "outcome": "queued",
+          "recorded_at": "2026-09-29T04:59:32.021Z"
+        }
+      }
+    }
+  ],
+  "references": []
+}

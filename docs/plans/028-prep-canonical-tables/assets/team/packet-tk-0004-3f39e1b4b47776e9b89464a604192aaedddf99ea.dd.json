@@ -1,0 +1,101 @@
+{
+  "dd": {
+    "schema": "builder/work-packet"
+  },
+  "sections": [
+    {
+      "name": "packet",
+      "value": {
+        "record_type": "packet",
+        "id": "packet-tk-0004-3f39e1b4b47776e9b89464a604192aaedddf99ea",
+        "recorded_at": "2026-09-29T04:59:47.888Z",
+        "nonce": "7261a823-ac5e-44d8-aa89-ca3b9e392fc4",
+        "unit": {
+          "id": "tk-0004",
+          "name": "Parquet prep store",
+          "role": "coder",
+          "responsibility": "ParquetPrepStore owns the physical table contract: open(target) takes an exclusive advisory lock for its lifetime; commit writes synced parts per table (incl. tool_uses) then sources/sessions snapshots then state.json by atomic rename with directory fsyncs; load removes parts unreferenced by the published state; compact rewrites current-generation rows (merging call and tool-use sightings) into new parts, publishes state, then deletes superseded parts; Parquet key-value schema-version metadata; views.sql with the canonical DuckDB views; source/session snapshots derive project/agent columns from PrepSourceMeta, not from Claude path knowledge.",
+          "paths": [
+            "crates/output-prep/src",
+            "crates/output-prep/tests/store.rs",
+            "crates/output-prep/Cargo.toml"
+          ],
+          "reads": [
+            {
+              "owner": "tk-0001",
+              "paths": [
+                "crates/core/src/prep.rs",
+                "crates/core/src/lib.rs",
+                "crates/testkit/src/prep.rs"
+              ]
+            }
+          ],
+          "interface": "ParquetPrepStore::open(target: PathBuf) -> Result<Self, PipelineError> (exclusive lock on TARGET/.prep.lock, already in the baseline); impl PrepStore — compact() returns Unsupported in the baseline and is delivered by this unit.",
+          "depends_on": [
+            "tk-0001"
+          ],
+          "wave": 1,
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0001",
+            "../plan.dd.json#acceptance_criteria/ac-0008"
+          ],
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0004"
+          ],
+          "notes": "Tests read Parquet back through parquet's Arrow reader + arrow-json and apply the canonical-view rules in Rust to prove compaction leaves every view result unchanged and that injected failures between parts and state leave the previous publication intact. No new workspace dependency without a PM contract delta."
+        },
+        "plan": {
+          "path": "docs/plans/028-prep-canonical-tables/plan.dd.json",
+          "sha256": "e1872f2cc578e37b275fad3b3057c05b38ed9f7e719de360696c32bbcf5d6f86"
+        },
+        "guide": {
+          "path": "docs/plans/028-prep-canonical-tables/assets/impl-guide.dd.json",
+          "sha256": "34d67d70b4f3a8fcbc4a59bd93696c62ca7653533da0d1a85a951fa0d59d8dba"
+        },
+        "baseline": {
+          "path": "docs/plans/028-prep-canonical-tables/assets/team/baseline.dd.json",
+          "sha256": "7fcd6b09bb717c5b60718ab9253df59ffe47a66e2bc28209bf0571d3f9ba46e2"
+        },
+        "source_sha": "3f39e1b4b47776e9b89464a604192aaedddf99ea",
+        "allocation": {
+          "path": "/Users/jordanknight/substrate/unisphere/unishpere-main/.git/builder/allocations/allocation-al-032-53039390-a0c5-40e4-9ae8-76f5a693c417.dd.json",
+          "sha256": "bf6e65428cb9e8c651fd823a6d49bbb3e443b1ad749eed4f8c39d3003c92ff60"
+        },
+        "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-028-tk0004",
+        "parent": "pij-native-tick",
+        "requested": {
+          "role": "coder",
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5.5",
+          "source": {
+            "harness": "guide",
+            "model": "guide"
+          }
+        },
+        "forbidden": [
+          ".the-flow-state.json",
+          "the-flow.json",
+          "the-flow.md",
+          "docs/plans/028-prep-canonical-tables/plan.dd.json",
+          "docs/plans/028-prep-canonical-tables/assets/impl-guide.dd.json",
+          "docs/plans/028-prep-canonical-tables/assets/team",
+          ".harness/government/",
+          "Global settings, deployed skills, unrelated workspaces and changes on main without user authorization.",
+          "Pushes, PRs, merges and destructive operations without user authorization; canonical lifecycle mutations and nested peers without PM approval."
+        ],
+        "instructions": [
+          "You own crates/output-prep/src, crates/output-prep/tests/store.rs, crates/output-prep/Cargo.toml.",
+          "You may read crates/core/src/prep.rs, crates/core/src/lib.rs, crates/testkit/src/prep.rs (owner tk-0001); immutable plan docs/plans/028-prep-canonical-tables/plan.dd.json and guide docs/plans/028-prep-canonical-tables/assets/impl-guide.dd.json.",
+          "Your job: ParquetPrepStore owns the physical table contract: open(target) takes an exclusive advisory lock for its lifetime; commit writes synced parts per table (incl. tool_uses) then sources/sessions snapshots then state.json by atomic rename with directory fsyncs; load removes parts unreferenced by the published state; compact rewrites current-generation rows (merging call and tool-use sightings) into new parts, publishes state, then deletes superseded parts; Parquet key-value schema-version metadata; views.sql with the canonical DuckDB views; source/session snapshots derive project/agent columns from PrepSourceMeta, not from Claude path knowledge.",
+          "Done means Incremental and idempotent: `unisphere prep --target DIR` over explicit or default roots publishes tables atomically. A re-run with nothing changed reads zero body bytes and writes zero rows. Appended sources contribute only records after the committed cursor. Replaced, truncated, or same-size rewritten sources start a new generation and the canonical views never contain rows from a superseded generation. A crash mid-run leaves the previous publication intact and the next run recovers without duplicates. (../plan.dd.json#acceptance_criteria/ac-0001); A versioned, documented table contract: schema version, per-source adapter policy version, generation semantics and canonical views are specified; an external engine reads the published Parquet without per-engine schema declarations. A compaction command rewrites the current generation and removes superseded parts without changing any view result. (../plan.dd.json#acceptance_criteria/ac-0008). Interface: ParquetPrepStore::open(target: PathBuf) -> Result<Self, PipelineError> (exclusive lock on TARGET/.prep.lock, already in the baseline); impl PrepStore — compact() returns Unsupported in the baseline and is delivered by this unit.. Proof: impl-guide.dd.json#checks/vd-0004.",
+          "Work packet: docs/plans/028-prep-canonical-tables/assets/team/packet-tk-0004-3f39e1b4b47776e9b89464a604192aaedddf99ea.dd.json. Use the measured SHA-256 in the dispatch message for the optional advisory builder self-check.",
+          "Expected checkout /Users/jordanknight/substrate/unisphere/unisphere-028-tk0004; source commit 3f39e1b4b47776e9b89464a604192aaedddf99ea. A self-check warning names a mismatch to inspect; it is not permission or a second work grant.",
+          "Receiving this packet means do the unit. Its write/read maps guide you, not fence source access; out-of-map edits need no approval or justification. Prefer frozen interfaces for independent work. Return committed changes, proof and visible file/owning_unit warnings to pij-native-tick.",
+          "Optional read-only comparison: harness builder on-track docs/plans/028-prep-canonical-tables/plan.dd.json --unit tk-0004 [--from <ref>] [--to <ref>] [--untracked]. No readiness, seal, review or receipt prerequisite; no writes; exit 0. Show compared, basis, measured from/to SHAs, includes_worktree/includes_untracked, warnings and issues. Unavailable comparison returns compared:false plus actionable issues.",
+          "On-track defaults to the sealed source, otherwise HEAD; malformed basis is an issue, not fallback. It includes committed touched paths (even reverted writes) plus tracked staged/unstaged work; --untracked explicitly adds new paths. Explicit --to is committed-only. Omitting --unit compares PM maps using imported integration_sha, otherwise the sealed source or HEAD."
+        ]
+      }
+    }
+  ],
+  "references": []
+}

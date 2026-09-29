@@ -1,0 +1,49 @@
+crates/core/src/prep.rs
+  s_711a14fdeac91f::t_47c3921ba9b3e5 20-21,96-133,139-275,317-318,323,777-780,807,828-837,898-901,915-916,918-919,937-940
+crates/core/tests/prep_contract.rs
+  s_f57bd301d9b71a::t_029fc6c267cbed 198
+crates/loader-jsonl/src/lib.rs
+  s_711a14fdeac91f::t_bae5d92c7c038c 392,395,398
+crates/loader-snapshot/tests/prep.rs
+  s_c50a787648743a::t_fd47b5ebeb1212 18-21,90,113-117,123
+crates/output-prep/tests/store.rs
+  s_f57bd301d9b71a::t_0d6b391eda1195 104
+crates/sdk/tests/prep.rs
+  s_c50a787648743a::t_e79a717a8df8b0 18-21,55,550,552,822-959
+crates/testkit/fixtures/consumer/prep-main.rs
+  s_f57bd301d9b71a::t_93baf2dbd1a973 69
+crates/testkit/src/prep.rs
+  s_711a14fdeac91f::t_b0d88680528620 17-20,231-232,385-391,437,442-459,461,463-465
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "8428dc40763f216ae57dcb063718b064b768986a",
+  "prompts": {},
+  "sessions": {
+    "s_711a14fdeac91f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9573fe35-d8a0-4bf8-9ea9-f2ade305075c",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    },
+    "s_c50a787648743a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1d1f18d3-0079-411e-80f5-4aa75d8f409d",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    },
+    "s_f57bd301d9b71a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d0451601-48e2-477c-8598-4f8e2fe7c20e",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

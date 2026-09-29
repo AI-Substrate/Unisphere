@@ -1,0 +1,26 @@
+docs/plans/028-prep-canonical-tables/assets/reviews/decomposition-p2-r2.md
+  h_9e71e8b09f7cf2 1-24
+docs/plans/028-prep-canonical-tables/assets/reviews/decomposition-p2-r2.receipt.dd.json
+  h_9e71e8b09f7cf2 1-66
+docs/plans/028-prep-canonical-tables/assets/team/baseline-p2r2.dd.json
+  h_9e71e8b09f7cf2 1-374
+docs/plans/028-prep-canonical-tables/assets/team/baseline-p2r2.dd.md
+  h_9e71e8b09f7cf2 1-21
+docs/plans/028-prep-canonical-tables/assets/team/basis-c6b8c852ae59839b1f383d0387625c32ab1be79fe0b2bc5b6dd31a373ef27a3a.json
+  h_9e71e8b09f7cf2 1-1347
+docs/plans/028-prep-canonical-tables/assets/team/review-decomposition-rv-028-decomposition-p2-r2.dd.json
+  h_9e71e8b09f7cf2 1-71
+docs/plans/028-prep-canonical-tables/assets/team/review-decomposition-rv-028-decomposition-p2-r2.dd.md
+  h_9e71e8b09f7cf2 1-24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "1ee6fb6ece111a43ddb1bc75b1c593e9800701de",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

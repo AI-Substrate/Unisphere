@@ -1,0 +1,16 @@
+docs/plans/028-prep-canonical-tables/assets/team/composition.dd.json
+  h_9e71e8b09f7cf2 11,739,871,895,923,971,1011,1035,1039,1047,1083,1099,1131,1143,1179,1219,1319,1391,1411,4811-4812,4823,4825,5698-5702,5709
+docs/plans/028-prep-canonical-tables/assets/team/composition.dd.md
+  h_9e71e8b09f7cf2 14,18-20,22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "1e66603703d624c6de26fc20e2578ce721ad8b8e",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

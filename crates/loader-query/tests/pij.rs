@@ -5,12 +5,37 @@ use std::{
     fs,
     os::unix::fs::PermissionsExt,
     path::{Path, PathBuf},
+    sync::{PoisonError, RwLock},
     time::{Duration, Instant},
 };
 use tempfile::{TempDir, tempdir};
 use unisphere_loader_query::pij::{
-    PijLookupError, PijLookupLimits, ResolvedPijSession, resolve_pij,
+    PijLookupError, PijLookupLimits, ResolvedPijSession, resolve_pij as lookup,
 };
+
+/// Tests run on parallel threads. A fixture executable's write descriptor is
+/// inherited by any child forked on another thread before it closes, and on
+/// Linux exec of a file still open for writing fails with ETXTBSY (seen in CI
+/// as a spurious `LookupUnavailable`). Writers hold this exclusively; every
+/// lookup (each may fork) holds it shared.
+static EXECUTABLES: RwLock<()> = RwLock::new(());
+
+fn write_executable(executable: &Path, contents: &str) {
+    let _writing = EXECUTABLES.write().unwrap_or_else(PoisonError::into_inner);
+    fs::write(executable, contents).unwrap();
+    let mut permissions = fs::metadata(executable).unwrap().permissions();
+    permissions.set_mode(0o700);
+    fs::set_permissions(executable, permissions).unwrap();
+}
+
+fn resolve_pij(
+    executable: Option<&Path>,
+    id: &str,
+    limits: PijLookupLimits,
+) -> Result<ResolvedPijSession, PijLookupError> {
+    let _spawning = EXECUTABLES.read().unwrap_or_else(PoisonError::into_inner);
+    lookup(executable, id, limits)
+}
 
 const ID: &str = "pij-test-seat";
 const SCRIPT: &str = "#!/bin/sh\nif [ \"$1\" != state ] || [ \"$2\" != pij-test-seat ] || [ \"$3\" != --json ] || [ \"$#\" != 3 ]; then exit 90; fi\nIFS= read -r response < \"$0.response\"\nprintf '%s' \"$response\"\nIFS= read -r status < \"$0.status\"\nexit \"$status\"\n";
@@ -24,10 +49,7 @@ fn sidecar(executable: &Path, suffix: &str) -> PathBuf {
 fn program(response: &str, status: u8) -> (TempDir, PathBuf) {
     let temporary = tempdir().unwrap();
     let executable = temporary.path().join("pij-fixture");
-    fs::write(&executable, SCRIPT).unwrap();
-    let mut permissions = fs::metadata(&executable).unwrap().permissions();
-    permissions.set_mode(0o700);
-    fs::set_permissions(&executable, permissions).unwrap();
+    write_executable(&executable, SCRIPT);
     set_response(&executable, response);
     fs::write(sidecar(&executable, ".status"), status.to_string()).unwrap();
     (temporary, executable)
@@ -182,7 +204,7 @@ fn output_and_elapsed_time_are_bounded() {
         Err(PijLookupError::OutputLimitExceeded)
     );
 
-    fs::write(&executable, "#!/bin/sh\nexec sleep 30\n").unwrap();
+    write_executable(&executable, "#!/bin/sh\nexec sleep 30\n");
     let started = Instant::now();
     assert_eq!(
         resolve_pij(

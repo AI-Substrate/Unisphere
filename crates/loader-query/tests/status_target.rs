@@ -512,4 +512,24 @@ fn ps_process_table_parses_c_locale_start_times_in_the_pij_form() {
         None,
         "ps exits 1 when nothing matches"
     );
+
+    // procps-ng 4 (ubuntu:24.04): tmux reports `/dev/pts/N`; only `/dev/` is
+    // stripped, and its wider right-aligned columns parse the same.
+    let procps = Arc::new(FakeRunner::default().with(
+        "ps",
+        Ok((true, "     11      10 Tue Sep 29 23:43:52 2026\n")),
+    ));
+    let linux = PsProcessTable::new(procps.clone());
+    assert_eq!(
+        linux.on_tty("/dev/pts/0").unwrap(),
+        vec![ProcessInfo {
+            pid: 11,
+            ppid: 10,
+            started: Some(20260929234352)
+        }]
+    );
+    assert_eq!(
+        procps.calls.lock().unwrap()[0],
+        "ps -o pid=,ppid=,lstart= -t pts/0"
+    );
 }

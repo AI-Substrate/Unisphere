@@ -8,8 +8,8 @@
       "value": {
         "title": "Backpressure survey — Plan 028 prep canonical tables",
         "plan": "../plan.dd.json#meta",
-        "certainty": "Partial",
-        "basis_sha": "e1872f2cc578e37b275fad3b3057c05b38ed9f7e719de360696c32bbcf5d6f86"
+        "certainty": "Confident",
+        "basis_sha": "7da3d4a4d05949ddba02368c80dbe145189a63214c43bd0335c381e36ce64e46"
       }
     },
     {
@@ -76,7 +76,7 @@
           "phase": "ph-62fe",
           "mode": "BUILD",
           "tier": "computational",
-          "proof": "BUILD→RUN (guide v2): per-harness fold tests on synthetic fixtures derived from the existing query fixtures, snapshot loader tests incl. SQLite WAL growth, proof-mode extension; then `cargo test --locked -p <adapter or loader-snapshot> --test prep` per lane and `cargo run --locked -p unisphere-testkit --bin unisphere-proof -- prep`.",
+          "proof": "BUILD→RUN (guide v3): per-harness fold tests on synthetic fixtures (vd-000d…vd-0012), snapshot loader tests incl. SQLite WAL growth (vd-0013), proof-mode extension to snapshot/SQLite (vd-0008); real corpus: python3 docs/plans/028-prep-canonical-tables/assets/proof/coverage.py --scratch .harness/temp/prep-real (vd-0017, numbers only).",
           "state": "unchecked",
           "probe": "Synthetic native fixtures exist per adapter (crates/adapter-{omp,pi,copilot-cli,vscode-copilot}/tests/fixtures, adapter-codex/fixtures, adapter-cursor/fixtures); SQLite loader tests crates/loader-snapshot/tests/sqlite.rs; no prep folds outside Claude."
         },
@@ -110,7 +110,7 @@
           "tier": "computational",
           "proof": "BUILD→RUN (guide v2): recipe catalogue tests; then `cargo test --locked -p unisphere-cli --test recipes`; external run `python3 docs/plans/028-prep-canonical-tables/assets/proof/recipes_check.py --scratch .harness/temp/prep-real`. Requires an operator-approved DuckDB CLI install.",
           "state": "unchecked",
-          "probe": "`which duckdb` → not found (2026-09-29); Python duckdb 1.5.3 importable; POC prep_sql.py ran 30/30 recipes on DuckDB (main scratch/poc-prep-duckdb/recipes-output-duckdb.txt)."
+          "probe": "DuckDB CLI installed 2026-09-29 with Jordan's approval (brew duckdb 1.5.5, /opt/homebrew/bin/duckdb); Python duckdb 1.5.3; POC prep_sql.py ran 30/30 recipes on DuckDB (main scratch/poc-prep-duckdb/recipes-output-duckdb.txt); phase-1 parity already reads views.sql through DuckDB."
         },
         {
           "id": "bp-000a",

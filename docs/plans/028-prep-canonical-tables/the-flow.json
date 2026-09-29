@@ -248,6 +248,39 @@
         "from": "phase-1",
         "to": "review-1"
       }
+    },
+    {
+      "id": "NOD-006",
+      "kind": "node-created",
+      "origin": "engine",
+      "fired_at": "2026-09-29T07:09:00.431Z",
+      "details": {
+        "node": "backpressure-7da3d4a4d059",
+        "type": "backpressure"
+      }
+    },
+    {
+      "id": "UPD-006",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-29T07:09:00.719Z",
+      "details": {
+        "node": "backpressure-7da3d4a4d059",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-005",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-29T07:09:00.975Z",
+      "details": {
+        "node": "backpressure-7da3d4a4d059",
+        "from": "known",
+        "to": "done"
+      }
     }
   ],
   "nodes": [
@@ -667,6 +700,27 @@
         "kind": "command",
         "importance": "recommended"
       }
+    },
+    {
+      "id": "backpressure-7da3d4a4d059",
+      "type": "backpressure",
+      "label": "Backpressure survey (phase 2)",
+      "status": "done",
+      "next": [
+        "plan"
+      ],
+      "created_at": "2026-09-29T07:09:00.430Z",
+      "modified_at": "2026-09-29T07:09:00.974Z",
+      "branch_of": "plan",
+      "comments": [
+        {
+          "at": "2026-09-29T07:09:00.719Z",
+          "text": "decision:route hook:pre-coding verb:backpressure (re-survey for guide v3 / phase 2; plan bytes changed only by phase-1 progress/proof links) result:assets/backpressure.dd.json bp-0006 proof now includes vd-0017 coverage, bp-0009 probe records the DuckDB install; 11 rows checked with receipts from phase 1; certainty Confident basis_sha256:7da3d4a4d05949ddba02368c80dbe145189a63214c43bd0335c381e36ce64e46 time:2026-09-29T07:09:00Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "ran_at": "2026-09-29T07:09:00.974Z"
     }
   ],
   "plan_dir": "docs/plans/028-prep-canonical-tables"

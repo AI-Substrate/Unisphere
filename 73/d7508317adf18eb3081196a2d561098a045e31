@@ -1,0 +1,27 @@
+crates/core/src/status.rs
+  s_042162115c1f28::t_f915b134b5c2d4 279-280,294,308-310
+crates/core/tests/status_contract.rs
+  s_042162115c1f28::t_bf705599f76e3e 134
+docs/plans/029-session-status/assets/proof/status_real.py
+  s_042162115c1f28::t_3d3a930c0fdabf 14,193-194
+docs/plans/029-session-status/plan.dd.json
+  s_042162115c1f28::t_f35534cfa9ffc3 188
+docs/plans/029-session-status/plan.dd.md
+  s_042162115c1f28::t_b97b6ad6a42502 161
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "73d7508317adf18eb3081196a2d561098a045e31",
+  "prompts": {},
+  "sessions": {
+    "s_042162115c1f28": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4b3f9ea7-6ca1-47b0-93c3-82069b1452f9",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

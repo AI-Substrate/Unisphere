@@ -45,32 +45,37 @@
         {
           "id": "ac-0001",
           "claim": "Incremental and idempotent: `unisphere prep --target DIR` over explicit or default roots publishes tables atomically. A re-run with nothing changed reads zero body bytes and writes zero rows. Appended sources contribute only records after the committed cursor. Replaced, truncated, or same-size rewritten sources start a new generation and the canonical views never contain rows from a superseded generation. A crash mid-run leaves the previous publication intact and the next run recovers without duplicates.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-0001"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0001",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0003"
         },
         {
           "id": "ac-0002",
           "claim": "Live files never fail: a source being appended during the run is committed to its last complete line; the partial tail is reported (bytes pending) and picked up by the next run. Proven with a concurrent non-line-aligned writer and on the real live fleet.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-0002"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0002",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0005"
         },
         {
           "id": "ac-0003",
           "claim": "CLI and SDK parity: prep is composed from public SDK/core ports (loader, pure fold, store) with no CLI-only semantics; an external SDK consumer can run the same incremental prep in-process with its own store. The core/SDK ports carry no Parquet, SQLite or engine dependency. The adapter catalogue reports persisted resume as supported for every harness prep covers.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-0003"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0003",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0003"
         },
         {
           "id": "ac-0004",
           "claim": "Claude cost correctness: calls are deduplicated on (message.id, requestId) with the per-field maximum; cache writes are split into 1 h and 5 m classes (with the documented fallback); `<synthetic>` records become limit events, not calls. The file-F and all four window totals in the consumer's use-case brief, and every reference call row, reproduce exactly against the reference parser; any divergence is explained and accepted by the reviewer, not rounded.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-0004"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0004",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0004"
         },
         {
           "id": "ac-0005",
           "claim": "Typed facts, not blobs: compaction boundaries (trigger, pre/post tokens, duration), recaps, scheduled/loop fires, limit notices (with parsed reset instants where the source allows), and queue operations are typed events. Turns carry the opening record's origin (human, peer with sender and Pij message identity, task notification, auto-continuation). Sidechains link to their parent session. Tool uses are a table (native name, family, input hash, result size, outcome, duration where native).",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-0005"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0005",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0007"
         },
         {
           "id": "ac-0006",
@@ -81,14 +86,16 @@
         {
           "id": "ac-0007",
           "claim": "Honest coverage: every run reports per-source outcome (unchanged, appended, replaced, new, skipped, unreadable, unsupported) and counts skipped symlinks and hidden entries; extra roots (for example a second Claude account under ~/.claude-alt) are explicit inputs. Nothing is silently excluded.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-0007"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0007",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0003"
         },
         {
           "id": "ac-0008",
           "claim": "A versioned, documented table contract: schema version, per-source adapter policy version, generation semantics and canonical views are specified; an external engine reads the published Parquet without per-engine schema declarations. A compaction command rewrites the current generation and removes superseded parts without changing any view result.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-0008"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0008",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0004"
         },
         {
           "id": "ac-0009",
@@ -99,14 +106,16 @@
         {
           "id": "ac-000a",
           "claim": "Contexts are gold, cheaply: expensive-turn and call rows carry a native address (path plus byte offset) so an agent can fetch exactly that record with explicit content opt-in, without re-reading the transcript.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-000a"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000a",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0003"
         },
         {
           "id": "ac-000b",
           "claim": "Privacy and safety: metadata-only by default; any content column needs explicit opt-in and is absent otherwise. Native stores are opened read-only and never locked, renamed or written; tests and committed fixtures contain no real prompts, bodies or private identifiers.",
-          "state": "unchecked",
-          "pressure": "assets/backpressure.dd.json#rows/bp-000b"
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-000b",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0007"
         },
         {
           "id": "ac-000c",
@@ -129,8 +138,9 @@
           "id": "ph-ed41",
           "title": "Claude prep hardened to product",
           "brief": "Harden the POC's Claude prep into product code: ports and contract, cost correctness proven against the reference parser, typed events/turns/tool uses, generations and compaction, live-file safety, coverage report, CLI/SDK parity, docs. Ends with real-corpus parity and an independent review.",
-          "state": "unchecked",
-          "tasks": "assets/tasks/phase-1/tasks.dd.json#tasks"
+          "state": "checked",
+          "tasks": "assets/tasks/phase-1/tasks.dd.json#tasks",
+          "receipt": "assets/team/review-composition-rv-028-composition-p1-r1.dd.json"
         },
         {
           "id": "ph-62fe",

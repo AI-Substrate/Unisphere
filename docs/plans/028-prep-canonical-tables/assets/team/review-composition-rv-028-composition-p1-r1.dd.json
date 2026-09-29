@@ -1,0 +1,111 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "review",
+      "value": {
+        "record_type": "review",
+        "id": "rv-028-composition-p1-r1",
+        "recorded_at": "2026-09-29T07:01:34+00:00",
+        "scope": "composition",
+        "subject_sha": "d80094913d16f68cefbca128015531c5aa3fc197",
+        "plan": {
+          "path": "docs/plans/028-prep-canonical-tables/plan.dd.json",
+          "sha256": "e1872f2cc578e37b275fad3b3057c05b38ed9f7e719de360696c32bbcf5d6f86"
+        },
+        "guide": {
+          "path": "docs/plans/028-prep-canonical-tables/assets/impl-guide.dd.json",
+          "sha256": "34d67d70b4f3a8fcbc4a59bd93696c62ca7653533da0d1a85a951fa0d59d8dba"
+        },
+        "reviewer_id": "pij-panicky-anteater",
+        "requested": {
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-sonnet-5.5",
+          "source": {
+            "harness": "guide",
+            "model": "guide"
+          }
+        },
+        "observed": {
+          "peer_id": "pij-panicky-anteater",
+          "root": "/Users/jordanknight/substrate/unisphere/unisphere-028-review",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/claude-sonnet-5.5",
+          "native_session": "01a0eb71-0bdc-74bd-97d4-6f85f7527e72",
+          "pid": 53353,
+          "argv": [
+            "omp",
+            "--auto-approve",
+            "--model",
+            "github-copilot/claude-sonnet-5.5"
+          ],
+          "evidence": [
+            "git -C unisphere-028-review log -1 --format=%H (1d11e5b13335ea231ffbcc9eccd8624477d9a60f, the evidence commit); read composition.dd.json artifact_sha (d80094913d16f68cefbca128015531c5aa3fc197) matching the packet binding exactly",
+            "sha256sum of plan.dd.json and assets/impl-guide.dd.json — both match packet bindings",
+            "read composition.dd.json in full: 4 units, all baseline_sha 3f39e1b4b47776e9b89464a604192aaedddf99ea (matches my own decomposition r2 sealed subject); checks vd-0008/vd-0015 both recorded ok; warnings array traced individually",
+            "read all 3 evidence files in full: parity-d800949.json, measure-d800949.json, live-1fb05c2.json",
+            "git show 67bd121 -- crates/app/src/main.rs crates/cli/src/query.rs crates/cli/tests/query_frontend.rs (traced the flagged ownership warning to a commented compile-level stub, later superseded by tk-0006's 99ac093)",
+            "git show d800949 -- crates/app/src/prep.rs crates/app/tests/prep.rs (platform-family location-hint fix + new composition-root integration test, read in full)",
+            "read crates/output-prep/src/views.rs in full (views.sql generator: explicit committed-part lists, paths-relative header, id-less-call row comment)",
+            "read crates/app/src/adapters.rs:38-60 confirming cli_persisted_resume:true scoped to the claude-code descriptor only",
+            "read crates/app/src/main.rs and crates/app/src/prep.rs (current composed state) confirming sole composition root",
+            "ran: cargo check --locked --workspace -> clean",
+            "ran: cargo test --locked -p unisphere-sdk --test prep -> 17 passed",
+            "ran: cargo test --locked -p unisphere-output-prep --test store -> 8 passed",
+            "ran: cargo test --locked -p unisphere-adapter-claude --test prep -> 14 passed",
+            "ran: cargo test --locked -p unisphere-cli --test prep -> 10 passed",
+            "ran: cargo test --locked -p unisphere-loader-jsonl --test prep -> 6 passed",
+            "ran: cargo run --locked -p unisphere-testkit --bin unisphere-arch-check -> 110 edges accepted, 0 violations",
+            "ran: cargo run --locked -p unisphere-testkit --bin unisphere-proof -- prep -> 'product proof prep: passed', independently reproducing the composition record's vd-0008 result"
+          ],
+          "gaps": [
+            "No provider-side attestation available beyond the harness-reported model string.",
+            "Did not re-run harness boot --json myself (3.6M ms budget, requires real external SDK/git-notes fixtures); relied on the PM's recorded vd-0015 result (exit 0, ready:true) plus my own targeted cargo test/arch-check/proof runs covering the same compiled surface.",
+            "Did not inspect the real Claude corpus underlying the numbers-only evidence files (boundary: read-only, numbers only, per packet)."
+          ]
+        },
+        "verdict": "approved",
+        "report": {
+          "path": "docs/plans/028-prep-canonical-tables/assets/reviews/composition-p1-r1.md",
+          "sha256": "3590d0883dcb491de12fdff4c0a887876ef375ca409bad2905748849f8c5dcfb"
+        },
+        "ac_0004_divergences": [
+          {
+            "item": "(a) 10 rows: reference resets prior-call gap state at its extract-window start",
+            "decision": "accept",
+            "evidence": "parity-d800949.json call_field_mismatches.gap_window_first_only_in_reference = 10 (exact match); reference-parser window-boundary artifact named in advance by guide risk rk-0001, not a fold defect"
+          },
+          {
+            "item": "(b) gap rounding: integer ms vs 0.1s float, 522 ties, 0 beyond rounding",
+            "decision": "accept",
+            "evidence": "parity-d800949.json call_field_mismatches.gap_rounding_ties = 522, gap_beyond_rounding = 0 (exact match); zero rows exceed tolerance"
+          },
+          {
+            "item": "(c) 2 reference-only rows (1 trigger, 1 synthetic) from a symlinked source",
+            "decision": "accept",
+            "evidence": "parity-d800949.json reference_only_rows = {total:2, from_symlinked_sources:2, by_kind:{trigger:1,synthetic:1}}, skipped.symlinks=3 (exact match); AC-0007 requires never following symlinks, honestly counted, source reachable via explicit --root"
+          },
+          {
+            "item": "(d) unrecorded counters null in prep vs 0 in reference; sums equal under coalesce",
+            "decision": "accept",
+            "evidence": "parity-d800949.json call_field_mismatches.usage = 0 (all sums match under coalesce); this is the intended F-02 nullability design (null = not recorded, distinct from recorded zero), more correct than the reference's conflation"
+          }
+        ],
+        "findings": [
+          {
+            "id": "F-01",
+            "severity": "low",
+            "description": "ac-000c's phase-1-is-Claude-only scoping is correct in the plan/guide's capability ownership but isn't restated in the shipped prep docs topic text a CLI user would see.",
+            "disposition": "open",
+            "evidence": "crates/cli/docs/prep.md content vs cp-000c owner ph-62fe in impl-guide.dd.json"
+          }
+        ]
+      }
+    }
+  ],
+  "references": []
+}

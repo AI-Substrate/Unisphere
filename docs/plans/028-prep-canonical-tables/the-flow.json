@@ -3,7 +3,7 @@
   "kind": "flight-plan",
   "slug": "prep-canonical-tables",
   "nav": {
-    "now": "phase-1",
+    "now": "review-1",
     "next": null
   },
   "created_at": "2026-09-29T04:11:32.808Z",
@@ -184,6 +184,70 @@
           "importance": "recommended"
         }
       }
+    },
+    {
+      "id": "UPD-004",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-29T07:04:27.918Z",
+      "details": {
+        "node": "observe-1",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-003",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-29T07:04:28.115Z",
+      "details": {
+        "node": "observe-1",
+        "from": "known",
+        "to": "done",
+        "chore": {
+          "kind": "command",
+          "importance": "recommended"
+        }
+      }
+    },
+    {
+      "id": "UPD-005",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-29T07:04:28.294Z",
+      "details": {
+        "node": "retro-1",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-004",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-29T07:04:28.515Z",
+      "details": {
+        "node": "retro-1",
+        "from": "known",
+        "to": "done",
+        "chore": {
+          "kind": "command",
+          "importance": "recommended"
+        }
+      }
+    },
+    {
+      "id": "CUR-004",
+      "kind": "cursor-moved",
+      "origin": "engine",
+      "fired_at": "2026-09-29T07:04:29.921Z",
+      "details": {
+        "from": "phase-1",
+        "to": "review-1"
+      }
     }
   ],
   "nodes": [
@@ -248,7 +312,15 @@
         "review-1"
       ],
       "dd_link": {
-        "address": "docs/plans/028-prep-canonical-tables/assets/tasks/phase-1/tasks.dd.json#tasks"
+        "address": "docs/plans/028-prep-canonical-tables/assets/tasks/phase-1/tasks.dd.json#tasks",
+        "basis_sha": "bf2ffb3b1304198da6e7795f5367164f6d552768de2c7ad5dd8847f239dce844",
+        "reading": {
+          "status": "complete",
+          "terminal": 6,
+          "total": 6,
+          "incomplete": [],
+          "at": "2026-09-29T07:04:29.921Z"
+        }
       },
       "instructions": [
         "You own the PM composition and canonical task/receipt paths named in the reviewed guide; each worker owns its assigned source/test paths. Read the product ACs, unit read paths/owners, shared contracts and selected proof before implementation.",
@@ -393,7 +465,7 @@
       "id": "observe-1",
       "type": "observe",
       "label": "Observe: P1",
-      "status": "known",
+      "status": "done",
       "branch_of": "phase-1",
       "next": [
         "phase-1"
@@ -410,13 +482,23 @@
         "Match model tier to work: chores -> cheap subagent, analysis -> Opus-class, judgement -> lead; context may override (§ Shared conventions).",
         "Terminalize at phase end BEFORE the retro drain, receipt first, status second: harness flow comment --path <flow-path> --node observe-1 --kind validation --source agent --text \"captures:<count> pointer:<real capture record> time:<…>\" THEN harness flow status --path <flow-path> --node observe-1 --to done — done only after at least one real capture. Human decline instead: harness flow comment --path <flow-path> --node observe-1 --kind decision --source user --text \"<their verbatim words>\" THEN harness flow status --path <flow-path> --node observe-1 --to skipped.",
         "Environment friction is work, not an apology: fix small things, otherwise `harness observe` it — is this environment working for us? (builder SKILL.md invariant #14)"
-      ]
+      ],
+      "comments": [
+        {
+          "at": "2026-09-29T07:04:27.918Z",
+          "text": "decision:done captures: harness observe DL-001 (builder compose one-roster-per-baseline), DL-002 (plan worktree lacks local ddocs), DL-003 (dispatch --bin omp refused by pij-rs; shim), DL-004 (machine load 128-193; flaky git_query under load), WIN-001 (deterministic prep proofs); drained to .harness/records/retro/2026-09-29/001-028-prep-canonical-tables-phase-1.md time:2026-09-29T07:04:27Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "modified_at": "2026-09-29T07:04:28.115Z",
+      "ran_at": "2026-09-29T07:04:28.115Z"
     },
     {
       "id": "retro-1",
       "type": "harness-retro",
       "label": "Retro: P1 (drain)",
-      "status": "known",
+      "status": "done",
       "branch_of": "phase-1",
       "next": [
         "phase-1"
@@ -430,7 +512,17 @@
         "Post-coding seam: drain this phase's observe buffer into durable retro notes before moving on.",
         "Run /eng-harness-flow --hook post-coding --json — a REAL invocation; narrate its envelope verbatim.",
         "Runs after this phase's observe chore is terminalized (real capture receipt, or human decline). On done, receipt first, status second: harness flow comment --path <flow-path> --node retro-1 --kind validation --source agent --text \"verdict:<…> time:<…>\" (router missing / envelope noop/UNAVAILABLE → text \"decision:unavailable reason:<…> time:<…>\" — a completed attempt, not a skip) THEN harness flow status --path <flow-path> --node retro-1 --to done. Mandatory unless the human declines — a decline is: harness flow comment --path <flow-path> --node retro-1 --kind decision --source user --text \"<their verbatim words>\" THEN harness flow status --path <flow-path> --node retro-1 --to skipped."
-      ]
+      ],
+      "comments": [
+        {
+          "at": "2026-09-29T07:04:28.294Z",
+          "text": "decision:route hook:post-coding verb:retro --drain (skill://eng-harness-flow references/stages/retro.md) bucket pij-native-tick: 5 entries saved all (disposition kept) to .harness/records/retro/2026-09-29/001-028-prep-canonical-tables-phase-1.md, bucket cleared; harness-itself entries DL-001 and DL-003 offered as upstream issues to the operator via the prime; highest value DL-003. time:2026-09-29T07:04:27Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "modified_at": "2026-09-29T07:04:28.515Z",
+      "ran_at": "2026-09-29T07:04:28.515Z"
     },
     {
       "id": "retro-harvest",

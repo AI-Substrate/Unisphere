@@ -74,6 +74,18 @@
             "../plan.dd.json#acceptance_criteria/ac-000c",
             "backpressure.dd.json#rows/bp-000c"
           ]
+        },
+        {
+          "id": "lg-0007",
+          "at": "2026-09-29T07:01:34+00:00",
+          "text": "Independent composition review rv-028-composition-p1-r1 APPROVED (reviewer pij-panicky-anteater, github-copilot/claude-sonnet-5.5; subject d80094913d16f68cefbca128015531c5aa3fc197; recorded via harness builder review, assets/team/review-composition-rv-028-composition-p1-r1.dd.json). Reviewer independently re-ran cargo check --workspace, the sdk/output-prep/adapter-claude/cli/loader-jsonl prep suites (55 passed), unisphere-arch-check (110 edges, 0 violations) and unisphere-proof prep (passed). AC-0004 divergences (a) window-first gaps, (b) integer-ms vs 0.1 s rounding, (c) 2 symlinked-source rows, (d) null vs 0 unrecorded counters: all ACCEPTED. One low finding open (prep topic does not restate phase-1 Claude-only scope of AC-000c; deferred to the phase-2 docs update).",
+          "links": [
+            "../plan.dd.json#acceptance_criteria/ac-0004",
+            "../plan.dd.json#acceptance_criteria/ac-0005",
+            "../plan.dd.json#acceptance_criteria/ac-0007",
+            "../plan.dd.json#acceptance_criteria/ac-0008",
+            "../plan.dd.json#acceptance_criteria/ac-000b"
+          ]
         }
       ]
     }

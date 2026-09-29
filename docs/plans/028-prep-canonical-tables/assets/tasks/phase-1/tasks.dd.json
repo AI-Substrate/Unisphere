@@ -23,7 +23,7 @@
           "id": "tk-0001",
           "title": "Prep contract v2 baseline (PM)",
           "phase": "ph-ed41",
-          "state": "unchecked",
+          "state": "checked",
           "success": "Sealed core::prep v2 + testkit fakes + arch allowlist; workspace green with POC adapted.",
           "done": "tasks.dd.json#done_when/tk-0001",
           "notes": "Guide unit tk-0001, wave 0. Commit, round-2 decomposition review of the exact commit, then `harness builder contracts --seal --review`.",
@@ -35,7 +35,7 @@
           "id": "tk-0002",
           "title": "Claude prep fold",
           "phase": "ph-ed41",
-          "state": "unchecked",
+          "state": "checked",
           "success": "ClaudePrepFold reproduces the reference parser's call rules and emits typed events, turns, tool uses and SessionFacts on synthetic fixtures.",
           "done": "tasks.dd.json#done_when/tk-0002",
           "notes": "Guide unit tk-0002, wave 1, coder lane. Includes Plan 029 requests: stop_reason, model_switch, first_context_after.",
@@ -51,7 +51,7 @@
           "id": "tk-0003",
           "title": "Incremental engine and JSONL prep loader",
           "phase": "ph-ed41",
-          "state": "unchecked",
+          "state": "checked",
           "success": "Preparer/fold_source own change detection, generations, live tails, coverage and record fetch; FileSessionLoader implements PrepLoader read-only.",
           "done": "tasks.dd.json#done_when/tk-0003",
           "notes": "Guide unit tk-0003, wave 1, coder lane.",
@@ -67,7 +67,7 @@
           "id": "tk-0004",
           "title": "Parquet prep store",
           "phase": "ph-ed41",
-          "state": "unchecked",
+          "state": "checked",
           "success": "ParquetPrepStore publishes parts, snapshots and state atomically, recovers crashes, excludes concurrent writers, compacts without changing views.",
           "done": "tasks.dd.json#done_when/tk-0004",
           "notes": "Guide unit tk-0004, wave 1, coder lane.",
@@ -82,7 +82,7 @@
           "id": "tk-0005",
           "title": "CLI prep frontend and docs",
           "phase": "ph-ed41",
-          "state": "unchecked",
+          "state": "checked",
           "success": "Frozen prep argv parse and render through PrepApi only; bundled prep topic and docs with parsed examples.",
           "done": "tasks.dd.json#done_when/tk-0005",
           "notes": "Guide unit tk-0005, wave 1, coder lane.",
@@ -97,7 +97,7 @@
           "id": "tk-0006",
           "title": "Phase-1 composition and Claude real-workload proof (PM)",
           "phase": "ph-ed41",
-          "state": "unchecked",
+          "state": "checked",
           "success": "`unisphere prep` wired end to end; assembled proof in boot; real-corpus parity, live and measurement evidence; independent composition review.",
           "done": "tasks.dd.json#done_when/tk-0006",
           "notes": "Guide unit tk-0006, wave 2. Real-corpus outputs stay in .harness/temp/prep-real; committed evidence is numbers only.",
@@ -125,198 +125,229 @@
           {
             "id": "dw-0101",
             "assertion": "core::prep v2 contract tests pass: every DTO round-trips through serde, status/reason vocabularies and the source-key format are pinned, and a checkpoint with another policy or format is refused.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0003"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0003",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0001"
           },
           {
             "id": "dw-0102",
             "assertion": "Arch-check passes with no parquet/arrow/rusqlite/engine edge in core or sdk; output-prep is the only Parquet owner.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-000e"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-000e",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0001"
           },
           {
             "id": "dw-0103",
             "assertion": "`harness checks --json` is ok at the baseline commit with the POC implementations adapted to v2.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-000f"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-000f",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0001"
           }
         ],
         "tk-0002": [
           {
             "id": "dw-0201",
             "assertion": "Duplicates of (message.id, requestId) merge by per-field maximum; repeats in a later batch or run emit update sightings; any batch split or checkpoint resume yields identical rows.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0004"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0004",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0004"
           },
           {
             "id": "dw-0202",
             "assertion": "cache_creation splits into cw_1h/cw_5m with the fallback main→1h, subagent→5m recorded in cache_write_basis; <synthetic> assistant records become limit_notice events and never calls.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0004"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0004",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0004"
           },
           {
             "id": "dw-0203",
             "assertion": "Compaction (trigger, pre/post tokens, duration), recap, scheduled_fire, limit_notice with resets_at_ms where parseable, queue_op and model_switch are typed events; calls carry stop_reason.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0005"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0005",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0003"
           },
           {
             "id": "dw-0204",
             "assertion": "Turn origin and sender precedence match extract.py; subagent sources carry parent_session_id; tool_uses pair use and result with outcome, sizes and native duration.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0005"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0005",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0003"
           },
           {
             "id": "dw-0205",
             "assertion": "SessionFacts report first/last native event time, the latest main-chain context (sidechains excluded), Some(compaction counts), last_compaction.first_context_after and last_model_switch.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0005"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0005",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0003"
           },
           {
             "id": "dw-0206",
             "assertion": "No row carries content unless include_content is set; content_head appears only then; fixtures are synthetic.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-000b"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-000b",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0003"
           }
         ],
         "tk-0003": [
           {
             "id": "dw-0301",
             "assertion": "An unchanged re-run reads 0 body bytes and commits nothing; an append reads only bytes after the cursor; rotate, truncate, rewrite and policy change produce Replaced{reason} with a new generation.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0001"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0001",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0003"
           },
           {
             "id": "dw-0302",
             "assertion": "An injected commit failure leaves the previous state; the next run recovers without duplicate canonical rows.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0001"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0001",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0003"
           },
           {
             "id": "dw-0303",
             "assertion": "Under a concurrent non-LF-aligned writer every run succeeds, pending_tail_bytes is reported and final canonical rows equal a fresh run.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0002"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0002",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0005"
           },
           {
             "id": "dw-0304",
             "assertion": "PrepReport counts skipped symlinks, hidden and unreadable entries per set, reports sources excluded by --modified-since as skipped (state kept), uses the full New…Missing vocabulary, reports unsupported harness roots and keys extra roots by label.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0007"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0007",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0003"
           },
           {
             "id": "dw-0305",
             "assertion": "record returns exactly the addressed native record only with include_content and is refused before any read otherwise.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-000a"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-000a",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0003"
           },
           {
             "id": "dw-0306",
             "assertion": "fold_source without a store yields the same SessionFacts and checkpoint as run_prep for that source.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0003"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0003",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0003"
           },
           {
             "id": "dw-0307",
             "assertion": "The loader opens native files read-only without locks, honours accept, and its anchor detects a same-inode rewrite.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-000b"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-000b",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0003"
           }
         ],
         "tk-0004": [
           {
             "id": "dw-0401",
             "assertion": "Commit order is parts → snapshots → state rename; a failure injected before the rename leaves the previous publication readable and the next load removes orphans.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0001"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0001",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0003"
           },
           {
             "id": "dw-0402",
             "assertion": "A second writer is refused while the first holds the target lock.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0001"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0001",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0003"
           },
           {
             "id": "dw-0403",
             "assertion": "compact rewrites the current generation, drops superseded rows and leaves every canonical view (read back in Rust) unchanged.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0008"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0008",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0004"
           },
           {
             "id": "dw-0404",
             "assertion": "Parquet files carry schema-version metadata; views.sql defines every canonical view; the tool_uses table is published.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0008"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0008",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0003"
           }
         ],
         "tk-0005": [
           {
             "id": "dw-0501",
             "assertion": "The frozen argv (incl. repeated --root HARNESS[:LABEL]=DIR, --harness, --no-default-roots, limits) parse into requests; invalid combinations exit 2.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0003"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0003",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0003"
           },
           {
             "id": "dw-0502",
             "assertion": "Machine envelope and human summary render per-set coverage, statuses, skips and pending tails; any Unreadable source exits 3.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0007"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0007",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0003"
           },
           {
             "id": "dw-0503",
             "assertion": "`prep record` without --include-content is refused with an actionable next_action.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-000b"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-000b",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0003"
           },
           {
             "id": "dw-0504",
             "assertion": "The prep topic is registered, every example argv in its manifest parses, and README, docs/cli.md and docs/sdk.md carry prep sections.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-000d"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-000d",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0003"
           }
         ],
         "tk-0006": [
           {
             "id": "dw-0601",
             "assertion": "unisphere-proof prep: an external SDK consumer with its own store and the built and installed CLI agree across cold, unchanged, append, tail, replace, crash, compact and record scenarios.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0003"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0003",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0003"
           },
           {
             "id": "dw-0602",
             "assertion": "The catalogue reports cli_persisted_resume = true for claude-code only.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0003"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0003",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0003"
           },
           {
             "id": "dw-0603",
             "assertion": "`harness boot --json` is ready with the prep proof mode included.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-000f"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-000f",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0003"
           },
           {
             "id": "dw-0604",
             "assertion": "Real-corpus parity against a copied extract.py: file-F, four window totals and every call row are exact, or each divergence is explained and accepted by the reviewer.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0004"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0004",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0004"
           },
           {
             "id": "dw-0605",
             "assertion": "Live fleet runs and the concurrent-writer copy proof complete with zero failures and final totals equal to a fresh prep.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0002"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0002",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0005"
           },
           {
             "id": "dw-0606",
             "assertion": "Claude cold, unchanged and append runs report wall time, peak RSS, bytes read and state.json size against the POC baseline.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-000c"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-000c",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0006"
           },
           {
             "id": "dw-0607",
             "assertion": "An external DuckDB (Python module) reads the published Parquet through views.sql without schema declarations, and view results equal the Rust-read canonical rows.",
-            "state": "unchecked",
-            "pressure": "../../backpressure.dd.json#rows/bp-0008"
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0008",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0004"
           }
         ]
       }

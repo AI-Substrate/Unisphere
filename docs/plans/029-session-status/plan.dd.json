@@ -66,7 +66,7 @@
         },
         {
           "id": "ac-0006",
-          "claim": "SDK and CLI parity: the SDK operation runs in-process with an injected loader and returns the same facts as the CLI; an external SDK consumer and the installed CLI are exercised; harness checks and boot stay green. Metadata only, native stores read-only, no real data in fixtures.",
+          "claim": "SDK and CLI parity: the SDK op takes an explicit target (harness, session id, optional transcript path) and never calls pij or tmux (that lookup is CLI-only). It returns (SessionStatus, cursor): an opaque caller-held cursor makes the next call read only appended bytes, resetting visibly on shrink/replace. 50 warm seats re-status in under 100 ms, measured. SessionStatus is serde with a schema version. The op's crate graph has no rusqlite/libsqlite3-sys/parquet/arrow (checked). An external SDK consumer and the installed CLI are exercised; harness checks and boot stay green. Metadata only, native stores read-only, no real data in fixtures.",
           "state": "unchecked"
         },
         {
@@ -157,6 +157,16 @@
           "question": "Seats and models?",
           "answer": "PM pij-specific-kiwi. Coder: OMP harness, github-copilot Claude Opus 5.5. Reviewer: Claude Sonnet 5.5 based, available when pij-curly-kiwi finishes; only reviewer dispatch waits.",
           "source": "Jordan, 2026-09-29"
+        },
+        {
+          "question": "Compaction count with no markers?",
+          "answer": "Claude: 0 (it records compaction markers). Unknown only for harnesses without markers.",
+          "source": "Prime / Plan 028 PM, 2026-09-29"
+        },
+        {
+          "question": "Embedding consumer needs?",
+          "answer": "pij-rs Plan 157 embeds the SDK op: explicit target, incremental cursor, no sqlite in graph, serde SessionStatus. Push of this branch needs Jordan approval.",
+          "source": "pij-yelling-trout ask; reply scratch/session-status-029-reply-plan157.md"
         }
       ]
     },

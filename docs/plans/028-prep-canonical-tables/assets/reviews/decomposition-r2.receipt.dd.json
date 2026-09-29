@@ -1,0 +1,91 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "review",
+      "value": {
+        "record_type": "review",
+        "id": "rv-028-decomposition-r2",
+        "recorded_at": "2026-09-29T04:55:28+00:00",
+        "scope": "decomposition",
+        "subject_sha": "3f39e1b4b47776e9b89464a604192aaedddf99ea",
+        "plan": {
+          "path": "docs/plans/028-prep-canonical-tables/plan.dd.json",
+          "sha256": "e1872f2cc578e37b275fad3b3057c05b38ed9f7e719de360696c32bbcf5d6f86"
+        },
+        "guide": {
+          "path": "docs/plans/028-prep-canonical-tables/assets/impl-guide.dd.json",
+          "sha256": "34d67d70b4f3a8fcbc4a59bd93696c62ca7653533da0d1a85a951fa0d59d8dba"
+        },
+        "reviewer_id": "pij-panicky-anteater",
+        "requested": {
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-sonnet-5.5",
+          "source": {
+            "harness": "guide",
+            "model": "guide"
+          }
+        },
+        "observed": {
+          "peer_id": "pij-panicky-anteater",
+          "root": "/Users/jordanknight/substrate/unisphere/unisphere-028-review",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/claude-sonnet-5.5",
+          "native_session": "01a0eb71-0bdc-74bd-97d4-6f85f7527e72",
+          "pid": 53353,
+          "argv": ["omp", "--auto-approve", "--model", "github-copilot/claude-sonnet-5.5"],
+          "evidence": [
+            "git -C unisphere-028-review log -1 --format=%H (3f39e1b4b47776e9b89464a604192aaedddf99ea) matched git -C unisphere-prep log -1 -- reviewer-decomposition-r2.md",
+            "sha256sum of plan.dd.json, assets/impl-guide.dd.json, assets/tasks/phase-1/tasks.dd.json in the clone — all three match the packet bindings table",
+            "read assets/team/review-decomposition-rv-028-decomposition-r1.dd.json (round-1 record as filed)",
+            "read impl-guide.dd.json v2 in full (all 14 architecture.contracts clauses, capabilities, units) and diffed against round-1 text",
+            "read crates/core/src/prep.rs in full (771 lines): PrepSourceStatus (Skipped+Missing), every row struct's Option<> fields, PrepFold::open(meta, source, generation, saved) signature, TurnOrigin/PrepEventKind/ToolSighting/ToolOutcome enums",
+            "read crates/core/tests/prep_contract.rs in full (211 lines, 6 tests)",
+            "read crates/testkit/src/prep.rs (752 lines): MemoryPrepStore.fail_next_commit, MemoryLoader.{append,rotate,rewrite,truncate,remove,put_snapshot,set_unreadable}, RecordingFold",
+            "grepped crates/output-prep/src/lib.rs and crates/testkit/src/prep.rs for compact()/Unsupported/incomplete_tail",
+            "ran: cargo check --locked --workspace -> clean, every crate compiles",
+            "ran: cargo test --locked -p unisphere-core --test prep_contract -> 6 passed, 0 failed",
+            "ran: cargo run --locked -p unisphere-testkit --bin unisphere-arch-check -> 110 edges accepted, 34 files scanned, 0 violations"
+          ],
+          "gaps": [
+            "No provider-side attestation available beyond the harness-reported model string and the omp models catalogue listing named in the guide's roles table.",
+            "Did not run the full harness checks --json / harness boot --json myself (2.4M/3.6M ms budgets); relied on the PM's stated harness checks -> ok evidence plus my own targeted cargo check/test/arch-check runs, which exercise the same compiled surface the guide's checks table names for this baseline."
+          ]
+        },
+        "verdict": "approved",
+        "report": {
+          "path": "docs/plans/028-prep-canonical-tables/assets/reviews/decomposition-r2.md",
+          "sha256": "324f56f0f89c8da905070db6088935e9bff69ed4935fdfc833a8c93e8924fd19"
+        },
+        "findings": [
+          {
+            "id": "F-01",
+            "severity": "medium",
+            "description": "AC-0007 requires a per-source outcome vocabulary including 'skipped', but the frozen v2 PrepSourceStatus enum had no Skipped variant.",
+            "disposition": "fixed",
+            "evidence": "crates/core/src/prep.rs:561-591 (PrepSourceStatus now has explicit Skipped distinct from Missing; label() matches AC-0007's word list exactly); crates/core/tests/prep_contract.rs:74-111 (status_vocabulary_covers_every_reported_outcome asserts the literal label list); test run: 6/6 passed including this test."
+          },
+          {
+            "id": "F-02",
+            "severity": "medium",
+            "description": "Row-schema fields (ts/ts_ms/started_ts/native_offset/native_key/usage counters) were not explicitly marked Option<> in the frozen v2 contract prose, contradicting planned phase-2 lanes (Cursor transcript, VS Code Copilot, Codex) that require these fields null.",
+            "disposition": "fixed",
+            "evidence": "crates/core/src/prep.rs:250-377 (every row struct's timestamp/counter/id/native-address field is Option<>); crates/core/tests/prep_contract.rs:113-151 (unrecorded_row_fields_serialize_as_null_not_zero constructs a Cursor-transcript-shaped PrepCallRow with every optional field None and asserts JSON null, not omitted/zero); guide v2 architecture.contracts Rows clause states nullability as an explicit rule matching the code."
+          },
+          {
+            "id": "F-03",
+            "severity": "low",
+            "description": "Capability cp-000b's proof list omitted vd-0006, the check that actually proves the read-only-loader half of AC-000b.",
+            "disposition": "fixed",
+            "evidence": "impl-guide.dd.json capabilities/cp-000b proof array now includes vd-0006 alongside vd-0002, vd-0003, vd-0005, vd-0008."
+          }
+        ]
+      }
+    }
+  ],
+  "references": []
+}

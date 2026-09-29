@@ -1,0 +1,22 @@
+docs/plans/028-prep-canonical-tables/assets/post-flight.md
+  h_9e71e8b09f7cf2 1-89
+docs/plans/028-prep-canonical-tables/plan.dd.json
+  h_9e71e8b09f7cf2 234
+docs/plans/028-prep-canonical-tables/plan.dd.md
+  h_9e71e8b09f7cf2 168
+docs/plans/028-prep-canonical-tables/the-flow.json
+  h_9e71e8b09f7cf2 418-444,734,748-758
+docs/plans/028-prep-canonical-tables/the-flow.md
+  h_9e71e8b09f7cf2 4,25,64-66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "4cbe003fb287bf456faa9ed8664dfb0a184ffe88",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

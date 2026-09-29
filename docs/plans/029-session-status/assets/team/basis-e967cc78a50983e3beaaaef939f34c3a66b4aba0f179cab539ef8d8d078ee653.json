@@ -1,0 +1,521 @@
+{
+  "dd": {
+    "schema": "builder/impl-guide"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Session status: one harness-neutral fact shape over the Plan 028 fold",
+        "plan": "../plan.dd.json#meta",
+        "version": 1,
+        "updated": "2026-09-29 r1 dispositions: F-01 roots on StatusService::new + transcript rule; F-02 ScriptedFold sighting/msg_id + baseline test (vd-000a); F-03 status_incremental takes Option<&StatusCursor>, target-changed reset; F-04 SDK fills target, CLI always fills resolved; F-05 UNKNOWN_FACTS closed vocabulary; F-06 cp-0001 proofs; F-07 negative/missing totals are unknown, compact accumulators."
+      }
+    },
+    {
+      "name": "architecture",
+      "value": {
+        "principles": "Hexagonal, functional core / imperative shell, constructor injection, no clock or ambient lookup in core/sdk (now_ms is injected). core::status owns the SessionStatus DTOs and two ports: SessionStatusApi (explicit target -> facts) and TargetResolver (pij id / tmux pane / explicit -> target). The SDK StatusService implements SessionStatusApi over Plan 028 PrepBinding {fold, loader} + fold_source; it never calls pij, tmux or processes. Target resolution (pij list + liveness, tmux pane -> child harness process -> harness session record) is I/O in loader-query, used by the CLI path only. The CLI maps argv to queries and renders; no status semantics. crates/app is the only composition root. Status derivation is a pure function of SessionFacts + accumulated call/turn rows + now_ms.",
+        "composition_root": "crates/app/src/main.rs dispatches `sessions status`; crates/app/src/status.rs (new) builds StatusService from the Plan 028 bindings table (crates/app/src/prep.rs) and the loader-query StatusTargetResolver. Nothing else constructs concrete loaders, folds or resolvers.",
+        "contracts": [
+          "core::status (crates/core/src/status.rs), STATUS_SCHEMA_VERSION = 1. All DTOs serde (Serialize + Deserialize); timestamps are i64 epoch ms; unknown facts are None AND named in SessionStatus.unknown; a harness never reports 0 for an unrecorded fact.",
+          "Basis = native | derived | table | mtime_fallback (snake_case). Fact<T> {value: T, basis: Basis}. Table-derived values carry the table version (context.window_table = \"model-windows@1\").",
+          "StatusTarget {harness: String (adapter id, e.g. \"claude-code\"), session_id: String, transcript: Option<PathBuf>}. StatusQuery = Target(StatusTarget) | Pij(String) | Pane(String). ResolveBasis = explicit | pij_registry | native_pane. Resolved {query, target, pij_id: Option<String>, pane: Option<String>, basis, conflicts: Vec<ResolveConflict {basis, target}>}.",
+          "SessionStatus {schema_version, target, resolved: Option<Resolved>, model: ModelStatus {current: Option<Fact<String>>, current_at_ms: Option<i64>, pending_switch: Option<ModelSwitchStatus {requested: String, at_ms: Option<i64>}>, history: Vec<ModelSpan {model, first_ms, last_ms, calls}>}, context: ContextStatus {used_tokens: Option<Fact<u64>>, window_tokens: Option<Fact<u64>>, window_table: Option<String>, percent: Option<f64>, display: Option<String> (\"250k of 1M (25%)\")}, last_call: Option<LastCall {at_ms, input, output, cache_read, cache_write_1h, cache_write_5m (all Option<u64>), ttl_bucket: Option<Fact<String>> (\"1h\"|\"5m\"), cache_warm: Option<Fact<bool>>, stop_reason: Option<String>}>, timeline: Timeline {created_ms: Option<Fact<i64>>, last_updated_ms: Option<Fact<i64>>, idle_seconds: Option<u64>}, turns: TurnStatus {total, last_hour_total, by_origin: BTreeMap<String,u64>, last_hour_by_origin: BTreeMap<String,u64>}, compaction: CompactionStatus {counts: Option<CompactionCounts>, last: Option<CompactionSample>}, calls: CallCounts {total, sidechain}, limits_seen: Vec<LimitSeen {kind, at_ms, resets_at}>, source: SourceStatus {bytes_read, pending_tail_bytes, reset: Option<String>}, unknown: Vec<String>}. CompactionCounts/CompactionSample are re-used from core::prep.",
+          "trait SessionStatusApi: Send + Sync { fn status(&self, target: &StatusTarget, now_ms: i64) -> Result<SessionStatus, StatusFailure>; } trait TargetResolver: Send + Sync { fn resolve(&self, query: &StatusQuery) -> Result<Resolved, StatusFailure>; }",
+          "StatusFailure {kind: StatusFailureKind, message} with code() and recovery() per kind: UNI-STATUS-UNSUPPORTED-HARNESS, UNI-STATUS-TRANSCRIPT-NOT-FOUND, UNI-STATUS-READ, UNI-STATUS-PIJ-UNAVAILABLE, UNI-STATUS-PIJ-UNKNOWN-SEAT, UNI-STATUS-PIJ-NO-SESSION, UNI-STATUS-DEAD-BINDING, UNI-STATUS-PANE-NOT-FOUND. Messages never carry transcript content.",
+          "SDK (crates/sdk/src/status.rs): StatusService::new(bindings: Vec<PrepBinding>, roots: Vec<PrepSourceSet>) implements SessionStatusApi, plus the embedding op `fn status_incremental(&self, target: &StatusTarget, cursor: Option<&StatusCursor>, now_ms: i64) -> Result<(SessionStatus, StatusCursor), StatusFailure>`. The caller keeps its cursor on error. StatusCursor is opaque, Clone + Send + Sync, compact (PrepResume, stat identity/anchor, target, and bounded accumulators: model spans, turn (started_ms, origin) pairs, last-call row, limit notices). Transcript rule: an explicit transcript path is read under the configured root that contains it, else under its parent directory as root; with no path, the SDK discovers under the roots for that harness and matches the file stem to session_id (Claude: <session_id>.jsonl), else TranscriptNotFound. Reads stop at the last complete record; shrink, identity change, anchor mismatch or a cursor for a different target refolds cold and sets source.reset (rotated|truncated|anchor|target-changed). incremental == cold for every field except source.",
+          "Definitions: current model = latest main-chain non-synthetic call model; pending_switch = SessionFacts.last_model_switch newer than that call; used_tokens = latest_context.total (native); window = native when recorded else model-windows@1 table else unknown; percent only when both known; ttl_bucket from last call write split (derived); cache_warm = now - last call < ttl (derived); last_updated = last_event_ms (native) else transcript mtime (mtime_fallback); Claude compaction count with zero markers = 0. ContextSample.total (i64) negative or missing maps to unknown. The SDK fills SessionStatus.target, including the transcript path read; the CLI always fills resolved (basis explicit for --session) and copies target.transcript into it. unknown uses only core::status::UNKNOWN_FACTS names (empty status lists all; the SDK removes each as filled)."
+        ]
+      }
+    },
+    {
+      "name": "fan_out",
+      "value": {
+        "decision": "coders",
+        "rationale": "Two behaviours run and prove independently against the frozen core::status contract and testkit fakes: the SDK StatusService (driven by testkit scripted PrepFold/PrepLoader fakes) and the CLI frontend + target resolver (driven by FakeStatusApi and injected pij/tmux/process/filesystem fakes). Composition, real-workload proof and the dependency sensor stay with the PM. Coders never import each other in the same wave."
+      }
+    },
+    {
+      "name": "capabilities",
+      "value": [
+        {
+          "id": "cp-0001",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0001",
+          "owner": "tk-0003",
+          "path": "argv --pij/--pane/--session+--harness -> StatusQuery -> StatusTargetResolver (pij list + proc liveness | tmux pane -> child harness pid -> harness session record) -> Resolved -> SessionStatusApi",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0003",
+            "impl-guide.dd.json#checks/vd-0004",
+            "impl-guide.dd.json#checks/vd-0006",
+            "impl-guide.dd.json#checks/vd-0008"
+          ]
+        },
+        {
+          "id": "cp-0002",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0002",
+          "owner": "tk-0001",
+          "path": "core::status DTOs, Basis, unknown list, schema version",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0001"
+          ]
+        },
+        {
+          "id": "cp-0003",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0003",
+          "owner": "tk-0002",
+          "path": "fold_source -> SessionFacts + call rows -> derive model/context facts",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002"
+          ]
+        },
+        {
+          "id": "cp-0004",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0004",
+          "owner": "tk-0002",
+          "path": "fold_source -> SessionFacts + call/turn/event rows + now_ms -> activity, turn and compaction facts",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002"
+          ]
+        },
+        {
+          "id": "cp-0005",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0005",
+          "owner": "tk-0004",
+          "path": "installed CLI sessions status on the real 211 MB live transcript by id and by --pij; concurrent appender",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0008"
+          ]
+        },
+        {
+          "id": "cp-0006",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0006",
+          "owner": "tk-0004",
+          "path": "external SDK consumer status_incremental loop vs installed CLI; dependency sensor; 50-seat warm timing",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0005",
+            "impl-guide.dd.json#checks/vd-0006",
+            "impl-guide.dd.json#checks/vd-0007",
+            "impl-guide.dd.json#checks/vd-0008"
+          ]
+        },
+        {
+          "id": "cp-0007",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0007",
+          "owner": "tk-0003",
+          "path": "unsupported harness refusal; bundled session-status docs topic; docs/cli.md and docs/sdk.md",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0003",
+            "impl-guide.dd.json#checks/vd-0006"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "units",
+      "value": [
+        {
+          "id": "tk-0001",
+          "name": "Status contract baseline",
+          "role": "pm",
+          "responsibility": "core::status DTOs, ports, failures and serde fixture tests; testkit ScriptedFold (one JSON step per record -> call/turn/event rows or SessionFacts), FakeStatusApi and FakeTargetResolver. The no-rusqlite/parquet/arrow rule for core, sdk, loader-jsonl and adapter-claude is already enforced by the closed arch-check allowlist (vd-0005); no sensor change.",
+          "paths": [
+            "crates/core/src/status.rs",
+            "crates/core/src/lib.rs",
+            "crates/core/tests/status_contract.rs",
+            "crates/testkit/src/status.rs",
+            "crates/testkit/src/lib.rs"
+          ],
+          "reads": [],
+          "interface": "core::status as in architecture.contracts; testkit::status fakes.",
+          "depends_on": [],
+          "wave": 0,
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0002"
+          ],
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0001",
+            "impl-guide.dd.json#checks/vd-000a",
+            "impl-guide.dd.json#checks/vd-0005"
+          ]
+        },
+        {
+          "id": "tk-0002",
+          "name": "SDK StatusService",
+          "role": "coder",
+          "responsibility": "StatusService over PrepBinding + fold_source: status and status_incremental, cursor reset rules, call/turn accumulators, pure derivation of every fact per architecture definitions, model-windows@1 table, unknown list. Synthetic tests: model switch mid-session reports new model and pending switch; compaction counts and last compaction; last-hour turns by origin with injected now; TTL/warm; mtime fallback labelled; incremental == cold result; shrink/replace resets visibly; partial tail never errors. Also: update sightings of the latest call merge per field (max) so last_call reflects the final sighting; cursor for another target resets visibly.",
+          "paths": [
+            "crates/sdk/src/status.rs",
+            "crates/sdk/src/lib.rs",
+            "crates/sdk/tests/status.rs"
+          ],
+          "reads": [
+            {
+              "owner": "tk-0001",
+              "paths": [
+                "crates/core/src/status.rs",
+                "crates/core/src/lib.rs",
+                "crates/testkit/src/status.rs"
+              ]
+            }
+          ],
+          "interface": "StatusService::new(Vec<PrepBinding>, Vec<PrepSourceSet>); impl SessionStatusApi; status_incremental(&StatusTarget, Option<&StatusCursor>, now_ms) -> Result<(SessionStatus, StatusCursor), StatusFailure>.",
+          "depends_on": [
+            "tk-0001"
+          ],
+          "wave": 1,
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0003",
+            "../plan.dd.json#acceptance_criteria/ac-0004",
+            "../plan.dd.json#acceptance_criteria/ac-0006"
+          ],
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002"
+          ]
+        },
+        {
+          "id": "tk-0003",
+          "name": "CLI sessions status and target resolver",
+          "role": "coder",
+          "responsibility": "`unisphere sessions status` argv (repeatable --pij/--pane/--session with --harness, --json default when piped), envelope with one result or failure per query, human table; StatusTargetResolver in loader-query: pij list --json + recorded proc (pid, proc_start) liveness, tmux list-panes -> bounded child walk -> Claude ~/.claude/sessions/<pid>.json (sessionId, tmux pane), conflicts returned not picked, distinct failures; injected command runner / process table / filesystem so tests use fakes. Docs topic session-status.md, docs/cli.md and docs/sdk.md sections.",
+          "paths": [
+            "crates/cli/src/status.rs",
+            "crates/cli/src/args.rs",
+            "crates/cli/src/lib.rs",
+            "crates/cli/src/docs.rs",
+            "crates/cli/docs/session-status.md",
+            "crates/cli/tests/status.rs",
+            "crates/loader-query/src/status_target.rs",
+            "crates/loader-query/src/lib.rs",
+            "crates/loader-query/tests/status_target.rs",
+            "docs/cli.md",
+            "docs/sdk.md"
+          ],
+          "reads": [
+            {
+              "owner": "tk-0001",
+              "paths": [
+                "crates/core/src/status.rs",
+                "crates/core/src/lib.rs",
+                "crates/testkit/src/status.rs"
+              ]
+            }
+          ],
+          "interface": "unisphere_cli status frontend taking &dyn SessionStatusApi + &dyn TargetResolver; loader_query::StatusTargetResolver::new(runner, procs, fs, home): TargetResolver.",
+          "depends_on": [
+            "tk-0001"
+          ],
+          "wave": 1,
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0001",
+            "../plan.dd.json#acceptance_criteria/ac-0007"
+          ],
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0003",
+            "impl-guide.dd.json#checks/vd-0004"
+          ]
+        },
+        {
+          "id": "tk-0004",
+          "name": "Composition and real-workload proof",
+          "role": "pm",
+          "responsibility": "Wire crates/app status.rs + main.rs on the Plan 028 bindings; status proof mode in unisphere-proof (external SDK consumer incremental loop vs installed CLI on synthetic roots) and its boot entry; real-machine proof script: 211 MB live transcript by id and --pij (~1 s cold, no limit error), concurrent appender, 50 warm seats < 100 ms via status_incremental, model-switch session, pane lookup < 50 ms; numbers-only evidence.",
+          "paths": [
+            "crates/app/src/main.rs",
+            "crates/app/src/status.rs",
+            "crates/app/tests/status.rs",
+            "crates/testkit/src/bin/unisphere-proof.rs",
+            "crates/testkit/src/bin/proof/status.rs",
+            "crates/testkit/fixtures/consumer/status-main.rs",
+            ".harness/extensions/boot/boot.mjs",
+            ".harness/extensions/boot/extension.test.mjs",
+            "docs/plans/029-session-status/assets/proof"
+          ],
+          "reads": [
+            {
+              "owner": "tk-0002",
+              "paths": [
+                "crates/sdk/src/status.rs"
+              ]
+            },
+            {
+              "owner": "tk-0003",
+              "paths": [
+                "crates/cli/src/status.rs",
+                "crates/loader-query/src/status_target.rs"
+              ]
+            }
+          ],
+          "interface": "crates/app composition; proof argv in checks.",
+          "depends_on": [
+            "tk-0002",
+            "tk-0003"
+          ],
+          "wave": 2,
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0005",
+            "../plan.dd.json#acceptance_criteria/ac-0006"
+          ],
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0006",
+            "impl-guide.dd.json#checks/vd-0007",
+            "impl-guide.dd.json#checks/vd-0008",
+            "impl-guide.dd.json#checks/vd-0009"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "baseline",
+      "value": {
+        "files": [
+          "crates/core/src/status.rs",
+          "crates/core/tests/status_contract.rs",
+          "crates/testkit/src/status.rs"
+        ],
+        "proof": [
+          "impl-guide.dd.json#checks/vd-0001",
+          "impl-guide.dd.json#checks/vd-000a",
+          "impl-guide.dd.json#checks/vd-0005"
+        ],
+        "receipt": "team/baseline.dd.json"
+      }
+    },
+    {
+      "name": "isolation",
+      "value": {
+        "mode": "clone-per-coder",
+        "allocation_owner": "harness",
+        "note": "One clone per coder (the installed dispatcher refuses linked-worktree coder allocations). Packets name the clone root and sealed source SHA. Authority records live under assets/team."
+      }
+    },
+    {
+      "name": "roles",
+      "value": [
+        {
+          "id": "rl-0001",
+          "role": "coder",
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5.5",
+          "note": "Jordan, 2026-09-29."
+        },
+        {
+          "id": "rl-0002",
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-sonnet-5.5",
+          "note": "Jordan, 2026-09-29: Sonnet 5.5 based reviewer, available when pij-curly-kiwi finishes its work; only reviewer dispatch waits. No substitute without Jordan."
+        }
+      ]
+    },
+    {
+      "name": "checks",
+      "value": [
+        {
+          "id": "vd-0001",
+          "description": "Contract: core::status serde round-trips, Basis vocabulary, unknown list, schema version, failure codes.",
+          "command": "cargo",
+          "args": [
+            "test",
+            "--locked",
+            "-p",
+            "unisphere-core",
+            "--test",
+            "status_contract"
+          ],
+          "cwd": ".",
+          "timeout_ms": 900000
+        },
+        {
+          "id": "vd-0002",
+          "description": "SDK StatusService on scripted fold fakes: every fact definition, model switch, compaction, last-hour turns, TTL/warm, mtime fallback, incremental == cold, reset on shrink/replace, partial tail.",
+          "command": "cargo",
+          "args": [
+            "test",
+            "--locked",
+            "-p",
+            "unisphere-sdk",
+            "--test",
+            "status"
+          ],
+          "cwd": ".",
+          "timeout_ms": 900000
+        },
+        {
+          "id": "vd-0003",
+          "description": "CLI frontend with FakeStatusApi + FakeTargetResolver: argv, repeat queries, envelopes, exit codes, failures, docs topic examples parse.",
+          "command": "cargo",
+          "args": [
+            "test",
+            "--locked",
+            "-p",
+            "unisphere-cli",
+            "--test",
+            "status"
+          ],
+          "cwd": ".",
+          "timeout_ms": 900000
+        },
+        {
+          "id": "vd-0004",
+          "description": "Target resolver with injected pij/tmux/process/filesystem fakes: pij registry + liveness, dead binding, duplicate pane, native pane child walk, conflicts, distinct failures.",
+          "command": "cargo",
+          "args": [
+            "test",
+            "--locked",
+            "-p",
+            "unisphere-loader-query",
+            "--test",
+            "status_target"
+          ],
+          "cwd": ".",
+          "timeout_ms": 900000
+        },
+        {
+          "id": "vd-0005",
+          "description": "Architecture sensor: no rusqlite/libsqlite3-sys/parquet/arrow in core, sdk, loader-jsonl, adapter-claude normal graphs; core/sdk purity.",
+          "command": "cargo",
+          "args": [
+            "run",
+            "--locked",
+            "-p",
+            "unisphere-testkit",
+            "--bin",
+            "unisphere-arch-check"
+          ],
+          "cwd": ".",
+          "timeout_ms": 900000
+        },
+        {
+          "id": "vd-0006",
+          "description": "Assembled: external SDK consumer status_incremental loop and built + installed CLI sessions status over synthetic Claude roots agree; append, partial tail, replace reset, model switch, unsupported harness.",
+          "command": "cargo",
+          "args": [
+            "run",
+            "--locked",
+            "-p",
+            "unisphere-testkit",
+            "--bin",
+            "unisphere-proof",
+            "--",
+            "status"
+          ],
+          "cwd": ".",
+          "timeout_ms": 1200000
+        },
+        {
+          "id": "vd-0007",
+          "description": "Full repository quality lane.",
+          "command": "harness",
+          "args": [
+            "checks",
+            "--json"
+          ],
+          "cwd": ".",
+          "timeout_ms": 2400000
+        },
+        {
+          "id": "vd-0008",
+          "description": "Real machine: 211 MB live Claude transcript by id and --pij cold (~1 s, no limit error), concurrent appender, 50 warm seats < 100 ms, pane lookup < 50 ms, a real model-switch session; numbers only.",
+          "command": "python3",
+          "args": [
+            "docs/plans/029-session-status/assets/proof/status_real.py",
+            "--scratch",
+            ".harness/temp/status-real"
+          ],
+          "cwd": ".",
+          "timeout_ms": 1800000
+        },
+        {
+          "id": "vd-0009",
+          "description": "Engineering-harness readiness including the status proof mode.",
+          "command": "harness",
+          "args": [
+            "boot",
+            "--json"
+          ],
+          "cwd": ".",
+          "timeout_ms": 3600000
+        },
+        {
+          "id": "vd-000a",
+          "description": "Baseline fake: ScriptedFold steps (call first/update with msg_id, turn, event, partial facts), checkpoint resume, FAIL.",
+          "command": "cargo",
+          "args": [
+            "test",
+            "--locked",
+            "-p",
+            "unisphere-testkit",
+            "--lib",
+            "status"
+          ],
+          "cwd": ".",
+          "timeout_ms": 900000
+        }
+      ]
+    },
+    {
+      "name": "composition",
+      "value": {
+        "owner": "tk-0004",
+        "order": [
+          "tk-0002",
+          "tk-0003"
+        ],
+        "steps": [
+          "Rebase on the landed Plan 028 phase-1 composition (its crates/app/src/prep.rs bindings) before wiring.",
+          "Import tk-0002 then tk-0003 after packet/baseline integrity checks; keep on-track warnings.",
+          "Wire crates/app status.rs + main.rs, add proof mode + boot entry; commit and run compose --verify with vd-0006, vd-0005, vd-0007.",
+          "Run vd-0008 real-workload proof; commit numbers-only evidence; independent composition review of the exact SHA; then ask Jordan-approved push of builder/029-session-status for Plan 157."
+        ],
+        "proof": [
+          "impl-guide.dd.json#checks/vd-0006",
+          "impl-guide.dd.json#checks/vd-0007",
+          "impl-guide.dd.json#checks/vd-0009"
+        ]
+      }
+    },
+    {
+      "name": "review",
+      "value": {
+        "when": "Decomposition: this guide + committed baseline before seal and coder release. Composition: exact composed SHA after compose --verify.",
+        "inputs": [
+          "plan.dd.json and original-ask.md",
+          "assets/impl-guide.dd.json",
+          "Exact subject SHA",
+          "Command receipts and numbers-only real-workload evidence"
+        ],
+        "proof": [
+          "ReviewReceipt via harness builder review (reviewer requested vs observed, subject SHA, digests, verdict, findings).",
+          "Reviewer github-copilot/claude-sonnet-5.5 as ruled; unavailability leaves review unfulfilled, never a solo pass."
+        ]
+      }
+    },
+    {
+      "name": "risks",
+      "value": [
+        {
+          "id": "rk-0001",
+          "text": "Plan 028 is not landed; its phase-1 composition (crates/app/src/prep.rs) is still uncommitted, so 029 composition waits and may need a rebase.",
+          "check": "Composition step 1; on-track warnings at import."
+        },
+        {
+          "id": "rk-0002",
+          "text": "Claude transcripts do not record the context window; the model-windows@1 table may be wrong for some models or tiers.",
+          "check": "Always labelled basis table with version; vd-0002 asserts the label."
+        },
+        {
+          "id": "rk-0003",
+          "text": "tmux pane ids are reused and pij rows can be dead bindings.",
+          "check": "vd-0004 duplicate pane + dead binding cases; liveness via (pid, proc_start)."
+        },
+        {
+          "id": "rk-0004",
+          "text": "50 seats < 100 ms depends on warm incremental reads only touching appended bytes.",
+          "check": "vd-0008 measures and reports; vd-0002 asserts bytes_read on unchanged re-status is 0."
+        }
+      ]
+    }
+  ],
+  "references": []
+}

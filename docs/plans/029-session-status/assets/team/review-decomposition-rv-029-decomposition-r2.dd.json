@@ -1,0 +1,131 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "review",
+      "value": {
+        "record_type": "review",
+        "id": "rv-029-decomposition-r2",
+        "recorded_at": "2026-09-29T06:16:19+00:00",
+        "scope": "decomposition",
+        "subject_sha": "aac28a053732a494fafe5219842de6d3aeaf06b6",
+        "plan": {
+          "path": "docs/plans/029-session-status/plan.dd.json",
+          "sha256": "72145b14324e289f86c5365f93785f3d76d2024e09595685c3f92a2f8235fa39"
+        },
+        "guide": {
+          "path": "docs/plans/029-session-status/assets/impl-guide.dd.json",
+          "sha256": "e967cc78a50983e3beaaaef939f34c3a66b4aba0f179cab539ef8d8d078ee653"
+        },
+        "reviewer_id": "pij-easy-seahorse",
+        "requested": {
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-sonnet-5.5",
+          "source": {
+            "harness": "guide",
+            "model": "guide"
+          }
+        },
+        "observed": {
+          "peer_id": "pij-easy-seahorse",
+          "root": "/Users/jordanknight/substrate/unisphere/unishpere-main",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/claude-sonnet-5.5",
+          "native_session": "01a0ebc8-c5b2-7268-8017-4ce7ad943e15",
+          "pid": 25009,
+          "argv": [
+            "omp",
+            "--auto-approve",
+            "--model",
+            "github-copilot/claude-sonnet-5.5"
+          ],
+          "evidence": [
+            "git log -1 for the r2 packet path = aac28a053732a494fafe5219842de6d3aeaf06b6; sha256sum of plan.dd.json (unchanged) and impl-guide.dd.json match the packet",
+            "git diff a025ef0..HEAD reviewed: crates/core/src/status.rs, crates/core/tests/status_contract.rs, crates/testkit/src/status.rs, impl-guide.dd.json/.dd.md, r1 records, r2 packet",
+            "read impl-guide contracts 6 and 7, tk-0002 responsibility/interface, cp-0001 proofs, vd-000a in full",
+            "read crates/testkit/src/status.rs baseline test and UNKNOWN_FACTS in crates/core/src/status.rs; confirmed PrepSourceSet in crates/core/src/prep.rs",
+            "ran: cargo test --locked -p unisphere-core --test status_contract -> 6 passed",
+            "ran: cargo test --locked -p unisphere-testkit --lib status -> 1 passed",
+            "ran: unisphere-arch-check -> 110 edges accepted",
+            "ran: cargo clippy --locked -p unisphere-core -p unisphere-testkit --all-targets -- -D warnings -> clean"
+          ],
+          "gaps": [
+            "Did not run harness checks --json / boot --json; no wave-1 code exists yet.",
+            "No provider-side attestation of the model beyond the harness-reported model string and pij seat record."
+          ]
+        },
+        "verdict": "approved",
+        "report": {
+          "path": "docs/plans/029-session-status/assets/reviews/decomposition-r2.md",
+          "sha256": "cce4336b5692598e0208ab3775908eee3fc1c2c7f325ce10f4d56f5698779908"
+        },
+        "findings": [
+          {
+            "id": "F-01",
+            "severity": "medium",
+            "description": "StatusService::new(Vec<PrepBinding>) has no source root; PrepLoader::stat/discover require a root, so default-location and explicit-path lookup cannot be implemented without ambient state. Add roots (Vec<PrepSourceSet>) and an explicit-path-under-root rule.",
+            "disposition": "fixed",
+            "evidence": "impl-guide.dd.json /sections/1/value/contracts/6: StatusService::new(bindings: Vec<PrepBinding>, roots: Vec<PrepSourceSet>) with explicit-path-under-containing-root (else parent-as-root) and discovery-by-file-stem rule, else TranscriptNotFound; /sections/4/value/1/interface repeats the signature; PrepSourceSet {harness,label,root} confirmed in crates/core/src/prep.rs."
+          },
+          {
+            "id": "F-02",
+            "severity": "medium",
+            "description": "testkit ScriptedFold only emits CallSighting::First with unique msg_id, so last-call Update max-merge/dedup (ac-0003) is unprovable by tk-0002 without editing the sealed baseline. Add sighting and msg_id to the call step plus one baseline test before seal.",
+            "disposition": "fixed",
+            "evidence": "crates/testkit/src/status.rs test scripted_steps_emit_rows_facts_and_resume: call steps with msg_id and sighting=update assert calls.len()==2, calls[1].sighting==Update, msg_id==Some(\"a\"); ran cargo test -p unisphere-testkit --lib status -> 1 passed. impl-guide.dd.json check vd-000a (/sections/8/value/9) referenced from cp-0001 proof."
+          },
+          {
+            "id": "F-03",
+            "severity": "medium",
+            "description": "status_incremental takes StatusCursor by value, so an error loses the cursor and callers must clone per call (50 warm seats < 100 ms). Take Option<&StatusCursor>, make it Clone+Send+Sync, treat a cursor for a different target as a visible reset, and exclude source from the incremental==cold comparison.",
+            "disposition": "fixed",
+            "evidence": "impl-guide.dd.json /sections/1/value/contracts/6 and /sections/4/value/1/interface: status_incremental(&StatusTarget, Option<&StatusCursor>, now_ms) -> Result<(SessionStatus, StatusCursor), StatusFailure>; caller keeps cursor on error; StatusCursor opaque Clone+Send+Sync with bounded accumulators; foreign-target cursor -> cold refold with source.reset=target-changed; incremental==cold except source."
+          },
+          {
+            "id": "F-04",
+            "severity": "medium",
+            "description": "Ownership of resolved.target.transcript and of the resolved block for explicit queries is undefined; core docs say resolved is CLI-filled only for pij/pane while ac-0001 requires it on every result. SDK sets status.target.transcript; CLI copies into resolved and always fills it (basis explicit).",
+            "disposition": "fixed",
+            "evidence": "impl-guide.dd.json /sections/1/value/contracts/6 and contracts/7: SDK fills SessionStatus.target including the transcript path read; CLI always fills resolved (basis explicit for --session) and copies target.transcript into it; matching doc comments in crates/core/src/status.rs (SourceStatus/SessionStatus)."
+          },
+          {
+            "id": "F-05",
+            "severity": "low",
+            "description": "The unknown-fact name vocabulary is free text and SessionStatus::empty leaves unknown empty; freeze a const list or guide table.",
+            "disposition": "fixed"
+          },
+          {
+            "id": "F-06",
+            "severity": "low",
+            "description": "cp-0001 proof omits vd-0004 and vd-0008 (50 ms pane budget).",
+            "disposition": "fixed"
+          },
+          {
+            "id": "F-07",
+            "severity": "low",
+            "description": "ContextSample.total is i64 while used_tokens is u64; specify negative/missing maps to unknown. Keep the cursor accumulators compact.",
+            "disposition": "fixed"
+          },
+          {
+            "id": "A-01",
+            "severity": "low",
+            "description": "model.pending_switch starts in UNKNOWN_FACTS; SDK should remove it when the fold ran and no switch exists (known: none).",
+            "disposition": "accepted"
+          },
+          {
+            "id": "A-02",
+            "severity": "low",
+            "description": "UNKNOWN_FACTS has no turn-count name; valid only while every dialect fold supplies turns; add via contract bump if that changes.",
+            "disposition": "accepted"
+          }
+        ],
+        "supersedes": "rv-029-decomposition-r1"
+      }
+    }
+  ],
+  "references": []
+}

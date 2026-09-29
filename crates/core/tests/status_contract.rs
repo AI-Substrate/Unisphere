@@ -131,6 +131,7 @@ fn failure_codes_are_stable_and_distinct() {
         StatusFailureKind::PijNoSession,
         StatusFailureKind::DeadBinding,
         StatusFailureKind::PaneNotFound,
+        StatusFailureKind::UnsupportedPlatform,
     ];
     let codes: std::collections::BTreeSet<_> = kinds.iter().map(|k| k.code()).collect();
     assert_eq!(codes.len(), kinds.len());

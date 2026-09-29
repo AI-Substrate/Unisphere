@@ -276,6 +276,8 @@ pub enum StatusFailureKind {
     PijNoSession,
     DeadBinding,
     PaneNotFound,
+    /// The lookup needs tools this platform lacks (e.g. tmux/ps on Windows).
+    UnsupportedPlatform,
 }
 
 impl StatusFailureKind {
@@ -289,6 +291,7 @@ impl StatusFailureKind {
             Self::PijNoSession => "UNI-STATUS-PIJ-NO-SESSION",
             Self::DeadBinding => "UNI-STATUS-DEAD-BINDING",
             Self::PaneNotFound => "UNI-STATUS-PANE-NOT-FOUND",
+            Self::UnsupportedPlatform => "UNI-STATUS-UNSUPPORTED-PLATFORM",
         }
     }
 
@@ -302,6 +305,9 @@ impl StatusFailureKind {
             Self::PijNoSession => "The seat has no recorded native session; query by --session.",
             Self::DeadBinding => "The seat's recorded process is gone; re-adopt the seat.",
             Self::PaneNotFound => "Check the pane id with `tmux list-panes -a`.",
+            Self::UnsupportedPlatform => {
+                "Pane lookup is unavailable on this platform; query by --session and --harness."
+            }
         }
     }
 }

@@ -6,9 +6,9 @@
 //! state and contributes no rows. Unchanged sources cost one `stat`.
 
 use std::{
-    collections::BTreeMap,
+    collections::BTreeSet,
     sync::{
-        Arc, Mutex,
+        Arc, Mutex, PoisonError,
         atomic::{AtomicUsize, Ordering},
     },
     thread,
@@ -117,17 +117,27 @@ pub fn fold_source(
         let rows = session.fold(&batch.input, options)?;
         result.rows += rows.len() as u64;
         sink(rows);
+        let before = cursor.as_ref().map(|cursor| cursor.offset);
         cursor = batch.next_cursor.or(cursor);
         if !batch.more {
             break;
         }
+        // A loader that asks for more without advancing would never finish.
+        if cursor.as_ref().map(|cursor| cursor.offset) <= before {
+            return Err(PipelineError::new(PipelineErrorKind::BatchLimit, before));
+        }
     }
     if let Some(cursor) = &cursor {
+        if cursor.offset < start {
+            return Err(PipelineError::new(
+                PipelineErrorKind::SourceChanged,
+                Some(start),
+            ));
+        }
         result.pending_tail_bytes = stat.size.saturating_sub(cursor.offset);
         if cursor.offset > 0 {
             result.anchor = Some(loader.anchor(stat, cursor.offset)?);
         }
-        debug_assert!(cursor.offset >= start);
     }
     result.cursor = cursor;
     result.checkpoint = session.checkpoint();
@@ -137,6 +147,8 @@ pub fn fold_source(
 
 struct Work<'a> {
     set: &'a PrepSourceSet,
+    /// Index of the owning set in `PrepReport::sets`.
+    set_index: usize,
     binding: &'a PrepBinding,
     stat: PrepSourceStat,
     key: String,
@@ -144,14 +156,25 @@ struct Work<'a> {
 
 struct SourceResult {
     outcome: PrepSourceOutcome,
+    /// State to commit for this key; `None` drops it.
     state: Option<PrepSourceState>,
+    /// The committed state must change (rows, cursor, revision or stat drift).
+    dirty: bool,
     rows: PrepRows,
+}
+
+fn invalid_input() -> PipelineError {
+    PipelineError::new(PipelineErrorKind::InvalidInput, None)
 }
 
 fn matcher(pattern: &str) -> Result<GlobMatcher, PipelineError> {
     Glob::new(pattern)
         .map(|glob| glob.compile_matcher())
-        .map_err(|_| PipelineError::new(PipelineErrorKind::InvalidInput, None))
+        .map_err(|_| invalid_input())
+}
+
+fn count(report: &mut PrepSetReport, status: PrepSourceStatus) {
+    *report.by_status.entry(status.label().into()).or_default() += 1;
 }
 
 /// Run one idempotent prep pass. Nothing is written when nothing changed.
@@ -162,31 +185,33 @@ pub fn run_prep(
 ) -> Result<PrepReport, PipelineError> {
     request.limits.read.validate()?;
     request.limits.snapshot.validate()?;
+    let mut set_keys = BTreeSet::new();
+    if !request.roots.iter().all(|set| set_keys.insert(set.key())) {
+        return Err(invalid_input());
+    }
     let loaded = store.load()?;
     let previous = loaded.state;
     let schema_ok = previous.as_ref().is_some_and(|state| {
         state.table_schema_version == PREP_TABLE_SCHEMA_VERSION
             && state.checkpoint_format == PREP_CHECKPOINT_FORMAT
     });
+    // An incompatible state contributes generations only; its sources and parts are dropped.
+    let prior = previous.as_ref().filter(|_| schema_ok);
     let mut report = PrepReport {
         target: request.target.clone(),
         table_schema_version: PREP_TABLE_SCHEMA_VERSION,
         ..PrepReport::default()
     };
-    let mut sets: BTreeMap<String, PrepSetState> = previous
-        .as_ref()
-        .filter(|_| schema_ok)
-        .map(|state| state.sets.clone())
-        .unwrap_or_default();
+    let mut sets = prior.map(|state| state.sets.clone()).unwrap_or_default();
     let mut work: Vec<Work<'_>> = Vec::new();
-    // Discovered but excluded by `modified_since`: reported, not read, state kept.
-    let mut skipped: Vec<String> = Vec::new();
-    let mut discovered_keys: BTreeMap<String, Vec<String>> = BTreeMap::new();
+    // Per requested set: every discovered key, including those scoped out.
+    let mut discovered: Vec<BTreeSet<String>> = Vec::new();
     for set in &request.roots {
         let set_bindings: Vec<&PrepBinding> = bindings
             .iter()
             .filter(|binding| binding.fold.harness() == set.harness)
             .collect();
+        let set_index = report.sets.len();
         let mut set_report = PrepSetReport {
             harness: set.harness.clone(),
             label: set.label.clone(),
@@ -194,68 +219,63 @@ pub fn run_prep(
             supported: !set_bindings.is_empty(),
             ..PrepSetReport::default()
         };
+        let mut keys = BTreeSet::new();
         if set_bindings.is_empty() {
-            *set_report
-                .by_status
-                .entry(PrepSourceStatus::Unsupported.label().into())
-                .or_default() += 1;
-            report.sets.push(set_report);
-            continue;
-        }
-        let policies: Vec<&str> = set_bindings.iter().map(|b| b.fold.policy()).collect();
-        set_report.policy = Some(policies.join("+"));
-        let keys = discovered_keys.entry(set.key()).or_default();
-        for binding in set_bindings {
-            let accept = matcher(binding.fold.pattern())?;
-            let discovery = binding
-                .loader
-                .discover(&set.root, &|file| accept.is_match(file))?;
-            set_report.skipped.symlinks += discovery.skipped.symlinks;
-            set_report.skipped.hidden += discovery.skipped.hidden;
-            set_report.skipped.unreadable_entries += discovery.skipped.unreadable_entries;
-            for stat in discovery.sources {
-                let key = set.source_key(&stat.file);
-                keys.push(key.clone());
-                if request
-                    .modified_since_ns
-                    .is_some_and(|since| stat.mtime_ns < since)
-                {
-                    skipped.push(key);
-                    continue;
+            count(&mut set_report, PrepSourceStatus::Unsupported);
+        } else {
+            let policies: Vec<&str> = set_bindings.iter().map(|b| b.fold.policy()).collect();
+            set_report.policy = Some(policies.join("+"));
+            for binding in set_bindings {
+                let accept = matcher(binding.fold.pattern())?;
+                let discovery = binding
+                    .loader
+                    .discover(&set.root, &|file| accept.is_match(file))?;
+                set_report.skipped.symlinks += discovery.skipped.symlinks;
+                set_report.skipped.hidden += discovery.skipped.hidden;
+                set_report.skipped.unreadable_entries += discovery.skipped.unreadable_entries;
+                for stat in discovery.sources {
+                    let key = set.source_key(&stat.file);
+                    // The first binding that accepts a file owns it.
+                    if !keys.insert(key.clone()) {
+                        continue;
+                    }
+                    if request
+                        .modified_since_ns
+                        .is_some_and(|since| stat.mtime_ns < since)
+                    {
+                        count(&mut set_report, PrepSourceStatus::Skipped);
+                        continue;
+                    }
+                    work.push(Work {
+                        set,
+                        set_index,
+                        binding,
+                        stat,
+                        key,
+                    });
                 }
-                work.push(Work {
-                    set,
-                    binding,
-                    stat,
-                    key,
-                });
             }
+            set_report.discovered = keys.len() as u64;
+            sets.insert(
+                set.key(),
+                PrepSetState {
+                    harness: set.harness.clone(),
+                    label: set.label.clone(),
+                    root: set.root.clone(),
+                    policy: set_report.policy.clone().unwrap_or_default(),
+                },
+            );
         }
-        set_report.discovered = keys.len() as u64;
-        sets.insert(
-            set.key(),
-            PrepSetState {
-                harness: set.harness.clone(),
-                label: set.label.clone(),
-                root: set.root.clone(),
-                policy: set_report.policy.clone().unwrap_or_default(),
-            },
-        );
         report.sets.push(set_report);
+        discovered.push(keys);
     }
 
-    let prior = previous.as_ref().filter(|_| schema_ok);
-    let root_moved = |set: &PrepSourceSet| {
-        previous
-            .as_ref()
-            .and_then(|state| state.sets.get(&set.key()))
-            .is_some_and(|old| old.root != set.root)
-    };
+    let threads = request.threads.clamp(1, work.len().max(1));
     let next = AtomicUsize::new(0);
     let results: Mutex<Vec<Option<SourceResult>>> =
         Mutex::new((0..work.len()).map(|_| None).collect());
     thread::scope(|scope| {
-        for _ in 0..request.threads.max(1) {
+        for _ in 0..threads {
             scope.spawn(|| {
                 loop {
                     let index = next.fetch_add(1, Ordering::Relaxed);
@@ -263,98 +283,55 @@ pub fn run_prep(
                     let prev = previous
                         .as_ref()
                         .and_then(|state| state.sources.get(&item.key));
-                    let incompatible = if prev.is_none() {
-                        None
-                    } else if !schema_ok {
-                        Some(PrepReplaceReason::Schema)
-                    } else if root_moved(item.set) {
-                        Some(PrepReplaceReason::RootMoved)
-                    } else if prev
-                        .is_some_and(|p| p.checkpoint.policy != item.binding.fold.policy())
-                    {
-                        Some(PrepReplaceReason::Policy)
-                    } else {
-                        None
-                    };
-                    let result = prep_source(item, prev, incompatible, request);
-                    if let Ok(mut slots) = results.lock() {
-                        slots[index] = Some(result);
-                    }
+                    let incompatible = prev.and_then(|prev| incompatibility(prev, schema_ok, item));
+                    let result = prep_source(item, prev, incompatible, schema_ok, request);
+                    results.lock().unwrap_or_else(PoisonError::into_inner)[index] = Some(result);
                 }
             });
         }
     });
-    let results = results
-        .into_inner()
-        .map_err(|_| PipelineError::new(PipelineErrorKind::InvalidData, None))?;
+    let results = results.into_inner().unwrap_or_else(PoisonError::into_inner);
 
     let mut sources = prior.map(|state| state.sources.clone()).unwrap_or_default();
     let mut rows = PrepRows::default();
-    let mut changed = previous.is_some() && !schema_ok;
+    let mut dirty = !schema_ok;
     for (item, result) in work.iter().zip(results) {
-        let Some(result) = result else {
-            return Err(PipelineError::new(PipelineErrorKind::InvalidData, None));
-        };
-        let set_report = report
-            .sets
-            .iter_mut()
-            .find(|r| r.harness == item.set.harness && r.label == item.set.label);
-        if let Some(set_report) = set_report {
-            *set_report
-                .by_status
-                .entry(result.outcome.status.label().into())
-                .or_default() += 1;
-        }
+        let result =
+            result.ok_or_else(|| PipelineError::new(PipelineErrorKind::InvalidData, None))?;
+        count(&mut report.sets[item.set_index], result.outcome.status);
         report.bytes_read += result.outcome.bytes_read;
         report.pending_tail_bytes += result.outcome.pending_tail_bytes;
+        dirty |= result.dirty;
         match result.state {
-            Some(state) => {
-                if result.outcome.status != PrepSourceStatus::Unchanged {
-                    changed = true;
-                }
-                sources.insert(item.key.clone(), state);
-            }
-            None => {
-                sources.remove(&item.key);
-            }
-        }
-        if !matches!(
-            result.outcome.status,
-            PrepSourceStatus::Unchanged | PrepSourceStatus::Skipped
-        ) {
+            Some(state) => sources.insert(item.key.clone(), state),
+            None => sources.remove(&item.key),
+        };
+        if result.outcome.status != PrepSourceStatus::Unchanged {
             report.sources.push(result.outcome);
         }
         rows.extend(result.rows);
     }
-    for set_report in &mut report.sets {
-        let set_key = format!("{}/{}", set_report.harness, set_report.label);
-        let prefix = format!("{set_key}/");
-        let scoped_out = skipped
-            .iter()
-            .filter(|key| key.starts_with(&prefix))
-            .count() as u64;
-        if scoped_out > 0 {
-            set_report
-                .by_status
-                .insert(PrepSourceStatus::Skipped.label().into(), scoped_out);
+    // Committed sources of a requested set that discovery no longer returns keep
+    // their state and rows.
+    for ((set, set_report), keys) in request.roots.iter().zip(&mut report.sets).zip(&discovered) {
+        if !set_report.supported {
+            continue;
         }
-        let seen = discovered_keys.get(&set_key);
-        let missing = sources
-            .iter()
-            .filter(|(key, state)| {
-                state.set == set_key && !seen.is_some_and(|keys| keys.contains(key))
-            })
-            .count() as u64;
-        if missing > 0 {
-            set_report
-                .by_status
-                .insert(PrepSourceStatus::Missing.label().into(), missing);
+        let set_key = set.key();
+        for (key, state) in &sources {
+            if state.set != set_key || keys.contains(key) {
+                continue;
+            }
+            count(set_report, PrepSourceStatus::Missing);
+            let mut missing = outcome(key, PrepSourceStatus::Missing, state.generation);
+            missing.committed_offset = state.offset;
+            report.sources.push(missing);
         }
     }
     report.rows_written = rows.counts();
     let runs = previous.as_ref().map_or(0, |state| state.runs);
     report.run = runs;
-    if changed || !rows.is_empty() || previous.is_none() {
+    if dirty {
         let state = PrepState {
             table_schema_version: PREP_TABLE_SCHEMA_VERSION,
             checkpoint_format: PREP_CHECKPOINT_FORMAT,
@@ -370,6 +347,23 @@ pub fn run_prep(
     Ok(report)
 }
 
+/// Why a committed source can no longer be resumed, whatever its bytes say.
+fn incompatibility(
+    prev: &PrepSourceState,
+    schema_ok: bool,
+    item: &Work<'_>,
+) -> Option<PrepReplaceReason> {
+    if !schema_ok || prev.checkpoint.format != PREP_CHECKPOINT_FORMAT {
+        Some(PrepReplaceReason::Schema)
+    } else if prev.path != item.stat.path {
+        Some(PrepReplaceReason::RootMoved)
+    } else if prev.kind != item.stat.kind || prev.checkpoint.policy != item.binding.fold.policy() {
+        Some(PrepReplaceReason::Policy)
+    } else {
+        None
+    }
+}
+
 fn outcome(key: &str, status: PrepSourceStatus, generation: u32) -> PrepSourceOutcome {
     PrepSourceOutcome {
         source: key.to_owned(),
@@ -383,144 +377,154 @@ fn outcome(key: &str, status: PrepSourceStatus, generation: u32) -> PrepSourceOu
     }
 }
 
+/// Nothing new to commit: the previous state with the observed stat.
+fn unchanged(item: &Work<'_>, prev: &PrepSourceState, bytes_read: u64) -> SourceResult {
+    let stat = &item.stat;
+    let mut result = outcome(&item.key, PrepSourceStatus::Unchanged, prev.generation);
+    result.bytes_read = bytes_read;
+    result.committed_offset = prev.offset;
+    if stat.kind == PrepSourceKind::Append {
+        result.pending_tail_bytes = stat.size.saturating_sub(prev.offset);
+    }
+    let state = PrepSourceState {
+        identity: stat.identity.clone(),
+        size: stat.size,
+        mtime_ns: stat.mtime_ns,
+        ..prev.clone()
+    };
+    SourceResult {
+        outcome: result,
+        dirty: state != *prev,
+        state: Some(state),
+        rows: PrepRows::default(),
+    }
+}
+
 fn prep_source(
     item: &Work<'_>,
     prev: Option<&PrepSourceState>,
     incompatible: Option<PrepReplaceReason>,
+    schema_ok: bool,
     request: &PrepRequest,
 ) -> SourceResult {
     let stat = &item.stat;
-    let loader = item.binding.loader.as_ref();
     let compatible = prev.filter(|_| incompatible.is_none());
+    // One stat decides the common case.
     if let Some(prev) = compatible
         && prev.identity == stat.identity
         && prev.size == stat.size
         && prev.mtime_ns == stat.mtime_ns
     {
-        let mut unchanged = outcome(&item.key, PrepSourceStatus::Unchanged, prev.generation);
-        unchanged.committed_offset = prev.offset;
-        unchanged.pending_tail_bytes = stat.size.saturating_sub(prev.offset);
-        let mut state = prev.clone();
-        state.status = PrepSourceStatus::Unchanged;
-        return SourceResult {
-            outcome: unchanged,
-            state: Some(state),
-            rows: PrepRows::default(),
-        };
+        return unchanged(item, prev, 0);
     }
-    let mut anchor_bytes = 0;
+    // A failed source contributes no rows and keeps its committed state, which
+    // is re-judged next run. Only a dropped (incompatible) state is not kept.
+    let failed = |error: PipelineError| {
+        let mut result = outcome(
+            &item.key,
+            PrepSourceStatus::Unreadable,
+            prev.map_or(0, |p| p.generation),
+        );
+        result.committed_offset = prev.map_or(0, |p| p.offset);
+        result.error = Some(error.to_string());
+        SourceResult {
+            outcome: result,
+            state: prev.filter(|_| schema_ok).cloned(),
+            dirty: false,
+            rows: PrepRows::default(),
+        }
+    };
     let mut reason = incompatible;
-    let resume = match (compatible, stat.kind) {
-        (Some(prev), PrepSourceKind::Append) => {
-            if prev.identity != stat.identity {
-                reason = Some(PrepReplaceReason::Rotated);
-                None
-            } else if stat.size < prev.offset {
-                reason = Some(PrepReplaceReason::Truncated);
-                None
-            } else {
-                anchor_bytes = prev.offset.min(8192);
-                let anchor = if prev.offset == 0 {
-                    None
-                } else {
-                    loader.anchor(stat, prev.offset).ok()
-                };
-                if anchor == prev.anchor {
-                    Some(prev)
-                } else {
-                    reason = Some(PrepReplaceReason::Rewritten);
-                    None
+    let mut resume = None;
+    if let Some(prev) = compatible
+        && stat.kind == PrepSourceKind::Append
+    {
+        if prev.identity != stat.identity {
+            reason = Some(PrepReplaceReason::Rotated);
+        } else if stat.size < prev.offset {
+            reason = Some(PrepReplaceReason::Truncated);
+        } else if prev.offset == 0 {
+            resume = Some(prev);
+        } else {
+            match item.binding.loader.anchor(stat, prev.offset) {
+                Ok(anchor) if prev.anchor.as_deref() == Some(anchor.as_str()) => {
+                    resume = Some(prev);
                 }
+                Ok(_) => reason = Some(PrepReplaceReason::Rewritten),
+                Err(error) => return failed(error),
             }
         }
-        _ => None,
+    }
+    let generation = match resume {
+        Some(prev) => prev.generation,
+        None => prev.map_or(0, |p| p.generation + 1),
     };
-    let attempt = match resume {
-        Some(prev) => fold_into(item, prev.generation, Some(prev), request),
-        None => fold_into(item, prev.map_or(0, |p| p.generation + 1), None, request),
+    let (fold, rows) = match fold_into(item, generation, resume, request) {
+        Ok(folded) => folded,
+        Err(error) => return failed(error),
     };
-    let generation_prev = prev.map_or(0, |p| p.generation);
-    match attempt {
-        Ok((fold, rows)) => {
-            // A snapshot whose revision did not change is unchanged; its rows are discarded.
-            if stat.kind == PrepSourceKind::Snapshot
-                && let Some(prev) = compatible
-                && prev.revision.is_some()
-                && prev.revision == fold.revision
-            {
-                let mut unchanged =
-                    outcome(&item.key, PrepSourceStatus::Unchanged, prev.generation);
-                unchanged.bytes_read = fold.bytes_read;
-                let mut state = prev.clone();
-                state.size = stat.size;
-                state.mtime_ns = stat.mtime_ns;
-                state.status = PrepSourceStatus::Unchanged;
-                return SourceResult {
-                    outcome: unchanged,
-                    state: Some(state),
-                    rows: PrepRows::default(),
-                };
+    if let Some(prev) = compatible {
+        let nothing_new = match stat.kind {
+            // Equal revision: the rows of the re-read are discarded.
+            PrepSourceKind::Snapshot => prev.revision.is_some() && prev.revision == fold.revision,
+            PrepSourceKind::Append => {
+                resume.is_some()
+                    && rows.is_empty()
+                    && fold.cursor.as_ref().map(|c| c.offset) == Some(prev.offset)
             }
-            let status = match (resume, prev, reason) {
-                (Some(_), _, _) => PrepSourceStatus::Appended,
-                (None, None, _) => PrepSourceStatus::New,
-                (None, Some(_), Some(reason)) => PrepSourceStatus::Replaced { reason },
-                (None, Some(_), None) => PrepSourceStatus::Replaced {
-                    reason: PrepReplaceReason::Revision,
-                },
-            };
-            let generation = resume.map_or(prev.map_or(0, |p| p.generation + 1), |p| p.generation);
-            let mut result = outcome(&item.key, status, generation);
-            result.bytes_read = fold.bytes_read + anchor_bytes;
-            result.rows = fold.rows;
-            result.committed_offset = fold.cursor.as_ref().map_or(0, |c| c.offset);
-            result.pending_tail_bytes = fold.pending_tail_bytes;
-            let identity = fold
-                .cursor
-                .as_ref()
-                .map_or_else(|| stat.identity.clone(), |c| c.identity.clone());
-            let state = PrepSourceState {
-                set: item.set.key(),
-                path: stat.path.clone(),
-                file: stat.file.clone(),
-                kind: stat.kind,
-                identity,
-                size: stat.size,
-                mtime_ns: stat.mtime_ns,
-                offset: result.committed_offset,
-                anchor: fold.anchor,
-                revision: fold.revision,
-                generation,
-                meta: item.binding.fold.describe(&stat.file),
-                checkpoint: fold.checkpoint,
-                facts: fold.facts,
-                status,
-            };
-            SourceResult {
-                outcome: result,
-                state: Some(state),
-                rows,
-            }
+        };
+        if nothing_new {
+            return unchanged(item, prev, fold.bytes_read);
         }
-        Err(error) => {
-            let mut failed = outcome(&item.key, PrepSourceStatus::Unreadable, generation_prev);
-            failed.error = Some(error.to_string());
-            SourceResult {
-                outcome: failed,
-                state: compatible.cloned(),
-                rows: PrepRows::default(),
-            }
-        }
+    }
+    let status = match (resume, prev) {
+        (Some(_), _) => PrepSourceStatus::Appended,
+        (None, None) => PrepSourceStatus::New,
+        (None, Some(_)) => PrepSourceStatus::Replaced {
+            reason: reason.unwrap_or(PrepReplaceReason::Revision),
+        },
+    };
+    let mut result = outcome(&item.key, status, generation);
+    result.bytes_read = fold.bytes_read;
+    result.rows = fold.rows;
+    result.committed_offset = fold.cursor.as_ref().map_or(0, |c| c.offset);
+    result.pending_tail_bytes = fold.pending_tail_bytes;
+    let identity = fold
+        .cursor
+        .as_ref()
+        .map_or_else(|| stat.identity.clone(), |c| c.identity.clone());
+    let state = PrepSourceState {
+        set: item.set.key(),
+        path: stat.path.clone(),
+        file: stat.file.clone(),
+        kind: stat.kind,
+        identity,
+        size: stat.size,
+        mtime_ns: stat.mtime_ns,
+        offset: result.committed_offset,
+        anchor: fold.anchor,
+        revision: fold.revision,
+        generation,
+        meta: item.binding.fold.describe(&stat.file),
+        checkpoint: fold.checkpoint,
+        facts: fold.facts,
+        status,
+    };
+    SourceResult {
+        outcome: result,
+        state: Some(state),
+        dirty: true,
+        rows,
     }
 }
 
 fn fold_into(
     item: &Work<'_>,
     generation: u32,
-    prev: Option<&PrepSourceState>,
+    resume: Option<&PrepSourceState>,
     request: &PrepRequest,
 ) -> Result<(SourceFold, PrepRows), PipelineError> {
-    let resume = prev.map(|prev| PrepResume {
+    let resume = resume.map(|prev| PrepResume {
         cursor: ReadCursor {
             source: item.stat.path.clone(),
             identity: prev.identity.clone(),
@@ -548,13 +552,16 @@ fn fetch_record(
     store: &dyn PrepStore,
     request: &PrepRecordRequest,
 ) -> Result<PrepRecord, PipelineError> {
-    let invalid = || PipelineError::new(PipelineErrorKind::InvalidInput, None);
+    // Content is opt-in: refuse before touching the store or any native source.
     if !request.include_content {
-        return Err(invalid());
+        return Err(invalid_input());
     }
-    let state = store.state()?.ok_or_else(invalid)?;
-    let source = state.sources.get(&request.source).ok_or_else(invalid)?;
-    let set = state.sets.get(&source.set).ok_or_else(invalid)?;
+    let state = store.state()?.ok_or_else(invalid_input)?;
+    let source = state
+        .sources
+        .get(&request.source)
+        .ok_or_else(invalid_input)?;
+    let set = state.sets.get(&source.set).ok_or_else(invalid_input)?;
     let binding = bindings
         .iter()
         .find(|binding| {
@@ -563,6 +570,22 @@ fn fetch_record(
                 && matcher(binding.fold.pattern()).is_ok_and(|m| m.is_match(&source.file))
         })
         .ok_or_else(|| PipelineError::new(PipelineErrorKind::Unsupported, None))?;
+    if source.kind == PrepSourceKind::Append {
+        // Only committed records of the committed generation are addressable.
+        let offset = request.address.offset.ok_or_else(invalid_input)?;
+        if offset >= source.offset {
+            return Err(invalid_input());
+        }
+        let changed = || PipelineError::new(PipelineErrorKind::SourceChanged, Some(offset));
+        let stat = binding.loader.stat(&set.root, &source.path)?;
+        if stat.identity != source.identity
+            || stat.size < source.offset
+            || source.anchor.as_deref()
+                != Some(binding.loader.anchor(&stat, source.offset)?.as_str())
+        {
+            return Err(changed());
+        }
+    }
     let bytes = binding
         .loader
         .record_at(&source.path, &request.address, request.max_bytes)?;

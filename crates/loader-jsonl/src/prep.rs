@@ -3,9 +3,9 @@
 //! followed and hidden entries are skipped, both counted.
 
 use std::{
-    fs::{self, File},
+    fs::{self, File, OpenOptions},
     io::{Read, Seek, SeekFrom},
-    os::unix::fs::MetadataExt,
+    os::unix::fs::{MetadataExt, OpenOptionsExt},
     path::Path,
 };
 
@@ -18,6 +18,21 @@ use unisphere_core::{
 /// Upper bound on discovered candidates; exceeding it fails instead of truncating.
 pub const MAX_PREP_SOURCES: usize = 100_000;
 const ANCHOR_BYTES: u64 = 4096;
+
+/// Read-only, never following a final symlink, never blocking on a special
+/// file, never locking. The descriptor must be a regular file.
+fn open_read_only(path: &Path, offset: Option<u64>) -> Result<File, PipelineError> {
+    let read = |_| PipelineError::new(PipelineErrorKind::Read, offset);
+    let file = OpenOptions::new()
+        .read(true)
+        .custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK)
+        .open(path)
+        .map_err(read)?;
+    if !file.metadata().map_err(read)?.is_file() {
+        return Err(PipelineError::new(PipelineErrorKind::Read, offset));
+    }
+    Ok(file)
+}
 
 fn stat_of(path: &Path, file: String, metadata: &fs::Metadata) -> PrepSourceStat {
     PrepSourceStat {
@@ -59,7 +74,12 @@ pub(crate) fn discover(
                 continue;
             };
             let name = entry.file_name();
-            if name.to_str().is_none_or(|name| name.starts_with('.')) {
+            let Some(name) = name.to_str() else {
+                // Not keyable as a `/`-separated UTF-8 relative path.
+                found.skipped.unreadable_entries += 1;
+                continue;
+            };
+            if name.starts_with('.') {
                 found.skipped.hidden += 1;
                 continue;
             }
@@ -119,7 +139,7 @@ pub(crate) fn stat(root: &Path, path: &Path) -> Result<PrepSourceStat, PipelineE
 /// Digest of the first and the last (up to) 4 KiB of the prefix `[0, offset)`.
 pub(crate) fn anchor(path: &Path, offset: u64) -> Result<String, PipelineError> {
     let read = |_| PipelineError::new(PipelineErrorKind::Read, Some(offset));
-    let mut file = File::open(path).map_err(read)?;
+    let mut file = open_read_only(path, Some(offset))?;
     let mut digest = Sha256::new();
     digest.update(b"unisphere.prep.anchor.v1\0");
     digest.update(offset.to_le_bytes());
@@ -149,7 +169,7 @@ pub(crate) fn record_at(
     let invalid = || PipelineError::new(PipelineErrorKind::InvalidInput, address.offset);
     let offset = address.offset.ok_or_else(invalid)?;
     let read = |_| PipelineError::new(PipelineErrorKind::Read, Some(offset));
-    let mut file = File::open(path).map_err(read)?;
+    let mut file = open_read_only(path, Some(offset))?;
     if offset > 0 {
         let mut previous = [0u8; 1];
         file.seek(SeekFrom::Start(offset - 1)).map_err(read)?;

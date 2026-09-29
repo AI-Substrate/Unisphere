@@ -1,0 +1,22 @@
+crates/cli/docs/prep.md
+  h_9e71e8b09f7cf2 18,24,30
+crates/cli/src/args.rs
+  h_9e71e8b09f7cf2 140,1230,1274,1277-1281
+crates/cli/tests/prep.rs
+  h_9e71e8b09f7cf2 296,313-340,726
+docs/plans/028-prep-canonical-tables/assets/proof/coverage.py
+  h_9e71e8b09f7cf2 6-8,54-61,97-99,101-102
+docs/plans/028-prep-canonical-tables/assets/proof/recipes_check.py
+  h_9e71e8b09f7cf2 6,22-35,75-76,91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "9820bb5a2d127164127de1f9778eff65b525a390",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

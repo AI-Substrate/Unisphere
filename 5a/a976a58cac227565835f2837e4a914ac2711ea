@@ -1,0 +1,33 @@
+docs/plans/029-session-status/assets/team/baseline.dd.json
+  s_042162115c1f28::t_99caf7d0b2a1fe 1-97
+docs/plans/029-session-status/assets/team/baseline.dd.md
+  s_042162115c1f28::t_007fe3eb029484 1-21
+docs/plans/029-session-status/assets/team/basis-72145b14324e289f86c5365f93785f3d76d2024e09595685c3f92a2f8235fa39.json
+  s_042162115c1f28::t_993a60d45097a1 1-208
+docs/plans/029-session-status/assets/team/basis-e967cc78a50983e3beaaaef939f34c3a66b4aba0f179cab539ef8d8d078ee653.json
+  s_042162115c1f28::t_ca46aab38a6a6a 1-521
+docs/plans/029-session-status/assets/team/review-decomposition-rv-029-decomposition-r2.dd.json
+  s_042162115c1f28::t_0b2918b52d6b45 1-131
+docs/plans/029-session-status/assets/team/review-decomposition-rv-029-decomposition-r2.dd.md
+  s_042162115c1f28::t_86da5c3bf1d344 1-25
+docs/plans/029-session-status/assets/reviews/decomposition-r2.md
+  s_042162115c1f28::t_5237f8563b35d3 1-29
+docs/plans/029-session-status/assets/reviews/decomposition-r2.receipt.dd.json
+  s_042162115c1f28::t_da973ed01a6ff4 1-131
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "5aa976a58cac227565835f2837e4a914ac2711ea",
+  "prompts": {},
+  "sessions": {
+    "s_042162115c1f28": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4b3f9ea7-6ca1-47b0-93c3-82069b1452f9",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

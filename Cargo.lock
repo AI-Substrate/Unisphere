@@ -1358,7 +1358,9 @@ dependencies = [
  "parquet",
  "serde",
  "serde_json",
+ "tempfile",
  "unisphere-core",
+ "unisphere-testkit",
 ]
 
 [[package]]

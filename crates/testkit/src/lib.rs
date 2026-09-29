@@ -6,6 +6,7 @@ pub mod fakes;
 pub mod fixtures;
 #[cfg(unix)]
 pub mod git_notes;
+pub mod prep;
 pub mod query;
 pub mod sealed;
 

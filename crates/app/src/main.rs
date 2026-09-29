@@ -85,30 +85,41 @@ fn main() -> ExitCode {
         },
         ParsedCommand::PijQuery(command) => pij::run(command, &context, &mut stdout, &mut stderr),
         ParsedCommand::Prep(command) => {
-            let root = command.root.clone().or_else(|| {
-                env::var_os("HOME").map(|home| {
-                    unisphere_sdk::prep::claude_projects_root(std::path::Path::new(&home))
-                })
-            });
-            match root {
-                Some(root) => unisphere_cli::run_prep(
-                    command,
+            let roots = match command.root.clone() {
+                Some(root) => Some(unisphere_sdk::prep::PrepSourceSet {
+                    harness: "claude-code".into(),
+                    label: unisphere_sdk::prep::derived_root_label(&root),
                     root,
+                }),
+                None => env::var_os("HOME").map(|home| {
+                    unisphere_sdk::prep::default_set(
+                        "claude-code",
+                        unisphere_sdk::prep::claude_projects_root(std::path::Path::new(&home)),
+                    )
+                }),
+            };
+            let invalid = unisphere_sdk::PipelineError::new(
+                unisphere_sdk::PipelineErrorKind::InvalidInput,
+                None,
+            );
+            match (
+                roots,
+                unisphere_output_prep::ParquetPrepStore::open(command.target.clone()),
+            ) {
+                (None, _) => unisphere_cli::session_error(&mut stderr, &invalid, 2),
+                (Some(_), Err(error)) => unisphere_cli::session_error(&mut stderr, &error, 1),
+                (Some(root), Ok(store)) => unisphere_cli::run_prep(
+                    command,
+                    vec![root],
                     &unisphere_sdk::prep::Preparer::new(
-                        unisphere_loader_jsonl::FileSessionLoader,
-                        unisphere_adapter_claude::ClaudePrepFold,
-                        unisphere_output_prep::ParquetPrepStore::new(command.target.clone()),
+                        vec![unisphere_sdk::prep::PrepBinding {
+                            fold: std::sync::Arc::new(unisphere_adapter_claude::ClaudePrepFold),
+                            loader: std::sync::Arc::new(unisphere_loader_jsonl::FileSessionLoader),
+                        }],
+                        store,
                     ),
                     &mut stdout,
                     &mut stderr,
-                ),
-                None => unisphere_cli::session_error(
-                    &mut stderr,
-                    &unisphere_sdk::PipelineError::new(
-                        unisphere_sdk::PipelineErrorKind::InvalidInput,
-                        None,
-                    ),
-                    2,
                 ),
             }
         }

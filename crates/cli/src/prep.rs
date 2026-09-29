@@ -3,16 +3,16 @@ use std::io::Write;
 
 use serde_json::json;
 use unisphere_core::{
-    PipelineError, PipelineErrorKind, ReadLimits,
-    prep::{PrepApi, PrepOptions, PrepRequest},
+    PipelineError, PipelineErrorKind, ReadLimits, SnapshotLimits,
+    prep::{PrepApi, PrepOptions, PrepReadLimits, PrepRequest, PrepSourceSet, PrepSourceStatus},
 };
 
 use crate::{PrepCommand, sessions::session_error};
 
-/// Execute one parsed prep command. `root` is the shell-resolved discovery root.
+/// Execute one parsed prep command over shell-resolved `roots`.
 pub fn run_prep(
     command: &PrepCommand,
-    root: std::path::PathBuf,
+    roots: Vec<PrepSourceSet>,
     api: &dyn PrepApi,
     stdout: &mut dyn Write,
     stderr: &mut dyn Write,
@@ -20,22 +20,29 @@ pub fn run_prep(
     let defaults = ReadLimits::default();
     let request = PrepRequest {
         target: command.target.clone(),
-        root,
+        roots,
         options: PrepOptions {
             include_content: command.include_content,
         },
-        limits: ReadLimits {
-            max_records: usize::MAX,
-            max_record_bytes: command
-                .max_record_bytes
-                .unwrap_or(defaults.max_record_bytes),
-            max_batch_bytes: command.max_batch_bytes.unwrap_or(16 * 1024 * 1024),
+        limits: PrepReadLimits {
+            read: ReadLimits {
+                max_records: usize::MAX,
+                max_record_bytes: command
+                    .max_record_bytes
+                    .unwrap_or(defaults.max_record_bytes),
+                max_batch_bytes: command.max_batch_bytes.unwrap_or(16 * 1024 * 1024),
+            },
+            snapshot: SnapshotLimits::default(),
         },
         threads: command.threads.unwrap_or(8),
         modified_since_ns: command.modified_since_ns,
     };
     let result = api.prep(&request).and_then(|report| {
-        let failed = report.sources_by_status.get("failed").copied().unwrap_or(0);
+        let unreadable: u64 = report
+            .sets
+            .iter()
+            .filter_map(|set| set.by_status.get(PrepSourceStatus::Unreadable.label()))
+            .sum();
         let value = json!({"ok": true, "command": "prep", "v": 1, "data": report,
             "next_action": {"summary": "Query TARGET/tables/*/*.parquet with a Parquet SQL engine; keep rows whose generation equals sources.generation.",
                 "argv": ["unisphere", "prep", "--help"], "required_inputs": []}});
@@ -43,7 +50,7 @@ pub fn run_prep(
             .ok()
             .and_then(|()| stdout.write_all(b"\n").ok())
             .ok_or_else(|| PipelineError::new(PipelineErrorKind::Write, None))?;
-        Ok(failed)
+        Ok(unreadable)
     });
     match result {
         Ok(0) => 0,

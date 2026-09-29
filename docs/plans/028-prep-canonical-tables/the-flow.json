@@ -73,6 +73,80 @@
         "from": "plan",
         "to": "impl-guide"
       }
+    },
+    {
+      "id": "NOD-001",
+      "kind": "node-created",
+      "origin": "engine",
+      "fired_at": "2026-09-29T04:49:47.431Z",
+      "details": {
+        "node": "phase-2",
+        "type": "phase"
+      }
+    },
+    {
+      "id": "NOD-002",
+      "kind": "node-created",
+      "origin": "engine",
+      "fired_at": "2026-09-29T04:49:47.431Z",
+      "details": {
+        "node": "review-2",
+        "type": "review"
+      }
+    },
+    {
+      "id": "NOD-003",
+      "kind": "node-created",
+      "origin": "engine",
+      "fired_at": "2026-09-29T04:49:47.431Z",
+      "details": {
+        "node": "boot-2",
+        "type": "harness-boot",
+        "chore": {
+          "kind": "command",
+          "importance": "recommended"
+        }
+      }
+    },
+    {
+      "id": "NOD-004",
+      "kind": "node-created",
+      "origin": "engine",
+      "fired_at": "2026-09-29T04:49:47.431Z",
+      "details": {
+        "node": "observe-2",
+        "type": "observe",
+        "chore": {
+          "kind": "command",
+          "importance": "recommended"
+        }
+      }
+    },
+    {
+      "id": "NOD-005",
+      "kind": "node-created",
+      "origin": "engine",
+      "fired_at": "2026-09-29T04:49:47.431Z",
+      "details": {
+        "node": "retro-2",
+        "type": "harness-retro",
+        "chore": {
+          "kind": "command",
+          "importance": "recommended"
+        }
+      }
+    },
+    {
+      "id": "UPD-002",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-29T04:49:47.431Z",
+      "details": {
+        "node": "review-1",
+        "fields": [
+          "next"
+        ]
+      }
     }
   ],
   "nodes": [
@@ -165,7 +239,7 @@
       "status": "assumed",
       "command": "/builder 7 review",
       "next": [
-        "post-flight"
+        "phase-2"
       ],
       "zone": "flight",
       "instructions": [
@@ -174,7 +248,8 @@
         "Done when the verdict is recorded (one finding line) and either accepted or routed to a fix-loop.",
         "Review the exact composed artifact and current plan/guide basis. Record an independent composition ReviewReceipt with harness builder review <plan> --receipt <path>; unavailable review stays unfulfilled.",
         "Close only criteria proven by observed receipts through node_modules/.bin/ddocs. Whole-plan --complete is not a review-exit gate: closeout work is still future work."
-      ]
+      ],
+      "modified_at": "2026-09-29T04:49:47.431Z"
     },
     {
       "id": "post-flight",
@@ -329,6 +404,130 @@
         "Run /eng-harness-flow --hook post-flight --json — a REAL invocation; narrate its envelope verbatim.",
         "On done, receipt first, status second: harness flow comment --path <flow-path> --node retro-harvest --kind validation --source agent --text \"verdict:<…> time:<…>\" (router missing / envelope noop/UNAVAILABLE → text \"decision:unavailable reason:<…> time:<…>\" — a completed attempt, not a skip) THEN harness flow status --path <flow-path> --node retro-harvest --to done. Mandatory unless the human declines — a decline is: harness flow comment --path <flow-path> --node retro-harvest --kind decision --source user --text \"<their verbatim words>\" THEN harness flow status --path <flow-path> --node retro-harvest --to skipped."
       ]
+    },
+    {
+      "id": "phase-2",
+      "type": "phase",
+      "label": "P2: Implementation",
+      "status": "known",
+      "next": [
+        "review-2"
+      ],
+      "created_at": "2026-09-29T04:49:47.431Z",
+      "modified_at": "2026-09-29T04:49:47.431Z",
+      "instructions": [
+        "You own the PM composition and canonical task/receipt paths named in the reviewed guide; each worker owns its assigned source/test paths. Read the product ACs, unit read paths/owners, shared contracts and selected proof before implementation.",
+        "Your job is exactly ONE approved phase. Run /builder 6 implement --plan \"<plan path>\"; log discoveries, tagging any Deferred/Noteworthy a human must see before ship.",
+        "Done means the phase's acceptance criteria are met, its selected checks actually ran, the composition is verified at its committed SHA, and the execution log links the observed proof.",
+        "Before new dispatch, seal committed contracts with harness builder contracts <plan> --seal --review <receipt>, inspect settings and ready, then send a work packet led by owned paths, read paths, job and done conditions. Follow with its actual pointer/digest. Receiving it starts the unit without a separate release. Optional harness builder self-check <packet> --sha256 <digest> gives warning-only root/source/digest orientation and writes no state.",
+        "For an already-running worker, dispatch --adopt-peer <id> with the actual --parent and existing --workspace, retaining kind/role controls; current native OMP requires a full clone. Preserve original adopted ownership/authority, sealed source ancestry, progressed HEAD and WIP. Seed only missing metadata; no spawn, reset, replay or new work grant. Existing durable dispatches are inspected/reused, not resent. Native observations are not provider identity attestation.",
+        "Import committed deliveries with harness builder compose <plan> --import <deliveries>; it verifies current evidence bindings, actual tree/branch/commit, distinct peers and sealed ancestry, not startup receipts or transport outcomes. The PM wires and commits, then uses --verify <sha>. Guide, coder and PM map deviations remain file/owning_unit/stage warnings for independent review; out-of-map edits need no approval or justification. Real Git, structural and product-check failures remain failures. Import alone is not proof. Preserve historical receipts without replay or reclassification. Solo execution never substitutes for requested independent review.",
+        "If every supplied unit is already integrated, compose --import <deliveries> --already-integrated proves frozen map projections equal current committed PM HEAD, falling back to delivery-touched paths only when no concrete mapped paths exist. Empty scope or missing/mismatched evidence is failure. Compare modes/types/Git objects and absence; preserve original worker SHAs without reapplying changes. This is scoped equality, not product proof: compose --verify and independent review still follow. --already-integrated requires --import and conflicts with --verify.",
+        "For already-integrated work followed by PM edits, pass --integration-sha <ref> with --import --already-integrated. Resolve a commit between sealed source and current HEAD, compare projections at that point, and retain it as integration_sha without checking it out. Current --verify measures the later PM delta with warnings; do not use detached HEAD or rewrite temporary-checkout receipt roots.",
+        "Optional inspection: harness builder on-track <plan> [--unit <id>] [--from <ref>] [--to <ref>] [--untracked]. No readiness, seal, review or receipt prerequisite, no writes, exit 0; show compared, warnings, issues and basis/full SHAs. Default includes tracked staged/unstaged work; --untracked explicitly adds new paths; explicit --to is committed-only. Unit history includes all touched paths, even reverted writes; PM uses endpoint changes. Without --from, PM prefers imported integration, then sealed source, then HEAD; a unit uses sealed source or HEAD. Malformed basis is an issue, not fallback; unavailable comparison returns compared:false.",
+        "Advisory maps do not authorize global/deployed changes, unrelated workspaces, changes on main, pushes, PRs, merges or destructive actions. Obtain the user's authorization; keep canonical lifecycle writes with the PM.",
+        "Use node_modules/.bin/ddocs to maintain assets/backpressure.dd.json, assertion pressure and AC proven_by links to actual execution-log entries; never mark an unexecuted test as proof.",
+        "Mutate task state through the CLI, never an editor: node_modules/.bin/ddocs set \"<plan dir>/assets/tasks/phase-N/tasks.dd.json#tasks/tk-XXXX/state\" checked (and #done_when/tk-XXXX/dw-XXXX/state for each assertion). The .dd.md sibling is GENERATED — editing it is drift.",
+        "Rehearse this node's gate before you try to leave: harness plan validate \"<plan dir>/plan.dd.json\" --address \"<plan dir>/assets/tasks/phase-N/tasks.dd.json#tasks\". Gate-terminal states are checked, human-skipped, na; unchecked and blocked hold it.",
+        "Spend tokens where they can change the outcome; use `--quiet` for routine flow mutations.",
+        "Match model tier to work: chores -> cheap subagent, analysis -> Opus-class, judgement -> lead; context may override (§ Shared conventions).",
+        "Environment friction is work, not an apology: fix small things, otherwise `harness observe` it — is this environment working for us? (builder SKILL.md invariant #14)"
+      ],
+      "command": "/builder 6 implement",
+      "dd_link": {
+        "address": "docs/plans/028-prep-canonical-tables/assets/tasks/phase-2/tasks.dd.json#tasks"
+      }
+    },
+    {
+      "id": "review-2",
+      "type": "review",
+      "label": "Review: P2",
+      "status": "known",
+      "next": [
+        "post-flight"
+      ],
+      "created_at": "2026-09-29T04:49:47.431Z",
+      "modified_at": "2026-09-29T04:49:47.431Z",
+      "instructions": [
+        "Review exactly ONE phase's diff against its acceptance criteria — confirm the tests prove behaviour and nothing risky slipped in.",
+        "Run /builder 7 review — it inspects the newest assets/reviews/*.md and surfaces a verdict; REQUEST_CHANGES loops back to fix, clean continues to the next phase or post-flight.",
+        "Done when the verdict is recorded (one finding line) and either accepted or routed to a fix-loop.",
+        "Review the exact composed artifact and current plan/guide basis. Record an independent composition ReviewReceipt with harness builder review <plan> --receipt <path>; unavailable review stays unfulfilled.",
+        "Close only criteria proven by observed receipts through node_modules/.bin/ddocs. Whole-plan --complete is not a review-exit gate: closeout work is still future work."
+      ],
+      "zone": "flight",
+      "command": "/builder 7 review"
+    },
+    {
+      "id": "boot-2",
+      "type": "harness-boot",
+      "label": "Boot check",
+      "status": "known",
+      "next": [
+        "phase-2"
+      ],
+      "created_at": "2026-09-29T04:49:47.431Z",
+      "modified_at": "2026-09-29T04:49:47.431Z",
+      "branch_of": "phase-2",
+      "instructions": [
+        "Pre-flight seam: confirm the harness is healthy before you start coding this phase.",
+        "Run /eng-harness-flow --hook pre-flight --json — a REAL invocation; narrate its envelope verbatim, never fabricate one. A manual `harness boot` (or any prior evidence) never satisfies this seam.",
+        "Spend tokens where they can change the outcome; use `--quiet` for routine flow mutations.",
+        "Match model tier to work: chores -> cheap subagent, analysis -> Opus-class, judgement -> lead; context may override (§ Shared conventions).",
+        "On done, receipt first, status second: harness flow comment --path <flow-path> --node boot-1 --kind validation --source agent --text \"verdict:<…> time:<…>\" (router missing / envelope noop/UNAVAILABLE → text \"decision:unavailable reason:<…> time:<…>\" — a completed attempt, not a skip) THEN harness flow status --path <flow-path> --node boot-1 --to done. Mandatory unless the human declines — a decline is: harness flow comment --path <flow-path> --node boot-1 --kind decision --source user --text \"<their verbatim words>\" THEN harness flow status --path <flow-path> --node boot-1 --to skipped."
+      ],
+      "command": "run /eng-harness-flow --hook pre-flight --json",
+      "chore": {
+        "kind": "command",
+        "importance": "recommended"
+      }
+    },
+    {
+      "id": "observe-2",
+      "type": "observe",
+      "label": "Observe: P2",
+      "status": "known",
+      "next": [
+        "phase-2"
+      ],
+      "created_at": "2026-09-29T04:49:47.431Z",
+      "modified_at": "2026-09-29T04:49:47.431Z",
+      "branch_of": "phase-2",
+      "instructions": [
+        "Mid-phase capture: record observations (decisions, gotchas, surprises) AS you code, so they don't evaporate as remembered prose.",
+        "Run harness observe \"<what>\" --kind <kind> — a real capture, never a narrated one, repeated through the phase; it stays due the whole time the cursor sits on this phase.",
+        "Spend tokens where they can change the outcome; use `--quiet` for routine flow mutations.",
+        "Match model tier to work: chores -> cheap subagent, analysis -> Opus-class, judgement -> lead; context may override (§ Shared conventions).",
+        "Terminalize at phase end BEFORE the retro drain, receipt first, status second: harness flow comment --path <flow-path> --node observe-1 --kind validation --source agent --text \"captures:<count> pointer:<real capture record> time:<…>\" THEN harness flow status --path <flow-path> --node observe-1 --to done — done only after at least one real capture. Human decline instead: harness flow comment --path <flow-path> --node observe-1 --kind decision --source user --text \"<their verbatim words>\" THEN harness flow status --path <flow-path> --node observe-1 --to skipped.",
+        "Environment friction is work, not an apology: fix small things, otherwise `harness observe` it — is this environment working for us? (builder SKILL.md invariant #14)"
+      ],
+      "command": "harness observe \"<what>\" --kind <kind>",
+      "chore": {
+        "kind": "command",
+        "importance": "recommended"
+      }
+    },
+    {
+      "id": "retro-2",
+      "type": "harness-retro",
+      "label": "Retro: P2 (drain)",
+      "status": "known",
+      "next": [
+        "phase-2"
+      ],
+      "created_at": "2026-09-29T04:49:47.431Z",
+      "modified_at": "2026-09-29T04:49:47.431Z",
+      "branch_of": "phase-2",
+      "instructions": [
+        "Post-coding seam: drain this phase's observe buffer into durable retro notes before moving on.",
+        "Run /eng-harness-flow --hook post-coding --json — a REAL invocation; narrate its envelope verbatim.",
+        "Runs after this phase's observe chore is terminalized (real capture receipt, or human decline). On done, receipt first, status second: harness flow comment --path <flow-path> --node retro-1 --kind validation --source agent --text \"verdict:<…> time:<…>\" (router missing / envelope noop/UNAVAILABLE → text \"decision:unavailable reason:<…> time:<…>\" — a completed attempt, not a skip) THEN harness flow status --path <flow-path> --node retro-1 --to done. Mandatory unless the human declines — a decline is: harness flow comment --path <flow-path> --node retro-1 --kind decision --source user --text \"<their verbatim words>\" THEN harness flow status --path <flow-path> --node retro-1 --to skipped."
+      ],
+      "command": "run /eng-harness-flow --hook post-coding --json",
+      "chore": {
+        "kind": "command",
+        "importance": "recommended"
+      }
     }
   ],
   "plan_dir": "docs/plans/028-prep-canonical-tables"

@@ -374,46 +374,93 @@ mod prep;
 #[cfg(unix)]
 pub use prep::MAX_PREP_SOURCES;
 
+#[cfg(not(unix))]
+fn prep_unsupported<T>() -> Result<T, PipelineError> {
+    Err(PipelineError::new(
+        unisphere_core::PipelineErrorKind::Unsupported,
+        None,
+    ))
+}
+
 impl unisphere_core::prep::PrepLoader for FileSessionLoader {
+    fn kind(&self) -> unisphere_core::prep::PrepSourceKind {
+        unisphere_core::prep::PrepSourceKind::Append
+    }
+
     fn discover(
         &self,
         root: &std::path::Path,
-    ) -> Result<Vec<unisphere_core::prep::PrepSourceStat>, PipelineError> {
+        accept: &dyn Fn(&str) -> bool,
+    ) -> Result<unisphere_core::prep::PrepDiscovery, PipelineError> {
         #[cfg(unix)]
-        {
-            prep::discover(root)
-        }
+        return prep::discover(root, accept);
         #[cfg(not(unix))]
         {
-            let _ = root;
-            Err(PipelineError::new(
-                unisphere_core::PipelineErrorKind::Unsupported,
-                None,
-            ))
+            let _ = (root, accept);
+            prep_unsupported()
         }
     }
 
-    fn read_batch(
+    fn stat(
         &self,
-        session: &SessionRef,
-        cursor: Option<&ReadCursor>,
-        limits: ReadLimits,
-    ) -> Result<LoadedBatch, PipelineError> {
-        SessionLoader::read_batch(self, session, cursor, limits)
-    }
-
-    fn anchor(&self, path: &std::path::Path, offset: u64) -> Result<String, PipelineError> {
+        root: &std::path::Path,
+        path: &std::path::Path,
+    ) -> Result<unisphere_core::prep::PrepSourceStat, PipelineError> {
         #[cfg(unix)]
-        {
-            prep::anchor(path, offset)
-        }
+        return prep::stat(root, path);
         #[cfg(not(unix))]
         {
-            let _ = (path, offset);
-            Err(PipelineError::new(
-                unisphere_core::PipelineErrorKind::Unsupported,
-                None,
-            ))
+            let _ = (root, path);
+            prep_unsupported()
+        }
+    }
+
+    fn read(
+        &self,
+        stat: &unisphere_core::prep::PrepSourceStat,
+        from: Option<&ReadCursor>,
+        limits: unisphere_core::prep::PrepReadLimits,
+    ) -> Result<unisphere_core::prep::PrepBatch, PipelineError> {
+        let start = from.map_or(0, |cursor| cursor.offset);
+        let session = SessionRef {
+            path: stat.path.clone(),
+        };
+        let batch = SessionLoader::read_batch(self, &session, from, limits.read)?;
+        Ok(unisphere_core::prep::PrepBatch {
+            bytes_read: batch.next_cursor.offset.saturating_sub(start),
+            input: unisphere_core::prep::PrepInput::Records(batch.records),
+            next_cursor: Some(batch.next_cursor),
+            more: batch.more,
+            incomplete_tail: batch.incomplete_tail,
+        })
+    }
+
+    fn anchor(
+        &self,
+        stat: &unisphere_core::prep::PrepSourceStat,
+        offset: u64,
+    ) -> Result<String, PipelineError> {
+        #[cfg(unix)]
+        return prep::anchor(&stat.path, offset);
+        #[cfg(not(unix))]
+        {
+            let _ = (stat, offset);
+            prep_unsupported()
+        }
+    }
+
+    fn record_at(
+        &self,
+        path: &std::path::Path,
+        address: &unisphere_core::prep::NativeAddress,
+        max_bytes: usize,
+    ) -> Result<Vec<u8>, PipelineError> {
+        #[cfg(unix)]
+        return prep::record_at(path, address, max_bytes);
+        #[cfg(not(unix))]
+        {
+            let _ = (path, address, max_bytes);
+            prep_unsupported()
         }
     }
 }

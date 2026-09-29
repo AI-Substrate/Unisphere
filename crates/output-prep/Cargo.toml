@@ -14,3 +14,8 @@ serde_json.workspace = true
 parquet.workspace = true
 arrow-json.workspace = true
 arrow-schema.workspace = true
+
+[dev-dependencies]
+unisphere-testkit.workspace = true
+tempfile.workspace = true
+serde_json.workspace = true

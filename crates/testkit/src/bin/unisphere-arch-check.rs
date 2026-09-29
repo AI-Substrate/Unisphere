@@ -44,7 +44,7 @@ fn allowed(package: &str, dependency: &str, kind: &str) -> bool {
                 | "unisphere-adapter-git-ai"
                 | "unisphere-output-prep"
         ),
-        // POC: the prep target store owns the Parquet/Arrow writer dependency.
+        // The prep target store is the only Parquet/Arrow owner.
         ("unisphere-output-prep", "normal") => matches!(
             dependency,
             "unisphere-core" | "serde" | "serde_json" | "parquet" | "arrow-json" | "arrow-schema"
@@ -116,7 +116,8 @@ fn allowed(package: &str, dependency: &str, kind: &str) -> bool {
             | "unisphere-loader-query"
             | "unisphere-output-query"
             | "unisphere-loader-git"
-            | "unisphere-adapter-git-ai",
+            | "unisphere-adapter-git-ai"
+            | "unisphere-output-prep",
             "dev",
         ) => matches!(dependency, "unisphere-testkit" | "tempfile" | "serde_json"),
         _ => false,

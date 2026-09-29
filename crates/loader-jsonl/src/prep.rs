@@ -1,5 +1,6 @@
-//! Recursive discovery, stat and prefix anchors for incremental prep.
-//! Symlinks are never followed; hidden entries are skipped like a `**` glob.
+//! Recursive discovery, stat, prefix anchors and single-record reads for
+//! incremental prep. Native files are opened read-only; symlinks are never
+//! followed and hidden entries are skipped, both counted.
 
 use std::{
     fs::{self, File},
@@ -9,69 +10,110 @@ use std::{
 };
 
 use sha2::{Digest as _, Sha256};
-use unisphere_core::{PipelineError, PipelineErrorKind, SourceIdentity, prep::PrepSourceStat};
+use unisphere_core::{
+    PipelineError, PipelineErrorKind, SourceIdentity,
+    prep::{NativeAddress, PrepDiscovery, PrepSourceKind, PrepSourceStat},
+};
 
 /// Upper bound on discovered candidates; exceeding it fails instead of truncating.
 pub const MAX_PREP_SOURCES: usize = 100_000;
 const ANCHOR_BYTES: u64 = 4096;
 
-pub(crate) fn discover(root: &Path) -> Result<Vec<PrepSourceStat>, PipelineError> {
+fn stat_of(path: &Path, file: String, metadata: &fs::Metadata) -> PrepSourceStat {
+    PrepSourceStat {
+        path: path.to_path_buf(),
+        file,
+        kind: PrepSourceKind::Append,
+        identity: SourceIdentity::Unix {
+            device: metadata.dev(),
+            inode: metadata.ino(),
+        },
+        size: metadata.len(),
+        mtime_ns: i128::from(metadata.mtime()) * 1_000_000_000 + i128::from(metadata.mtime_nsec()),
+    }
+}
+
+pub(crate) fn discover(
+    root: &Path,
+    accept: &dyn Fn(&str) -> bool,
+) -> Result<PrepDiscovery, PipelineError> {
     let read = |_| PipelineError::new(PipelineErrorKind::Read, None);
     if !root.is_absolute() || !fs::symlink_metadata(root).map_err(read)?.is_dir() {
         return Err(PipelineError::new(PipelineErrorKind::InvalidInput, None));
     }
-    let mut found = Vec::new();
+    let mut found = PrepDiscovery::default();
     let mut stack = vec![root.to_path_buf()];
     while let Some(dir) = stack.pop() {
-        // The root must be readable; a subdirectory vanishing mid-walk is skipped.
+        // The root must be readable; a subdirectory vanishing mid-walk is counted.
         let entries = match fs::read_dir(&dir) {
             Ok(entries) => entries,
             Err(failure) if dir == root => return Err(read(failure)),
-            Err(_) => continue,
+            Err(_) => {
+                found.skipped.unreadable_entries += 1;
+                continue;
+            }
         };
-        for entry in entries.flatten() {
+        for entry in entries {
+            let Ok(entry) = entry else {
+                found.skipped.unreadable_entries += 1;
+                continue;
+            };
             let name = entry.file_name();
             if name.to_str().is_none_or(|name| name.starts_with('.')) {
+                found.skipped.hidden += 1;
                 continue;
             }
             let Ok(kind) = entry.file_type() else {
+                found.skipped.unreadable_entries += 1;
                 continue;
             };
             let path = entry.path();
-            if kind.is_dir() {
+            if kind.is_symlink() {
+                found.skipped.symlinks += 1;
+            } else if kind.is_dir() {
                 stack.push(path);
-            } else if kind.is_file() && path.extension().is_some_and(|e| e == "jsonl") {
-                let Ok(metadata) = fs::symlink_metadata(&path) else {
-                    continue;
-                };
+            } else if kind.is_file() {
                 let Some(file) = path
                     .strip_prefix(root)
                     .ok()
                     .and_then(Path::to_str)
                     .map(str::to_owned)
                 else {
+                    found.skipped.unreadable_entries += 1;
                     continue;
                 };
-                if found.len() == MAX_PREP_SOURCES {
+                if !accept(&file) {
+                    continue;
+                }
+                let Ok(metadata) = fs::symlink_metadata(&path) else {
+                    found.skipped.unreadable_entries += 1;
+                    continue;
+                };
+                if found.sources.len() == MAX_PREP_SOURCES {
                     return Err(PipelineError::new(PipelineErrorKind::ListingLimit, None));
                 }
-                found.push(PrepSourceStat {
-                    path,
-                    file,
-                    identity: SourceIdentity::Unix {
-                        device: metadata.dev(),
-                        inode: metadata.ino(),
-                    },
-                    size: metadata.len(),
-                    mtime_ns: i128::from(metadata.mtime()) * 1_000_000_000
-                        + i128::from(metadata.mtime_nsec()),
-                });
+                found.sources.push(stat_of(&path, file, &metadata));
             }
         }
     }
     // Byte order of the relative path, like a sorted glob; also the table order.
-    found.sort_unstable_by(|a, b| a.file.cmp(&b.file));
+    found.sources.sort_unstable_by(|a, b| a.file.cmp(&b.file));
     Ok(found)
+}
+
+pub(crate) fn stat(root: &Path, path: &Path) -> Result<PrepSourceStat, PipelineError> {
+    let file = path
+        .strip_prefix(root)
+        .ok()
+        .and_then(Path::to_str)
+        .map(str::to_owned)
+        .ok_or_else(|| PipelineError::new(PipelineErrorKind::InvalidInput, None))?;
+    let metadata = fs::symlink_metadata(path)
+        .map_err(|_| PipelineError::new(PipelineErrorKind::Read, None))?;
+    if !metadata.is_file() {
+        return Err(PipelineError::new(PipelineErrorKind::InvalidInput, None));
+    }
+    Ok(stat_of(path, file, &metadata))
 }
 
 /// Digest of the first and the last (up to) 4 KiB of the prefix `[0, offset)`.
@@ -95,4 +137,40 @@ pub(crate) fn anchor(path: &Path, offset: u64) -> Result<String, PipelineError> 
         digest.update(&*slice);
     }
     Ok(format!("sha256:{:x}", digest.finalize()))
+}
+
+/// The complete line starting at `address.offset` (which must follow an LF or
+/// be 0), without its LF, at most `max_bytes`.
+pub(crate) fn record_at(
+    path: &Path,
+    address: &NativeAddress,
+    max_bytes: usize,
+) -> Result<Vec<u8>, PipelineError> {
+    let invalid = || PipelineError::new(PipelineErrorKind::InvalidInput, address.offset);
+    let offset = address.offset.ok_or_else(invalid)?;
+    let read = |_| PipelineError::new(PipelineErrorKind::Read, Some(offset));
+    let mut file = File::open(path).map_err(read)?;
+    if offset > 0 {
+        let mut previous = [0u8; 1];
+        file.seek(SeekFrom::Start(offset - 1)).map_err(read)?;
+        file.read_exact(&mut previous).map_err(read)?;
+        if previous[0] != b'\n' {
+            return Err(invalid());
+        }
+    }
+    file.seek(SeekFrom::Start(offset)).map_err(read)?;
+    let limit = u64::try_from(max_bytes)
+        .unwrap_or(u64::MAX)
+        .saturating_add(1);
+    let mut bytes = Vec::new();
+    file.take(limit).read_to_end(&mut bytes).map_err(read)?;
+    let end = bytes.iter().position(|b| *b == b'\n').ok_or_else(|| {
+        if bytes.len() > max_bytes {
+            PipelineError::new(PipelineErrorKind::RecordLimit, Some(offset))
+        } else {
+            invalid()
+        }
+    })?;
+    bytes.truncate(end);
+    Ok(bytes)
 }

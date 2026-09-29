@@ -12,11 +12,14 @@ use std::collections::{BTreeSet, HashMap};
 
 use serde_json::{Map, Value, json};
 use time::{OffsetDateTime, format_description::well_known::Rfc3339};
+#[cfg(test)]
+use unisphere_core::NativeRecord;
 use unisphere_core::{
-    NativeRecord, PipelineError, PipelineErrorKind,
+    PipelineError, PipelineErrorKind,
     prep::{
-        PrepCallRow, PrepEventRow, PrepFold, PrepFoldSession, PrepFoldState, PrepOptions, PrepRows,
-        PrepSessionFacts, PrepSourceMeta, PrepTriggerRow, PrepTurnRow,
+        CacheWriteBasis, CallSighting, PREP_CHECKPOINT_FORMAT, PrepCallRow, PrepCheckpoint,
+        PrepEventKind, PrepEventRow, PrepFold, PrepFoldSession, PrepInput, PrepOptions, PrepRows,
+        PrepSourceKind, PrepSourceMeta, PrepTriggerRow, PrepTurnRow, SessionFacts, TurnOrigin,
     },
 };
 
@@ -33,19 +36,38 @@ impl PrepFold for ClaudePrepFold {
     fn policy(&self) -> &'static str {
         PREP_POLICY_VERSION
     }
-    fn is_sub(&self, file: &str) -> bool {
-        file.contains("/subagents/")
+    fn kind(&self) -> PrepSourceKind {
+        PrepSourceKind::Append
+    }
+    fn pattern(&self) -> &'static str {
+        "**/*.jsonl"
+    }
+    fn describe(&self, file: &str) -> PrepSourceMeta {
+        let is_sub = file.contains("/subagents/");
+        let project_dir = file.split('/').next().unwrap_or(file);
+        PrepSourceMeta {
+            is_sub,
+            agent_id: agent_of(file, is_sub).map(str::to_owned),
+            project: Some(project_of(project_dir)),
+        }
     }
     fn open(
         &self,
         meta: &PrepSourceMeta,
+        source: &str,
         generation: u32,
-        saved: Option<&PrepFoldState>,
+        saved: Option<&PrepCheckpoint>,
     ) -> Result<Box<dyn PrepFoldSession>, PipelineError> {
+        let invalid = || PipelineError::new(PipelineErrorKind::InvalidData, None);
         let state = match saved {
-            None => State::new(meta, generation),
-            Some(value) => State::load(meta, generation, value)
-                .ok_or_else(|| PipelineError::new(PipelineErrorKind::InvalidData, None))?,
+            None => State::new(meta, source, generation),
+            Some(checkpoint)
+                if checkpoint.format == PREP_CHECKPOINT_FORMAT
+                    && checkpoint.policy == PREP_POLICY_VERSION =>
+            {
+                State::load(meta, source, generation, &checkpoint.fold).ok_or_else(invalid)?
+            }
+            Some(_) => return Err(invalid()),
         };
         Ok(Box::new(state))
     }
@@ -62,9 +84,26 @@ struct Pending {
     body_key: Option<String>,
 }
 
+/// `-Users-<name>-rest` → `rest`; Claude encodes the cwd with `/` as `-`.
+fn project_of(project_dir: &str) -> String {
+    let mut parts = project_dir.trim_start_matches('-').splitn(3, '-');
+    match (parts.next(), parts.next(), parts.next()) {
+        (Some("Users"), Some(_), Some(rest)) => rest.to_owned(),
+        _ => project_dir.to_owned(),
+    }
+}
+
+fn agent_of(file: &str, is_sub: bool) -> Option<&str> {
+    if !is_sub {
+        return None;
+    }
+    let name = file.rsplit('/').next()?;
+    name.strip_suffix(".jsonl")
+}
+
 #[derive(Debug, Clone)]
 struct State {
-    file: String,
+    source: String,
     is_sub: bool,
     generation: u32,
     turn_no: i64,
@@ -76,13 +115,13 @@ struct State {
     /// input, cw_1h, cw_5m, cache_read of the latest new call, max-updated.
     last_call_ctx: [i64; 4],
     committed: BTreeSet<u64>,
-    session: PrepSessionFacts,
+    session: SessionFacts,
 }
 
 impl State {
-    fn new(meta: &PrepSourceMeta, generation: u32) -> Self {
+    fn new(meta: &PrepSourceMeta, source: &str, generation: u32) -> Self {
         Self {
-            file: meta.file.clone(),
+            source: source.to_owned(),
             is_sub: meta.is_sub,
             generation,
             turn_no: 0,
@@ -93,11 +132,14 @@ impl State {
             last_call_key: None,
             last_call_ctx: [0; 4],
             committed: BTreeSet::new(),
-            session: PrepSessionFacts::default(),
+            session: SessionFacts {
+                is_sidechain: meta.is_sub,
+                ..SessionFacts::default()
+            },
         }
     }
 
-    fn load(meta: &PrepSourceMeta, generation: u32, value: &Value) -> Option<Self> {
+    fn load(meta: &PrepSourceMeta, source: &str, generation: u32, value: &Value) -> Option<Self> {
         let object = value.as_object()?;
         let int = |key: &str| object.get(key).and_then(Value::as_i64);
         let text = |value: Option<&Value>| value.and_then(Value::as_str).map(str::to_owned);
@@ -126,7 +168,7 @@ impl State {
             .collect::<Option<BTreeSet<_>>>()?;
         let session = serde_json::from_value(object.get("session")?.clone()).ok()?;
         Some(Self {
-            file: meta.file.clone(),
+            source: source.to_owned(),
             is_sub: meta.is_sub,
             generation,
             turn_no: int("turn_no")?,
@@ -145,12 +187,35 @@ impl State {
     }
 
     fn row_base(&self) -> (String, u32) {
-        (self.file.clone(), self.generation)
+        (self.source.clone(), self.generation)
     }
 }
 
 impl PrepFoldSession for State {
-    fn save(&self) -> PrepFoldState {
+    fn checkpoint(&self) -> PrepCheckpoint {
+        PrepCheckpoint {
+            format: PREP_CHECKPOINT_FORMAT,
+            policy: PREP_POLICY_VERSION.to_owned(),
+            fold: self.save(),
+        }
+    }
+
+    fn facts(&self) -> SessionFacts {
+        self.session.clone()
+    }
+
+    fn fold(&mut self, input: &PrepInput, options: PrepOptions) -> Result<PrepRows, PipelineError> {
+        match input {
+            PrepInput::Records(records) => self.fold_records(records, options),
+            PrepInput::Snapshot(_) => {
+                Err(PipelineError::new(PipelineErrorKind::InvalidInput, None))
+            }
+        }
+    }
+}
+
+impl State {
+    fn save(&self) -> Value {
         json!({
             "turn_no": self.turn_no,
             "call_in_turn": self.call_in_turn,
@@ -167,13 +232,9 @@ impl PrepFoldSession for State {
         })
     }
 
-    fn session(&self) -> PrepSessionFacts {
-        self.session.clone()
-    }
-
-    fn fold(
+    fn fold_records(
         &mut self,
-        records: &[NativeRecord],
+        records: &[unisphere_core::NativeRecord],
         options: PrepOptions,
     ) -> Result<PrepRows, PipelineError> {
         let mut rows = PrepRows::default();
@@ -184,7 +245,7 @@ impl PrepFoldSession for State {
                 continue;
             }
             let Ok(Value::Object(record)) = serde_json::from_slice::<Value>(&native.bytes) else {
-                self.session.skipped_malformed += 1;
+                self.session.skipped.malformed += 1;
                 continue;
             };
             let Some(ts) = record
@@ -192,11 +253,11 @@ impl PrepFoldSession for State {
                 .and_then(Value::as_str)
                 .filter(|ts| !ts.is_empty())
             else {
-                self.session.skipped_untimed += 1;
+                self.session.skipped.untimed += 1;
                 continue;
             };
             let Some(ts_ms) = parse_ms(ts) else {
-                self.session.skipped_bad_timestamp += 1;
+                self.session.skipped.bad_timestamp += 1;
                 continue;
             };
             self.observe_session(&record, ts, ts_ms);
@@ -219,7 +280,7 @@ impl PrepFoldSession for State {
                         .and_then(Value::as_str)
                         .map(str::to_owned);
                     rows.events
-                        .push(self.event(&at, "queue_operation", subkind, body_key));
+                        .push(self.event(&at, PrepEventKind::QueueOp, subkind, body_key));
                 }
                 Some("attachment") => {
                     let attachment = record.get("attachment").and_then(Value::as_object);
@@ -232,8 +293,12 @@ impl PrepFoldSession for State {
                             .and_then(|a| a.get("prompt"))
                             .and_then(Value::as_str)
                             .map(|text| fnv_hex(normalised_body(text).as_bytes()));
-                        rows.events
-                            .push(self.event(&at, "queued_command", None, body_key));
+                        rows.events.push(self.event(
+                            &at,
+                            PrepEventKind::QueueOp,
+                            Some("queued_command".into()),
+                            body_key,
+                        ));
                     }
                 }
                 _ => {}
@@ -259,36 +324,40 @@ impl State {
         if session.cwd.as_deref().unwrap_or("").is_empty() {
             session.cwd = string(record, "cwd").filter(|s| !s.is_empty());
         }
-        if session.first_ts.is_none() {
-            session.first_ts = Some(ts.to_owned());
-            session.first_ts_ms = Some(ts_ms);
+        if session.first_event_ts.is_none() {
+            session.first_event_ts = Some(ts.to_owned());
+            session.first_event_ms = Some(ts_ms);
         }
-        session.last_ts = Some(ts.to_owned());
-        session.last_ts_ms = Some(ts_ms);
+        session.last_event_ts = Some(ts.to_owned());
+        session.last_event_ms = Some(ts_ms);
     }
 
     fn event(
         &self,
         at: &At<'_>,
-        kind: &str,
+        kind: PrepEventKind,
         subkind: Option<String>,
         body_key: Option<String>,
     ) -> PrepEventRow {
-        let (file, generation) = self.row_base();
+        let (source, generation) = self.row_base();
         PrepEventRow {
-            file,
+            source,
             generation,
-            native_offset: at.offset,
-            ts: at.ts.to_owned(),
-            ts_ms: at.ts_ms,
-            kind: kind.to_owned(),
+            native_offset: Some(at.offset),
+            native_key: None,
+            ts: Some(at.ts.to_owned()),
+            ts_ms: Some(at.ts_ms),
+            kind,
             subkind,
+            trigger: None,
+            model: None,
             pre_tokens: None,
             post_tokens: None,
             duration_ms: None,
             last_context: None,
             gap_ms: None,
             resets_at: None,
+            resets_at_ms: None,
             turn_no: self.turn_no,
             body_key,
         }
@@ -324,14 +393,15 @@ impl State {
         let body = normalised_body(&text);
         let body_key = fnv_hex(body.as_bytes());
         let chars = i64::try_from(text.chars().count()).unwrap_or(i64::MAX);
-        let (file, generation) = self.row_base();
+        let (source, generation) = self.row_base();
         rows.triggers.push(PrepTriggerRow {
-            file,
+            source,
             generation,
-            native_offset: at.offset,
-            ts: at.ts.to_owned(),
-            ts_ms: at.ts_ms,
-            kind: kind.clone(),
+            native_offset: Some(at.offset),
+            native_key: None,
+            ts: Some(at.ts.to_owned()),
+            ts_ms: Some(at.ts_ms),
+            kind: origin(&kind),
             sender: sender.clone(),
             pij_msg_id: pij_msg_id.clone(),
             chars,
@@ -367,7 +437,8 @@ impl State {
                     .get("compactMetadata")
                     .and_then(Value::as_object)
                     .unwrap_or(&empty);
-                let mut event = self.event(at, "compact_boundary", string(meta, "trigger"), None);
+                let mut event = self.event(at, PrepEventKind::Compaction, None, None);
+                event.trigger = string(meta, "trigger");
                 event.pre_tokens = meta.get("preTokens").and_then(Value::as_i64);
                 event.post_tokens = meta.get("postTokens").and_then(Value::as_i64);
                 event.duration_ms = meta.get("durationMs").and_then(Value::as_i64);
@@ -375,22 +446,23 @@ impl State {
                 rows.events.push(event);
             }
             Some("away_summary") => {
-                let mut event = self.event(at, "away_summary", None, None);
+                let mut event = self.event(at, PrepEventKind::Recap, None, None);
                 event.last_context = Some(self.last_call_ctx.iter().sum());
                 event.gap_ms = self.gap_since_last_call(at.ts_ms);
                 rows.events.push(event);
             }
             Some("scheduled_task_fire") => {
                 rows.events
-                    .push(self.event(at, "scheduled_task_fire", None, None));
-                let (file, generation) = self.row_base();
+                    .push(self.event(at, PrepEventKind::ScheduledFire, None, None));
+                let (source, generation) = self.row_base();
                 rows.triggers.push(PrepTriggerRow {
-                    file,
+                    source,
                     generation,
-                    native_offset: at.offset,
-                    ts: at.ts.to_owned(),
-                    ts_ms: at.ts_ms,
-                    kind: "loop".into(),
+                    native_offset: Some(at.offset),
+                    native_key: None,
+                    ts: Some(at.ts.to_owned()),
+                    ts_ms: Some(at.ts_ms),
+                    kind: TurnOrigin::Loop,
                     sender: None,
                     pij_msg_id: None,
                     chars: 0,
@@ -433,7 +505,7 @@ impl State {
             } else {
                 "other"
             };
-            let mut event = self.event(at, "synthetic", Some(subkind.into()), None);
+            let mut event = self.event(at, PrepEventKind::LimitNotice, Some(subkind.into()), None);
             event.resets_at = head.find("resets ").map(|at| {
                 head[at + "resets ".len()..]
                     .trim()
@@ -467,10 +539,20 @@ impl State {
             tokens(usage, "cache_read_input_tokens"),
             tokens(usage, "output_tokens"),
         ];
+        let mut basis = if cache_creation.is_some() {
+            CacheWriteBasis::Split
+        } else {
+            CacheWriteBasis::None
+        };
         if cache_creation.is_none() {
             let total = tokens(usage, "cache_creation_input_tokens");
             if total != 0 {
                 values[if self.is_sub { 2 } else { 1 }] = total;
+                basis = if self.is_sub {
+                    CacheWriteBasis::Fallback5m
+                } else {
+                    CacheWriteBasis::Fallback1h
+                };
             }
         }
         if self.last_call_key == Some(key) {
@@ -484,44 +566,50 @@ impl State {
             row.records += 1;
             return;
         }
-        let (file, generation) = self.row_base();
+        let (source, generation) = self.row_base();
         let mut row = PrepCallRow {
-            file,
+            source,
             generation,
-            native_offset: at.offset,
-            sighting: "first".into(),
+            native_offset: Some(at.offset),
+            native_key: None,
+            sighting: CallSighting::First,
             msg_id,
             request_id,
-            ts: at.ts.to_owned(),
-            ts_ms: at.ts_ms,
+            ts: Some(at.ts.to_owned()),
+            ts_ms: Some(at.ts_ms),
             model: string(message, "model"),
-            input: values[0],
-            cw_1h: values[1],
-            cw_5m: values[2],
-            cache_read: values[3],
-            output: values[4],
+            stop_reason: string(message, "stop_reason"),
+            input: Some(values[0]),
+            cw_1h: Some(values[1]),
+            cw_5m: Some(values[2]),
+            cache_read: Some(values[3]),
+            output: Some(values[4]),
+            cache_write_basis: basis,
+            is_sidechain: truthy(record.get("isSidechain")),
             gap_ms: None,
             turn_no: None,
             call_in_turn: None,
             records: 1,
         };
         if self.committed.contains(&key) {
-            row.sighting = "update".into();
+            row.sighting = CallSighting::Update;
         } else {
             self.committed.insert(key);
             self.session.calls += 1;
             if let Some(pending) = self.pending.take() {
                 self.turn_no += 1;
                 self.call_in_turn = 0;
-                let (file, generation) = self.row_base();
+                let (source, generation) = self.row_base();
                 rows.turns.push(PrepTurnRow {
-                    file,
+                    source,
                     generation,
+                    native_offset: Some(at.offset),
+                    native_key: None,
                     turn_no: self.turn_no,
-                    started_ts: at.ts.to_owned(),
-                    started_ts_ms: at.ts_ms,
-                    first_call_offset: at.offset,
-                    trigger: pending.kind,
+                    started_ts: Some(at.ts.to_owned()),
+                    started_ts_ms: Some(at.ts_ms),
+                    first_call_offset: Some(at.offset),
+                    origin: origin(&pending.kind),
                     sender: pending.sender,
                     pij_msg_id: pending.pij_msg_id,
                     opener_offset: pending.offset,
@@ -529,16 +617,19 @@ impl State {
                     opener_chars: pending.chars,
                     body_key: pending.body_key,
                 });
+                self.session.turns += 1;
             } else if self.turn_no == 0 && !self.turn_zero_emitted {
-                let (file, generation) = self.row_base();
+                let (source, generation) = self.row_base();
                 rows.turns.push(PrepTurnRow {
-                    file,
+                    source,
                     generation,
+                    native_offset: Some(at.offset),
+                    native_key: None,
                     turn_no: 0,
-                    started_ts: at.ts.to_owned(),
-                    started_ts_ms: at.ts_ms,
-                    first_call_offset: at.offset,
-                    trigger: "start".into(),
+                    started_ts: Some(at.ts.to_owned()),
+                    started_ts_ms: Some(at.ts_ms),
+                    first_call_offset: Some(at.offset),
+                    origin: TurnOrigin::Start,
                     sender: None,
                     pij_msg_id: None,
                     opener_offset: None,
@@ -546,6 +637,7 @@ impl State {
                     opener_chars: None,
                     body_key: None,
                 });
+                self.session.turns += 1;
             }
             self.turn_zero_emitted = true;
             self.call_in_turn += 1;
@@ -562,11 +654,30 @@ impl State {
 }
 
 fn merge_max(row: &mut PrepCallRow, values: [i64; 5]) {
-    row.input = row.input.max(values[0]);
-    row.cw_1h = row.cw_1h.max(values[1]);
-    row.cw_5m = row.cw_5m.max(values[2]);
-    row.cache_read = row.cache_read.max(values[3]);
-    row.output = row.output.max(values[4]);
+    let max = |slot: &mut Option<i64>, value: i64| *slot = Some(slot.unwrap_or(0).max(value));
+    max(&mut row.input, values[0]);
+    max(&mut row.cw_1h, values[1]);
+    max(&mut row.cw_5m, values[2]);
+    max(&mut row.cache_read, values[3]);
+    max(&mut row.output, values[4]);
+}
+
+/// Reference-parser trigger kind → contract origin.
+fn origin(kind: &str) -> TurnOrigin {
+    match kind {
+        "start" => TurnOrigin::Start,
+        "human" => TurnOrigin::Human,
+        "peer" => TurnOrigin::Peer,
+        "task-notification" => TurnOrigin::TaskNotification,
+        "coordinator" => TurnOrigin::Coordinator,
+        "auto-continuation" => TurnOrigin::AutoContinuation,
+        "compact-summary" => TurnOrigin::CompactSummary,
+        "manual-compact" => TurnOrigin::ManualCompact,
+        "scheduled" => TurnOrigin::Scheduled,
+        "loop" => TurnOrigin::Loop,
+        "subagent-task" => TurnOrigin::SubagentTask,
+        _ => TurnOrigin::Other,
+    }
 }
 
 /// Python-style truthiness for JSON values (the reference uses `if not x`).
@@ -856,44 +967,46 @@ mod tests {
     fn fold_all(state: &mut State, lines: &[String]) -> PrepRows {
         let lines: Vec<&str> = lines.iter().map(String::as_str).collect();
         state
-            .fold(&records(&lines), PrepOptions::default())
+            .fold(&PrepInput::Records(records(&lines)), PrepOptions::default())
             .unwrap()
     }
 
     fn meta() -> PrepSourceMeta {
-        PrepSourceMeta {
-            file: "p/s.jsonl".into(),
-            is_sub: false,
-        }
+        PrepSourceMeta::default()
     }
+
+    const SOURCE: &str = "claude-code/default/p/s.jsonl";
 
     #[test]
     fn repeats_merge_by_maximum_and_cross_batch_repeats_become_updates() {
-        let mut state = State::new(&meta(), 0);
+        let mut state = State::new(&meta(), SOURCE, 0);
         let rows = fold_all(
             &mut state,
             &[assistant(1, "msg_a", 3, 1), assistant(1, "msg_a", 2, 9)],
         );
         assert_eq!(rows.calls.len(), 1);
-        assert_eq!((rows.calls[0].input, rows.calls[0].output), (3, 9));
+        assert_eq!(
+            (rows.calls[0].input, rows.calls[0].output),
+            (Some(3), Some(9))
+        );
         // Resume from the saved state as a later run would.
         let saved = state.save();
-        let mut resumed = State::load(&meta(), 0, &saved).unwrap();
+        let mut resumed = State::load(&meta(), SOURCE, 0, &saved).unwrap();
         let rows = fold_all(
             &mut resumed,
             &[assistant(2, "msg_a", 1, 11), assistant(3, "msg_b", 1, 1)],
         );
-        assert_eq!(rows.calls[0].sighting, "update");
-        assert_eq!(rows.calls[0].output, 11);
+        assert_eq!(rows.calls[0].sighting, CallSighting::Update);
+        assert_eq!(rows.calls[0].output, Some(11));
         assert_eq!(rows.calls[0].turn_no, None);
-        assert_eq!(rows.calls[1].sighting, "first");
+        assert_eq!(rows.calls[1].sighting, CallSighting::First);
         assert_eq!(rows.calls[1].gap_ms, Some(2000));
-        assert_eq!(resumed.session().calls, 2);
+        assert_eq!(resumed.facts().calls, 2);
     }
 
     #[test]
     fn peer_message_opens_the_next_turn_with_sender_and_no_content() {
-        let mut state = State::new(&meta(), 0);
+        let mut state = State::new(&meta(), SOURCE, 0);
         let peer = r#"{"type":"user","timestamp":"2026-09-26T00:00:05Z","origin":{"kind":"peer"},"message":{"content":"[pij-rs from pij-quiet-heron] secret words [pijMessageId:ab12-cd]"}}"#;
         let rows = fold_all(
             &mut state,
@@ -904,9 +1017,9 @@ mod tests {
             ],
         );
         assert_eq!(rows.turns.len(), 2);
-        assert_eq!(rows.turns[0].trigger, "start");
+        assert_eq!(rows.turns[0].origin, TurnOrigin::Start);
         let turn = &rows.turns[1];
-        assert_eq!((turn.turn_no, turn.trigger.as_str()), (1, "peer"));
+        assert_eq!((turn.turn_no, turn.origin), (1, TurnOrigin::Peer));
         assert_eq!(turn.sender.as_deref(), Some("pij-quiet-heron"));
         assert_eq!(turn.pij_msg_id.as_deref(), Some("ab12-cd"));
         assert_eq!(rows.triggers[0].content_head, None);
@@ -915,7 +1028,7 @@ mod tests {
 
     #[test]
     fn synthetic_notices_are_events_not_calls() {
-        let mut state = State::new(&meta(), 0);
+        let mut state = State::new(&meta(), SOURCE, 0);
         let synthetic = r#"{"type":"assistant","timestamp":"2026-09-26T00:00:05Z","message":{"model":"<synthetic>","usage":{"input_tokens":0},"content":[{"type":"text","text":"You've hit your weekly limit · resets 3pm"}]}}"#;
         let rows = fold_all(&mut state, &[synthetic.to_owned()]);
         assert!(rows.calls.is_empty());

@@ -1,20 +1,21 @@
 //! Target-directory store for `unisphere prep`.
 //!
 //! Layout under the target directory:
-//! - `state.json`: committed per-source cursors and fold state (published last,
-//!   by atomic rename);
-//! - `tables/{calls,turns,triggers,events}/run-NNNNNN.parquet`: append-only parts,
-//!   one per table per run that produced rows;
+//! - `state.json`: committed per-source cursors and fold checkpoints (published
+//!   last, by atomic rename);
+//! - `tables/{calls,turns,triggers,events,tool_uses}/run-NNNNNN.parquet`:
+//!   append-only parts, one per table per run that produced rows;
 //! - `tables/sources.parquet`, `tables/sessions.parquet`: current snapshots.
 //!
 //! Parts not referenced by `state.json` belong to an uncommitted run and are
 //! removed on load, so readers never see a row twice. Superseded generations
-//! stay in older parts; readers keep rows whose `generation` equals the source's
-//! current generation in `sources`.
+//! stay in older parts; readers keep rows whose `generation` equals the
+//! source's current generation in `sources`. The store holds an exclusive lock
+//! on `TARGET/.prep.lock` for its lifetime.
 #![forbid(unsafe_code)]
 
 use std::{
-    fs::{self, File},
+    fs::{self, File, OpenOptions},
     io::Write,
     path::{Path, PathBuf},
     sync::Arc,
@@ -25,18 +26,36 @@ use parquet::{arrow::ArrowWriter, basic::Compression, file::properties::WriterPr
 use serde::Serialize;
 use unisphere_core::{
     PipelineError, PipelineErrorKind, SourceIdentity,
-    prep::{PrepCommit, PrepRows, PrepState},
+    prep::{
+        PrepCommit, PrepCompactReport, PrepLoaded, PrepReplaceReason, PrepRows, PrepSourceKind,
+        PrepSourceStatus, PrepState,
+    },
 };
 
-pub const FACT_TABLES: [&str; 4] = ["calls", "turns", "triggers", "events"];
+pub const FACT_TABLES: [&str; 5] = ["calls", "turns", "triggers", "events", "tool_uses"];
 
 pub struct ParquetPrepStore {
     target: PathBuf,
+    /// Held for the store's lifetime; dropping it releases the target.
+    _lock: File,
 }
 
 impl ParquetPrepStore {
-    pub fn new(target: PathBuf) -> Self {
-        Self { target }
+    /// Open (creating if needed) `target` and take its exclusive writer lock.
+    /// A second concurrent writer is refused with `Write`.
+    pub fn open(target: PathBuf) -> Result<Self, PipelineError> {
+        fs::create_dir_all(&target).map_err(write_error)?;
+        let lock = OpenOptions::new()
+            .create(true)
+            .truncate(false)
+            .write(true)
+            .open(target.join(".prep.lock"))
+            .map_err(write_error)?;
+        lock.try_lock().map_err(write_error)?;
+        Ok(Self {
+            target,
+            _lock: lock,
+        })
     }
 }
 
@@ -55,21 +74,28 @@ fn columns(spec: &[(&str, DataType, bool)]) -> Arc<Schema> {
 use DataType::{Boolean as B, Int64 as I, Utf8 as S};
 
 fn schema(table: &str) -> Arc<Schema> {
-    let key = [("file", S, false), ("generation", I, false)];
+    let key = [
+        ("source", S, false),
+        ("generation", I, false),
+        ("native_offset", I, true),
+        ("native_key", S, true),
+    ];
     let spec: Vec<(&str, DataType, bool)> = match table {
         "calls" => vec![
-            ("native_offset", I, false),
             ("sighting", S, false),
             ("msg_id", S, true),
             ("request_id", S, true),
-            ("ts", S, false),
-            ("ts_ms", I, false),
+            ("ts", S, true),
+            ("ts_ms", I, true),
             ("model", S, true),
-            ("input", I, false),
-            ("cw_1h", I, false),
-            ("cw_5m", I, false),
-            ("cache_read", I, false),
-            ("output", I, false),
+            ("stop_reason", S, true),
+            ("input", I, true),
+            ("cw_1h", I, true),
+            ("cw_5m", I, true),
+            ("cache_read", I, true),
+            ("output", I, true),
+            ("cache_write_basis", S, false),
+            ("is_sidechain", B, false),
             ("gap_ms", I, true),
             ("turn_no", I, true),
             ("call_in_turn", I, true),
@@ -77,10 +103,10 @@ fn schema(table: &str) -> Arc<Schema> {
         ],
         "turns" => vec![
             ("turn_no", I, false),
-            ("started_ts", S, false),
-            ("started_ts_ms", I, false),
-            ("first_call_offset", I, false),
-            ("trigger", S, false),
+            ("started_ts", S, true),
+            ("started_ts_ms", I, true),
+            ("first_call_offset", I, true),
+            ("origin", S, false),
             ("sender", S, true),
             ("pij_msg_id", S, true),
             ("opener_offset", I, true),
@@ -89,9 +115,8 @@ fn schema(table: &str) -> Arc<Schema> {
             ("body_key", S, true),
         ],
         "triggers" => vec![
-            ("native_offset", I, false),
-            ("ts", S, false),
-            ("ts_ms", I, false),
+            ("ts", S, true),
+            ("ts_ms", I, true),
             ("kind", S, false),
             ("sender", S, true),
             ("pij_msg_id", S, true),
@@ -101,53 +126,92 @@ fn schema(table: &str) -> Arc<Schema> {
             ("content_head", S, true),
         ],
         "events" => vec![
-            ("native_offset", I, false),
-            ("ts", S, false),
-            ("ts_ms", I, false),
+            ("ts", S, true),
+            ("ts_ms", I, true),
             ("kind", S, false),
             ("subkind", S, true),
+            ("trigger", S, true),
+            ("model", S, true),
             ("pre_tokens", I, true),
             ("post_tokens", I, true),
             ("duration_ms", I, true),
             ("last_context", I, true),
             ("gap_ms", I, true),
             ("resets_at", S, true),
+            ("resets_at_ms", I, true),
             ("turn_no", I, false),
             ("body_key", S, true),
         ],
-        "sources" => vec![
-            ("path", S, false),
-            ("project_dir", S, false),
-            ("project", S, false),
-            ("is_sub", B, false),
-            ("agent_id", S, true),
-            ("device", I, true),
-            ("inode", I, true),
-            ("size", I, false),
-            ("mtime_ns", I, false),
-            ("committed_offset", I, false),
-            ("pending_tail_bytes", I, false),
-            ("last_status", S, false),
-            ("policy", S, false),
-            ("table_schema_version", I, false),
+        "tool_uses" => vec![
+            ("sighting", S, false),
+            ("tool_use_id", S, true),
+            ("call_msg_id", S, true),
+            ("ts", S, true),
+            ("ts_ms", I, true),
+            ("name", S, true),
+            ("family", S, true),
+            ("input_hash", S, true),
+            ("input_bytes", I, true),
+            ("result_offset", I, true),
+            ("result_bytes", I, true),
+            ("outcome", S, true),
+            ("duration_ms", I, true),
+            ("turn_no", I, true),
         ],
-        "sessions" => vec![
-            ("session_id", S, true),
-            ("is_sub", B, false),
-            ("agent_id", S, true),
-            ("project", S, false),
-            ("cwd", S, true),
-            ("first_ts", S, true),
-            ("last_ts", S, true),
-            ("first_ts_ms", I, true),
-            ("last_ts_ms", I, true),
-            ("seat_hint", S, true),
-            ("records", I, false),
-            ("calls", I, false),
-            ("skipped_malformed", I, false),
-            ("skipped_untimed", I, false),
-            ("skipped_bad_timestamp", I, false),
-        ],
+        "sources" => {
+            return columns(&[
+                ("source", S, false),
+                ("generation", I, false),
+                ("harness", S, false),
+                ("label", S, false),
+                ("path", S, false),
+                ("file", S, false),
+                ("kind", S, false),
+                ("project", S, true),
+                ("is_sub", B, false),
+                ("agent_id", S, true),
+                ("device", I, true),
+                ("inode", I, true),
+                ("size", I, false),
+                ("mtime_ns", I, false),
+                ("committed_offset", I, false),
+                ("pending_tail_bytes", I, false),
+                ("revision", S, true),
+                ("status", S, false),
+                ("replace_reason", S, true),
+                ("policy", S, false),
+                ("table_schema_version", I, false),
+            ]);
+        }
+        "sessions" => {
+            return columns(&[
+                ("source", S, false),
+                ("generation", I, false),
+                ("session_id", S, true),
+                ("parent_session_id", S, true),
+                ("is_sidechain", B, false),
+                ("agent_id", S, true),
+                ("project", S, true),
+                ("cwd", S, true),
+                ("first_event_ts", S, true),
+                ("first_event_ms", I, true),
+                ("last_event_ts", S, true),
+                ("last_event_ms", I, true),
+                ("seat_hint", S, true),
+                ("records", I, false),
+                ("calls", I, false),
+                ("turns", I, false),
+                ("compactions_manual", I, true),
+                ("compactions_auto", I, true),
+                ("compactions_unknown", I, true),
+                ("latest_context_total", I, true),
+                ("latest_context_ms", I, true),
+                ("latest_model", S, true),
+                ("skipped_malformed", I, false),
+                ("skipped_untimed", I, false),
+                ("skipped_bad_timestamp", I, false),
+            ]);
+        }
         _ => unreachable!("unknown prep table"),
     };
     columns(&key.into_iter().chain(spec).collect::<Vec<_>>())
@@ -155,11 +219,14 @@ fn schema(table: &str) -> Arc<Schema> {
 
 #[derive(Serialize)]
 struct SourceRow<'a> {
-    file: &'a str,
+    source: &'a str,
     generation: u32,
+    harness: &'a str,
+    label: &'a str,
     path: &'a str,
-    project_dir: &'a str,
-    project: String,
+    file: &'a str,
+    kind: PrepSourceKind,
+    project: Option<&'a str>,
     is_sub: bool,
     agent_id: Option<&'a str>,
     device: Option<i64>,
@@ -168,45 +235,40 @@ struct SourceRow<'a> {
     mtime_ns: i64,
     committed_offset: i64,
     pending_tail_bytes: i64,
-    last_status: &'a str,
+    revision: Option<&'a str>,
+    status: &'static str,
+    replace_reason: Option<PrepReplaceReason>,
     policy: &'a str,
     table_schema_version: u32,
 }
 
 #[derive(Serialize)]
 struct SessionRow<'a> {
-    file: &'a str,
+    source: &'a str,
     generation: u32,
     session_id: Option<&'a str>,
-    is_sub: bool,
+    parent_session_id: Option<&'a str>,
+    is_sidechain: bool,
     agent_id: Option<&'a str>,
-    project: String,
+    project: Option<&'a str>,
     cwd: Option<&'a str>,
-    first_ts: Option<&'a str>,
-    last_ts: Option<&'a str>,
-    first_ts_ms: Option<i64>,
-    last_ts_ms: Option<i64>,
+    first_event_ts: Option<&'a str>,
+    first_event_ms: Option<i64>,
+    last_event_ts: Option<&'a str>,
+    last_event_ms: Option<i64>,
     seat_hint: Option<&'a str>,
     records: u64,
     calls: u64,
+    turns: u64,
+    compactions_manual: Option<u64>,
+    compactions_auto: Option<u64>,
+    compactions_unknown: Option<u64>,
+    latest_context_total: Option<i64>,
+    latest_context_ms: Option<i64>,
+    latest_model: Option<&'a str>,
     skipped_malformed: u64,
     skipped_untimed: u64,
     skipped_bad_timestamp: u64,
-}
-
-/// `-Users-<name>-rest` → `rest`; Claude encodes the cwd with `/` as `-`.
-fn project_of(project_dir: &str) -> String {
-    project_dir
-        .strip_prefix("-Users-")
-        .and_then(|rest| rest.split_once('-'))
-        .map_or_else(|| project_dir.to_owned(), |(_, rest)| rest.to_owned())
-}
-
-fn agent_of(file: &str, is_sub: bool) -> Option<&str> {
-    is_sub
-        .then(|| file.rsplit('/').next())
-        .flatten()
-        .and_then(|name| name.strip_suffix(".jsonl"))
 }
 
 fn fsync_dir(dir: &Path) -> Result<(), PipelineError> {
@@ -245,17 +307,25 @@ fn write_parquet<T: Serialize>(path: &Path, table: &str, rows: &[T]) -> Result<u
     Ok(bytes)
 }
 
+impl ParquetPrepStore {
+    fn read_state(&self) -> Result<Option<PrepState>, PipelineError> {
+        match fs::read(self.target.join("state.json")) {
+            Ok(bytes) => serde_json::from_slice(&bytes)
+                .map(Some)
+                .map_err(|_| PipelineError::new(PipelineErrorKind::InvalidData, None)),
+            Err(failure) if failure.kind() == std::io::ErrorKind::NotFound => Ok(None),
+            Err(_) => Err(PipelineError::new(PipelineErrorKind::Read, None)),
+        }
+    }
+}
+
 impl unisphere_core::prep::PrepStore for ParquetPrepStore {
-    fn load(&self) -> Result<(Option<PrepState>, u64), PipelineError> {
-        let state_path = self.target.join("state.json");
-        let state: Option<PrepState> = match fs::read(&state_path) {
-            Ok(bytes) => Some(
-                serde_json::from_slice(&bytes)
-                    .map_err(|_| PipelineError::new(PipelineErrorKind::InvalidData, None))?,
-            ),
-            Err(failure) if failure.kind() == std::io::ErrorKind::NotFound => None,
-            Err(_) => return Err(PipelineError::new(PipelineErrorKind::Read, None)),
-        };
+    fn state(&self) -> Result<Option<PrepState>, PipelineError> {
+        self.read_state()
+    }
+
+    fn load(&self) -> Result<PrepLoaded, PipelineError> {
+        let state = self.read_state()?;
         let parts = state.as_ref().map(|s| s.parts.as_slice()).unwrap_or(&[]);
         let mut removed = 0;
         for table in FACT_TABLES {
@@ -271,7 +341,10 @@ impl unisphere_core::prep::PrepStore for ParquetPrepStore {
                 }
             }
         }
-        Ok((state, removed))
+        Ok(PrepLoaded {
+            state,
+            orphans_removed: removed,
+        })
     }
 
     fn commit(&self, rows: &PrepRows, state: &PrepState) -> Result<PrepCommit, PipelineError> {
@@ -296,56 +369,74 @@ impl unisphere_core::prep::PrepStore for ParquetPrepStore {
         part!("turns", &rows.turns);
         part!("triggers", &rows.triggers);
         part!("events", &rows.events);
+        part!("tool_uses", &rows.tool_uses);
         fs::create_dir_all(&tables).map_err(write_error)?;
         let as_i64 = |v: u64| i64::try_from(v).unwrap_or(i64::MAX);
         let mut sources = Vec::with_capacity(state.sources.len());
         let mut sessions = Vec::with_capacity(state.sources.len());
-        for (file, source) in &state.sources {
-            let project_dir = file.split('/').next().unwrap_or(file);
+        for (key, source) in &state.sources {
+            let set = state.sets.get(&source.set);
             let (device, inode) = match source.identity {
                 SourceIdentity::Unix { device, inode } => {
                     (Some(as_i64(device)), Some(as_i64(inode)))
                 }
                 SourceIdentity::Unavailable => (None, None),
             };
-            let agent_id = agent_of(file, source.is_sub);
+            let replace_reason = match source.status {
+                PrepSourceStatus::Replaced { reason } => Some(reason),
+                _ => None,
+            };
             sources.push(SourceRow {
-                file,
+                source: key,
                 generation: source.generation,
+                harness: set.map_or("", |s| s.harness.as_str()),
+                label: set.map_or("", |s| s.label.as_str()),
                 path: source.path.to_str().unwrap_or_default(),
-                project_dir,
-                project: project_of(project_dir),
-                is_sub: source.is_sub,
-                agent_id,
+                file: &source.file,
+                kind: source.kind,
+                project: source.meta.project.as_deref(),
+                is_sub: source.meta.is_sub,
+                agent_id: source.meta.agent_id.as_deref(),
                 device,
                 inode,
                 size: as_i64(source.size),
                 mtime_ns: i64::try_from(source.mtime_ns).unwrap_or(i64::MAX),
                 committed_offset: as_i64(source.offset),
                 pending_tail_bytes: as_i64(source.size.saturating_sub(source.offset)),
-                last_status: &source.last_status,
-                policy: &state.policy,
+                revision: source.revision.as_deref(),
+                status: source.status.label(),
+                replace_reason,
+                policy: &source.checkpoint.policy,
                 table_schema_version: state.table_schema_version,
             });
-            let facts = &source.session;
+            let facts = &source.facts;
+            let latest = facts.latest_context.as_ref();
             sessions.push(SessionRow {
-                file,
+                source: key,
                 generation: source.generation,
                 session_id: facts.session_id.as_deref(),
-                is_sub: source.is_sub,
-                agent_id,
-                project: project_of(project_dir),
+                parent_session_id: facts.parent_session_id.as_deref(),
+                is_sidechain: facts.is_sidechain,
+                agent_id: source.meta.agent_id.as_deref(),
+                project: source.meta.project.as_deref(),
                 cwd: facts.cwd.as_deref(),
-                first_ts: facts.first_ts.as_deref(),
-                last_ts: facts.last_ts.as_deref(),
-                first_ts_ms: facts.first_ts_ms,
-                last_ts_ms: facts.last_ts_ms,
+                first_event_ts: facts.first_event_ts.as_deref(),
+                first_event_ms: facts.first_event_ms,
+                last_event_ts: facts.last_event_ts.as_deref(),
+                last_event_ms: facts.last_event_ms,
                 seat_hint: facts.seat_hint.as_deref(),
                 records: facts.records,
                 calls: facts.calls,
-                skipped_malformed: facts.skipped_malformed,
-                skipped_untimed: facts.skipped_untimed,
-                skipped_bad_timestamp: facts.skipped_bad_timestamp,
+                turns: facts.turns,
+                compactions_manual: facts.compactions.map(|c| c.manual),
+                compactions_auto: facts.compactions.map(|c| c.auto),
+                compactions_unknown: facts.compactions.map(|c| c.unknown_trigger),
+                latest_context_total: latest.and_then(|c| c.total),
+                latest_context_ms: latest.and_then(|c| c.ts_ms),
+                latest_model: latest.and_then(|c| c.model.as_deref()),
+                skipped_malformed: facts.skipped.malformed,
+                skipped_untimed: facts.skipped.untimed,
+                skipped_bad_timestamp: facts.skipped.bad_timestamp,
             });
         }
         commit.bytes_written +=
@@ -364,5 +455,10 @@ impl unisphere_core::prep::PrepStore for ParquetPrepStore {
         fsync_dir(&self.target)?;
         commit.bytes_written += bytes.len() as u64;
         Ok(commit)
+    }
+
+    fn compact(&self) -> Result<PrepCompactReport, PipelineError> {
+        // Compaction is delivered by the store lane (guide unit tk-0004).
+        Err(PipelineError::new(PipelineErrorKind::Unsupported, None))
     }
 }

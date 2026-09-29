@@ -1,0 +1,28 @@
+docs/plans/028-prep-canonical-tables/assets/backpressure.dd.json
+  h_9e71e8b09f7cf2 80-82,113-115,146-148,157-159
+docs/plans/028-prep-canonical-tables/assets/backpressure.dd.md
+  h_9e71e8b09f7cf2 28,31,34-35
+docs/plans/028-prep-canonical-tables/assets/execution-log.dd.json
+  h_9e71e8b09f7cf2 174-185
+docs/plans/028-prep-canonical-tables/assets/execution-log.dd.md
+  h_9e71e8b09f7cf2 38
+docs/plans/028-prep-canonical-tables/assets/tasks/phase-2/tasks.dd.json
+  h_9e71e8b09f7cf2 26,39,51,63,75,87,100,116,139-141,146-148,155-157,164-166,173-175,182-184,191-193,198-200,207-209,214-216,221-223,230-232,237-239,244-246,251-253,258-260,265-267,344
+docs/plans/028-prep-canonical-tables/assets/tasks/phase-2/tasks.dd.md
+  h_9e71e8b09f7cf2 38-45,53-56,60-62,66-68,72-74,78-80,84-87,91-95,99-106
+docs/plans/028-prep-canonical-tables/plan.dd.json
+  h_9e71e8b09f7cf2 83-85,104-106,125-127,132-134,153,157-158
+docs/plans/028-prep-canonical-tables/plan.dd.md
+  h_9e71e8b09f7cf2 64,67,70-71,80
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "2db939d16ba50d8b8128b0e52fc5556047f52627",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

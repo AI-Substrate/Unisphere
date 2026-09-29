@@ -77,7 +77,7 @@ Give Unisphere a convert-once, research-many path. `unisphere prep --target DIR`
 | id | title | brief | state | note | receipt | depends_on | tasks | objective | delivers | key_risks |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | ph-ed41 | Claude prep hardened to product | Harden the POC's Claude prep into product code: ports and contract, cost correctness proven against the reference parser, typed events/turns/tool uses, generations and compaction, live-file safety, coverage report, CLI/SDK parity, docs. Ends with real-corpus parity and an independent review. | [x] checked | — | assets/team/review-composition-rv-028-composition-p1-r1.dd.json | — | [tasks](assets/tasks/phase-1/tasks.dd.md#tasks) | — | — | — |
-| ph-62fe | All harnesses and research recipes | Extend prep to every other registered harness with representation-appropriate change detection and explicit nulls; ship the named research recipes against external DuckDB; full-corpus measurement across harnesses; docs. Ends with independent review. | [x] checked | — | assets/team/review-composition-rv-028-composition-p2-r1.dd.json | ph-ed41 | [tasks](assets/tasks/phase-2/tasks.dd.md#tasks) | — | — | — |
+| ph-62fe | All harnesses and research recipes | Extend prep to every other registered harness with representation-appropriate change detection and explicit nulls; ship the named research recipes against external DuckDB; full-corpus measurement across harnesses; docs. Ends with independent review. | [x] checked | — | — | ph-ed41 | [tasks](assets/tasks/phase-2/tasks.dd.md#tasks) | — | — | — |
 
 <a id="tasks"></a>
 

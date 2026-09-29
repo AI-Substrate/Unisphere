@@ -3,7 +3,7 @@
   "kind": "flight-plan",
   "slug": "prep-canonical-tables",
   "nav": {
-    "now": "review-1",
+    "now": "post-flight",
     "next": null
   },
   "created_at": "2026-09-29T04:11:32.808Z",
@@ -330,6 +330,90 @@
           "kind": "command",
           "importance": "recommended"
         }
+      }
+    },
+    {
+      "id": "CUR-005",
+      "kind": "cursor-moved",
+      "origin": "engine",
+      "fired_at": "2026-09-29T09:57:37.871Z",
+      "details": {
+        "from": "review-1",
+        "to": "phase-2"
+      }
+    },
+    {
+      "id": "UPD-009",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-29T09:59:38.913Z",
+      "details": {
+        "node": "observe-2",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-008",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-29T09:59:39.080Z",
+      "details": {
+        "node": "observe-2",
+        "from": "known",
+        "to": "done",
+        "chore": {
+          "kind": "command",
+          "importance": "recommended"
+        }
+      }
+    },
+    {
+      "id": "UPD-010",
+      "kind": "node-updated",
+      "origin": "engine",
+      "fired_at": "2026-09-29T09:59:39.237Z",
+      "details": {
+        "node": "retro-2",
+        "fields": [
+          "comments"
+        ]
+      }
+    },
+    {
+      "id": "STA-009",
+      "kind": "status-changed",
+      "origin": "engine",
+      "fired_at": "2026-09-29T09:59:39.399Z",
+      "details": {
+        "node": "retro-2",
+        "from": "known",
+        "to": "done",
+        "chore": {
+          "kind": "command",
+          "importance": "recommended"
+        }
+      }
+    },
+    {
+      "id": "CUR-006",
+      "kind": "cursor-moved",
+      "origin": "engine",
+      "fired_at": "2026-09-29T09:59:45.108Z",
+      "details": {
+        "from": "phase-2",
+        "to": "review-2"
+      }
+    },
+    {
+      "id": "CUR-007",
+      "kind": "cursor-moved",
+      "origin": "engine",
+      "fired_at": "2026-09-29T09:59:50.009Z",
+      "details": {
+        "from": "review-2",
+        "to": "post-flight"
       }
     }
   ],
@@ -666,7 +750,15 @@
       ],
       "command": "/builder 6 implement",
       "dd_link": {
-        "address": "docs/plans/028-prep-canonical-tables/assets/tasks/phase-2/tasks.dd.json#tasks"
+        "address": "docs/plans/028-prep-canonical-tables/assets/tasks/phase-2/tasks.dd.json#tasks",
+        "basis_sha": "e8703dc636521ead48df6cb29bc082266bb725d89965974f8a6ca3532fb11b01",
+        "reading": {
+          "status": "complete",
+          "terminal": 8,
+          "total": 8,
+          "incomplete": [],
+          "at": "2026-09-29T09:59:45.108Z"
+        }
       }
     },
     {
@@ -726,12 +818,12 @@
       "id": "observe-2",
       "type": "observe",
       "label": "Observe: P2",
-      "status": "known",
+      "status": "done",
       "next": [
         "phase-2"
       ],
       "created_at": "2026-09-29T04:49:47.431Z",
-      "modified_at": "2026-09-29T04:49:47.431Z",
+      "modified_at": "2026-09-29T09:59:39.079Z",
       "branch_of": "phase-2",
       "instructions": [
         "Mid-phase capture: record observations (decisions, gotchas, surprises) AS you code, so they don't evaporate as remembered prose.",
@@ -745,18 +837,27 @@
       "chore": {
         "kind": "command",
         "importance": "recommended"
-      }
+      },
+      "comments": [
+        {
+          "at": "2026-09-29T09:59:38.913Z",
+          "text": "decision:done captures: harness observe DL-001..DL-007 in bucket pij-native-tick (advance gate across re-seal, dispatch readiness E471, second-phase import E472, guide drift beyond meta.updated, on-track directory prefixes, receipt custody, phase receipt plan drift) plus coder buckets (tk-0007/tk-000a/tk-000d on-track, tk-000b packet map); drained to .harness/records/retro/2026-09-29/002-028-prep-canonical-tables-phase-2.md time:2026-09-29T09:59:38Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "ran_at": "2026-09-29T09:59:39.079Z"
     },
     {
       "id": "retro-2",
       "type": "harness-retro",
       "label": "Retro: P2 (drain)",
-      "status": "known",
+      "status": "done",
       "next": [
         "phase-2"
       ],
       "created_at": "2026-09-29T04:49:47.431Z",
-      "modified_at": "2026-09-29T04:49:47.431Z",
+      "modified_at": "2026-09-29T09:59:39.399Z",
       "branch_of": "phase-2",
       "instructions": [
         "Post-coding seam: drain this phase's observe buffer into durable retro notes before moving on.",
@@ -767,7 +868,16 @@
       "chore": {
         "kind": "command",
         "importance": "recommended"
-      }
+      },
+      "comments": [
+        {
+          "at": "2026-09-29T09:59:39.237Z",
+          "text": "decision:route hook:post-coding verb:retro --drain (skill://eng-harness-flow references/stages/retro.md) bucket pij-native-tick: 10 entries saved all (disposition kept: 7 harness-itself, 2 plan, 1 win) to .harness/records/retro/2026-09-29/002-028-prep-canonical-tables-phase-2.md, bucket cleared; harness-itself entries held for the operator's upstream-issue decision via the prime; highest value DL-001/DL-003 (per-phase baselines and receipts). time:2026-09-29T09:59:38Z",
+          "source": "agent",
+          "kind": "validation"
+        }
+      ],
+      "ran_at": "2026-09-29T09:59:39.399Z"
     },
     {
       "id": "backpressure-7da3d4a4d059",

@@ -154,8 +154,7 @@
           "depends_on": [
             "ph-ed41"
           ],
-          "tasks": "assets/tasks/phase-2/tasks.dd.json#tasks",
-          "receipt": "assets/team/review-composition-rv-028-composition-p2-r1.dd.json"
+          "tasks": "assets/tasks/phase-2/tasks.dd.json#tasks"
         }
       ]
     },

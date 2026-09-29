@@ -13,18 +13,19 @@
 
 You may run read-only commands, tests and `harness builder on-track` in your clone. Do not read or copy real transcript content. The PM ran the real-corpus proofs into gitignored scratch and committed only numbers.
 
-**Your job:** independently review the phase-2 **composition**: the exact verified artifact below (verify receipt committed at `1e66603`), checked against the product intent (the ph-8b1c ACs and the phase-2 parts of ph-ed41), guide v3 (including its `meta.updated` composition delta) and the phase-2 tasks. Decide approved, changes-requested or blocked.
+**Your job:** independently review the phase-2 **composition**: the exact verified artifact below (verify receipt committed at `9a09aab`), checked against the product intent (the ph-62fe ACs, with no regression of ph-ed41), guide v3 (including its `meta.updated` composition delta) and the phase-2 tasks. Decide approved, changes-requested or blocked.
 
 ## Bindings
 
 | Binding | Value |
 |---|---|
 | Scope | composition |
-| Exact subject SHA | the verified artifact `b4958ad6d4b795dcf968795f5d2cf03b16480520`, recorded as `artifact_sha` in `assets/team/composition.dd.json` at the verify-receipt commit |
+| Exact subject SHA | the verified artifact `19ace79fd493350525323dd5da0cff8e3d3a020c` |
+| Chain of custody | A commit cannot contain its own SHA, so the builder records the verification receipt in a descendant commit. `assets/team/composition.dd.json` at `9a09aabe514fddcf419ab6e667c731f4a14924f1` (parent `19ace79`) binds `artifact_sha` `19ace79…` with vd-0008 and vd-0015 exit 0. At the subject itself, that file still holds the previous verification (`b4958ad`). Phase 1 worked the same way (subject `d800949`, receipt in a later commit). Review the code at the subject; read the receipt at `9a09aab`. |
 | Product plan | `docs/plans/028-prep-canonical-tables/plan.dd.json` sha256 `7da3d4a4d05949ddba02368c80dbe145189a63214c43bd0335c381e36ce64e46` |
 | Implementation guide | `docs/plans/028-prep-canonical-tables/assets/impl-guide.dd.json` sha256 `6d5131283c31d68f121b0c24701f641705f19af72a966ed4aac159477eaeac6d` |
 | Requested role | `{"role":"reviewer","harness":"omp","model":"github-copilot/claude-sonnet-5.5","source":{"harness":"guide","model":"guide"}}` |
-| Composition | `harness builder compose --import` replayed the 7 phase-2 deliveries on sealed baseline `cfd716b` (integration `8dc6a6b`: tk-000c, tk-0007, tk-0008, tk-0009, tk-000a, tk-000b including the PM ruling commit, tk-000d). PM composition tk-000e followed: `44b558c`, `9820bb5`, `6161ba6`, `42034b5` (Plan 029 extraction), `8428dc4` (prime rulings), guide delta `dfb8bf8`. `compose --verify` ran vd-0008 (prep proof) and vd-0015 (full boot including harness checks). |
+| Composition | `harness builder compose --import` replayed the 7 phase-2 deliveries on sealed baseline `cfd716b` (integration `8dc6a6b`: tk-000c, tk-0007, tk-0008, tk-0009, tk-000a, tk-000b including the PM ruling commit, tk-000d). PM composition tk-000e followed: `44b558c`, `9820bb5`, `6161ba6`, `42034b5` (Plan 029 extraction), `8428dc4` (prime rulings), guide delta `dfb8bf8`, boot-proof extension to journal and SQLite snapshots `a952e35` (dw-0e01; lg-0010). `compose --verify` ran vd-0008 (prep proof) and vd-0015 (full boot including harness checks). |
 | Evidence | `assets/evidence/`: `coverage-dfb8bf8.json` (vd-0017), `measure-dfb8bf8.json` (vd-000b), `recipes-9820bb5.json` (vd-000c), plus `live-4074389.json` (vd-0016) and `parity-dfb8bf8.json` (vd-000a); earlier runs kept for comparison (`coverage-9820bb5.json`, `measure-6161ba6.json` before the rulings) |
 
 ## What to assess
@@ -54,6 +55,7 @@ You may run read-only commands, tests and `harness builder on-track` in your clo
      - A failure after a committed wave keeps that wave.
      - The committed state is no longer copied, either in the SDK or in the Parquet store (`Published` view).
      - Tests: in `crates/sdk/tests/prep.rs`, the wave budget, failure-after-wave and index hand-back tests.
+   - (c) Boot proof (dw-0e01): `SNAPSHOT_CASES` in `crates/testkit/src/bin/proof/prep.rs` drives a JSON document, a mutation journal and a SQLite store through the built and installed CLI. The store uses the synthetic `crates/testkit/fixtures/prep-snapshots/state-v{1,2}.vscdb`, generated from the committed synthetic `ide.json`.
    - Check the claim that sources plus skip counts from an incremental walk equal a full walk. Check whether an index-only change that goes uncommitted can ever hide a source; it should only cost a re-list.
 4. **Measured results (vd-000b), which you accept or reject explicitly:**
    - cold full corpus: 13.99 GB read, 30.6 s, 57 commits, peak RSS 1,759 MB (footprint 1,408 MB);

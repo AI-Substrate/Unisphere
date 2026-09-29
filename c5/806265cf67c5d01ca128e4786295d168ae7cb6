@@ -1,0 +1,23 @@
+docs/plans/028-prep-canonical-tables/assets/backpressure.dd.md
+  s_c50a787648743a::t_6f21bf30adbf65 23-27,29-30,32-33,36-37
+docs/plans/028-prep-canonical-tables/assets/reviews/composition-p1-r1.md
+  s_c50a787648743a::t_914930bfeb44c3 1-84
+docs/plans/028-prep-canonical-tables/assets/reviews/composition-p1-r1.receipt.dd.json
+  s_c50a787648743a::t_16b17ef289c427 1-106
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "c5806265cf67c5d01ca128e4786295d168ae7cb6",
+  "prompts": {},
+  "sessions": {
+    "s_c50a787648743a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1d1f18d3-0079-411e-80f5-4aa75d8f409d",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

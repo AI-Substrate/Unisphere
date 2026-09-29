@@ -9,7 +9,7 @@
         "title": "Prep canonical tables: sealed ports, pure folds, one incremental engine",
         "plan": "../plan.dd.json#meta",
         "version": 3,
-        "updated": "2026-09-29 — v3: phase 2 roster (7 coder lanes + PM composition) sealed on the verified phase-1 composition d800949 (composition review rv-028-composition-p1-r1 approved); phase-1 units kept as delivered PM units; phase-2 lanes depend only on the sealed contract unit tk-0001 (the phase-1 reference code they read is already in the sealed source), which builder readiness requires. v2: decomposition review r1 F-01/F-02/F-03 and baseline deltas."
+        "updated": "\"2026-09-29 \\u2014 v3 composition delta (prime rulings, pij-suspicious-meadowlark; no roster, check or ownership change): (1) incremental discovery \\u2014 core walk_prep_root re-lists only directories whose identity or mtime changed since the committed per-binding index (PrepSetState.discovery), stats known sources directly and never reuses a listing modified within 2 s of listing; PrepLoader::discover takes the previous index, loaders supply PrepWalkFs, sets report dirs_listed/dirs_reused (warm full-corpus re-run 49.5 s \\u2192 0.5 s, 1 of 14,707 directories listed). (2) commit waves \\u2014 PrepRequest.max_run_bytes / --max-run-bytes (default 256 MiB of expected new input) bounds the rows held before each durable commit; report.commits counts them; the SDK moves and the Parquet store publishes the committed state without copying it. This resolves rk-000b (rows for a whole run were buffered). Also in composition: --max-record-bytes defaults to the batch limit (real records up to 13.3 MiB); Plan 029's crate-private advance extraction (b9c86e67) taken into sdk/src/prep.rs. 2026-09-29 \\u2014 v3: phase 2 roster (7 coder lanes + PM composition) sealed on the verified phase-1 composition d800949 (composition review rv-028-composition-p1-r1 approved); phase-1 units kept as delivered PM units; phase-2 lanes depend only on the sealed contract unit tk-0001 (the phase-1 reference code they read is already in the sealed source), which builder readiness requires. v2: decomposition review r1 F-01/F-02/F-03 and baseline deltas.\""
       }
     },
     {
@@ -1342,6 +1342,5 @@
         }
       ]
     }
-  ],
-  "references": []
+  ]
 }

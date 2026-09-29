@@ -75,13 +75,19 @@ impl ParquetPrepStore {
     /// Open (creating if needed) `target` and take its exclusive writer lock.
     /// A second concurrent writer is refused with `Write`.
     pub fn open(target: PathBuf) -> Result<Self, PipelineError> {
-        fs::create_dir_all(&target).map_err(write_error)?;
-        let lock = OpenOptions::new()
-            .create(true)
-            .truncate(false)
-            .write(true)
-            .open(target.join(".prep.lock"))
-            .map_err(write_error)?;
+        create_private_dir(&target)?;
+        let lock_path = target.join(".prep.lock");
+        if fs::symlink_metadata(&lock_path).is_ok_and(|m| !m.file_type().is_file()) {
+            return Err(write_error(()));
+        }
+        let mut options = OpenOptions::new();
+        options.create(true).truncate(false).write(true);
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::OpenOptionsExt;
+            options.mode(0o600);
+        }
+        let lock = options.open(lock_path).map_err(write_error)?;
         lock.try_lock().map_err(write_error)?;
         Ok(Self {
             target,
@@ -132,13 +138,58 @@ fn fingerprint(bytes: &[u8]) -> String {
     format!("{hash:016x}")
 }
 
+/// Create the store's own temporary file: never through a symlink or onto an
+/// existing file (`create_new`), owner-only permissions. A stale temporary file
+/// (or a link planted at its name) left by a crash is removed first; removing a
+/// symlink never touches its target.
+fn create_private(path: &Path) -> Result<File, PipelineError> {
+    if fs::symlink_metadata(path).is_ok() {
+        fs::remove_file(path).map_err(write_error)?;
+    }
+    let mut options = OpenOptions::new();
+    options.write(true).create_new(true);
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::OpenOptionsExt;
+        options.mode(0o600);
+    }
+    options.open(path).map_err(write_error)
+}
+
+/// Create `dir` (and missing parents) owner-only; existing directories are left as they are.
+fn create_private_dir(dir: &Path) -> Result<(), PipelineError> {
+    let mut builder = fs::DirBuilder::new();
+    builder.recursive(true);
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::DirBuilderExt;
+        builder.mode(0o700);
+    }
+    builder.create(dir).map_err(write_error)
+}
+
+/// Whether `name` is one of this store's fact-table part files (or its temporary).
+fn is_part_name(name: &str) -> bool {
+    let name = name.strip_suffix(".tmp").unwrap_or(name);
+    let Some(stem) = name.strip_suffix(".parquet") else {
+        return false;
+    };
+    let digits = |s: &str| !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit());
+    if let Some(run) = stem.strip_prefix("run-") {
+        return run.len() == 6 && digits(run);
+    }
+    stem.strip_prefix("compact-")
+        .and_then(|rest| rest.split_once('-'))
+        .is_some_and(|(run, k)| run.len() == 6 && digits(run) && digits(k))
+}
+
 /// Write `bytes` to `path` via a synced temporary file and an atomic rename.
 /// The caller syncs the parent directory.
 fn write_atomic(path: &Path, bytes: &[u8]) -> Result<(), PipelineError> {
     let mut tmp = path.as_os_str().to_owned();
     tmp.push(".tmp");
     let tmp = PathBuf::from(tmp);
-    let mut file = File::create(&tmp).map_err(write_error)?;
+    let mut file = create_private(&tmp)?;
     file.write_all(bytes).map_err(write_error)?;
     file.sync_all().map_err(write_error)?;
     drop(file);
@@ -155,7 +206,7 @@ fn write_parquet<T: Serialize>(
 ) -> Result<u64, PipelineError> {
     let schema = schema::schema(table);
     let tmp = path.with_extension("parquet.tmp");
-    let file = File::create(&tmp).map_err(write_error)?;
+    let file = create_private(&tmp)?;
     let mut metadata = vec![
         KeyValue::new(
             META_SCHEMA_VERSION.to_owned(),
@@ -272,7 +323,7 @@ impl ParquetPrepStore {
             return Err(PipelineError::new(PipelineErrorKind::InvalidInput, None));
         }
         let dir = self.tables().join(table);
-        fs::create_dir_all(&dir).map_err(write_error)?;
+        create_private_dir(&dir)?;
         let bytes = write_parquet(&dir.join(name), table, rows, None)?;
         fsync_dir(&dir)?;
         parts.push(relative.clone());
@@ -284,7 +335,7 @@ impl ParquetPrepStore {
         let (sources, sessions) = schema::snapshot_rows(state);
         let print = snapshot_fingerprint(&sources, &sessions)?;
         let tables = self.tables();
-        fs::create_dir_all(&tables).map_err(write_error)?;
+        create_private_dir(&tables)?;
         let stamp = || {
             Some(KeyValue::new(
                 META_STATE_FINGERPRINT.to_owned(),
@@ -361,8 +412,9 @@ impl ParquetPrepStore {
         Ok(0)
     }
 
-    /// Remove part files and temporary files the published `parts` do not
-    /// reference. Only regular files are touched.
+    /// Remove this store's own part and temporary files that the published
+    /// `parts` do not reference. Only regular files with the store's own names
+    /// are touched; anything else a user keeps in the target is left alone.
     fn remove_unreferenced(&self, parts: &[String]) -> Result<u64, PipelineError> {
         let mut removed = 0;
         let mut sweep = |dir: &Path, keep: &dyn Fn(&str) -> bool| -> Result<(), PipelineError> {
@@ -386,11 +438,18 @@ impl ParquetPrepStore {
         for table in FACT_TABLES {
             let prefix = table_prefix(table);
             sweep(&self.tables().join(table), &|name| {
-                parts.contains(&format!("{prefix}{name}"))
+                !is_part_name(name) || parts.contains(&format!("{prefix}{name}"))
             })?;
         }
-        sweep(&self.tables(), &|name| !name.ends_with(".tmp"))?;
-        sweep(&self.target, &|name| !name.ends_with(".tmp"))?;
+        let own_tmp = |names: &[&str], name: &str| {
+            !names
+                .iter()
+                .any(|own| name.strip_suffix(".tmp") == Some(own))
+        };
+        sweep(&self.tables(), &|name| {
+            own_tmp(&["sources.parquet", "sessions.parquet"], name)
+        })?;
+        sweep(&self.target, &|name| own_tmp(&[STATE, VIEWS_SQL], name))?;
         Ok(removed)
     }
 

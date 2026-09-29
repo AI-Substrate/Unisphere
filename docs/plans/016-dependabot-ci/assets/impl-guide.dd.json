@@ -1,0 +1,93 @@
+{
+  "dd": {
+    "schema": "builder/impl-guide"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Dependabot scope note: teaching guide disarmed; not dispatch-ready",
+        "plan": "../plan.dd.json#meta",
+        "version": 1
+      }
+    },
+    {
+      "name": "architecture",
+      "value": {
+        "principles": "Use native Dependabot configuration and the existing pull_request workflow. The unrelated text-conversion teaching scaffold is explicitly disarmed; this source note is not an approved Builder implementation guide.",
+        "composition_root": ".github/dependabot.yml is consumed by GitHub on the default branch; proposed bot PRs use the unchanged .github/workflows/rust.yml.",
+        "contracts": [
+          "version: 2; cargo and github-actions each at /; weekly; version-update PR caps 5 and 2 respectively.",
+          "No product/dependency/action upgrades, bot privilege exceptions, npm ecosystem, secrets or automatic merge."
+        ]
+      }
+    },
+    {
+      "name": "fan_out",
+      "value": {
+        "decision": "solo-pm",
+        "rationale": "One small configuration contract has no independently runnable sub-units. Main owns integration and validation; this worker was directly assigned a source-only edit, not formally dispatched through Builder."
+      }
+    },
+    {
+      "name": "capabilities",
+      "value": []
+    },
+    {
+      "name": "units",
+      "value": []
+    },
+    {
+      "name": "baseline",
+      "value": {
+        "files": [],
+        "proof": [],
+        "receipt": ""
+      }
+    },
+    {
+      "name": "isolation",
+      "value": {
+        "mode": "solo",
+        "allocation_owner": "harness",
+        "note": "Use only the already allocated builder/016-dependabot-ci worktree. No coder allocation, native rebind or baseline sealing is claimed."
+      }
+    },
+    {
+      "name": "roles",
+      "value": []
+    },
+    {
+      "name": "checks",
+      "value": []
+    },
+    {
+      "name": "composition",
+      "value": {
+        "owner": "Main",
+        "order": [],
+        "steps": [
+          "Review the source-ready configuration and DD note, then run the suggested local validation once after concurrent deliveries.",
+          "Only separately authorized default-branch integration can activate Dependabot; inspect real update-job logs and bot-PR CI after that integration."
+        ],
+        "proof": []
+      }
+    },
+    {
+      "name": "review",
+      "value": {
+        "when": "Main validates this source-ready change after the concurrent batch. Formal guide checking, baseline sealing and independent decomposition review have not occurred.",
+        "inputs": [
+          "../plan.dd.json",
+          "../../../../.github/dependabot.yml",
+          "../../../../.github/workflows/rust.yml"
+        ],
+        "proof": []
+      }
+    },
+    {
+      "name": "risks",
+      "value": []
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "scope": "Local configuration and existing CI source validation; no hosted Dependabot run claimed.",
+  "configuration": {
+    "version": 2,
+    "ecosystems": [
+      "cargo",
+      "github-actions"
+    ],
+    "directory": "/",
+    "schedule": "weekly",
+    "version_update_pr_caps": {
+      "cargo": 5,
+      "github-actions": 2
+    }
+  },
+  "observed_checks": [
+    {
+      "check": "Ruby YAML parsing and configuration assertions",
+      "exit": 0,
+      "stdout": "PASS: Dependabot Cargo/Actions weekly configuration and unrestricted read-only Ubuntu/macOS PR CI"
+    },
+    {
+      "check": "harness plan validate; ddocs backpressure/guide validation",
+      "exit": 0,
+      "result": "zero structural errors; untracked-link warnings before commit"
+    }
+  ],
+  "ci": {
+    "workflow": ".github/workflows/rust.yml",
+    "unchanged": true,
+    "pull_request_trigger": true,
+    "permissions": {
+      "contents": "read"
+    },
+    "matrix": [
+      "ubuntu-latest",
+      "macos-latest"
+    ],
+    "secrets_required": false
+  },
+  "hosted_activation": "Not observed; configuration must be integrated onto default branch. No bot PR or update job was created during this work."
+}

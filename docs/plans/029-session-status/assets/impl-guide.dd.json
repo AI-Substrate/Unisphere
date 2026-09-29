@@ -6,18 +6,26 @@
     {
       "name": "meta",
       "value": {
-        "title": "Text conversion: injected services and explicit composition",
+        "title": "Session status: one harness-neutral fact shape over the Plan 028 fold",
         "plan": "../plan.dd.json#meta",
-        "version": 1
+        "version": 1,
+        "updated": "2026-09-29 initial; phase 1 (Claude) only. Phase 2 (OMP, Codex) is guide v2 on the phase-1 composed SHA after Plan 028 phase-2 folds exist."
       }
     },
     {
       "name": "architecture",
       "value": {
-        "principles": "One immutable Document contract; parser and renderer know no sibling implementation. Source/sink are injected. Only the PM composition root wires real filesystem I/O.",
-        "composition_root": "skills/builder/examples/cli.mjs",
+        "principles": "Hexagonal, functional core / imperative shell, constructor injection, no clock or ambient lookup in core/sdk (now_ms is injected). core::status owns the SessionStatus DTOs and two ports: SessionStatusApi (explicit target -> facts) and TargetResolver (pij id / tmux pane / explicit -> target). The SDK StatusService implements SessionStatusApi over Plan 028 PrepBinding {fold, loader} + fold_source; it never calls pij, tmux or processes. Target resolution (pij list + liveness, tmux pane -> child harness process -> harness session record) is I/O in loader-query, used by the CLI path only. The CLI maps argv to queries and renders; no status semantics. crates/app is the only composition root. Status derivation is a pure function of SessionFacts + accumulated call/turn rows + now_ms.",
+        "composition_root": "crates/app/src/main.rs dispatches `sessions status`; crates/app/src/status.rs (new) builds StatusService from the Plan 028 bindings table (crates/app/src/prep.rs) and the loader-query StatusTargetResolver. Nothing else constructs concrete loaders, folds or resolvers.",
         "contracts": [
-          "skills/builder/examples/contracts.mjs: documentFromLines(string[]) returns frozen {lines: readonly string[]}"
+          "core::status (crates/core/src/status.rs), STATUS_SCHEMA_VERSION = 1. All DTOs serde (Serialize + Deserialize); timestamps are i64 epoch ms; unknown facts are None AND named in SessionStatus.unknown; a harness never reports 0 for an unrecorded fact.",
+          "Basis = native | derived | table | mtime_fallback (snake_case). Fact<T> {value: T, basis: Basis}. Table-derived values carry the table version (context.window_table = \"model-windows@1\").",
+          "StatusTarget {harness: String (adapter id, e.g. \"claude-code\"), session_id: String, transcript: Option<PathBuf>}. StatusQuery = Target(StatusTarget) | Pij(String) | Pane(String). ResolveBasis = explicit | pij_registry | native_pane. Resolved {query, target, pij_id: Option<String>, pane: Option<String>, basis, conflicts: Vec<ResolveConflict {basis, target}>}.",
+          "SessionStatus {schema_version, target, resolved: Option<Resolved>, model: ModelStatus {current: Option<Fact<String>>, current_at_ms: Option<i64>, pending_switch: Option<ModelSwitchStatus {requested: String, at_ms: Option<i64>}>, history: Vec<ModelSpan {model, first_ms, last_ms, calls}>}, context: ContextStatus {used_tokens: Option<Fact<u64>>, window_tokens: Option<Fact<u64>>, window_table: Option<String>, percent: Option<f64>, display: Option<String> (\"250k of 1M (25%)\")}, last_call: Option<LastCall {at_ms, input, output, cache_read, cache_write_1h, cache_write_5m (all Option<u64>), ttl_bucket: Option<Fact<String>> (\"1h\"|\"5m\"), cache_warm: Option<Fact<bool>>, stop_reason: Option<String>}>, timeline: Timeline {created_ms: Option<Fact<i64>>, last_updated_ms: Option<Fact<i64>>, idle_seconds: Option<u64>}, turns: TurnStatus {total, last_hour_total, by_origin: BTreeMap<String,u64>, last_hour_by_origin: BTreeMap<String,u64>}, compaction: CompactionStatus {counts: Option<CompactionCounts>, last: Option<CompactionSample>}, calls: CallCounts {total, sidechain}, limits_seen: Vec<LimitSeen {kind, at_ms, resets_at}>, source: SourceStatus {bytes_read, pending_tail_bytes, reset: Option<String>}, unknown: Vec<String>}. CompactionCounts/CompactionSample are re-used from core::prep.",
+          "trait SessionStatusApi: Send + Sync { fn status(&self, target: &StatusTarget, now_ms: i64) -> Result<SessionStatus, StatusFailure>; } trait TargetResolver: Send + Sync { fn resolve(&self, query: &StatusQuery) -> Result<Resolved, StatusFailure>; }",
+          "StatusFailure {code, message, recovery} with codes: UNI-STATUS-UNSUPPORTED-HARNESS, UNI-STATUS-TRANSCRIPT-NOT-FOUND, UNI-STATUS-READ, UNI-STATUS-PIJ-UNAVAILABLE, UNI-STATUS-PIJ-UNKNOWN-SEAT, UNI-STATUS-PIJ-NO-SESSION, UNI-STATUS-DEAD-BINDING, UNI-STATUS-PANE-NOT-FOUND.",
+          "SDK (crates/sdk/src/status.rs): StatusService::new(bindings: Vec<PrepBinding>) implements SessionStatusApi, plus the embedding op `fn status_incremental(&self, target: &StatusTarget, cursor: Option<StatusCursor>, now_ms: i64) -> Result<(SessionStatus, StatusCursor), StatusFailure>`. StatusCursor is opaque, Clone + Send (PrepResume + stat identity/anchor + call/turn accumulators). Reads stop at the last complete record; shrink, identity change or anchor mismatch refolds cold and sets source.reset. Transcript default location for a (harness, session_id) with no path comes from the binding loader discovery under the catalogue root.",
+          "Definitions: current model = latest main-chain non-synthetic call model; pending_switch = SessionFacts.last_model_switch newer than that call; used_tokens = latest_context.total (native); window = native when recorded else model-windows@1 table else unknown; percent only when both known; ttl_bucket from last call write split (derived); cache_warm = now - last call < ttl (derived); last_updated = last_event_ms (native) else transcript mtime (mtime_fallback); Claude compaction count with zero markers = 0."
         ]
       }
     },
@@ -25,7 +33,7 @@
       "name": "fan_out",
       "value": {
         "decision": "coders",
-        "rationale": "Parser and renderer are independently executable against the frozen Document and fake reader/writer. Composition follows both; file count is not the rationale."
+        "rationale": "Two behaviours run and prove independently against the frozen core::status contract and testkit fakes: the SDK StatusService (driven by testkit scripted PrepFold/PrepLoader fakes) and the CLI frontend + target resolver (driven by FakeStatusApi and injected pij/tmux/process/filesystem fakes). Composition, real-workload proof and the dependency sensor stay with the PM. Coders never import each other in the same wave."
       }
     },
     {
@@ -34,28 +42,69 @@
         {
           "id": "cp-0001",
           "criterion": "../plan.dd.json#acceptance_criteria/ac-0001",
-          "owner": "tk-0002",
-          "path": "CLI source -> injected parser -> immutable Document",
+          "owner": "tk-0003",
+          "path": "argv --pij/--pane/--session+--harness -> StatusQuery -> StatusTargetResolver (pij list + proc liveness | tmux pane -> child harness pid -> harness session record) -> Resolved -> SessionStatusApi",
           "proof": [
-            "impl-guide.dd.json#checks/vd-0002"
+            "impl-guide.dd.json#checks/vd-0003",
+            "impl-guide.dd.json#checks/vd-0006"
           ]
         },
         {
           "id": "cp-0002",
           "criterion": "../plan.dd.json#acceptance_criteria/ac-0002",
-          "owner": "tk-0003",
-          "path": "Document -> injected renderer -> escaped HTML bytes",
+          "owner": "tk-0001",
+          "path": "core::status DTOs, Basis, unknown list, schema version",
           "proof": [
-            "impl-guide.dd.json#checks/vd-0003"
+            "impl-guide.dd.json#checks/vd-0001"
           ]
         },
         {
           "id": "cp-0003",
           "criterion": "../plan.dd.json#acceptance_criteria/ac-0003",
-          "owner": "tk-0004",
-          "path": "Real CLI source file -> parser -> renderer -> output file",
+          "owner": "tk-0002",
+          "path": "fold_source -> SessionFacts + call rows -> derive model/context facts",
           "proof": [
-            "impl-guide.dd.json#checks/vd-0004"
+            "impl-guide.dd.json#checks/vd-0002"
+          ]
+        },
+        {
+          "id": "cp-0004",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0004",
+          "owner": "tk-0002",
+          "path": "fold_source -> SessionFacts + call/turn/event rows + now_ms -> activity, turn and compaction facts",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0002"
+          ]
+        },
+        {
+          "id": "cp-0005",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0005",
+          "owner": "tk-0004",
+          "path": "installed CLI sessions status on the real 211 MB live transcript by id and by --pij; concurrent appender",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0008"
+          ]
+        },
+        {
+          "id": "cp-0006",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0006",
+          "owner": "tk-0004",
+          "path": "external SDK consumer status_incremental loop vs installed CLI; dependency sensor; 50-seat warm timing",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0005",
+            "impl-guide.dd.json#checks/vd-0006",
+            "impl-guide.dd.json#checks/vd-0007",
+            "impl-guide.dd.json#checks/vd-0008"
+          ]
+        },
+        {
+          "id": "cp-0007",
+          "criterion": "../plan.dd.json#acceptance_criteria/ac-0007",
+          "owner": "tk-0003",
+          "path": "unsupported harness refusal; bundled session-status docs topic; docs/cli.md and docs/sdk.md",
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0003",
+            "impl-guide.dd.json#checks/vd-0006"
           ]
         }
       ]
@@ -65,44 +114,58 @@
       "value": [
         {
           "id": "tk-0001",
-          "name": "Contracts",
+          "name": "Status contract baseline",
           "role": "pm",
-          "responsibility": "Immutable Document DTO and validation; no I/O.",
+          "responsibility": "core::status DTOs, ports, failures and serde fixture tests; testkit FakeStatusApi, FakeTargetResolver and a scripted Claude-like PrepFold/PrepLoader fake emitting calls/turns/events + SessionFacts; arch-check rule forbidding rusqlite/libsqlite3-sys/parquet/arrow in the normal graphs of core, sdk, loader-jsonl and adapter-claude.",
           "paths": [
-            "skills/builder/examples/contracts.mjs"
+            "crates/core/src/status.rs",
+            "crates/core/src/lib.rs",
+            "crates/core/tests/status_contract.rs",
+            "crates/testkit/src/status.rs",
+            "crates/testkit/src/lib.rs",
+            "crates/testkit/src/bin/unisphere-arch-check.rs"
           ],
           "reads": [],
-          "interface": "Immutable Document DTO and validation; no I/O.",
+          "interface": "core::status as in architecture.contracts; testkit::status fakes.",
           "depends_on": [],
           "wave": 0,
-          "acceptance": [],
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0002"
+          ],
           "proof": [
-            "impl-guide.dd.json#checks/vd-0001"
+            "impl-guide.dd.json#checks/vd-0001",
+            "impl-guide.dd.json#checks/vd-0005"
           ]
         },
         {
           "id": "tk-0002",
-          "name": "Parser",
+          "name": "SDK StatusService",
           "role": "coder",
-          "responsibility": "createParser({read}): async (path) => Document; injected read rejects normally.",
+          "responsibility": "StatusService over PrepBinding + fold_source: status and status_incremental, cursor reset rules, call/turn accumulators, pure derivation of every fact per architecture definitions, model-windows@1 table, unknown list. Synthetic tests: model switch mid-session reports new model and pending switch; compaction counts and last compaction; last-hour turns by origin with injected now; TTL/warm; mtime fallback labelled; incremental == cold result; shrink/replace resets visibly; partial tail never errors.",
           "paths": [
-            "skills/builder/examples/parser.mjs"
+            "crates/sdk/src/status.rs",
+            "crates/sdk/src/lib.rs",
+            "crates/sdk/tests/status.rs"
           ],
           "reads": [
             {
               "owner": "tk-0001",
               "paths": [
-                "skills/builder/examples/contracts.mjs"
+                "crates/core/src/status.rs",
+                "crates/core/src/lib.rs",
+                "crates/testkit/src/status.rs"
               ]
             }
           ],
-          "interface": "createParser({read}): async (path) => Document; injected read rejects normally.",
+          "interface": "StatusService::new(Vec<PrepBinding>); impl SessionStatusApi; status_incremental(target, Option<StatusCursor>, now_ms) -> Result<(SessionStatus, StatusCursor), StatusFailure>.",
           "depends_on": [
             "tk-0001"
           ],
           "wave": 1,
           "acceptance": [
-            "../plan.dd.json#acceptance_criteria/ac-0001"
+            "../plan.dd.json#acceptance_criteria/ac-0003",
+            "../plan.dd.json#acceptance_criteria/ac-0004",
+            "../plan.dd.json#acceptance_criteria/ac-0006"
           ],
           "proof": [
             "impl-guide.dd.json#checks/vd-0002"
@@ -110,78 +173,92 @@
         },
         {
           "id": "tk-0003",
-          "name": "Renderer",
+          "name": "CLI sessions status and target resolver",
           "role": "coder",
-          "responsibility": "createRenderer({write}): async (Document,path) => {path,bytes}; escapes HTML.",
+          "responsibility": "`unisphere sessions status` argv (repeatable --pij/--pane/--session with --harness, --json default when piped), envelope with one result or failure per query, human table; StatusTargetResolver in loader-query: pij list --json + recorded proc (pid, proc_start) liveness, tmux list-panes -> bounded child walk -> Claude ~/.claude/sessions/<pid>.json (sessionId, tmux pane), conflicts returned not picked, distinct failures; injected command runner / process table / filesystem so tests use fakes. Docs topic session-status.md, docs/cli.md and docs/sdk.md sections.",
           "paths": [
-            "skills/builder/examples/renderer.mjs"
+            "crates/cli/src/status.rs",
+            "crates/cli/src/args.rs",
+            "crates/cli/src/lib.rs",
+            "crates/cli/src/docs.rs",
+            "crates/cli/docs/session-status.md",
+            "crates/cli/tests/status.rs",
+            "crates/loader-query/src/status_target.rs",
+            "crates/loader-query/src/lib.rs",
+            "crates/loader-query/tests/status_target.rs",
+            "docs/cli.md",
+            "docs/sdk.md"
           ],
           "reads": [
             {
               "owner": "tk-0001",
               "paths": [
-                "skills/builder/examples/contracts.mjs"
+                "crates/core/src/status.rs",
+                "crates/core/src/lib.rs",
+                "crates/testkit/src/status.rs"
               ]
             }
           ],
-          "interface": "createRenderer({write}): async (Document,path) => {path,bytes}; escapes HTML.",
+          "interface": "unisphere_cli status frontend taking &dyn SessionStatusApi + &dyn TargetResolver; loader_query::StatusTargetResolver::new(runner, procs, fs, home): TargetResolver.",
           "depends_on": [
             "tk-0001"
           ],
           "wave": 1,
           "acceptance": [
-            "../plan.dd.json#acceptance_criteria/ac-0002"
+            "../plan.dd.json#acceptance_criteria/ac-0001",
+            "../plan.dd.json#acceptance_criteria/ac-0007"
           ],
           "proof": [
-            "impl-guide.dd.json#checks/vd-0003"
+            "impl-guide.dd.json#checks/vd-0003",
+            "impl-guide.dd.json#checks/vd-0004"
           ]
         },
         {
           "id": "tk-0004",
-          "name": "Composition",
+          "name": "Composition and real-workload proof",
           "role": "pm",
-          "responsibility": "createConvert({parse,render}): async (source,destination) => render result; explicit I/O only in cli.mjs.",
+          "responsibility": "Wire crates/app status.rs + main.rs on the Plan 028 bindings; status proof mode in unisphere-proof (external SDK consumer incremental loop vs installed CLI on synthetic roots) and its boot entry; real-machine proof script: 211 MB live transcript by id and --pij (~1 s cold, no limit error), concurrent appender, 50 warm seats < 100 ms via status_incremental, model-switch session, pane lookup < 50 ms; numbers-only evidence.",
           "paths": [
-            "skills/builder/examples/compose.mjs",
-            "skills/builder/examples/cli.mjs",
-            "skills/builder/examples/verify.mjs",
-            "skills/builder/examples/bad.mjs",
-            "skills/builder/examples/solo.mjs",
-            "skills/builder/examples/lifecycle.mjs",
-            "skills/builder/examples/proof-recipe.mjs"
+            "crates/app/src/main.rs",
+            "crates/app/src/status.rs",
+            "crates/app/tests/status.rs",
+            "crates/testkit/src/bin/unisphere-proof.rs",
+            "crates/testkit/src/bin/proof/status.rs",
+            "crates/testkit/fixtures/consumer/status-main.rs",
+            ".harness/extensions/boot/boot.mjs",
+            ".harness/extensions/boot/extension.test.mjs",
+            "docs/plans/029-session-status/assets/proof"
           ],
           "reads": [
             {
-              "owner": "tk-0001",
-              "paths": [
-                "skills/builder/examples/contracts.mjs"
-              ]
-            },
-            {
               "owner": "tk-0002",
               "paths": [
-                "skills/builder/examples/parser.mjs"
+                "crates/sdk/src/status.rs"
               ]
             },
             {
               "owner": "tk-0003",
               "paths": [
-                "skills/builder/examples/renderer.mjs"
+                "crates/cli/src/status.rs",
+                "crates/loader-query/src/status_target.rs"
               ]
             }
           ],
-          "interface": "createConvert({parse,render}): async (source,destination) => render result; explicit I/O only in cli.mjs.",
+          "interface": "crates/app composition; proof argv in checks.",
           "depends_on": [
-            "tk-0001",
             "tk-0002",
             "tk-0003"
           ],
           "wave": 2,
           "acceptance": [
-            "../plan.dd.json#acceptance_criteria/ac-0003"
+            "../plan.dd.json#acceptance_criteria/ac-0005",
+            "../plan.dd.json#acceptance_criteria/ac-0006"
           ],
           "proof": [
-            "impl-guide.dd.json#checks/vd-0004"
+            "impl-guide.dd.json#checks/vd-0006",
+            "impl-guide.dd.json#checks/vd-0007",
+            "impl-guide.dd.json#checks/vd-0008",
+            "impl-guide.dd.json#checks/vd-0009"
           ]
         }
       ]
@@ -190,10 +267,13 @@
       "name": "baseline",
       "value": {
         "files": [
-          "skills/builder/examples/contracts.mjs"
+          "crates/core/src/status.rs",
+          "crates/core/tests/status_contract.rs",
+          "crates/testkit/src/status.rs"
         ],
         "proof": [
-          "impl-guide.dd.json#checks/vd-0001"
+          "impl-guide.dd.json#checks/vd-0001",
+          "impl-guide.dd.json#checks/vd-0005"
         ],
         "receipt": "team/baseline.dd.json"
       }
@@ -203,7 +283,7 @@
       "value": {
         "mode": "clone-per-coder",
         "allocation_owner": "harness",
-        "note": "Packets name the checkout root and sealed source for advisory orientation; import verifies allocated tree/source integrity. Owner is not checkout kind."
+        "note": "One clone per coder (the installed dispatcher refuses linked-worktree coder allocations). Packets name the clone root and sealed source SHA. Authority records live under assets/team."
       }
     },
     {
@@ -213,13 +293,15 @@
           "id": "rl-0001",
           "role": "coder",
           "harness": "omp",
-          "model": "github-copilot/gpt-6-astra"
+          "model": "github-copilot/claude-opus-5.5",
+          "note": "Jordan, 2026-09-29."
         },
         {
           "id": "rl-0002",
           "role": "reviewer",
           "harness": "omp",
-          "model": "github-copilot/claude-opus-5"
+          "model": "github-copilot/claude-sonnet-5.5",
+          "note": "Jordan, 2026-09-29: Sonnet 5.5 based reviewer, available when pij-curly-kiwi finishes its work; only reviewer dispatch waits. No substitute without Jordan."
         }
       ]
     },
@@ -228,51 +310,129 @@
       "value": [
         {
           "id": "vd-0001",
-          "description": "Exercise contracts observable contract",
-          "command": "node",
+          "description": "Contract: core::status serde round-trips, Basis vocabulary, unknown list, schema version, failure codes.",
+          "command": "cargo",
           "args": [
-            "skills/builder/examples/verify.mjs",
-            "--case",
-            "contracts"
+            "test",
+            "--locked",
+            "-p",
+            "unisphere-core",
+            "--test",
+            "status_contract"
           ],
           "cwd": ".",
-          "timeout_ms": 30000
+          "timeout_ms": 900000
         },
         {
           "id": "vd-0002",
-          "description": "Exercise parser observable contract",
-          "command": "node",
+          "description": "SDK StatusService on scripted fold fakes: every fact definition, model switch, compaction, last-hour turns, TTL/warm, mtime fallback, incremental == cold, reset on shrink/replace, partial tail.",
+          "command": "cargo",
           "args": [
-            "skills/builder/examples/verify.mjs",
-            "--case",
-            "parser"
+            "test",
+            "--locked",
+            "-p",
+            "unisphere-sdk",
+            "--test",
+            "status"
           ],
           "cwd": ".",
-          "timeout_ms": 30000
+          "timeout_ms": 900000
         },
         {
           "id": "vd-0003",
-          "description": "Exercise renderer observable contract",
-          "command": "node",
+          "description": "CLI frontend with FakeStatusApi + FakeTargetResolver: argv, repeat queries, envelopes, exit codes, failures, docs topic examples parse.",
+          "command": "cargo",
           "args": [
-            "skills/builder/examples/verify.mjs",
-            "--case",
-            "renderer"
+            "test",
+            "--locked",
+            "-p",
+            "unisphere-cli",
+            "--test",
+            "status"
           ],
           "cwd": ".",
-          "timeout_ms": 30000
+          "timeout_ms": 900000
         },
         {
           "id": "vd-0004",
-          "description": "Exercise composition observable contract",
-          "command": "node",
+          "description": "Target resolver with injected pij/tmux/process/filesystem fakes: pij registry + liveness, dead binding, duplicate pane, native pane child walk, conflicts, distinct failures.",
+          "command": "cargo",
           "args": [
-            "skills/builder/examples/verify.mjs",
-            "--case",
-            "composition"
+            "test",
+            "--locked",
+            "-p",
+            "unisphere-loader-query",
+            "--test",
+            "status_target"
           ],
           "cwd": ".",
-          "timeout_ms": 30000
+          "timeout_ms": 900000
+        },
+        {
+          "id": "vd-0005",
+          "description": "Architecture sensor: no rusqlite/libsqlite3-sys/parquet/arrow in core, sdk, loader-jsonl, adapter-claude normal graphs; core/sdk purity.",
+          "command": "cargo",
+          "args": [
+            "run",
+            "--locked",
+            "-p",
+            "unisphere-testkit",
+            "--bin",
+            "unisphere-arch-check"
+          ],
+          "cwd": ".",
+          "timeout_ms": 900000
+        },
+        {
+          "id": "vd-0006",
+          "description": "Assembled: external SDK consumer status_incremental loop and built + installed CLI sessions status over synthetic Claude roots agree; append, partial tail, replace reset, model switch, unsupported harness.",
+          "command": "cargo",
+          "args": [
+            "run",
+            "--locked",
+            "-p",
+            "unisphere-testkit",
+            "--bin",
+            "unisphere-proof",
+            "--",
+            "status"
+          ],
+          "cwd": ".",
+          "timeout_ms": 1200000
+        },
+        {
+          "id": "vd-0007",
+          "description": "Full repository quality lane.",
+          "command": "harness",
+          "args": [
+            "checks",
+            "--json"
+          ],
+          "cwd": ".",
+          "timeout_ms": 2400000
+        },
+        {
+          "id": "vd-0008",
+          "description": "Real machine: 211 MB live Claude transcript by id and --pij cold (~1 s, no limit error), concurrent appender, 50 warm seats < 100 ms, pane lookup < 50 ms, a real model-switch session; numbers only.",
+          "command": "python3",
+          "args": [
+            "docs/plans/029-session-status/assets/proof/status_real.py",
+            "--scratch",
+            ".harness/temp/status-real"
+          ],
+          "cwd": ".",
+          "timeout_ms": 1800000
+        },
+        {
+          "id": "vd-0009",
+          "description": "Engineering-harness readiness including the status proof mode.",
+          "command": "harness",
+          "args": [
+            "boot",
+            "--json"
+          ],
+          "cwd": ".",
+          "timeout_ms": 3600000
         }
       ]
     },
@@ -285,27 +445,31 @@
           "tk-0003"
         ],
         "steps": [
-          "Import committed deliveries after baseline/packet integrity checks; retain ownership-map warnings without a path veto.",
-          "Wire filesystem reader/writer in cli.mjs and commit the composed artifact.",
-          "Run composition verification and independently review the exact artifact SHA."
+          "Rebase on the landed Plan 028 phase-1 composition (its crates/app/src/prep.rs bindings) before wiring.",
+          "Import tk-0002 then tk-0003 after packet/baseline integrity checks; keep on-track warnings.",
+          "Wire crates/app status.rs + main.rs, add proof mode + boot entry; commit and run compose --verify with vd-0006, vd-0005, vd-0007.",
+          "Run vd-0008 real-workload proof; commit numbers-only evidence; independent composition review of the exact SHA; then ask Jordan-approved push of builder/029-session-status for Plan 157."
         ],
         "proof": [
-          "impl-guide.dd.json#checks/vd-0004"
+          "impl-guide.dd.json#checks/vd-0006",
+          "impl-guide.dd.json#checks/vd-0007",
+          "impl-guide.dd.json#checks/vd-0009"
         ]
       }
     },
     {
       "name": "review",
       "value": {
-        "when": "Guide approval before dispatch; exact committed composition after verification.",
+        "when": "Decomposition: this guide + committed baseline before seal and coder release. Composition: exact composed SHA after compose --verify.",
         "inputs": [
-          "Product plan",
-          "Implementation guide",
+          "plan.dd.json and original-ask.md",
+          "assets/impl-guide.dd.json",
           "Exact subject SHA",
-          "Actual command receipts"
+          "Command receipts and numbers-only real-workload evidence"
         ],
         "proof": [
-          "Independent requested/observed reviewer, subject and document digests, findings and dispositions."
+          "ReviewReceipt via harness builder review (reviewer requested vs observed, subject SHA, digests, verdict, findings).",
+          "Reviewer github-copilot/claude-sonnet-5.5 as ruled; unavailability leaves review unfulfilled, never a solo pass."
         ]
       }
     },
@@ -314,13 +478,23 @@
       "value": [
         {
           "id": "rk-0001",
-          "text": "Mutable hidden state defeats file-based fan-out.",
-          "check": "node skills/builder/examples/verify.mjs --case bad"
+          "text": "Plan 028 is not landed; its phase-1 composition (crates/app/src/prep.rs) is still uncommitted, so 029 composition waits and may need a rebase.",
+          "check": "Composition step 1; on-track warnings at import."
         },
         {
           "id": "rk-0002",
-          "text": "Atomic ledger reservation should stay solo.",
-          "check": "node skills/builder/examples/verify.mjs --case solo"
+          "text": "Claude transcripts do not record the context window; the model-windows@1 table may be wrong for some models or tiers.",
+          "check": "Always labelled basis table with version; vd-0002 asserts the label."
+        },
+        {
+          "id": "rk-0003",
+          "text": "tmux pane ids are reused and pij rows can be dead bindings.",
+          "check": "vd-0004 duplicate pane + dead binding cases; liveness via (pid, proc_start)."
+        },
+        {
+          "id": "rk-0004",
+          "text": "50 seats < 100 ms depends on warm incremental reads only touching appended bytes.",
+          "check": "vd-0008 measures and reports; vd-0002 asserts bytes_read on unchanged re-status is 0."
         }
       ]
     }

@@ -140,6 +140,7 @@ _No entries._
 | — | Seats and models? | PM pij-specific-kiwi. Coder: OMP harness, github-copilot Claude Opus 5.5. Reviewer: Claude Sonnet 5.5 based, available when pij-curly-kiwi finishes; only reviewer dispatch waits. | Jordan, 2026-09-29 |
 | — | Compaction count with no markers? | Claude: 0 (it records compaction markers). Unknown only for harnesses without markers. | Prime / Plan 028 PM, 2026-09-29 |
 | — | Embedding consumer needs? | pij-rs Plan 157 embeds the SDK op: explicit target, incremental cursor, no sqlite in graph, serde SessionStatus. Push of this branch needs Jordan approval. | pij-yelling-trout ask; reply scratch/session-status-029-reply-plan157.md |
+| — | Push approval? | Approved: push builder/029-session-status once the SDK code lands (for Plan 157 rev pin). PR/merge still separate. | Jordan, 2026-09-29 |
 
 <a id="planning-seam"></a>
 

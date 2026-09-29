@@ -167,6 +167,11 @@
           "question": "Embedding consumer needs?",
           "answer": "pij-rs Plan 157 embeds the SDK op: explicit target, incremental cursor, no sqlite in graph, serde SessionStatus. Push of this branch needs Jordan approval.",
           "source": "pij-yelling-trout ask; reply scratch/session-status-029-reply-plan157.md"
+        },
+        {
+          "question": "Push approval?",
+          "answer": "Approved: push builder/029-session-status once the SDK code lands (for Plan 157 rev pin). PR/merge still separate.",
+          "source": "Jordan, 2026-09-29"
         }
       ]
     },

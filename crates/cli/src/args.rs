@@ -137,7 +137,7 @@ struct PrepArgs {
     /// Opt in to content columns (triggers.content_head); absent otherwise.
     #[arg(long)]
     include_content: bool,
-    /// Largest physical native record accepted, in bytes.
+    /// Largest physical native record accepted, in bytes (default: the batch limit).
     #[arg(long, value_name = "N")]
     max_record_bytes: Option<usize>,
     /// Native bytes read per bounded batch; at least --max-record-bytes.
@@ -1202,7 +1202,6 @@ fn prep_command(
     context: &CliContext,
     mode: OutputMode,
 ) -> Result<ParsedCommand, CliParseFailure> {
-    let default_record_bytes = ReadLimits::default().max_record_bytes;
     match args.command {
         Some(PrepSubcommand::Compact { target }) => {
             return Ok(ParsedCommand::PrepCompact(PrepCompactCommand {
@@ -1228,7 +1227,7 @@ fn prep_command(
                 source,
                 address: NativeAddress { offset, key },
                 include_content,
-                max_bytes: default_record_bytes,
+                max_bytes: PREP_DEFAULT_BATCH_BYTES,
                 mode,
             }));
         }
@@ -1272,10 +1271,14 @@ fn prep_command(
     if args.no_default_roots && roots.is_empty() {
         return Err(CliParseFailure::prep_scope());
     }
+    let max_batch_bytes = args.max_batch_bytes.unwrap_or(PREP_DEFAULT_BATCH_BYTES);
     let read = ReadLimits {
         max_records: usize::MAX,
-        max_record_bytes: args.max_record_bytes.unwrap_or(default_record_bytes),
-        max_batch_bytes: args.max_batch_bytes.unwrap_or(PREP_DEFAULT_BATCH_BYTES),
+        // Real Oh My Pi and Copilot CLI records reach ~13 MiB (inlined tool
+        // output): prep accepts a record up to the batch bound, which alone
+        // bounds memory per source.
+        max_record_bytes: args.max_record_bytes.unwrap_or(max_batch_bytes),
+        max_batch_bytes,
     };
     let threads = args.threads.unwrap_or(PREP_DEFAULT_THREADS);
     let default_snapshot = SnapshotLimits::default();

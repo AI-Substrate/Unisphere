@@ -3,7 +3,7 @@
 
 For every recipe listed by `unisphere prep recipes --json`, runs the documented
 one-line command `unisphere prep recipe NAME --target DIR | duckdb -csv` against
-(1) a synthetic target prepped from the committed content-free Claude fixtures
+(1) a synthetic target prepped from every harness's committed content-free fixtures
 and (2) a real target prepped from this machine's default roots. Records exit
 status, stderr presence and result row counts only; recipe output never leaves
 the process. Without a duckdb executable the check fails with the install hint.
@@ -17,6 +17,20 @@ import shutil
 import subprocess
 import sys
 import time
+
+
+# Committed, content-free prep fixtures: one root per harness with an append or
+# document fixture tree (Cursor IDE's SQLite store is covered by the app test).
+SYNTHETIC_ROOTS = [
+    ("claude-code", "crates/adapter-claude/tests/fixtures/prep"),
+    ("oh-my-pi", "crates/adapter-omp/tests/fixtures/prep"),
+    ("pi", "crates/adapter-pi/tests/fixtures/prep"),
+    ("codex", "crates/adapter-codex/tests/fixtures/prep"),
+    ("copilot-cli", "crates/adapter-copilot-cli/tests/fixtures/prep"),
+    ("copilot-cli-snapshot", "crates/adapter-copilot-cli/tests/fixtures/prep"),
+    ("vscode-copilot", "crates/adapter-vscode-copilot/tests/fixtures/prep"),
+    ("cursor-transcript", "crates/adapter-cursor/tests/fixtures/prep"),
+]
 
 
 def prep(binary, target, extra):
@@ -58,7 +72,8 @@ def main():
     names = [r["name"] for r in listed["data"]["recipes"]]
     targets = {
         "synthetic": (os.path.join(scratch, "recipes-synthetic"),
-                      ["--no-default-roots", "--root", "claude-code:fixture=" + os.path.join(repo, "crates/adapter-claude/tests/fixtures/prep")]),
+                      ["--no-default-roots", *(arg for harness, fixture in SYNTHETIC_ROOTS
+                                               for arg in ("--root", f"{harness}:fixture=" + os.path.join(repo, fixture)))]),
         "real": (os.path.join(scratch, "recipes-real"), []),
     }
     result = {"subject_sha": sha, "duckdb": version, "recipes": len(names), "targets": {}}
@@ -73,7 +88,7 @@ def main():
             "empty": [n for n, r in runs.items() if r.get("rows") == 0],
             "rows": {n: r.get("rows") for n, r in runs.items()},
         }
-        ok = ok and code == 0 and not failed
+        ok = ok and code in (0, 3) and not failed
     with open(os.path.join(scratch, f"recipes-{int(time.time())}.json"), "w") as fh:
         json.dump(result, fh, indent=1)
     print(json.dumps(result))

@@ -293,7 +293,7 @@ fn defaults_are_metadata_only_with_catalogue_roots_for_every_harness() {
     assert!(command.wants_default_root("claude-code") && command.wants_default_root("codex"));
     let request = command.request(Vec::new());
     assert!(!request.options.include_content);
-    assert_eq!(request.limits.read.max_record_bytes, 3 * 1024 * 1024);
+    assert_eq!(request.limits.read.max_record_bytes, 16 * 1024 * 1024);
     assert_eq!(request.limits.read.max_batch_bytes, 16 * 1024 * 1024);
     assert_eq!(request.threads, 8);
     assert_eq!(request.limits.snapshot, SnapshotLimits::default());
@@ -308,6 +308,34 @@ fn defaults_are_metadata_only_with_catalogue_roots_for_every_harness() {
         "claude-code",
     ]);
     assert!(filtered.wants_default_root("claude-code") && !filtered.wants_default_root("codex"));
+}
+
+#[test]
+fn record_limit_follows_a_lowered_batch_limit_unless_given() {
+    let lowered = prep(&[
+        "unisphere",
+        "prep",
+        "--target",
+        "/t",
+        "--max-batch-bytes",
+        "4194304",
+    ])
+    .request(Vec::new());
+    assert_eq!(lowered.limits.read.max_record_bytes, 4_194_304);
+    assert_eq!(lowered.limits.read.max_batch_bytes, 4_194_304);
+
+    let explicit = prep(&[
+        "unisphere",
+        "prep",
+        "--target",
+        "/t",
+        "--max-batch-bytes",
+        "4194304",
+        "--max-record-bytes",
+        "1048576",
+    ])
+    .request(Vec::new());
+    assert_eq!(explicit.limits.read.max_record_bytes, 1_048_576);
 }
 
 #[test]
@@ -695,7 +723,7 @@ fn compact_and_record_render_their_reports() {
         assert!(request.include_content);
         assert_eq!(request.address.key.as_deref(), Some("k1"));
         assert_eq!(request.address.offset, None);
-        assert_eq!(request.max_bytes, 3 * 1024 * 1024);
+        assert_eq!(request.max_bytes, 16 * 1024 * 1024);
         let value = envelope(&stdout);
         assert_eq!(value["command"], "prep.record");
         assert_eq!(value["data"]["encoding"], encoding);

@@ -3,9 +3,9 @@
 
 Preps every catalogued default root on this machine into --scratch/coverage-target
 (fresh), then reports per harness (catalogue descriptor id): sources by status,
-discovery skips, rows per table, and the share of rows carrying model, usage,
-timestamps and native ids — so explicit nulls are visible per dialect rather than
-estimated. Nothing but counts and ratios is printed or stored.
+discovery skips, unreadable sources by error code, rows per table, and the share
+of rows carrying model, usage, timestamps and native ids — so explicit nulls are
+visible per dialect rather than estimated. Nothing but counts and ratios is printed or stored.
 
   python3 docs/plans/028-prep-canonical-tables/assets/proof/coverage.py --scratch .harness/temp/prep-real
 """
@@ -51,6 +51,14 @@ def main():
         },
         "harnesses": {},
     }
+    # Unreadable is an honest per-source outcome (AC-0007), recorded by error
+    # code only: no path, key or message text leaves the process.
+    for source in report["sources"]:
+        if source["status"]["status"] == "unreadable":
+            harness = source["source"].split("/", 1)[0]
+            code = (source.get("error") or "").split(":", 1)[0]
+            codes = result["sets"][harness].setdefault("unreadable_by_code", {})
+            codes[code] = codes.get(code, 0) + 1
     con = duckdb.connect()
     con.execute(f"SET file_search_path = '{target}'")
     con.execute(open(os.path.join(target, "views.sql")).read())
@@ -86,9 +94,12 @@ def main():
     with open(os.path.join(scratch, f"coverage-{int(time.time())}.json"), "w") as fh:
         json.dump(result, fh, indent=1)
     print(json.dumps(result))
-    unreadable = sum(s["by_status"].get("unreadable", 0) for s in result["sets"].values())
+    # vd-0017: every catalogued root prepped (supported) and every discovered
+    # source accounted for by exactly one status; exit 3 means some source was
+    # reported unreadable, which the per-code counts above make reviewable.
     unsupported = sum(1 for s in result["sets"].values() if not s["supported"])
-    sys.exit(0 if proc.returncode == 0 and unreadable == 0 and unsupported == 0 else 1)
+    unaccounted = sum(1 for s in result["sets"].values() if sum(s["by_status"].values()) != s["discovered"])
+    sys.exit(0 if proc.returncode in (0, 3) and unsupported == 0 and unaccounted == 0 else 1)
 
 
 if __name__ == "__main__":

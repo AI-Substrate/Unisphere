@@ -160,7 +160,7 @@ fn fold_identities_match_the_catalogue_descriptors() {
     assert_eq!(events.harness(), "copilot-cli");
     assert_eq!(events.harness(), DESCRIPTOR.id);
     assert_eq!(events.policy(), PREP_POLICY_VERSION);
-    assert_eq!(PREP_POLICY_VERSION, "copilot-cli/prep-v1");
+    assert_eq!(PREP_POLICY_VERSION, "copilot-cli/prep-v2");
     assert_eq!(events.kind(), PrepSourceKind::Append);
     assert_eq!(events.pattern(), "*/events.jsonl");
     assert_eq!(events.describe(EVENTS_FILE), PrepSourceMeta::default());
@@ -617,7 +617,8 @@ fn session_facts_report_context_compactions_model_and_coverage() {
     assert_eq!(
         facts,
         SessionFacts {
-            context_window: None,
+            // The manual compaction after the model change records the new limit.
+            context_window: Some(700),
             session_id: Some("sess-0001".into()),
             parent_session_id: None,
             is_sidechain: false,
@@ -672,6 +673,38 @@ fn first_context_after_waits_for_the_usage_of_the_first_main_chain_call() {
     let compaction = facts.last_compaction.unwrap();
     assert_eq!(compaction.first_context_after, None);
     assert_eq!(facts.latest_context.unwrap().total, None);
+}
+
+#[test]
+fn context_window_is_the_latest_main_chain_token_limit_until_the_model_changes() {
+    let window = |lines: usize| {
+        let prefix: Vec<&str> = EVENTS.lines().take(lines).collect();
+        fold(&(prefix.join("\n") + "\n")).facts.context_window
+    };
+    assert_eq!(window(17), None, "no limit recorded yet");
+    assert_eq!(window(18), Some(900), "compaction_start records one");
+    assert_eq!(window(21), None, "the model change clears it");
+    assert_eq!(
+        window(24),
+        Some(700),
+        "the next compaction records the new one"
+    );
+
+    let text = concat!(
+        r#"{"type":"session.truncation","timestamp":"2026-01-10T00:00:01.000Z","data":{"tokenLimit":500}}"#,
+        "\n",
+        r#"{"type":"session.truncation","timestamp":"2026-01-10T00:00:02.000Z","agentId":"agent-1","data":{"tokenLimit":90}}"#,
+        "\n",
+        r#"{"type":"session.compaction_complete","timestamp":"2026-01-10T00:00:03.000Z","data":{"success":true,"tokenLimit":0}}"#,
+        "\n",
+        r#"{"type":"session.shutdown","timestamp":"2026-01-10T00:00:04.000Z","data":{"tokenLimit":80}}"#,
+        "\n",
+    );
+    assert_eq!(
+        fold(text).facts.context_window,
+        Some(500),
+        "subagent, zero and non-limit records leave the main-chain limit"
+    );
 }
 
 #[test]
@@ -928,7 +961,7 @@ fn foreign_checkpoints_and_the_other_representation_are_refused() {
     let meta = PrepSourceMeta::default();
     let good = fold(EVENTS).checkpoint;
     assert_eq!(good.format, PREP_CHECKPOINT_FORMAT);
-    assert_eq!(good.policy, "copilot-cli/prep-v1");
+    assert_eq!(good.policy, "copilot-cli/prep-v2");
     let refused = |fold: &dyn PrepFold, checkpoint: PrepCheckpoint| {
         fold.open(&meta, "s", 0, Some(&checkpoint))
             .err()

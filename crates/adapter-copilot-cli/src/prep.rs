@@ -38,6 +38,12 @@
 //!   `threshold`, `memory_pressure` and `context_limit_retry` count as `auto`);
 //!   `session.error` → `api_error`; `abort`, `session.truncation` and
 //!   `session.context_cleared` → `system_other`.
+//! - `context_window` is the harness's own `tokenLimit` (its prompt-token
+//!   limit for the active model) from the latest main-chain
+//!   `session.compaction_start`, `session.compaction_complete`,
+//!   `session.truncation` or `session.usage_info` record that carries one. A
+//!   later `session.model_change` clears it, because the limit belongs to the
+//!   model it was recorded for; until the next such record it is `None`.
 //! - Tool uses come from `toolRequests` (with the requesting call id) or, when
 //!   unrequested, `tool.execution_start`; results from `tool.execution_complete`
 //!   with its native `success`. Durations are not recorded natively: null.
@@ -73,7 +79,7 @@ use unisphere_core::{
 use crate::{DESCRIPTOR, SNAPSHOT_DESCRIPTOR, query::tool_family};
 
 /// Events interpretation policy; bump on any rule change so every source re-emits.
-pub const PREP_POLICY_VERSION: &str = "copilot-cli/prep-v1";
+pub const PREP_POLICY_VERSION: &str = "copilot-cli/prep-v2";
 /// Legacy-document interpretation policy.
 pub const LEGACY_PREP_POLICY_VERSION: &str = "copilot-cli-snapshot/prep-v1";
 
@@ -910,6 +916,18 @@ impl EventsSession {
                 .unwrap_or(&empty);
             let sidechain = text(&record, "agentId").is_some();
             let kind = record.get("type").and_then(Value::as_str).unwrap_or("");
+            if !sidechain
+                && matches!(
+                    kind,
+                    "session.compaction_start"
+                        | "session.compaction_complete"
+                        | "session.truncation"
+                        | "session.usage_info"
+                )
+                && let Some(limit) = int(data, "tokenLimit").filter(|limit| *limit > 0)
+            {
+                core.session.context_window = Some(limit);
+            }
             match kind {
                 "session.start" | "session.resume" => session_context(core, kind, data),
                 "user.message" => {
@@ -999,6 +1017,7 @@ impl EventsSession {
                     );
                 }
                 "session.model_change" => {
+                    core.session.context_window = None;
                     if let Some(model) = text(data, "newModel") {
                         let mut event =
                             core.event(&at, PrepEventKind::ModelSwitch, text(data, "source"));

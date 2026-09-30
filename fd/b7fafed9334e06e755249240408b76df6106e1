@@ -1,0 +1,35 @@
+crates/adapter-claude/tests/prep.rs
+  s_042162115c1f28::t_d52f49d57bd02b 721-722
+crates/adapter-codex/tests/prep.rs
+  s_042162115c1f28::t_b685de8dff1ee0 749-750
+crates/adapter-copilot-cli/tests/prep.rs
+  s_042162115c1f28::t_8f9b297279e56f 622-623,866-867
+crates/adapter-omp/tests/prep.rs
+  s_042162115c1f28::t_a8789eabd760cf 669-670
+crates/adapter-pi/tests/prep.rs
+  s_042162115c1f28::t_9c78f39ada0dcc 611-612
+crates/adapter-vscode-copilot/tests/prep.rs
+  s_042162115c1f28::t_a0af94266d0e09 453-454
+crates/core/src/prep.rs
+  s_042162115c1f28::t_4622bf00d4e00e 655-660
+crates/sdk/src/status.rs
+  s_042162115c1f28::t_069807d14721b2 380-401,409-410,555-566,580-587,744,747-748,752,781-807,810
+crates/sdk/tests/status.rs
+  s_042162115c1f28::t_81b86400a38192 849-889
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "fdb7fafed9334e06e755249240408b76df6106e1",
+  "prompts": {},
+  "sessions": {
+    "s_042162115c1f28": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4b3f9ea7-6ca1-47b0-93c3-82069b1452f9",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

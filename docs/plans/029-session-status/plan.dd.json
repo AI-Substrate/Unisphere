@@ -88,8 +88,8 @@
         },
         {
           "id": "ph-b2c1",
-          "title": "Oh My Pi and Codex",
-          "brief": "Same facts for OMP and Codex on Plan 028 phase 2 folds; native pane lookup for those harnesses. Independent review.",
+          "title": "Oh My Pi, Copilot CLI and Codex",
+          "brief": "Status folds for OMP (first), Copilot CLI, then Codex, macOS + Linux; same SessionStatus contract; native context window where recorded. Plan: assets/phase-2-plan.md. Each harness is pushed and pinged to pij-yelling-trout as it lands.",
           "state": "unchecked",
           "depends_on": [
             "ph-a624"

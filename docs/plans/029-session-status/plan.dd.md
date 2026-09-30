@@ -68,7 +68,7 @@ Agents and pij need quick, general facts about any agent session without knowing
 | id | title | brief | state | note | receipt | depends_on | tasks | objective | delivers | key_risks |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | ph-a624 | Claude status end to end | SessionStatus contract, SDK op and `sessions status` CLI for Claude Code over the Plan 028 fold; pij/pane/session lookup; model, context, activity, turn and compaction facts; big-live-file proof; docs. Independent review. | [ ] unchecked | — | — | — | [tasks](assets/tasks/phase-1/tasks.dd.md#tasks) | — | — | — |
-| ph-b2c1 | Oh My Pi and Codex | Same facts for OMP and Codex on Plan 028 phase 2 folds; native pane lookup for those harnesses. Independent review. | [ ] unchecked | — | — | ph-a624 | [tasks](assets/tasks/phase-2/tasks.dd.md#tasks) | — | — | — |
+| ph-b2c1 | Oh My Pi, Copilot CLI and Codex | Status folds for OMP (first), Copilot CLI, then Codex, macOS + Linux; same SessionStatus contract; native context window where recorded. Plan: assets/phase-2-plan.md. Each harness is pushed and pinged to pij-yelling-trout as it lands. | [ ] unchecked | — | — | ph-a624 | [tasks](assets/tasks/phase-2/tasks.dd.md#tasks) | — | — | — |
 
 <a id="tasks"></a>
 

@@ -1,0 +1,33 @@
+.harness/extensions/checks/checks.mjs
+  s_b77fcc140bc8c3::t_75e8b23031f24a 25-38,106-109
+.harness/extensions/checks/checks.test.mjs
+  s_042162115c1f28::t_3d9cda777b9d5e 3,89-97
+crates/sdk/src/status.rs
+  s_042162115c1f28::t_b121bfb5aa8bc7 317,320-333
+crates/sdk/tests/status.rs
+  s_042162115c1f28::t_bc0b37c3147063 810-848
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "046e40035d10394e1334995ddf20f9e7d4c7329f",
+  "prompts": {},
+  "sessions": {
+    "s_042162115c1f28": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4b3f9ea7-6ca1-47b0-93c3-82069b1452f9",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    },
+    "s_b77fcc140bc8c3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d32c91bc-1a9a-4904-a6f0-8f7bec4daf6b",
+        "model": "unknown"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

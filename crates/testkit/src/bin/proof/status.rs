@@ -131,7 +131,7 @@ fn scenario(repo: &Path, binary: &Path, dir: &Path) -> ProofResult<Vec<Value>> {
     )?;
     steps.push(project(facts));
 
-    let (code, value) = status(binary, &sandbox, &["--session", "x", "--harness", "codex"])?;
+    let (code, value) = status(binary, &sandbox, &["--session", "x", "--harness", "git-ai"])?;
     check(
         code == 3 && failure_code(&value) == "UNI-STATUS-UNSUPPORTED-HARNESS",
         "unsupported harness",

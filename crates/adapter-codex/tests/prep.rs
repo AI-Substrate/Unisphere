@@ -743,7 +743,8 @@ fn session_facts_report_identity_context_compaction_and_skips() {
     assert_eq!(
         run.facts,
         SessionFacts {
-            context_window: None,
+            // The latest token_count's native window, not an earlier one.
+            context_window: Some(2000),
             session_id: Some("thread-main".into()),
             parent_session_id: Some("thread-origin".into()),
             is_sidechain: false,
@@ -847,6 +848,7 @@ fn legacy_rollouts_fold_untimed_records_with_null_timestamps() {
     assert_eq!(facts.records, 5);
     assert_eq!(facts.cwd, None);
     assert_eq!(facts.skipped, SessionSkips::default());
+    assert_eq!(facts.context_window, None, "no window recorded: unknown");
 }
 
 #[test]

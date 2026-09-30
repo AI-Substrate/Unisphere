@@ -20,6 +20,9 @@
 //!   attributed like other aggregate-only dialects (1 h main, 5 m sidechain).
 //!   Without it `cw_1h`/`cw_5m` are null, basis `none`, and any unrecorded writes
 //!   stay inside `input`, so `input + cache_read` is still the native context.
+//! - **Context window.** The latest `token_count.info.model_context_window`
+//!   (the harness's own window for the model in use) is
+//!   `SessionFacts.context_window`; without one it stays null.
 //! - **Model** is the latest `turn_context.model` or
 //!   `thread_settings_applied.thread_settings.model`; a change is a
 //!   `model_switch` event. Codex records no stop reason: `stop_reason` is null.
@@ -68,7 +71,7 @@ use unisphere_core::{
 use super::{DESCRIPTOR, codex_tool_family};
 
 /// Interpretation policy; bump on any rule change so every source re-emits.
-pub const PREP_POLICY_VERSION: &str = "codex/prep-v1";
+pub const PREP_POLICY_VERSION: &str = "codex/prep-v2";
 
 #[derive(Debug, Clone, Copy, Default)]
 pub struct CodexPrepFold;
@@ -971,6 +974,13 @@ impl State {
             .get("total_token_usage")
             .and_then(Value::as_object)
             .map(|total| self.tokens(total).2);
+        if let Some(window) = info
+            .get("model_context_window")
+            .and_then(Value::as_i64)
+            .filter(|window| *window > 0)
+        {
+            self.session.context_window = Some(window);
+        }
         match self.usage.clone() {
             // Re-emission: the cumulative total did not move.
             Some(mark) if !mark.from_record && total.is_some() && mark.total == total => {

@@ -1,0 +1,51 @@
+.github/dependabot.yml
+  s_042162115c1f28::t_c6077cf0a4263d 1-13
+.gitignore
+  s_042162115c1f28::t_c9d7787040ed87 28-30
+SECURITY.md
+  s_042162115c1f28::t_187c3d754b277d 1-22
+docs/plans/016-dependabot-ci/assets/backpressure.dd.json
+  s_042162115c1f28::t_b09efc6c344793 1-57
+docs/plans/016-dependabot-ci/assets/backpressure.dd.md
+  s_042162115c1f28::t_f76b4fc27f2fb7 1-31
+docs/plans/016-dependabot-ci/assets/impl-guide.dd.json
+  s_042162115c1f28::t_a9a15ea4a98f23 1-93
+docs/plans/016-dependabot-ci/assets/impl-guide.dd.md
+  s_042162115c1f28::t_029b387d9c7cde 1-105
+docs/plans/016-dependabot-ci/assets/local-validation.json
+  s_042162115c1f28::t_bdf205e44c36de 1-42
+docs/plans/016-dependabot-ci/assets/tasks/phase-1/tasks.dd.json
+  s_042162115c1f28::t_62b4432fa669c1 1-101
+docs/plans/016-dependabot-ci/assets/tasks/phase-1/tasks.dd.md
+  s_042162115c1f28::t_726d2c94f8c2e1 1-159
+docs/plans/016-dependabot-ci/assets/team/coder-packet.template.md
+  s_042162115c1f28::t_dbe37ab07d165a 1-59
+docs/plans/016-dependabot-ci/assets/team/model-settings.template.json
+  s_042162115c1f28::t_14cde8bab61fb9 1-10
+docs/plans/016-dependabot-ci/assets/team/reviewer-packet.template.md
+  s_042162115c1f28::t_419e2618f53998 1-50
+docs/plans/016-dependabot-ci/plan.dd.json
+  s_042162115c1f28::t_cb51de4ff9ef08 1-150
+docs/plans/016-dependabot-ci/plan.dd.md
+  s_042162115c1f28::t_159c2b58832e58 1-170
+docs/plans/016-dependabot-ci/the-flow.json
+  s_042162115c1f28::t_c006a414dce16d 1-278
+docs/plans/016-dependabot-ci/the-flow.md
+  s_042162115c1f28::t_f38dcdd127cf22 1-40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "13683ad482e3b12692c61ccc7fd7b2f74b4dcde6",
+  "prompts": {},
+  "sessions": {
+    "s_042162115c1f28": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4b3f9ea7-6ca1-47b0-93c3-82069b1452f9",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

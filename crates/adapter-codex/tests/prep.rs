@@ -575,7 +575,8 @@ fn model_switches_compactions_aborts_and_errors_are_typed_events() {
         ]
     );
     let compaction = &run.rows.events[1];
-    // Codex records neither the trigger nor token counts of a compaction.
+    // The `compacted` record carries neither the trigger nor token counts; the
+    // later post-compaction count reaches only the session facts.
     assert_eq!(
         (
             compaction.trigger.as_ref(),
@@ -775,8 +776,9 @@ fn session_facts_report_identity_context_compaction_and_skips() {
                 ts_ms: Some(ms(31)),
                 trigger: None,
                 pre_tokens: None,
-                post_tokens: None,
-                // The re-emitted token_count right after the boundary is not a call.
+                // Codex's own count from the zero-usage token_count right after
+                // the boundary, which is not a call.
+                post_tokens: Some(45),
                 first_context_after: Some(50),
             }),
             last_model_switch: Some(ModelSwitch {

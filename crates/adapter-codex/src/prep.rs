@@ -34,9 +34,13 @@
 //!   call opens the turn. Developer and injected user response items are not
 //!   triggers. Codex writes a response's items before its usage, so tool uses
 //!   and events seen while an opener is pending carry the turn it will open.
-//! - **Events.** `compacted` → `compaction` (Codex records no trigger or token
-//!   counts for it; the paired `context_compacted` marker is not counted again);
-//!   `turn_aborted` → `system_other`; `error`/`stream_error` → `api_error`.
+//! - **Events.** `compacted` → `compaction` (Codex records no trigger or
+//!   pre-compaction count for it; the paired `context_compacted` marker is not
+//!   counted again); `turn_aborted` → `system_other`; `error`/`stream_error` →
+//!   `api_error`. The first `token_count` after a compaction whose
+//!   `last_token_usage` counts no input or output carries Codex's own
+//!   post-compaction context in `total_tokens`: that is
+//!   `last_compaction.post_tokens`.
 //! - **Tool uses.** `function_call`/`custom_tool_call` → use; their outputs →
 //!   result. The outcome and duration come from the native end event
 //!   (`exec_command_end` exit code, `patch_apply_end` success,
@@ -981,6 +985,7 @@ impl State {
         {
             self.session.context_window = Some(window);
         }
+        self.post_compaction(last);
         match self.usage.clone() {
             // Re-emission: the cumulative total did not move.
             Some(mark) if !mark.from_record && total.is_some() && mark.total == total => {
@@ -1009,6 +1014,23 @@ impl State {
                     paired: false,
                 });
             }
+        }
+    }
+
+    /// Codex's own count of the compacted context, recorded before any call
+    /// follows the compaction.
+    fn post_compaction(&mut self, last: &Map<String, Value>) {
+        let int = |field: &str| last.get(field).and_then(Value::as_i64);
+        if !self.awaiting_first_after
+            || int("input_tokens") != Some(0)
+            || int("output_tokens").is_some_and(|output| output != 0)
+        {
+            return;
+        }
+        if let Some(compaction) = self.session.last_compaction.as_mut()
+            && compaction.post_tokens.is_none()
+        {
+            compaction.post_tokens = int("total_tokens").filter(|total| *total > 0);
         }
     }
 

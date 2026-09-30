@@ -314,10 +314,23 @@ fn derive(
     };
 
     // Context.
-    let used = facts
+    let latest_ms = facts
         .latest_context
         .as_ref()
-        .and_then(|sample| non_negative(sample.total));
+        .and_then(|sample| sample.ts_ms);
+    // After a compaction with no call since, the context now is the harness's
+    // own post-compaction figure, not the last (pre-compaction) call.
+    let after_compaction = facts
+        .last_compaction
+        .as_ref()
+        .filter(|c| c.ts_ms.zip(latest_ms).is_some_and(|(at, call)| at > call))
+        .and_then(|c| non_negative(c.post_tokens));
+    let used = after_compaction.or_else(|| {
+        facts
+            .latest_context
+            .as_ref()
+            .and_then(|sample| non_negative(sample.total))
+    });
     // A window the harness recorded wins over the versioned table.
     let native_window = non_negative(facts.context_window).filter(|w| *w > 0);
     let window = native_window.or_else(|| current.as_deref().and_then(table_window));

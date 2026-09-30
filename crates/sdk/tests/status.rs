@@ -807,3 +807,42 @@ fn failures_are_typed() {
     assert_eq!(failure.kind, StatusFailureKind::Read);
     assert!(!failure.message.contains("FAIL"));
 }
+
+#[test]
+fn a_compaction_newer_than_the_last_call_sets_context_to_its_post_tokens() {
+    let f = fixture();
+    f.append(
+        FILE,
+        &[
+            json!({"call": {"ts_ms": T0, "model": "claude-opus-5", "input": 1, "cache_read": 64_991}}),
+            json!({"facts": {
+                "latest_context": {"ts_ms": T0, "model": "claude-opus-5", "stop_reason": null,
+                    "input": 1, "cache_read": 64_991, "cache_write": 0, "total": 64_992},
+                "compactions": {"manual": 0, "auto": 1, "unknown_trigger": 0},
+                "last_compaction": {"ts_ms": T0 + MIN, "trigger": "auto", "pre_tokens": 64_992,
+                    "post_tokens": 8_260, "first_context_after": null}}}),
+        ],
+    );
+    let status = f.cold("s1", T0 + 2 * MIN);
+    let used = status.context.used_tokens.as_ref().unwrap();
+    assert_eq!((used.value, used.basis), (8_260, Basis::Derived));
+
+    // Once a call follows the compaction, that call is the context again.
+    f.append(
+        FILE,
+        &[json!({"facts": {
+            "latest_context": {"ts_ms": T0 + 3 * MIN, "model": "claude-opus-5", "stop_reason": null,
+                "input": 1, "cache_read": 9_000, "cache_write": 0, "total": 9_001},
+            "compactions": {"manual": 0, "auto": 1, "unknown_trigger": 0},
+            "last_compaction": {"ts_ms": T0 + MIN, "trigger": "auto", "pre_tokens": 64_992,
+                "post_tokens": 8_260, "first_context_after": 9_001}}})],
+    );
+    assert_eq!(
+        f.cold("s1", T0 + 4 * MIN)
+            .context
+            .used_tokens
+            .unwrap()
+            .value,
+        9_001
+    );
+}

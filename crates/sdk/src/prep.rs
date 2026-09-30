@@ -3,10 +3,11 @@
 //! fold it purely, then commit rows before the state that references them.
 //!
 //! Each source is independent: a failure keeps that source's previous committed
-//! state and contributes no rows. Unchanged sources cost one `stat`.
+//! state and contributes no rows. Unchanged sources, and directories whose
+//! committed listing still holds, cost one `stat`.
 
 use std::{
-    collections::BTreeSet,
+    collections::{BTreeMap, BTreeSet},
     sync::{
         Arc, Mutex, PoisonError,
         atomic::{AtomicUsize, Ordering},
@@ -210,6 +211,12 @@ fn count(report: &mut PrepSetReport, status: PrepSourceStatus) {
 }
 
 /// Run one idempotent prep pass. Nothing is written when nothing changed.
+///
+/// Discovery reuses each binding's committed directory index, so unchanged
+/// directories cost one `stat`. Sources are then read, folded and committed in
+/// waves of at most [`PrepRequest::max_run_bytes`] expected new input: each
+/// wave that changed anything is one durable commit, so the rows held in
+/// memory are bounded by the wave, and a failure after a commit keeps it.
 pub fn run_prep(
     bindings: &[PrepBinding],
     store: &dyn PrepStore,
@@ -217,24 +224,32 @@ pub fn run_prep(
 ) -> Result<PrepReport, PipelineError> {
     request.limits.read.validate()?;
     request.limits.snapshot.validate()?;
+    if request.max_run_bytes == 0 {
+        return Err(invalid_input());
+    }
     let mut set_keys = BTreeSet::new();
     if !request.roots.iter().all(|set| set_keys.insert(set.key())) {
         return Err(invalid_input());
     }
     let loaded = store.load()?;
-    let previous = loaded.state;
-    let schema_ok = previous.as_ref().is_some_and(|state| {
+    let schema_ok = loaded.state.as_ref().is_some_and(|state| {
         state.table_schema_version == PREP_TABLE_SCHEMA_VERSION
             && state.checkpoint_format == PREP_CHECKPOINT_FORMAT
     });
-    // An incompatible state contributes generations only; its sources and parts are dropped.
-    let prior = previous.as_ref().filter(|_| schema_ok);
+    let runs = loaded.state.as_ref().map_or(0, |state| state.runs);
+    // A compatible state is carried forward by value (never copied: it is the
+    // largest thing prep holds). An incompatible one contributes generations
+    // only; its sources and parts are dropped.
+    let (prior, incompatible) = match loaded.state {
+        Some(state) if schema_ok => (state, None),
+        other => (PrepState::default(), other),
+    };
     let mut report = PrepReport {
         target: request.target.clone(),
         table_schema_version: PREP_TABLE_SCHEMA_VERSION,
         ..PrepReport::default()
     };
-    let mut sets = prior.map(|state| state.sets.clone()).unwrap_or_default();
+    let mut sets = prior.sets;
     let mut work: Vec<Work<'_>> = Vec::new();
     // Per requested set: every discovered key, including those scoped out.
     let mut discovered: Vec<BTreeSet<String>> = Vec::new();
@@ -257,14 +272,24 @@ pub fn run_prep(
         } else {
             let policies: Vec<&str> = set_bindings.iter().map(|b| b.fold.policy()).collect();
             set_report.policy = Some(policies.join("+"));
+            // A set's listings are reused only for the root they were made of.
+            let committed = sets
+                .get(&set.key())
+                .filter(|committed| committed.root == set.root);
+            let mut indexes = BTreeMap::new();
             for binding in set_bindings {
                 let accept = matcher(binding.fold.pattern())?;
-                let discovery = binding
-                    .loader
-                    .discover(&set.root, &|file| accept.is_match(file))?;
-                set_report.skipped.symlinks += discovery.skipped.symlinks;
-                set_report.skipped.hidden += discovery.skipped.hidden;
-                set_report.skipped.unreadable_entries += discovery.skipped.unreadable_entries;
+                let previous_index =
+                    committed.and_then(|committed| committed.discovery.get(binding.fold.policy()));
+                let discovery = binding.loader.discover(
+                    &set.root,
+                    &|file| accept.is_match(file),
+                    previous_index.unwrap_or(&PrepDirIndex::new()),
+                )?;
+                set_report.skipped += discovery.skipped;
+                set_report.dirs_listed += discovery.dirs_listed;
+                set_report.dirs_reused += discovery.dirs_reused;
+                indexes.insert(binding.fold.policy().to_owned(), discovery.index);
                 for stat in discovery.sources {
                     let key = set.source_key(&stat.file);
                     // The first binding that accepts a file owns it.
@@ -295,6 +320,7 @@ pub fn run_prep(
                     label: set.label.clone(),
                     root: set.root.clone(),
                     policy: set_report.policy.clone().unwrap_or_default(),
+                    discovery: indexes,
                 },
             );
         }
@@ -302,46 +328,53 @@ pub fn run_prep(
         discovered.push(keys);
     }
 
-    let threads = request.threads.clamp(1, work.len().max(1));
-    let next = AtomicUsize::new(0);
-    let results: Mutex<Vec<Option<SourceResult>>> =
-        Mutex::new((0..work.len()).map(|_| None).collect());
-    thread::scope(|scope| {
-        for _ in 0..threads {
-            scope.spawn(|| {
-                loop {
-                    let index = next.fetch_add(1, Ordering::Relaxed);
-                    let Some(item) = work.get(index) else { break };
-                    let prev = previous
-                        .as_ref()
-                        .and_then(|state| state.sources.get(&item.key));
-                    let incompatible = prev.and_then(|prev| incompatibility(prev, schema_ok, item));
-                    let result = prep_source(item, prev, incompatible, schema_ok, request);
-                    results.lock().unwrap_or_else(PoisonError::into_inner)[index] = Some(result);
-                }
-            });
-        }
-    });
-    let results = results.into_inner().unwrap_or_else(PoisonError::into_inner);
-
-    let mut sources = prior.map(|state| state.sources.clone()).unwrap_or_default();
-    let mut rows = PrepRows::default();
+    let mut state = PrepState {
+        table_schema_version: PREP_TABLE_SCHEMA_VERSION,
+        checkpoint_format: PREP_CHECKPOINT_FORMAT,
+        runs,
+        parts: prior.parts,
+        sets,
+        sources: prior.sources,
+    };
+    // An incompatible state is replaced even when no source changed.
     let mut dirty = !schema_ok;
-    for (item, result) in work.iter().zip(results) {
-        let result =
-            result.ok_or_else(|| PipelineError::new(PipelineErrorKind::InvalidData, None))?;
-        count(&mut report.sets[item.set_index], result.outcome.status);
-        report.bytes_read += result.outcome.bytes_read;
-        report.pending_tail_bytes += result.outcome.pending_tail_bytes;
-        dirty |= result.dirty;
-        match result.state {
-            Some(state) => sources.insert(item.key.clone(), state),
-            None => sources.remove(&item.key),
-        };
-        if result.outcome.status != PrepSourceStatus::Unchanged {
-            report.sources.push(result.outcome);
+    let mut start = 0;
+    while start < work.len() || dirty {
+        // Each source is prepped once per run, so its committed state is read
+        // before its own result replaces it.
+        let committed = incompatible.as_ref().map_or(&state.sources, |s| &s.sources);
+        let end = wave_end(&work, start, committed, request.max_run_bytes);
+        let wave = &work[start..end];
+        let results = prep_wave(wave, committed, schema_ok, request);
+        let mut rows = PrepRows::default();
+        for (item, result) in wave.iter().zip(results) {
+            let result =
+                result.ok_or_else(|| PipelineError::new(PipelineErrorKind::InvalidData, None))?;
+            count(&mut report.sets[item.set_index], result.outcome.status);
+            report.bytes_read += result.outcome.bytes_read;
+            report.pending_tail_bytes += result.outcome.pending_tail_bytes;
+            dirty |= result.dirty;
+            match result.state {
+                Some(source) => state.sources.insert(item.key.clone(), source),
+                None => state.sources.remove(&item.key),
+            };
+            if result.outcome.status != PrepSourceStatus::Unchanged {
+                report.sources.push(result.outcome);
+            }
+            rows.extend(result.rows);
         }
-        rows.extend(result.rows);
+        if dirty {
+            state.runs += 1;
+            let commit = store.commit(&rows, &state)?;
+            state.parts.extend(commit.parts_written.iter().cloned());
+            report.rows_written += rows.counts();
+            report.commit.parts_written.extend(commit.parts_written);
+            report.commit.bytes_written += commit.bytes_written;
+            report.commit.snapshot_rows = commit.snapshot_rows;
+            report.commits += 1;
+            dirty = false;
+        }
+        start = end;
     }
     // Committed sources of a requested set that discovery no longer returns keep
     // their state and rows.
@@ -350,33 +383,91 @@ pub fn run_prep(
             continue;
         }
         let set_key = set.key();
-        for (key, state) in &sources {
-            if state.set != set_key || keys.contains(key) {
+        for (key, source) in &state.sources {
+            if source.set != set_key || keys.contains(key) {
                 continue;
             }
             count(set_report, PrepSourceStatus::Missing);
-            let mut missing = outcome(key, PrepSourceStatus::Missing, state.generation);
-            missing.committed_offset = state.offset;
+            let mut missing = outcome(key, PrepSourceStatus::Missing, source.generation);
+            missing.committed_offset = source.offset;
             report.sources.push(missing);
         }
     }
-    report.rows_written = rows.counts();
-    let runs = previous.as_ref().map_or(0, |state| state.runs);
-    report.run = runs;
-    if dirty {
-        let state = PrepState {
-            table_schema_version: PREP_TABLE_SCHEMA_VERSION,
-            checkpoint_format: PREP_CHECKPOINT_FORMAT,
-            runs: runs + 1,
-            parts: prior.map(|state| state.parts.clone()).unwrap_or_default(),
-            sets,
-            sources,
-        };
-        report.run = state.runs;
-        report.commit = store.commit(&rows, &state)?;
-    }
+    report.run = state.runs;
     report.commit.orphans_removed = loaded.orphans_removed;
     Ok(report)
+}
+
+/// Bytes a source is expected to read: nothing when its stat is unchanged, the
+/// appended tail when an append source can resume, otherwise the whole source.
+fn expected_bytes(item: &Work<'_>, committed: &BTreeMap<String, PrepSourceState>) -> u64 {
+    let stat = &item.stat;
+    match committed.get(&item.key) {
+        Some(prev)
+            if prev.identity == stat.identity
+                && prev.size == stat.size
+                && prev.mtime_ns == stat.mtime_ns =>
+        {
+            0
+        }
+        Some(prev)
+            if stat.kind == PrepSourceKind::Append
+                && prev.identity == stat.identity
+                && stat.size >= prev.offset =>
+        {
+            stat.size - prev.offset
+        }
+        _ => stat.size,
+    }
+}
+
+/// End of the wave starting at `start`: sources are added while their expected
+/// input fits `budget`; a wave always holds at least one source.
+fn wave_end(
+    work: &[Work<'_>],
+    start: usize,
+    committed: &BTreeMap<String, PrepSourceState>,
+    budget: u64,
+) -> usize {
+    let mut end = start;
+    let mut used = 0u64;
+    while let Some(item) = work.get(end) {
+        let bytes = expected_bytes(item, committed);
+        if end > start && used.saturating_add(bytes) > budget {
+            break;
+        }
+        used = used.saturating_add(bytes);
+        end += 1;
+    }
+    end
+}
+
+/// Prep one wave's sources concurrently; results are in wave order.
+fn prep_wave(
+    wave: &[Work<'_>],
+    committed: &BTreeMap<String, PrepSourceState>,
+    schema_ok: bool,
+    request: &PrepRequest,
+) -> Vec<Option<SourceResult>> {
+    let threads = request.threads.clamp(1, wave.len().max(1));
+    let next = AtomicUsize::new(0);
+    let results: Mutex<Vec<Option<SourceResult>>> =
+        Mutex::new((0..wave.len()).map(|_| None).collect());
+    thread::scope(|scope| {
+        for _ in 0..threads {
+            scope.spawn(|| {
+                loop {
+                    let index = next.fetch_add(1, Ordering::Relaxed);
+                    let Some(item) = wave.get(index) else { break };
+                    let prev = committed.get(&item.key);
+                    let incompatible = prev.and_then(|prev| incompatibility(prev, schema_ok, item));
+                    let result = prep_source(item, prev, incompatible, schema_ok, request);
+                    results.lock().unwrap_or_else(PoisonError::into_inner)[index] = Some(result);
+                }
+            });
+        }
+    });
+    results.into_inner().unwrap_or_else(PoisonError::into_inner)
 }
 
 /// Why a committed source can no longer be resumed, whatever its bytes say.

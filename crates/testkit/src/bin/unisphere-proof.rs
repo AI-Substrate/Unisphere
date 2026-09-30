@@ -628,7 +628,7 @@ fn run() -> ProofResult<()> {
             "explicit Claude JSONL projection; not lossless or final completeness"
         }
         Some("prep") => {
-            "incremental Claude prep over synthetic sources: built/installed CLI and an external SDK consumer with its own store; not real-corpus parity or other harnesses"
+            "incremental Claude JSONL plus revisioned JSON document, mutation journal and SQLite snapshots over synthetic sources through the built/installed CLI, Claude through an external SDK consumer with its own store; not real-corpus parity or the other append folds"
         }
         Some("status") => {
             "session status for a synthetic Claude session: built/installed CLI and an external SDK consumer with a caller-held cursor; not real sessions or other harnesses"

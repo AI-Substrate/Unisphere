@@ -1,0 +1,387 @@
+{
+ "subject_sha": "dfb8bf80845c143b6077dd1e24af58634f1b1174",
+ "exit": 3,
+ "wall_s": 25.53,
+ "load_average": [
+  95.2,
+  92.5,
+  107.1
+ ],
+ "sets": {
+  "claude-code": {
+   "supported": true,
+   "discovered": 478,
+   "skipped": {
+    "hidden": 0,
+    "symlinks": 3,
+    "unreadable_entries": 0
+   },
+   "by_status": {
+    "new": 478
+   }
+  },
+  "codex": {
+   "supported": true,
+   "discovered": 177,
+   "skipped": {
+    "hidden": 0,
+    "symlinks": 0,
+    "unreadable_entries": 0
+   },
+   "by_status": {
+    "new": 177
+   }
+  },
+  "oh-my-pi": {
+   "supported": true,
+   "discovered": 1376,
+   "skipped": {
+    "hidden": 91,
+    "symlinks": 0,
+    "unreadable_entries": 0
+   },
+   "by_status": {
+    "new": 1376
+   }
+  },
+  "pi": {
+   "supported": true,
+   "discovered": 1305,
+   "skipped": {
+    "hidden": 4,
+    "symlinks": 0,
+    "unreadable_entries": 0
+   },
+   "by_status": {
+    "new": 1305
+   }
+  },
+  "copilot-cli": {
+   "supported": true,
+   "discovered": 1774,
+   "skipped": {
+    "hidden": 126,
+    "symlinks": 7,
+    "unreadable_entries": 0
+   },
+   "by_status": {
+    "new": 1774
+   }
+  },
+  "cursor-transcript": {
+   "supported": true,
+   "discovered": 15,
+   "skipped": {
+    "hidden": 5,
+    "symlinks": 0,
+    "unreadable_entries": 0
+   },
+   "by_status": {
+    "new": 15
+   }
+  },
+  "vscode-copilot": {
+   "supported": true,
+   "discovered": 293,
+   "skipped": {
+    "hidden": 12,
+    "symlinks": 0,
+    "unreadable_entries": 0
+   },
+   "by_status": {
+    "new": 291,
+    "unreadable": 2
+   },
+   "unreadable_by_code": {
+    "UNI-DATA": 2
+   }
+  },
+  "cursor-ide": {
+   "supported": true,
+   "discovered": 1,
+   "skipped": {
+    "hidden": 1,
+    "symlinks": 0,
+    "unreadable_entries": 0
+   },
+   "by_status": {
+    "new": 1
+   }
+  },
+  "copilot-cli-snapshot": {
+   "supported": true,
+   "discovered": 4,
+   "skipped": {
+    "hidden": 0,
+    "symlinks": 0,
+    "unreadable_entries": 0
+   },
+   "by_status": {
+    "new": 4
+   }
+  }
+ },
+ "harnesses": {
+  "claude-code": {
+   "sources": 478,
+   "sessions_with_id": 471,
+   "rows": {
+    "calls": 122395,
+    "turns": 21113,
+    "triggers": 22971,
+    "events": 61911,
+    "compactions": 271,
+    "tool_uses": 110455
+   },
+   "call_field_presence": {
+    "model": 1.0,
+    "ts": 1.0,
+    "input": 1.0,
+    "output": 1.0,
+    "cache_read": 1.0,
+    "cw_1h": 1.0,
+    "msg_id": 1.0,
+    "request_id": 1.0,
+    "native_offset": 1.0,
+    "native_key": 0.0
+   },
+   "tool_field_presence": {
+    "name": 1.0,
+    "outcome": 1.0,
+    "duration_ms": 0.0029
+   }
+  },
+  "codex": {
+   "sources": 177,
+   "sessions_with_id": 177,
+   "rows": {
+    "calls": 13283,
+    "turns": 822,
+    "triggers": 1038,
+    "events": 220,
+    "compactions": 175,
+    "tool_uses": 14624
+   },
+   "call_field_presence": {
+    "model": 0.9818,
+    "ts": 1.0,
+    "input": 1.0,
+    "output": 1.0,
+    "cache_read": 1.0,
+    "cw_1h": 0.0129,
+    "msg_id": 0.0047,
+    "request_id": 0.0,
+    "native_offset": 1.0,
+    "native_key": 0.0
+   },
+   "tool_field_presence": {
+    "name": 1.0,
+    "outcome": 0.6649,
+    "duration_ms": 0.6465
+   }
+  },
+  "copilot-cli": {
+   "sources": 1774,
+   "sessions_with_id": 1774,
+   "rows": {
+    "calls": 248415,
+    "turns": 24444,
+    "triggers": 26351,
+    "events": 3679,
+    "compactions": 1354,
+    "tool_uses": 391966
+   },
+   "call_field_presence": {
+    "model": 0.5609,
+    "ts": 1.0,
+    "input": 0.0084,
+    "output": 0.8214,
+    "cache_read": 0.0084,
+    "cw_1h": 0.0081,
+    "msg_id": 1.0,
+    "request_id": 0.0084,
+    "native_offset": 1.0,
+    "native_key": 0.0
+   },
+   "tool_field_presence": {
+    "name": 0.9998,
+    "outcome": 0.9993,
+    "duration_ms": 0.0
+   }
+  },
+  "copilot-cli-snapshot": {
+   "sources": 4,
+   "sessions_with_id": 4,
+   "rows": {
+    "calls": 86,
+    "turns": 11,
+    "triggers": 13,
+    "events": 0,
+    "compactions": 0,
+    "tool_uses": 57
+   },
+   "call_field_presence": {
+    "model": 0.0,
+    "ts": 0.0,
+    "input": 0.0,
+    "output": 0.0,
+    "cache_read": 0.0,
+    "cw_1h": 0.0,
+    "msg_id": 0.0,
+    "request_id": 0.0,
+    "native_offset": 0.0,
+    "native_key": 1.0
+   },
+   "tool_field_presence": {
+    "name": 1.0,
+    "outcome": 0.9825,
+    "duration_ms": 0.0
+   }
+  },
+  "cursor-ide": {
+   "sources": 1,
+   "sessions_with_id": 0,
+   "rows": {
+    "calls": 814,
+    "turns": 67,
+    "triggers": 67,
+    "events": 44,
+    "compactions": 0,
+    "tool_uses": 614
+   },
+   "call_field_presence": {
+    "model": 0.0,
+    "ts": 1.0,
+    "input": 0.0,
+    "output": 0.0,
+    "cache_read": 0.0,
+    "cw_1h": 0.0,
+    "msg_id": 1.0,
+    "request_id": 0.0,
+    "native_offset": 0.0,
+    "native_key": 1.0
+   },
+   "tool_field_presence": {
+    "name": 1.0,
+    "outcome": 1.0,
+    "duration_ms": 0.0
+   }
+  },
+  "cursor-transcript": {
+   "sources": 15,
+   "sessions_with_id": 15,
+   "rows": {
+    "calls": 524,
+    "turns": 70,
+    "triggers": 70,
+    "events": 70,
+    "compactions": 0,
+    "tool_uses": 616
+   },
+   "call_field_presence": {
+    "model": 0.0,
+    "ts": 0.0,
+    "input": 0.0,
+    "output": 0.0,
+    "cache_read": 0.0,
+    "cw_1h": 0.0,
+    "msg_id": 0.0,
+    "request_id": 0.0,
+    "native_offset": 1.0,
+    "native_key": 0.0
+   },
+   "tool_field_presence": {
+    "name": 1.0,
+    "outcome": 0.0,
+    "duration_ms": 0.0
+   }
+  },
+  "oh-my-pi": {
+   "sources": 1376,
+   "sessions_with_id": 1376,
+   "rows": {
+    "calls": 138493,
+    "turns": 17961,
+    "triggers": 19289,
+    "events": 2293,
+    "compactions": 533,
+    "tool_uses": 202466
+   },
+   "call_field_presence": {
+    "model": 1.0,
+    "ts": 1.0,
+    "input": 1.0,
+    "output": 1.0,
+    "cache_read": 1.0,
+    "cw_1h": 1.0,
+    "msg_id": 1.0,
+    "request_id": 0.0,
+    "native_offset": 1.0,
+    "native_key": 1.0
+   },
+   "tool_field_presence": {
+    "name": 1.0,
+    "outcome": 0.9998,
+    "duration_ms": 0.0
+   }
+  },
+  "pi": {
+   "sources": 1305,
+   "sessions_with_id": 1305,
+   "rows": {
+    "calls": 35348,
+    "turns": 5660,
+    "triggers": 7086,
+    "events": 2428,
+    "compactions": 312,
+    "tool_uses": 44268
+   },
+   "call_field_presence": {
+    "model": 1.0,
+    "ts": 1.0,
+    "input": 1.0,
+    "output": 1.0,
+    "cache_read": 1.0,
+    "cw_1h": 1.0,
+    "msg_id": 1.0,
+    "request_id": 0.0,
+    "native_offset": 1.0,
+    "native_key": 1.0
+   },
+   "tool_field_presence": {
+    "name": 1.0,
+    "outcome": 0.9991,
+    "duration_ms": 0.0
+   }
+  },
+  "vscode-copilot": {
+   "sources": 291,
+   "sessions_with_id": 291,
+   "rows": {
+    "calls": 516,
+    "turns": 516,
+    "triggers": 516,
+    "events": 0,
+    "compactions": 0,
+    "tool_uses": 2316
+   },
+   "call_field_presence": {
+    "model": 0.9884,
+    "ts": 0.0136,
+    "input": 0.0136,
+    "output": 0.0291,
+    "cache_read": 0.0,
+    "cw_1h": 0.0,
+    "msg_id": 1.0,
+    "request_id": 1.0,
+    "native_offset": 0.0,
+    "native_key": 1.0
+   },
+   "tool_field_presence": {
+    "name": 1.0,
+    "outcome": 0.9987,
+    "duration_ms": 0.0
+   }
+  }
+ }
+}

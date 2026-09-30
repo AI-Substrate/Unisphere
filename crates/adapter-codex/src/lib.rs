@@ -1,8 +1,12 @@
-//! Pure, stateless projection of supplied Codex rollout JSONL records.
+//! Pure, stateless projection of supplied Codex rollout JSONL records, plus
+//! the incremental [`CodexPrepFold`] into canonical prep tables.
 //!
 //! The physical OTLP mapper never carries header context into later records;
 //! query inspection uses only explicit versioned header and turn boundaries.
 #![forbid(unsafe_code)]
+
+mod prep;
+pub use prep::{CodexPrepFold, PREP_POLICY_VERSION};
 
 use std::{collections::BTreeMap, path::PathBuf};
 
@@ -40,7 +44,7 @@ pub const DESCRIPTOR: AdapterDescriptor = AdapterDescriptor {
         output_formats: &["otlp-jsonl"],
         sdk_caller_owned_cursor: true,
         cursor_source_assumption: "append_only",
-        cli_persisted_resume: false,
+        cli_persisted_resume: true,
         delayed_revision_reconciliation: false,
         lossless_archive: false,
     },

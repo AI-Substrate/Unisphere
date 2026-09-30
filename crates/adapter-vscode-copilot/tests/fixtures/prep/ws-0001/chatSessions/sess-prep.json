@@ -1,0 +1,55 @@
+{
+  "version": 3,
+  "sessionId": "sess-prep-0001",
+  "creationDate": 1700000100000,
+  "customTitle": "PRIVATE-MARKER-TITLE",
+  "responderUsername": "copilot",
+  "requests": [
+    {
+      "requestId": "req-1",
+      "message": {"text": "PRIVATE-MARKER-ONE", "parts": []},
+      "timestamp": 1700000101000,
+      "modelId": "synthetic-model-a",
+      "responseId": "resp-1",
+      "responseTimestamp": 1700000102000,
+      "modelState": {"value": 1, "completedAt": 1700000109000},
+      "promptTokens": 1200,
+      "completionTokens": 80,
+      "modelTotals": [{"model": "synthetic-served-model", "inputTokens": 2500, "cachedTokens": 900, "outputTokens": 140}],
+      "response": [
+        {"value": "PRIVATE-MARKER-ANSWER"},
+        {"kind": "toolInvocationSerialized", "toolId": "read_file", "toolCallId": "tool-1", "isComplete": true, "isConfirmed": {"type": 1}, "invocationMessage": "PRIVATE-MARKER-DISPLAY", "resultDetails": {"input": "PRIVATE-MARKER-INPUT", "output": [], "isError": false}},
+        {"kind": "toolInvocationSerialized", "toolId": "run_in_terminal", "toolCallId": "tool-2", "isComplete": true, "resultDetails": {"input": "PRIVATE-MARKER-COMMAND", "output": [], "isError": true}},
+        {"kind": "toolInvocationSerialized", "toolId": "synthetic_custom_tool", "toolCallId": "tool-3", "isComplete": false}
+      ]
+    },
+    {
+      "requestId": "req-2",
+      "message": {"text": "PRIVATE-MARKER-TWO", "parts": []},
+      "timestamp": 1700000110000,
+      "isSystemInitiated": true,
+      "modelId": "synthetic-model-b",
+      "responseId": "resp-2",
+      "responseTimestamp": 1700000112500,
+      "isCanceled": true,
+      "response": [
+        {"kind": "toolInvocationSerialized", "toolId": "grep_search", "toolCallId": "tool-4", "isComplete": true, "resultDetails": {"input": "PRIVATE-MARKER-QUERY", "output": []}}
+      ]
+    },
+    {
+      "requestId": "req-3",
+      "message": {"text": "PRIVATE-MARKER-THREE", "parts": []},
+      "timestamp": 1700000120000,
+      "modelId": "synthetic-model-b",
+      "response": null
+    },
+    7,
+    {
+      "requestId": "req-5",
+      "message": "PRIVATE-MARKER-FIVE",
+      "timestamp": "not-a-timestamp",
+      "responseId": "resp-5",
+      "response": "PRIVATE-MARKER-LEGACY-ANSWER"
+    }
+  ]
+}

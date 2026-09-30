@@ -89,6 +89,12 @@ fn main() -> ExitCode {
         ParsedCommand::Prep(command) => prep::run_prep(command, &mut stdout, &mut stderr),
         ParsedCommand::PrepCompact(command) => prep::run_compact(command, &mut stdout, &mut stderr),
         ParsedCommand::PrepRecord(command) => prep::run_record(command, &mut stdout, &mut stderr),
+        ParsedCommand::PrepRecipes(command) => {
+            unisphere_cli::run_prep_recipes(command, &mut stdout, &mut stderr)
+        }
+        ParsedCommand::PrepRecipe(command) => {
+            unisphere_cli::run_prep_recipe(command, &mut stdout, &mut stderr)
+        }
         ParsedCommand::SessionStatus(command) => status::run(command, &mut stdout, &mut stderr),
         ParsedCommand::Catalog(_)
         | ParsedCommand::NativeRootList(_)

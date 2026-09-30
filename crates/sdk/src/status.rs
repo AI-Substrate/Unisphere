@@ -230,6 +230,28 @@ fn origin_label(origin: crate::prep::TurnOrigin) -> String {
 // Pure derivation
 // ---------------------------------------------------------------------------
 
+/// Whether a source path names `session`, across the dialects' layouts:
+/// `<id>.jsonl` (Claude), `<timestamp>_<id>.jsonl` (Oh My Pi, Pi, Codex
+/// rollouts) and `<id>/events.jsonl` (Copilot CLI).
+fn names_session(file: &str, session: &str) -> bool {
+    let path = Path::new(file);
+    let stem = path
+        .file_stem()
+        .and_then(|s| s.to_str())
+        .unwrap_or_default();
+    let parent = path
+        .parent()
+        .and_then(Path::file_name)
+        .and_then(|s| s.to_str())
+        .unwrap_or_default();
+    !session.is_empty()
+        && (stem == session
+            || stem
+                .strip_suffix(session)
+                .is_some_and(|prefix| prefix.ends_with(['_', '-']))
+            || parent == session)
+}
+
 fn non_negative(value: Option<i64>) -> Option<u64> {
     value.and_then(|v| u64::try_from(v).ok())
 }
@@ -700,11 +722,13 @@ impl StatusService {
                             continue;
                         };
                         let accept = |file: &str| {
-                            pattern.is_match(file)
-                                && Path::new(file).file_stem().and_then(|s| s.to_str())
-                                    == Some(target.session_id.as_str())
+                            pattern.is_match(file) && names_session(file, &target.session_id)
                         };
-                        let Ok(discovery) = binding.loader.discover(&set.root, &accept) else {
+                        let Ok(discovery) =
+                            binding
+                                .loader
+                                .discover(&set.root, &accept, &Default::default())
+                        else {
                             failed = true;
                             continue;
                         };

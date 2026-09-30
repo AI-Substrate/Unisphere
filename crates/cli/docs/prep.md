@@ -8,6 +8,10 @@ How do I turn every local agent session into research-ready tables once, then ke
 
 `unisphere prep --target DIR` folds native sessions into canonical metadata tables under `DIR`. A re-run reads only records appended since the committed cursor; an unchanged source costs one `stat` and a run where nothing changed commits nothing.
 
+Discovery is incremental too. Each committed run records every directory it listed under a root (its identity and mtime, subdirectories and accepted files); the next run re-lists only directories whose mtime or identity changed (adding, removing or renaming an entry always changes its directory's mtime) and `stat`s every known source directly. A directory modified within 2 seconds of being listed is listed again next run, so a change inside the filesystem's timestamp granularity is never missed. Each set reports `dirs_listed` and `dirs_reused`. The index is saved only by a run that commits, so a run where nothing changed re-lists the same changed directories next time.
+
+A run reads, folds and commits in waves: sources are taken in order while their expected new input (the appended tail of a resumable source, otherwise its whole size; zero when unchanged) fits `--max-run-bytes` (default 268435456; a larger single source is a wave of its own). Each wave that changed anything is one durable commit (`commits` in the report; `run` counts commits), so the rows held in memory are bounded by the wave, and a failure after a commit keeps every earlier wave. Peak memory is the committed state (`state.json`, parsed) held in full plus one wave in flight; lower `--max-run-bytes` or `--threads` to lower it, at the cost of more commits.
+
 Roots are explicit and reported:
 
 - Every harness's adapter-catalogue default root, labelled `default`, unless `--no-default-roots`. `--harness H` (repeatable) restricts the run to those harnesses.
@@ -15,7 +19,23 @@ Roots are explicit and reported:
 - Every source is keyed `<harness>/<label>/<path relative to the root>` in every table.
 - A root whose harness has no prep binding in this build is reported `unsupported` with its sources counted, never silently dropped.
 
-Limits: `--max-record-bytes` (default 3145728), `--max-batch-bytes` (default 16777216, at least the record limit), `--threads` (default 8). `--modified-since RFC3339` reports older sources `skipped`: not read, committed rows and state kept.
+Limits: `--max-batch-bytes` (default 16777216), `--max-record-bytes` (default: the batch limit, never above it; a larger record makes its source `unreadable` with a retry hint), `--threads` (default 8), `--max-run-bytes` (default 268435456; see above). Snapshot sources (whole documents, journals and databases) are bounded by `--max-snapshot-bytes` (default 67108864) and `--max-snapshot-records` (default 100000); a snapshot exceeding either bound is not folded and its source keeps its previous committed rows. `--modified-since RFC3339` reports older sources `skipped`: not read, committed rows and state kept.
+
+## Harness coverage in this build
+
+The prep harness key is the adapter-catalogue descriptor id. Every catalogued session descriptor has a prep binding; `unisphere adapters list --json` reports `cli_persisted_resume: true` for exactly those. `git-ai` has no session root and no fold: an explicit `--root git-ai=DIR` is reported `unsupported` with its sources counted.
+
+- Append-only JSONL, folded incrementally from the committed offset: `claude-code` (main sessions and `subagents/` sidechains), `oh-my-pi`, `pi`, `codex`, `copilot-cli` (`*/events.jsonl`) and `cursor-transcript`. A rewrite before the committed offset (Oh My Pi rewrites a session's title line in place) replaces the source with a new generation. Oh My Pi subagent transcripts (`<project>/<parent session>/<agent>.jsonl`) are sources of their own whose calls are sidechain calls.
+- Snapshots, re-read whole when their stat changes and folded only when their revision changes (a changed revision is a new generation; an equal one is `unchanged`): `copilot-cli-snapshot` and `vscode-copilot` JSON documents, `vscode-copilot` mutation journals (replayed to the current document first), and `cursor-ide` SQLite databases (`cursorDiskKV`; `-wal`/`-shm`/`-journal` siblings count toward the database's stat).
+
+Dialect limits, all recorded as null rather than estimated:
+
+- Only Claude records a 1 h/5 m cache-write split. Copilot CLI records an aggregate: every conversation call names the documented fallback in `cache_write_basis` (main → `fallback_1h`, subagent → `fallback_5m`), taken from the first sighting of the call, and its cache-write columns stay null until a usage record is folded. Codex splits likewise when it records writes; otherwise basis is `none` with null cache-write columns.
+- VS Code Copilot records one call per request with the requested `modelId` (often `auto`), prompt and completion tokens only, no cache counters, a call `ts` only from the native `responseTimestamp` (absent from current session documents, whose request `timestamp` dates the trigger), no tool input/output/duration and no compaction or model-switch marker. A document or journal that is empty (VS Code leaves zero-byte session files), invalid, or of an unknown schema version is reported `unreadable` (exit 3), never folded as an empty session.
+- Cursor IDE facts are per database, not per composer: one `state.vscdb` is one source. IDE calls have null model, and an all-zero native `tokenCount` is not recorded.
+- Dialects without a native compaction marker (VS Code Copilot, Cursor) have null compaction counts; a fully read Claude source with no marker has zero.
+
+`prep record` addresses a snapshot row by its `native_key`: a SQLite key (`bubbleId:<composer>:<bubble>`), a JSON pointer into the document (`/requests/0/response/2`), or `<record key>#<JSON pointer>` (`document#/chatMessages/3`). Journal rows are addressed in the replayed document, so their pointers cannot be fetched from the journal file; `prep record` refuses them as invalid input.
 
 ## Table contract
 
@@ -89,15 +109,21 @@ unisphere prep --target $TARGET --root claude-code:alt=$HOME/.claude-alt/project
 unisphere prep --target $TARGET --no-default-roots --root claude-code=$HOME/archive/projects
 unisphere prep --target $TARGET --modified-since 2026-01-01T00:00:00Z --threads 4
 unisphere prep --target $TARGET --max-record-bytes 8388608 --max-batch-bytes 33554432
+unisphere prep --target $TARGET --max-snapshot-bytes 134217728 --max-snapshot-records 200000
 unisphere prep --target $TARGET --include-content
 unisphere prep compact --target $TARGET
 unisphere prep record --target $TARGET --source claude-code/default/project/session.jsonl --offset 0 --include-content
 ```
 
-Query the views with an external DuckDB:
+Query the views with an external DuckDB, or print a named research recipe (see `unisphere docs get research-recipes`):
 
 ```text
 cd $TARGET && duckdb -init views.sql -c "SELECT model, count(*) AS calls, sum(output) AS output FROM calls_v GROUP BY model ORDER BY calls DESC"
 ```
 
-**Next step:** run `unisphere prep --target DIR --human`, then open `DIR/views.sql` in DuckDB.
+```sh
+unisphere prep recipes --human
+unisphere prep recipe daily --target $TARGET | duckdb
+```
+
+**Next step:** run `unisphere prep --target DIR --human`, then `unisphere prep recipe daily --target DIR | duckdb`.

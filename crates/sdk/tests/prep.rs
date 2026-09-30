@@ -15,10 +15,10 @@ use unisphere_sdk::{
     PipelineError, PipelineErrorKind, ReadCursor, ReadLimits, SnapshotLimits,
     prep::{
         NativeAddress, PREP_TABLE_SCHEMA_VERSION, PrepApi, PrepBatch, PrepBinding, PrepCommit,
-        PrepCompactReport, PrepDiscovery, PrepLoaded, PrepLoader, PrepOptions, PrepReadLimits,
-        PrepRecordRequest, PrepReplaceReason, PrepReport, PrepRequest, PrepRows, PrepSkipCounts,
-        PrepSourceKind, PrepSourceSet, PrepSourceStat, PrepSourceStatus, PrepState, PrepStore,
-        Preparer, fold_source,
+        PrepCompactReport, PrepDirIndex, PrepDiscovery, PrepLoaded, PrepLoader, PrepOptions,
+        PrepReadLimits, PrepRecordRequest, PrepReplaceReason, PrepReport, PrepRequest, PrepRows,
+        PrepSkipCounts, PrepSourceKind, PrepSourceSet, PrepSourceStat, PrepSourceStatus, PrepState,
+        PrepStore, Preparer, fold_source,
     },
 };
 use unisphere_testkit::prep::{MemoryLoader, MemoryPrepStore, RecordingFold};
@@ -52,6 +52,7 @@ fn request(roots: Vec<PrepSourceSet>) -> PrepRequest {
         options: PrepOptions::default(),
         limits: limits(),
         threads: 4,
+        max_run_bytes: u64::MAX,
         modified_since_ns: None,
     }
 }
@@ -546,8 +547,9 @@ impl PrepLoader for Routed {
         &self,
         root: &Path,
         accept: &dyn Fn(&str) -> bool,
+        previous: &PrepDirIndex,
     ) -> Result<PrepDiscovery, PipelineError> {
-        self.route(root)?.discover(root, accept)
+        self.route(root)?.discover(root, accept, previous)
     }
     fn stat(&self, root: &Path, path: &Path) -> Result<PrepSourceStat, PipelineError> {
         self.route(root)?.stat(root, path)
@@ -816,4 +818,142 @@ fn fold_source_without_a_store_matches_run_prep() {
     assert_eq!(fold.anchor, committed.anchor);
     assert_eq!(fold.pending_tail_bytes, 2);
     assert_eq!(rows, rig.store.canonical());
+}
+
+/// A store that fails its `n`th commit (1-based) and delegates otherwise.
+struct FailNth {
+    store: Arc<MemoryPrepStore>,
+    n: u64,
+    seen: AtomicU64,
+}
+
+impl PrepStore for FailNth {
+    fn state(&self) -> Result<Option<PrepState>, PipelineError> {
+        self.store.state()
+    }
+    fn load(&self) -> Result<PrepLoaded, PipelineError> {
+        self.store.load()
+    }
+    fn commit(&self, rows: &PrepRows, state: &PrepState) -> Result<PrepCommit, PipelineError> {
+        if self.seen.fetch_add(1, Ordering::SeqCst) + 1 == self.n {
+            return Err(PipelineError::new(PipelineErrorKind::Write, None));
+        }
+        self.store.commit(rows, state)
+    }
+    fn compact(&self) -> Result<PrepCompactReport, PipelineError> {
+        self.store.compact()
+    }
+}
+
+fn budgeted(max_run_bytes: u64) -> PrepRequest {
+    PrepRequest {
+        max_run_bytes,
+        ..request(vec![set("default", ROOT)])
+    }
+}
+
+#[test]
+fn commit_waves_split_new_input_by_budget_and_equal_a_single_wave() {
+    let files = ["a.jsonl", "b.jsonl", "c.jsonl"];
+    let single = Rig::new(PrepSourceKind::Append);
+    for rig_files in files {
+        single.loader.append(rig_files, b"one\ntwo\n");
+    }
+    single.prep();
+    // 8 bytes each: a budget of 10 fits one source per wave, 16 fits two.
+    for (budget, commits) in [(10, 3), (16, 2), (24, 1)] {
+        let rig = Rig::new(PrepSourceKind::Append);
+        for file in files {
+            rig.loader.append(file, b"one\ntwo\n");
+        }
+        let report = rig.preparer().prep(&budgeted(budget)).unwrap();
+        assert_eq!((report.commits, rig.store.commits()), (commits, commits));
+        assert_eq!(report.run, commits, "each wave commit is a run");
+        assert_eq!(report.rows_written.calls, 6);
+        assert_eq!(rig.store.canonical(), single.store.canonical());
+
+        // Unchanged sources expect no input, so a re-run is one empty wave.
+        let again = rig.preparer().prep(&budgeted(budget)).unwrap();
+        assert_eq!((again.commits, rig.store.commits()), (0, commits));
+
+        // Only the appended tail counts: 4 bytes per source now.
+        for file in files {
+            rig.loader.append(file, b"new\n");
+        }
+        let appended = rig.preparer().prep(&budgeted(8)).unwrap();
+        assert_eq!(appended.commits, 2, "two 4-byte tails per 8-byte wave");
+    }
+    assert!(
+        Rig::new(PrepSourceKind::Append)
+            .preparer()
+            .prep(&budgeted(0))
+            .is_err(),
+        "a zero budget is refused"
+    );
+}
+
+#[test]
+fn failure_after_a_committed_wave_keeps_that_wave() {
+    let store = Arc::new(MemoryPrepStore::new());
+    let loader = Arc::new(MemoryLoader::new(PrepSourceKind::Append, ROOT));
+    loader.append("a.jsonl", b"one\ntwo\n");
+    loader.append("b.jsonl", b"one\ntwo\n");
+    let failing = FailNth {
+        store: store.clone(),
+        n: 2,
+        seen: AtomicU64::new(0),
+    };
+    let error = Preparer::new(vec![binding("v1", loader.clone())], failing)
+        .prep(&budgeted(8))
+        .unwrap_err();
+    assert_eq!(error.kind(), PipelineErrorKind::Write);
+    let state = store.state().unwrap().expect("first wave published");
+    assert_eq!(state.runs, 1);
+    assert!(state.sources.contains_key(&key("a.jsonl")));
+    assert!(!state.sources.contains_key(&key("b.jsonl")));
+
+    let report = Preparer::new(vec![binding("v1", loader)], Shared(store.clone()))
+        .prep(&budgeted(8))
+        .unwrap();
+    assert_eq!(report.sets[0].by_status.get("unchanged"), Some(&1));
+    assert_eq!(status_of(&report, "b.jsonl"), PrepSourceStatus::New);
+    let fresh = Rig::new(PrepSourceKind::Append);
+    fresh.loader.append("a.jsonl", b"one\ntwo\n");
+    fresh.loader.append("b.jsonl", b"one\ntwo\n");
+    fresh.prep();
+    assert_eq!(store.canonical(), fresh.store.canonical());
+}
+
+#[test]
+fn committed_discovery_index_is_handed_back_for_the_same_root_only() {
+    let rig = Rig::new(PrepSourceKind::Append);
+    rig.loader.append("a.jsonl", b"one\n");
+    let first = rig.prep();
+    assert_eq!(first.sets[0].dirs_listed, 1);
+    rig.loader.append("a.jsonl", b"two\n");
+    rig.prep();
+    let received = rig.loader.indexes_received();
+    assert!(received[0].is_empty(), "first discovery walks everything");
+    assert_eq!(
+        received[1][""].files,
+        ["a.jsonl"],
+        "committed index handed back"
+    );
+
+    // Not committed (nothing changed): the next run gets the last committed one.
+    rig.prep();
+    rig.prep();
+    let received = rig.loader.indexes_received();
+    assert_eq!(received[3], received[2]);
+
+    // The same label over another root starts from an empty index.
+    let moved = Arc::new(MemoryLoader::new(PrepSourceKind::Append, "/moved"));
+    moved.append("a.jsonl", b"one\n");
+    Preparer::new(
+        vec![binding("v1", moved.clone())],
+        Shared(rig.store.clone()),
+    )
+    .prep(&request(vec![set("default", "/moved")]))
+    .unwrap();
+    assert!(moved.indexes_received()[0].is_empty());
 }

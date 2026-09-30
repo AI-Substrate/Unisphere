@@ -60,9 +60,12 @@ unisphere events show EVENT SCOPE [QUERY OPTIONS]
 
 unisphere prep --target DIR [--root HARNESS[:LABEL]=DIR]... [--harness H]...
     [--no-default-roots] [--include-content] [--max-record-bytes N]
-    [--max-batch-bytes N] [--threads N] [--modified-since RFC3339]
+    [--max-batch-bytes N] [--max-snapshot-bytes N] [--max-snapshot-records N]
+    [--threads N] [--max-run-bytes N] [--modified-since RFC3339]
 unisphere prep compact --target DIR
 unisphere prep record --target DIR --source KEY (--offset N | --key K) --include-content
+unisphere prep recipes
+unisphere prep recipe NAME --target DIR
 ```
 
 A query scope is exactly one of:
@@ -217,7 +220,8 @@ data into success.
 ```text
 ParsedCommand::Config | Catalog | Docs | Schema | Query(QueryCommand)
   | NativeRootList | NativeGitNotesList | NativeExport
-  | Prep(PrepCommand) | PrepCompact | PrepRecord | Help | Version
+  | Prep(PrepCommand) | PrepCompact | PrepRecord | PrepRecipes | PrepRecipe
+  | Help | Version
 ```
 
 `QueryCommand` owns a validated `QueryRequest`, output format/CSV policy,
@@ -230,7 +234,8 @@ remain in `QueryApi`; CLI serialization remains in `QueryWriter`.
 Typed execution entrypoints are `run_config`, `run_catalog`, `run_help`,
 `run_version`, `run_native_list`, `run_native_export`,
 `run_native_snapshot_export`, `run_query`, `emit_query_failure`, `run_docs`,
-`run_schema`, `run_prep`, `run_prep_compact`, and `run_prep_record`.
+`run_schema`, `run_prep`, `run_prep_compact`, `run_prep_record`,
+`run_prep_recipes`, and `run_prep_recipe`.
 `emit_query_failure` keeps initialization failures on the same safe
 diagnostic channel without constructing a fake query response. Call
 `diagnostic_mode(&args, stdout_is_terminal)` before moving argv into `parse` when
@@ -256,6 +261,8 @@ unisphere prep --target /absolute/prep --root claude-code:alt=/home/me/.claude-a
 unisphere prep --target /absolute/prep --no-default-roots --root claude-code=/absolute/archive --modified-since 2026-01-01T00:00:00Z
 unisphere prep compact --target /absolute/prep
 unisphere prep record --target /absolute/prep --source claude-code/default/project/session.jsonl --offset 0 --include-content
+unisphere prep recipes --human
+unisphere prep recipe daily --target /absolute/prep | duckdb
 ```
 
 Re-runs read only records after each source's committed cursor, stop at the last
@@ -279,6 +286,13 @@ metadata-only unless `--include-content` adds `triggers.content_head`.
 and request; `run_prep` takes the merged `Vec<PrepSourceSet>` and an injected
 `&dyn PrepApi` and holds no prep semantics. `unisphere docs get prep` is the
 offline guide.
+
+`prep recipes` lists the bundled DuckDB research recipes (envelope command
+`prep.recipes`); `prep recipe NAME --target DIR` prints `SET file_search_path`,
+`.read 'TARGET/views.sql'` and the named query to stdout in every output mode,
+for `| duckdb`. Unisphere links and runs no engine. An unknown name exits 2
+listing the valid names. `unisphere docs get research-recipes` maps each recipe
+to its question.
 
 ## Session status
 

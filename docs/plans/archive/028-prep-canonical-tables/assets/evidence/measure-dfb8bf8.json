@@ -1,0 +1,282 @@
+{
+ "subject_sha": "dfb8bf80845c143b6077dd1e24af58634f1b1174",
+ "poc_baseline": {
+  "claude_cold_s": 3.46,
+  "claude_unchanged_s": [
+   0.05,
+   0.62
+  ],
+  "claude_peak_rss_mb": 507
+ },
+ "extra_args": [],
+ "load_average_before": [
+  73.4,
+  92.4,
+  109.7
+ ],
+ "cold": {
+  "exit": 3,
+  "wall_s": 30.617,
+  "peak_rss_mb": 1759.1,
+  "peak_footprint_mb": 1407.8,
+  "user_s": 33.0,
+  "sys_s": 5.23,
+  "commits": 57,
+  "dirs_listed": 14707,
+  "dirs_reused": 0,
+  "bytes_read": 13988474923,
+  "rows_written": {
+   "calls": 560573,
+   "events": 70645,
+   "tool_uses": 1535150,
+   "triggers": 77401,
+   "turns": 70664
+  },
+  "sources_by_status": {
+   "new": 5421,
+   "unreadable": 2
+  },
+  "discovery_skipped": {
+   "symlinks": 10,
+   "hidden": 239,
+   "unreadable_entries": 0
+  },
+  "pending_tail_bytes": 0,
+  "sets": [
+   [
+    "claude-code",
+    "default",
+    true,
+    478
+   ],
+   [
+    "codex",
+    "default",
+    true,
+    177
+   ],
+   [
+    "oh-my-pi",
+    "default",
+    true,
+    1376
+   ],
+   [
+    "pi",
+    "default",
+    true,
+    1305
+   ],
+   [
+    "copilot-cli",
+    "default",
+    true,
+    1774
+   ],
+   [
+    "cursor-transcript",
+    "default",
+    true,
+    15
+   ],
+   [
+    "vscode-copilot",
+    "default",
+    true,
+    293
+   ],
+   [
+    "cursor-ide",
+    "default",
+    true,
+    1
+   ],
+   [
+    "copilot-cli-snapshot",
+    "default",
+    true,
+    4
+   ]
+  ],
+  "state_json_bytes": 58605501
+ },
+ "unchanged": {
+  "exit": 3,
+  "wall_s": 1.421,
+  "peak_rss_mb": 600.4,
+  "peak_footprint_mb": 569.7,
+  "user_s": 0.42,
+  "sys_s": 0.15,
+  "commits": 1,
+  "dirs_listed": 0,
+  "dirs_reused": 14707,
+  "bytes_read": 13843289,
+  "rows_written": {
+   "calls": 5,
+   "events": 0,
+   "tool_uses": 9,
+   "triggers": 0,
+   "turns": 0
+  },
+  "sources_by_status": {
+   "appended": 1,
+   "unchanged": 5420,
+   "unreadable": 2
+  },
+  "discovery_skipped": {
+   "symlinks": 10,
+   "hidden": 239,
+   "unreadable_entries": 0
+  },
+  "pending_tail_bytes": 0,
+  "sets": [
+   [
+    "claude-code",
+    "default",
+    true,
+    478
+   ],
+   [
+    "codex",
+    "default",
+    true,
+    177
+   ],
+   [
+    "oh-my-pi",
+    "default",
+    true,
+    1376
+   ],
+   [
+    "pi",
+    "default",
+    true,
+    1305
+   ],
+   [
+    "copilot-cli",
+    "default",
+    true,
+    1774
+   ],
+   [
+    "cursor-transcript",
+    "default",
+    true,
+    15
+   ],
+   [
+    "vscode-copilot",
+    "default",
+    true,
+    293
+   ],
+   [
+    "cursor-ide",
+    "default",
+    true,
+    1
+   ],
+   [
+    "copilot-cli-snapshot",
+    "default",
+    true,
+    4
+   ]
+  ],
+  "state_json_bytes": 58605852
+ },
+ "append": {
+  "exit": 3,
+  "wall_s": 0.66,
+  "peak_rss_mb": 596.0,
+  "peak_footprint_mb": 568.1,
+  "user_s": 0.4,
+  "sys_s": 0.25,
+  "commits": 1,
+  "dirs_listed": 1,
+  "dirs_reused": 14706,
+  "bytes_read": 13895665,
+  "rows_written": {
+   "calls": 8,
+   "events": 0,
+   "tool_uses": 17,
+   "triggers": 0,
+   "turns": 0
+  },
+  "sources_by_status": {
+   "appended": 2,
+   "unchanged": 5419,
+   "unreadable": 2
+  },
+  "discovery_skipped": {
+   "symlinks": 10,
+   "hidden": 239,
+   "unreadable_entries": 0
+  },
+  "pending_tail_bytes": 0,
+  "sets": [
+   [
+    "claude-code",
+    "default",
+    true,
+    478
+   ],
+   [
+    "codex",
+    "default",
+    true,
+    177
+   ],
+   [
+    "oh-my-pi",
+    "default",
+    true,
+    1376
+   ],
+   [
+    "pi",
+    "default",
+    true,
+    1305
+   ],
+   [
+    "copilot-cli",
+    "default",
+    true,
+    1774
+   ],
+   [
+    "cursor-transcript",
+    "default",
+    true,
+    15
+   ],
+   [
+    "vscode-copilot",
+    "default",
+    true,
+    293
+   ],
+   [
+    "cursor-ide",
+    "default",
+    true,
+    1
+   ],
+   [
+    "copilot-cli-snapshot",
+    "default",
+    true,
+    4
+   ]
+  ],
+  "state_json_bytes": 58606144
+ },
+ "load_average_after": [
+  86.8,
+  91.0,
+  107.2
+ ]
+}

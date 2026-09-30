@@ -9,20 +9,59 @@ use std::{
 };
 
 use unisphere_cli::{PrepCommand, PrepCompactCommand, PrepRecordCommand};
+use unisphere_loader_jsonl::FileSessionLoader;
+use unisphere_loader_snapshot::SnapshotPrepLoader;
 use unisphere_output_prep::ParquetPrepStore;
 use unisphere_sdk::{
-    PipelineError, PipelineErrorKind,
-    prep::{PrepBinding, PrepSourceSet, Preparer, default_set},
+    PipelineError, PipelineErrorKind, SnapshotFormat,
+    prep::{PrepBinding, PrepFold, PrepLoader, PrepSourceSet, Preparer, default_set},
 };
 
-/// Every harness representation prep interprets. The fold's harness id is the
-/// adapter catalogue descriptor id; catalogued harnesses without a binding are
-/// reported as unsupported sets.
+fn bind(fold: impl PrepFold + 'static, loader: impl PrepLoader + 'static) -> PrepBinding {
+    PrepBinding {
+        fold: Arc::new(fold),
+        loader: Arc::new(loader),
+    }
+}
+
+/// Every harness representation prep interprets: one fold per native
+/// representation with the loader for its storage. The fold's harness id is the
+/// adapter catalogue descriptor id; a descriptor with two representations
+/// (VS Code documents and journals) has two bindings under one id.
 pub(crate) fn bindings() -> Vec<PrepBinding> {
-    vec![PrepBinding {
-        fold: Arc::new(unisphere_adapter_claude::ClaudePrepFold),
-        loader: Arc::new(unisphere_loader_jsonl::FileSessionLoader),
-    }]
+    let snapshot = SnapshotPrepLoader::new;
+    vec![
+        bind(unisphere_adapter_claude::ClaudePrepFold, FileSessionLoader),
+        bind(unisphere_adapter_omp::OmpPrepFold, FileSessionLoader),
+        bind(unisphere_adapter_pi::PiPrepFold, FileSessionLoader),
+        bind(unisphere_adapter_codex::CodexPrepFold, FileSessionLoader),
+        bind(
+            unisphere_adapter_copilot_cli::CopilotCliPrepFold,
+            FileSessionLoader,
+        ),
+        bind(
+            unisphere_adapter_copilot_cli::CopilotCliLegacyPrepFold,
+            snapshot(SnapshotFormat::JsonDocument),
+        ),
+        bind(
+            unisphere_adapter_vscode_copilot::VsCodeCopilotPrepFold::Document,
+            snapshot(SnapshotFormat::JsonDocument),
+        ),
+        bind(
+            unisphere_adapter_vscode_copilot::VsCodeCopilotPrepFold::Journal,
+            snapshot(SnapshotFormat::JsonJournal),
+        ),
+        bind(
+            unisphere_adapter_cursor::CursorTranscriptPrepFold,
+            FileSessionLoader,
+        ),
+        bind(
+            unisphere_adapter_cursor::CursorIdePrepFold,
+            snapshot(SnapshotFormat::SqliteKeyValue {
+                table: "cursorDiskKV".into(),
+            }),
+        ),
+    ]
 }
 
 /// Catalogue default roots on this platform: one set per selected descriptor
@@ -37,7 +76,14 @@ fn default_roots(command: &PrepCommand, home: Option<&Path>) -> Vec<PrepSourceSe
         .filter_map(|(id, locations)| {
             locations
                 .iter()
-                .find(|hint| hint.base == "home" && hint.platforms.contains(&env::consts::OS))
+                .find(|hint| {
+                    // Hints name an OS ("macos") or a family ("unix").
+                    hint.base == "home"
+                        && hint
+                            .platforms
+                            .iter()
+                            .any(|p| *p == env::consts::OS || *p == env::consts::FAMILY)
+                })
                 .map(|hint| home.join(hint.path))
                 .filter(|root| root.is_dir())
                 .map(|root| default_set(id, root))

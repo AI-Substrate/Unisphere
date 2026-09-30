@@ -42,7 +42,7 @@ pub const IDE_DESCRIPTOR: AdapterDescriptor = AdapterDescriptor {
         output_formats: &["otlp-jsonl"],
         sdk_caller_owned_cursor: false,
         cursor_source_assumption: "whole_source_revision",
-        cli_persisted_resume: false,
+        cli_persisted_resume: true,
         delayed_revision_reconciliation: false,
         lossless_archive: false,
     },

@@ -1,0 +1,121 @@
+{
+  "dd": {
+    "schema": "builder/work-packet"
+  },
+  "sections": [
+    {
+      "name": "packet",
+      "value": {
+        "record_type": "packet",
+        "id": "packet-tk-000d-cfd716b8dda71884f0b2838953f324f988cd0eff",
+        "recorded_at": "2026-09-29T07:23:27.683Z",
+        "nonce": "965b6225-da72-49a7-a0dc-aa369fa17dc7",
+        "unit": {
+          "id": "tk-000d",
+          "name": "Research recipes",
+          "role": "coder",
+          "responsibility": "CLI lane for phase 2. (1) Named DuckDB recipes over the published views answering the consumer brief's 14 questions and the fleet questions (idle tax, compaction cadence, peer amplification, subagent fan-out, tool loops, fleet idle-longest, most expensive turns, daily token cost by repo/model/harness — token classes, no authoritative pricing); `unisphere prep recipes` and `unisphere prep recipe NAME --target DIR` printing a self-contained script that reads TARGET/views.sql; bundled research-recipes docs topic with the one-line command and the actionable no-duckdb message. The printed script is `SET file_search_path = '<abs TARGET>';` then `.read '<abs TARGET>/views.sql'` then the query, so the documented use is `unisphere prep recipe NAME --target DIR | duckdb`. (2) `--max-snapshot-bytes N` and `--max-snapshot-records N` on `unisphere prep` feeding PrepReadLimits.snapshot (AC-000c adjustable bounds). (3) The prep docs topic states current harness coverage; this closes the phase-1 composition review's low finding.",
+          "paths": [
+            "crates/cli/recipes",
+            "crates/cli/src/recipes.rs",
+            "crates/cli/src/args.rs",
+            "crates/cli/src/lib.rs",
+            "crates/cli/src/docs.rs",
+            "crates/cli/src/prep.rs",
+            "crates/cli/docs/research-recipes.md",
+            "crates/cli/docs/prep.md",
+            "crates/cli/tests/recipes.rs",
+            "crates/cli/tests/prep.rs",
+            "crates/cli/tests/query_frontend.rs"
+          ],
+          "reads": [
+            {
+              "owner": "tk-0001",
+              "paths": [
+                "crates/core/src/prep.rs",
+                "crates/core/src/lib.rs"
+              ]
+            },
+            {
+              "owner": "tk-0004",
+              "paths": [
+                "crates/output-prep/src"
+              ]
+            },
+            {
+              "owner": "tk-0005",
+              "paths": [
+                "crates/cli/src/prep.rs",
+                "crates/cli/src/args.rs"
+              ]
+            }
+          ],
+          "interface": "run_prep_recipes(&PrepRecipesCommand, stdout, stderr) -> u8; run_prep_recipe(&PrepRecipeCommand, stdout, stderr) -> u8; ParsedCommand::{PrepRecipes, PrepRecipe}.",
+          "depends_on": [
+            "tk-0001"
+          ],
+          "wave": 3,
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0009",
+            "../plan.dd.json#acceptance_criteria/ac-000d"
+          ],
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0014"
+          ],
+          "notes": "No engine is linked and the CLI never shells out. Port the POC recipe set (/Users/jordanknight/substrate/unisphere/unishpere-main/scratch/poc-prep-duckdb/prep_sql.py, 30 DuckDB recipes over the v1 schema) to the v2 views; the consumer's questions are in ~/games/unasphere/scratch/unisphere-feedback/usecase-brief.md. DuckDB CLI is installed (/opt/homebrew/bin/duckdb) for local validation; tests must not require it; the PM's vd-000c is the external-engine proof."
+        },
+        "plan": {
+          "path": "docs/plans/028-prep-canonical-tables/plan.dd.json",
+          "sha256": "7da3d4a4d05949ddba02368c80dbe145189a63214c43bd0335c381e36ce64e46"
+        },
+        "guide": {
+          "path": "docs/plans/028-prep-canonical-tables/assets/impl-guide.dd.json",
+          "sha256": "c6b8c852ae59839b1f383d0387625c32ab1be79fe0b2bc5b6dd31a373ef27a3a"
+        },
+        "baseline": {
+          "path": "docs/plans/028-prep-canonical-tables/assets/team/baseline-p2r2.dd.json",
+          "sha256": "4887eddbdb33888456870dc7a2bcaf2453fa08a241aa73c2b366765bcbc64147"
+        },
+        "source_sha": "cfd716b8dda71884f0b2838953f324f988cd0eff",
+        "allocation": {
+          "path": "/Users/jordanknight/substrate/unisphere/unishpere-main/.git/builder/allocations/allocation-al-042-60fa2855-f9f6-410f-9328-712971c2b8ce.dd.json",
+          "sha256": "e7a56d32d3a324f9f1c195fb5486a90c582e121db027a6a51390cbe40ad77570"
+        },
+        "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-028-p2-tk000d",
+        "parent": "pij-native-tick",
+        "requested": {
+          "role": "coder",
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5.5",
+          "source": {
+            "harness": "guide",
+            "model": "guide"
+          }
+        },
+        "forbidden": [
+          ".the-flow-state.json",
+          "the-flow.json",
+          "the-flow.md",
+          "docs/plans/028-prep-canonical-tables/plan.dd.json",
+          "docs/plans/028-prep-canonical-tables/assets/impl-guide.dd.json",
+          "docs/plans/028-prep-canonical-tables/assets/team",
+          ".harness/government/",
+          "Global settings, deployed skills, unrelated workspaces and changes on main without user authorization.",
+          "Pushes, PRs, merges and destructive operations without user authorization; canonical lifecycle mutations and nested peers without PM approval."
+        ],
+        "instructions": [
+          "You own crates/cli/recipes, crates/cli/src/recipes.rs, crates/cli/src/args.rs, crates/cli/src/lib.rs, crates/cli/src/docs.rs, crates/cli/src/prep.rs, crates/cli/docs/research-recipes.md, crates/cli/docs/prep.md, crates/cli/tests/recipes.rs, crates/cli/tests/prep.rs, crates/cli/tests/query_frontend.rs.",
+          "You may read crates/core/src/prep.rs, crates/core/src/lib.rs (owner tk-0001); crates/output-prep/src (owner tk-0004); crates/cli/src/prep.rs, crates/cli/src/args.rs (owner tk-0005); immutable plan docs/plans/028-prep-canonical-tables/plan.dd.json and guide docs/plans/028-prep-canonical-tables/assets/impl-guide.dd.json.",
+          "Your job: CLI lane for phase 2. (1) Named DuckDB recipes over the published views answering the consumer brief's 14 questions and the fleet questions (idle tax, compaction cadence, peer amplification, subagent fan-out, tool loops, fleet idle-longest, most expensive turns, daily token cost by repo/model/harness — token classes, no authoritative pricing); `unisphere prep recipes` and `unisphere prep recipe NAME --target DIR` printing a self-contained script that reads TARGET/views.sql; bundled research-recipes docs topic with the one-line command and the actionable no-duckdb message. The printed script is `SET file_search_path = '<abs TARGET>';` then `.read '<abs TARGET>/views.sql'` then the query, so the documented use is `unisphere prep recipe NAME --target DIR | duckdb`. (2) `--max-snapshot-bytes N` and `--max-snapshot-records N` on `unisphere prep` feeding PrepReadLimits.snapshot (AC-000c adjustable bounds). (3) The prep docs topic states current harness coverage; this closes the phase-1 composition review's low finding.",
+          "Done means Research recipes ship: named recipes answer the consumer brief's questions and the prime's fleet questions (idle tax, compaction cadence, peer amplification, subagent fan-out, tool loops, fleet idle-longest, most expensive turns, daily cost by repo/model/harness) through one documented command against external DuckDB. If an optional `unisphere sql` wrapper exists it shells out to an installed engine and fails with a clear, actionable error when none is present; no engine is linked into the build. (../plan.dd.json#acceptance_criteria/ac-0009); Offline documentation: the bundled docs gain a prep topic and a research-recipes topic with tested one-line examples, the table contract, the incremental and generation semantics, and the privacy defaults. (../plan.dd.json#acceptance_criteria/ac-000d). Interface: run_prep_recipes(&PrepRecipesCommand, stdout, stderr) -> u8; run_prep_recipe(&PrepRecipeCommand, stdout, stderr) -> u8; ParsedCommand::{PrepRecipes, PrepRecipe}.. Proof: impl-guide.dd.json#checks/vd-0014.",
+          "Work packet: docs/plans/028-prep-canonical-tables/assets/team/packet-tk-000d-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.json. Use the measured SHA-256 in the dispatch message for the optional advisory builder self-check.",
+          "Expected checkout /Users/jordanknight/substrate/unisphere/unisphere-028-p2-tk000d; source commit cfd716b8dda71884f0b2838953f324f988cd0eff. A self-check warning names a mismatch to inspect; it is not permission or a second work grant.",
+          "Receiving this packet means do the unit. Its write/read maps guide you, not fence source access; out-of-map edits need no approval or justification. Prefer frozen interfaces for independent work. Return committed changes, proof and visible file/owning_unit warnings to pij-native-tick.",
+          "Optional read-only comparison: harness builder on-track docs/plans/028-prep-canonical-tables/plan.dd.json --unit tk-000d [--from <ref>] [--to <ref>] [--untracked]. No readiness, seal, review or receipt prerequisite; no writes; exit 0. Show compared, basis, measured from/to SHAs, includes_worktree/includes_untracked, warnings and issues. Unavailable comparison returns compared:false plus actionable issues.",
+          "On-track defaults to the sealed source, otherwise HEAD; malformed basis is an issue, not fallback. It includes committed touched paths (even reverted writes) plus tracked staged/unstaged work; --untracked explicitly adds new paths. Explicit --to is committed-only. Omitting --unit compares PM maps using imported integration_sha, otherwise the sealed source or HEAD."
+        ]
+      }
+    }
+  ],
+  "references": []
+}

@@ -1,0 +1,7 @@
+{
+  "sessionId": "sess-prep-legacy",
+  "creationDate": 1700000200000,
+  "requests": [
+    {"requestId": "req-legacy", "message": "PRIVATE-MARKER-LEGACY", "timestamp": 1700000201000, "responseId": "resp-legacy", "response": [{"value": "PRIVATE-MARKER-LEGACY-ANSWER"}]}
+  ]
+}

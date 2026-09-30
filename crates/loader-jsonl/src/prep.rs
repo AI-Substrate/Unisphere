@@ -12,11 +12,12 @@ use std::{
 use sha2::{Digest as _, Sha256};
 use unisphere_core::{
     PipelineError, PipelineErrorKind, SourceIdentity,
-    prep::{NativeAddress, PrepDiscovery, PrepSourceKind, PrepSourceStat},
+    prep::{
+        NativeAddress, PrepDirEntry, PrepDirIndex, PrepDiscovery, PrepSourceKind, PrepSourceStat,
+        PrepWalkFs, walk_prep_root,
+    },
 };
 
-/// Upper bound on discovered candidates; exceeding it fails instead of truncating.
-pub const MAX_PREP_SOURCES: usize = 100_000;
 const ANCHOR_BYTES: u64 = 4096;
 
 /// Read-only, never following a final symlink, never blocking on a special
@@ -44,81 +45,75 @@ fn stat_of(path: &Path, file: String, metadata: &fs::Metadata) -> PrepSourceStat
             inode: metadata.ino(),
         },
         size: metadata.len(),
-        mtime_ns: i128::from(metadata.mtime()) * 1_000_000_000 + i128::from(metadata.mtime_nsec()),
+        mtime_ns: mtime_ns(metadata),
     }
+}
+
+/// The real filesystem for [`walk_prep_root`]: append sources are regular files.
+struct Filesystem;
+
+impl PrepWalkFs for Filesystem {
+    fn dir(&self, path: &Path) -> std::io::Result<Option<(SourceIdentity, i128)>> {
+        let metadata = fs::symlink_metadata(path)?;
+        Ok(metadata.is_dir().then(|| {
+            let identity = SourceIdentity::Unix {
+                device: metadata.dev(),
+                inode: metadata.ino(),
+            };
+            (identity, mtime_ns(&metadata))
+        }))
+    }
+
+    fn list(&self, path: &Path) -> Option<Vec<PrepDirEntry>> {
+        let entries = fs::read_dir(path).ok()?;
+        Some(entries.filter_map(|entry| list_entry(entry.ok())).collect())
+    }
+
+    fn source(&self, path: &Path, file: String) -> Option<PrepSourceStat> {
+        let metadata = fs::symlink_metadata(path).ok()?;
+        metadata.is_file().then(|| stat_of(path, file, &metadata))
+    }
+
+    fn now_ns(&self) -> i128 {
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map_or(0, |elapsed| elapsed.as_nanos() as i128)
+    }
+}
+
+/// Directories, regular files and symlinks by name; other kinds (sockets,
+/// FIFOs, devices) are never sources and are left out.
+fn list_entry(entry: Option<fs::DirEntry>) -> Option<PrepDirEntry> {
+    let Some(entry) = entry else {
+        return Some(PrepDirEntry::Unreadable);
+    };
+    let Ok(name) = entry.file_name().into_string() else {
+        return Some(PrepDirEntry::Unreadable);
+    };
+    let Ok(kind) = entry.file_type() else {
+        return Some(PrepDirEntry::Untyped(name));
+    };
+    if kind.is_symlink() {
+        Some(PrepDirEntry::Symlink(name))
+    } else if kind.is_dir() {
+        Some(PrepDirEntry::Dir(name))
+    } else if kind.is_file() {
+        Some(PrepDirEntry::File(name))
+    } else {
+        None
+    }
+}
+
+fn mtime_ns(metadata: &fs::Metadata) -> i128 {
+    i128::from(metadata.mtime()) * 1_000_000_000 + i128::from(metadata.mtime_nsec())
 }
 
 pub(crate) fn discover(
     root: &Path,
     accept: &dyn Fn(&str) -> bool,
+    previous: &PrepDirIndex,
 ) -> Result<PrepDiscovery, PipelineError> {
-    let read = |_| PipelineError::new(PipelineErrorKind::Read, None);
-    if !root.is_absolute() || !fs::symlink_metadata(root).map_err(read)?.is_dir() {
-        return Err(PipelineError::new(PipelineErrorKind::InvalidInput, None));
-    }
-    let mut found = PrepDiscovery::default();
-    let mut stack = vec![root.to_path_buf()];
-    while let Some(dir) = stack.pop() {
-        // The root must be readable; a subdirectory vanishing mid-walk is counted.
-        let entries = match fs::read_dir(&dir) {
-            Ok(entries) => entries,
-            Err(failure) if dir == root => return Err(read(failure)),
-            Err(_) => {
-                found.skipped.unreadable_entries += 1;
-                continue;
-            }
-        };
-        for entry in entries {
-            let Ok(entry) = entry else {
-                found.skipped.unreadable_entries += 1;
-                continue;
-            };
-            let name = entry.file_name();
-            let Some(name) = name.to_str() else {
-                // Not keyable as a `/`-separated UTF-8 relative path.
-                found.skipped.unreadable_entries += 1;
-                continue;
-            };
-            if name.starts_with('.') {
-                found.skipped.hidden += 1;
-                continue;
-            }
-            let Ok(kind) = entry.file_type() else {
-                found.skipped.unreadable_entries += 1;
-                continue;
-            };
-            let path = entry.path();
-            if kind.is_symlink() {
-                found.skipped.symlinks += 1;
-            } else if kind.is_dir() {
-                stack.push(path);
-            } else if kind.is_file() {
-                let Some(file) = path
-                    .strip_prefix(root)
-                    .ok()
-                    .and_then(Path::to_str)
-                    .map(str::to_owned)
-                else {
-                    found.skipped.unreadable_entries += 1;
-                    continue;
-                };
-                if !accept(&file) {
-                    continue;
-                }
-                let Ok(metadata) = fs::symlink_metadata(&path) else {
-                    found.skipped.unreadable_entries += 1;
-                    continue;
-                };
-                if found.sources.len() == MAX_PREP_SOURCES {
-                    return Err(PipelineError::new(PipelineErrorKind::ListingLimit, None));
-                }
-                found.sources.push(stat_of(&path, file, &metadata));
-            }
-        }
-    }
-    // Byte order of the relative path, like a sorted glob; also the table order.
-    found.sources.sort_unstable_by(|a, b| a.file.cmp(&b.file));
-    Ok(found)
+    walk_prep_root(&Filesystem, root, accept, previous)
 }
 
 pub(crate) fn stat(root: &Path, path: &Path) -> Result<PrepSourceStat, PipelineError> {

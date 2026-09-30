@@ -101,6 +101,7 @@ fn next_state(store: &impl PrepStore, runs: u64, sources: &[(&str, u32)]) -> Pre
                 label: "default".into(),
                 root: PathBuf::from("/native"),
                 policy: "test-fold/1".into(),
+                discovery: BTreeMap::new(),
             },
         )]),
         sources: sources
@@ -614,6 +615,7 @@ fn views(target: &Path) -> BTreeMap<&'static str, Vec<String>> {
                 });
             let context = after.and_then(|c| {
                 let cache_write = match (c.cw_1h, c.cw_5m) {
+                    (None, None) if c.cache_write_basis == CacheWriteBasis::None => Some(0),
                     (None, None) => None,
                     (a, b) => Some(a.unwrap_or(0) + b.unwrap_or(0)),
                 };
@@ -1095,4 +1097,78 @@ fn a_part_name_already_committed_is_refused() {
         .unwrap_err();
     assert_eq!(error.kind(), PipelineErrorKind::InvalidInput);
     assert_eq!(published_state(dir.path()), state);
+}
+
+#[cfg(unix)]
+#[test]
+fn only_the_stores_own_files_are_written_or_removed_and_writes_never_follow_links() {
+    use std::os::unix::fs::{PermissionsExt, symlink};
+    let dir = tempfile::tempdir().unwrap();
+    let outside = tempfile::tempdir().unwrap();
+    let target = dir.path();
+    let store = ParquetPrepStore::open(target.to_path_buf()).unwrap();
+    let (run1, sources) = &runs()[0];
+    commit_run(&store, 1, run1, sources);
+
+    // Files a user keeps in the target, plus a crashed run's own leftovers.
+    let foreign = [
+        target.join("notes.txt"),
+        target.join("tables/readme.md"),
+        target.join("tables/calls/keep-me.parquet"),
+        target.join("tables/calls/run-1.parquet"),
+    ];
+    for path in &foreign {
+        fs::write(path, b"user data").unwrap();
+    }
+    let orphans = [
+        target.join("tables/calls/run-999999.parquet"),
+        target.join("tables/calls/compact-000009-0.parquet.tmp"),
+        target.join("tables/sources.parquet.tmp"),
+        target.join("state.json.tmp"),
+    ];
+    for path in &orphans {
+        fs::write(path, b"leftover").unwrap();
+    }
+    assert_eq!(store.load().unwrap().orphans_removed, orphans.len() as u64);
+    for path in &foreign {
+        assert_eq!(fs::read(path).unwrap(), b"user data", "{}", path.display());
+    }
+    for path in &orphans {
+        assert!(!path.exists(), "{}", path.display());
+    }
+
+    // Links planted at the store's temporary names are replaced, never followed.
+    let victims: Vec<PathBuf> = ["a", "b", "c"]
+        .iter()
+        .map(|name| outside.path().join(name))
+        .collect();
+    for victim in &victims {
+        fs::write(victim, b"outside").unwrap();
+    }
+    symlink(&victims[0], target.join("state.json.tmp")).unwrap();
+    symlink(&victims[1], target.join("tables/sessions.parquet.tmp")).unwrap();
+    symlink(
+        &victims[2],
+        target.join("tables/calls/run-000002.parquet.tmp"),
+    )
+    .unwrap();
+    let (run2, sources2) = &runs()[1];
+    commit_run(&store, 2, run2, sources2);
+    for victim in &victims {
+        assert_eq!(fs::read(victim).unwrap(), b"outside");
+    }
+
+    // Everything the store writes is owner-only.
+    let state = published_state(target);
+    let mut written = vec![
+        target.join("state.json"),
+        target.join("views.sql"),
+        target.join("tables/sources.parquet"),
+        target.join("tables/sessions.parquet"),
+    ];
+    written.extend(state.parts.iter().map(|part| target.join(part)));
+    for path in &written {
+        let mode = fs::metadata(path).unwrap().permissions().mode() & 0o777;
+        assert_eq!(mode, 0o600, "{}", path.display());
+    }
 }

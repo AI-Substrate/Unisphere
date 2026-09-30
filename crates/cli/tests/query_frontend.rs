@@ -908,7 +908,7 @@ fn bundled_docs_and_schema_are_real_static_routes() {
     assert!(
         envelope["data"]["topics"]
             .as_array()
-            .is_some_and(|topics| topics.len() == 14)
+            .is_some_and(|topics| topics.len() == 15)
     );
     assert!(envelope["next_action"]["argv"].is_array());
 

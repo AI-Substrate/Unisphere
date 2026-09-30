@@ -14,10 +14,10 @@ use unisphere_core::{
     SnapshotRecord, SnapshotRef, SourceIdentity,
     prep::{
         CacheWriteBasis, CallSighting, NativeAddress, PREP_CHECKPOINT_FORMAT, PrepBatch,
-        PrepCallRow, PrepCheckpoint, PrepCommit, PrepCompactReport, PrepDiscovery, PrepFold,
-        PrepFoldSession, PrepInput, PrepLoaded, PrepLoader, PrepOptions, PrepReadLimits, PrepRows,
-        PrepSkipCounts, PrepSourceKind, PrepSourceMeta, PrepSourceStat, PrepState, PrepStore,
-        SessionFacts,
+        PrepCallRow, PrepCheckpoint, PrepCommit, PrepCompactReport, PrepDirIndex, PrepDirListing,
+        PrepDiscovery, PrepFold, PrepFoldSession, PrepInput, PrepLoaded, PrepLoader, PrepOptions,
+        PrepReadLimits, PrepRows, PrepSkipCounts, PrepSourceKind, PrepSourceMeta, PrepSourceStat,
+        PrepState, PrepStore, SessionFacts,
     },
 };
 
@@ -228,6 +228,8 @@ struct LoaderInner {
     clock: i128,
     reads: u64,
     unreadable: Vec<String>,
+    /// The `previous` index each discovery received, in call order.
+    indexes_received: Vec<PrepDirIndex>,
 }
 
 /// In-memory [`PrepLoader`] over named sources below one root. Append sources
@@ -380,6 +382,13 @@ impl MemoryLoader {
         self.lock().reads
     }
 
+    /// The `previous` directory index each discovery received, in call order.
+    /// Every discovery returns one root listing naming the accepted files, so a
+    /// caller that persists indexes hands that listing back next time.
+    pub fn indexes_received(&self) -> Vec<PrepDirIndex> {
+        self.lock().indexes_received.clone()
+    }
+
     fn lock(&self) -> std::sync::MutexGuard<'_, LoaderInner> {
         self.inner
             .lock()
@@ -425,19 +434,35 @@ impl PrepLoader for MemoryLoader {
         &self,
         root: &Path,
         accept: &dyn Fn(&str) -> bool,
+        previous: &PrepDirIndex,
     ) -> Result<PrepDiscovery, PipelineError> {
         if root != self.root {
             return Err(error(PipelineErrorKind::Read));
         }
-        let inner = self.lock();
-        Ok(PrepDiscovery {
-            sources: inner
-                .sources
-                .iter()
-                .filter(|(file, _)| accept(file))
-                .map(|(file, source)| self.stat_of(file, source))
-                .collect(),
+        let mut inner = self.lock();
+        inner.indexes_received.push(previous.clone());
+        let sources: Vec<PrepSourceStat> = inner
+            .sources
+            .iter()
+            .filter(|(file, _)| accept(file))
+            .map(|(file, source)| self.stat_of(file, source))
+            .collect();
+        let listing = PrepDirListing {
+            identity: SourceIdentity::Unix {
+                device: 1,
+                inode: 0,
+            },
+            mtime_ns: inner.clock,
+            dirs: Vec::new(),
+            files: sources.iter().map(|source| source.file.clone()).collect(),
             skipped: inner.skipped,
+        };
+        Ok(PrepDiscovery {
+            sources,
+            skipped: inner.skipped,
+            index: PrepDirIndex::from([(String::new(), listing)]),
+            dirs_listed: 1,
+            dirs_reused: 0,
         })
     }
 

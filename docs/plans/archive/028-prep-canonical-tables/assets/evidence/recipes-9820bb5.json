@@ -1,0 +1,73 @@
+{
+ "subject_sha": "9820bb5a2d127164127de1f9778eff65b525a390",
+ "duckdb": "v1.5.5",
+ "recipes": 24,
+ "targets": {
+  "synthetic": {
+   "prep_exit": 0,
+   "failed": [],
+   "empty": [
+    "idle-wakes",
+    "idle-tax",
+    "tool-loops"
+   ],
+   "rows": {
+    "daily": 2,
+    "hourly": 2,
+    "call-timeline": 60,
+    "turn-cost": 44,
+    "trigger-kinds": 10,
+    "sender-attribution": 4,
+    "compactions": 9,
+    "context-bands": 1,
+    "idle-wakes": 0,
+    "limit-events": 5,
+    "meter-replay": 3,
+    "fan-outs": 6,
+    "message-graph": 9,
+    "hidden-requests": 10,
+    "structure": 1,
+    "trigger-records": 11,
+    "idle-tax": 0,
+    "compaction-cadence": 5,
+    "peer-amplification": 8,
+    "subagent-fanout": 1,
+    "tool-loops": 0,
+    "fleet-idle": 11,
+    "expensive-turns": 44,
+    "daily-tokens": 13
+   }
+  },
+  "real": {
+   "prep_exit": 3,
+   "failed": [],
+   "empty": [],
+   "rows": {
+    "daily": 247,
+    "hourly": 2680,
+    "call-timeline": 558968,
+    "turn-cost": 70590,
+    "trigger-kinds": 11,
+    "sender-attribution": 377,
+    "compactions": 2643,
+    "context-bands": 8,
+    "idle-wakes": 2908,
+    "limit-events": 207,
+    "meter-replay": 586,
+    "fan-outs": 13970,
+    "message-graph": 1719,
+    "hidden-requests": 4635,
+    "structure": 1,
+    "trigger-records": 11,
+    "idle-tax": 316,
+    "compaction-cadence": 798,
+    "peer-amplification": 1706,
+    "subagent-fanout": 194,
+    "tool-loops": 4715,
+    "fleet-idle": 4409,
+    "expensive-turns": 50,
+    "daily-tokens": 1909
+   }
+  }
+ }
+}

@@ -1,13 +1,18 @@
-//! Pure, distinct projections for Cursor transcript JSONL and IDE snapshots.
+//! Pure, distinct projections and prep folds for Cursor transcript JSONL and
+//! IDE snapshots.
 //!
-//! Neither mapper reconstructs facts discarded by its native source, reads
+//! No mapper or fold reconstructs facts discarded by its native source, reads
 //! storage, or interprets content as executable instructions.
 #![forbid(unsafe_code)]
 
 mod ide;
+mod prep;
 mod query;
 
 pub use ide::{CursorIdeAdapter, IDE_DESCRIPTOR};
+pub use prep::{
+    CursorIdePrepFold, CursorTranscriptPrepFold, IDE_PREP_POLICY, TRANSCRIPT_PREP_POLICY,
+};
 pub use query::{IDE_POLICY, TRANSCRIPT_POLICY};
 
 use std::collections::BTreeMap;
@@ -36,7 +41,7 @@ pub const DESCRIPTOR: AdapterDescriptor = AdapterDescriptor {
         output_formats: &["otlp-jsonl"],
         sdk_caller_owned_cursor: true,
         cursor_source_assumption: "append_only",
-        cli_persisted_resume: false,
+        cli_persisted_resume: true,
         delayed_revision_reconciliation: false,
         lossless_archive: false,
     },

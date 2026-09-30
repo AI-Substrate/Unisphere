@@ -159,6 +159,8 @@ fn report(unreadable: bool) -> PrepReport {
                     hidden: 5,
                     unreadable_entries: 1,
                 },
+                dirs_listed: 2,
+                dirs_reused: 9,
                 by_status,
             },
             PrepSetReport {
@@ -169,6 +171,8 @@ fn report(unreadable: bool) -> PrepReport {
                 supported: false,
                 discovered: 4,
                 skipped: PrepSkipCounts::default(),
+                dirs_listed: 0,
+                dirs_reused: 0,
                 by_status: BTreeMap::from([("unsupported".to_owned(), 4)]),
             },
         ],
@@ -185,6 +189,7 @@ fn report(unreadable: bool) -> PrepReport {
             parts_written: vec!["tables/calls/p1.parquet".into()],
             ..PrepCommit::default()
         },
+        commits: 1,
         sources,
     }
 }
@@ -216,8 +221,14 @@ fn frozen_argv_parses_into_the_port_request() {
         "1024",
         "--max-batch-bytes",
         "4096",
+        "--max-snapshot-bytes",
+        "1048576",
+        "--max-snapshot-records",
+        "50",
         "--threads",
         "3",
+        "--max-run-bytes",
+        "65536",
         "--modified-since",
         "2026-01-01T00:00:00Z",
         "--human",
@@ -269,8 +280,17 @@ fn frozen_argv_parses_into_the_port_request() {
     assert!(request.options.include_content);
     assert_eq!(request.limits.read.max_record_bytes, 1024);
     assert_eq!(request.limits.read.max_batch_bytes, 4096);
-    assert_eq!(request.limits.snapshot, SnapshotLimits::default());
+    assert_eq!(
+        request.limits.snapshot,
+        SnapshotLimits {
+            max_records: 50,
+            max_record_bytes: 1_048_576,
+            max_snapshot_bytes: 1_048_576,
+        },
+        "one snapshot record is bounded by the snapshot"
+    );
     assert_eq!(request.threads, 3);
+    assert_eq!(request.max_run_bytes, 65_536);
     assert_eq!(request.modified_since_ns, Some(1_767_225_600_000_000_000));
 }
 
@@ -281,9 +301,11 @@ fn defaults_are_metadata_only_with_catalogue_roots_for_every_harness() {
     assert!(command.wants_default_root("claude-code") && command.wants_default_root("codex"));
     let request = command.request(Vec::new());
     assert!(!request.options.include_content);
-    assert_eq!(request.limits.read.max_record_bytes, 3 * 1024 * 1024);
+    assert_eq!(request.limits.read.max_record_bytes, 16 * 1024 * 1024);
     assert_eq!(request.limits.read.max_batch_bytes, 16 * 1024 * 1024);
     assert_eq!(request.threads, 8);
+    assert_eq!(request.max_run_bytes, 256 * 1024 * 1024);
+    assert_eq!(request.limits.snapshot, SnapshotLimits::default());
     assert_eq!(request.modified_since_ns, None);
 
     let filtered = prep(&[
@@ -295,6 +317,34 @@ fn defaults_are_metadata_only_with_catalogue_roots_for_every_harness() {
         "claude-code",
     ]);
     assert!(filtered.wants_default_root("claude-code") && !filtered.wants_default_root("codex"));
+}
+
+#[test]
+fn record_limit_follows_a_lowered_batch_limit_unless_given() {
+    let lowered = prep(&[
+        "unisphere",
+        "prep",
+        "--target",
+        "/t",
+        "--max-batch-bytes",
+        "4194304",
+    ])
+    .request(Vec::new());
+    assert_eq!(lowered.limits.read.max_record_bytes, 4_194_304);
+    assert_eq!(lowered.limits.read.max_batch_bytes, 4_194_304);
+
+    let explicit = prep(&[
+        "unisphere",
+        "prep",
+        "--target",
+        "/t",
+        "--max-batch-bytes",
+        "4194304",
+        "--max-record-bytes",
+        "1048576",
+    ])
+    .request(Vec::new());
+    assert_eq!(explicit.limits.read.max_record_bytes, 1_048_576);
 }
 
 #[test]
@@ -342,12 +392,15 @@ fn invalid_combinations_exit_2_before_any_port_call() {
         (&["--root", "claude-code="], "UNI-CLI-PREP-ROOT"),
         (&["--root", ".hidden=/a"], "UNI-CLI-PREP-ROOT"),
         (&["--threads", "0"], "UNI-CLI-PREP-LIMITS"),
+        (&["--max-run-bytes", "0"], "UNI-CLI-PREP-LIMITS"),
         (&["--max-record-bytes", "0"], "UNI-CLI-PREP-LIMITS"),
         (
             &["--max-record-bytes", "10", "--max-batch-bytes", "9"],
             "UNI-CLI-PREP-LIMITS",
         ),
         (&["--modified-since", "yesterday"], "UNI-CLI-PREP-LIMITS"),
+        (&["--max-snapshot-bytes", "0"], "UNI-CLI-PREP-LIMITS"),
+        (&["--max-snapshot-records", "0"], "UNI-CLI-PREP-LIMITS"),
     ];
     for (extra, code) in cases {
         let mut values = vec!["unisphere", "prep", "--target", "/t"];
@@ -680,7 +733,7 @@ fn compact_and_record_render_their_reports() {
         assert!(request.include_content);
         assert_eq!(request.address.key.as_deref(), Some("k1"));
         assert_eq!(request.address.offset, None);
-        assert_eq!(request.max_bytes, 3 * 1024 * 1024);
+        assert_eq!(request.max_bytes, 16 * 1024 * 1024);
         let value = envelope(&stdout);
         assert_eq!(value["command"], "prep.record");
         assert_eq!(value["data"]["encoding"], encoding);
@@ -724,7 +777,8 @@ fn compact_and_record_render_their_reports() {
     assert!(String::from_utf8(stderr).unwrap().starts_with("Next: "));
 }
 
-/// `unisphere …` lines inside ```sh fences, with `$TARGET`/`$HOME` bound.
+/// `unisphere …` argv inside ```sh fences, with `$TARGET`/`$HOME` bound, up to
+/// the first `|` (the external engine).
 fn documented_examples(markdown: &str) -> Vec<Vec<OsString>> {
     let mut examples = Vec::new();
     let mut in_sh = false;
@@ -739,7 +793,13 @@ fn documented_examples(markdown: &str) -> Vec<Vec<OsString>> {
                 .replace("$TARGET", "/fixtures/prep-target")
                 .replace("$HOME", "/fixtures/home");
             assert!(!bound.contains('$'), "unbound placeholder in {trimmed:?}");
-            examples.push(bound.split_whitespace().map(OsString::from).collect());
+            examples.push(
+                bound
+                    .split_whitespace()
+                    .take_while(|word| *word != "|")
+                    .map(OsString::from)
+                    .collect(),
+            );
         }
     }
     examples
@@ -757,7 +817,7 @@ fn prep_topic_is_registered_and_every_documented_example_parses() {
     assert_eq!(value["data"]["text"], PREP_TOPIC);
 
     for (name, markdown, minimum) in [
-        ("prep topic", PREP_TOPIC, 10),
+        ("prep topic", PREP_TOPIC, 13),
         ("README.md", README, 1),
         ("docs/cli.md", CLI_GUIDE, 3),
         ("docs/sdk.md", SDK_GUIDE, 1),

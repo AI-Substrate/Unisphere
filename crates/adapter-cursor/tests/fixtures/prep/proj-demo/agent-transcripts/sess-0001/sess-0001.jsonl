@@ -1,0 +1,10 @@
+{"type":"metadata","metadata":{"overview":"SYNTHETIC-TEXT overview"}}
+{"role":"assistant","message":{"content":[{"type":"text","text":"SYNTHETIC-TEXT answer"}]}}
+{"role":"user","message":{"content":[{"type":"text","text":"SYNTHETIC-TEXT   first\nprompt"}]}}
+{"role":"assistant","message":{"content":[{"type":"tool_use","name":"read_file","input":{"path":"SYNTHETIC-TEXT","lines":[1,2]}}]}}
+{"role":"assistant","message":{"content":[{"type":"text","text":"SYNTHETIC-TEXT"},{"type":"tool_use","name":"Shell","input":{"command":"SYNTHETIC-TEXT"}}]}}
+{"type":"turn_ended","status":"success"}
+{"role":"assistant","message":
+{"role":"user","message":{"content":[]}}
+{"role":"assistant","message":{"content":[{"type":"text","text":"SYNTHETIC-TEXT"}]}}
+{"type":"turn_ended","status":"error","error":"SYNTHETIC-TEXT error"}

@@ -1,0 +1,122 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "review",
+      "value": {
+        "record_type": "review",
+        "id": "rv-028-composition-p2-r1",
+        "recorded_at": "2026-09-29T09:54:43+00:00",
+        "scope": "composition",
+        "subject_sha": "19ace79fd493350525323dd5da0cff8e3d3a020c",
+        "plan": {
+          "path": "docs/plans/028-prep-canonical-tables/plan.dd.json",
+          "sha256": "7da3d4a4d05949ddba02368c80dbe145189a63214c43bd0335c381e36ce64e46"
+        },
+        "guide": {
+          "path": "docs/plans/028-prep-canonical-tables/assets/impl-guide.dd.json",
+          "sha256": "6d5131283c31d68f121b0c24701f641705f19af72a966ed4aac159477eaeac6d"
+        },
+        "reviewer_id": "pij-panicky-anteater",
+        "requested": {
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-sonnet-5.5",
+          "source": {
+            "harness": "guide",
+            "model": "guide"
+          }
+        },
+        "observed": {
+          "peer_id": "pij-panicky-anteater",
+          "root": "/Users/jordanknight/substrate/unisphere/unisphere-028-review",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/claude-sonnet-5.5",
+          "native_session": "01a0eb71-0bdc-74bd-97d4-6f85f7527e72",
+          "pid": 53353,
+          "argv": [
+            "omp",
+            "--auto-approve",
+            "--model",
+            "github-copilot/claude-sonnet-5.5"
+          ],
+          "evidence": [
+            "git checkout --detach 19ace79fd493350525323dd5da0cff8e3d3a020c; git log -1 confirmed subject",
+            "sha256sum of packet (88defe30...c92d50), plan.dd.json, assets/impl-guide.dd.json - all match packet bindings exactly",
+            "chain of custody: composition.dd.json at subject shows artifact_sha=b4958ad (self-reference impossibility, expected); descendant 9a09aabe514fddcf419ab6e667c731f4a14924f1 (confirmed sole parent = 19ace79 via git log --format='%H %P') shows artifact_sha=19ace79 with vd-0008/vd-0015 both exit_code 0",
+            "git diff --stat b4958ad..19ace79 confirmed the delta is exactly: testkit/src/bin/proof/prep.rs (+166), unisphere-proof.rs (1 line), 2 new SQLite fixtures, boot.mjs doc string, execution-log/composition-record/packet - nothing else changed",
+            "read the extended prep.rs proof code in full: 3 SnapshotCases (copilot-cli-snapshot JSON document, vscode-copilot journal, cursor-ide SQLite) each driven through built+installed CLI: cold/touched-unchanged/changed-generation-1/record-fetch",
+            "ran: cargo run --locked -p unisphere-testkit --bin unisphere-proof -- prep -> passed, explicitly naming revisioned JSON document, mutation journal and SQLite snapshots",
+            "ran: cargo check --locked --workspace -> clean",
+            "ran: cargo run --locked -p unisphere-testkit --bin unisphere-arch-check -> 110 edges accepted (unchanged), 40 files scanned (up from 34)",
+            "ran 89 new phase-2 lane tests (adapter-omp 13, adapter-pi 13, adapter-codex 16, adapter-copilot-cli 15, adapter-vscode-copilot 9, adapter-cursor 9, loader-snapshot 7, cli --test recipes 7) - all passed",
+            "ran 61 phase-1 non-regression tests (sdk 20, output-prep 9, adapter-claude 14, loader-jsonl 7, cli --test prep 11) - all still passed",
+            "ran cargo test -p unisphere-app -> 5 passed",
+            "read crates/app/src/prep.rs and adapters.rs in full: bindings() = 10 fold registrations / 9 harness ids; grepped cli_persisted_resume across every adapter-* crate confirming true set individually in each of 7 lane crates (including copilot-cli-snapshot's inherited value via struct-update) and false in adapter-git-ai (unbound, correctly unsupported)",
+            "read crates/core/src/prep.rs walk_prep_root (lines 178-276) in full: reusable-listing check, racy-directory 2s rule, per-file unconditional stat",
+            "read crates/sdk/src/prep.rs run_prep (lines 220-378) in full: state threaded by value not cloned, wave_end budget splitting, per-wave commit-then-continue",
+            "read crates/output-prep/src/lib.rs Published<'a> struct (lines 56-86): borrows PrepState fields for serialization, exhaustive destructure forces compile error on new unhandled field",
+            "read and independently verified evidence: measure-dfb8bf8.json vs measure-6161ba6.json (cold RSS 3974.8MB->1759.1MB, unchanged 49.489s->1.421s), parity-dfb8bf8.json (identical to phase-1's 4 accepted divergences), coverage-dfb8bf8.json (9/9 supported), recipes-9820bb5.json (24/24 recipes 0 failed), live-4074389.json (344 runs 0 failed, fleet 10 runs 0 failed)",
+            "read crates/cli/src/args.rs:1288 (max_record_bytes defaults to max_batch_bytes) and cli/tests/prep.rs precedence assertions",
+            "read crates/sdk/src/prep.rs:203-207 (Glob::new, no literal_separator) vs crates/loader-query/src/lib.rs:900-901 (GlobBuilder .literal_separator(true))",
+            "read crates/output-prep/src/views.rs:159-173 compactions_v SQL CASE expression for cache-write coalesce-only-when-basis-none",
+            "read crates/loader-snapshot/src/prep.rs:120-161 record_at: split_once('#'), bare-pointer accepted only for JsonDocument format, refused for all others",
+            "read docs/plans/028-prep-canonical-tables/assets/proof/{measure,coverage,live}.py in full for exit-3 acceptance logic"
+          ],
+          "gaps": [
+            "No provider-side attestation available beyond the harness-reported model string.",
+            "Did not re-run harness checks --json / harness boot --json myself (multi-million-ms budgets, requires real external SDK/git-notes fixtures); relied on the PM's recorded vd-0008/vd-0015 exit_code 0 at the 9a09aabe receipt plus my own targeted cargo check/test/arch-check/proof runs covering the identical compiled surface those checks exercise.",
+            "Did not inspect the real Claude/all-harness corpus underlying the numbers-only evidence files (boundary: read-only, numbers only, per packet)."
+          ]
+        },
+        "verdict": "approved",
+        "report": {
+          "path": "docs/plans/028-prep-canonical-tables/assets/reviews/composition-p2-r1.md",
+          "sha256": "91fd68dc33a9f4430781f9c2ed8e7d429c078b88a21ba720a9432be6cad78860"
+        },
+        "measured_results_ruling": {
+          "item": "vd-000b: cold 30.617s/13.99GB/57 commits/1759.1MB peak RSS; unchanged 1.421s/0 of 14707 dirs listed/600.4MB; append 0.66s. Before rulings: cold peak RSS 3974.8MB, unchanged 49.489s.",
+          "decision": "accept",
+          "evidence": "measure-dfb8bf8.json and measure-6161ba6.json, both read in full and cross-checked field by field against the packet's stated numbers; all match exactly. AC-000c's 'bounded by documented, adjustable limits' is honestly satisfied: --max-run-bytes (documented, adjustable, default 256MiB) bounds the dominant corpus-depth-scaling term (rows buffered per commit), which is what drove the measured reduction; the residual (committed state held in full, 58.6MB for 5,423 sources) scales with corpus breadth not depth, is over an order of magnitude smaller, and is the same disclosed cost phase-1's rk-0002 already accepted."
+        },
+        "composition_decisions": [
+          {
+            "item": "(a) --max-record-bytes defaults to the batch limit",
+            "decision": "accept",
+            "evidence": "crates/cli/src/args.rs:1288; precedence proven in cli/tests/prep.rs (unset tracks batch, explicit persists independently)"
+          },
+          {
+            "item": "(b) Zero-byte VS Code documents reported unreadable, not folded as empty",
+            "decision": "accept",
+            "evidence": "coverage-dfb8bf8.json 2 UNI-DATA unreadable, documented; measure.py/coverage.py/live.py all surface exit 3 rather than swallowing it"
+          },
+          {
+            "item": "(c) Prep's glob * spans /; loader-query uses literal separators",
+            "decision": "accept",
+            "evidence": "sdk/src/prep.rs:203-207 plain Glob::new (default * spans /) vs loader-query/src/lib.rs:900-901 GlobBuilder.literal_separator(true) - genuine, intentional, confirmed divergence"
+          },
+          {
+            "item": "(d) compactions_v coalesces unrecorded cache writes to 0 only when basis is none",
+            "decision": "accept",
+            "evidence": "output-prep/src/views.rs:159-173 exact CASE expression read: basis='none' -> 0, any other basis with both fields null -> NULL propagated, never fabricated 0"
+          },
+          {
+            "item": "(e) Snapshot prep record resolves <key>#<pointer> and bare document pointers; journal pointers refused",
+            "decision": "accept",
+            "evidence": "loader-snapshot/src/prep.rs:120-161 read in full: bare pointer accepted only for JsonDocument, InvalidInput for JsonJournal and all other formats; independently exercised by the extended proof (journal SnapshotCase has record:None, JSON-document and SQLite cases have record:Some and passed)"
+          },
+          {
+            "item": "(f) coverage.py passes on supported/fully-accounted sets with unreadable counted by error code; measure.py accepts exit 3",
+            "decision": "accept",
+            "evidence": "measure.py:98, coverage.py:102, live.py:141 all read in full: exit 3 accepted only alongside additional guards (unsupported==0, unaccounted==0, or unreadable count held constant across runs) - not a blanket rubber stamp"
+          }
+        ],
+        "findings": []
+      }
+    }
+  ],
+  "references": []
+}

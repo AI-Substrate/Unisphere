@@ -79,7 +79,8 @@ pub(crate) fn views_sql(parts: &[String]) -> String {
          -- is its own row. tool_uses_v merges the use and result sightings of one\n\
          -- (source, generation, tool_use_id): each field is the first non-null value,\n\
          -- use sightings first. compactions_v adds first_context_after, the context\n\
-         -- (input + cache_read + cw_1h + cw_5m) of the first main-chain call after\n\
+         -- (input + cache_read + cw_1h + cw_5m; no cache write when the call records\n\
+         -- none, cache_write_basis 'none') of the first main-chain call after\n\
          -- the boundary in the same source.\n\n"
     );
     let _ = writeln!(
@@ -157,7 +158,8 @@ pub(crate) fn views_sql(parts: &[String]) -> String {
         sql,
         "CREATE OR REPLACE VIEW compactions_v AS\n\
          SELECT e.*, (\n\
-         \x20 SELECT c.input + c.cache_read + CASE WHEN c.cw_1h IS NULL AND c.cw_5m IS NULL THEN NULL\n\
+         \x20 SELECT c.input + c.cache_read + CASE WHEN c.cw_1h IS NULL AND c.cw_5m IS NULL\n\
+         \x20     THEN CASE WHEN c.cache_write_basis = 'none' THEN 0 END\n\
          \x20     ELSE coalesce(c.cw_1h, 0) + coalesce(c.cw_5m, 0) END\n\
          \x20 FROM calls_v c\n\
          \x20 WHERE c.source = e.source AND c.generation = e.generation AND NOT c.is_sidechain\n\

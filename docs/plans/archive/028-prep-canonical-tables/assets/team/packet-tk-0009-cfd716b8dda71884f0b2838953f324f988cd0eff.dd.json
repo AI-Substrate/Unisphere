@@ -1,0 +1,108 @@
+{
+  "dd": {
+    "schema": "builder/work-packet"
+  },
+  "sections": [
+    {
+      "name": "packet",
+      "value": {
+        "record_type": "packet",
+        "id": "packet-tk-0009-cfd716b8dda71884f0b2838953f324f988cd0eff",
+        "recorded_at": "2026-09-29T07:22:20.089Z",
+        "nonce": "403b85ab-9d4a-4c18-9d50-debe4b6f935f",
+        "unit": {
+          "id": "tk-0009",
+          "name": "Copilot CLI prep folds",
+          "role": "coder",
+          "responsibility": "Pure Copilot CLI interpretation into the same PrepRows and SessionFacts contract, with representation-appropriate identity, explicit nulls for everything the dialect does not record, per-source coverage and a versioned checkpoint.",
+          "paths": [
+            "crates/adapter-copilot-cli/src/prep.rs",
+            "crates/adapter-copilot-cli/src/lib.rs",
+            "crates/adapter-copilot-cli/tests/prep.rs",
+            "crates/adapter-copilot-cli/tests/fixtures/prep"
+          ],
+          "reads": [
+            {
+              "owner": "tk-0001",
+              "paths": [
+                "crates/core/src/prep.rs",
+                "crates/core/src/lib.rs",
+                "crates/testkit/src/prep.rs"
+              ]
+            },
+            {
+              "owner": "tk-0002",
+              "paths": [
+                "crates/adapter-claude/src/prep.rs"
+              ]
+            }
+          ],
+          "interface": "CopilotCliPrepFold (harness \"copilot-cli\", kind Append, pattern \"*/events.jsonl\") and CopilotCliLegacyPrepFold (harness \"copilot-cli-snapshot\", kind Snapshot, JSON document, pattern \"*.json\").",
+          "depends_on": [
+            "tk-0001"
+          ],
+          "wave": 3,
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0006",
+            "../plan.dd.json#acceptance_criteria/ac-000b"
+          ],
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0010"
+          ],
+          "notes": "Events: model selection/changes, message/API usage (input/output/cache read/write), compaction events, tool calls/results/outcomes. Legacy snapshot has no model or usage: explicit nulls and coverage, chat rows without timestamps stay untimed. harness() returns the adapter catalogue descriptor id and pattern() the descriptor's session_glob; flip cli_persisted_resume to true in this lane's own descriptor(s). Fixtures are synthetic and content-free."
+        },
+        "plan": {
+          "path": "docs/plans/028-prep-canonical-tables/plan.dd.json",
+          "sha256": "7da3d4a4d05949ddba02368c80dbe145189a63214c43bd0335c381e36ce64e46"
+        },
+        "guide": {
+          "path": "docs/plans/028-prep-canonical-tables/assets/impl-guide.dd.json",
+          "sha256": "c6b8c852ae59839b1f383d0387625c32ab1be79fe0b2bc5b6dd31a373ef27a3a"
+        },
+        "baseline": {
+          "path": "docs/plans/028-prep-canonical-tables/assets/team/baseline-p2r2.dd.json",
+          "sha256": "4887eddbdb33888456870dc7a2bcaf2453fa08a241aa73c2b366765bcbc64147"
+        },
+        "source_sha": "cfd716b8dda71884f0b2838953f324f988cd0eff",
+        "allocation": {
+          "path": "/Users/jordanknight/substrate/unisphere/unishpere-main/.git/builder/allocations/allocation-al-039-d123ec3e-504d-4cd5-84cf-d422dea8fbd8.dd.json",
+          "sha256": "480e0d04b547c718685b084ed0456b45db619935ffc584f41923ddacde597128"
+        },
+        "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-028-p2-tk0009",
+        "parent": "pij-native-tick",
+        "requested": {
+          "role": "coder",
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5.5",
+          "source": {
+            "harness": "guide",
+            "model": "guide"
+          }
+        },
+        "forbidden": [
+          ".the-flow-state.json",
+          "the-flow.json",
+          "the-flow.md",
+          "docs/plans/028-prep-canonical-tables/plan.dd.json",
+          "docs/plans/028-prep-canonical-tables/assets/impl-guide.dd.json",
+          "docs/plans/028-prep-canonical-tables/assets/team",
+          ".harness/government/",
+          "Global settings, deployed skills, unrelated workspaces and changes on main without user authorization.",
+          "Pushes, PRs, merges and destructive operations without user authorization; canonical lifecycle mutations and nested peers without PM approval."
+        ],
+        "instructions": [
+          "You own crates/adapter-copilot-cli/src/prep.rs, crates/adapter-copilot-cli/src/lib.rs, crates/adapter-copilot-cli/tests/prep.rs, crates/adapter-copilot-cli/tests/fixtures/prep.",
+          "You may read crates/core/src/prep.rs, crates/core/src/lib.rs, crates/testkit/src/prep.rs (owner tk-0001); crates/adapter-claude/src/prep.rs (owner tk-0002); immutable plan docs/plans/028-prep-canonical-tables/plan.dd.json and guide docs/plans/028-prep-canonical-tables/assets/impl-guide.dd.json.",
+          "Your job: Pure Copilot CLI interpretation into the same PrepRows and SessionFacts contract, with representation-appropriate identity, explicit nulls for everything the dialect does not record, per-source coverage and a versioned checkpoint.",
+          "Done means Every registered harness: Oh My Pi, Pi, Codex, Copilot CLI (events and legacy snapshot), VS Code Copilot (JSON and journal), Cursor transcript and Cursor IDE land in the same table contract with representation-appropriate change detection (append cursors for JSONL, revision checks for snapshots and SQLite). Fields a harness does not record are explicit nulls with per-source coverage, never estimates. (../plan.dd.json#acceptance_criteria/ac-0006); Privacy and safety: metadata-only by default; any content column needs explicit opt-in and is absent otherwise. Native stores are opened read-only and never locked, renamed or written; tests and committed fixtures contain no real prompts, bodies or private identifiers. (../plan.dd.json#acceptance_criteria/ac-000b). Interface: CopilotCliPrepFold (harness \"copilot-cli\", kind Append, pattern \"*/events.jsonl\") and CopilotCliLegacyPrepFold (harness \"copilot-cli-snapshot\", kind Snapshot, JSON document, pattern \"*.json\").. Proof: impl-guide.dd.json#checks/vd-0010.",
+          "Work packet: docs/plans/028-prep-canonical-tables/assets/team/packet-tk-0009-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.json. Use the measured SHA-256 in the dispatch message for the optional advisory builder self-check.",
+          "Expected checkout /Users/jordanknight/substrate/unisphere/unisphere-028-p2-tk0009; source commit cfd716b8dda71884f0b2838953f324f988cd0eff. A self-check warning names a mismatch to inspect; it is not permission or a second work grant.",
+          "Receiving this packet means do the unit. Its write/read maps guide you, not fence source access; out-of-map edits need no approval or justification. Prefer frozen interfaces for independent work. Return committed changes, proof and visible file/owning_unit warnings to pij-native-tick.",
+          "Optional read-only comparison: harness builder on-track docs/plans/028-prep-canonical-tables/plan.dd.json --unit tk-0009 [--from <ref>] [--to <ref>] [--untracked]. No readiness, seal, review or receipt prerequisite; no writes; exit 0. Show compared, basis, measured from/to SHAs, includes_worktree/includes_untracked, warnings and issues. Unavailable comparison returns compared:false plus actionable issues.",
+          "On-track defaults to the sealed source, otherwise HEAD; malformed basis is an issue, not fallback. It includes committed touched paths (even reverted writes) plus tracked staged/unstaged work; --untracked explicitly adds new paths. Explicit --to is committed-only. Omitting --unit compares PM maps using imported integration_sha, otherwise the sealed source or HEAD."
+        ]
+      }
+    }
+  ],
+  "references": []
+}

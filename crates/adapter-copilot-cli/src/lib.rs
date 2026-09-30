@@ -12,8 +12,12 @@ use unisphere_core::{
     SessionAdapter, SessionRef, TelemetryRecord,
 };
 
+mod prep;
 mod query;
 mod snapshot;
+pub use prep::{
+    CopilotCliLegacyPrepFold, CopilotCliPrepFold, LEGACY_PREP_POLICY_VERSION, PREP_POLICY_VERSION,
+};
 pub use snapshot::{CopilotCliAdapterSnapshot, SNAPSHOT_DESCRIPTOR};
 
 /// Versioned current-event membership and classification policy.
@@ -42,7 +46,7 @@ pub const DESCRIPTOR: AdapterDescriptor = AdapterDescriptor {
         output_formats: &["otlp-jsonl"],
         sdk_caller_owned_cursor: true,
         cursor_source_assumption: "append_only",
-        cli_persisted_resume: false,
+        cli_persisted_resume: true,
         delayed_revision_reconciliation: false,
         lossless_archive: false,
     },

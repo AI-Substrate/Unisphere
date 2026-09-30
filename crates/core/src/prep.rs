@@ -17,8 +17,8 @@ use serde_json::Value;
 use sha2::{Digest as _, Sha256};
 
 use crate::{
-    NativeRecord, NativeSnapshot, PipelineError, ReadCursor, ReadLimits, SnapshotLimits,
-    SourceIdentity,
+    NativeRecord, NativeSnapshot, PipelineError, PipelineErrorKind, ReadCursor, ReadLimits,
+    SnapshotLimits, SourceIdentity,
 };
 
 /// Physical layout/column contract of the published tables.
@@ -93,11 +93,186 @@ pub struct PrepSkipCounts {
     pub unreadable_entries: u64,
 }
 
+impl std::ops::AddAssign for PrepSkipCounts {
+    fn add_assign(&mut self, other: Self) {
+        self.symlinks += other.symlinks;
+        self.hidden += other.hidden;
+        self.unreadable_entries += other.unreadable_entries;
+    }
+}
+
+/// Most sources one discovery returns; more is a listing-limit failure.
+pub const PREP_MAX_SOURCES: usize = 100_000;
+
+/// A directory whose mtime is this close to (or after) the listing clock may
+/// still change within the filesystem's timestamp granularity, so its listing
+/// is never reused (the "racy" rule): it is listed again next run.
+pub const PREP_RACY_DIR_NS: i128 = 2_000_000_000;
+
+/// One directory as discovery last listed it.
+///
+/// A listing is reused while its directory keeps the same identity and mtime:
+/// adding, removing or renaming an entry always changes the mtime of the
+/// directory holding it, so an unchanged directory needs one `stat`, not a
+/// re-list. Files named here are still stat'ed on every run.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct PrepDirListing {
+    pub identity: SourceIdentity,
+    pub mtime_ns: i128,
+    /// Child directories descended into.
+    pub dirs: Vec<String>,
+    /// Regular files the discovery accepted.
+    pub files: Vec<String>,
+    /// This directory's entries counted as skipped.
+    pub skipped: PrepSkipCounts,
+}
+
+/// Listings of one discovery (one root and one accept rule), keyed by the
+/// `/`-separated directory path relative to the root (`""` is the root).
+pub type PrepDirIndex = BTreeMap<String, PrepDirListing>;
+
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct PrepDiscovery {
     /// Sorted by `file` (byte order).
     pub sources: Vec<PrepSourceStat>,
     pub skipped: PrepSkipCounts,
+    /// Reusable listings for the next discovery of the same root and rule.
+    pub index: PrepDirIndex,
+    /// Directories read this time.
+    pub dirs_listed: u64,
+    /// Directories whose previous listing was reused after one `stat`.
+    pub dirs_reused: u64,
+}
+
+/// One raw directory entry as a loader's filesystem reports it.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum PrepDirEntry {
+    Dir(String),
+    File(String),
+    Symlink(String),
+    /// An entry whose type could not be read.
+    Untyped(String),
+    /// A name that is not UTF-8, or an entry that failed while listing.
+    Unreadable,
+}
+
+/// The filesystem operations a discovery walk needs; loaders implement it.
+pub trait PrepWalkFs {
+    /// Identity and mtime of `path` without following symlinks; `Ok(None)`
+    /// when it exists but is not a directory.
+    fn dir(&self, path: &Path) -> std::io::Result<Option<(SourceIdentity, i128)>>;
+    /// Entries of the directory `path`; `None` when it cannot be listed.
+    /// Entries a loader never treats as sources or skips may be left out.
+    fn list(&self, path: &Path) -> Option<Vec<PrepDirEntry>>;
+    /// Stat one accepted regular file; `None` when it is gone or not a file.
+    fn source(&self, path: &Path, file: String) -> Option<PrepSourceStat>;
+    /// Current time in Unix nanoseconds, for the racy-directory rule.
+    fn now_ns(&self) -> i128;
+}
+
+/// Recursive discovery under the absolute directory `root`, re-listing only
+/// directories that changed since `previous`. Symlinks are never followed and
+/// hidden entries (leading `.`) are skipped, both counted; `accept` receives
+/// each regular file's `/`-separated path relative to `root`. The sources and
+/// skip counts equal those of a full walk of the same tree.
+pub fn walk_prep_root(
+    fs: &dyn PrepWalkFs,
+    root: &Path,
+    accept: &dyn Fn(&str) -> bool,
+    previous: &PrepDirIndex,
+) -> Result<PrepDiscovery, PipelineError> {
+    let invalid = || PipelineError::new(PipelineErrorKind::InvalidInput, None);
+    let unreadable = || PipelineError::new(PipelineErrorKind::Read, None);
+    if !root.is_absolute() || fs.dir(root).map_err(|_| unreadable())?.is_none() {
+        return Err(invalid());
+    }
+    let now = fs.now_ns();
+    let mut found = PrepDiscovery::default();
+    let mut stack = vec![String::new()];
+    while let Some(relative) = stack.pop() {
+        let path = root.join(&relative);
+        let join = |name: &str| {
+            if relative.is_empty() {
+                name.to_owned()
+            } else {
+                format!("{relative}/{name}")
+            }
+        };
+        // The root must stay readable; a subdirectory failing mid-walk is counted.
+        let Ok(Some((identity, mtime_ns))) = fs.dir(&path) else {
+            if relative.is_empty() {
+                return Err(unreadable());
+            }
+            found.skipped.unreadable_entries += 1;
+            continue;
+        };
+        let reusable = previous.get(&relative).filter(|listing| {
+            identity != SourceIdentity::Unavailable
+                && listing.identity == identity
+                && listing.mtime_ns == mtime_ns
+        });
+        let listing = if let Some(listing) = reusable {
+            found.dirs_reused += 1;
+            listing.clone()
+        } else {
+            let Some(entries) = fs.list(&path) else {
+                if relative.is_empty() {
+                    return Err(unreadable());
+                }
+                found.skipped.unreadable_entries += 1;
+                continue;
+            };
+            found.dirs_listed += 1;
+            let mut listing = PrepDirListing {
+                identity,
+                mtime_ns,
+                dirs: Vec::new(),
+                files: Vec::new(),
+                skipped: PrepSkipCounts::default(),
+            };
+            for entry in entries {
+                match entry {
+                    PrepDirEntry::Unreadable => listing.skipped.unreadable_entries += 1,
+                    PrepDirEntry::Dir(name)
+                    | PrepDirEntry::File(name)
+                    | PrepDirEntry::Symlink(name)
+                    | PrepDirEntry::Untyped(name)
+                        if name.starts_with('.') =>
+                    {
+                        listing.skipped.hidden += 1;
+                    }
+                    PrepDirEntry::Untyped(_) => listing.skipped.unreadable_entries += 1,
+                    PrepDirEntry::Symlink(_) => listing.skipped.symlinks += 1,
+                    PrepDirEntry::Dir(name) => listing.dirs.push(name),
+                    PrepDirEntry::File(name) => {
+                        if accept(&join(&name)) {
+                            listing.files.push(name);
+                        }
+                    }
+                }
+            }
+            listing
+        };
+        found.skipped += listing.skipped;
+        stack.extend(listing.dirs.iter().map(|name| join(name)));
+        for name in &listing.files {
+            let file = join(name);
+            let Some(stat) = fs.source(&root.join(&file), file) else {
+                found.skipped.unreadable_entries += 1;
+                continue;
+            };
+            if found.sources.len() == PREP_MAX_SOURCES {
+                return Err(PipelineError::new(PipelineErrorKind::ListingLimit, None));
+            }
+            found.sources.push(stat);
+        }
+        if now.saturating_sub(mtime_ns) >= PREP_RACY_DIR_NS {
+            found.index.insert(relative, listing);
+        }
+    }
+    // Byte order of the relative path, like a sorted glob; also the table order.
+    found.sources.sort_unstable_by(|a, b| a.file.cmp(&b.file));
+    Ok(found)
 }
 
 /// Where one native record lives inside its source: a byte offset for append
@@ -139,10 +314,13 @@ pub trait PrepLoader: Send + Sync {
     fn kind(&self) -> PrepSourceKind;
     /// Recursive discovery under `root`; `accept` receives the relative path.
     /// Symlinks are never followed and hidden entries are skipped, both counted.
+    /// `previous` is the index the last discovery of this root and rule
+    /// returned (empty for a full walk); see [`walk_prep_root`].
     fn discover(
         &self,
         root: &Path,
         accept: &dyn Fn(&str) -> bool,
+        previous: &PrepDirIndex,
     ) -> Result<PrepDiscovery, PipelineError>;
     /// Stat one explicit source below `root` (single-source callers).
     fn stat(&self, root: &Path, path: &Path) -> Result<PrepSourceStat, PipelineError>;
@@ -600,6 +778,10 @@ pub struct PrepSetState {
     pub label: String,
     pub root: PathBuf,
     pub policy: String,
+    /// Directory index of each binding's last committed discovery, keyed by
+    /// the binding's fold policy. Absent or stale entries only cost a re-list.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub discovery: BTreeMap<String, PrepDirIndex>,
 }
 
 /// Durable per-source state committed with (after) its rows.
@@ -626,7 +808,7 @@ pub struct PrepSourceState {
     pub status: PrepSourceStatus,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct PrepState {
     pub table_schema_version: u32,
     pub checkpoint_format: u32,
@@ -645,6 +827,16 @@ pub struct PrepTableCounts {
     pub triggers: u64,
     pub events: u64,
     pub tool_uses: u64,
+}
+
+impl std::ops::AddAssign for PrepTableCounts {
+    fn add_assign(&mut self, other: Self) {
+        self.calls += other.calls;
+        self.turns += other.turns;
+        self.triggers += other.triggers;
+        self.events += other.events;
+        self.tool_uses += other.tool_uses;
+    }
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -707,6 +899,10 @@ pub struct PrepSetReport {
     pub supported: bool,
     pub discovered: u64,
     pub skipped: PrepSkipCounts,
+    /// Directories read by discovery this run.
+    pub dirs_listed: u64,
+    /// Directories whose committed listing was reused after one `stat`.
+    pub dirs_reused: u64,
     /// Keyed by [`PrepSourceStatus::label`].
     pub by_status: BTreeMap<String, u64>,
 }
@@ -720,7 +916,11 @@ pub struct PrepReport {
     pub bytes_read: u64,
     pub pending_tail_bytes: u64,
     pub rows_written: PrepTableCounts,
+    /// Every commit of this run combined: parts and bytes summed, snapshot rows
+    /// of the last commit.
     pub commit: PrepCommit,
+    /// Durable commits this run made: one per wave that changed anything.
+    pub commits: u64,
     /// Every source whose status is neither `unchanged` nor `skipped`
     /// (those are counted per set in `by_status`).
     pub sources: Vec<PrepSourceOutcome>,
@@ -738,6 +938,10 @@ pub struct PrepRequest {
     pub options: PrepOptions,
     pub limits: PrepReadLimits,
     pub threads: usize,
+    /// Commit wave budget: sources are read, folded and committed in waves of
+    /// at most this many bytes of expected new input (a single larger source
+    /// is a wave of its own), so held rows stay bounded by it. At least 1.
+    pub max_run_bytes: u64,
     /// Discovery scope: ignore sources whose mtime is older (Unix nanoseconds).
     pub modified_since_ns: Option<i128>,
 }

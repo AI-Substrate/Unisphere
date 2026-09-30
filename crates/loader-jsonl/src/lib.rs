@@ -372,8 +372,6 @@ mod unix {
 #[cfg(unix)]
 mod prep;
 #[cfg(unix)]
-pub use prep::MAX_PREP_SOURCES;
-
 #[cfg(not(unix))]
 fn prep_unsupported<T>() -> Result<T, PipelineError> {
     Err(PipelineError::new(
@@ -391,12 +389,13 @@ impl unisphere_core::prep::PrepLoader for FileSessionLoader {
         &self,
         root: &std::path::Path,
         accept: &dyn Fn(&str) -> bool,
+        previous: &unisphere_core::prep::PrepDirIndex,
     ) -> Result<unisphere_core::prep::PrepDiscovery, PipelineError> {
         #[cfg(unix)]
-        return prep::discover(root, accept);
+        return prep::discover(root, accept, previous);
         #[cfg(not(unix))]
         {
-            let _ = (root, accept);
+            let _ = (root, accept, previous);
             prep_unsupported()
         }
     }

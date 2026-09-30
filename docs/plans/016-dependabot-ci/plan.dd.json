@@ -1,0 +1,150 @@
+{
+  "dd": {
+    "schema": "builder/plan"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Dependabot updates with existing pull-request CI coverage",
+        "slug": "dependabot-ci",
+        "ordinal": 16,
+        "status": "ready",
+        "summary": "Weekly bounded version-update proposals for Cargo and GitHub Actions; source-ready only.",
+        "backpressure": "assets/backpressure.dd.json#rows"
+      }
+    },
+    {
+      "name": "summary",
+      "value": "Configure weekly dependency version-update proposals for the existing Cargo workspace and GitHub Actions, with bounded open PRs and the unchanged pull-request quality workflow. This is source preparation, not GitHub activation or observed bot execution."
+    },
+    {
+      "name": "goals",
+      "value": [
+        "Maintain visibility of available Cargo dependency and GitHub Action updates through ordinary reviewable pull requests.",
+        "Keep dependency proposals on the existing read-only pull-request CI path without bot-specific privilege escalation."
+      ]
+    },
+    {
+      "name": "non_goals",
+      "value": [
+        "No dependency or action-version upgrades in this change; no product-code changes.",
+        "No npm or other speculative ecosystems, reviewers, auto-merge, private registry credentials or new runtime dependencies.",
+        "No commit, push, pull request, merge, visibility change, publication or claim of remote Dependabot activation."
+      ]
+    },
+    {
+      "name": "acceptance_criteria",
+      "value": [
+        {
+          "id": "ac-0001",
+          "claim": "The version-2 configuration targets exactly Cargo and GitHub Actions at / on a weekly cadence, limiting open version-update PRs to 5 and 2 respectively, with no speculative ecosystem or dependency upgrade.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0001",
+          "note": "Main validated local YAML/CI source semantics; assets/local-validation.json. Hosted activation/bot execution remains unclaimed."
+        },
+        {
+          "id": "ac-0002",
+          "claim": "Dependency-update pull requests use the existing pull_request workflow without actor exclusions or additional privileges; the Ubuntu/macOS harness-boot workflow remains unchanged.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0002",
+          "note": "Main validated local YAML/CI source semantics; assets/local-validation.json. Hosted activation/bot execution remains unclaimed."
+        },
+        {
+          "id": "ac-0003",
+          "claim": "The handoff states that default-branch configuration is required before hosted Dependabot activation, leaves real bot PR/CI execution unclaimed, and introduces no auto-merge, reviewers, credentials, publication or visibility change.",
+          "state": "checked",
+          "pressure": "assets/backpressure.dd.json#rows/bp-0003",
+          "note": "Main validated local YAML/CI source semantics; assets/local-validation.json. Hosted activation/bot execution remains unclaimed."
+        }
+      ]
+    },
+    {
+      "name": "phases",
+      "value": [
+        {
+          "id": "ph-868e",
+          "title": "Dependency update automation",
+          "brief": "Prepare bounded dependency-update configuration and source evidence for Main to validate; remote operation remains unobserved.",
+          "state": "checked",
+          "tasks": "assets/tasks/phase-1/tasks.dd.json#tasks"
+        }
+      ]
+    },
+    {
+      "name": "tasks",
+      "value": []
+    },
+    {
+      "name": "done_when",
+      "value": {}
+    },
+    {
+      "name": "research_context",
+      "value": "Source inspection: Cargo.toml:1-3 declares the root workspace, with dependency declarations at lines 12-33 and a root Cargo.lock. The assignment confirms no tracked npm package manifest. .github/workflows/rust.yml:3-8 enables push and pull_request with contents: read; lines 10-32 contain no actor, branch or path exclusion and invoke harness boot --json on Ubuntu and macOS. checkout and setup-node remain at v4. GitHub documentation: https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/configure-version-updates and https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference ."
+    },
+    {
+      "name": "testing_strategy",
+      "value": {
+        "approach": "Main owns all validation after this concurrent batch. Suggested checks: parse the YAML and assert exactly cargo and github-actions at /, weekly schedules and PR limits 5 and 2; run harness plan validate docs/plans/016-dependabot-ci/plan.dd.json. Source inspection confirms the existing pull_request trigger has no actor exclusions. No validation, build, lint or test command was run by this worker.",
+        "rationale": "Source/configuration proof is distinct from GitHub-hosted scheduled execution. An unchanged Rust workflow does not justify a new project-wide test or a fabricated bot run.",
+        "excluded": "No simulated bot identity or local claim of GitHub activation; real update-job and bot-PR CI evidence can only follow authorized default-branch integration."
+      }
+    },
+    {
+      "name": "documentation_strategy",
+      "value": {
+        "location": "This DD product plan and the disarmed scope note in assets/impl-guide.dd.json; generated Markdown is maintained by the local DD writer.",
+        "rationale": "A small configuration change needs a truthful scope/evidence note, not the unrelated text-conversion teaching guide or a second Markdown plan."
+      }
+    },
+    {
+      "name": "risks_assumptions",
+      "value": "Dependabot reads configuration from the default branch. A local branch does not activate GitHub schedules or prove a real bot PR/CI run. The open PR limits constrain version-update PRs per ecosystem, not every security-update PR. The GitHub Actions ecosystem updates action references, not the npm install --global harness version embedded in a shell command. Hosted policy, service health and update availability remain external prerequisites."
+    },
+    {
+      "name": "open_questions",
+      "value": []
+    },
+    {
+      "name": "workshop_opportunities",
+      "value": []
+    },
+    {
+      "name": "clarifications",
+      "value": []
+    },
+    {
+      "name": "planning_seam",
+      "value": []
+    },
+    {
+      "name": "gate_matrix",
+      "value": []
+    },
+    {
+      "name": "implementation_summary",
+      "value": "Added and locally validated .github/dependabot.yml for Cargo and GitHub Actions, weekly with version-update PR limits 5/2. Existing read-only Ubuntu/macOS pull_request CI is unchanged. Source-scoped ACs are verified; no hosted bot execution or activation claim. Main preserves the work in the isolated branch; no visibility change or remote publication."
+    },
+    {
+      "name": "key_findings",
+      "value": []
+    },
+    {
+      "name": "acceptance_coverage",
+      "value": []
+    },
+    {
+      "name": "risks",
+      "value": []
+    },
+    {
+      "name": "execution_guardrails",
+      "value": [
+        "Only source/configuration ACs are checked, based on assets/local-validation.json; hosted activation remains unobserved.",
+        "No formal Builder dispatch, baseline sealing, independent decomposition review or native-root rebinding is claimed.",
+        "No dependency/action upgrade, auto-merge, secret, GitHub permission or visibility change."
+      ]
+    }
+  ]
+}

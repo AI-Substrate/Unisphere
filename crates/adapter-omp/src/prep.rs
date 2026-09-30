@@ -7,13 +7,18 @@
 //!   generation on its native entry id (`msg_id`). A repeat whose first
 //!   sighting was folded by an earlier batch or run is an `update` sighting.
 //!   `request_id` is null: the dialect records no request id (`responseId`
-//!   names the response).
-//! - `usage.cttl` splits cache writes into 5 m and 1 h; a half it omits is the
-//!   native `cacheWrite` aggregate minus the recorded half. Without `cttl` the
-//!   aggregate follows the contract's documented fallback (1 h in main
-//!   sessions, 5 m in subagent sources); `cache_write_basis` says which.
+//!   names the response). The model is `provider/model`, the id the harness's
+//!   own `model_change` entries use, because one model's window differs by
+//!   provider.
+//! - Context is `input + cacheRead + cacheWrite` (the harness's
+//!   `contextSnapshot.promptTokens`). `usage.cttl` splits cache writes into 5 m
+//!   and 1 h; a half it omits is the native `cacheWrite` aggregate minus the
+//!   recorded half. Without `cttl` the harness does not distinguish the TTL, so
+//!   both halves are null with basis `none`; the aggregate still counts toward
+//!   the context.
 //! - An `error` response whose usage records no tokens consumed nothing: it is
 //!   an `api_error` event, not a call. Every `error` response is such an event.
+//!   An `aborted` response that records no tokens is not a call either.
 //! - Branch membership comes from parent ids. The fold keeps a bounded window of
 //!   the most recent tree entries, each with the call nearest on its path, so a
 //!   retry or navigation that re-parents onto a recent entry restores that
@@ -22,14 +27,19 @@
 //!   sources.
 //! - User messages open `human` turns (`subagent-task` in subagent sources).
 //!   A `[pij-rs from …]` envelope, in user text or a `pij` custom message, opens
-//!   a `peer` turn with its sender and Pij message id; `async-result` custom
-//!   messages open `task-notification` turns. Other injections open none.
+//!   a `peer` turn with its sender and Pij message id; `pij-fyi` and
+//!   `irc:incoming` custom messages are `peer` too, the latter with its native
+//!   sender. `async-result` and `launch-completion` open `task-notification`
+//!   turns and other user-attributed custom messages (skill prompts) `human`
+//!   turns. Agent-attributed injections (nudges, reminders, diagnostics) open
+//!   none.
 //! - `compaction` and `branch_summary` entries are compaction events (`subkind`
 //!   is the entry type). Only `compaction` entries count in
 //!   `SessionFacts::compactions`; the dialect records no manual/auto trigger.
 //! - Tool calls and results are `tool_uses`; `details.wallTimeMs` is the only
 //!   native duration.
 //! - The mutable title slot is session metadata, not an event, and is not folded.
+//! - The dialect records no context window, so `context_window` stays null.
 //!
 //! Message text is read only to classify openers and derive hashes. It leaves
 //! the fold only as `triggers.content_head`, under explicit opt-in.
@@ -52,7 +62,7 @@ use unisphere_core::{
 use crate::DESCRIPTOR;
 
 /// Interpretation policy; bump on any rule change so every source re-emits.
-pub const PREP_POLICY_VERSION: &str = "oh-my-pi/prep-v1";
+pub const PREP_POLICY_VERSION: &str = "oh-my-pi/prep-v2";
 
 /// Tree entries remembered for re-parenting (retries, navigation).
 const WINDOW: usize = 256;
@@ -141,8 +151,9 @@ fn parent_session_id(value: &str) -> Option<String> {
     }
 }
 
-/// input, cw_1h, cw_5m, cache_read, output; `None` = not recorded.
-type Tokens = [Option<i64>; 5];
+/// input, cw_1h, cw_5m, cache_read, output, cache-write aggregate;
+/// `None` = not recorded.
+type Tokens = [Option<i64>; 6];
 
 fn max_opt(a: Option<i64>, b: Option<i64>) -> Option<i64> {
     match (a, b) {
@@ -157,11 +168,12 @@ fn merge_tokens(into: &mut Tokens, from: &Tokens) {
     }
 }
 
+/// The native aggregate, else the sum of the recorded halves.
 fn cache_write(tokens: &Tokens) -> Option<i64> {
-    Some(tokens[1]?.saturating_add(tokens[2]?))
+    tokens[5].or_else(|| Some(tokens[1]?.saturating_add(tokens[2]?)))
 }
 
-/// `input + cw_1h + cw_5m + cache_read`, only when all are recorded.
+/// `input + cache writes + cache_read`, only when all are recorded.
 fn context(tokens: &Tokens) -> Option<i64> {
     Some(
         tokens[0]?
@@ -239,7 +251,7 @@ impl Tracked {
     fn load(value: &Value) -> Option<Self> {
         let object = value.as_object()?;
         let array = object.get("tokens")?.as_array()?;
-        let mut tokens: Tokens = [None; 5];
+        let mut tokens: Tokens = [None; 6];
         if array.len() != tokens.len() {
             return None;
         }
@@ -735,19 +747,25 @@ impl State {
     ) {
         let text = text_of(record.get("content"));
         let origin = match record.get("customType").and_then(Value::as_str) {
-            Some("pij") => TurnOrigin::Peer,
-            Some("async-result") => TurnOrigin::TaskNotification,
+            Some("pij" | "pij-fyi" | "irc:incoming") => TurnOrigin::Peer,
+            Some("async-result" | "launch-completion") => TurnOrigin::TaskNotification,
+            _ if record.get("attribution").and_then(Value::as_str) == Some("user") => {
+                TurnOrigin::Human
+            }
             _ => return,
         };
+        let details = record.get("details").and_then(Value::as_object);
+        let detail = |key: &str| {
+            details
+                .and_then(|details| string(details, key))
+                .filter(|value| !value.is_empty())
+        };
         let (sender, pij_msg_id) = if origin == TurnOrigin::Peer {
-            let native_id = record
-                .get("details")
-                .and_then(|details| details.get("pijMessageId"))
-                .and_then(Value::as_str)
-                .map(str::to_owned);
             (
-                pij_rs_from(&text).map(|(sender, _)| sender),
-                native_id.or_else(|| pij_message_id(&text)),
+                pij_rs_from(&text)
+                    .map(|(sender, _)| sender)
+                    .or_else(|| detail("from")),
+                detail("pijMessageId").or_else(|| pij_message_id(&text)),
             )
         } else {
             (None, None)
@@ -856,8 +874,9 @@ impl State {
             None,
             int(usage, "cacheRead"),
             int(usage, "output"),
+            int(usage, "cacheWrite"),
         ];
-        let total = int(usage, "cacheWrite");
+        let total = tokens[5];
         let split = usage
             .get("cttl")
             .and_then(Value::as_object)
@@ -871,20 +890,12 @@ impl State {
                     (None, None) => None,
                 }
             });
-        let basis = match (split, total) {
-            (Some((h1, h5)), _) => {
+        let basis = match split {
+            Some((h1, h5)) => {
                 (tokens[1], tokens[2]) = (Some(h1), Some(h5));
                 CacheWriteBasis::Split
             }
-            (None, Some(total)) if self.is_sub => {
-                (tokens[1], tokens[2]) = (Some(0), Some(total));
-                CacheWriteBasis::Fallback5m
-            }
-            (None, Some(total)) => {
-                (tokens[1], tokens[2]) = (Some(total), Some(0));
-                CacheWriteBasis::Fallback1h
-            }
-            (None, None) => CacheWriteBasis::None,
+            None => CacheWriteBasis::None,
         };
         (tokens, basis)
     }
@@ -902,6 +913,9 @@ impl State {
             .and_then(Value::as_object)
             .filter(|usage| !usage.is_empty());
         let tokens = usage.map(|usage| self.tokens(usage));
+        let consumed = tokens
+            .as_ref()
+            .is_some_and(|(t, _)| t.iter().flatten().any(|n| *n != 0));
         if stop_reason.as_deref() == Some("error") {
             let status = message.get("errorStatus").and_then(|status| match status {
                 Value::Number(n) => Some(n.to_string()),
@@ -910,13 +924,10 @@ impl State {
             });
             rows.events
                 .push(self.event(at, PrepEventKind::ApiError, status));
-            let consumed = tokens
-                .as_ref()
-                .is_some_and(|(t, _)| t.iter().flatten().any(|n| *n != 0));
-            if !consumed {
-                self.tool_uses(message, at, rows);
-                return;
-            }
+        }
+        if !consumed && matches!(stop_reason.as_deref(), Some("error" | "aborted")) {
+            self.tool_uses(message, at, rows);
+            return;
         }
         if let Some((tokens, basis)) = tokens {
             self.call(message, at, tokens, basis, stop_reason, rows, batch_calls);
@@ -977,7 +988,7 @@ impl State {
             request_id: None,
             ts: Some(at.ts.to_owned()),
             ts_ms: Some(at.ts_ms),
-            model: string(message, "model"),
+            model: qualified_model(message),
             stop_reason,
             input: tokens[0],
             cw_1h: tokens[1],
@@ -1177,6 +1188,17 @@ fn tracked_of(row: &PrepCallRow, tokens: &Tokens, ts_ms: i64) -> Tracked {
         model: row.model.clone(),
         stop_reason: row.stop_reason.clone(),
     }
+}
+
+/// `provider/model`; the bare model when the message names no provider.
+fn qualified_model(message: &Map<String, Value>) -> Option<String> {
+    let model = string(message, "model").filter(|model| !model.is_empty())?;
+    Some(
+        match string(message, "provider").filter(|provider| !provider.is_empty()) {
+            Some(provider) => format!("{provider}/{model}"),
+            None => model,
+        },
+    )
 }
 
 /// The query mapping's tool-family vocabulary; unknown names stay null.

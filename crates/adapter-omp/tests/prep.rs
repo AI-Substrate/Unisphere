@@ -125,8 +125,8 @@ fn fold_identity_matches_the_catalogue_descriptor() {
     let fold = OmpPrepFold;
     assert_eq!(fold.harness(), "oh-my-pi");
     assert_eq!(fold.harness(), DESCRIPTOR.id);
-    assert_eq!(fold.policy(), "oh-my-pi/prep-v1");
-    assert_eq!(PREP_POLICY_VERSION, "oh-my-pi/prep-v1");
+    assert_eq!(fold.policy(), "oh-my-pi/prep-v2");
+    assert_eq!(PREP_POLICY_VERSION, "oh-my-pi/prep-v2");
     assert_eq!(fold.kind(), PrepSourceKind::Append);
     assert_eq!(fold.pattern(), "*/*.jsonl");
     assert_eq!(fold.pattern(), DESCRIPTOR.locations[0].session_glob);
@@ -162,11 +162,11 @@ type CallExpectation = (
 
 #[test]
 fn assistant_messages_with_usage_are_calls_keyed_by_native_id() {
-    use CacheWriteBasis::{Fallback1h, Fallback5m, Split};
+    use CacheWriteBasis::{None as NoTtl, Split};
     let s = Some;
     // (entry id, [input, cw_1h, cw_5m, cache_read, output], gap_ms, turn_no,
     // call_in_turn, basis, stop reason)
-    let main: [CallExpectation; 7] = [
+    let main: [CallExpectation; 10] = [
         // cttl records only 5 m: 1 h is the aggregate minus it.
         (
             "e05",
@@ -186,33 +186,34 @@ fn assistant_messages_with_usage_are_calls_keyed_by_native_id() {
             Split,
             "stop",
         ),
-        // Aggregate only: the documented main-session fallback.
+        // Aggregate only: the harness does not distinguish the TTL.
         (
             "e10",
-            [s(2), s(7), s(0), s(170), s(3)],
+            [s(2), None, None, s(170), s(3)],
             55_000,
             2,
             1,
-            Fallback1h,
+            NoTtl,
             "toolUse",
         ),
         // The zero-usage error response (e12) is not a call.
         (
             "e13",
-            [s(1), s(0), s(0), s(180), s(2)],
+            [s(1), None, None, s(180), s(2)],
             10_000,
             2,
             2,
-            Fallback1h,
+            NoTtl,
             "stop",
         ),
+        // An abort that recorded tokens is a call.
         (
             "e15",
-            [s(5), s(0), s(0), s(200), s(1)],
+            [s(5), None, None, s(200), s(1)],
             50_000,
             3,
             1,
-            Fallback1h,
+            NoTtl,
             "aborted",
         ),
         (
@@ -226,22 +227,50 @@ fn assistant_messages_with_usage_are_calls_keyed_by_native_id() {
         ),
         (
             "e23",
-            [s(1), s(0), s(0), s(60), s(1)],
+            [s(1), None, None, s(60), s(1)],
             40_000,
             5,
             1,
-            Fallback1h,
+            NoTtl,
+            "stop",
+        ),
+        // The zero-usage abort (e29) is not a call.
+        (
+            "e30",
+            [s(6), None, None, s(64), s(2)],
+            65_000,
+            6,
+            1,
+            NoTtl,
+            "stop",
+        ),
+        (
+            "e32",
+            [s(1), None, None, s(84), s(1)],
+            15_000,
+            7,
+            1,
+            NoTtl,
+            "stop",
+        ),
+        (
+            "e34",
+            [s(2), None, None, s(85), s(1)],
+            10_000,
+            8,
+            1,
+            NoTtl,
             "stop",
         ),
     ];
     let sub: [CallExpectation; 2] = [
         (
             "s02",
-            [s(3), s(0), s(30), s(0), s(4)],
+            [s(3), None, None, s(0), s(4)],
             -1,
             1,
             1,
-            Fallback5m,
+            NoTtl,
             "toolUse",
         ),
         (
@@ -295,11 +324,44 @@ fn assistant_messages_with_usage_are_calls_keyed_by_native_id() {
         }
     }
     let rows = fold(MAIN_FILE, MAIN).rows;
+    // The model is provider-qualified, as the harness's model_change names it.
+    assert_eq!(rows.calls[0].model.as_deref(), Some("anthropic/model-a"));
     let last = rows.calls.last().unwrap();
-    assert_eq!(last.model.as_deref(), Some("model-b"));
-    assert_eq!(last.ts.as_deref(), Some(ts(305).as_str()));
-    assert_eq!(last.ts_ms, Some(ms(305)));
-    assert_eq!(last.native_offset, Some(line_offset(MAIN, 24)));
+    assert_eq!(last.model.as_deref(), Some("github-copilot/model-d"));
+    assert_eq!(last.ts.as_deref(), Some(ts(395).as_str()));
+    assert_eq!(last.ts_ms, Some(ms(395)));
+    assert_eq!(last.native_offset, Some(line_offset(MAIN, 36)));
+}
+
+#[test]
+fn an_abort_that_recorded_no_tokens_keeps_the_previous_context() {
+    // Up to and including the zero-usage abort e29.
+    let text = MAIN.lines().take(32).collect::<Vec<_>>().join("\n");
+    for splits in [vec![], vec![31], vec![30, 31]] {
+        let run = fold_with(MAIN_FILE, &text, &splits, true, PrepOptions::default());
+        assert!(
+            run.rows
+                .calls
+                .iter()
+                .all(|c| c.msg_id.as_deref() != Some("e29"))
+        );
+        assert_eq!(run.facts.calls, 7, "splits={splits:?}");
+        let latest = run.facts.latest_context.unwrap();
+        assert_eq!(
+            (latest.ts_ms, latest.total),
+            (Some(ms(305)), Some(61)),
+            "splits={splits:?}"
+        );
+    }
+    // The next call, parented on the abort, carries its own context.
+    let latest = fold(
+        MAIN_FILE,
+        &MAIN.lines().take(33).collect::<Vec<_>>().join("\n"),
+    )
+    .facts
+    .latest_context
+    .unwrap();
+    assert_eq!((latest.ts_ms, latest.total), (Some(ms(370)), Some(82)));
 }
 
 #[test]
@@ -336,7 +398,7 @@ fn a_repeated_native_id_merges_in_batch_and_is_an_update_across_batches() {
         (None, None, None)
     );
     assert_eq!(update.native_offset, Some(line_offset(MAIN, 20)));
-    assert_eq!(run.facts.calls, 7);
+    assert_eq!(run.facts.calls, 10);
 }
 
 #[test]
@@ -474,6 +536,11 @@ fn openers_carry_human_peer_and_task_origins() {
                 Some("e18")
             ),
             (TaskNotification, None, None, 24, 5, Some("e20")),
+            // IRC: the native sender, no Pij message id.
+            (Peer, Some("pij-delta-four"), None, 20, 6, Some("e28")),
+            (TaskNotification, None, None, 25, 7, Some("e31")),
+            // A user-attributed skill prompt.
+            (Human, None, None, 24, 8, Some("e33")),
         ]
     );
     // Both peer bodies normalise to the same payload.
@@ -499,6 +566,9 @@ fn openers_carry_human_peer_and_task_origins() {
             (3, Human, None, Some("e15")),
             (4, Peer, Some("pij-gamma-three"), Some("e19")),
             (5, TaskNotification, None, Some("e23")),
+            (6, Peer, Some("pij-delta-four"), Some("e30")),
+            (7, TaskNotification, None, Some("e32")),
+            (8, Human, None, Some("e34")),
         ]
     );
     let peer = &rows.turns[1];
@@ -674,19 +744,20 @@ fn session_facts_report_branch_context_compaction_model_and_subagent_link() {
             cwd: Some("/work/demo".into()),
             first_event_ts: Some(ts(0)),
             first_event_ms: Some(ms(0)),
-            last_event_ts: Some(ts(320)),
-            last_event_ms: Some(ms(320)),
-            records: 26,
-            calls: 7,
-            turns: 5,
+            last_event_ts: Some(ts(395)),
+            last_event_ms: Some(ms(395)),
+            records: 33,
+            calls: 10,
+            turns: 8,
+            // Without cttl the aggregate cache write still counts: 2 + 85 + 3.
             latest_context: Some(ContextSample {
-                ts_ms: Some(ms(305)),
-                model: Some("model-b".into()),
+                ts_ms: Some(ms(395)),
+                model: Some("github-copilot/model-d".into()),
                 stop_reason: Some("stop".into()),
-                input: Some(1),
-                cache_read: Some(60),
-                cache_write: Some(0),
-                total: Some(61),
+                input: Some(2),
+                cache_read: Some(85),
+                cache_write: Some(3),
+                total: Some(90),
             }),
             compactions: Some(CompactionCounts {
                 manual: 0,
@@ -820,6 +891,9 @@ fn content_appears_only_under_explicit_opt_in() {
             Some("placeholder human prompt two"),
             Some("placeholder peer body"),
             Some("placeholder async result"),
+            Some("placeholder irc body"),
+            Some("placeholder launch notice"),
+            Some("placeholder skill prompt"),
         ]
     );
     // Opt-in changes only the content column.
@@ -836,7 +910,7 @@ fn foreign_checkpoints_and_snapshot_input_are_refused() {
     let meta = fold.describe(MAIN_FILE);
     let good = fold_with(MAIN_FILE, MAIN, &[], false, PrepOptions::default()).checkpoint;
     assert_eq!(good.format, PREP_CHECKPOINT_FORMAT);
-    assert_eq!(good.policy, "oh-my-pi/prep-v1");
+    assert_eq!(good.policy, "oh-my-pi/prep-v2");
     let refused = |checkpoint: PrepCheckpoint| {
         fold.open(&meta, "s", 0, Some(&checkpoint))
             .err()

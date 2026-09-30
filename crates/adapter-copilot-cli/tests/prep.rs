@@ -160,7 +160,7 @@ fn fold_identities_match_the_catalogue_descriptors() {
     assert_eq!(events.harness(), "copilot-cli");
     assert_eq!(events.harness(), DESCRIPTOR.id);
     assert_eq!(events.policy(), PREP_POLICY_VERSION);
-    assert_eq!(PREP_POLICY_VERSION, "copilot-cli/prep-v2");
+    assert_eq!(PREP_POLICY_VERSION, "copilot-cli/prep-v3");
     assert_eq!(events.kind(), PrepSourceKind::Append);
     assert_eq!(events.pattern(), "*/events.jsonl");
     assert_eq!(events.describe(EVENTS_FILE), PrepSourceMeta::default());
@@ -710,6 +710,85 @@ fn context_window_is_the_latest_main_chain_token_limit_until_the_model_changes()
 }
 
 #[test]
+fn cache_lifetime_is_the_current_models_entry_in_the_latest_main_checkpoint() {
+    let text = concat!(
+        r#"{"type":"session.start","timestamp":"2026-01-10T00:00:00.000Z","data":{"sessionId":"s","selectedModel":"model-a"}}"#,
+        "\n",
+        r#"{"type":"usage_placeholder","timestamp":"2026-01-10T00:00:01.000Z","data":{}}"#,
+        "\n",
+        r#"{"type":"session.usage_checkpoint","timestamp":"2026-01-10T00:00:02.000Z","data":{"modelCacheState":[{"modelId":"model-a","cacheTtlSeconds":300,"cacheExpiresAt":"2026-01-10T00:05:02.000Z"},{"modelId":"model-b","cacheTtlSeconds":3600,"cacheExpiresAt":"2026-01-10T01:00:02.000Z"}]}}"#,
+        "\n",
+        r#"{"type":"assistant.message","timestamp":"2026-01-10T00:00:03.000Z","data":{"apiCallId":"api-1","messageId":"m1","model":"model-a"}}"#,
+        "\n",
+        r#"{"type":"session.usage_checkpoint","timestamp":"2026-01-10T00:00:04.000Z","agentId":"agent-1","data":{"modelCacheState":[{"modelId":"model-a","cacheTtlSeconds":86400,"cacheExpiresAt":"2026-01-11T00:00:04.000Z"}]}}"#,
+        "\n",
+        r#"{"type":"assistant.message","timestamp":"2026-01-10T00:00:05.000Z","agentId":"agent-1","data":{"apiCallId":"api-2","messageId":"m2","model":"model-b"}}"#,
+        "\n",
+        r#"{"type":"assistant.message","timestamp":"2026-01-10T00:00:06.000Z","data":{"apiCallId":"api-3","messageId":"m3"}}"#,
+        "\n",
+        r#"{"type":"session.model_change","timestamp":"2026-01-10T00:00:07.000Z","data":{"previousModel":"model-a","newModel":"model-b"}}"#,
+        "\n",
+        r#"{"type":"assistant.message","timestamp":"2026-01-10T00:00:08.000Z","data":{"apiCallId":"api-4","messageId":"m4","model":"model-b"}}"#,
+        "\n",
+        r#"{"type":"session.usage_checkpoint","timestamp":"2026-01-10T00:00:09.000Z","data":{"totalPremiumRequests":1}}"#,
+        "\n",
+        r#"{"type":"session.usage_checkpoint","timestamp":"2026-01-10T00:00:10.000Z","data":{"modelCacheState":[{"modelId":"model-a","cacheTtlSeconds":300,"cacheExpiresAt":"2026-01-10T00:05:10.000Z"}]}}"#,
+        "\n",
+        r#"{"type":"session.usage_checkpoint","timestamp":"2026-01-10T00:00:11.000Z","data":{"modelCacheState":[{"modelId":"model-b","cacheTtlSeconds":1800}]}}"#,
+        "\n",
+    );
+    let lifetime = |lines: usize| {
+        let prefix: Vec<&str> = text.lines().take(lines).collect();
+        let facts = fold(&(prefix.join("\n") + "\n")).facts;
+        (facts.cache_ttl_seconds, facts.cache_expires_ms)
+    };
+    assert_eq!(lifetime(3), (None, None), "no call has named a model yet");
+    assert_eq!(
+        lifetime(4),
+        (Some(300), Some(ms(302))),
+        "the named model's entry, whichever came first"
+    );
+    assert_eq!(
+        lifetime(7),
+        (Some(300), Some(ms(302))),
+        "subagent checkpoints and calls, and calls naming no model, change nothing"
+    );
+    assert_eq!(
+        lifetime(8),
+        (Some(300), Some(ms(302))),
+        "a requested switch is not current until a call uses it"
+    );
+    assert_eq!(
+        lifetime(9),
+        (Some(3600), Some(ms(3602))),
+        "the new model's entry"
+    );
+    assert_eq!(
+        lifetime(10),
+        (Some(3600), Some(ms(3602))),
+        "a checkpoint without cache state keeps the last one"
+    );
+    assert_eq!(
+        lifetime(11),
+        (None, None),
+        "the latest checkpoint has no entry for the current model"
+    );
+    assert_eq!(
+        lifetime(12),
+        (Some(1800), None),
+        "unrecorded expiry stays None"
+    );
+
+    let whole = fold(text);
+    let n = records(text).len();
+    for split in 1..n {
+        let run = fold_with(text, &[split], true, PrepOptions::default());
+        assert_eq!(run.facts, whole.facts, "split={split}");
+        assert_eq!(run.checkpoint, whole.checkpoint, "split={split}");
+    }
+}
+
+#[test]
 fn untimed_event_records_fold_with_null_time_columns() {
     let text = concat!(
         r#"{"type":"user.message","data":{"content":"placeholder"}}"#,
@@ -965,7 +1044,7 @@ fn foreign_checkpoints_and_the_other_representation_are_refused() {
     let meta = PrepSourceMeta::default();
     let good = fold(EVENTS).checkpoint;
     assert_eq!(good.format, PREP_CHECKPOINT_FORMAT);
-    assert_eq!(good.policy, "copilot-cli/prep-v2");
+    assert_eq!(good.policy, "copilot-cli/prep-v3");
     let refused = |fold: &dyn PrepFold, checkpoint: PrepCheckpoint| {
         fold.open(&meta, "s", 0, Some(&checkpoint))
             .err()
@@ -983,12 +1062,23 @@ fn foreign_checkpoints_and_the_other_representation_are_refused() {
         refused(&events, newer),
         Some(PipelineErrorKind::InvalidData)
     );
-    let mut damaged = good.clone();
-    damaged.fold["committed"] = serde_json::json!(["not hex"]);
-    assert_eq!(
-        refused(&events, damaged),
-        Some(PipelineErrorKind::InvalidData)
-    );
+    for (part, key, bad) in [
+        ("core", "committed", serde_json::json!(["not hex"])),
+        ("cache", "call_model", serde_json::json!(7)),
+        (
+            "cache",
+            "lifetimes",
+            serde_json::json!({"m": {"ttl_seconds": "300"}}),
+        ),
+    ] {
+        let mut damaged = good.clone();
+        damaged.fold[part][key] = bad;
+        assert_eq!(
+            refused(&events, damaged),
+            Some(PipelineErrorKind::InvalidData),
+            "{part}.{key}"
+        );
+    }
     // Each fold refuses the other's checkpoint.
     let legacy_saved = fold_legacy(LEGACY, PrepOptions::default()).checkpoint;
     assert_eq!(legacy_saved.policy, "copilot-cli-snapshot/prep-v1");

@@ -44,6 +44,11 @@
 //!   `session.truncation` or `session.usage_info` record that carries one. A
 //!   later `session.model_change` clears it, because the limit belongs to the
 //!   model it was recorded for; until the next such record it is `None`.
+//! - `cache_ttl_seconds` / `cache_expires_ms` are the native prompt-cache
+//!   lifetime (`cacheTtlSeconds`, and `cacheExpiresAt` as epoch ms) of the
+//!   current model's entry in the latest main-chain `session.usage_checkpoint`
+//!   `modelCacheState`. The current model is the one the latest main-chain
+//!   call named. With no such call, checkpoint or entry, both are `None`.
 //! - Tool uses come from `toolRequests` (with the requesting call id) or, when
 //!   unrequested, `tool.execution_start`; results from `tool.execution_complete`
 //!   with its native `success`. Durations are not recorded natively: null.
@@ -79,7 +84,7 @@ use unisphere_core::{
 use crate::{DESCRIPTOR, SNAPSHOT_DESCRIPTOR, query::tool_family};
 
 /// Events interpretation policy; bump on any rule change so every source re-emits.
-pub const PREP_POLICY_VERSION: &str = "copilot-cli/prep-v2";
+pub const PREP_POLICY_VERSION: &str = "copilot-cli/prep-v3";
 /// Legacy-document interpretation policy.
 pub const LEGACY_PREP_POLICY_VERSION: &str = "copilot-cli-snapshot/prep-v1";
 
@@ -141,13 +146,16 @@ impl PrepFold for CopilotCliPrepFold {
         generation: u32,
         saved: Option<&PrepCheckpoint>,
     ) -> Result<Box<dyn PrepFoldSession>, PipelineError> {
-        let core = resume(
+        let session = resume(
             saved,
             PREP_POLICY_VERSION,
-            || Core::new(source, generation, Some(CompactionCounts::default())),
-            |value| Core::load(source, generation, value),
+            || EventsSession {
+                core: Core::new(source, generation, Some(CompactionCounts::default())),
+                cache: CacheState::default(),
+            },
+            |value| EventsSession::load(source, generation, value),
         )?;
-        Ok(Box::new(EventsSession { core }))
+        Ok(Box::new(session))
     }
 }
 
@@ -865,8 +873,92 @@ impl Core {
 // Events (append)
 // ---------------------------------------------------------------------------
 
+/// A prompt-cache lifetime as `session.usage_checkpoint` records it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+struct Lifetime {
+    ttl_seconds: Option<i64>,
+    expires_ms: Option<i64>,
+}
+
+/// What the cache-lifetime facts are derived from.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct CacheState {
+    /// Model the latest main-chain call named.
+    call_model: Option<String>,
+    /// The latest main-chain checkpoint's `modelCacheState`, by `modelId`.
+    lifetimes: BTreeMap<String, Lifetime>,
+}
+
+impl CacheState {
+    fn save(&self) -> Value {
+        let lifetimes: Map<String, Value> = self
+            .lifetimes
+            .iter()
+            .map(|(model, life)| {
+                (
+                    model.clone(),
+                    json!({ "ttl_seconds": life.ttl_seconds, "expires_ms": life.expires_ms }),
+                )
+            })
+            .collect();
+        json!({ "call_model": self.call_model, "lifetimes": lifetimes })
+    }
+
+    fn load(value: &Value) -> Option<Self> {
+        let object = value.as_object()?;
+        let lifetimes = object
+            .get("lifetimes")?
+            .as_object()?
+            .iter()
+            .map(|(model, life)| {
+                let life = life.as_object()?;
+                let read = |key: &str| opt(life.get(key)?, Value::as_i64);
+                Some((
+                    model.clone(),
+                    Lifetime {
+                        ttl_seconds: read("ttl_seconds")?,
+                        expires_ms: read("expires_ms")?,
+                    },
+                ))
+            })
+            .collect::<Option<BTreeMap<_, _>>>()?;
+        Some(Self {
+            call_model: opt_text(object.get("call_model")?)?,
+            lifetimes,
+        })
+    }
+
+    /// Replace the lifetimes with a checkpoint's `modelCacheState` entries.
+    fn record(&mut self, entries: &[Value]) {
+        self.lifetimes = entries
+            .iter()
+            .filter_map(Value::as_object)
+            .filter_map(|entry| {
+                let lifetime = Lifetime {
+                    ttl_seconds: int(entry, "cacheTtlSeconds"),
+                    expires_ms: entry
+                        .get("cacheExpiresAt")
+                        .and_then(Value::as_str)
+                        .and_then(parse_ms),
+                };
+                Some((text(entry, "modelId")?, lifetime))
+            })
+            .collect();
+    }
+
+    fn apply(&self, session: &mut SessionFacts) {
+        let lifetime = self
+            .call_model
+            .as_ref()
+            .and_then(|model| self.lifetimes.get(model));
+        session.cache_ttl_seconds = lifetime.and_then(|life| life.ttl_seconds);
+        session.cache_expires_ms = lifetime.and_then(|life| life.expires_ms);
+    }
+}
+
 struct EventsSession {
     core: Core,
+    cache: CacheState,
 }
 
 impl PrepFoldSession for EventsSession {
@@ -874,7 +966,7 @@ impl PrepFoldSession for EventsSession {
         PrepCheckpoint {
             format: PREP_CHECKPOINT_FORMAT,
             policy: PREP_POLICY_VERSION.to_owned(),
-            fold: self.core.save(),
+            fold: json!({ "core": self.core.save(), "cache": self.cache.save() }),
         }
     }
 
@@ -891,6 +983,15 @@ impl PrepFoldSession for EventsSession {
 }
 
 impl EventsSession {
+    /// Strict inverse of the events checkpoint; anything else is refused.
+    fn load(source: &str, generation: u32, value: &Value) -> Option<Self> {
+        let object = value.as_object()?;
+        Some(Self {
+            core: Core::load(source, generation, object.get("core")?)?,
+            cache: CacheState::load(object.get("cache")?)?,
+        })
+    }
+
     fn fold_records(&mut self, records: &[NativeRecord], options: PrepOptions) -> PrepRows {
         let mut rows = PrepRows::default();
         // Calls sighted in this batch, by key, so repeats merge in place.
@@ -1044,9 +1145,24 @@ impl EventsSession {
                         Some(kind.to_owned()),
                     ));
                 }
+                "session.usage_checkpoint" if !sidechain => {
+                    if let Some(entries) = data.get("modelCacheState").and_then(Value::as_array) {
+                        self.cache.record(entries);
+                    }
+                }
                 _ => {}
             }
+            if let Some(model) = core
+                .session
+                .latest_context
+                .as_ref()
+                .and_then(|sample| sample.model.as_ref())
+                && self.cache.call_model.as_ref() != Some(model)
+            {
+                self.cache.call_model = Some(model.clone());
+            }
         }
+        self.cache.apply(&mut self.core.session);
         rows
     }
 }

@@ -1,0 +1,23 @@
+docs/plans/029-session-status/assets/phase-2-plan.md
+  s_042162115c1f28::t_4372bb794b76c1 1-40
+docs/plans/029-session-status/plan.dd.json
+  s_042162115c1f28::t_3edf3ecae945c6 91-92
+docs/plans/029-session-status/plan.dd.md
+  s_042162115c1f28::t_0692dd2c4fabc1 71
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "8ed36752b4df045f17f96aff4a6f3a47b0d3c04f",
+  "prompts": {},
+  "sessions": {
+    "s_042162115c1f28": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4b3f9ea7-6ca1-47b0-93c3-82069b1452f9",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

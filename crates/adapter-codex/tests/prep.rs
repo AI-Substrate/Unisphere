@@ -746,6 +746,8 @@ fn session_facts_report_identity_context_compaction_and_skips() {
         SessionFacts {
             // The latest token_count's native window, not an earlier one.
             context_window: Some(2000),
+            cache_ttl_seconds: None,
+            cache_expires_ms: None,
             session_id: Some("thread-main".into()),
             parent_session_id: Some("thread-origin".into()),
             is_sidechain: false,

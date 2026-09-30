@@ -666,6 +666,8 @@ fn session_facts_report_branch_context_compaction_model_and_subagent_link() {
         main,
         SessionFacts {
             context_window: None,
+            cache_ttl_seconds: None,
+            cache_expires_ms: None,
             session_id: Some("sess-0001".into()),
             parent_session_id: None,
             is_sidechain: false,

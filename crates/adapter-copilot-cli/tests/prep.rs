@@ -619,6 +619,8 @@ fn session_facts_report_context_compactions_model_and_coverage() {
         SessionFacts {
             // The manual compaction after the model change records the new limit.
             context_window: Some(700),
+            cache_ttl_seconds: None,
+            cache_expires_ms: None,
             session_id: Some("sess-0001".into()),
             parent_session_id: None,
             is_sidechain: false,
@@ -861,6 +863,8 @@ fn legacy_documents_fold_with_structural_keys_and_explicit_nulls() {
         run.facts,
         SessionFacts {
             context_window: None,
+            cache_ttl_seconds: None,
+            cache_expires_ms: None,
             session_id: Some("legacy-0001".into()),
             parent_session_id: None,
             is_sidechain: false,

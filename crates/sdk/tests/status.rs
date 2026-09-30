@@ -846,3 +846,44 @@ fn a_compaction_newer_than_the_last_call_sets_context_to_its_post_tokens() {
         9_001
     );
 }
+
+#[test]
+fn a_native_cache_lifetime_and_expiry_win_over_write_split_inference() {
+    let f = fixture();
+    f.append(
+        FILE,
+        &[
+            json!({"call": {"ts_ms": T0, "model": "claude-opus-5", "cw_5m": 10}}),
+            json!({"facts": {"cache_ttl_seconds": 1800, "cache_expires_ms": T0 + 30 * MIN}}),
+        ],
+    );
+    let warm = f.cold("s1", T0 + 20 * MIN).last_call.unwrap();
+    let bucket = warm.ttl_bucket.unwrap();
+    assert_eq!(
+        (bucket.value.as_str(), bucket.basis),
+        ("30m", Basis::Native)
+    );
+    let cache = warm.cache_warm.unwrap();
+    assert_eq!((cache.value, cache.basis), (true, Basis::Native));
+    assert!(
+        !f.cold("s1", T0 + 31 * MIN)
+            .last_call
+            .unwrap()
+            .cache_warm
+            .unwrap()
+            .value
+    );
+}
+
+#[test]
+fn a_session_directory_layout_is_found_by_a_direct_probe() {
+    let f = fixture();
+    let file = "s9/events.jsonl";
+    f.append(
+        file,
+        &[json!({"call": {"ts_ms": T0, "model": "claude-opus-5", "input": 5}})],
+    );
+    let status = f.cold("s9", T0 + MIN);
+    assert_eq!(status.calls.total, 1);
+    assert!(status.target.transcript.unwrap().ends_with(file));
+}

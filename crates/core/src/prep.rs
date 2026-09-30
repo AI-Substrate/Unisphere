@@ -652,6 +652,12 @@ pub struct SessionFacts {
     /// when the dialect records none (status then falls back to a table).
     #[serde(default)]
     pub context_window: Option<i64>,
+    /// Prompt-cache lifetime the harness recorded for the current model
+    /// (seconds), and when that cache expires; `None` when not recorded.
+    #[serde(default)]
+    pub cache_ttl_seconds: Option<i64>,
+    #[serde(default)]
+    pub cache_expires_ms: Option<i64>,
     /// `None` only when the dialect has no native compaction marker.
     pub compactions: Option<CompactionCounts>,
     pub last_compaction: Option<CompactionSample>,

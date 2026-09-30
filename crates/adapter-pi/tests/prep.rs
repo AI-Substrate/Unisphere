@@ -608,6 +608,8 @@ fn session_facts_report_branch_context_compaction_model_and_parent() {
         fold(MAIN).facts,
         SessionFacts {
             context_window: None,
+            cache_ttl_seconds: None,
+            cache_expires_ms: None,
             session_id: Some("sess-0001".into()),
             // The parent file's stem suffix, never its path.
             parent_session_id: Some("sess-0000".into()),

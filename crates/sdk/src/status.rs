@@ -377,6 +377,28 @@ fn derive(
         } else {
             None
         };
+        // A lifetime the harness recorded outright (e.g. Copilot CLI's
+        // modelCacheState) is native and wins; its expiry decides warmth.
+        let native_ttl = facts
+            .cache_ttl_seconds
+            .filter(|seconds| *seconds > 0)
+            .map(|seconds| (ttl_label(seconds), seconds.saturating_mul(1000)));
+        let (ttl_bucket, cache_warm) = match native_ttl {
+            Some((label, ttl_ms)) => (
+                Some(Fact::new(label, Basis::Native)),
+                match facts.cache_expires_ms {
+                    Some(expires) => Some(Fact::new(now_ms < expires, Basis::Native)),
+                    None => call
+                        .at_ms
+                        .map(|at| Fact::new(now_ms - at < ttl_ms, Basis::Derived)),
+                },
+            ),
+            None => (
+                ttl.map(|(bucket, _)| Fact::new(bucket.to_owned(), Basis::Derived)),
+                ttl.zip(call.at_ms)
+                    .map(|((_, ttl), at)| Fact::new(now_ms - at < ttl, Basis::Derived)),
+            ),
+        };
         LastCall {
             at_ms: call.at_ms,
             input: non_negative(call.input),
@@ -384,10 +406,8 @@ fn derive(
             cache_read: non_negative(call.cache_read),
             cache_write_1h: non_negative(call.cw_1h),
             cache_write_5m: non_negative(call.cw_5m),
-            ttl_bucket: ttl.map(|(bucket, _)| Fact::new(bucket.to_owned(), Basis::Derived)),
-            cache_warm: ttl
-                .zip(call.at_ms)
-                .map(|((_, ttl), at)| Fact::new(now_ms - at < ttl, Basis::Derived)),
+            ttl_bucket,
+            cache_warm,
             stop_reason: call.stop_reason.clone(),
         }
     });
@@ -532,6 +552,18 @@ struct Located<'a> {
     stat: PrepSourceStat,
 }
 
+/// `300` → `5m`, `3600` → `1h`, `86400` → `24h`, else seconds.
+fn ttl_label(seconds: i64) -> String {
+    match seconds {
+        s if s % 3600 == 0 => format!("{}h", s / 3600),
+        s if s % 60 == 0 => format!("{}m", s / 60),
+        s => format!("{s}s"),
+    }
+}
+
+/// Largest single native record status accepts.
+const STATUS_MAX_RECORD_BYTES: usize = 64 * 1024 * 1024;
+
 /// Implements [`SessionStatusApi`] over Plan 028 bindings and discovery roots.
 pub struct StatusService {
     bindings: Vec<PrepBinding>,
@@ -545,7 +577,14 @@ impl StatusService {
             bindings,
             roots,
             limits: PrepReadLimits {
-                read: ReadLimits::default(),
+                // Status reads metadata, but some harnesses write single
+                // records far above the prep default (Copilot CLI tool output
+                // and message snapshots); one such record must not fail status.
+                read: ReadLimits {
+                    max_record_bytes: STATUS_MAX_RECORD_BYTES,
+                    max_batch_bytes: STATUS_MAX_RECORD_BYTES,
+                    ..ReadLimits::default()
+                },
                 snapshot: SnapshotLimits::default(),
             },
         }
@@ -702,13 +741,15 @@ impl StatusService {
         target: &StatusTarget,
         bindings: &[&'a PrepBinding],
     ) -> Result<Located<'a>, StatusFailure> {
-        let roots = self
+        let roots: Vec<&PrepSourceSet> = self
             .roots
             .iter()
-            .filter(|set| set.harness == target.harness);
+            .filter(|set| set.harness == target.harness)
+            .collect();
         match &target.transcript {
             Some(path) => {
                 let (root, label) = match roots
+                    .iter()
                     .filter(|set| path.starts_with(&set.root))
                     .max_by_key(|set| set.root.components().count())
                 {
@@ -737,9 +778,36 @@ impl StatusService {
                 })
             }
             None => {
+                // Layouts that name the session directly are probed with one
+                // stat each before any walk: `<id>/events.jsonl` (Copilot CLI)
+                // and `<id>.jsonl`. A walk of a large store costs seconds.
+                for set in &roots {
+                    for binding in bindings.iter().copied() {
+                        let Some(pattern) = matcher(binding) else {
+                            continue;
+                        };
+                        for relative in [
+                            format!("{}/events.jsonl", target.session_id),
+                            format!("{}.jsonl", target.session_id),
+                        ] {
+                            if !pattern.is_match(&relative) {
+                                continue;
+                            }
+                            let path = set.root.join(&relative);
+                            if let Ok(stat) = binding.loader.stat(&set.root, &path) {
+                                return Ok(Located {
+                                    binding,
+                                    root: set.root.clone(),
+                                    label: set.label.clone(),
+                                    stat,
+                                });
+                            }
+                        }
+                    }
+                }
                 let mut found: Option<Located<'a>> = None;
                 let mut failed = false;
-                for set in roots {
+                for set in &roots {
                     for binding in bindings.iter().copied() {
                         let Some(pattern) = matcher(binding) else {
                             failed = true;

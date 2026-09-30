@@ -718,6 +718,8 @@ fn session_facts_report_context_compaction_model_and_sidechain_link() {
             turns: 11,
             // msg_12 is a sidechain record in the main file: excluded.
             context_window: None,
+            cache_ttl_seconds: None,
+            cache_expires_ms: None,
             latest_context: Some(ContextSample {
                 ts_ms: Some(ms(&ts(1865))),
                 model: Some("claude-test-2".into()),

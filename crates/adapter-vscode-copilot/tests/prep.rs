@@ -450,6 +450,8 @@ fn document_folds_requests_into_calls_turns_triggers_and_tool_uses() {
         facts,
         SessionFacts {
             context_window: None,
+            cache_ttl_seconds: None,
+            cache_expires_ms: None,
             session_id: Some("sess-prep-0001".into()),
             parent_session_id: None,
             is_sidechain: false,

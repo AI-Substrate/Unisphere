@@ -30,7 +30,7 @@ fn error(kind: PipelineErrorKind) -> PipelineError {
 /// every row and fact without a real dialect:
 ///
 /// - `{"call": {"ts_ms", "model", "input", "cw_1h", "cw_5m", "cache_read",
-///   "output", "stop_reason", "sidechain", "turn_no", "sighting", "msg_id"}}`
+///   "output", "stop_reason", "sidechain", "turn_no", "sighting", "msg_id", "basis"}}`
 ///   → one call row; `sighting` is `first` (default) or `update`, and `msg_id`
 ///   defaults to `msg-<offset>` (repeat it with `update` to model a re-sighting)
 /// - `{"turn": {"turn_no", "ts_ms", "origin"}}` → one turn row (origin in the
@@ -164,7 +164,11 @@ impl PrepFoldSession for ScriptedSession {
                     cw_5m: int(c, "cw_5m"),
                     cache_read: int(c, "cache_read"),
                     output: int(c, "output"),
-                    cache_write_basis: CacheWriteBasis::Split,
+                    cache_write_basis: match c.get("basis").and_then(Value::as_str) {
+                        None | Some("split") => CacheWriteBasis::Split,
+                        Some(other) => serde_json::from_value(Value::from(other))
+                            .map_err(|_| error(PipelineErrorKind::InvalidData))?,
+                    },
                     is_sidechain: c.get("sidechain").and_then(Value::as_bool) == Some(true),
                     gap_ms: None,
                     turn_no: int(c, "turn_no"),

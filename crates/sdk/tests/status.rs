@@ -409,6 +409,18 @@ fn ttl_bucket_and_cache_warmth_from_the_last_call_write_split() {
     assert!(unknown(&none, "last_call.ttl_bucket"));
     assert!(unknown(&none, "last_call.cache_warm"));
     assert!(!unknown(&none, "last_call"));
+
+    // A TTL class the fold only inferred (e.g. OMP writes with no TTL split)
+    // is not reported: the bucket stays unknown even though a write exists.
+    f.append(
+        FILE,
+        &[json!({"call": {"ts_ms": T0 + 90 * MIN, "model": "claude-opus-5", "cw_5m": 900, "basis": "fallback_5m"}})],
+    );
+    let inferred = f.cold("s1", T0 + 91 * MIN);
+    let last = inferred.last_call.as_ref().unwrap();
+    assert_eq!(last.cache_write_5m, Some(900));
+    assert_eq!(last.ttl_bucket, None);
+    assert!(unknown(&inferred, "last_call.ttl_bucket"));
 }
 
 #[test]

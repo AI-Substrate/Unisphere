@@ -33,7 +33,14 @@ fn default_roots(home: Option<&PathBuf>) -> Vec<PrepSourceSet> {
         .filter_map(|(id, locations)| {
             locations
                 .iter()
-                .find(|hint| hint.base == "home" && hint.platforms.contains(&env::consts::OS))
+                .find(|hint| {
+                    // Hints name an OS ("macos") or a family ("unix").
+                    hint.base == "home"
+                        && hint
+                            .platforms
+                            .iter()
+                            .any(|p| *p == env::consts::OS || *p == env::consts::FAMILY)
+                })
                 .map(|hint| home.join(hint.path))
                 .filter(|root| root.is_dir())
                 .map(|root| default_set(id, root))

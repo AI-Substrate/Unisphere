@@ -26,9 +26,9 @@ use globset::{Glob, GlobMatcher};
 use unisphere_core::{PipelineError, ReadCursor, ReadLimits, SnapshotLimits};
 
 use crate::prep::{
-    CallSighting, PrepBinding, PrepCallRow, PrepEventKind, PrepFoldSession, PrepOptions,
-    PrepReadLimits, PrepRows, PrepSourceKind, PrepSourceSet, PrepSourceStat, SessionFacts, advance,
-    derived_root_label,
+    CacheWriteBasis, CallSighting, PrepBinding, PrepCallRow, PrepEventKind, PrepFoldSession,
+    PrepOptions, PrepReadLimits, PrepRows, PrepSourceKind, PrepSourceSet, PrepSourceStat,
+    SessionFacts, advance, derived_root_label,
 };
 
 pub use unisphere_core::status::*;
@@ -56,6 +56,10 @@ const MODEL_WINDOWS: &[(&str, u64)] = &[
 ];
 
 fn table_window(model: &str) -> Option<u64> {
+    // Harnesses spell one model several ways: `github-copilot/claude-opus-5.5`
+    // (OMP) and `claude-opus-5-5` (Claude Code) name the same model.
+    let model = model.rsplit('/').next().unwrap_or(model).replace('.', "-");
+    let model = model.as_str();
     MODEL_WINDOWS
         .iter()
         .filter(|(prefix, _)| {
@@ -82,6 +86,8 @@ struct TrackedCall {
     cache_read: Option<i64>,
     cw_1h: Option<i64>,
     cw_5m: Option<i64>,
+    /// The harness recorded which TTL class each cache write used.
+    ttl_split: bool,
     stop_reason: Option<String>,
 }
 
@@ -96,6 +102,7 @@ impl TrackedCall {
             cache_read: row.cache_read,
             cw_1h: row.cw_1h,
             cw_5m: row.cw_5m,
+            ttl_split: row.cache_write_basis == CacheWriteBasis::Split,
             stop_reason: row.stop_reason.clone(),
         }
     }
@@ -115,6 +122,7 @@ impl TrackedCall {
         self.cache_read = max(self.cache_read, row.cache_read);
         self.cw_1h = max(self.cw_1h, row.cw_1h);
         self.cw_5m = max(self.cw_5m, row.cw_5m);
+        self.ttl_split |= row.cache_write_basis == CacheWriteBasis::Split;
         if row.stop_reason.is_some() {
             self.stop_reason.clone_from(&row.stop_reason);
         }
@@ -346,7 +354,10 @@ fn derive(
 
     // Last call.
     status.last_call = acc.last_call.as_ref().map(|call| {
-        let ttl = if call.cw_1h.is_some_and(|v| v > 0) {
+        // A TTL class the fold only inferred (fallback basis) is not reported.
+        let ttl = if !call.ttl_split {
+            None
+        } else if call.cw_1h.is_some_and(|v| v > 0) {
             Some(("1h", HOUR_MS))
         } else if call.cw_5m.is_some_and(|v| v > 0) {
             Some(("5m", FIVE_MINUTES_MS))
@@ -816,4 +827,21 @@ fn finish(
         reset: reset.map(str::to_owned),
     };
     (status, cursor)
+}
+
+#[cfg(test)]
+mod window_tests {
+    use super::table_window;
+
+    #[test]
+    fn provider_prefixed_and_dotted_models_share_one_table_row() {
+        assert_eq!(table_window("claude-opus-5-5"), Some(1_000_000));
+        assert_eq!(
+            table_window("github-copilot/claude-opus-5.5"),
+            Some(1_000_000)
+        );
+        assert_eq!(table_window("claude-sonnet-5.5"), Some(1_000_000));
+        assert_eq!(table_window("claude-opus-50"), None);
+        assert_eq!(table_window("gpt-unknown"), None);
+    }
 }

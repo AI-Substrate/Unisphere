@@ -1,0 +1,399 @@
+.harness/extensions/boot/boot.mjs
+  s_042162115c1f28::t_079d64b2a0ec6a 41
+.harness/records/retro/2026-09-29/001-028-prep-canonical-tables-phase-1.md
+  s_042162115c1f28::t_1fec29b97b13d4 1-88
+.harness/records/retro/2026-09-29/002-028-prep-canonical-tables-phase-2.md
+  s_042162115c1f28::t_d030f228a6feb1 1-156
+.harness/records/retro/2026-09-29/003-028-prep-canonical-tables-post-flight.md
+  s_042162115c1f28::t_f6894aac1bf13f 1-50
+README.md
+  s_042162115c1f28::t_96b67258d12976 130-133,135-138
+crates/adapter-codex/src/lib.rs
+  s_042162115c1f28::t_a44f0776fca840 1-2,8-10,47
+crates/adapter-codex/src/prep.rs
+  s_042162115c1f28::t_ba498ae8e4e83e 1-1639
+crates/adapter-codex/tests/fixtures/prep/2025/05/01/rollout-2025-05-01T00-00-00-00000000-0000-4000-8000-000000000003.jsonl
+  s_042162115c1f28::t_e4ae6afcdfec9b 1-5
+crates/adapter-codex/tests/fixtures/prep/2026/01/10/rollout-2026-01-10T00-00-00-00000000-0000-4000-8000-000000000001.jsonl
+  s_042162115c1f28::t_8b17710c57806c 1-37
+crates/adapter-codex/tests/fixtures/prep/2026/01/10/rollout-2026-01-10T00-00-00-00000000-0000-4000-8000-000000000002.jsonl
+  s_042162115c1f28::t_8156dc48a1621f 1-15
+crates/adapter-codex/tests/prep.rs
+  s_042162115c1f28::t_871e20d84025c5 1-992
+crates/adapter-copilot-cli/src/lib.rs
+  s_042162115c1f28::t_297fbe79475330 15,18-20,49
+crates/adapter-copilot-cli/src/prep.rs
+  s_042162115c1f28::t_e9c78fc8c0139b 1-1489
+crates/adapter-copilot-cli/src/query.rs
+  s_042162115c1f28::t_6c43b4c711d1b4 1386
+crates/adapter-copilot-cli/tests/fixtures/prep/legacy-0001.json
+  s_042162115c1f28::t_04e7b0cc8e8129 1-82
+crates/adapter-copilot-cli/tests/fixtures/prep/sess-0001/events.jsonl
+  s_042162115c1f28::t_bf4b97cce81c54 1-34
+crates/adapter-copilot-cli/tests/prep.rs
+  s_042162115c1f28::t_bf3a24b2cbd158 1-1033
+crates/adapter-cursor/src/ide.rs
+  s_042162115c1f28::t_229d75988f4b75 45
+crates/adapter-cursor/src/lib.rs
+  s_042162115c1f28::t_51a7406beb10e2 1-2,4,9,13-15,44
+crates/adapter-cursor/src/prep.rs
+  s_042162115c1f28::t_6ed3b09b631936 1-1067
+crates/adapter-cursor/src/query.rs
+  s_042162115c1f28::t_38fc966745c498 940
+crates/adapter-cursor/tests/fixtures/prep/ide.json
+  s_042162115c1f28::t_3d1affccd2682e 1-14
+crates/adapter-cursor/tests/fixtures/prep/proj-demo/agent-transcripts/sess-0001/sess-0001.jsonl
+  s_042162115c1f28::t_0a3835a9160ea1 1-10
+crates/adapter-cursor/tests/prep.rs
+  s_042162115c1f28::t_a389e31e4e9d4e 1-863
+crates/adapter-omp/src/lib.rs
+  s_042162115c1f28::t_6bb0af285f688f 4,6,36
+crates/adapter-omp/src/prep.rs
+  s_042162115c1f28::t_514b39e696299f 1-1370
+crates/adapter-omp/src/query.rs
+  s_042162115c1f28::t_4929ab12db6b4d 835
+crates/adapter-omp/tests/fixtures/prep/--Users-dev-demo--/2026-01-10T00-00-00-000Z_sess-0001.jsonl
+  s_042162115c1f28::t_19b3688a1ed3ad 1-30
+crates/adapter-omp/tests/fixtures/prep/--Users-dev-demo--/2026-01-10T00-00-00-000Z_sess-0001/Scout.jsonl
+  s_042162115c1f28::t_77ae225114b007 1-5
+crates/adapter-omp/tests/prep.rs
+  s_042162115c1f28::t_31045c52d682a5 1-873
+crates/adapter-pi/src/lib.rs
+  s_042162115c1f28::t_c039885aac5674 4,6,36
+crates/adapter-pi/src/prep.rs
+  s_042162115c1f28::t_04d23ae7fb1c25 1-1324
+crates/adapter-pi/src/query.rs
+  s_042162115c1f28::t_06ee8e70ebcd32 801
+crates/adapter-pi/tests/fixtures/prep/--Users-dev-demo--/2026-01-10T00-00-00-000Z_sess-0001.jsonl
+  s_042162115c1f28::t_7b992f3fd552db 1-27
+crates/adapter-pi/tests/prep.rs
+  s_042162115c1f28::t_8c5554c132fd01 1-818
+crates/adapter-vscode-copilot/src/lib.rs
+  s_042162115c1f28::t_70b070eacabfb2 7-9,86
+crates/adapter-vscode-copilot/src/prep.rs
+  s_042162115c1f28::t_d25e63015e7c44 1-543
+crates/adapter-vscode-copilot/tests/fixtures/prep/ws-0001/chatSessions/sess-legacy.json
+  s_042162115c1f28::t_d70bca4f88af26 1-7
+crates/adapter-vscode-copilot/tests/fixtures/prep/ws-0001/chatSessions/sess-prep.json
+  s_042162115c1f28::t_e894317bbb272e 1-55
+crates/adapter-vscode-copilot/tests/fixtures/prep/ws-0001/chatSessions/sess-prep.jsonl
+  s_042162115c1f28::t_26491bb912da6a 1-18
+crates/adapter-vscode-copilot/tests/prep.rs
+  s_042162115c1f28::t_16c4dbfdb959e2 1-746
+crates/app/src/main.rs
+  s_042162115c1f28::t_98232e02f63154 92-97
+crates/app/src/prep.rs
+  s_042162115c1f28::t_f500fcc24329d0 12-13,16-17,20-30,32-64,79-86
+crates/app/tests/prep.rs
+  s_042162115c1f28::t_077ba1d1c83eba 1-174
+crates/cli/docs/prep.md
+  s_042162115c1f28::t_1b2bbd35d3a770 11-14,22-38,112,118,124-129
+crates/cli/docs/research-recipes.md
+  s_042162115c1f28::t_de66b876a3ac13 1-74
+crates/cli/recipes/call-timeline.sql
+  s_042162115c1f28::t_ef6122310eb23a 1-8
+crates/cli/recipes/calls_x.sql
+  s_042162115c1f28::t_93d4510755a7f2 1-28
+crates/cli/recipes/compaction-cadence.sql
+  s_042162115c1f28::t_2c051a91bf9016 1-22
+crates/cli/recipes/compactions.sql
+  s_042162115c1f28::t_72a0810a3371d7 1-6
+crates/cli/recipes/context-bands.sql
+  s_042162115c1f28::t_3f7058d95f1ce6 1-15
+crates/cli/recipes/daily-tokens.sql
+  s_042162115c1f28::t_8ef15c1bb9f8d5 1-8
+crates/cli/recipes/daily.sql
+  s_042162115c1f28::t_8c5f0b9f3b616b 1-22
+crates/cli/recipes/expensive-turns.sql
+  s_042162115c1f28::t_771e5a7d05c8b1 1-10
+crates/cli/recipes/fan-outs.sql
+  s_042162115c1f28::t_b008abb6b874e1 1-19
+crates/cli/recipes/fleet-idle.sql
+  s_042162115c1f28::t_997607a9f6144c 1-8
+crates/cli/recipes/hidden-requests.sql
+  s_042162115c1f28::t_644561a5359e30 1-8
+crates/cli/recipes/hourly.sql
+  s_042162115c1f28::t_2a1e1bbde2296f 1-16
+crates/cli/recipes/idle-tax.sql
+  s_042162115c1f28::t_f58b1f07d5557b 1-9
+crates/cli/recipes/idle-wakes.sql
+  s_042162115c1f28::t_03f20cf1594aa3 1-7
+crates/cli/recipes/limit-events.sql
+  s_042162115c1f28::t_11441b4ee37630 1-10
+crates/cli/recipes/message-graph.sql
+  s_042162115c1f28::t_f44f3db0d65235 1-25
+crates/cli/recipes/meter-replay.sql
+  s_042162115c1f28::t_bdc3e15633ac7b 1-18
+crates/cli/recipes/peer-amplification.sql
+  s_042162115c1f28::t_533320e00955b6 1-11
+crates/cli/recipes/sender-attribution.sql
+  s_042162115c1f28::t_1e8f037300121a 1-11
+crates/cli/recipes/structure.sql
+  s_042162115c1f28::t_82ec43fe55020d 1-20
+crates/cli/recipes/subagent-fanout.sql
+  s_042162115c1f28::t_8f97ea6f1554c7 1-22
+crates/cli/recipes/tool-loops.sql
+  s_042162115c1f28::t_a6e120b30cd663 1-14
+crates/cli/recipes/trigger-kinds.sql
+  s_042162115c1f28::t_ad73475b1dc464 1-10
+crates/cli/recipes/trigger-records.sql
+  s_042162115c1f28::t_b230678295316f 1-5
+crates/cli/recipes/turn-cost.sql
+  s_042162115c1f28::t_b6ff088d3de80d 1-8
+crates/cli/recipes/turns_x.sql
+  s_042162115c1f28::t_1ea4eb216c65d2 1-22
+crates/cli/src/args.rs
+  s_042162115c1f28::t_7e5a790e439c2c 142,148-153,157-159,196-206,750-751,760-761,787,831-847,853-854,1061-1062,1293-1303,1337,1340-1344,1347-1364,1382,1384
+crates/cli/src/docs.rs
+  s_042162115c1f28::t_822929e732e591 118-125
+crates/cli/src/lib.rs
+  s_042162115c1f28::t_8392f8e9e35b5f 19,28-29,38
+crates/cli/src/prep.rs
+  s_042162115c1f28::t_c7759d4e41d540 234,237-238,328-333
+crates/cli/src/query.rs
+  s_042162115c1f28::t_309df3d398f25a 783,805-807
+crates/cli/src/recipes.rs
+  s_042162115c1f28::t_563e9b4b67b348 1-213
+crates/cli/tests/prep.rs
+  s_042162115c1f28::t_756fb3a1278928 162-163,174-175,192,224-227,230-231,283-291,293,304,307-308,322-349,395,402-403,736,780-781,796-802,820
+crates/cli/tests/query_frontend.rs
+  s_042162115c1f28::t_2fe936bd03b0dc 911
+crates/cli/tests/recipes.rs
+  s_042162115c1f28::t_e8564a23d6e20b 1-303
+crates/core/src/prep.rs
+  s_042162115c1f28::t_d869fc6bd01c91 20-21,96-133,139-275,317-318,323,781-784,811,832-841,902-905,919-920,922-923,941-944
+crates/core/tests/prep_contract.rs
+  s_042162115c1f28::t_01d5a6c11967d8 198
+crates/loader-jsonl/src/lib.rs
+  s_042162115c1f28::t_6b8ac9c83c8e41 392,395,398
+crates/loader-jsonl/src/prep.rs
+  s_042162115c1f28::t_91d923639a9392 15-18,48,52-110,114,116
+crates/loader-jsonl/tests/prep.rs
+  s_042162115c1f28::t_5a10c3bae33830 18,74,130-132,203-205,326-431
+crates/loader-snapshot/src/lib.rs
+  s_042162115c1f28::t_5c17e0778fffd6 8,12-13
+crates/loader-snapshot/src/prep.rs
+  s_042162115c1f28::t_77c6d24bf863e3 1-326
+crates/loader-snapshot/tests/prep.rs
+  s_042162115c1f28::t_c9efaf871faa72 1-456
+crates/output-prep/src/lib.rs
+  s_042162115c1f28::t_1c4aa51cd1cfd3 53-86,112-124,175-219,226,243,360,372,396-397,449-451,475,478-486,583-584,590-591,602,605-606,642
+crates/output-prep/src/views.rs
+  s_042162115c1f28::t_20c4dbd3a538d0 82-83,161-162
+crates/output-prep/tests/store.rs
+  s_042162115c1f28::t_5f6194dfe35816 104,618,1101-1174
+crates/sdk/src/prep.rs
+  s_042162115c1f28::t_abb40c426ac9fd 6-7,10,214-219,227-229,235,239-246,252,275-279,282-292,323,331-339,341-375,377,386-387,391-392,396,401-472
+crates/sdk/src/status.rs
+  s_042162115c1f28::t_02849700745d91 233-254,725,727-731
+crates/sdk/tests/prep.rs
+  s_042162115c1f28::t_8efe2ae909ebc7 18-21,55,550,552,822-959
+crates/testkit/fixtures/consumer/prep-main.rs
+  s_042162115c1f28::t_32afc31539d6cf 69
+crates/testkit/src/bin/proof/prep.rs
+  s_042162115c1f28::t_36c1480f5853a6 219-373,442-449
+crates/testkit/src/bin/unisphere-proof.rs
+  s_042162115c1f28::t_dd47492c66a68e 631
+crates/testkit/src/prep.rs
+  s_042162115c1f28::t_033c3bcc6e6121 17-20,231-232,385-391,437,442-459,461,463-465
+docs/cli.md
+  s_042162115c1f28::t_5b385947d288c7 63-64,67-68,223-224,237-238,264-265,290-296
+docs/plans/archive/028-prep-canonical-tables/assets/backpressure.dd.json
+  s_042162115c1f28::t_d5f50ee623bcaf 11-12,25-27,36-38,47-49,58-60,69-71,79-82,91-93,102-104,113-115,124-126,135-137,146-148,157-159,168-170,179-181
+docs/plans/archive/028-prep-canonical-tables/assets/backpressure.dd.md
+  s_042162115c1f28::t_8442dcec3cba7b 14-15,23-37
+docs/plans/archive/028-prep-canonical-tables/assets/evidence/coverage-9820bb5.json
+  s_042162115c1f28::t_df79ef2bd4a641 1-387
+docs/plans/archive/028-prep-canonical-tables/assets/evidence/coverage-dfb8bf8.json
+  s_042162115c1f28::t_f9fe6bb5214ad0 1-387
+docs/plans/archive/028-prep-canonical-tables/assets/evidence/live-1fb05c2.json
+  s_042162115c1f28::t_fa9224418caf3e 1-113
+docs/plans/archive/028-prep-canonical-tables/assets/evidence/live-4074389.json
+  s_042162115c1f28::t_2a2bee4e589737 1-114
+docs/plans/archive/028-prep-canonical-tables/assets/evidence/measure-6161ba6.json
+  s_042162115c1f28::t_c99fbbc60e1017 1-264
+docs/plans/archive/028-prep-canonical-tables/assets/evidence/measure-d800949.json
+  s_042162115c1f28::t_fe763b9ba8acd6 1-263
+docs/plans/archive/028-prep-canonical-tables/assets/evidence/measure-dfb8bf8.json
+  s_042162115c1f28::t_24bc8b30e85201 1-282
+docs/plans/archive/028-prep-canonical-tables/assets/evidence/parity-d800949.json
+  s_042162115c1f28::t_8a260545bcc49d 1-224
+docs/plans/archive/028-prep-canonical-tables/assets/evidence/parity-dfb8bf8.json
+  s_042162115c1f28::t_e6604007fa8bb1 1-224
+docs/plans/archive/028-prep-canonical-tables/assets/evidence/recipes-9820bb5.json
+  s_042162115c1f28::t_5b4b54b7c1c9e2 1-73
+docs/plans/archive/028-prep-canonical-tables/assets/execution-log.dd.json
+  s_042162115c1f28::t_19e8dfc65302be 1-190
+docs/plans/archive/028-prep-canonical-tables/assets/execution-log.dd.md
+  s_042162115c1f28::t_8471708284c0ed 1-38
+docs/plans/archive/028-prep-canonical-tables/assets/impl-guide.dd.json
+  s_042162115c1f28::t_461ac31c92abed 11-12,33,41,101,111-112,139,174,183,229,259,264,299,304,333,338,375,459-848,865,1198-1209,1227,1229-1235,1238-1241,1305-1321,1325-1326,1345
+docs/plans/archive/028-prep-canonical-tables/assets/impl-guide.dd.md
+  s_042162115c1f28::t_bf03f6ff6767e6 14-15,25,34,47,50,53-54,63-66,68-75,85,133,142-144,169-173
+docs/plans/archive/028-prep-canonical-tables/assets/post-flight.json
+  s_042162115c1f28::t_740eaa7f6a7c2e 1-136
+docs/plans/archive/028-prep-canonical-tables/assets/post-flight.md
+  s_042162115c1f28::t_45bf1a33508191 1-89
+docs/plans/archive/028-prep-canonical-tables/assets/proof/coverage.py
+  s_042162115c1f28::t_7ecf2dedd73724 1-106
+docs/plans/archive/028-prep-canonical-tables/assets/proof/live.py
+  s_042162115c1f28::t_5a379667a54b64 10-13,141-143
+docs/plans/archive/028-prep-canonical-tables/assets/proof/measure.py
+  s_042162115c1f28::t_3090d03f7c1435 8-11,34-35,52-57,96-98
+docs/plans/archive/028-prep-canonical-tables/assets/proof/recipes_check.py
+  s_042162115c1f28::t_2acd8f706a9c3c 1-99
+docs/plans/archive/028-prep-canonical-tables/assets/reviews/composition-p1-r1.md
+  s_042162115c1f28::t_7d7f87ee52545a 1-84
+docs/plans/archive/028-prep-canonical-tables/assets/reviews/composition-p1-r1.receipt.dd.json
+  s_042162115c1f28::t_faf2d4903f5b92 1-106
+docs/plans/archive/028-prep-canonical-tables/assets/reviews/composition-p2-r1.md
+  s_042162115c1f28::t_859a5be57a0666 1-84
+docs/plans/archive/028-prep-canonical-tables/assets/reviews/composition-p2-r1.receipt.dd.json
+  s_042162115c1f28::t_8356593d3ce8d5 1-93
+docs/plans/archive/028-prep-canonical-tables/assets/reviews/decomposition-p2-r1.md
+  s_042162115c1f28::t_5f0e2569ad4ce7 1-55
+docs/plans/archive/028-prep-canonical-tables/assets/reviews/decomposition-p2-r1.receipt.dd.json
+  s_042162115c1f28::t_c51ebe708cf60c 1-68
+docs/plans/archive/028-prep-canonical-tables/assets/reviews/decomposition-p2-r2.md
+  s_042162115c1f28::t_4771ef7a214a8d 1-24
+docs/plans/archive/028-prep-canonical-tables/assets/reviews/decomposition-p2-r2.receipt.dd.json
+  s_042162115c1f28::t_5acf687055eac6 1-66
+docs/plans/archive/028-prep-canonical-tables/assets/tasks/phase-1/tasks.dd.json
+  s_042162115c1f28::t_6ec073717d57f4 26,38,54,70,85,100,128-130,135-137,142-144,151-153,158-160,165-167,172-174,179-181,186-188,195-197,202-204,209-211,216-218,223-225,230-232,237-239,246-248,253-255,260-262,267-269,276-278,283-285,290-292,297-299,306-308,313-315,320-322,327-329,334-336,341-343,348-350
+docs/plans/archive/028-prep-canonical-tables/assets/tasks/phase-1/tasks.dd.md
+  s_042162115c1f28::t_83097fd540e14f 38-43,51-55,59-66,70-78,82-87,91-96,100-108
+docs/plans/archive/028-prep-canonical-tables/assets/tasks/phase-2/tasks.dd.json
+  s_042162115c1f28::t_f086742b0b5d06 9,11-12,17,21-130,134-270,344
+docs/plans/archive/028-prep-canonical-tables/assets/tasks/phase-2/tasks.dd.md
+  s_042162115c1f28::t_fb6e4d960f169b 2,12,15,17,30,36-45,51-106
+docs/plans/archive/028-prep-canonical-tables/assets/team/baseline-p2.dd.json
+  s_042162115c1f28::t_d57888d612137a 1-302
+docs/plans/archive/028-prep-canonical-tables/assets/team/baseline-p2.dd.md
+  s_042162115c1f28::t_286b9a9e739680 1-21
+docs/plans/archive/028-prep-canonical-tables/assets/team/baseline-p2r2.dd.json
+  s_042162115c1f28::t_1a91e1a4f9a50f 1-374
+docs/plans/archive/028-prep-canonical-tables/assets/team/baseline-p2r2.dd.md
+  s_042162115c1f28::t_e9b6872e3668b3 1-21
+docs/plans/archive/028-prep-canonical-tables/assets/team/basis-5ae69d772341f1753534f4f4dfee301a912155e7f4e2b9f11522dbd3f65864a4.json
+  s_042162115c1f28::t_4435e8aef60478 1-1362
+docs/plans/archive/028-prep-canonical-tables/assets/team/basis-6d5131283c31d68f121b0c24701f641705f19af72a966ed4aac159477eaeac6d.json
+  s_042162115c1f28::t_f3677adc9d7e83 1-1346
+docs/plans/archive/028-prep-canonical-tables/assets/team/basis-7da3d4a4d05949ddba02368c80dbe145189a63214c43bd0335c381e36ce64e46.json
+  s_042162115c1f28::t_ea1054207746d3 1-249
+docs/plans/archive/028-prep-canonical-tables/assets/team/basis-c6b8c852ae59839b1f383d0387625c32ab1be79fe0b2bc5b6dd31a373ef27a3a.json
+  s_042162115c1f28::t_f775ba12cdd23c 1-1347
+docs/plans/archive/028-prep-canonical-tables/assets/team/composition-p1.dd.json
+  s_042162115c1f28::t_60429f380e28f7 1-4693
+docs/plans/archive/028-prep-canonical-tables/assets/team/composition-p1.dd.md
+  s_042162115c1f28::t_89f5c2b7532993 14,18-20,22
+docs/plans/archive/028-prep-canonical-tables/assets/team/composition.dd.json
+  s_042162115c1f28::t_2a329352451ed5 10-11,13-14,18-23,26-31,34-39,42-71,74,139,323,371-387,393-396,407-411,415,429-436,441-444,467,471-475,479-487,493-496,535-539,543,549-556,561-564,575-579,583-587,597-600,615-631,653-656,675,683,697-700,739,745-748,765-868,871,879,887,895,899-903,923,927-931,971,1011,1035,1039,1047,1079-1083,1097-1100,1131,1139,1143,1179,1219,1319-1327,1363,1375,1399,1419,4818-4820,4830-4831,4833,4838-4839,4841-4843,4846-4847,4849-4851,4854-4855,4857-4859,4862-4863,4865-4867,4870-4871,4873-4875,4878-4879,4881-4883,4886-4891,4894-4899,4902-4907,4910-4915,4918-4923,4926-5035,5040-5043,5046-5051,5054-5722,5727
+docs/plans/archive/028-prep-canonical-tables/assets/team/composition.dd.md
+  s_042162115c1f28::t_9038ca4578f5f4 1-22
+docs/plans/archive/028-prep-canonical-tables/assets/team/dispatch-tk-0007-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.json
+  s_042162115c1f28::t_23d697206c8bac 1-386
+docs/plans/archive/028-prep-canonical-tables/assets/team/dispatch-tk-0007-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.md
+  s_042162115c1f28::t_773df201ec427b 1-25
+docs/plans/archive/028-prep-canonical-tables/assets/team/dispatch-tk-0008-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.json
+  s_042162115c1f28::t_80fc18c8d8da0b 1-386
+docs/plans/archive/028-prep-canonical-tables/assets/team/dispatch-tk-0008-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.md
+  s_042162115c1f28::t_e07d41e3bbdd0f 1-25
+docs/plans/archive/028-prep-canonical-tables/assets/team/dispatch-tk-0009-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.json
+  s_042162115c1f28::t_07df2223ad1817 1-386
+docs/plans/archive/028-prep-canonical-tables/assets/team/dispatch-tk-0009-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.md
+  s_042162115c1f28::t_385219c963ae4c 1-25
+docs/plans/archive/028-prep-canonical-tables/assets/team/dispatch-tk-000a-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.json
+  s_042162115c1f28::t_a77b760bdef65e 1-386
+docs/plans/archive/028-prep-canonical-tables/assets/team/dispatch-tk-000a-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.md
+  s_042162115c1f28::t_14247a5949242d 1-25
+docs/plans/archive/028-prep-canonical-tables/assets/team/dispatch-tk-000b-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.json
+  s_042162115c1f28::t_9376a01942a253 1-386
+docs/plans/archive/028-prep-canonical-tables/assets/team/dispatch-tk-000b-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.md
+  s_042162115c1f28::t_087277bfe7fb87 1-25
+docs/plans/archive/028-prep-canonical-tables/assets/team/dispatch-tk-000c-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.json
+  s_042162115c1f28::t_cd741a506fb358 1-386
+docs/plans/archive/028-prep-canonical-tables/assets/team/dispatch-tk-000c-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.md
+  s_042162115c1f28::t_5623999d73622f 1-25
+docs/plans/archive/028-prep-canonical-tables/assets/team/dispatch-tk-000d-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.json
+  s_042162115c1f28::t_5fe03de5dee178 1-386
+docs/plans/archive/028-prep-canonical-tables/assets/team/dispatch-tk-000d-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.md
+  s_042162115c1f28::t_8e5ff6cda971b9 1-25
+docs/plans/archive/028-prep-canonical-tables/assets/team/packet-tk-0007-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.json
+  s_042162115c1f28::t_8b8671767b8644 1-113
+docs/plans/archive/028-prep-canonical-tables/assets/team/packet-tk-0007-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.md
+  s_042162115c1f28::t_2a8caec7b0f024 1-26
+docs/plans/archive/028-prep-canonical-tables/assets/team/packet-tk-0008-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.json
+  s_042162115c1f28::t_fd910bdf5175bb 1-108
+docs/plans/archive/028-prep-canonical-tables/assets/team/packet-tk-0008-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.md
+  s_042162115c1f28::t_b1434b7c87e90f 1-26
+docs/plans/archive/028-prep-canonical-tables/assets/team/packet-tk-0009-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.json
+  s_042162115c1f28::t_2ea04df6b52ad5 1-108
+docs/plans/archive/028-prep-canonical-tables/assets/team/packet-tk-0009-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.md
+  s_042162115c1f28::t_2f5324800287f0 1-26
+docs/plans/archive/028-prep-canonical-tables/assets/team/packet-tk-000a-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.json
+  s_042162115c1f28::t_b93ddfe3b99ac2 1-108
+docs/plans/archive/028-prep-canonical-tables/assets/team/packet-tk-000a-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.md
+  s_042162115c1f28::t_b2b23289cb0137 1-26
+docs/plans/archive/028-prep-canonical-tables/assets/team/packet-tk-000b-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.json
+  s_042162115c1f28::t_0ad9ca77e9a650 1-108
+docs/plans/archive/028-prep-canonical-tables/assets/team/packet-tk-000b-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.md
+  s_042162115c1f28::t_6cfcba0cd86bbc 1-26
+docs/plans/archive/028-prep-canonical-tables/assets/team/packet-tk-000c-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.json
+  s_042162115c1f28::t_ca6fc56a456815 1-107
+docs/plans/archive/028-prep-canonical-tables/assets/team/packet-tk-000c-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.md
+  s_042162115c1f28::t_759b41c0bf1ca4 1-26
+docs/plans/archive/028-prep-canonical-tables/assets/team/packet-tk-000d-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.json
+  s_042162115c1f28::t_8d2e2969856abc 1-121
+docs/plans/archive/028-prep-canonical-tables/assets/team/packet-tk-000d-cfd716b8dda71884f0b2838953f324f988cd0eff.dd.md
+  s_042162115c1f28::t_a5c240f6240e42 1-26
+docs/plans/archive/028-prep-canonical-tables/assets/team/review-composition-rv-028-composition-p1-r1.dd.json
+  s_042162115c1f28::t_5064904a03cab2 1-111
+docs/plans/archive/028-prep-canonical-tables/assets/team/review-composition-rv-028-composition-p1-r1.dd.md
+  s_042162115c1f28::t_80bedff299af55 1-25
+docs/plans/archive/028-prep-canonical-tables/assets/team/review-composition-rv-028-composition-p2-r1.dd.json
+  s_042162115c1f28::t_cf755b536214fd 1-122
+docs/plans/archive/028-prep-canonical-tables/assets/team/review-composition-rv-028-composition-p2-r1.dd.md
+  s_042162115c1f28::t_6fce7aa35dea46 1-26
+docs/plans/archive/028-prep-canonical-tables/assets/team/review-decomposition-rv-028-decomposition-p2-r1.dd.json
+  s_042162115c1f28::t_35c46c9e915213 1-73
+docs/plans/archive/028-prep-canonical-tables/assets/team/review-decomposition-rv-028-decomposition-p2-r1.dd.md
+  s_042162115c1f28::t_f32e37ed138100 1-24
+docs/plans/archive/028-prep-canonical-tables/assets/team/review-decomposition-rv-028-decomposition-p2-r2.dd.json
+  s_042162115c1f28::t_044a2200debd0e 1-71
+docs/plans/archive/028-prep-canonical-tables/assets/team/review-decomposition-rv-028-decomposition-p2-r2.dd.md
+  s_042162115c1f28::t_8f194c84de6f5a 1-24
+docs/plans/archive/028-prep-canonical-tables/assets/team/reviewer-composition-p1-r1.md
+  s_042162115c1f28::t_a4f246c4149e5a 1-43
+docs/plans/archive/028-prep-canonical-tables/assets/team/reviewer-composition-p2-r1.md
+  s_042162115c1f28::t_e1153b3f53716c 1-92
+docs/plans/archive/028-prep-canonical-tables/assets/team/reviewer-decomposition-p2-r1.md
+  s_042162115c1f28::t_4405921434bdee 1-46
+docs/plans/archive/028-prep-canonical-tables/assets/team/reviewer-decomposition-p2-r2.md
+  s_042162115c1f28::t_322e5e74454e1d 1-22
+docs/plans/archive/028-prep-canonical-tables/assets/telemetry.json
+  s_042162115c1f28::t_53d28ce57305d0 1-25
+docs/plans/archive/028-prep-canonical-tables/plan.dd.json
+  s_042162115c1f28::t_e9af0b767ac50d 48-50,55-57,62-64,69-71,76-78,83-85,90-92,97-99,104-106,111-113,118-120,125-127,132-134,145-147,153,234
+docs/plans/archive/028-prep-canonical-tables/plan.dd.md
+  s_042162115c1f28::t_b48fcfcea70b5e 59-71,79-80,168
+docs/plans/archive/028-prep-canonical-tables/the-flow.json
+  s_042162115c1f28::t_eb142e23ff89da 6,187-639,647,656-666,672,683-693,699,711-721,728,734-742,761-771,777,790-799,805,812-821,829-851,936,953-963,969,983-993,999,1013-1023,1029,1034,1055-1073,1079,1084,1093-1102,1108,1113,1126-1135,1141,1146,1160-1169,1175,1180,1191-1221,1224
+docs/plans/archive/028-prep-canonical-tables/the-flow.md
+  s_042162115c1f28::t_1de657a57db9c8 4,6,10-17,22-25,36,40,47-66,72-98
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "a252089df381fbdece6cd770bd215d5158fde6a1",
+  "prompts": {},
+  "sessions": {
+    "s_042162115c1f28": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4b3f9ea7-6ca1-47b0-93c3-82069b1452f9",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

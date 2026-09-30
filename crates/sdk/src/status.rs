@@ -238,6 +238,11 @@ fn origin_label(origin: crate::prep::TurnOrigin) -> String {
 // Pure derivation
 // ---------------------------------------------------------------------------
 
+/// Non-empty, not `.`/`..`, no separator or NUL: safe to join under a root.
+fn is_plain_component(id: &str) -> bool {
+    !id.is_empty() && id != "." && id != ".." && !id.contains(['/', '\\', '\0'])
+}
+
 /// Whether a source path names `session`, across the dialects' layouts:
 /// `<id>.jsonl` (Claude), `<timestamp>_<id>.jsonl` (Oh My Pi, Pi, Codex
 /// rollouts) and `<id>/events.jsonl` (Copilot CLI).
@@ -598,6 +603,14 @@ impl StatusService {
         cursor: Option<&StatusCursor>,
         now_ms: i64,
     ) -> Result<(SessionStatus, StatusCursor), StatusFailure> {
+        // The id names a file under a configured root: it must be one plain
+        // path component, never a path that could escape the root.
+        if !is_plain_component(&target.session_id) {
+            return Err(StatusFailure::new(
+                StatusFailureKind::TranscriptNotFound,
+                "the session id must be a single path component",
+            ));
+        }
         let bindings: Vec<&PrepBinding> = self
             .bindings
             .iter()

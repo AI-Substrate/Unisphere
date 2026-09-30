@@ -887,3 +887,31 @@ fn a_session_directory_layout_is_found_by_a_direct_probe() {
     assert_eq!(status.calls.total, 1);
     assert!(status.target.transcript.unwrap().ends_with(file));
 }
+
+#[test]
+fn a_session_id_that_is_not_one_path_component_is_refused_before_any_read() {
+    let f = fixture();
+    f.append(
+        "outside.jsonl",
+        &[json!({"call": {"ts_ms": T0, "model": "claude-opus-5"}})],
+    );
+    for id in [
+        "../outside",
+        "..",
+        ".",
+        "",
+        "a/b",
+        "a\\b",
+        "proj/../outside",
+    ] {
+        let failure = f
+            .service
+            .status_incremental(&target(id), None, T0)
+            .unwrap_err();
+        assert_eq!(
+            failure.kind,
+            StatusFailureKind::TranscriptNotFound,
+            "{id:?}"
+        );
+    }
+}

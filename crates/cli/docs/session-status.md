@@ -48,7 +48,7 @@ Every fact is a `{value, basis}` pair or bare value, or it is absent and its nam
 | `model.pending_switch` | A `/model` switch recorded after that call; the next call uses it |
 | `model.history` | Main-chain model spans in order: model, first/last call time, calls |
 | `context.used_tokens` | Latest main-chain call's input + cache read + cache write (native) |
-| `context.window_tokens` | Native when recorded, else `model-windows@1` table (basis `table`), else unknown |
+| `context.window_tokens` | Native when recorded, else `model-windows@1` table (basis `table`), else unknown. Claude Code transcripts do not say whether a model ran with a 200k or 1M window; the table assumes the larger one, so `percent` can understate how full a 200k session is. Windows for GPT models differ by provider and are left unknown. |
 | `context.percent`, `context.display` | Only when used and window are both known, e.g. `250k of 1M (25%)` |
 | `last_call` | Time, input, output, cache read, 1h and 5m cache writes, stop reason when recorded |
 | `last_call.ttl_bucket` | `1h` or `5m`, from where the last call wrote cache (derived) |

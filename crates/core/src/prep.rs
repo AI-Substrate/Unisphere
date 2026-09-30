@@ -470,6 +470,10 @@ pub struct SessionFacts {
     pub calls: u64,
     pub turns: u64,
     pub latest_context: Option<ContextSample>,
+    /// Context window the harness itself recorded for the latest call; `None`
+    /// when the dialect records none (status then falls back to a table).
+    #[serde(default)]
+    pub context_window: Option<i64>,
     /// `None` only when the dialect has no native compaction marker.
     pub compactions: Option<CompactionCounts>,
     pub last_compaction: Option<CompactionSample>,

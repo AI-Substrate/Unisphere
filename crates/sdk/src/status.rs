@@ -288,7 +288,9 @@ fn derive(
         .latest_context
         .as_ref()
         .and_then(|sample| non_negative(sample.total));
-    let window = current.as_deref().and_then(table_window);
+    // A window the harness recorded wins over the versioned table.
+    let native_window = non_negative(facts.context_window).filter(|w| *w > 0);
+    let window = native_window.or_else(|| current.as_deref().and_then(table_window));
     let percent = used
         .zip(window)
         .filter(|(_, window)| *window > 0)
@@ -296,8 +298,17 @@ fn derive(
     status.context = ContextStatus {
         // The fold's total sums input, cache reads and cache writes.
         used_tokens: used.map(|used| Fact::new(used, Basis::Derived)),
-        window_tokens: window.map(|window| Fact::new(window, Basis::Table)),
-        window_table: window.map(|_| MODEL_WINDOWS_TABLE.to_owned()),
+        window_tokens: window.map(|window| {
+            let basis = if native_window.is_some() {
+                Basis::Native
+            } else {
+                Basis::Table
+            };
+            Fact::new(window, basis)
+        }),
+        window_table: window
+            .filter(|_| native_window.is_none())
+            .map(|_| MODEL_WINDOWS_TABLE.to_owned()),
         percent,
         display: used
             .zip(window)

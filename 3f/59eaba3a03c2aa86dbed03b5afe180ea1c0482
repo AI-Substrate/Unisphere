@@ -1,0 +1,23 @@
+crates/adapter-claude/tests/prep.rs
+  s_042162115c1f28::t_3c62d92ccd869e 720
+crates/core/src/prep.rs
+  s_042162115c1f28::t_4c245483403a43 473-476
+crates/sdk/src/status.rs
+  s_042162115c1f28::t_d72cf99f7dedcc 291-293,301-311
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "3f59eaba3a03c2aa86dbed03b5afe180ea1c0482",
+  "prompts": {},
+  "sessions": {
+    "s_042162115c1f28": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4b3f9ea7-6ca1-47b0-93c3-82069b1452f9",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

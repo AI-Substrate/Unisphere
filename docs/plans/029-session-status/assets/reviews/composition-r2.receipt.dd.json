@@ -1,0 +1,97 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "review",
+      "value": {
+        "record_type": "review",
+        "id": "rv-029-composition-r2",
+        "recorded_at": "2026-09-30T01:36:25+00:00",
+        "scope": "composition",
+        "subject_sha": "0a5d16b9370c81b0adf5ea08d7bff281755ad38e",
+        "plan": {
+          "path": "docs/plans/029-session-status/plan.dd.json",
+          "sha256": "218f1788a8f3d2f978ce81128229802d414909ca0053a3d994ca31c9be40a325"
+        },
+        "guide": {
+          "path": "docs/plans/029-session-status/assets/impl-guide.dd.json",
+          "sha256": "e967cc78a50983e3beaaaef939f34c3a66b4aba0f179cab539ef8d8d078ee653"
+        },
+        "reviewer_id": "pij-easy-seahorse",
+        "requested": {
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-sonnet-5.5",
+          "source": {
+            "harness": "guide",
+            "model": "guide"
+          }
+        },
+        "observed": {
+          "peer_id": "pij-easy-seahorse",
+          "root": "/Users/jordanknight/substrate/unisphere/unishpere-main",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/claude-sonnet-5.5",
+          "native_session": "01a0ebc8-c5b2-7268-8017-4ce7ad943e15",
+          "pid": 25009,
+          "argv": [
+            "omp",
+            "--auto-approve",
+            "--model",
+            "github-copilot/claude-sonnet-5.5"
+          ],
+          "evidence": [
+            "Subject 0a5d16b9370c\u2026 is the packet commit; parent a57491d90ce6038962b6c68d8a315390e6130697 is the verified code (worktree clean; binary rebuilt with cargo build --bin unisphere).",
+            "Re-ran the r1 exploit with HOME=/tmp/rv/home: '../../../x/z', '../x/z', 'a\\b', '.', 'proj/../outside', '/tmp/rv/x/z' all return UNI-STATUS-TRANSCRIPT-NOT-FOUND 'the session id must be a single path component'; plain id 'y' still resolves ok.",
+            "cargo test --locked: sdk status 23 passed (includes a_session_id_that_is_not_one_path_component_is_refused_before_any_read), cli status 23 passed.",
+            "Read is_plain_component and its call site at the top of status_incremental in crates/sdk/src/status.rs; the CLI doc row in crates/cli/docs/session-status.md; plan.dd.md line 161 acceptance reasons for F-03/F-04."
+          ],
+          "gaps": [
+            "Did not re-run harness checks/boot, CI, the Linux container proof or the real-machine script at a57491d.",
+            "No provider-side model attestation beyond the harness-reported model string and the pij seat record."
+          ]
+        },
+        "verdict": "approved",
+        "report": {
+          "path": "docs/plans/029-session-status/assets/reviews/composition-r2.md",
+          "sha256": "f6a907f57dbd8321317e298f40b0609000868434d92cea28b6f7100ad9c93cc1"
+        },
+        "findings": [
+          {
+            "id": "F-01",
+            "severity": "medium",
+            "description": "StatusService::locate joins the unchecked session_id into set.root.join('<id>.jsonl' | '<id>/events.jsonl'); an id with '..' matches the fold glob and reads a .jsonl outside the configured root. Reject any session_id that is not one path component at the SDK boundary and add a contract test.",
+            "disposition": "fixed",
+            "evidence": "Rebuilt unisphere at a57491d: the r1 traversal id '../../../x/z' and variants now return UNI-STATUS-TRANSCRIPT-NOT-FOUND 'the session id must be a single path component'; is_plain_component gates status_incremental before any read; regression test passes; plain id still resolves."
+          },
+          {
+            "id": "F-02",
+            "severity": "low",
+            "description": "MODEL_WINDOWS maps Claude Opus/Fable to 1M although transcripts do not distinguish 200k and 1M variants; percent may be understated. Basis is table and named, but docs/session-status.md does not state the limit.",
+            "disposition": "fixed",
+            "evidence": "crates/cli/docs/session-status.md window row states the 200k/1M ambiguity and that GPT windows are unknown."
+          },
+          {
+            "id": "F-03",
+            "severity": "low",
+            "description": "Native Claude pane record is accepted without a procStart check, so a recycled pid in the same pane could name a stale session; the record's pane id is checked, which narrows it.",
+            "disposition": "accepted",
+            "evidence": "Accepted with reason in plan.dd.md line 161: UTC vs local procStart mismatch; pane id match and live descendant pid narrow the window."
+          },
+          {
+            "id": "F-04",
+            "severity": "low",
+            "description": "Builder compose --verify refuses E475 because phase 2 was added after seal; direct guide checks are acceptable for landing (CI green, harness checks ok) but the guide should be re-sealed or amended before the PR.",
+            "disposition": "accepted",
+            "evidence": "Accepted; guide checks run directly at the reviewed SHA and stated in the PR description (plan.dd.md line 161)."
+          }
+        ],
+        "supersedes": "rv-029-composition-r1"
+      }
+    }
+  ],
+  "references": []
+}

@@ -42,37 +42,44 @@
         {
           "id": "ac-0001",
           "claim": "Lookup: `unisphere sessions status` accepts `--pij ID`, `--pane %N`, or `--session ID --harness H`, repeatable in one call. Each result has a `resolved` block (pij id, harness, session id, transcript path, basis). Pane lookup uses pij's seat list with a live-process check, else a native lookup (tmux pane -> child harness process -> the harness's own session record); disagreements are returned, not picked. Unknown seat, seat with no session, dead binding, pane not found and unsupported harness are distinct errors. Native pane lookup takes under 50 ms.",
-          "state": "unchecked"
+          "state": "checked",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0004"
         },
         {
           "id": "ac-0002",
           "claim": "One shape: every harness returns the same versioned `SessionStatus` JSON; each fact carries a basis (native, derived, table@vN, mtime-fallback) or is listed as unknown. A harness that does not record a fact never reports 0 for it.",
-          "state": "unchecked"
+          "state": "checked",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0003"
         },
         {
           "id": "ac-0003",
           "claim": "Model and context: current model is the latest main-chain, non-synthetic call's model, with a pending /model switch reported separately and a model history. A fixture that switches model mid-session reports the new model. Context used = last deduplicated main-chain call input + cache read + cache write; window is native when recorded, else a labelled versioned model table, else unknown; percent only when both are known.",
-          "state": "unchecked"
+          "state": "checked",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0004"
         },
         {
           "id": "ac-0004",
           "claim": "Activity facts: created, last updated (latest native event; file mtime only as labelled fallback), idle seconds, last call time and tokens with cache read and 1h/5m write split, inferred cache TTL bucket, stop reason when available, total turns and last-hour turns by trigger (human vs peer etc.), compaction count (manual/auto) and last compaction time/pre/post tokens, or unknown.",
-          "state": "unchecked"
+          "state": "checked",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0006"
         },
         {
           "id": "ac-0005",
           "claim": "Big and live: the 211 MB live Claude transcript returns status by session id and by `--pij` in about a second cold with no limit error; a file being appended reports its complete prefix and never fails.",
-          "state": "unchecked"
+          "state": "checked",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0004"
         },
         {
           "id": "ac-0006",
           "claim": "SDK and CLI parity: the SDK op takes an explicit target (harness, session id, optional transcript path) and never calls pij or tmux (that lookup is CLI-only). It returns (SessionStatus, cursor): an opaque caller-held cursor makes the next call read only appended bytes, resetting visibly on shrink/replace. 50 warm seats re-status in under 100 ms, measured. SessionStatus is serde with a schema version. The op's crate graph has no rusqlite/libsqlite3-sys/parquet/arrow (checked). An external SDK consumer and the installed CLI are exercised; harness checks and boot stay green. Metadata only, native stores read-only, no real data in fixtures.",
-          "state": "unchecked"
+          "state": "checked",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0004"
         },
         {
           "id": "ac-0007",
           "claim": "Harnesses: Claude Code in phase 1; Oh My Pi and Codex in phase 2 using Plan 028's folds. Other harnesses return an explicit unsupported result. A bundled docs topic and the SDK doc describe the command, the shape and each fact's definition.",
-          "state": "unchecked"
+          "state": "checked",
+          "proven_by": "assets/execution-log.dd.json#entries/lg-0006"
         }
       ]
     },
@@ -83,18 +90,20 @@
           "id": "ph-a624",
           "title": "Claude status end to end",
           "brief": "SessionStatus contract, SDK op and `sessions status` CLI for Claude Code over the Plan 028 fold; pij/pane/session lookup; model, context, activity, turn and compaction facts; big-live-file proof; docs. Independent review.",
-          "state": "unchecked",
-          "tasks": "assets/tasks/phase-1/tasks.dd.json#tasks"
+          "state": "checked",
+          "tasks": "assets/tasks/phase-1/tasks.dd.json#tasks",
+          "receipt": "assets/reviews/composition-r2.receipt.dd.json"
         },
         {
           "id": "ph-b2c1",
           "title": "Oh My Pi, Copilot CLI and Codex",
           "brief": "Status folds for OMP (first), Copilot CLI, then Codex, macOS + Linux; same SessionStatus contract; native context window where recorded. Plan: assets/phase-2-plan.md. Each harness is pushed and pinged to pij-yelling-trout as it lands.",
-          "state": "unchecked",
+          "state": "checked",
           "depends_on": [
             "ph-a624"
           ],
-          "tasks": "assets/tasks/phase-2/tasks.dd.json#tasks"
+          "tasks": "assets/tasks/phase-2/tasks.dd.json#tasks",
+          "receipt": "assets/reviews/composition-r2.receipt.dd.json"
         }
       ]
     },

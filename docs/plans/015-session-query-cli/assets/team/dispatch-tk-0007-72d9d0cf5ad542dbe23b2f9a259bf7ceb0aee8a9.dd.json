@@ -1,0 +1,103 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "dispatch",
+      "value": {
+        "record_type": "dispatch",
+        "id": "dispatch-tk-0007-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9",
+        "recorded_at": "2026-09-10T04:53:31.918Z",
+        "unit_id": "tk-0007",
+        "packet": {
+          "path": "docs/plans/015-session-query-cli/assets/team/packet-tk-0007-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.json",
+          "sha256": "9ad9b4c1396b2800445441a5e98d95a8351b1ccc7df4271010c98b1f1db58753"
+        },
+        "baseline": {
+          "path": "docs/plans/015-session-query-cli/assets/team/baseline.dd.json",
+          "sha256": "c8f8ddfb487d7a97a0e9de1bca0d13927aa7faa472b46415c26c7e37496be00c"
+        },
+        "allocation": {
+          "path": "/Users/jordanknight/substrate/unisphere/unishpere-main/.git/builder/allocations/allocation-al-021-40c2c210-6e60-411a-beb5-f68a2dc62ebc.dd.json",
+          "sha256": "7f3851d22cb1b83b255a7de1a6d01fff93f6376a333400f0d9c332df24db8c14"
+        },
+        "requested": {
+          "role": "coder",
+          "harness": "omp",
+          "model": "github-copilot/gpt-5.6-sol-fast",
+          "effort": "high",
+          "source": {
+            "harness": "guide",
+            "model": "guide",
+            "effort": "guide"
+          }
+        },
+        "observed": {
+          "peer_id": "pij-exact-partridge",
+          "root": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0007",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/gpt-5.6-sol-fast",
+          "effort": "high",
+          "native_session": "01a089a9-f08a-77e4-8dce-d44f56b537eb",
+          "pid": 75951,
+          "evidence": [
+            "pij-rs state: {\"id\":\"pij-exact-partridge\",\"liveness\":\"active\",\"cwd\":\"/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0007\",\"harness\":\"omp\",\"boundModel\":\"github-copilot/gpt-5.6-sol-fast\",\"effort\":\"high\",\"pid\":75951,\"procStart\":20260910145329,\"parent\":\"pij-empirical-tiger\"}",
+            "pij-rs list: {\"id\":\"pij-exact-partridge\",\"session\":\"01a089a9-f08a-77e4-8dce-d44f56b537eb\",\"folder\":\"/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0007\",\"proc\":{\"pid\":75951,\"proc_start\":20260910145329},\"harness\":\"omp\",\"model\":\"github-copilot/gpt-5.6-sol-fast\",\"effort\":\"high\"}",
+            "plan root HEAD at dispatch: 99ea782e86fc1ebc4ea09bf8d4e7624dc87dc3bc (sealed source 72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9, a descendant: receipts/evidence committed after the seal)"
+          ],
+          "gaps": [
+            "Provider-served inference identity is unverified; these observations bind launch/session configuration only.",
+            "Native public state does not expose process argv or environment."
+          ]
+        },
+        "seed_files": [
+          {
+            "path": "docs/plans/015-session-query-cli/plan.dd.json",
+            "sha256": "23e11ee7ec867315349aab8df11282da08bf211a6c86e27a3782292ba5bcecef"
+          },
+          {
+            "path": "docs/plans/015-session-query-cli/plan.dd.md",
+            "sha256": "e8e0e1b9f7b9d0a56b28aba7e45cb0d0dc9288e75bd6e1e0b5ce6c6c0f0f50bc"
+          },
+          {
+            "path": "docs/plans/015-session-query-cli/assets/impl-guide.dd.json",
+            "sha256": "5caed35ffa6f28570c16b6bc42baf47ce4403012069e429eeeaeb4e02f04c88f"
+          },
+          {
+            "path": "docs/plans/015-session-query-cli/assets/impl-guide.dd.md",
+            "sha256": "3fb871c243dda45517b6435823e318b9c5ad8b9cf3a4242cce21c1f2bacb9858"
+          },
+          {
+            "path": "docs/plans/015-session-query-cli/assets/team/baseline.dd.json",
+            "sha256": "c8f8ddfb487d7a97a0e9de1bca0d13927aa7faa472b46415c26c7e37496be00c"
+          },
+          {
+            "path": "docs/plans/015-session-query-cli/assets/team/baseline.dd.md",
+            "sha256": "db5a7243d4fd8bfe1e78b3a7970ea0fea324c3d928f8d0657990c2a1dd441a5f"
+          },
+          {
+            "path": "docs/plans/015-session-query-cli/assets/team/review-baseline-approved.dd.json",
+            "sha256": "a8f61b1e404cd43f12367ba6c97e61b18de143ae1c3dccb3e36ea7210ed248c7"
+          },
+          {
+            "path": "docs/plans/015-session-query-cli/assets/team/packet-tk-0007-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.json",
+            "sha256": "9ad9b4c1396b2800445441a5e98d95a8351b1ccc7df4271010c98b1f1db58753"
+          },
+          {
+            "path": "docs/plans/015-session-query-cli/assets/team/packet-tk-0007-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.md",
+            "sha256": "d3bd0404dd13ca563177195b4b79ee117d15608a2fefd123224c9f334324382d"
+          }
+        ],
+        "warnings": [],
+        "delivery": {
+          "message_id": "b20918c5-045d-483a-9460-b5e348732603",
+          "outcome": "queued",
+          "recorded_at": "2026-09-10T04:53:32.757Z"
+        }
+      }
+    }
+  ],
+  "references": []
+}

@@ -1,0 +1,32 @@
+{
+  "recorded_at": "2026-09-10T08:39:17.551Z",
+  "status": "Unformatted and unvalidated integration work; CLI worker still editing",
+  "paths": [
+    "crates/adapter-omp/src/lib.rs",
+    "crates/adapter-omp/src/query.rs",
+    "crates/adapter-pi/src/lib.rs",
+    "crates/adapter-pi/src/query.rs",
+    "crates/adapter-cursor/src/lib.rs",
+    "crates/adapter-cursor/src/query.rs",
+    "crates/app/Cargo.toml",
+    "crates/app/src/main.rs",
+    "crates/app/src/adapters.rs",
+    "crates/loader-query/src/lib.rs",
+    "crates/loader-query/tests/discovery.rs",
+    "crates/testkit/src/bin/unisphere-arch-check.rs"
+  ],
+  "changes": [
+    "Single app parser dispatch and lazy static/config/query/native composition",
+    "One registry supplies nine native query adapters and ten framings, including VS Code journal",
+    "Expose existing private adapter policy constants rather than duplicate version strings",
+    "Explicit copied source framing resolved only from declared hint extensions when an adapter has multiple representations",
+    "Bounded stdin with explicit frontend format and safe recovery; no live capabilities for saved input",
+    "Allow real query writer in CLI integration tests without a production dependency"
+  ],
+  "pending": [
+    "Integrate manual CLI delivery",
+    "Resolve accepted Git Notes convergence after typed merge confirmation",
+    "Regenerate lockfile and run formatting/composed validation after edits stop"
+  ],
+  "reviewed_previous_source": "771f94a6d478dd50d74b661b2592d67bd0eeaa1a"
+}

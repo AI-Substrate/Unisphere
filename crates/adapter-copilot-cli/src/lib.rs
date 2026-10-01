@@ -12,8 +12,22 @@ use unisphere_core::{
     SessionAdapter, SessionRef, TelemetryRecord,
 };
 
+mod prep;
+mod query;
 mod snapshot;
+pub use prep::{
+    CopilotCliLegacyPrepFold, CopilotCliPrepFold, LEGACY_PREP_POLICY_VERSION, PREP_POLICY_VERSION,
+};
 pub use snapshot::{CopilotCliAdapterSnapshot, SNAPSHOT_DESCRIPTOR};
+
+/// Versioned current-event membership and classification policy.
+pub const CURRENT_QUERY_POLICY_VERSION: &str = "copilot-cli-events-query-v1";
+/// Versioned legacy-document view and classification policy.
+pub const LEGACY_QUERY_POLICY_VERSION: &str = "copilot-cli-legacy-query-v1";
+
+fn decode_json(bytes: &[u8]) -> Result<Value, ()> {
+    serde_json::from_slice(bytes).map_err(|_| ())
+}
 
 /// The JSONL registration only; legacy monolithic JSON needs a separate loader.
 pub const DESCRIPTOR: AdapterDescriptor = AdapterDescriptor {
@@ -32,7 +46,7 @@ pub const DESCRIPTOR: AdapterDescriptor = AdapterDescriptor {
         output_formats: &["otlp-jsonl"],
         sdk_caller_owned_cursor: true,
         cursor_source_assumption: "append_only",
-        cli_persisted_resume: false,
+        cli_persisted_resume: true,
         delayed_revision_reconciliation: false,
         lossless_archive: false,
     },
@@ -60,7 +74,7 @@ impl SessionAdapter for CopilotCliAdapter {
             .ok_or_else(|| PipelineError::new(PipelineErrorKind::InvalidInput, None))?;
         let mut batch = MappedBatch::default();
         for native in records {
-            let value: Value = serde_json::from_slice(&native.bytes).map_err(|_| {
+            let value = decode_json(&native.bytes).map_err(|()| {
                 PipelineError::new(PipelineErrorKind::InvalidData, Some(native.offset))
             })?;
             let mut diagnostic = |code| {
@@ -83,6 +97,28 @@ impl SessionAdapter for CopilotCliAdapter {
             batch.records.push(mapping.record(&value));
         }
         Ok(batch)
+    }
+}
+
+impl unisphere_core::query::QueryAdapter for CopilotCliAdapter {
+    fn inspect(
+        &self,
+        input: unisphere_core::query::NativeQueryInput<'_>,
+        access: unisphere_core::query::ContentAccess,
+        limits: &unisphere_core::query::QueryLimits,
+    ) -> Result<unisphere_core::query::InspectedSource, unisphere_core::query::QueryFailure> {
+        query::inspect_current(input, access, limits)
+    }
+}
+
+impl unisphere_core::query::QueryAdapter for CopilotCliAdapterSnapshot {
+    fn inspect(
+        &self,
+        input: unisphere_core::query::NativeQueryInput<'_>,
+        access: unisphere_core::query::ContentAccess,
+        limits: &unisphere_core::query::QueryLimits,
+    ) -> Result<unisphere_core::query::InspectedSource, unisphere_core::query::QueryFailure> {
+        query::inspect_legacy(input, access, limits)
     }
 }
 

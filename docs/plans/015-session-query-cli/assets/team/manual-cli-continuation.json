@@ -1,0 +1,30 @@
+{
+  "recorded_at": "2026-09-10T08:14:29.433Z",
+  "authorization": "Jordan: continue",
+  "peer_id": "pij-unfortunate-rat",
+  "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-000b-manual",
+  "checkpoint_sha": "f4c8b3570a851f9008183fff3f045d8f30a6307b",
+  "status": "released to complete original product-only CLI scope",
+  "packet": "docs/plans/015-session-query-cli/assets/team/manual-cli-packet.json",
+  "requirements": [
+    "Resume existing checkpoint/clone; no new allocation or automatic Builder reconciliation.",
+    "Complete all original grammar, docs/schema/actions/recovery/stream/create-new requirements, including P2/P3.",
+    "Expose typed execution entrypoints for config/catalog/help/version/native JSONL and snapshot operations so app parses once and dispatches ParsedCommand, not raw argv reconstruction or second parsing. Keep existing supported frontend APIs as thin wrappers around the typed execution, not a second grammar.",
+    "Required typed APIs: run_config(&ConfigCommand,&CliContext,&dyn InspectionApi,stdout,stderr); run_catalog(&CatalogCommand,&[&AdapterDescriptor],stdout,stderr); run_help(&HelpCommand,stdout,stderr); run_version(&CliContext,OutputMode,stdout,stderr); run_native_list(&NativeRootListCommand,&dyn CollectionApi,stdout,stderr); run_native_export(&NativeExportCommand,&dyn CollectionApi,stdout,stderr); run_native_snapshot_export(&NativeExportCommand,&dyn SnapshotCollectionApi,SnapshotFormat,stdout,stderr). All return u8. Existing parse/run_query/run_docs/run_schema/emit_parse_failure remain. If an existing core trait has a different name, use its actual type and report exact signature.",
+    "PM exclusively owns app/root manifests/lock/architecture/Git-ai bridge/canonical records; do not edit those paths. Existing plan014 Git Notes integration is separate PM convergence; Pij-ID lookup is research only.",
+    "Skip all tests/builds/lint/formatters/startup boot; PM runs composed validation after delivery.",
+    "Publish final ProductOnlyDelivery with source SHA, candidate commit(s), paths, unrun checks, friction and truthful attribution. Original requested model/effort and isolation remain."
+  ],
+  "forbidden": [
+    ".the-flow-state.json",
+    "the-flow.json",
+    "the-flow.md",
+    "canonical plan/guide/tasks/team/records",
+    "app composition",
+    "root manifests/lock",
+    "core/SDK/loader/output",
+    "global tooling",
+    "push/merge",
+    "peer transport logs"
+  ]
+}

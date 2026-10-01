@@ -1,0 +1,67 @@
+{
+  "goal": "Independent exact-code wave0 baseline review for plan015, required before seal and normal coder release",
+  "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+  "subject_sha": "819fc30ae5d721fe2a2100ae9eef5692f10eac63",
+  "plan": {
+    "path": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/plan.dd.json",
+    "sha256": "3af595c0e1c8f0e6c53bcbf5f538864d8eb93d8d7126030e1e9943e15be8395a"
+  },
+  "guide": {
+    "path": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/impl-guide.dd.json",
+    "sha256": "7dad5fc51e5762fcf26ba279f55bac4875ab8b30290291d7803a7acee32908a2"
+  },
+  "requested": {
+    "harness": "omp",
+    "model": "github-copilot/claude-opus-5",
+    "effort": "high"
+  },
+  "read": [
+    "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/baseline-followups.json",
+    "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/team/operator-role-amendment.json",
+    "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/tasks/phase-1/tasks.dd.json",
+    "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/team/review-decomposition-approved.dd.json"
+  ],
+  "code_scope": [
+    "crates/core/src/query/mod.rs",
+    "crates/core/src/query/model.rs",
+    "crates/core/src/query/source.rs",
+    "crates/core/src/query/error.rs",
+    "crates/core/src/query/schema.rs",
+    "crates/testkit/src/query.rs",
+    "crates/testkit/fixtures/query/shared-v1.json",
+    "crates/core/tests/query_contract.rs",
+    "crates/core/src/query/identity.rs",
+    "crates/core/src/query/fingerprint.rs",
+    "crates/core/src/lib.rs",
+    "crates/sdk/src/lib.rs",
+    "crates/testkit/src/lib.rs",
+    "crates/testkit/src/bin/unisphere-arch-check.rs",
+    "Cargo.toml",
+    "Cargo.lock",
+    "crates/core/Cargo.toml",
+    "crates/sdk/Cargo.toml"
+  ],
+  "proof": {
+    "earlier": "18 contract tests and external SDK consumer passed on latest pair before minor layout/doc correction; workspace clippy passes after corrections",
+    "pending": "PM runs exact-source harness boot and external consumer now; do not fabricate their outcome; receipt will be at assets/verification/baseline-proof-819fc30a.json"
+  },
+  "checks": [
+    "Judge actual complete C21/C22/C23/C25 declarations, field registry, fakes/fixtures, hashes and typed actions/errors against guide; do not approve from passing tests alone",
+    "Focus privacy boundary: projected rows cannot bypass consent, raw observations not serializable, untrusted saved inputs validated; null differs from absence",
+    "Source selection before I/O, native provenance and revision checks, bounded DTO contracts and incomplete offline evidence",
+    "Stable typed timestamp selection, Turns-only ranges without requiring branch prematurely, closed nonrecursive canonical view digest; query-binding precedence and F11/F12",
+    "Public SDK external usability, appropriate core architecture and meaningful tests; flag missing contracts required by downstream coders, not unimplemented service/CLI slated for later lanes"
+  ],
+  "restrictions": [
+    "Read-only product/plan/guide/task/team/flow/main; skip all builds/tests/lint/formatters; PM owns composed validation",
+    "Do not repeat R3 guide approval as baseline approval; evaluate this exact subject and current document hashes",
+    "No commit/push/merge/global repair; do not reassign canonical ownership",
+    "Forbidden .the-flow-state.json, the-flow.json, the-flow.md, all canonical team/ledger directories except explicit review output paths",
+    "Follow pij wire discipline C10; native root remains main so read absolute plan workspace paths"
+  ],
+  "output": {
+    "report": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/reviews/baseline-r1-pij-armed-cow.json",
+    "receipt": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/reviews/baseline-r1-pij-armed-cow-receipt.json",
+    "format": "Write JSON evidence-backed report and raw ReviewReceipt matching builder/team review shape: scope decomposition (baseline seal grammar), exact subject/plan/guide/report SHA256, reviewer identity plus actual observed runtime/gaps, verdict and findings with severity/disposition. Scope explicitly actual wave0 baseline, not full plan acceptance. No unresolved material finding may accompany approved. Wait for PM proof result before final approval. Send paths and short outcome."
+  }
+}

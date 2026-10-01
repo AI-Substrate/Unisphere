@@ -192,6 +192,60 @@ loader missed bytes. A malformed bubble may leave valid siblings available with
 diagnostics. Consumers requiring complete semantic projection must inspect those
 diagnostics, not just a successful raw snapshot read or revision digest.
 
+## Query adapter facts
+
+Both adapter types also implement the pure `unisphere_core::query::QueryAdapter`
+port. They accept only caller-supplied `NativeQueryInput`; discovery, source I/O,
+repository scoping, cross-source identity, logical turn reconstruction, filtering
+and statistics remain outside this crate. Query policy versions are
+`cursor-transcript-query-v1` and `cursor-ide-query-v1`.
+
+### Transcript query view
+
+Agent-transcript JSONL is one `SourceOnly` partition with unavailable membership.
+Physical byte offsets define versioned source order and provenance only. Messages
+retain their outer native role, but native message/session/turn/call IDs and all
+timestamps remain absent. A native user role is an initiating-request marker;
+`turn_id` remains unavailable for SDK-owned versioned reconstruction. Idless
+`tool_use` parts can be retained as message evidence under content access, but do
+not become `ToolCall`/`ToolResult` entities and are never paired by adjacency,
+name, arguments or text. Tool results, outcomes, exit codes and durations remain
+explicitly `not_captured`.
+
+Supported sensitive message parts are retained only when `ContentAccess` permits
+the relevant field or content emission. Otherwise the observation carries typed
+`sensitive_omitted` availability. Metadata, turn-end and unsupported records stay
+source/control observations; they do not manufacture sessions or turns.
+
+### IDE query view
+
+Each key/JSON-validated composer is a `MainSpine` partition with
+`ValidatedHeader` membership. The existing composer/header/bubble validation and
+`fullConversationHeadersOnly` order are authoritative; database row order,
+lexical bubble IDs and timestamps do not reorder the spine. The supplied snapshot
+revision and exact native keys remain on every source reference.
+
+Cursor's IDE store is global and may contain multiple projects. A valid composer
+therefore remains `unassociated` unless the supplied source evidence contains an
+association for that exact partition. Selecting one composer does not silently
+associate other store rows. Unselected composers, orphan/alternate bubbles and
+malformed referenced rows remain `SourceOnly` branch/control observations with
+typed availability; absent referenced keys remain explicit source issues.
+Duplicate native keys reject the supplied snapshot as invalid rather than choosing
+one row. No repository association is inferred from message text, native keys,
+filenames or similarly named metadata.
+IDE tool facts become tool entities only when a nonempty native `toolCallId`
+exists. Start, result and error facts carry that exact ID so SDK reconstruction
+can pair them only within the validated composer partition; this adapter does not
+join invocations. Exact registered start names retain separately normalized
+families (for example `read_file` → `file-read`); unknown names keep no guessed
+family. A native `result` has outcome `unknown`, not assumed success; an explicit
+native `error` has outcome `failed`. Exit code, duration and turn ID remain
+unavailable. Idless tools stay
+message/source evidence rather than receiving a synthetic call identity. Arguments,
+results, errors, text and reasoning follow `ContentAccess`; no blob, attachment,
+context or raw-argument string is decoded beyond its supported native shape.
+
 ## Verification handoff
 
 Regression tests and fixtures are authored in `crates/adapter-cursor`; they were
@@ -199,7 +253,8 @@ Regression tests and fixtures are authored in `crates/adapter-cursor`; they were
 integration and coordinated proof. After integrating the package in the workspace:
 
 ```sh
-cargo test -p unisphere-adapter-cursor
+cargo test --locked -p unisphere-adapter-cursor --test query
+cargo run --locked -p unisphere-testkit --bin unisphere-proof -- native
 cargo run --locked -p unisphere-testkit --bin unisphere-arch-check
 ```
 

@@ -1,0 +1,97 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "baseline",
+      "value": {
+        "record_type": "baseline",
+        "id": "baseline-aac28a053732a494fafe5219842de6d3aeaf06b6",
+        "recorded_at": "2026-09-29T06:18:20.228Z",
+        "source_sha": "aac28a053732a494fafe5219842de6d3aeaf06b6",
+        "plan": {
+          "path": "docs/plans/029-session-status/plan.dd.json",
+          "sha256": "72145b14324e289f86c5365f93785f3d76d2024e09595685c3f92a2f8235fa39"
+        },
+        "guide": {
+          "path": "docs/plans/029-session-status/assets/impl-guide.dd.json",
+          "sha256": "e967cc78a50983e3beaaaef939f34c3a66b4aba0f179cab539ef8d8d078ee653"
+        },
+        "files": [
+          {
+            "path": "crates/core/src/status.rs",
+            "sha256": "ea0edb1bc013b2873c7d5c893b24463874f61a74026d4a78c341bc0234175194"
+          },
+          {
+            "path": "crates/core/tests/status_contract.rs",
+            "sha256": "f938f3688fb616b626d4df0199b5890e00886fae3401f0e09b565ce6aec141b0"
+          },
+          {
+            "path": "crates/testkit/src/status.rs",
+            "sha256": "5b44dc97968d3aece3ea9c97fe0d52f6f3e4cba3c1acbf33d8b012516cf9efe2"
+          }
+        ],
+        "checks": [
+          {
+            "id": "vd-0001",
+            "command": "cargo",
+            "args": [
+              "test",
+              "--locked",
+              "-p",
+              "unisphere-core",
+              "--test",
+              "status_contract"
+            ],
+            "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-status",
+            "exit_code": 0,
+            "stdout": "\nrunning 6 tests\ntest versions_are_the_published_contract ... ok\ntest failure_codes_are_stable_and_distinct ... ok\ntest basis_vocabulary_is_snake_case ... ok\ntest queries_and_resolve_basis_are_tagged ... ok\ntest empty_status_is_unknown_not_zero ... ok\ntest status_round_trips ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+            "stderr": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.64s\n     Running tests/status_contract.rs (target/debug/deps/status_contract-443ffdd4a22a98a8)\n",
+            "recorded_at": "2026-09-29T06:18:08.781Z"
+          },
+          {
+            "id": "vd-0005",
+            "command": "cargo",
+            "args": [
+              "run",
+              "--locked",
+              "-p",
+              "unisphere-testkit",
+              "--bin",
+              "unisphere-arch-check"
+            ],
+            "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-status",
+            "exit_code": 0,
+            "stdout": "architecture: 110 declared normal/dev/build edges accepted\npurity: 35 core/adapter production source files checked (lexical sensor; independent review still required)\n",
+            "stderr": "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.72s\n     Running `target/debug/unisphere-arch-check`\n",
+            "recorded_at": "2026-09-29T06:18:11.783Z"
+          },
+          {
+            "id": "vd-000a",
+            "command": "cargo",
+            "args": [
+              "test",
+              "--locked",
+              "-p",
+              "unisphere-testkit",
+              "--lib",
+              "status"
+            ],
+            "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-status",
+            "exit_code": 0,
+            "stdout": "\nrunning 1 test\ntest status::tests::scripted_steps_emit_rows_facts_and_resume ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 15 filtered out; finished in 0.00s\n\n",
+            "stderr": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.29s\n     Running unittests src/lib.rs (target/debug/deps/unisphere_testkit-d73027b725e9a817)\n",
+            "recorded_at": "2026-09-29T06:18:20.169Z"
+          }
+        ],
+        "review": {
+          "path": "docs/plans/029-session-status/assets/reviews/decomposition-r2.receipt.dd.json",
+          "sha256": "9875a5f932959271e31655a42540b111d7afff67e155a1dba4cc1111c72778a9"
+        },
+        "warnings": []
+      }
+    }
+  ],
+  "references": []
+}

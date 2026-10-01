@@ -1,0 +1,941 @@
+//! Session status for one explicit target over the Plan 028 fold.
+//!
+//! [`StatusService`] binds harness folds and loaders ([`PrepBinding`]) and the
+//! configured discovery roots, finds the target's transcript, folds it like
+//! [`fold_source`](crate::prep::fold_source) and derives every
+//! [`SessionStatus`] fact purely from the fold's [`SessionFacts`], the
+//! accumulated call/turn/event rows and the injected `now_ms`. It never calls
+//! Pij, tmux or any process, and never reads a clock.
+//!
+//! [`StatusService::status_incremental`] returns an opaque [`StatusCursor`]
+//! that keeps the fold open: handing it back reads and folds only appended
+//! complete records, so a warm call costs the appended bytes, not the history.
+//! A shrink, identity change, prefix rewrite, a cursor for another target or
+//! one already resumed refolds cold and names the reason in
+//! [`SourceStatus::reset`]. Apart from `source`, an incremental result equals
+//! the cold result for the same bytes and `now_ms`.
+
+use std::{
+    collections::BTreeMap,
+    fmt,
+    path::{Path, PathBuf},
+    sync::{Arc, Mutex, PoisonError},
+};
+
+use globset::{Glob, GlobMatcher};
+use unisphere_core::{PipelineError, ReadCursor, ReadLimits, SnapshotLimits};
+
+use crate::prep::{
+    CacheWriteBasis, CallSighting, PrepBinding, PrepCallRow, PrepEventKind, PrepFoldSession,
+    PrepOptions, PrepReadLimits, PrepRows, PrepSourceKind, PrepSourceSet, PrepSourceStat,
+    SessionFacts, advance, derived_root_label,
+};
+
+pub use unisphere_core::status::*;
+
+const HOUR_MS: i64 = 3_600_000;
+const FIVE_MINUTES_MS: i64 = 300_000;
+/// Oldest model spans are dropped beyond this many.
+const MAX_MODEL_SPANS: usize = 64;
+/// Only the latest usage-limit notices are kept.
+const MAX_LIMITS: usize = 16;
+/// Client-generated notices carry this model; they are never API calls.
+const SYNTHETIC_MODEL: &str = "<synthetic>";
+
+/// `model-windows@1` ([`MODEL_WINDOWS_TABLE`]): context window by model id. The
+/// longest entry that equals the id, or is followed in it by `-`, wins.
+/// 1M entries are backed by observed main-chain contexts above 200k, except
+/// `claude-sonnet-5`, which the github-copilot model catalog lists at 1M.
+const MODEL_WINDOWS: &[(&str, u64)] = &[
+    ("claude-opus-5", 1_000_000),
+    ("claude-fable-5", 1_000_000),
+    ("claude-sonnet-5", 1_000_000),
+    ("claude-opus-4-8", 1_000_000),
+    ("claude-haiku-4-5", 200_000),
+    ("claude-3", 200_000),
+];
+
+fn table_window(model: &str) -> Option<u64> {
+    // Harnesses spell one model several ways: `github-copilot/claude-opus-5.5`
+    // (OMP) and `claude-opus-5-5` (Claude Code) name the same model.
+    let model = model.rsplit('/').next().unwrap_or(model).replace('.', "-");
+    let model = model.as_str();
+    MODEL_WINDOWS
+        .iter()
+        .filter(|(prefix, _)| {
+            model
+                .strip_prefix(prefix)
+                .is_some_and(|rest| rest.is_empty() || rest.starts_with('-'))
+        })
+        .max_by_key(|(prefix, _)| prefix.len())
+        .map(|(_, window)| *window)
+}
+
+// ---------------------------------------------------------------------------
+// Accumulators
+// ---------------------------------------------------------------------------
+
+/// The latest deduplicated main-chain call; update sightings raise its counters.
+#[derive(Debug, Clone, PartialEq)]
+struct TrackedCall {
+    msg_id: Option<String>,
+    request_id: Option<String>,
+    at_ms: Option<i64>,
+    input: Option<i64>,
+    output: Option<i64>,
+    cache_read: Option<i64>,
+    cw_1h: Option<i64>,
+    cw_5m: Option<i64>,
+    /// The harness recorded which TTL class each cache write used.
+    ttl_split: bool,
+    stop_reason: Option<String>,
+}
+
+impl TrackedCall {
+    fn new(row: &PrepCallRow) -> Self {
+        Self {
+            msg_id: row.msg_id.clone(),
+            request_id: row.request_id.clone(),
+            at_ms: row.ts_ms,
+            input: row.input,
+            output: row.output,
+            cache_read: row.cache_read,
+            cw_1h: row.cw_1h,
+            cw_5m: row.cw_5m,
+            ttl_split: row.cache_write_basis == CacheWriteBasis::Split,
+            stop_reason: row.stop_reason.clone(),
+        }
+    }
+
+    fn same_call(&self, row: &PrepCallRow) -> bool {
+        (self.msg_id.is_some() || self.request_id.is_some())
+            && self.msg_id == row.msg_id
+            && self.request_id == row.request_id
+    }
+
+    /// Per-field maximum of the counters and the last recorded stop reason,
+    /// exactly as one merged sighting; the time stays the first sighting's.
+    fn merge(&mut self, row: &PrepCallRow) {
+        let max = |a: Option<i64>, b: Option<i64>| a.max(b);
+        self.input = max(self.input, row.input);
+        self.output = max(self.output, row.output);
+        self.cache_read = max(self.cache_read, row.cache_read);
+        self.cw_1h = max(self.cw_1h, row.cw_1h);
+        self.cw_5m = max(self.cw_5m, row.cw_5m);
+        self.ttl_split |= row.cache_write_basis == CacheWriteBasis::Split;
+        if row.stop_reason.is_some() {
+            self.stop_reason.clone_from(&row.stop_reason);
+        }
+    }
+}
+
+/// Bounded facts accumulated from rows; independent of how input was batched.
+#[derive(Debug, Clone, Default, PartialEq)]
+struct Accumulated {
+    model_spans: Vec<ModelSpan>,
+    /// Time of the latest main-chain, non-synthetic call that named a model.
+    current_at_ms: Option<i64>,
+    last_call: Option<TrackedCall>,
+    calls: CallCounts,
+    turns_total: u64,
+    turns_by_origin: BTreeMap<String, u64>,
+    /// Timed turns newer than an hour before `newest_turn_ms`.
+    recent_turns: Vec<(i64, String)>,
+    newest_turn_ms: Option<i64>,
+    limits: Vec<LimitSeen>,
+}
+
+impl Accumulated {
+    fn apply(&mut self, rows: &PrepRows) {
+        for call in &rows.calls {
+            self.call(call);
+        }
+        for turn in &rows.turns {
+            let origin = origin_label(turn.origin);
+            self.turns_total += 1;
+            *self.turns_by_origin.entry(origin.clone()).or_default() += 1;
+            if let Some(ts) = turn.started_ts_ms {
+                self.newest_turn_ms = self.newest_turn_ms.max(Some(ts));
+                self.recent_turns.push((ts, origin));
+            }
+        }
+        for event in &rows.events {
+            if event.kind == PrepEventKind::LimitNotice {
+                if self.limits.len() == MAX_LIMITS {
+                    self.limits.remove(0);
+                }
+                self.limits.push(LimitSeen {
+                    kind: event
+                        .subkind
+                        .clone()
+                        .unwrap_or_else(|| "limit_notice".to_owned()),
+                    at_ms: event.ts_ms,
+                    resets_at: event.resets_at.clone(),
+                });
+            }
+        }
+        // Monotonic in `newest_turn_ms`, so any batch split prunes the same set.
+        if let Some(newest) = self.newest_turn_ms {
+            self.recent_turns.retain(|(ts, _)| *ts > newest - HOUR_MS);
+        }
+    }
+
+    fn call(&mut self, row: &PrepCallRow) {
+        if row.model.as_deref() == Some(SYNTHETIC_MODEL) {
+            return;
+        }
+        match row.sighting {
+            CallSighting::Update => {
+                if let Some(last) = self.last_call.as_mut().filter(|l| l.same_call(row)) {
+                    last.merge(row);
+                }
+            }
+            CallSighting::First => {
+                self.calls.total += 1;
+                if row.is_sidechain {
+                    self.calls.sidechain += 1;
+                    return;
+                }
+                self.last_call = Some(TrackedCall::new(row));
+                if let Some(model) = &row.model {
+                    self.model(model, row.ts_ms);
+                }
+            }
+        }
+    }
+
+    fn model(&mut self, model: &str, ts: Option<i64>) {
+        match self.model_spans.last_mut() {
+            Some(span) if span.model == model => {
+                span.calls += 1;
+                span.first_ms = span.first_ms.or(ts);
+                span.last_ms = ts.or(span.last_ms);
+            }
+            _ => {
+                if self.model_spans.len() == MAX_MODEL_SPANS {
+                    self.model_spans.remove(0);
+                }
+                self.model_spans.push(ModelSpan {
+                    model: model.to_owned(),
+                    first_ms: ts,
+                    last_ms: ts,
+                    calls: 1,
+                });
+            }
+        }
+        self.current_at_ms = ts;
+    }
+}
+
+fn origin_label(origin: crate::prep::TurnOrigin) -> String {
+    serde_json::to_value(origin)
+        .ok()
+        .and_then(|value| value.as_str().map(str::to_owned))
+        .unwrap_or_else(|| "other".to_owned())
+}
+
+// ---------------------------------------------------------------------------
+// Pure derivation
+// ---------------------------------------------------------------------------
+
+/// Non-empty, not `.`/`..`, no separator or NUL: safe to join under a root.
+fn is_plain_component(id: &str) -> bool {
+    !id.is_empty() && id != "." && id != ".." && !id.contains(['/', '\\', '\0'])
+}
+
+/// Whether a source path names `session`, across the dialects' layouts:
+/// `<id>.jsonl` (Claude), `<timestamp>_<id>.jsonl` (Oh My Pi, Pi, Codex
+/// rollouts) and `<id>/events.jsonl` (Copilot CLI).
+fn names_session(file: &str, session: &str) -> bool {
+    let path = Path::new(file);
+    let stem = path
+        .file_stem()
+        .and_then(|s| s.to_str())
+        .unwrap_or_default();
+    let parent = path
+        .parent()
+        .and_then(Path::file_name)
+        .and_then(|s| s.to_str())
+        .unwrap_or_default();
+    !session.is_empty()
+        && (stem == session
+            || stem
+                .strip_suffix(session)
+                .is_some_and(|prefix| prefix.ends_with(['_', '-']))
+            || parent == session)
+}
+
+fn non_negative(value: Option<i64>) -> Option<u64> {
+    value.and_then(|v| u64::try_from(v).ok())
+}
+
+fn tokens_label(tokens: u64) -> String {
+    let scaled = |value: f64, unit: &str| {
+        let text = format!("{value:.1}");
+        format!("{}{unit}", text.strip_suffix(".0").unwrap_or(&text))
+    };
+    if tokens >= 1_000_000 {
+        scaled(tokens as f64 / 1_000_000.0, "M")
+    } else if tokens >= 1_000 {
+        format!("{}k", (tokens as f64 / 1_000.0).round())
+    } else {
+        tokens.to_string()
+    }
+}
+
+/// Every fact from the fold's facts, the accumulated rows, the source's mtime
+/// and `now_ms`. `source` is left for the caller.
+fn derive(
+    target: StatusTarget,
+    facts: &SessionFacts,
+    acc: &Accumulated,
+    mtime_ns: i128,
+    now_ms: i64,
+) -> SessionStatus {
+    let mut status = SessionStatus::empty(target);
+
+    // Model.
+    let current = acc.model_spans.last().map(|span| span.model.clone());
+    let (pending_known, pending_switch) = match &facts.last_model_switch {
+        None => (true, None),
+        Some(switch) => {
+            let pending = || ModelSwitchStatus {
+                requested: switch.requested_model.clone(),
+                at_ms: switch.ts_ms,
+            };
+            match (&current, switch.ts_ms, acc.current_at_ms) {
+                (None, _, _) => (true, Some(pending())),
+                (Some(_), Some(at), Some(call)) => (true, (at > call).then(pending)),
+                // No time on one side: whether it follows the call is unknown.
+                _ => (false, None),
+            }
+        }
+    };
+    status.model = ModelStatus {
+        current: current.clone().map(|model| Fact::new(model, Basis::Native)),
+        current_at_ms: current.as_ref().and(acc.current_at_ms),
+        pending_switch,
+        history: acc.model_spans.clone(),
+    };
+
+    // Context.
+    let latest_ms = facts
+        .latest_context
+        .as_ref()
+        .and_then(|sample| sample.ts_ms);
+    // After a compaction with no call since, the context now is the harness's
+    // own post-compaction figure, not the last (pre-compaction) call.
+    let after_compaction = facts
+        .last_compaction
+        .as_ref()
+        .filter(|c| c.ts_ms.zip(latest_ms).is_some_and(|(at, call)| at > call))
+        .and_then(|c| non_negative(c.post_tokens));
+    let used = after_compaction.or_else(|| {
+        facts
+            .latest_context
+            .as_ref()
+            .and_then(|sample| non_negative(sample.total))
+    });
+    // A window the harness recorded wins over the versioned table.
+    let native_window = non_negative(facts.context_window).filter(|w| *w > 0);
+    let window = native_window.or_else(|| current.as_deref().and_then(table_window));
+    let percent = used
+        .zip(window)
+        .filter(|(_, window)| *window > 0)
+        .map(|(used, window)| (used as f64 / window as f64 * 1000.0).round() / 10.0);
+    status.context = ContextStatus {
+        // The fold's total sums input, cache reads and cache writes.
+        used_tokens: used.map(|used| Fact::new(used, Basis::Derived)),
+        window_tokens: window.map(|window| {
+            let basis = if native_window.is_some() {
+                Basis::Native
+            } else {
+                Basis::Table
+            };
+            Fact::new(window, basis)
+        }),
+        window_table: window
+            .filter(|_| native_window.is_none())
+            .map(|_| MODEL_WINDOWS_TABLE.to_owned()),
+        percent,
+        display: used
+            .zip(window)
+            .zip(percent)
+            .map(|((used, window), percent)| {
+                format!(
+                    "{} of {} ({percent:.0}%)",
+                    tokens_label(used),
+                    tokens_label(window)
+                )
+            }),
+    };
+
+    // Last call.
+    status.last_call = acc.last_call.as_ref().map(|call| {
+        // A TTL class the fold only inferred (fallback basis) is not reported.
+        let ttl = if !call.ttl_split {
+            None
+        } else if call.cw_1h.is_some_and(|v| v > 0) {
+            Some(("1h", HOUR_MS))
+        } else if call.cw_5m.is_some_and(|v| v > 0) {
+            Some(("5m", FIVE_MINUTES_MS))
+        } else {
+            None
+        };
+        // A lifetime the harness recorded outright (e.g. Copilot CLI's
+        // modelCacheState) is native and wins; its expiry decides warmth.
+        let native_ttl = facts
+            .cache_ttl_seconds
+            .filter(|seconds| *seconds > 0)
+            .map(|seconds| (ttl_label(seconds), seconds.saturating_mul(1000)));
+        let (ttl_bucket, cache_warm) = match native_ttl {
+            Some((label, ttl_ms)) => (
+                Some(Fact::new(label, Basis::Native)),
+                match facts.cache_expires_ms {
+                    Some(expires) => Some(Fact::new(now_ms < expires, Basis::Native)),
+                    None => call
+                        .at_ms
+                        .map(|at| Fact::new(now_ms - at < ttl_ms, Basis::Derived)),
+                },
+            ),
+            None => (
+                ttl.map(|(bucket, _)| Fact::new(bucket.to_owned(), Basis::Derived)),
+                ttl.zip(call.at_ms)
+                    .map(|((_, ttl), at)| Fact::new(now_ms - at < ttl, Basis::Derived)),
+            ),
+        };
+        LastCall {
+            at_ms: call.at_ms,
+            input: non_negative(call.input),
+            output: non_negative(call.output),
+            cache_read: non_negative(call.cache_read),
+            cache_write_1h: non_negative(call.cw_1h),
+            cache_write_5m: non_negative(call.cw_5m),
+            ttl_bucket,
+            cache_warm,
+            stop_reason: call.stop_reason.clone(),
+        }
+    });
+
+    // Timeline.
+    let last_updated = match facts.last_event_ms {
+        Some(ms) => Some(Fact::new(ms, Basis::Native)),
+        None => i64::try_from(mtime_ns.div_euclid(1_000_000))
+            .ok()
+            .map(|ms| Fact::new(ms, Basis::MtimeFallback)),
+    };
+    status.timeline = Timeline {
+        created_ms: facts.first_event_ms.map(|ms| Fact::new(ms, Basis::Native)),
+        idle_seconds: last_updated
+            .as_ref()
+            .map(|updated| (now_ms.saturating_sub(updated.value).max(0) / 1000) as u64),
+        last_updated_ms: last_updated,
+    };
+
+    // Turns.
+    let mut last_hour_by_origin = BTreeMap::new();
+    for (_, origin) in acc
+        .recent_turns
+        .iter()
+        .filter(|(ts, _)| *ts > now_ms - HOUR_MS)
+    {
+        *last_hour_by_origin.entry(origin.clone()).or_default() += 1;
+    }
+    status.turns = TurnStatus {
+        total: acc.turns_total,
+        last_hour_total: last_hour_by_origin.values().sum(),
+        by_origin: acc.turns_by_origin.clone(),
+        last_hour_by_origin,
+    };
+
+    // Compaction.
+    status.compaction = CompactionStatus {
+        counts: facts.compactions,
+        last: facts.last_compaction.clone(),
+    };
+    let no_compactions = facts
+        .compactions
+        .is_some_and(|c| c.manual + c.auto + c.unknown_trigger == 0);
+
+    status.calls = acc.calls;
+    status.limits_seen = acc.limits.clone();
+
+    let last_call = status.last_call.as_ref();
+    let known = [
+        ("model.current", status.model.current.is_some()),
+        ("model.pending_switch", pending_known),
+        ("context.used_tokens", status.context.used_tokens.is_some()),
+        (
+            "context.window_tokens",
+            status.context.window_tokens.is_some(),
+        ),
+        ("context.percent", status.context.percent.is_some()),
+        ("last_call", last_call.is_some()),
+        (
+            "last_call.ttl_bucket",
+            last_call.is_some_and(|c| c.ttl_bucket.is_some()),
+        ),
+        (
+            "last_call.cache_warm",
+            last_call.is_some_and(|c| c.cache_warm.is_some()),
+        ),
+        (
+            "last_call.stop_reason",
+            last_call.is_some_and(|c| c.stop_reason.is_some()),
+        ),
+        ("timeline.created_ms", status.timeline.created_ms.is_some()),
+        (
+            "timeline.last_updated_ms",
+            status.timeline.last_updated_ms.is_some(),
+        ),
+        ("compaction.counts", status.compaction.counts.is_some()),
+        (
+            "compaction.last",
+            status.compaction.last.is_some() || no_compactions,
+        ),
+    ];
+    status
+        .unknown
+        .retain(|name| !known.iter().any(|(fact, known)| *known && fact == name));
+    status
+}
+
+// ---------------------------------------------------------------------------
+// Service
+// ---------------------------------------------------------------------------
+
+/// Opaque, caller-held position of one target's transcript: the source's
+/// observed stat and anchor, the read cursor after the last complete record,
+/// the open fold there, its facts and the bounded row accumulators. Hand it
+/// back to read only appended bytes.
+///
+/// Resuming moves the open fold into the returned cursor, so a cursor (and
+/// every clone of it) resumes appended input once; handing back a cursor that
+/// was already resumed, or one whose resume failed, refolds cold with reset
+/// `spent`. Returning an unchanged source does not use the fold up.
+#[derive(Debug, Clone)]
+pub struct StatusCursor {
+    target: StatusTarget,
+    policy: String,
+    root: PathBuf,
+    label: String,
+    stat: PrepSourceStat,
+    /// Append: after the last complete record, where `fold` stands.
+    cursor: Option<ReadCursor>,
+    anchor: Option<String>,
+    fold: LiveFold,
+    facts: SessionFacts,
+    acc: Accumulated,
+}
+
+/// The open fold session at a cursor's position, shared by the cursor's clones
+/// and taken by the first resume.
+#[derive(Clone, Default)]
+struct LiveFold(Arc<Mutex<Option<Box<dyn PrepFoldSession>>>>);
+
+impl LiveFold {
+    fn new(session: Box<dyn PrepFoldSession>) -> Self {
+        Self(Arc::new(Mutex::new(Some(session))))
+    }
+
+    fn take(&self) -> Option<Box<dyn PrepFoldSession>> {
+        self.0.lock().unwrap_or_else(PoisonError::into_inner).take()
+    }
+}
+
+impl fmt::Debug for LiveFold {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str("LiveFold")
+    }
+}
+
+/// One located transcript and the binding that reads it.
+struct Located<'a> {
+    binding: &'a PrepBinding,
+    root: PathBuf,
+    label: String,
+    stat: PrepSourceStat,
+}
+
+/// `300` → `5m`, `3600` → `1h`, `86400` → `24h`, else seconds.
+fn ttl_label(seconds: i64) -> String {
+    match seconds {
+        s if s % 3600 == 0 => format!("{}h", s / 3600),
+        s if s % 60 == 0 => format!("{}m", s / 60),
+        s => format!("{s}s"),
+    }
+}
+
+/// Largest single native record status accepts.
+const STATUS_MAX_RECORD_BYTES: usize = 64 * 1024 * 1024;
+
+/// Implements [`SessionStatusApi`] over Plan 028 bindings and discovery roots.
+pub struct StatusService {
+    bindings: Vec<PrepBinding>,
+    roots: Vec<PrepSourceSet>,
+    limits: PrepReadLimits,
+}
+
+impl StatusService {
+    pub fn new(bindings: Vec<PrepBinding>, roots: Vec<PrepSourceSet>) -> Self {
+        Self {
+            bindings,
+            roots,
+            limits: PrepReadLimits {
+                // Status reads metadata, but some harnesses write single
+                // records far above the prep default (Copilot CLI tool output
+                // and message snapshots); one such record must not fail status.
+                read: ReadLimits {
+                    max_record_bytes: STATUS_MAX_RECORD_BYTES,
+                    max_batch_bytes: STATUS_MAX_RECORD_BYTES,
+                    ..ReadLimits::default()
+                },
+                snapshot: SnapshotLimits::default(),
+            },
+        }
+    }
+
+    /// Status for `target`, resuming from `cursor` when it still describes the
+    /// same target and source. On error the caller keeps its previous cursor.
+    pub fn status_incremental(
+        &self,
+        target: &StatusTarget,
+        cursor: Option<&StatusCursor>,
+        now_ms: i64,
+    ) -> Result<(SessionStatus, StatusCursor), StatusFailure> {
+        // The id names a file under a configured root: it must be one plain
+        // path component, never a path that could escape the root.
+        if !is_plain_component(&target.session_id) {
+            return Err(StatusFailure::new(
+                StatusFailureKind::TranscriptNotFound,
+                "the session id must be a single path component",
+            ));
+        }
+        let bindings: Vec<&PrepBinding> = self
+            .bindings
+            .iter()
+            .filter(|binding| binding.fold.harness() == target.harness)
+            .collect();
+        if bindings.is_empty() {
+            return Err(StatusFailure::new(
+                StatusFailureKind::UnsupportedHarness,
+                "no status binding for this harness",
+            ));
+        }
+        let mut reset = None;
+        let mut prior = None;
+        let located = match cursor {
+            Some(cursor) if cursor.target != *target => {
+                reset = Some("target-changed");
+                self.locate(target, &bindings)?
+            }
+            Some(cursor) => match self.relocate(cursor, &bindings) {
+                Some(located) => {
+                    prior = Some(cursor);
+                    located
+                }
+                None => {
+                    let located = self.locate(target, &bindings)?;
+                    reset = Some(if located.binding.fold.policy() == cursor.policy {
+                        "rotated"
+                    } else {
+                        "policy"
+                    });
+                    located
+                }
+            },
+            None => self.locate(target, &bindings)?,
+        };
+        let stat = &located.stat;
+
+        let mut resume = None;
+        if let Some(prior) = prior {
+            let same_stat = prior.stat.identity == stat.identity
+                && prior.stat.size == stat.size
+                && prior.stat.mtime_ns == stat.mtime_ns;
+            if same_stat {
+                return Ok(finish(prior.clone(), target, 0, now_ms, None));
+            }
+            if stat.kind == PrepSourceKind::Append {
+                let offset = prior.cursor.as_ref().map_or(0, |cursor| cursor.offset);
+                if prior.stat.identity != stat.identity {
+                    reset = Some("rotated");
+                } else if stat.size < offset {
+                    reset = Some("truncated");
+                } else if offset > 0 {
+                    let anchor = located
+                        .binding
+                        .loader
+                        .anchor(stat, offset)
+                        .map_err(read_failure)?;
+                    if prior.anchor.as_deref() != Some(anchor.as_str()) {
+                        reset = Some("anchor");
+                    } else if let Some(session) = prior.fold.take() {
+                        resume = Some((prior, session));
+                    } else {
+                        reset = Some("spent");
+                    }
+                }
+            }
+        }
+
+        let (mut acc, mut session, from) = match resume {
+            Some((prior, session)) => (
+                prior.acc.clone(),
+                session,
+                prior.cursor.as_ref().map(|cursor| ReadCursor {
+                    source: stat.path.clone(),
+                    identity: stat.identity.clone(),
+                    offset: cursor.offset,
+                }),
+            ),
+            None => {
+                let fold = located.binding.fold.as_ref();
+                let source = format!("{}/{}/{}", target.harness, located.label, stat.file);
+                let session = fold
+                    .open(&fold.describe(&stat.file), &source, 0, None)
+                    .map_err(read_failure)?;
+                (Accumulated::default(), session, None)
+            }
+        };
+        let advanced = advance(
+            located.binding.loader.as_ref(),
+            session.as_mut(),
+            stat,
+            from,
+            PrepOptions::default(),
+            self.limits,
+            &mut |rows| acc.apply(&rows),
+        )
+        .map_err(read_failure)?;
+        let facts = session.facts();
+        let next = StatusCursor {
+            target: target.clone(),
+            policy: located.binding.fold.policy().to_owned(),
+            root: located.root,
+            label: located.label,
+            stat: located.stat.clone(),
+            // A snapshot is refolded whole on every change.
+            fold: match located.stat.kind {
+                PrepSourceKind::Append => LiveFold::new(session),
+                PrepSourceKind::Snapshot => LiveFold::default(),
+            },
+            cursor: advanced.cursor,
+            anchor: advanced.anchor,
+            facts,
+            acc,
+        };
+        Ok(finish(next, target, advanced.bytes_read, now_ms, reset))
+    }
+
+    /// The cursor's source, if its binding still exists and the path still stats.
+    fn relocate<'a>(
+        &self,
+        cursor: &StatusCursor,
+        bindings: &[&'a PrepBinding],
+    ) -> Option<Located<'a>> {
+        let binding = bindings.iter().copied().find(|binding| {
+            binding.fold.policy() == cursor.policy && binding.loader.kind() == cursor.stat.kind
+        })?;
+        let stat = binding.loader.stat(&cursor.root, &cursor.stat.path).ok()?;
+        Some(Located {
+            binding,
+            root: cursor.root.clone(),
+            label: cursor.label.clone(),
+            stat,
+        })
+    }
+
+    /// Transcript rule: an explicit path is read under the configured root that
+    /// contains it, else under its parent directory; without a path the file
+    /// whose stem is the session id is discovered under the harness's roots.
+    fn locate<'a>(
+        &self,
+        target: &StatusTarget,
+        bindings: &[&'a PrepBinding],
+    ) -> Result<Located<'a>, StatusFailure> {
+        let roots: Vec<&PrepSourceSet> = self
+            .roots
+            .iter()
+            .filter(|set| set.harness == target.harness)
+            .collect();
+        match &target.transcript {
+            Some(path) => {
+                let (root, label) = match roots
+                    .iter()
+                    .filter(|set| path.starts_with(&set.root))
+                    .max_by_key(|set| set.root.components().count())
+                {
+                    Some(set) => (set.root.clone(), set.label.clone()),
+                    None => {
+                        let parent = path.parent().ok_or_else(not_found)?;
+                        (parent.to_path_buf(), derived_root_label(parent))
+                    }
+                };
+                let file = path
+                    .strip_prefix(&root)
+                    .ok()
+                    .and_then(Path::to_str)
+                    .unwrap_or_default();
+                let binding = bindings
+                    .iter()
+                    .copied()
+                    .find(|binding| matcher(binding).is_some_and(|m| m.is_match(file)))
+                    .unwrap_or(bindings[0]);
+                let stat = binding.loader.stat(&root, path).map_err(|_| not_found())?;
+                Ok(Located {
+                    binding,
+                    root,
+                    label,
+                    stat,
+                })
+            }
+            None => {
+                // Layouts that name the session directly are probed with one
+                // stat each before any walk: `<id>/events.jsonl` (Copilot CLI)
+                // and `<id>.jsonl`. A walk of a large store costs seconds.
+                for set in &roots {
+                    for binding in bindings.iter().copied() {
+                        let Some(pattern) = matcher(binding) else {
+                            continue;
+                        };
+                        for relative in [
+                            format!("{}/events.jsonl", target.session_id),
+                            format!("{}.jsonl", target.session_id),
+                        ] {
+                            if !pattern.is_match(&relative) {
+                                continue;
+                            }
+                            let path = set.root.join(&relative);
+                            if let Ok(stat) = binding.loader.stat(&set.root, &path) {
+                                return Ok(Located {
+                                    binding,
+                                    root: set.root.clone(),
+                                    label: set.label.clone(),
+                                    stat,
+                                });
+                            }
+                        }
+                    }
+                }
+                let mut found: Option<Located<'a>> = None;
+                let mut failed = false;
+                for set in &roots {
+                    for binding in bindings.iter().copied() {
+                        let Some(pattern) = matcher(binding) else {
+                            failed = true;
+                            continue;
+                        };
+                        let accept = |file: &str| {
+                            pattern.is_match(file) && names_session(file, &target.session_id)
+                        };
+                        let Ok(discovery) =
+                            binding
+                                .loader
+                                .discover(&set.root, &accept, &Default::default())
+                        else {
+                            failed = true;
+                            continue;
+                        };
+                        for stat in discovery.sources {
+                            // The most recently modified match wins; ties keep the first.
+                            if found
+                                .as_ref()
+                                .is_none_or(|best| stat.mtime_ns > best.stat.mtime_ns)
+                            {
+                                found = Some(Located {
+                                    binding,
+                                    root: set.root.clone(),
+                                    label: set.label.clone(),
+                                    stat,
+                                });
+                            }
+                        }
+                    }
+                }
+                match found {
+                    Some(located) => Ok(located),
+                    None if failed => Err(StatusFailure::new(
+                        StatusFailureKind::Read,
+                        "discovery failed under a configured root",
+                    )),
+                    None => Err(not_found()),
+                }
+            }
+        }
+    }
+}
+
+impl SessionStatusApi for StatusService {
+    fn status(&self, target: &StatusTarget, now_ms: i64) -> Result<SessionStatus, StatusFailure> {
+        self.status_incremental(target, None, now_ms)
+            .map(|(status, _)| status)
+    }
+}
+
+fn matcher(binding: &PrepBinding) -> Option<GlobMatcher> {
+    Glob::new(binding.fold.pattern())
+        .ok()
+        .map(|glob| glob.compile_matcher())
+}
+
+fn not_found() -> StatusFailure {
+    StatusFailure::new(
+        StatusFailureKind::TranscriptNotFound,
+        "no transcript found for the session",
+    )
+}
+
+fn read_failure(error: PipelineError) -> StatusFailure {
+    StatusFailure::new(
+        StatusFailureKind::Read,
+        format!("reading the transcript failed: {error}"),
+    )
+}
+
+fn finish(
+    cursor: StatusCursor,
+    target: &StatusTarget,
+    bytes_read: u64,
+    now_ms: i64,
+    reset: Option<&str>,
+) -> (SessionStatus, StatusCursor) {
+    let read = StatusTarget {
+        transcript: Some(cursor.stat.path.clone()),
+        ..target.clone()
+    };
+    let mut status = derive(
+        read,
+        &cursor.facts,
+        &cursor.acc,
+        cursor.stat.mtime_ns,
+        now_ms,
+    );
+    let offset = cursor.cursor.as_ref().map_or(0, |cursor| cursor.offset);
+    status.source = SourceStatus {
+        bytes_read,
+        pending_tail_bytes: match cursor.stat.kind {
+            PrepSourceKind::Append => cursor.stat.size.saturating_sub(offset),
+            PrepSourceKind::Snapshot => 0,
+        },
+        reset: reset.map(str::to_owned),
+    };
+    (status, cursor)
+}
+
+#[cfg(test)]
+mod window_tests {
+    use super::table_window;
+
+    #[test]
+    fn provider_prefixed_and_dotted_models_share_one_table_row() {
+        assert_eq!(table_window("claude-opus-5-5"), Some(1_000_000));
+        assert_eq!(
+            table_window("github-copilot/claude-opus-5.5"),
+            Some(1_000_000)
+        );
+        assert_eq!(table_window("claude-sonnet-5.5"), Some(1_000_000));
+        assert_eq!(table_window("claude-opus-50"), None);
+        assert_eq!(table_window("gpt-unknown"), None);
+    }
+}

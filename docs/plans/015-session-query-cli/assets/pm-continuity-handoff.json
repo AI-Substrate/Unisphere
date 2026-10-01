@@ -1,0 +1,151 @@
+{
+  "meta": {
+    "format": "HOVR/2",
+    "recorded_at": "2026-09-10T03:15:03.151Z",
+    "pm": "pij-empirical-tiger",
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+    "branch": "builder/015-session-query-cli",
+    "phase": "Phase 1 — shared query baseline",
+    "status": "Paused for Jordan-requested handover; not sealed or accepted"
+  },
+  "intent": {
+    "primary": "Deliver SDK-owned query semantics, thin actionable CLI and offline recipes.",
+    "scope": [
+      "24 ACs, 27 leaves, seven workflows",
+      "No retired telemetry, automatic execution or mandatory service",
+      "PM delegates code; owns quality, integration and acceptance"
+    ]
+  },
+  "timeline": {
+    "just_completed": "Composed contracts067ac042 plus proof39c62092 passed18 core tests.",
+    "current": "Latest time-field candidates are preserved but NOT integrated/tested.",
+    "last_actions": [
+      "Sol coders implemented contracts and proof in independent clones",
+      "PM caught null serialization, projection bypass and schema/validation defects",
+      "Corrected composed snapshot passed18 tests",
+      "HOLD sent to both coders; no new work authorized during handover"
+    ]
+  },
+  "code": {
+    "working_tree": "Checkpoint captures composed067ac042/39c62092; newer9b0a9560/fa792618 remains unintegrated.",
+    "composed_contracts": "067ac04256b9253417543e4a4db8f4c85f0ab0f6",
+    "composed_proof": "39c62092af0ef9c5af1204b78a2217fc6f378608",
+    "latest_contracts": "9b0a9560e99a01956ad91c826381ebe5c3446dfd",
+    "latest_proof": "fa7926189eb965f5d4cd9d8c41984be55b376a22",
+    "paths": [
+      "crates/core/src/query/",
+      "crates/core/tests/query_contract.rs",
+      "crates/testkit/src/query.rs",
+      "crates/testkit/fixtures/query/shared-v1.json"
+    ],
+    "pm_changes": [
+      "Cargo.toml/Cargo.lock; core/sdk Cargo.toml",
+      "core/testkit query module mounts; SDK core-query re-export",
+      "architecture allowlist for pure sha2/time and SDK regex/globset"
+    ],
+    "base_before_checkpoint": "b652810b7134348da45929079b723daeae30123a",
+    "checkpoint_lookup": "git log -1 --format=%H -- docs/plans/015-session-query-cli/assets/pm-continuity-handoff.json",
+    "preserved_refs": {
+      "composed_contracts": "refs/builder/015/baseline-contracts",
+      "composed_proof": "refs/builder/015/baseline-proof",
+      "latest_contracts": "refs/builder/015/baseline-contracts-latest",
+      "latest_proof": "refs/builder/015/baseline-proof-latest"
+    }
+  },
+  "decisions": {
+    "coders": "omp / github-copilot/gpt-5.6-sol-fast / high /1050000 context",
+    "reviewers": "omp / github-copilot/claude-opus-5 / high",
+    "architecture": "Guide v4 independently approved at b3d758c1; role-only operator amendment follows",
+    "routing": "--adapter native dispatch; --source-adapter query filter",
+    "baseline": "Actual contract proof and independent exact-baseline review precede seal/normal lanes"
+  },
+  "workers": {
+    "contracts": {
+      "peer": "pij-generous-godfrey",
+      "root": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/baseline-coders/contracts",
+      "branch": "work/015-baseline-contracts",
+      "owns": "crates/core/src/query/**"
+    },
+    "proof": {
+      "peer": "pij-glorious-galliform",
+      "root": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/baseline-coders/proof",
+      "branch": "work/015-baseline-proof",
+      "owns": "core query_contract test; testkit query fake/fixture"
+    },
+    "status": "Both HOLD acknowledged; latest clone worktrees reported clean. Preserve seats/clones.",
+    "authority": "External PM-baseline assistants, not falsely claimed sealed Builder dispatches"
+  },
+  "tasks": {
+    "done": [
+      "Reviewed guide and24 pressure links",
+      "Three phase dossiers:13 tasks/84 unchecked assertions",
+      "F11 typed cursor mismatch implemented in composed candidate",
+      "F12 freeze-set reference corrected"
+    ],
+    "in_progress": [
+      "phase-1 tk-0001 baseline"
+    ],
+    "pending": [
+      "Integrate latest9b0a9560/fa792618 pair after review",
+      "Run core/testkit/workspace quality and external smoke",
+      "Update baseline file inventory and exact-source evidence",
+      "Independent Opus baseline review, seal, then normal Sol lanes"
+    ]
+  },
+  "tests": {
+    "unit": "18 passed on067ac042+39c62092",
+    "command": "cargo test --locked -p unisphere-core --test query_contract",
+    "latest_pair": "unrun",
+    "workspace_clippy_architecture": "not run on composed baseline",
+    "external_smoke": "prepared, unrun; fix null-presence assertion before executing",
+    "old_failure": "859020c0/e6af083e:7 passed/1 failed tagged projected-null serialization; fixed by941e8926"
+  },
+  "risks": [
+    "Latest9b adds TimeWindow.field and corrects Turns-only ranges/optional branch;18-pass result does not cover it.",
+    "No QueryService/native query/CLI features implemented yet; baseline contracts only",
+    "Do not mark assertions/ACs checked from candidate delivery or isolated tests",
+    "Raw seed under ignored baseline-seed is uncompiled archival material, not authority"
+  ],
+  "anchors": {
+    "user_verbatim": [
+      "you are the pm you are responsible for quailty, they made code crap",
+      "coders will be omp harness aith github sol fast 1m high coders",
+      "please prepare a handover before we start new work"
+    ],
+    "immutable": [
+      "Native PM root remains unishpere-main: explicit cwd and absolute worktree writes",
+      "Communicate via xd://pij_send; never replay inbox files",
+      "Main pij-female-varl owns plan014/main convergence",
+      "Distro is separate; no ownership transfer",
+      "No push/PR/merge/global repair authorized"
+    ]
+  },
+  "next": {
+    "task": "Resume phase-1 tk-0001 only after handover",
+    "tasks_file": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/tasks/phase-1/tasks.dd.json",
+    "why": "Finish and prove delegated baseline before releasing broader lanes",
+    "validate": [
+      "Newest pair passes meaningful core contracts and testkit compile",
+      "External public SDK smoke, workspace quality and architecture pass",
+      "Exact-baseline Opus review accepted before harness builder contracts --seal"
+    ],
+    "command": "cargo test --locked -p unisphere-core --test query_contract"
+  },
+  "refs": {
+    "plan": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/plan.dd.json",
+    "guide": "assets/impl-guide.dd.json",
+    "approval": "assets/team/review-decomposition-approved.dd.json",
+    "roles": "assets/team/operator-role-amendment.json",
+    "assignments": "assets/team/baseline-assistants.json",
+    "packets": [
+      "assets/team/baseline-contracts-packet.md",
+      "assets/team/baseline-proof-packet.md"
+    ],
+    "deliveries": "Each clone .harness/temp/baseline-delivery.json",
+    "followups": "assets/baseline-followups.json",
+    "smoke": ".harness/temp/pij-empirical-tiger/external-baseline-consumer",
+    "friction": ".harness/temp/pij-empirical-tiger/session-buffer.md",
+    "flow": "the-flow.json last observed nav=research; reconcile through CLI, never hand-edit",
+    "plan_progress": "implementation_summary is current; old review plan digests precede progress-only updates."
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "kind": "ProductOnlyDelivery",
+  "mode": "manual-external-follow-on",
+  "unit_id": "tk-000b-pij-cli-follow-on",
+  "peer_id": "pij-unfortunate-rat",
+  "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-000b-manual",
+  "branch": "work/015-manual-cli",
+  "source_sha": "10e72f900e744fe6c83ba7601ba0e3570c12a27a",
+  "commit_sha": "073d321752221398a9097cca3c3a999a0f5a40f5",
+  "packet": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/cli-packet.json",
+  "requested": {
+    "harness": "omp",
+    "model": "github-copilot/gpt-5.6-sol-fast",
+    "effort": "high"
+  },
+  "paths": [
+    "crates/cli/docs/find-sessions.md",
+    "crates/cli/docs/troubleshooting.md",
+    "crates/cli/src/args.rs",
+    "crates/cli/src/lib.rs",
+    "crates/cli/src/query.rs",
+    "crates/cli/tests/query_frontend.rs"
+  ],
+  "interfaces": {
+    "parsed_variant": "ParsedCommand::PijQuery(PijQueryCommand)",
+    "command": "PijQueryCommand { id: String, query: QueryCommand, target: PijTarget }",
+    "targets": ["Query", "SessionShow", "SourceCheck"],
+    "failure": "emit_pij_failure(&str, &str, &str, OutputMode, &mut dyn Write) -> u8",
+    "provenance": "emit_pij_resolution(&str, &str, EntityId, SourceId, OutputMode, &mut dyn Write) -> std::io::Result<()>"
+  },
+  "behavior": [
+    "--pij is available through shared query arguments for sources, sessions, turns, messages, tools, and events, but never native list/export/Git Notes routes.",
+    "Pij requests retain a validated QueryCommand with an injected cwd repository scope and cannot be executed as ordinary ParsedCommand::Query values before PM resolution.",
+    "SessionShow and SourceCheck carry explicit pending targets using temporary List operations; Query preserves its requested operation.",
+    "Pij turn ranges are retained while parser validation temporarily excludes only the unresolved-session range constraint.",
+    "Resolved continuation actions use explicit SourceId and exact session EntityId, never the live Pij alias.",
+    "--min-duration accepts finite nonnegative decimal milliseconds and emits FieldValue::Float with Predicate::AtLeast.",
+    "Raw summaries expose QueryResponse coverage, universe, CSV format losses, JSON/JSONL recovery formats, and raw spreadsheet formula risk on stderr.",
+    "Typed input/query contract failures exit 2; source/read/cursor/limit/output failures and diagnostic write failures exit 1."
+  ],
+  "unrun_checks": [
+    "No cargo build/check/test command was run.",
+    "No clippy or rustfmt command was run.",
+    "No harness checks or harness boot command was run.",
+    "No installed CLI or Pij process scenario was run."
+  ],
+  "attribution": {
+    "mode": "direct-verified",
+    "refs_notes_ai": "landed",
+    "claim_boundary": "Harness collector receipt only; not independent product acceptance or runtime-model proof."
+  },
+  "acceptance_claim": "Candidate only. PM owns resolver, loader/app convergence, composed validation, review, and acceptance."
+}

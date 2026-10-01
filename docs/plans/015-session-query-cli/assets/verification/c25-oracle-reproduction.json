@@ -1,0 +1,33 @@
+{
+  "recorded_at": "2026-09-10T04:36:41.027Z",
+  "source": "Original proof-coder derivation, independently rerun by PM with Python stdlib; raw delivered bytes hash-verified",
+  "chronology": "Coder attests original derivation preceded its committed expected test vector; PM first Rust run came after that candidate delivery. This record is a later reproduction, not claimed earlier evidence.",
+  "oracle_sha256": "7da871d6ea687b59f4586395a82a035d43492ad6eec11a464dd383afe2c4d9da",
+  "script_sha256": "2a22745eca3d429c3a97d7abe1c59283fed0059b88d97c222bd4665eb4d287b3",
+  "preimage_bytes": 972,
+  "digest": "23c71eb09affec419f8bf44180fcb9b975d9ead38351be921688a1b904d0ae35",
+  "run": {
+    "argv": [
+      "python3",
+      "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/verification/c25-independent-derivation.py"
+    ],
+    "stdout": "source_id=q1:source:aea024db164980dee299775e2ca50ec8c6cbb4a0607aa1300f84bb46951e678b\ndomain_hex=756e697370686572652f71756572792d766965772f763100\ncanonical_json={\"admitted_repository_roots\":[\"/fixtures/project\"],\"admitted_scope\":{\"kind\":\"repository\",\"path\":\"/fixtures/project\",\"scope\":\"exact\"},\"input\":{\"kind\":\"live_native\"},\"reconstruction_version\":1,\"retained\":{\"access\":{\"emit_content\":false,\"inspect_fields\":[]},\"fields_by_source\":{\"q1:source:aea024db164980dee299775e2ca50ec8c6cbb4a0607aa1300f84bb46951e678b\":[\"id\",\"source_refs\"]}},\"selected_associations\":[],\"source_read_facts\":{\"association_status\":{\"matched\":1},\"discovered_sources\":1,\"excluded_adapters\":[],\"issues\":[],\"loaded_sources\":1,\"selected_sources\":1,\"source_read_complete\":true,\"source_status\":{\"readable\":1}},\"source_selection\":{\"exclude_adapters\":[],\"exclude_harnesses\":[],\"include_adapters\":[],\"include_harnesses\":[]},\"sources\":[{\"query_policy_version\":\"policy-v1\",\"representation\":\"claude-jsonl-v1\",\"revision\":\"revision-a\",\"source_id\":\"q1:source:aea024db164980dee299775e2ca50ec8c6cbb4a0607aa1300f84bb46951e678b\"}],\"view_schema_version\":1}\npreimage_hex=756e697370686572652f71756572792d766965772f7631007b2261646d69747465645f7265706f7369746f72795f726f6f7473223a5b222f66697874757265732f70726f6a656374225d2c2261646d69747465645f73636f7065223a7b226b696e64223a227265706f7369746f7279222c2270617468223a222f66697874757265732f70726f6a656374222c2273636f7065223a226578616374227d2c22696e707574223a7b226b696e64223a226c6976655f6e6174697665227d2c227265636f6e737472756374696f6e5f76657273696f6e223a312c2272657461696e6564223a7b22616363657373223a7b22656d69745f636f6e74656e74223a66616c73652c22696e73706563745f6669656c6473223a5b5d7d2c226669656c64735f62795f736f75726365223a7b2271313a736f757263653a61656130323464623136343938306465653239393737356532636135306563386336636262346130363037616131333030663834626234363935316536373862223a5b226964222c22736f757263655f72656673225d7d7d2c2273656c65637465645f6173736f63696174696f6e73223a5b5d2c22736f757263655f726561645f6661637473223a7b226173736f63696174696f6e5f737461747573223a7b226d617463686564223a317d2c22646973636f76657265645f736f7572636573223a312c226578636c756465645f6164617074657273223a5b5d2c22697373756573223a5b5d2c226c6f616465645f736f7572636573223a312c2273656c65637465645f736f7572636573223a312c22736f757263655f726561645f636f6d706c657465223a747275652c22736f757263655f737461747573223a7b227265616461626c65223a317d7d2c22736f757263655f73656c656374696f6e223a7b226578636c7564655f6164617074657273223a5b5d2c226578636c7564655f6861726e6573736573223a5b5d2c22696e636c7564655f6164617074657273223a5b5d2c22696e636c7564655f6861726e6573736573223a5b5d7d2c22736f7572636573223a5b7b2271756572795f706f6c6963795f76657273696f6e223a22706f6c6963792d7631222c22726570726573656e746174696f6e223a22636c617564652d6a736f6e6c2d7631222c227265766973696f6e223a227265766973696f6e2d61222c22736f757263655f6964223a2271313a736f757263653a61656130323464623136343938306465653239393737356532636135306563386336636262346130363037616131333030663834626234363935316536373862227d5d2c22766965775f736368656d615f76657273696f6e223a317d\npreimage_bytes=972\nsha256=23c71eb09affec419f8bf44180fcb9b975d9ead38351be921688a1b904d0ae35\n",
+    "stderr": "",
+    "exit": 0
+  },
+  "closure": {
+    "grade": "Structural plus independent fixed-vector execution",
+    "file": "crates/core/src/query/fingerprint.rs",
+    "fields": 10,
+    "non_exhaustive": false,
+    "excluded": [
+      "limit",
+      "columns",
+      "result universe",
+      "action",
+      "cursor"
+    ],
+    "observation": "ViewDigestBasis has exactly the ten C25 fields; digest accepts only self. Adding a field breaks existing exhaustive struct literals; altering encoded preimage fails the fixed digest vector."
+  },
+  "runtime_obligation": "assets/tasks/phase-1/tasks.dd.json#done_when/tk-0008/dw-002a"
+}

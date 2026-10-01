@@ -1,0 +1,252 @@
+{
+  "candidate": "9250b8f6f9084598433bc49d0077303df80cabc3",
+  "checked_at": "2026-09-10T00:54:16.805Z",
+  "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes",
+  "method": "Read accepted commit blobs via git cat-file --batch; SHA256 each blob and current file; compare both to the accepted committed boot manifest. No runtime tests rerun.",
+  "files_checked": 30,
+  "mismatches": [],
+  "tracked_runtime_diff": [],
+  "index_was_empty": true,
+  "files": [
+    {
+      "path": "Cargo.toml",
+      "git_blob": "49ad6d8d54ac71776dae4454a30e9bfa0eb067e9",
+      "expected_sha256": "f79762a9a985ee3ddeaa702d559e9328f84483fbaf53c861a26148f675b5e04d",
+      "committed_sha256": "f79762a9a985ee3ddeaa702d559e9328f84483fbaf53c861a26148f675b5e04d",
+      "worktree_sha256": "f79762a9a985ee3ddeaa702d559e9328f84483fbaf53c861a26148f675b5e04d",
+      "match": true
+    },
+    {
+      "path": "Cargo.lock",
+      "git_blob": "3060150047bc33169672b341fcec5174ba141617",
+      "expected_sha256": "b05f75ab6cd9ffb38523823659b7d978bbf30098c361f5f8254f861dd78ea01f",
+      "committed_sha256": "b05f75ab6cd9ffb38523823659b7d978bbf30098c361f5f8254f861dd78ea01f",
+      "worktree_sha256": "b05f75ab6cd9ffb38523823659b7d978bbf30098c361f5f8254f861dd78ea01f",
+      "match": true
+    },
+    {
+      "path": "crates/core/src/lib.rs",
+      "git_blob": "340685d87051c78e95b2ab94b1a68c161d02b618",
+      "expected_sha256": "abcb01a2e783abcdd43a9b06dc1e29ab0d195095cc476886bd05a6bafaa02816",
+      "committed_sha256": "abcb01a2e783abcdd43a9b06dc1e29ab0d195095cc476886bd05a6bafaa02816",
+      "worktree_sha256": "abcb01a2e783abcdd43a9b06dc1e29ab0d195095cc476886bd05a6bafaa02816",
+      "match": true
+    },
+    {
+      "path": "crates/core/src/git_notes.rs",
+      "git_blob": "cda4c6bab53ce5eb553d961322f5fdca44f30c27",
+      "expected_sha256": "4261f117f598726da973fd6fc80ca546d65a368a7acc33d8982f7c5723c61571",
+      "committed_sha256": "4261f117f598726da973fd6fc80ca546d65a368a7acc33d8982f7c5723c61571",
+      "worktree_sha256": "4261f117f598726da973fd6fc80ca546d65a368a7acc33d8982f7c5723c61571",
+      "match": true
+    },
+    {
+      "path": "crates/loader-git/Cargo.toml",
+      "git_blob": "4d2ae8075f04037f73d1fb4be75dee5e4fd00e0d",
+      "expected_sha256": "b094980b1dc8e1612c28404ba068bb990c2ef45dce27d4753b269892c0a6bad3",
+      "committed_sha256": "b094980b1dc8e1612c28404ba068bb990c2ef45dce27d4753b269892c0a6bad3",
+      "worktree_sha256": "b094980b1dc8e1612c28404ba068bb990c2ef45dce27d4753b269892c0a6bad3",
+      "match": true
+    },
+    {
+      "path": "crates/loader-git/src/lib.rs",
+      "git_blob": "34f335b3a5411079d4ac020c288a1a82f0304618",
+      "expected_sha256": "92454d420e72837dd489f8a78f17cbab4feb71908671dce2f9ebc0d6e623d661",
+      "committed_sha256": "92454d420e72837dd489f8a78f17cbab4feb71908671dce2f9ebc0d6e623d661",
+      "worktree_sha256": "92454d420e72837dd489f8a78f17cbab4feb71908671dce2f9ebc0d6e623d661",
+      "match": true
+    },
+    {
+      "path": "crates/loader-git/tests/storage.rs",
+      "git_blob": "88408fb669f33ca8ec0e413ad9510e0e03414f2c",
+      "expected_sha256": "7376402eceb100f1bed663bd5b9edfda0ccac610019753465d1f858ec47201cf",
+      "committed_sha256": "7376402eceb100f1bed663bd5b9edfda0ccac610019753465d1f858ec47201cf",
+      "worktree_sha256": "7376402eceb100f1bed663bd5b9edfda0ccac610019753465d1f858ec47201cf",
+      "match": true
+    },
+    {
+      "path": "crates/adapter-git-ai/Cargo.toml",
+      "git_blob": "f365fdb9868d5f15578dc966f7201e3991fd0f30",
+      "expected_sha256": "17d0ddfdbfec8d455e005c70150a3bd16973a1f4e9c12d93d92da3bc9edf5213",
+      "committed_sha256": "17d0ddfdbfec8d455e005c70150a3bd16973a1f4e9c12d93d92da3bc9edf5213",
+      "worktree_sha256": "17d0ddfdbfec8d455e005c70150a3bd16973a1f4e9c12d93d92da3bc9edf5213",
+      "match": true
+    },
+    {
+      "path": "crates/adapter-git-ai/src/lib.rs",
+      "git_blob": "a28d98f23ea01745cbb9c79465efd3a736f8dbd3",
+      "expected_sha256": "57d902344041538cbaf96bec8a35348fa44b66e7b346c22825321e34e8567d60",
+      "committed_sha256": "57d902344041538cbaf96bec8a35348fa44b66e7b346c22825321e34e8567d60",
+      "worktree_sha256": "57d902344041538cbaf96bec8a35348fa44b66e7b346c22825321e34e8567d60",
+      "match": true
+    },
+    {
+      "path": "crates/adapter-git-ai/tests/format.rs",
+      "git_blob": "3d41a4a8ae9478200d09423173ee626caf511101",
+      "expected_sha256": "d650001118ca864e8303b54502706b01c1f93f2ab83878bd7cd029324a094cf1",
+      "committed_sha256": "d650001118ca864e8303b54502706b01c1f93f2ab83878bd7cd029324a094cf1",
+      "worktree_sha256": "d650001118ca864e8303b54502706b01c1f93f2ab83878bd7cd029324a094cf1",
+      "match": true
+    },
+    {
+      "path": "crates/adapter-git-ai/fixtures/mixed.notes",
+      "git_blob": "a46eaa498e8a6e5ebc44a3fe4c96e7c7785816a4",
+      "expected_sha256": "3d8837cad9e0ab0a91899c74b9a7ec923e707ce30c54eb901b1bb6fc138618ec",
+      "committed_sha256": "3d8837cad9e0ab0a91899c74b9a7ec923e707ce30c54eb901b1bb6fc138618ec",
+      "worktree_sha256": "3d8837cad9e0ab0a91899c74b9a7ec923e707ce30c54eb901b1bb6fc138618ec",
+      "match": true
+    },
+    {
+      "path": "crates/sdk/src/lib.rs",
+      "git_blob": "f1d25e8c3fa72b8893ce6ee8051b59c47b6bb97b",
+      "expected_sha256": "c9508b6ed4f84543f6481ca77be8ea1c3e85564991477897c19ef97b087cb06c",
+      "committed_sha256": "c9508b6ed4f84543f6481ca77be8ea1c3e85564991477897c19ef97b087cb06c",
+      "worktree_sha256": "c9508b6ed4f84543f6481ca77be8ea1c3e85564991477897c19ef97b087cb06c",
+      "match": true
+    },
+    {
+      "path": "crates/sdk/src/git_notes.rs",
+      "git_blob": "2ee15d55a088bad9b280e2da0dfed844eaf033ed",
+      "expected_sha256": "9168746c6bb57816199b56708c56887f47704fbf037d01a25d8fd4b87921d229",
+      "committed_sha256": "9168746c6bb57816199b56708c56887f47704fbf037d01a25d8fd4b87921d229",
+      "worktree_sha256": "9168746c6bb57816199b56708c56887f47704fbf037d01a25d8fd4b87921d229",
+      "match": true
+    },
+    {
+      "path": "crates/cli/src/lib.rs",
+      "git_blob": "bcd8208214875f580ed34120d7723eb181ab8f64",
+      "expected_sha256": "1773625d564a0574ea4c1ab8ddc6544732b2567abf3ec7fcbf128f16bb2ab59b",
+      "committed_sha256": "1773625d564a0574ea4c1ab8ddc6544732b2567abf3ec7fcbf128f16bb2ab59b",
+      "worktree_sha256": "1773625d564a0574ea4c1ab8ddc6544732b2567abf3ec7fcbf128f16bb2ab59b",
+      "match": true
+    },
+    {
+      "path": "crates/cli/src/git_notes.rs",
+      "git_blob": "846e0912cd287a11b75e168258e9f51a9a44956e",
+      "expected_sha256": "4721e0ff811b7e8db7baceb67b6765ef7e35e863dbeeb6eaa442d825780a9a00",
+      "committed_sha256": "4721e0ff811b7e8db7baceb67b6765ef7e35e863dbeeb6eaa442d825780a9a00",
+      "worktree_sha256": "4721e0ff811b7e8db7baceb67b6765ef7e35e863dbeeb6eaa442d825780a9a00",
+      "match": true
+    },
+    {
+      "path": "crates/app/Cargo.toml",
+      "git_blob": "4b958023125bdaba9818bc01592617d9b756902e",
+      "expected_sha256": "eb6bb642486ddb4be6eb97a63cd1630b4bacecc9305aad91ab52135493054669",
+      "committed_sha256": "eb6bb642486ddb4be6eb97a63cd1630b4bacecc9305aad91ab52135493054669",
+      "worktree_sha256": "eb6bb642486ddb4be6eb97a63cd1630b4bacecc9305aad91ab52135493054669",
+      "match": true
+    },
+    {
+      "path": "crates/app/src/adapters.rs",
+      "git_blob": "c5602136a0a63f74b9334d0139ba4fd2559814c2",
+      "expected_sha256": "4fbf7f65848bc3a9f13f22326277dfafd8401eeaa85a6fb0b80f1d1c0bc640f4",
+      "committed_sha256": "4fbf7f65848bc3a9f13f22326277dfafd8401eeaa85a6fb0b80f1d1c0bc640f4",
+      "worktree_sha256": "4fbf7f65848bc3a9f13f22326277dfafd8401eeaa85a6fb0b80f1d1c0bc640f4",
+      "match": true
+    },
+    {
+      "path": "crates/app/tests/adapter_catalog.rs",
+      "git_blob": "6676890190841d04c262151e7aad5e534f43c06d",
+      "expected_sha256": "440793c2c9e3afe5ac446ccffa67d9a151913ca1db490e085cbe7d3b63c02495",
+      "committed_sha256": "440793c2c9e3afe5ac446ccffa67d9a151913ca1db490e085cbe7d3b63c02495",
+      "worktree_sha256": "440793c2c9e3afe5ac446ccffa67d9a151913ca1db490e085cbe7d3b63c02495",
+      "match": true
+    },
+    {
+      "path": "crates/testkit/src/lib.rs",
+      "git_blob": "ffc5939337bfe28a3cb1fd2ab3eaaac463d84280",
+      "expected_sha256": "58b7eac576a6a02e00ef9e483fad72c4209291041bf42314b42dcd8f17ddc31f",
+      "committed_sha256": "58b7eac576a6a02e00ef9e483fad72c4209291041bf42314b42dcd8f17ddc31f",
+      "worktree_sha256": "58b7eac576a6a02e00ef9e483fad72c4209291041bf42314b42dcd8f17ddc31f",
+      "match": true
+    },
+    {
+      "path": "crates/testkit/src/git_notes.rs",
+      "git_blob": "5b26dd6589bb5e72dc97cf2ee348a8db802fddd5",
+      "expected_sha256": "661a3316ae147fd9d76f6fd2ec47a88017304aa76c08fd8909da77895a6612d6",
+      "committed_sha256": "661a3316ae147fd9d76f6fd2ec47a88017304aa76c08fd8909da77895a6612d6",
+      "worktree_sha256": "661a3316ae147fd9d76f6fd2ec47a88017304aa76c08fd8909da77895a6612d6",
+      "match": true
+    },
+    {
+      "path": "crates/testkit/src/bin/unisphere-arch-check.rs",
+      "git_blob": "7aad8b0f26988b1d713d0ae804d1498e00371589",
+      "expected_sha256": "670fa7adbdd8c3eabb77725f37cc6729b3f45456c57ef35c0e60215a580ece01",
+      "committed_sha256": "670fa7adbdd8c3eabb77725f37cc6729b3f45456c57ef35c0e60215a580ece01",
+      "worktree_sha256": "670fa7adbdd8c3eabb77725f37cc6729b3f45456c57ef35c0e60215a580ece01",
+      "match": true
+    },
+    {
+      "path": "crates/testkit/src/bin/unisphere-proof.rs",
+      "git_blob": "fd3b0f9a7157549027a86058669dc07342777b1e",
+      "expected_sha256": "42bab80dc1c05c63cb0cb256c97bc4349ddd019859a97087edd38c3f46628499",
+      "committed_sha256": "42bab80dc1c05c63cb0cb256c97bc4349ddd019859a97087edd38c3f46628499",
+      "worktree_sha256": "42bab80dc1c05c63cb0cb256c97bc4349ddd019859a97087edd38c3f46628499",
+      "match": true
+    },
+    {
+      "path": "crates/testkit/src/bin/proof/native.rs",
+      "git_blob": "292849804c6b783593b5ba6a21a36c9252539146",
+      "expected_sha256": "4f3a4dac4ab99d7c523d3be842dc8de4676c6a6eb7fa61587212cc176b77e52a",
+      "committed_sha256": "4f3a4dac4ab99d7c523d3be842dc8de4676c6a6eb7fa61587212cc176b77e52a",
+      "worktree_sha256": "4f3a4dac4ab99d7c523d3be842dc8de4676c6a6eb7fa61587212cc176b77e52a",
+      "match": true
+    },
+    {
+      "path": "crates/testkit/src/bin/proof/git_notes.rs",
+      "git_blob": "7c23625194a990bfb5cbc85d84ebef77f55980d3",
+      "expected_sha256": "1ae2a01613062f3b4d50c5df959701660e458fa1524d3ddfea407eb523e4ce9f",
+      "committed_sha256": "1ae2a01613062f3b4d50c5df959701660e458fa1524d3ddfea407eb523e4ce9f",
+      "worktree_sha256": "1ae2a01613062f3b4d50c5df959701660e458fa1524d3ddfea407eb523e4ce9f",
+      "match": true
+    },
+    {
+      "path": "crates/testkit/fixtures/consumer/git-notes-Cargo.toml.template",
+      "git_blob": "fff75b431f1c0318d47271725ac9ecc56aec558b",
+      "expected_sha256": "692554cf43f68dac2090127526b612810515fe6942b612d23fbb907e099fb5e0",
+      "committed_sha256": "692554cf43f68dac2090127526b612810515fe6942b612d23fbb907e099fb5e0",
+      "worktree_sha256": "692554cf43f68dac2090127526b612810515fe6942b612d23fbb907e099fb5e0",
+      "match": true
+    },
+    {
+      "path": "crates/testkit/fixtures/consumer/git-notes-main.rs",
+      "git_blob": "38abac12f133082b4c792ff84fba19d94d54776d",
+      "expected_sha256": "cf0574c30c3dc3374acb1e17807503a50872c5c70ddebab2da28f42163ca239b",
+      "committed_sha256": "cf0574c30c3dc3374acb1e17807503a50872c5c70ddebab2da28f42163ca239b",
+      "worktree_sha256": "cf0574c30c3dc3374acb1e17807503a50872c5c70ddebab2da28f42163ca239b",
+      "match": true
+    },
+    {
+      "path": ".harness/extensions/boot/boot.mjs",
+      "git_blob": "8cbc733d8346d04a3b35c675ef0d2acec15b0697",
+      "expected_sha256": "2853bb08900be56d079d9eebb3019af22094495c6994a000cabd88ea16f1972b",
+      "committed_sha256": "2853bb08900be56d079d9eebb3019af22094495c6994a000cabd88ea16f1972b",
+      "worktree_sha256": "2853bb08900be56d079d9eebb3019af22094495c6994a000cabd88ea16f1972b",
+      "match": true
+    },
+    {
+      "path": ".harness/extensions/boot/extension.test.mjs",
+      "git_blob": "ecdbe4a196693cf87fe0d4601814952d7f2a4e27",
+      "expected_sha256": "9c4d87ef4c04a0d4283bdda9b110e83445ec4e67b311211ddcd1624fe76b0c32",
+      "committed_sha256": "9c4d87ef4c04a0d4283bdda9b110e83445ec4e67b311211ddcd1624fe76b0c32",
+      "worktree_sha256": "9c4d87ef4c04a0d4283bdda9b110e83445ec4e67b311211ddcd1624fe76b0c32",
+      "match": true
+    },
+    {
+      "path": ".harness/extensions/boot/extension.ts",
+      "git_blob": "78be6f1593fdd5948e3dd4558db59a31cd18213a",
+      "expected_sha256": "b5910f3e9d71cdbdde29a979b27ac1108c4403910f814bb63760631b386c2d02",
+      "committed_sha256": "b5910f3e9d71cdbdde29a979b27ac1108c4403910f814bb63760631b386c2d02",
+      "worktree_sha256": "b5910f3e9d71cdbdde29a979b27ac1108c4403910f814bb63760631b386c2d02",
+      "match": true
+    },
+    {
+      "path": ".harness/extensions/boot/instructions.md",
+      "git_blob": "373cb1d55d44d877de8385ae63c574119b423ef2",
+      "expected_sha256": "c8e1e51c3fbd69ae854fff9fc096f5919cb93fc944ef94ee1ee75df5b6ef6479",
+      "committed_sha256": "c8e1e51c3fbd69ae854fff9fc096f5919cb93fc944ef94ee1ee75df5b6ef6479",
+      "worktree_sha256": "c8e1e51c3fbd69ae854fff9fc096f5919cb93fc944ef94ee1ee75df5b6ef6479",
+      "match": true
+    }
+  ]
+}

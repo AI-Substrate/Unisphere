@@ -1,0 +1,58 @@
+{
+  "receipt": {
+    "command": [
+      "harness",
+      "boot",
+      "--json"
+    ],
+    "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+    "before": {
+      "head": {
+        "args": [
+          "rev-parse",
+          "HEAD"
+        ],
+        "exit": 0,
+        "stdout": "d42051770f1b99f23a9d040b2fcbf58eb820ed31\n",
+        "stderr": ""
+      },
+      "status": {
+        "args": [
+          "status",
+          "--porcelain"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    "after": {
+      "head": {
+        "args": [
+          "rev-parse",
+          "HEAD"
+        ],
+        "exit": 0,
+        "stdout": "d42051770f1b99f23a9d040b2fcbf58eb820ed31\n",
+        "stderr": ""
+      },
+      "status": {
+        "args": [
+          "status",
+          "--porcelain"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    "started_at": "2026-09-10T09:50:06.980Z",
+    "finished_at": "2026-09-10T09:50:08.871Z",
+    "exit": 1,
+    "signal": null,
+    "stdout_path": ".harness/temp/pij-empirical-tiger/final-query-boot-2.stdout",
+    "stderr_path": ".harness/temp/pij-empirical-tiger/final-query-boot-2.stderr"
+  },
+  "stdout": "{\"command\":\"boot\",\"status\":\"error\",\"timestamp\":\"2026-09-10T09:50:08.827Z\",\"error\":{\"code\":\"E_CHECKS_FAILED\",\"message\":\"harness checks failed (exit 1)\",\"details\":{\"code\":1,\"stdout\":\"{\\\"command\\\":\\\"checks\\\",\\\"status\\\":\\\"error\\\",\\\"timestamp\\\":\\\"2026-09-10T09:50:08.821Z\\\",\\\"error\\\":{\\\"code\\\":\\\"E_PRODUCT_CHECK_FAILED\\\",\\\"message\\\":\\\"clippy failed (exit 101)\\\",\\\"details\\\":{\\\"toolchain\\\":{\\\"rustc\\\":{\\\"release\\\":\\\"1.95.0\\\",\\\"normalized_release\\\":\\\"1.95.0\\\",\\\"commit\\\":\\\"59807616e1fa2540724bfbac14d7976d7e4a3860\\\",\\\"commit_metadata\\\":\\\"emitted\\\",\\\"release_matches\\\":true,\\\"commit_matches\\\":true,\\\"approved\\\":true,\\\"provenance\\\":{\\\"invoked\\\":\\\"/opt/homebrew/bin/rustc\\\",\\\"resolved\\\":\\\"/opt/homebrew/Cellar/rust/1.95.0/bin/rustc\\\"},\\\"args\\\":[\\\"-vV\\\"],\\\"code\\\":0,\\\"stdout\\\":\\\"rustc 1.95.0 (59807616e 2026-04-14) (Homebrew)\\\\nbinary: rustc\\\\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\\\\ncommit-date: 2026-04-14\\\\nhost: aarch64-apple-darwin\\\\nrelease: 1.95.0\\\\nLLVM version: 22.1.3\\\\n\\\",\\\"stderr\\\":\\\"\\\"},\\\"cargo\\\":{\\\"release\\\":\\\"1.95.0\\\",\\\"normalized_release\\\":\\\"1.95.0\\\",\\\"commit\\\":\\\"f2d3ce0bd7f24a49f8f72d9000448f8838c4e850\\\",\\\"commit_metadata\\\":\\\"emitted\\\",\\\"release_matches\\\":true,\\\"commit_matches\\\":true,\\\"approved\\\":true,\\\"provenance\\\":{\\\"invoked\\\":\\\"/opt/homebrew/bin/cargo\\\",\\\"resolved\\\":\\\"/opt/homebrew/Cellar/rust/1.95.0/bin/cargo\\\"},\\\"args\\\":[\\\"-vV\\\"],\\\"code\\\":0,\\\"stdout\\\":\\\"cargo 1.95.0 (f2d3ce0bd 2026-03-21) (Homebrew)\\\\nrelease: 1.95.0\\\\ncommit-hash: f2d3ce0bd7f24a49f8f72d9000448f8838c4e850\\\\ncommit-date: 2026-03-21\\\\nhost: aarch64-apple-darwin\\\\nlibgit2: 1.9.3 (sys:0.20.4 system)\\\\nlibcurl: 8.7.1 (sys:0.4.83+curl-8.15.0 system ssl:(SecureTransport) LibreSSL/3.3.6)\\\\nos: Mac OS 26.6.2 [64-bit]\\\\n\\\",\\\"stderr\\\":\\\"\\\"},\\\"clippy\\\":{\\\"release\\\":\\\"0.1.95\\\",\\\"normalized_release\\\":\\\"0.1.95\\\",\\\"commit\\\":\\\"59807616e1\\\",\\\"commit_metadata\\\":\\\"emitted\\\",\\\"release_matches\\\":true,\\\"commit_matches\\\":true,\\\"approved\\\":true,\\\"provenance\\\":{\\\"invoked\\\":\\\"/opt/homebrew/bin/cargo\\\",\\\"resolved\\\":\\\"/opt/homebrew/Cellar/rust/1.95.0/bin/cargo\\\"},\\\"args\\\":[\\\"clippy\\\",\\\"--version\\\"],\\\"code\\\":0,\\\"stdout\\\":\\\"clippy 0.1.95 (59807616e1 2026-04-14)\\\\n\\\",\\\"stderr\\\":\\\"\\\",\\\"binaries\\\":{\\\"cargo-clippy\\\":{\\\"invoked\\\":\\\"/opt/homebrew/bin/cargo-clippy\\\",\\\"resolved\\\":\\\"/opt/homebrew/Cellar/rust/1.95.0/bin/cargo-clippy\\\"},\\\"clippy-driver\\\":{\\\"invoked\\\":\\\"/opt/homebrew/bin/clippy-driver\\\",\\\"resolved\\\":\\\"/opt/homebrew/Cellar/rust/1.95.0/bin/clippy-driver\\\"}}},\\\"rustfmt\\\":{\\\"release\\\":\\\"1.9.0-stable\\\",\\\"normalized_release\\\":\\\"1.9.0\\\",\\\"commit\\\":\\\"59807616e1\\\",\\\"commit_metadata\\\":\\\"emitted\\\",\\\"release_matches\\\":true,\\\"commit_matches\\\":true,\\\"approved\\\":true,\\\"provenance\\\":{\\\"invoked\\\":\\\"/opt/homebrew/bin/cargo\\\",\\\"resolved\\\":\\\"/opt/homebrew/Cellar/rust/1.95.0/bin/cargo\\\"},\\\"args\\\":[\\\"fmt\\\",\\\"--version\\\"],\\\"code\\\":0,\\\"stdout\\\":\\\"rustfmt 1.9.0-stable (59807616e1 2026-04-14)\\\\n\\\",\\\"stderr\\\":\\\"\\\",\\\"binaries\\\":{\\\"cargo-fmt\\\":{\\\"invoked\\\":\\\"/opt/homebrew/bin/cargo-fmt\\\",\\\"resolved\\\":\\\"/opt/homebrew/Cellar/rust/1.95.0/bin/cargo-fmt\\\"},\\\"rustfmt\\\":{\\\"invoked\\\":\\\"/opt/homebrew/bin/rustfmt\\\",\\\"resolved\\\":\\\"/opt/homebrew/Cellar/rust/1.95.0/bin/rustfmt\\\"}}}},\\\"gates\\\":[{\\\"name\\\":\\\"format\\\",\\\"command\\\":\\\"/opt/homebrew/bin/cargo\\\",\\\"args\\\":[\\\"fmt\\\",\\\"--all\\\",\\\"--check\\\"],\\\"code\\\":0,\\\"stdout\\\":\\\"\\\",\\\"stderr\\\":\\\"\\\",\\\"ok\\\":true},{\\\"name\\\":\\\"clippy\\\",\\\"command\\\":\\\"/opt/homebrew/bin/cargo\\\",\\\"args\\\":[\\\"clippy\\\",\\\"--workspace\\\",\\\"--all-targets\\\",\\\"--locked\\\",\\\"--\\\",\\\"-D\\\",\\\"warnings\\\"],\\\"code\\\":101,\\\"stdout\\\":\\\"\\\",\\\"stderr\\\":\\\"    Checking unisphere-testkit v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/testkit)\\\\nerror: this boolean expression can be simplified\\\\n   --> crates/testkit/src/bin/unisphere-proof.rs:325:8\\\\n    |\\\\n325 |       if !action[\\\\\\\"summary\\\\\\\"]\\\\n    |  ________^\\\\n326 | |         .as_str()\\\\n327 | |         .is_some_and(|summary| !summary.is_empty())\\\\n    | |___________________________________________________^\\\\n    |\\\\n    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#nonminimal_bool\\\\n    = note: `-D clippy::nonminimal-bool` implied by `-D warnings`\\\\n    = help: to override `-D warnings` add `#[allow(clippy::nonminimal_bool)]`\\\\nhelp: try\\\\n    |\\\\n325 ~     if action[\\\\\\\"summary\\\\\\\"]\\\\n326 +         .as_str().is_none_or(|summary| summary.is_empty())\\\\n    |\\\\n\\\\nerror: could not compile `unisphere-testkit` (bin \\\\\\\"unisphere-proof\\\\\\\" test) due to 1 previous error\\\\nwarning: build failed, waiting for other jobs to finish...\\\\nerror: could not compile `unisphere-testkit` (bin \\\\\\\"unisphere-proof\\\\\\\") due to 1 previous error\\\\n\\\",\\\"ok\\\":false}]}},\\\"next_action\\\":\\\"Run /opt/homebrew/bin/cargo clippy --workspace --all-targets --locked -- -D warnings, fix the failure, then rerun harness checks --json.\\\"}\\n\",\"stderr\":\"\",\"ok\":false}},\"next_action\":\"Run harness checks --json, repair its reported failure, then rerun harness boot --json.\"}\n",
+  "stderr": ""
+}

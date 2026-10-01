@@ -1,0 +1,36 @@
+{
+  "subject_sha": "5ee631b46142b88dea2a2742c9cb8087642c4d25",
+  "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+  "baseline_sha": "72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9",
+  "plan": {
+    "path": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/plan.dd.json",
+    "sha256": "cadab76f98e7f12ecae30969e4ddef791a62c3bda20520c961ddb70fc3c121d1"
+  },
+  "guide": {
+    "path": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/impl-guide.dd.json",
+    "sha256": "5caed35ffa6f28570c16b6bc42baf47ce4403012069e429eeeaeb4e02f04c88f"
+  },
+  "scope": "Independent product review of integrated first-wave units tk-0002..tk-000a and PM corrections; no new CLI or official Builder composition acceptance claim",
+  "proof": [
+    "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/verification/first-wave-proof-5ee631b4.json",
+    "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/verification/first-wave-proof-working.json"
+  ],
+  "review_focus": [
+    "Real query service branch/turn/call identity and bounded selection/context/statistics",
+    "Source/adapter/output composition and source-qualified missing values; privacy and no telemetry-to-query reconstruction",
+    "Raw CSV cell preservation and bounded output/escaping; correct typed failures",
+    "C8/C18 projection amendment A1-A6 closure; explicit path selector binding versus canonical source identity",
+    "Meaningful regression evidence, no fake API recipe or source/prose-pinning tests; no claim new CLI exists"
+  ],
+  "write_paths": [
+    "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/reviews/first-wave-pij-armed-cow.json"
+  ],
+  "restrictions": [
+    "Read-only all code/plan/guide/flow/team records",
+    "Skip build/test/lint/formatter and do not rerun PM proof",
+    "No commit/push/merge/global repair",
+    "Use exact committed bytes; report blockers with paths/evidence, not broad style preferences"
+  ],
+  "receipt_note": "Return a JSON product-review report and concise findings. Do not fabricate a formal Builder composition receipt: installed tooling has a confirmed all-coder/staged-dependency cycle.",
+  "known_gap": "A5 C18 implementation spelling is clarified in assets/query-contract.md; frozen guide bytes have not been rewritten to preserve sealed bindings. The final CLI lane is formally unallocated pending explicit operator choice or supported tooling fix."
+}

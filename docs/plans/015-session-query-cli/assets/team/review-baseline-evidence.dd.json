@@ -1,0 +1,130 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "review",
+      "value": {
+        "record_type": "review",
+        "id": "rv-plan015-baseline-evidence-addendum-pij-armed-cow",
+        "recorded_at": "2026-09-10T05:06:00Z",
+        "scope": "decomposition",
+        "subject_sha": "99ea782e86fc1ebc4ea09bf8d4e7624dc87dc3bc",
+        "plan": {
+          "path": "docs/plans/015-session-query-cli/plan.dd.json",
+          "sha256": "23e11ee7ec867315349aab8df11282da08bf211a6c86e27a3782292ba5bcecef"
+        },
+        "guide": {
+          "path": "docs/plans/015-session-query-cli/assets/impl-guide.dd.json",
+          "sha256": "5caed35ffa6f28570c16b6bc42baf47ce4403012069e429eeeaeb4e02f04c88f"
+        },
+        "report": {
+          "path": "docs/plans/015-session-query-cli/assets/reviews/baseline-evidence-addendum-pij-armed-cow.json",
+          "sha256": "0331bc95574b64b1254019cdcd97e23e328905ddbb571c0cfe7b0c616f09e3e0"
+        },
+        "reviewer_id": "pij-armed-cow",
+        "requested": {
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5",
+          "effort": "high",
+          "source": {
+            "harness": "guide",
+            "model": "guide",
+            "effort": "guide"
+          }
+        },
+        "observed": {
+          "peer_id": "pij-armed-cow",
+          "root": "/Users/jordanknight/substrate/unisphere/unishpere-main",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5",
+          "effort": "high",
+          "pid": 48187,
+          "native_session": "01a08872-82bb-7641-b1dc-3964616e3e0a",
+          "evidence": [
+            "PM transcribed the independent raw receipt without changing its verdict: /Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/reviews/baseline-r2-n1-pij-armed-cow-receipt.json",
+            "Runtime fields observed by pij state; configuration identity is not provider attestation.",
+            "Administrative evidence transcription from /Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/reviews/baseline-evidence-addendum-pij-armed-cow-receipt.json; no new assessment or verdict change."
+          ],
+          "gaps": [
+            "Read-only: no build, test, lint, formatter or proof command was executed for this addendum or for either prior addendum.",
+            "Exercised-code evidence remains assets/verification/baseline-proof-4c3c665f.json, valid at this subject only because the crates/, Cargo.toml and Cargo.lock objects are byte-identical to 4c3c665f.",
+            "Carried: the two declared workspace dependency entries point at crate directories that do not exist at this subject; the claim that an unconsumed template stays unresolved is [INFERENCE], as cargo was not run.",
+            "Carried: runtime C25 metamorphs remain unproven and bound to unchecked tasks phase-1 dw-002a under bp-0008.",
+            "Carried informational O1 from the N1 addendum: guide meta.version 6 and meta.updated 2026-09-10T04:24:42.377Z are identical across two distinct guide byte-strings, so guide identity must be resolved by sha256 rather than by version label."
+          ]
+        },
+        "verdict": "approved",
+        "findings": [
+          {
+            "id": "F1",
+            "severity": "high",
+            "description": "Declared inward query-adapter edges added to Cargo.toml, arch-check allowlist and the allowed.json fixture, and bp-000e rewritten to withdraw the runtime claim the baseline cannot support.",
+            "disposition": "fixed",
+            "evidence": "Cargo.toml:27-28 declare unisphere-loader-query and unisphere-output-query in [workspace.dependencies] with path crates/loader-query and crates/output-query.\ncrates/testkit/src/bin/unisphere-arch-check.rs:41-42, 49, 58, 98-99, 144-145 add the two crate names to the layer, direction and allow rules.\ncrates/testkit/src/bin/unisphere-arch-check.rs:368-371 add test query_adapters_cannot_depend_outward_on_services_or_cli, asserting the loader may not reach unisphere-sdk and the output adapter may not reach unisphere-cli.\nassets/backpressure.dd.json bp-000e description rewritten to state that the loader-query and output-query runtime implementations remain later owning lanes and that bp-000e is not an observed baseline runtime claim; this withdraws the overclaim R1 raised.\n[INFERENCE] git ls-tree at this subject shows no crates/loader-query or crates/output-query directory, so the two entries are unconsumed declarations; cargo was not run to demonstrate that an unconsumed [workspace.dependencies] template stays unresolved."
+          },
+          {
+            "id": "F2",
+            "severity": "high",
+            "description": "All six datasets now declare the C18 common row fields; turns, messages, tools and events each gained exactly the four missing entries.",
+            "disposition": "fixed",
+            "evidence": "crates/core/src/query/schema.rs field registries at :173 SOURCE_FIELDS, :187 SESSION_FIELDS, :244 TURN_FIELDS, :279 MESSAGE_FIELDS, :302 TOOL_FIELDS, :341 EVENT_FIELDS each declare NativeId, Harness, Adapter and Availability as the third through sixth field! entries, immediately after Id and SourceRefs.\nVerified by reading the committed block of every one of the six datasets, not by sampling: SOURCE 12 fields, SESSION 17, TURN 18, MESSAGE 14, TOOL 22, EVENT 14, with the four C18 common row fields present in all six."
+          },
+          {
+            "id": "F3",
+            "severity": "medium",
+            "description": "Fixed independently derived preimage vector plus repeat stability committed; admits algebra, from_untrusted, ResultUniverse::validate and Coverage::validate now tested; runtime C25 metamorphs bound to unchecked dw-002a under bp-0008.",
+            "disposition": "fixed",
+            "evidence": "crates/core/tests/query_contract.rs contains 28 #[test] functions at this subject.\ncrates/core/tests/query_contract.rs:950-955 view_digest_matches_closed_preimage_vector_and_repeats_stably pins the digest constant 23c71eb09affec419f8bf44180fcb9b975d9ead38351be921688a1b904d0ae35 and asserts repeat stability.\nThat constant equals the value this reviewer derived independently before reading the Rust encoder, recorded at assets/verification/c25-independent-derivation.json sha256 7da871d6ea687b59f4586395a82a035d43492ad6eec11a464dd383afe2c4d9da with script c25-independent-derivation.py sha256 2a22745eca3d429c3a97d7abe1c59283fed0059b88d97c222bd4665eb4d287b3; preimage 972 bytes, ten lexically ordered keys, no floats.\ncrates/core/tests/query_contract.rs:925-940 exercise SourceSelection::admits across empty-includes-all, within-group OR, across-group AND and exclusion subtraction; from_untrusted schema rejection, ResultUniverse::validate and Coverage::validate invalid states are covered by the same file.\nGrade recorded in the R2 report: the fixed vector is a regression oracle, not a specification oracle; specification conformance rests on this reviewer's direct reading of the encoder against C25.\nResidual runtime obligation is bound, not dropped: assets/tasks/phase-1/tasks.dd.json dw-002a is state unchecked under bp-0008 (cargo test --locked -p unisphere-sdk --test query) and states in terms that baseline type-exclusion and the fixed vector do not satisfy it."
+          },
+          {
+            "id": "F4",
+            "severity": "medium",
+            "description": "Dead JSON fixture deleted and replaced by a typed shared_query_fixture() consumed by a behavioural provenance-rejection test; freeze inventory updated.",
+            "disposition": "fixed",
+            "evidence": "The unparseable fixture assets/fixtures/query/shared-v1.json is deleted at this subject.\ncrates/testkit/src/query.rs:97 defines typed shared_query_fixture() -> Vec<InspectedSource>.\ncrates/testkit/src/query.rs:296 shared_fixture_validates_and_rejects_foreign_provenance consumes it behaviourally.\nRecorded limitation carried from the R2 report: that internal test is currently the only consumer, so the fixture is proven parseable and provenance-rejecting but not yet shared across crates."
+          },
+          {
+            "id": "F5",
+            "severity": "medium",
+            "description": "TimestampBasis::SuppliedUnknown used by both supplied-string read paths; FormatLoss::TimestampBasis declared lossy on timestamp-bearing datasets only; C10 amended.",
+            "disposition": "fixed",
+            "evidence": "crates/core/src/query/model.rs:224 and :1006 are the two supplied-string read paths and both construct with TimestampBasis::SuppliedUnknown rather than Native.\ncrates/core/src/query/model.rs:153 enumerates TimestampBasis including SuppliedUnknown.\ncrates/core/src/query/schema.rs:405-413 define LOSSES_TIMESTAMP_JSON, LOSSES_TIMESTAMP_CSV and LOSSES_TIMESTAMP_HUMAN carrying FormatLoss::TimestampBasis, applied to the FORMATS tables of timestamp-bearing datasets only; SOURCE carries no FieldType::Timestamp field and no default_time_field, so its omission is correct rather than an oversight.\nContract C10 amended in guide v6 to require SuppliedUnknown on supplied-string reads and to declare JSON and JSONL lossy for basis omission."
+          },
+          {
+            "id": "F6",
+            "severity": "low",
+            "description": "Paired validate/validate_for routing keeps ConsultSchema dataset-accurate and confines ReadQueryHelp to standalone validators; C21 records the rule.",
+            "disposition": "fixed",
+            "evidence": "crates/core/src/query/model.rs:331 routes a standalone argument validator to RecoveryAction::ReadQueryHelp while :334 keeps ConsultSchema { dataset } where a dataset is genuinely in hand; ReadQueryHelp also appears at :214, :276 and :384.\nThe dataset-aware private validators inside QueryRequest preserve ConsultSchema accuracy, so C14's actionable-outcome contract is not weakened by a blanket substitution.\nContract C21 amended in guide v6 to record the standalone-validator rule."
+          },
+          {
+            "id": "F7",
+            "severity": "low",
+            "description": "Grouping fields emptied on the three datasets that permit no Stats; the remaining three carry real metric sets.",
+            "disposition": "fixed",
+            "evidence": "crates/core/src/query/schema.rs grouping_fields is empty at :601 SOURCE, :658 MESSAGE and :692 EVENT, the three datasets whose metrics are NO_METRICS (:389).\ngrouping_fields is non-empty only where real metric sets exist: :620 with COUNT_USAGE_METRICS, :639 with COUNT_USAGE_METRICS, :678 with TOOL_METRICS (:390, :397)."
+          },
+          {
+            "id": "F8",
+            "severity": "medium",
+            "description": "Timestamp equality and ordering compare unix_nanos only; basis is provenance metadata and never an ordering tie-break; C10 amended.",
+            "disposition": "fixed",
+            "evidence": "crates/core/src/query/model.rs:149 declares pub struct Timestamp with derives limited to Debug and Clone, so no derived ordering over basis remains.\ncrates/core/src/query/model.rs:197 impl PartialEq for Timestamp and :208-209 impl Ord::cmp compare unix_nanos only, leaving basis as provenance metadata that never becomes an ordering tie-break ahead of C10's stable entity-ID tiebreak, and restoring serialize-then-deserialize identity.\nContract C10 amended in guide v6 to state the equality and ordering rule."
+          },
+          {
+            "id": "N1",
+            "severity": "low",
+            "description": "C21 now enumerates FormatLoss with all five variants including TimestampBasis; the guide agrees with the frozen code and with C10 v6.",
+            "disposition": "fixed",
+            "evidence": "Closed at 72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9 and unchanged at this subject.\nStructured comparison of committed guide bytes across 4c3c665f and 72d9d0cf: section name list identical, contract id list identical, all top-level keys outside sections identical, and C21 the only contract whose text changed, 5151 to 5166 characters.\nThe delta is a pure insertion of the 15 characters |TimestampBasis with zero removed characters, yielding FormatLoss=AbsenceNullEmptyCollapse|StructuredAsJsonText|HumanRounding|PresentationOnly|TimestampBasis.\nThat vocabulary now matches the frozen code enumeration at crates/core/src/query/schema.rs:28, where query_enum! FormatLoss declares TimestampBasis => \"timestamp_basis\", and matches C10 v6.\nCode identity confirmed across the repair: tree objects for crates/, Cargo.toml and Cargo.lock are byte-identical at 4c3c665f, 72d9d0cf and 99ea782e (crates tree 2b43e9ce958aa9639d889f27813511c8a6a006fc), so no reviewed code moved when N1 was closed."
+          }
+        ]
+      }
+    }
+  ],
+  "references": []
+}

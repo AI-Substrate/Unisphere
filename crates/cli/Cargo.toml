@@ -14,4 +14,5 @@ serde_json.workspace = true
 
 [dev-dependencies]
 unisphere-testkit.workspace = true
+unisphere-output-query.workspace = true
 tempfile.workspace = true

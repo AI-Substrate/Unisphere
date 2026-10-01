@@ -1,11 +1,65 @@
 # VS Code Copilot adapter
 
-`unisphere-adapter-vscode-copilot` exports `VsCodeCopilotAdapter: SnapshotAdapter`
-and `DESCRIPTOR` with ID `vscode-copilot`. It consumes bounded `NativeSnapshot`
+`unisphere-adapter-vscode-copilot` exports `VsCodeCopilotAdapter`, implementing
+both `SnapshotAdapter` and `QueryAdapter`, plus `DESCRIPTOR` with ID
+`vscode-copilot` and query policy `QUERY_POLICY_VERSION`. It consumes bounded
+`NativeSnapshot`
 values supplied by a loader; it does not discover files, read a database, expand
 an environment variable, observe a clock, dereference a URI, or write output.
 The application composition root owns SDK/CLI registration, loading, revision
 manifests, checkpoints and the OTLP writer.
+
+## Query inspection
+
+`QueryAdapter::inspect` accepts only caller-supplied `NativeQueryInput::Snapshot`
+values. It validates the supplied `SourceEvidence` against the snapshot path and
+revision, applies `journal::reduce` before interpreting a journal, and returns the
+shared core `InspectedSource`/`SourcePartition`/`Observation` types. It performs no
+discovery or I/O. The registration must use
+`vscode-request-containment-v1` (`QUERY_POLICY_VERSION`) for both document and
+journal representations.
+
+The policy creates one source-local partition. A native non-empty `sessionId`
+establishes `Conversation` plus `NativeContainment`; without one the partition is
+`SourceOnly` with unavailable membership, and no conversation ID is invented.
+Partition identity uses the native session ID when present and the supplied source
+revision otherwise. Snapshot source references always retain the exact revision and
+logical key (`document#/requests/...` or `journal:reduced#/requests/...`). The
+reduced journal exposes only the final supplied revision: overwritten, truncated and
+deleted requests or parts do not become observations.
+
+Each persisted request is a versioned containment boundary. Its user message,
+assistant response and serialized tool parts carry the same native `requestId` turn
+key; a request missing that ID receives only a revision-local `request-index:N`
+containment label, never a fabricated native record or conversation ID.
+`isSystemInitiated: true` is `RequestMarker::Injected`, not an initiating user turn.
+Missing/null responses do not create an assistant observation. Native request,
+response and tool IDs remain source-local evidence; SDK reconstruction owns logical
+turns, pairing and cross-source identity.
+
+`toolInvocationSerialized` yields a `ToolCall` with its exact `toolCallId` and
+`toolId`. The closed known-name mapping currently normalises `read_file` to
+`file-read`, file mutation tools to `file-write`, terminal tools to `shell`, and
+VS Code search tools to `search`; unknown names retain no guessed family. Native
+`isComplete`, `isConfirmed`, confirmation kind and `subAgentInvocationId` are kept
+as structured lifecycle facts. `resultDetails`, when present and authorised by
+`ContentAccess`, is a `ToolResult` with `Outcome::Unknown`; confirmation/completion
+never becomes success. Original LM arguments, exit code and duration are
+`NotCaptured`. An absent `resultDetails` is not an empty successful result.
+
+Message text, reasoning, session titles and tool result details are retained only
+when `ContentAccess` permits the corresponding field. Otherwise observations carry
+`SensitiveOmitted`, not payload text or a fabricated empty value. Unsupported
+response kinds remain `NotSupported` availability, and unknown session versions
+return an unsupported source with no guessed request observations.
+
+Repository association uses only evidence already supplied by the provider or the
+v3 native `workingDirectory` when it is a valid local `file://` URI. Such a URI is
+recorded as `AssociationBasis::NativeCwd`. Provider-supplied
+`VerifiedWorkspaceMetadata` associations are preserved when their partition agrees.
+`repoData.remoteUrl`, prompt mentions, equal basenames and the opaque
+`workspaceStorage/<hash>` directory name never become a cwd. With no valid
+association, the partition stays unassociated and carries `AvailabilityCode::Unassociated`.
 
 ## Native authority and supported dialects
 
@@ -181,10 +235,13 @@ exhaustive inventory of Insiders, portable/remote builds, custom user-data roots
 or global/empty-window session stores. Windows is a location hint, not a claim
 that this Unix export pipeline runs on Windows.
 
-`tests/mapping.rs` and its synthetic fixtures cover versioned mapping, privacy,
-tool details, distinct usage scopes, identity selection, final-revision journal
-reduction, suffix replacement, later Initial, sparse arrays, Delete, bounded
-allocation, atomic errors and unsupported schemas. The designated PM runs
-`cargo test -p unisphere-adapter-vscode-copilot` after workspace admission and the
-plan's `vd-0002`/`vd-0003` composed proof. Authored regressions are not a passing
-execution claim; mapper-only evidence does not establish real SDK/CLI export.
+`tests/mapping.rs` and `tests/query.rs` use synthetic fixtures. Mapping coverage
+includes native privacy, usage scopes, identity selection, journal replay bounds,
+atomic errors and unsupported schemas. Query coverage includes v1/v2/v3 request
+containment, exact current-revision journal provenance, serialized tool lifecycle
+facts with unknown execution outcome, content omission, injected requests and
+workspace-association evidence floors. The designated PM runs
+`cargo test --locked -p unisphere-adapter-vscode-copilot --test query` after fleet
+delivery, then the plan's composed native parity proof. Authored regressions are
+not a passing execution claim; adapter-only evidence does not establish SDK/CLI
+query behavior.

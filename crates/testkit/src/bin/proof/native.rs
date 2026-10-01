@@ -542,8 +542,9 @@ pub fn run(repo: &Path, scratch: &Path) -> ProofResult<()> {
         .iter()
         .filter_map(|d| d["id"].as_str())
         .collect();
-    if ids != cases.iter().map(|case| case.id).collect() {
-        return Err("catalog and real native proof cases differ".into());
+    // Git objects have their own external-consumer lane, not a session-file decoder case.
+    if ids != cases.iter().map(|case| case.id).chain(["git-ai"]).collect() {
+        return Err("catalog and real native/Git Notes proof cases differ".into());
     }
     for case in &cases {
         for content in [false, true] {
@@ -560,6 +561,7 @@ pub fn run(repo: &Path, scratch: &Path) -> ProofResult<()> {
     let revision_root = scratch.join("revisions");
     fs::create_dir_all(&revision_root).map_err(|e| e.to_string())?;
     revisions(&cli, &sdk, &installed, repo, &revision_root)?;
+    super::query::run(&cli, &installed, &scratch.join("queries"))?;
     println!(
         "native proof: all registered dialects SDK/CLI/installed parity; changed/deleted/late sources; partial output without checkpoint"
     );

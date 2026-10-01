@@ -1,0 +1,135 @@
+{
+  "dd": {
+    "schema": "builder/backpressure"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Backpressure survey",
+        "plan": "../plan.dd.json#meta",
+        "certainty": "Proven",
+        "basis_sha": "30bcc8079f5e9e913f8410617b80ae7ea2ba75f4002e0288e3ca9781a0626f48"
+      }
+    },
+    {
+      "name": "rows",
+      "value": [
+        {
+          "id": "bp-0001",
+          "criterion": "ac-0001: An external Rust SDK consumer can list and read explicitly selected local Git Notes attached to commits, retaining repository, notes-ref, pinned ref tip, target commit and note-blob provenance. Bare repositories and linked worktrees resolve Git storage correctly.",
+          "phase": "ph-7688",
+          "mode": "BUILD",
+          "tier": "computational",
+          "proof": "BUILD→RUN: cargo test --locked -p unisphere-loader-git plus external git-notes proof: normal/bare/linked/nested repositories, pinned tip/commit/blob, selective fanout membership and listing parity.",
+          "state": "checked",
+          "probe": "R1 adjudicated guide v3; real existing entrypoints: cli/sessions.rs requested_session_adapter, app/adapters.rs registry and production fixture test, testkit sealed_command (PATH empty), boot/boot.mjs proof list; new functionality remains BUILD/EXTEND and unproven.",
+          "receipt": "execution-log.dd.json#entries/lg-0004"
+        },
+        {
+          "id": "bp-0002",
+          "criterion": "ac-0002: The registered CLI Git-ai ingestion path calls the SDK and produces the same source-derived OTLP LogsData for the same repository, note selection and content policy; existing native session commands remain working.",
+          "phase": "ph-7688",
+          "mode": "BUILD",
+          "tier": "computational",
+          "proof": "BUILD→RUN: cargo run --locked -p unisphere-testkit --bin unisphere-proof -- git-notes. Dedicated run_git_notes frontend, SourceRepresentation::GitNotes registry branch, synthetic Git fixture and static descriptor; compare actual installed CLI/external SDK and retain existing native commands.",
+          "state": "checked",
+          "probe": "R1 adjudicated guide v3; real existing entrypoints: cli/sessions.rs requested_session_adapter, app/adapters.rs registry and production fixture test, testkit sealed_command (PATH empty), boot/boot.mjs proof list; new functionality remains BUILD/EXTEND and unproven.",
+          "receipt": "execution-log.dd.json#entries/lg-0004"
+        },
+        {
+          "id": "bp-0003",
+          "criterion": "ac-0003: Independent parsing preserves supported authorship/3.0.0 file paths, inclusive line ranges, attestation keys and declared prompts/sessions/humans, including mixed maps and their agent identities. Missing data is not synthesized; unsupported variants or schema versions are explicit.",
+          "phase": "ph-7688",
+          "mode": "BUILD",
+          "tier": "computational",
+          "proof": "BUILD→RUN: cargo test --locked -p unisphere-adapter-git-ai and git-notes composed proof: mixed current/legacy/human maps, 16-hex and spec-line193 7-hex keys, normal/optionally quoted paths, single/inclusive ranges, unreferenced identities and unresolved attribution without synthesis.",
+          "state": "checked",
+          "probe": "R1 adjudicated guide v3; real existing entrypoints: cli/sessions.rs requested_session_adapter, app/adapters.rs registry and production fixture test, testkit sealed_command (PATH empty), boot/boot.mjs proof list; new functionality remains BUILD/EXTEND and unproven.",
+          "receipt": "execution-log.dd.json#entries/lg-0004"
+        },
+        {
+          "id": "bp-0004",
+          "criterion": "ac-0004: Git AI can be absent: no git-ai invocation, imported implementation, crate/library dependency, daemon, HTTP service or private git-ai cache is used. Standard read-only Git is the only Git-side runtime prerequisite.",
+          "phase": "ph-7688",
+          "mode": "BUILD",
+          "tier": "computational",
+          "proof": "BUILD→RUN: git-notes external SDK/installed CLI runs under sealed empty PATH and isolated HOME with explicit actual absolute standard Git executable. Successful collection is distinct from missing/non-executable Git and empty-PATH-without-explicit-Git failures. Inspect dependency/source graph for no imported Git AI implementation/invocation/cache.",
+          "state": "checked",
+          "probe": "R1 adjudicated guide v3; real existing entrypoints: cli/sessions.rs requested_session_adapter, app/adapters.rs registry and production fixture test, testkit sealed_command (PATH empty), boot/boot.mjs proof list; new functionality remains BUILD/EXTEND and unproven.",
+          "receipt": "execution-log.dd.json#entries/lg-0004"
+        },
+        {
+          "id": "bp-0005",
+          "criterion": "ac-0005: Ingestion does not modify source refs, notes, index, worktree, configuration or hooks and performs no fetch/push/network access. Git arguments are passed without shell interpolation; external Git behaviour that could execute hooks/filters or fetch missing objects is controlled or refused.",
+          "phase": "ph-7688",
+          "mode": "BUILD",
+          "tier": "computational",
+          "proof": "BUILD→RUN: loader regressions and git-notes consumer proof check unchanged source refs/index/worktree/config/hooks, hostile inherited Git environment, disabled helpers/lazy fetch and promisor refusal; reject output under canonical worktree/git-dir/common-dir and symlinked parent aliases. Independent source review complements, not substitutes for, runtime evidence; no network-denial trace claim.",
+          "state": "checked",
+          "probe": "R1 adjudicated guide v3; real existing entrypoints: cli/sessions.rs requested_session_adapter, app/adapters.rs registry and production fixture test, testkit sealed_command (PATH empty), boot/boot.mjs proof list; new functionality remains BUILD/EXTEND and unproven.",
+          "receipt": "execution-log.dd.json#entries/lg-0004"
+        },
+        {
+          "id": "bp-0006",
+          "criterion": "ac-0006: Missing notes and empty selections are distinguishable from invalid refs, missing Git, malformed/oversized note data and object-read failures. Explicit input/output bounds, output failures and partial-result policy are observable; no silent successful truncation.",
+          "phase": "ph-7688",
+          "mode": "BUILD",
+          "tier": "computational",
+          "proof": "BUILD→RUN: real Git missing ref/present empty selection, selected non-commit UnsupportedTarget and missing-object ObjectRead, malformed/unsupported/oversized notes, bounded All vs successful direct selected fanout lookup, output size/write/flush failures, deadline/helper capture and UnsafeRepository error handling. No successful truncation or partial-result receipt.",
+          "state": "checked",
+          "probe": "R1 adjudicated guide v3; real existing entrypoints: cli/sessions.rs requested_session_adapter, app/adapters.rs registry and production fixture test, testkit sealed_command (PATH empty), boot/boot.mjs proof list; new functionality remains BUILD/EXTEND and unproven.",
+          "receipt": "execution-log.dd.json#entries/lg-0004"
+        },
+        {
+          "id": "bp-0007",
+          "criterion": "ac-0007: Metadata-first output preserves source identifiers without emitting human-author strings, free-form custom attributes or legacy message content unless the declared content policy explicitly permits them. Missing timestamps/counts remain unknown, not zero or invented timing.",
+          "phase": "ph-7688",
+          "mode": "BUILD",
+          "tier": "computational",
+          "proof": "BUILD→RUN: parser plus external SDK/CLI decoded OTLP: exact common profile/source keys, structural Git object provenance and allowlisted metadata; human/custom/message fields only with content; null versus missing; no synthetic times/offsets/spans/totals.",
+          "state": "checked",
+          "probe": "R1 adjudicated guide v3; real existing entrypoints: cli/sessions.rs requested_session_adapter, app/adapters.rs registry and production fixture test, testkit sealed_command (PATH empty), boot/boot.mjs proof list; new functionality remains BUILD/EXTEND and unproven.",
+          "receipt": "execution-log.dd.json#entries/lg-0004"
+        },
+        {
+          "id": "bp-0008",
+          "criterion": "ac-0008: Existing tracking refs do not silently duplicate canonical-note observations; selection and ref revisions are explicit. Note attribution is not presented as a complete conversation, token ledger, tool-duration stream or lossless archive.",
+          "phase": "ph-7688",
+          "mode": "BUILD",
+          "tier": "computational",
+          "proof": "BUILD→RUN: git-notes proof checks explicit normalized selection, no automatic tracking-ref duplicate aggregation, unchanged pinned revision on ref movement, exact closing manifest fields and empty-result semantics; selection-scoped replace_projection, unknown finality, not conversation history.",
+          "state": "checked",
+          "probe": "R1 adjudicated guide v3; real existing entrypoints: cli/sessions.rs requested_session_adapter, app/adapters.rs registry and production fixture test, testkit sealed_command (PATH empty), boot/boot.mjs proof list; new functionality remains BUILD/EXTEND and unproven.",
+          "receipt": "execution-log.dd.json#entries/lg-0004"
+        },
+        {
+          "id": "bp-0009",
+          "criterion": "ac-0009: No retired refs/harness-telemetry reader, old segment/rollup import, migration, compatibility shim or parallel telemetry path is introduced.",
+          "phase": "ph-7688",
+          "mode": "EXTEND",
+          "tier": "computational",
+          "proof": "EXTEND→RUN: unisphere-arch-check registers inward-only unisphere-loader-git and unisphere-adapter-git-ai; actual source/dependency review confirms no retired harness telemetry reader/migration/compatibility path. New format name does not import upstream implementation.",
+          "state": "checked",
+          "probe": "R1 adjudicated guide v3; real existing entrypoints: cli/sessions.rs requested_session_adapter, app/adapters.rs registry and production fixture test, testkit sealed_command (PATH empty), boot/boot.mjs proof list; new functionality remains BUILD/EXTEND and unproven.",
+          "receipt": "execution-log.dd.json#entries/lg-0004"
+        },
+        {
+          "id": "bp-000a",
+          "criterion": "ac-000a: Synthetic real-Git fixtures and exercised external SDK/CLI paths prove ordinary, mixed legacy/current/human, empty, malformed, bounded, bare/worktree and Git-AI-absent behavior without committing real private note payloads. Documentation names commands, provenance and limitations.",
+          "phase": "ph-7688",
+          "mode": "BUILD",
+          "tier": "computational",
+          "proof": "BUILD→RUN: real synthetic external SDK/temporary-installed CLI git-notes mode covers all source/format/absence/failure fixtures; then harness boot --json includes git-notes alongside every existing proof mode. Boot regression proves Git Notes failure prevents readiness and retains child evidence, not wording. Preserve exact source/command/cwd/exit and limitations; no private payload publication.",
+          "state": "checked",
+          "probe": "R1 adjudicated guide v3; real existing entrypoints: cli/sessions.rs requested_session_adapter, app/adapters.rs registry and production fixture test, testkit sealed_command (PATH empty), boot/boot.mjs proof list; new functionality remains BUILD/EXTEND and unproven.",
+          "receipt": "execution-log.dd.json#entries/lg-0004"
+        }
+      ]
+    },
+    {
+      "name": "sensors",
+      "value": []
+    }
+  ]
+}

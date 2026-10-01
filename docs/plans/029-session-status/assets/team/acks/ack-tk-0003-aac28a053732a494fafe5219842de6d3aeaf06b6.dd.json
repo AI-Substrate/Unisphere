@@ -1,0 +1,53 @@
+{
+  "dd": {
+    "schema": "builder/packet"
+  },
+  "sections": [
+    {
+      "name": "ack",
+      "value": {
+        "record_type": "ack",
+        "id": "ack-tk-0003-aac28a053732a494fafe5219842de6d3aeaf06b6",
+        "nonce": "ef3064e8-729e-47b1-a615-99718b6b54f1",
+        "recorded_at": "2026-09-29T06:27:16.000Z",
+        "unit_id": "tk-0003",
+        "peer_id": "pij-explicit-earwig",
+        "packet_sha256": "eb99b920690c7785d5e521f0146436c7b23aa6d61a98cfe9ee179f4fdba4dd9a",
+        "baseline_sha": "aac28a053732a494fafe5219842de6d3aeaf06b6",
+        "native_root": "/Users/jordanknight/substrate/unisphere/unisphere-029-cli",
+        "shell_cwd": "/Users/jordanknight/substrate/unisphere/unisphere-029-cli",
+        "canary_nonce": "ef3064e8-729e-47b1-a615-99718b6b54f1",
+        "observed": {
+          "peer_id": "pij-explicit-earwig",
+          "root": "/Users/jordanknight/substrate/unisphere/unisphere-029-cli",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5.5",
+          "native_session": "01a0ebd1-e11e-7513-8b98-31e9fa249eee",
+          "pid": 18595,
+          "argv": [
+            "omp",
+            "--auto-approve",
+            "--model",
+            "github-copilot/claude-opus-5.5"
+          ],
+          "evidence": [
+            "harness builder self-check on the packet with --sha256 eb99b920…: status ok, observed root/source_sha/packet digest equal expected, no warnings.",
+            "shasum -a 256 of the packet file = eb99b920690c7785d5e521f0146436c7b23aa6d61a98cfe9ee179f4fdba4dd9a.",
+            "git rev-parse HEAD = aac28a053732a494fafe5219842de6d3aeaf06b6 on branch builder/035-session-status/tk-0003; pwd = native root.",
+            "pij whoami --json: id pij-explicit-earwig, harness omp, session 01a0ebd1-e11e-7513-8b98-31e9fa249eee, proc pid 18595 (proc_start 20260929161952), parent pij-specific-kiwi, model github-copilot/claude-opus-5.5.",
+            "ps -p 18595: argv `omp --auto-approve --model github-copilot/claude-opus-5.5`.",
+            "No prior tk-0003 commits or working changes existed at packet receipt; implementation starts from the sealed source."
+          ],
+          "gaps": [
+            "The work packet carries no separate canary; canary_nonce repeats packet.nonce.",
+            "Written under .harness/temp because the packet forbids writes to docs/plans/029-session-status/assets/team; the PM records it.",
+            "Effort is not configured in argv; provider-side model and effort are not independently attested.",
+            "recorded_at is when the observations were taken, before this file was written."
+          ]
+        }
+      }
+    }
+  ],
+  "references": []
+}

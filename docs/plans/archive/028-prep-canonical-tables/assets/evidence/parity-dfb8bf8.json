@@ -1,0 +1,224 @@
+{
+ "subject_sha": "dfb8bf80845c143b6077dd1e24af58634f1b1174",
+ "reference_wall_s": null,
+ "prep": {
+  "exit": 0,
+  "wall_s": 5.92,
+  "by_status": {
+   "new": 478
+  },
+  "skipped": {
+   "hidden": 0,
+   "symlinks": 3,
+   "unreadable_entries": 0
+  },
+  "rows_written": {
+   "calls": 123116,
+   "events": 61911,
+   "tool_uses": 222289,
+   "triggers": 22971,
+   "turns": 21113
+  }
+ },
+ "totals": {
+  "file_f": {
+   "prep": [
+    336,
+    4078,
+    4073840,
+    0,
+    105199616,
+    316933
+   ],
+   "reference_now": [
+    67,
+    678,
+    2189521,
+    0,
+    23396497,
+    47468
+   ],
+   "brief": [
+    336,
+    4078,
+    4073840,
+    0,
+    105199616,
+    316933
+   ],
+   "prep_equals_reference_now": null,
+   "prep_equals_brief": true
+  },
+  "extract_window": {
+   "prep": [
+    129,
+    55607,
+    125006,
+    161327570,
+    10328326,
+    18515531680,
+    41261643
+   ],
+   "reference_now": [
+    129,
+    55607,
+    125006,
+    161327570,
+    10328326,
+    18515531680,
+    41261643
+   ],
+   "brief": [
+    129,
+    55607,
+    125006,
+    161327570,
+    10328326,
+    18515531680,
+    41261643
+   ],
+   "prep_equals_reference_now": true,
+   "prep_equals_brief": true
+  },
+  "analysis_window": {
+   "prep": [
+    119,
+    53691,
+    120904,
+    148719523,
+    9805657,
+    17875839027,
+    39717869
+   ],
+   "reference_now": [
+    119,
+    53691,
+    120904,
+    148719523,
+    9805657,
+    17875839027,
+    39717869
+   ],
+   "brief": [
+    119,
+    53691,
+    120904,
+    148719523,
+    9805657,
+    17875839027,
+    39717869
+   ],
+   "prep_equals_reference_now": true,
+   "prep_equals_brief": true
+  },
+  "analysis_main": {
+   "prep": [
+    63,
+    51608,
+    116712,
+    148708908,
+    0,
+    17610578342,
+    38066136
+   ],
+   "reference_now": [
+    63,
+    51608,
+    116712,
+    148708908,
+    0,
+    17610578342,
+    38066136
+   ],
+   "brief": [
+    63,
+    51608,
+    116712,
+    148708908,
+    0,
+    17610578342,
+    38066136
+   ],
+   "prep_equals_reference_now": true,
+   "prep_equals_brief": true
+  },
+  "analysis_sub": {
+   "prep": [
+    56,
+    2083,
+    4192,
+    10615,
+    9805657,
+    265260685,
+    1651733
+   ],
+   "reference_now": [
+    56,
+    2083,
+    4192,
+    10615,
+    9805657,
+    265260685,
+    1651733
+   ],
+   "brief": [
+    56,
+    2083,
+    4192,
+    10615,
+    9805657,
+    265260685,
+    1651733
+   ],
+   "prep_equals_reference_now": true,
+   "prep_equals_brief": true
+  }
+ },
+ "call_rows": {
+  "reference": 55607,
+  "prep": 55607,
+  "joined_on_file_ts": 55607
+ },
+ "call_field_mismatches": {
+  "usage": 0,
+  "model": 0,
+  "call_in_turn": 0,
+  "trigger": 0,
+  "sender": 0,
+  "gap_window_first_only_in_reference": 10,
+  "gap_beyond_rounding": 0,
+  "gap_rounding_ties": 522
+ },
+ "trigger_mismatch_pairs": [],
+ "compactions": {
+  "reference": 102,
+  "prep": 102,
+  "equal_rows": 102
+ },
+ "triggers_multiset": {
+  "reference": 8427,
+  "prep": 8426,
+  "reference_only": 1,
+  "prep_only": 0
+ },
+ "hidden_rows": [
+  [
+   "recap",
+   612,
+   612
+  ],
+  [
+   "synthetic",
+   45,
+   44
+  ]
+ ],
+ "reference_only_rows": {
+  "total": 2,
+  "from_symlinked_sources": 2,
+  "by_kind": {
+   "trigger": 1,
+   "synthetic": 1
+  }
+ }
+}

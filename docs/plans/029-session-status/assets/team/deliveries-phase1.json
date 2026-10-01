@@ -1,0 +1,18 @@
+[
+ {
+  "unit_id": "tk-0002",
+  "peer_id": "pij-soft-rodent",
+  "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-029-sdk",
+  "commit_sha": "79fdf7ae6384d490200833c1f1e8a7c930add849",
+  "packet_sha256": "ed4b9b8a0bffa3bdb7f659b20e43de6fe86855a33aa7f8d1fdd48b0d1fd7ee9b",
+  "baseline_sha": "aac28a053732a494fafe5219842de6d3aeaf06b6"
+ },
+ {
+  "unit_id": "tk-0003",
+  "peer_id": "pij-explicit-earwig",
+  "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-029-cli",
+  "commit_sha": "403c4ce47d641d18124d3359d0c157f9fa04016d",
+  "packet_sha256": "eb99b920690c7785d5e521f0146436c7b23aa6d61a98cfe9ee179f4fdba4dd9a",
+  "baseline_sha": "aac28a053732a494fafe5219842de6d3aeaf06b6"
+ }
+]

@@ -42,7 +42,7 @@ pub const IDE_DESCRIPTOR: AdapterDescriptor = AdapterDescriptor {
         output_formats: &["otlp-jsonl"],
         sdk_caller_owned_cursor: false,
         cursor_source_assumption: "whole_source_revision",
-        cli_persisted_resume: false,
+        cli_persisted_resume: true,
         delayed_revision_reconciliation: false,
         lossless_archive: false,
     },
@@ -62,20 +62,7 @@ impl SnapshotAdapter for CursorIdeAdapter {
         snapshot: &NativeSnapshot,
         options: MappingOptions,
     ) -> Result<MappedSnapshot, PipelineError> {
-        snapshot.source.validate()?;
-        if !matches!(&snapshot.source.format, SnapshotFormat::SqliteKeyValue { table } if table == "cursorDiskKV")
-        {
-            return Err(PipelineError::new(PipelineErrorKind::Unsupported, None));
-        }
-        if snapshot.revision.is_empty() {
-            return Err(PipelineError::new(PipelineErrorKind::InvalidData, None));
-        }
-        let mut rows = BTreeMap::new();
-        for row in &snapshot.records {
-            if row.key.is_empty() || rows.insert(row.key.as_str(), row).is_some() {
-                return Err(PipelineError::new(PipelineErrorKind::InvalidData, None));
-            }
-        }
+        let rows = index_snapshot(snapshot)?;
         let mut mapper = Mapper {
             snapshot,
             content: options.include_content,
@@ -112,6 +99,95 @@ impl SnapshotAdapter for CursorIdeAdapter {
         Ok(mapper.output)
     }
 }
+pub(crate) fn index_snapshot(
+    snapshot: &NativeSnapshot,
+) -> Result<BTreeMap<&str, &SnapshotRecord>, PipelineError> {
+    snapshot.source.validate()?;
+    if !matches!(&snapshot.source.format, SnapshotFormat::SqliteKeyValue { table } if table == "cursorDiskKV")
+    {
+        return Err(PipelineError::new(PipelineErrorKind::Unsupported, None));
+    }
+    if snapshot.revision.is_empty() {
+        return Err(PipelineError::new(PipelineErrorKind::InvalidData, None));
+    }
+    let mut rows = BTreeMap::new();
+    for row in &snapshot.records {
+        if row.key.is_empty() || rows.insert(row.key.as_str(), row).is_some() {
+            return Err(PipelineError::new(PipelineErrorKind::InvalidData, None));
+        }
+    }
+    Ok(rows)
+}
+
+pub(crate) fn decode_object(row: &SnapshotRecord) -> Result<Map<String, Value>, Code> {
+    match serde_json::from_slice(&row.bytes) {
+        Ok(Value::Object(object)) => Ok(object),
+        _ => Err(Code::InvalidField),
+    }
+}
+
+pub(crate) fn classify_composer(
+    row: &SnapshotRecord,
+    id: &str,
+) -> Result<(Map<String, Value>, Vec<Value>), Code> {
+    let mut object = decode_object(row)?;
+    if id.is_empty() || object.get("composerId").and_then(Value::as_str) != Some(id) {
+        return Err(Code::InvalidField);
+    }
+    if object
+        .get("_v")
+        .and_then(Value::as_u64)
+        .is_none_or(|version| version < 2)
+    {
+        return Err(Code::UnsupportedRecord);
+    }
+    let Some(Value::Array(headers)) = object.remove("fullConversationHeadersOnly") else {
+        return Err(Code::InvalidField);
+    };
+    Ok((object, headers))
+}
+
+pub(crate) fn classify_bubble(
+    row: &SnapshotRecord,
+    id: &str,
+    header_type: Option<i64>,
+) -> Result<(Map<String, Value>, i64), Code> {
+    let object = decode_object(row)?;
+    if object
+        .get("bubbleId")
+        .is_some_and(|value| value.as_str() != Some(id))
+    {
+        return Err(Code::InvalidField);
+    }
+    let kind = object.get("type").and_then(Value::as_i64);
+    if kind.is_none() || kind != header_type {
+        return Err(Code::InvalidField);
+    }
+    Ok((object, kind.expect("validated native bubble kind")))
+}
+
+pub(crate) fn composer_timestamp(object: &Map<String, Value>) -> Result<Option<u64>, Code> {
+    let Some(created) = object.get("createdAt") else {
+        return Ok(None);
+    };
+    created
+        .as_u64()
+        .and_then(|ms| ms.checked_mul(1_000_000))
+        .map(Some)
+        .ok_or(Code::InvalidTimestamp)
+}
+
+pub(crate) fn bubble_timestamp(object: &Map<String, Value>) -> Result<Option<u64>, Code> {
+    let Some(created) = object.get("createdAt") else {
+        return Ok(None);
+    };
+    created
+        .as_str()
+        .and_then(|value| OffsetDateTime::parse(value, &Rfc3339).ok())
+        .and_then(|value| u64::try_from(value.unix_timestamp_nanos()).ok())
+        .map(Some)
+        .ok_or(Code::InvalidTimestamp)
+}
 
 struct Mapper<'a> {
     snapshot: &'a NativeSnapshot,
@@ -125,16 +201,6 @@ impl Mapper<'_> {
             key: key.into(),
             code,
         });
-    }
-
-    fn object(&mut self, row: &SnapshotRecord) -> Option<Map<String, Value>> {
-        match serde_json::from_slice(&row.bytes) {
-            Ok(Value::Object(object)) => Some(object),
-            _ => {
-                self.diagnostic(&row.key, Code::InvalidField);
-                None
-            }
-        }
     }
 
     fn record(&self, key: &str, kind: &str, session: &str) -> TelemetryRecord {
@@ -190,31 +256,17 @@ impl Mapper<'_> {
         referenced: &mut BTreeSet<String>,
     ) {
         let key = row.key.as_str();
-        let Some(mut object) = self.object(row) else {
-            return;
-        };
-        if id.is_empty() || object.get("composerId").and_then(Value::as_str) != Some(id) {
-            self.diagnostic(key, Code::InvalidField);
-            return;
-        }
-        if object
-            .get("_v")
-            .and_then(Value::as_u64)
-            .is_none_or(|version| version < 2)
-        {
-            self.diagnostic(key, Code::UnsupportedRecord);
-            return;
-        }
-        let Some(Value::Array(headers)) = object.remove("fullConversationHeadersOnly") else {
-            self.diagnostic(key, Code::InvalidField);
-            return;
+        let (mut object, headers) = match classify_composer(row, id) {
+            Ok(classified) => classified,
+            Err(code) => {
+                self.diagnostic(key, code);
+                return;
+            }
         };
         let mut record = self.record(key, "composerData", id);
-        if let Some(created) = object.remove("createdAt") {
-            record.timestamp_unix_nano = created.as_u64().and_then(|ms| ms.checked_mul(1_000_000));
-            if record.timestamp_unix_nano.is_none() {
-                self.diagnostic(key, Code::InvalidTimestamp);
-            }
+        match composer_timestamp(&object) {
+            Ok(timestamp) => record.timestamp_unix_nano = timestamp,
+            Err(code) => self.diagnostic(key, code),
         }
         self.model(
             key,
@@ -309,22 +361,13 @@ impl Mapper<'_> {
 
     fn bubble(&mut self, row: &SnapshotRecord, session: &str, id: &str, header_type: Option<i64>) {
         let key = row.key.as_str();
-        let Some(mut object) = self.object(row) else {
-            return;
+        let (mut object, kind) = match classify_bubble(row, id, header_type) {
+            Ok(classified) => classified,
+            Err(code) => {
+                self.diagnostic(key, code);
+                return;
+            }
         };
-        if object
-            .get("bubbleId")
-            .is_some_and(|value| value.as_str() != Some(id))
-        {
-            self.diagnostic(key, Code::InvalidField);
-            return;
-        }
-        let kind = object.get("type").and_then(Value::as_i64);
-        if kind.is_none() || kind != header_type {
-            self.diagnostic(key, Code::InvalidField);
-            return;
-        }
-        let kind = kind.unwrap();
         let mut record = self.record(key, &kind.to_string(), session);
         record
             .attributes
@@ -339,14 +382,9 @@ impl Mapper<'_> {
                     .insert(attribute.into(), Value::String(value));
             }
         }
-        if let Some(created) = object.remove("createdAt") {
-            record.timestamp_unix_nano = created
-                .as_str()
-                .and_then(|value| OffsetDateTime::parse(value, &Rfc3339).ok())
-                .and_then(|value| u64::try_from(value.unix_timestamp_nanos()).ok());
-            if record.timestamp_unix_nano.is_none() {
-                self.diagnostic(key, Code::InvalidTimestamp);
-            }
+        match bubble_timestamp(&object) {
+            Ok(timestamp) => record.timestamp_unix_nano = timestamp,
+            Err(code) => self.diagnostic(key, code),
         }
         for field in [
             "skipRendering",

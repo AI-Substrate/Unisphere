@@ -1,0 +1,29 @@
+{
+  "recorded_at": "2026-09-10T05:47:53.841Z",
+  "ready": {
+    "unit": "tk-000b",
+    "status": "not-ready",
+    "code": "E471",
+    "message": "Dependencies lack committed proof: tk-000a, tk-0009"
+  },
+  "compose": {
+    "argv": [
+      "harness",
+      "builder",
+      "compose",
+      "docs/plans/015-session-query-cli/plan.dd.json",
+      "--import",
+      "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/team/unit-deliveries.json"
+    ],
+    "stdout": "{\"command\":\"builder compose\",\"status\":\"error\",\"timestamp\":\"2026-09-10T05:24:59.777Z\",\"error\":{\"code\":\"E470\",\"message\":\"Composition must contain each coder exactly once.\"},\"next_action\":\"Use the reviewed guide dependency order and an exact delivery set.\"}\n",
+    "stderr": "",
+    "exit": 1
+  },
+  "confirmed_by": "pij-female-varl: installed0.14 linked upstream8eeb1bb1; no staged surface or upstream fix found; already-integrated/adopt-peer preserve the same guards",
+  "code_evidence": [
+    "contracts-service.ts dependencyEvidence requires verified complete composition for non-baseline dependencies",
+    "composition-service.ts import requires each coder exactly once, including downstream CLI",
+    "dispatch-service.ts adopt-peer also calls readiness"
+  ],
+  "state": "No fake receipt, guard bypass, global tooling change or tenth allocation. Manual product-only helper requires explicit Jordan decision; cannot promise automatic later Builder reconciliation."
+}

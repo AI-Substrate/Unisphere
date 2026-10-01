@@ -8,6 +8,7 @@ repository.workspace = true
 
 [dependencies]
 unisphere-core.workspace = true
+sha2.workspace = true
 
 [target.'cfg(unix)'.dependencies]
 libc.workspace = true

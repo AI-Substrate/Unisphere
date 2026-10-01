@@ -1,0 +1,92 @@
+{
+  "kind": "ProductOnlyDelivery",
+  "mode": "manual-external",
+  "unit_id": "tk-000b",
+  "peer_id": "pij-unfortunate-rat",
+  "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-000b-manual",
+  "branch": "work/015-manual-cli",
+  "source_sha": "4f4a6eef348fac18508b438ed9b216a8c982d460",
+  "proved_source_sha": "5ee631b46142b88dea2a2742c9cb8087642c4d25",
+  "checkpoint_sha": "f4c8b3570a851f9008183fff3f045d8f30a6307b",
+  "commit_sha": "10e72f900e744fe6c83ba7601ba0e3570c12a27a",
+  "commits": [
+    "f4c8b3570a851f9008183fff3f045d8f30a6307b",
+    "10e72f900e744fe6c83ba7601ba0e3570c12a27a"
+  ],
+  "requested": {
+    "harness": "omp",
+    "model": "github-copilot/gpt-5.6-sol-fast",
+    "effort": "high"
+  },
+  "paths": [
+    "crates/cli/Cargo.toml",
+    "crates/cli/src/args.rs",
+    "crates/cli/src/catalog.rs",
+    "crates/cli/src/lib.rs",
+    "crates/cli/src/output.rs",
+    "crates/cli/src/query.rs",
+    "crates/cli/src/sessions.rs",
+    "crates/cli/src/snapshots.rs",
+    "crates/cli/tests/frontend.rs",
+    "crates/cli/tests/query_frontend.rs",
+    "crates/cli/tests/sessions.rs",
+    "docs/cli.md"
+  ],
+  "api": {
+    "parser": "parse(Vec<OsString>, &CliContext) -> Result<ParsedCommand, CliParseFailure>",
+    "mode": "diagnostic_mode(&[OsString], bool) -> OutputMode",
+    "query": "run_query(&QueryCommand, &CliContext, &dyn QueryApi, &dyn QueryWriter, &mut dyn Write, &mut dyn Write) -> u8",
+    "query_failure": "emit_query_failure(&QueryCommand, &QueryFailure, &mut dyn Write, &mut dyn Write) -> u8",
+    "typed_runners": [
+      "run_config(&ConfigCommand, &CliContext, &dyn InspectionApi, stdout, stderr) -> u8",
+      "run_catalog(&CatalogCommand, &[&AdapterDescriptor], stdout, stderr) -> u8",
+      "run_help(&HelpCommand, stdout, stderr) -> u8",
+      "run_version(&CliContext, OutputMode, stdout, stderr) -> u8",
+      "run_native_list(&NativeRootListCommand, &dyn CollectionApi, stdout, stderr) -> u8",
+      "run_native_export(&NativeExportCommand, &dyn CollectionApi, stdout, stderr) -> u8",
+      "run_native_snapshot_export(&NativeExportCommand, &dyn SnapshotCollectionApi, SnapshotFormat, stdout, stderr) -> u8",
+      "run_docs(&DocsCommand, stdout, stderr) -> u8",
+      "run_schema(&SchemaCommand, stdout, stderr) -> u8"
+    ],
+    "parsed_variants": [
+      "Config",
+      "Catalog",
+      "Docs",
+      "Schema",
+      "Query",
+      "NativeRootList",
+      "NativeGitNotesList",
+      "NativeExport",
+      "Help",
+      "Version"
+    ],
+    "stdin_framing": "QueryCommand.stdin_format: SavedFormat; --stdin-format json|jsonl only with --input -, default json",
+    "git_notes": "Native list/export DTOs preserve notes_ref, repeated commits, absolute git_executable and every approved Git Notes bound; actual GitNotesApi execution remains PM-owned."
+  },
+  "unrun_checks": [
+    "No cargo build/check/test command was run.",
+    "No clippy or rustfmt command was run.",
+    "No harness checks or harness boot command was run.",
+    "No product startup or installed-CLI scenario was run.",
+    "No Git Notes execution was claimed; the approved parser was read only."
+  ],
+  "startup_attempts": [],
+  "friction": [
+    "Installed Builder 0.14 dispatch composition cycle required explicit product-only manual authorization.",
+    "PM-owned app composition still references removed requested_session_adapter in this clone and must consume ParsedCommand during convergence.",
+    "Approved plan014 Git Notes core types are intentionally absent from this clone; only its native CLI grammar was preserved in typed DTOs.",
+    "Validation was intentionally withheld while PM composes concurrent deliveries."
+  ],
+  "attribution": {
+    "checkpoint": {
+      "mode": "direct-verified",
+      "refs_notes_ai": "landed"
+    },
+    "candidate": {
+      "mode": "direct-verified",
+      "refs_notes_ai": "landed"
+    },
+    "claim_boundary": "These are harness collector receipts for the commits. A landed note alone is not asserted as independent proof of runtime model identity or product acceptance."
+  },
+  "acceptance_claim": "Candidate delivery only. PM owns composition, validation, independent review, Git Notes integration and acceptance; no Builder receipt or automatic reconciliation is claimed."
+}

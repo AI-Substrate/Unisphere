@@ -1,0 +1,83 @@
+{
+ "tests": {
+  "unisphere-core": {
+   "exit": 0,
+   "passed": 49,
+   "failed": 0
+  },
+  "unisphere-sdk": {
+   "exit": 0,
+   "passed": 84,
+   "failed": 0
+  },
+  "unisphere-cli": {
+   "exit": 0,
+   "passed": 72,
+   "failed": 0
+  },
+  "unisphere-loader-query": {
+   "exit": 0,
+   "passed": 23,
+   "failed": 0
+  },
+  "unisphere-app": {
+   "exit": 0,
+   "passed": 16,
+   "failed": 0
+  }
+ },
+ "tools": {
+  "procps": "4.0.4",
+  "tmux": "3.4"
+ },
+ "pane_native": {
+  "exit": 0,
+  "ok": true,
+  "basis": "native_pane",
+  "conflicts": 0,
+  "code": null,
+  "session_matches": true
+ },
+ "session_explicit": {
+  "exit": 0,
+  "ok": true,
+  "basis": "explicit",
+  "conflicts": 0,
+  "code": null,
+  "has_model": true
+ },
+ "pane_missing": {
+  "exit": 3,
+  "ok": false,
+  "basis": null,
+  "conflicts": 0,
+  "code": "UNI-STATUS-PANE-NOT-FOUND"
+ },
+ "pane_native_wall_ms": {
+  "runs": 20,
+  "median": 8.8,
+  "max": 10.4
+ },
+ "pij_live": {
+  "exit": 0,
+  "ok": true,
+  "basis": "pij_registry",
+  "conflicts": 0,
+  "code": null
+ },
+ "pij_recycled_start": {
+  "exit": 3,
+  "ok": false,
+  "basis": null,
+  "conflicts": 0,
+  "code": "UNI-STATUS-DEAD-BINDING"
+ },
+ "pane_pij_and_native": {
+  "exit": 0,
+  "ok": true,
+  "basis": "pij_registry",
+  "conflicts": 0,
+  "code": null
+ },
+ "failures": []
+}

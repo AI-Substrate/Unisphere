@@ -1,0 +1,128 @@
+{
+  "record_type": "review",
+  "id": "rv-plan015-baseline-r2-pij-armed-cow",
+  "title": "Final independent exact-code wave0 baseline delta review for plan015",
+  "reviewer": {
+    "seat": "pij-armed-cow",
+    "role": "independent reviewer",
+    "harness": "omp",
+    "model_id_exposed": "github-copilot/claude-opus-5",
+    "effort_exposed": "high",
+    "settings_source": "guide",
+    "native_session": "01a08872-82bb-7641-b1dc-3964616e3e0a",
+    "attestation_note": "Harness/model/effort are locally observed configuration strings only; no provider attestation is claimed."
+  },
+  "recorded_at": "2026-09-10T04:45:00Z",
+  "scope": {
+    "grammar": "decomposition",
+    "subject": "corrected wave0 query contract baseline at 4c3c665f only",
+    "delta_basis": "819fc30ae5d721fe2a2100ae9eef5692f10eac63",
+    "explicit_non_scope": [
+      "Not full plan acceptance and not a query service or CLI feature claim.",
+      "Not a re-issue of the guide-level R3 decomposition approval.",
+      "No build, test, lint, formatter or proof rerun was performed by this reviewer."
+    ]
+  },
+  "basis": {
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+    "subject_sha": "4c3c665f757ddaeb1469753853018cb18febe538",
+    "head_at_review": "4c3c665f757ddaeb1469753853018cb18febe538",
+    "worktree_state": "clean except untracked assets/team/baseline-r2-review-packet.json",
+    "plan_sha256": "23e11ee7ec867315349aab8df11282da08bf211a6c86e27a3782292ba5bcecef",
+    "guide_sha256": "0b886259f6227b42b45939bb8bdb9f9ebaad48169a35a296cdb4c1f7b9ddecc7",
+    "guide_version": 6,
+    "delta": "31 files, +1688/-384, single commit 4c3c665f 'fix(query): resolve baseline review and prove contract invariants'",
+    "verification": "Working-tree and committed plan/guide bytes hash equal to the packet digests. Contract text changed in exactly C10 and C21, matching the announced v6 scope; all other contracts byte-identical to v5."
+  },
+  "verdict": "approved",
+  "verdict_rationale": "Every R1 finding and F8 is resolved in committed code at this subject, each with a behavioural test rather than a restatement, and the two high findings are resolved honestly rather than cosmetically: F1 combines the declared edges with an explicit rewrite of bp-000e that withdraws the runtime claim the baseline cannot support, and F2 declares the missing common fields across all four affected datasets. One new low finding remains (N1), a single-token inconsistency inside C21 that the compiler already prevents from reaching behaviour; it is recorded as a pre-seal guide correction rather than a blocker.",
+  "findings_disposition": [
+    {
+      "id": "F1",
+      "severity": "high",
+      "disposition": "fixed",
+      "evidence": "Cargo.toml declares unisphere-loader-query and unisphere-output-query in [workspace.dependencies]; unisphere-arch-check gains allowlist arms for both, admits them as unisphere-app dependencies, and adds query_adapters_cannot_depend_outward_on_services_or_cli; the policy moved to the crates/testkit/fixtures/architecture/allowed.json fixture, now in the freeze inventory. Decisively, bp-000e's description was rewritten from 'EXTEND then RUN: dependency graph includes two new inward adapters' to 'RUN: actual workspace dependency/purity scan plus declared policy for inward query adapters ... Loader-query/output-query runtime implementations remain the later owning lanes, not an observed baseline runtime claim.'",
+      "note": "This takes both branches of the R1 required resolution at once: the shared-file churn for tk-0007 and tk-0009 is pre-absorbed, and the check no longer asserts an extension the baseline does not contain. The crate directories deliberately do not exist yet, and the guide now says so."
+    },
+    {
+      "id": "F2",
+      "severity": "high",
+      "disposition": "fixed",
+      "evidence": "TURN_FIELDS 14->18, MESSAGE_FIELDS 10->14, TOOL_FIELDS 18->22, EVENT_FIELDS 10->14, each gaining exactly NativeId, Harness, Adapter and Availability; all six datasets now declare the full C18 common set. Defended by every_dataset_projects_common_metadata_and_protects_native_ids."
+    },
+    {
+      "id": "F3",
+      "severity": "medium",
+      "disposition": "fixed",
+      "evidence": "view_digest_matches_closed_preimage_vector_and_repeats_stably pins the literal 23c71eb09affec419f8bf44180fcb9b975d9ead38351be921688a1b904d0ae35 and asserts repeat stability; source_selection_applies_or_within_groups_and_across_group_exclusions covers the C22 admits algebra; untrusted_rows_reject_schema_drift_and_convert_supplied_timestamps covers from_untrusted; universe_coverage_and_output_boundaries_reject_invalid_states covers ResultUniverse::validate and Coverage::validate; query_binding_changes_when_columns_change is behavioural rather than tautological. Core contract tests 19 -> 28.",
+      "note": "The runtime C25 metamorphs are bound, not assumed: tasks phase-1 dw-002a is unchecked and states that 'baseline type-exclusion and fixed-vector proof do not satisfy this runtime obligation', bound to bp-0008 and backpressure bp-0007."
+    },
+    {
+      "id": "F4",
+      "severity": "medium",
+      "disposition": "fixed",
+      "evidence": "crates/testkit/fixtures/query/shared-v1.json deleted (217 lines); replaced by pub fn shared_query_fixture() -> Vec<InspectedSource> at crates/testkit/src/query.rs:97, which is built through the frozen types by construction. Consumed behaviourally by shared_fixture_validates_and_rejects_foreign_provenance, which validates each source then repoints an observation source_ref at a foreign source id and asserts InvalidData. The JSON is removed from the guide freeze inventory and from tk-0001 paths; allowed.json takes its place."
+    },
+    {
+      "id": "F5",
+      "severity": "medium",
+      "disposition": "fixed",
+      "evidence": "TimestampBasis gains SuppliedUnknown; both supplied-string read paths use it (Deserialize at model.rs:224 and projected_value_from_json at model.rs:1006), neither hardcodes Native. FormatLoss gains TimestampBasis. Timestamp-bearing datasets declare lossy:true with LOSSES_TIMESTAMP_* on Json, Jsonl, Csv, Table, Text and Markdown, while SOURCE_FORMATS correctly keeps Json/Jsonl lossy:false because sources declare no Timestamp-typed field and no default time field. C10 is amended to state the omission, the SuppliedUnknown rule and that this is a field-level provenance loss rather than an alteration of the instant."
+    },
+    {
+      "id": "F6",
+      "severity": "low",
+      "disposition": "fixed",
+      "evidence": "Paired validators implement exactly the requested discrimination rather than a blanket substitution: public validate() passes RecoveryAction::ReadQueryHelp while dataset-aware validate_for(dataset) passes ConsultSchema{dataset} (model.rs:331 and :334, same pattern at :250, :281, :333). invalid_time() uses ReadQueryHelp because a Timestamp has no dataset. C21 records the rule. Defended by standalone_validators_use_neutral_help_while_requests_name_their_dataset."
+    },
+    {
+      "id": "F7",
+      "severity": "low",
+      "disposition": "fixed",
+      "evidence": "SOURCE_SCHEMA, MESSAGE_SCHEMA and EVENT_SCHEMA now declare grouping_fields: &[]; the three datasets that retain grouping (sessions, turns, tools) carry real metric sets (COUNT_USAGE_METRICS, TOOL_METRICS). Defended by non_stats_datasets_declare_no_grouping_fields."
+    },
+    {
+      "id": "F8",
+      "severity": "medium",
+      "disposition": "fixed",
+      "evidence": "Timestamp drops the derived comparison and implements PartialEq, Eq, PartialOrd and Ord manually over unix_nanos only (model.rs:197-212), with the doc comment stating that basis is never compared. This restores C10's stable entity-ID tie break and makes serialize/deserialize identity-preserving under equality despite the SuppliedUnknown downgrade. C10 amended to state the rule. Defended by time_bounds_compare_instants_and_preserve_contextual_recovery."
+    }
+  ],
+  "new_findings": [
+    {
+      "id": "N1",
+      "severity": "low",
+      "disposition": "open",
+      "title": "C21 still enumerates FormatLoss as four variants while C10 v6 and the code require five",
+      "evidence": [
+        "C21 v6 reads FormatLoss=AbsenceNullEmptyCollapse|StructuredAsJsonText|HumanRounding|PresentationOnly, unchanged from v5.",
+        "C10 v6 requires 'Formats that omit basis declare FormatLoss::TimestampBasis and lossy=true for timestamp-bearing datasets, including JSON/JSONL'.",
+        "crates/core/src/query/schema.rs:28 declares five variants including TimestampBasis => \"timestamp_basis\"."
+      ],
+      "consequence": "Two contracts in the sealed guide contradict each other, and the one that is wrong is C21, whose specific job is freezing the type vocabulary that wave1 lanes read. The code is correct and self-consistent, and a coder building an exhaustive match from C21 would get a compile error rather than wrong behaviour, which is why this is low and not blocking.",
+      "required_resolution": "Append |TimestampBasis to C21's FormatLoss enumeration before the seal record is written."
+    }
+  ],
+  "pm_proof_assessment": {
+    "receipt": "assets/verification/baseline-proof-4c3c665f.json",
+    "bindings_verified": "subject_sha, plan_sha256 and guide_sha256 in the receipt equal the values this reviewer independently computed at this commit.",
+    "observed": [
+      "harness boot --json exit 0",
+      "external SDK consumer cargo run --locked --offline exit 0",
+      "baseline_sealed=false and independent_review='pending R2' recorded honestly"
+    ],
+    "external_consumer_reaches_the_corrections": "The expanded consumer asserts through the public SDK facade that a SourceReported timestamp round-trips to SuppliedUnknown with unix_nanos preserved, that Dataset::Sessions JSON capability is lossy with losses containing FormatLoss::TimestampBasis, and that shared_query_fixture() is callable from an external crate with a wrong-revision source rejected as InvalidData. Those exercise F5, F8 and F4 from outside the workspace rather than restating them.",
+    "reviewer_action": "Read only. This reviewer ran no command from the receipt and does not restate its outcomes as its own measurement."
+  },
+  "oracle_assessment": {
+    "grade": "condition 1 met - regression oracle, not specification oracle",
+    "independent_third_derivation": "This reviewer rebuilt the C25 encoding from the contract rules and declared inputs in a separate kernel, without executing the delivered script, and obtained source_id q1:source:aea024db164980dee299775e2ca50ec8c6cbb4a0607aa1300f84bb46951e678b, preimage exactly 972 bytes and sha256 23c71eb09affec419f8bf44180fcb9b975d9ead38351be921688a1b904d0ae35.",
+    "artifact_hashes_match": "c25-independent-derivation.json 7da871d6ea687b59f4586395a82a035d43492ad6eec11a464dd383afe2c4d9da and c25-independent-derivation.py 2a22745eca3d429c3a97d7abe1c59283fed0059b88d97c222bd4665eb4d287b3 as delivered.",
+    "vector_is_live": "digest() emits exactly the ten member names in exactly the encoded order, so the constant binds the encoder rather than being self-consistent in isolation; the committed test hardcodes the literal rather than recomputing it.",
+    "limitation": "Execution independence is provable from the artifact; derivation independence is not, since a script transcribed from fingerprint.rs would look identical. The vector therefore catches widening and accidental encoder change but not a specification misreading shared by both implementations; that residue is closed by this reviewer's direct reading of the encoder against C25, not by the vector.",
+    "chronology": "Recorded as an attestation and explicitly labelled 'This record is a later reproduction, not claimed earlier evidence.' That framing is correct and is what makes the artifact usable.",
+    "maintenance_rule": "The constant must never be regenerated from code output; a disagreement requires an encoder fix or an explicit C25 amendment. PM has accepted this and will carry it into the SDK task handoff."
+  },
+  "seal_recommendation": "Seal at 4c3c665f once N1 is corrected in the guide. The correction is confined to appending one variant to C21's FormatLoss enumeration so the guide matches code this review has already approved; a guide re-hash for exactly that edit does not require re-review, while any other guide or code change at this subject does.",
+  "release_recommendation": "Normal wave1 lanes may be released against this baseline."
+}

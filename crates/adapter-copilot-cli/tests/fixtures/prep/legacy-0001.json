@@ -1,0 +1,82 @@
+{
+ "sessionId": "legacy-0001",
+ "startTime": "2026-01-10T00:00:00.000Z",
+ "chatMessages": [
+  {
+   "role": "user",
+   "content": "placeholder legacy prompt"
+  },
+  {
+   "role": "assistant",
+   "tool_calls": [
+    {
+     "id": "call-1",
+     "type": "function",
+     "function": {
+      "name": "view",
+      "arguments": "{\"path\":\"/work/demo/a\"}"
+     }
+    }
+   ]
+  },
+  {
+   "role": "tool",
+   "content": "placeholder result",
+   "tool_call_id": "call-1"
+  },
+  {
+   "role": "assistant",
+   "content": "placeholder answer"
+  },
+  {
+   "role": "user",
+   "content": "[pij-rs from pij-quiet-heron] placeholder peer body [/pij]"
+  },
+  {
+   "role": "assistant",
+   "content": "placeholder answer"
+  },
+  "not an object"
+ ],
+ "timeline": [
+  {
+   "id": "info-1",
+   "type": "info",
+   "timestamp": "2026-01-10T00:00:01.000Z",
+   "text": "placeholder"
+  },
+  {
+   "id": "user-1",
+   "type": "user",
+   "timestamp": "2026-01-10T00:00:02.000Z",
+   "text": "placeholder"
+  },
+  {
+   "id": "tool-1",
+   "type": "tool_call_completed",
+   "timestamp": "2026-01-10T00:00:04.000Z",
+   "callId": "call-1",
+   "name": "view",
+   "result": {
+    "ok": true
+   }
+  },
+  {
+   "id": "copilot-1",
+   "type": "copilot",
+   "text": "placeholder"
+  },
+  {
+   "id": "copilot-2",
+   "type": "copilot",
+   "timestamp": "yesterday",
+   "text": "placeholder"
+  },
+  {
+   "id": "copilot-3",
+   "type": "copilot",
+   "timestamp": "2026-01-10T00:00:09.000Z",
+   "text": "placeholder"
+  }
+ ]
+}

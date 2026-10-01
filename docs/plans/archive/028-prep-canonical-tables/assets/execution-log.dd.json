@@ -1,0 +1,190 @@
+{
+  "dd": {
+    "schema": "builder/execution-log"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Plan 028 observed implementation evidence",
+        "plan": "../plan.dd.json#meta",
+        "phase": "ph-ed41"
+      }
+    },
+    {
+      "name": "entries",
+      "value": [
+        {
+          "id": "lg-0001",
+          "at": "2026-09-29T04:57:15.189Z",
+          "text": "Contract baseline sealed: harness builder contracts --seal at source 3f39e1b ran vd-0001 (core prep_contract), vd-0007 (harness checks --json) and vd-0009 (arch-check), all exit 0; receipt assets/team/baseline.dd.json (sha256 7fcd6b09…) with approved decomposition review rv-028-decomposition-r2 (Sonnet 5.5, pij-panicky-anteater).",
+          "links": [
+            "../plan.dd.json#acceptance_criteria/ac-0003",
+            "backpressure.dd.json#rows/bp-000e",
+            "backpressure.dd.json#rows/bp-000f"
+          ]
+        },
+        {
+          "id": "lg-0002",
+          "at": "2026-09-29T05:07:29.693Z",
+          "text": "Phase-1 pre-flight: harness boot --json at 1a46a86 status ok, ready:true (scope configuration-native-sessions-and-git-notes); verdict SLOW (checks + 6 proof modes, far over 45 s under machine load).",
+          "links": [
+            "backpressure.dd.json#rows/bp-000f"
+          ]
+        },
+        {
+          "id": "lg-0003",
+          "at": "2026-09-29T06:52:23.572Z",
+          "text": "Composition verified: harness builder compose --verify d80094913d16f68cefbca128015531c5aa3fc197 (integration 67bd121 of tk-0003, tk-0004, tk-0002, tk-0005 + PM composition 99ac093/1fb05c2/d800949) ran vd-0008 (unisphere-proof prep: built + installed CLI across cold, unchanged 0 bytes/no commit, partial tail pending, append, rotation → generation 1, orphan part removed, compact, record refused without --include-content then exact line with it, no-roots exit 2; external SDK consumer with its own in-memory PrepStore agreed on rows and statuses; fold_source without a store) and vd-0015 (harness boot incl. harness checks and the new prep mode), both exit 0; artifact_sha recorded in assets/team/composition.dd.json.",
+          "links": [
+            "../plan.dd.json#acceptance_criteria/ac-0001",
+            "../plan.dd.json#acceptance_criteria/ac-0003",
+            "../plan.dd.json#acceptance_criteria/ac-000a",
+            "../plan.dd.json#acceptance_criteria/ac-000b",
+            "backpressure.dd.json#rows/bp-0001",
+            "backpressure.dd.json#rows/bp-0003",
+            "backpressure.dd.json#rows/bp-000a"
+          ]
+        },
+        {
+          "id": "lg-0004",
+          "at": "2026-09-29T06:53:39Z",
+          "text": "Real-corpus parity at d800949 (python3 assets/proof/parity.py --scratch .harness/temp/prep-real, exit 0; evidence assets/evidence/parity-d800949.json, numbers only; reference = fresh copy of extract.py run in scratch): file-F whole-file and all four brief windows equal (files, calls, input, cw_1h, cw_5m, cache_read, output) to both the fresh reference and the brief; 55,607/55,607 reference call rows joined on (file, ts) with 0 mismatches in usage, model, call_in_turn, trigger, sender; compactions 102/102 equal rows; recaps 612/612. Divergences for reviewer acceptance: 10 window-first gaps (reference resets at its window start), 522 rows at an exact 50 ms rounding tie and 0 beyond rounding (prep keeps integer ms), 2 reference-only rows (1 trigger, 1 limit notice) from a symlinked source that prep counts in skipped.symlinks and does not follow.",
+          "links": [
+            "../plan.dd.json#acceptance_criteria/ac-0004",
+            "../plan.dd.json#acceptance_criteria/ac-0008",
+            "backpressure.dd.json#rows/bp-0004",
+            "backpressure.dd.json#rows/bp-0008"
+          ]
+        },
+        {
+          "id": "lg-0005",
+          "at": "2026-09-29T06:36:34Z",
+          "text": "Live-file proof at 1fb05c2 (python3 assets/proof/live.py, exit 0; evidence assets/evidence/live-1fb05c2.json; product code identical to d800949 except catalogue default-root resolution): a 221,555,970-byte real transcript re-written into scratch by a concurrent writer in random non-LF-aligned chunks while prep ran 104 times — 0 failed runs, 86 runs reported pending tails, final incremental canonical totals equal a fresh prep; 10 real-fleet runs during live sessions — 0 failures, 0 unreadable, appended sources picked up every run.",
+          "links": [
+            "../plan.dd.json#acceptance_criteria/ac-0002",
+            "backpressure.dd.json#rows/bp-0002"
+          ]
+        },
+        {
+          "id": "lg-0006",
+          "at": "2026-09-29T06:53:32Z",
+          "text": "Claude-scale measurement at d800949 (python3 assets/proof/measure.py --settle 60, exit 0; evidence assets/evidence/measure-d800949.json; machine load average 45-67 during the runs): cold 3.95 s, peak RSS 803 MB, 2,979,696,694 bytes read, 478 Claude sources new, 8 other catalogued roots reported unsupported, 3 symlinks skipped, state.json 5.57 MB; unchanged re-run 0 bytes in 0.68 s at 66 MB RSS with no commit; append re-run after 60 s of live growth 85,790 bytes, 2 sources appended, 0.21 s. POC baseline: 3.46 s cold / 507 MB, 0.05–0.62 s unchanged. Full-corpus all-harness measurement belongs to phase 2.",
+          "links": [
+            "../plan.dd.json#acceptance_criteria/ac-000c",
+            "backpressure.dd.json#rows/bp-000c"
+          ]
+        },
+        {
+          "id": "lg-0007",
+          "at": "2026-09-29T07:01:34+00:00",
+          "text": "Independent composition review rv-028-composition-p1-r1 APPROVED (reviewer pij-panicky-anteater, github-copilot/claude-sonnet-5.5; subject d80094913d16f68cefbca128015531c5aa3fc197; recorded via harness builder review, assets/team/review-composition-rv-028-composition-p1-r1.dd.json). Reviewer independently re-ran cargo check --workspace, the sdk/output-prep/adapter-claude/cli/loader-jsonl prep suites (55 passed), unisphere-arch-check (110 edges, 0 violations) and unisphere-proof prep (passed). AC-0004 divergences (a) window-first gaps, (b) integer-ms vs 0.1 s rounding, (c) 2 symlinked-source rows, (d) null vs 0 unrecorded counters: all ACCEPTED. One low finding open (prep topic does not restate phase-1 Claude-only scope of AC-000c; deferred to the phase-2 docs update).",
+          "links": [
+            "../plan.dd.json#acceptance_criteria/ac-0004",
+            "../plan.dd.json#acceptance_criteria/ac-0005",
+            "../plan.dd.json#acceptance_criteria/ac-0007",
+            "../plan.dd.json#acceptance_criteria/ac-0008",
+            "../plan.dd.json#acceptance_criteria/ac-000b"
+          ]
+        },
+        {
+          "id": "lg-0008",
+          "at": "2026-09-29T08:35:04+00:00",
+          "text": "Phase-2 import: harness builder compose --import replayed all 7 deliveries on baseline cfd716b (tk-000c, tk-0007, tk-0008, tk-0009, tk-000a, tk-000b incl. PM ruling commit, tk-000d) into integration 8dc6a6b; the phase-1 receipt is preserved as composition-p1.dd.*. PM composition tk-000e 44b558c binds every catalogued session descriptor (append JSONL via FileSessionLoader; Copilot CLI legacy and VS Code documents/journals and Cursor IDE SQLite via SnapshotPrepLoader), resolves snapshot prep record keys as <record key>#<JSON pointer> or bare document pointers, coalesces compactions_v cache writes to 0 only for basis none (matching facts), adds a revisioned JSON snapshot scenario to the boot prep proof and a SQLite end-to-end app test. compose --verify 44b558c passed vd-0008 and vd-0015 (load average ~95).",
+          "links": [
+            "../plan.dd.json#acceptance_criteria/ac-0006",
+            "backpressure.dd.json#rows/bp-0006"
+          ]
+        },
+        {
+          "id": "lg-0009",
+          "at": "2026-09-29T08:35:04+00:00",
+          "text": "vd-0017 real-corpus coverage: the first run at 7e49fbe found every catalogued set supported but 17 of 5,422 sources unreadable: 15 UNI-LIMIT-RECORD (Oh My Pi 3, Pi 1, Copilot CLI 11; largest single record 13.3 MiB) and 2 UNI-DATA (zero-byte VS Code .json documents). Fix 9820bb5: --max-record-bytes defaults to the effective --max-batch-bytes (16 MiB) so the per-source memory bound is unchanged; the CLI test pins precedence. Re-run at 9820bb5 (assets/evidence/coverage-9820bb5.json): 9/9 sets supported, 5,422 discovered, 5,420 new, 2 unreadable (UNI-DATA, empty VS Code documents, documented), wall 30.4 s at load average 109. Per-dialect field presence records explicit nulls (for example VS Code call ts 0.0136: calls are dated only by responseTimestamp, which current session documents omit; documented).",
+          "links": [
+            "../plan.dd.json#acceptance_criteria/ac-0006",
+            "../plan.dd.json#acceptance_criteria/ac-0007",
+            "backpressure.dd.json#rows/bp-0006"
+          ]
+        },
+        {
+          "id": "lg-000a",
+          "at": "2026-09-29T08:35:04+00:00",
+          "text": "vd-000c research recipes at 9820bb5 (assets/evidence/recipes-9820bb5.json): all 24 shipped recipes rendered by unisphere prep recipe NAME --target DIR and run through external duckdb 1.5.5 -csv with 0 failures and no stderr on a synthetic target prepped from every harness's committed fixtures (3 recipes legitimately empty there: idle-wakes, idle-tax, tool-loops) and on the real all-harness target (0 empty).",
+          "links": [
+            "../plan.dd.json#acceptance_criteria/ac-0009",
+            "backpressure.dd.json#rows/bp-0009"
+          ]
+        },
+        {
+          "id": "lg-000b",
+          "at": "2026-09-29T08:35:04+00:00",
+          "text": "vd-000b full-corpus measurement at 6161ba6 (assets/evidence/measure-6161ba6.json; load average 130.7 before, 54.2 after): cold 42.5 s, 13.97 GB read, peak RSS 3.97 GB, 559,707 calls / 1,533,456 tool_uses / 70,593 turns written, state.json 54.6 MB; unchanged re-run 49.5 s wall (0.66 s user CPU in a follow-up timing) with 17.2 MB read from 5 live-appended sources; append re-run after 60 s 37.5 s, 15.3 MB read. Findings escalated to the prime: warm wall time is discovery I/O wait (Copilot CLI session-state holds 10,385 directories; a plain os.walk takes 22 s at this load), and peak memory grows with the rows of one run because run_prep commits once. POC baseline: Claude 3.46 s cold / 507 MB, 0.05-0.62 s warm.",
+          "links": [
+            "../plan.dd.json#acceptance_criteria/ac-000c",
+            "backpressure.dd.json#rows/bp-000c"
+          ]
+        },
+        {
+          "id": "lg-000c",
+          "at": "2026-09-29T09:22:28+00:00",
+          "text": "Prime rulings on the lg-000b findings (pij-suspicious-meadowlark): (A) commit waves with an adjustable --max-run-bytes; (1) incremental discovery keeping glob semantics (persisted per-directory mtime/entry index, re-list only changed directories, stat known sources directly), both in the same guide revision, re-verify and review. Convergence: Plan 029's crate-private fold_source read-loop extraction (b9c86e67, sdk/src/prep.rs only) applied cleanly as 42034b5 before these changes so 029 rebases onto 028's ownership.",
+          "links": [
+            "impl-guide.dd.json#meta",
+            "../plan.dd.json#acceptance_criteria/ac-000c"
+          ]
+        },
+        {
+          "id": "lg-000d",
+          "at": "2026-09-29T09:22:28+00:00",
+          "text": "8428dc4 incremental discovery and commit waves. Discovery: core walk_prep_root with a PrepWalkFs port (both loaders), PrepLoader::discover takes the previous index, PrepSetState.discovery holds each binding's index, racy directories (mtime within 2 s of listing) are never reused; a real-filesystem test proves a new file deep in an unchanged tree lists one directory, an unchanged tree lists none, a replaced subtree is found through its parent and results equal a full walk. Waves: PrepRequest.max_run_bytes (default 256 MiB) bounds rows per durable commit; tests prove budgets split waves, equal a single wave, and a failure after a committed wave keeps it. The SDK now moves the committed state and the Parquet store publishes it through a borrowed view instead of cloning it. Default chosen from the real corpus: 1 GiB gave 14 commits at 2.2 GB peak RSS, 256 MiB 57 commits at 1.9 GB, 64 MiB 225 commits at 2.3 GB (per-commit state rewrites dominate below that). Guide delta recorded in meta.updated (dfb8bf8).",
+          "links": [
+            "impl-guide.dd.json#meta",
+            "../plan.dd.json#acceptance_criteria/ac-000c",
+            "backpressure.dd.json#rows/bp-000c"
+          ]
+        },
+        {
+          "id": "lg-000e",
+          "at": "2026-09-29T09:22:28+00:00",
+          "text": "vd-000b at dfb8bf8 (assets/evidence/measure-dfb8bf8.json; load average 73.4 before, 86.8 after): cold 13.99 GB read in 30.6 s wall / 33.0 s user CPU, 57 commits, peak RSS 1,759 MB (footprint 1,408 MB), 14,707 directories listed, state.json 58.6 MB; unchanged re-run 1.42 s wall / 0.42 s user CPU, 0 directories listed and 14,707 reused, 600 MB RSS, 13.8 MB read from 1 live-appended source; append re-run after 60 s 0.66 s wall, 1 directory listed. Before the rulings (lg-000b): cold 3.97 GB peak RSS, unchanged 49.5 s. POC baseline: Claude 3.46 s cold / 507 MB, 0.05-0.62 s warm; this is the all-harness corpus (14 GB, 5,423 sources) under shared-machine load.",
+          "links": [
+            "../plan.dd.json#acceptance_criteria/ac-000c",
+            "backpressure.dd.json#rows/bp-000c"
+          ]
+        },
+        {
+          "id": "lg-000f",
+          "at": "2026-09-29T09:22:28+00:00",
+          "text": "Re-proofs at the final code: vd-0017 coverage at dfb8bf8 (coverage-dfb8bf8.json) 9/9 sets supported, 5,423 discovered, 2 unreadable UNI-DATA (empty VS Code documents), 25.5 s; vd-000a parity at dfb8bf8 (parity-dfb8bf8.json) unchanged from phase 1: 55,607/55,607 call rows, 0 usage/model/turn/trigger/sender mismatches, same accepted divergences (10 window-first gaps, 522 rounding ties, 2 symlinked-source rows); vd-0016 live at 4074389 (live-4074389.json) copy writer 344 runs during writes on a 221.6 MB transcript, 0 failed, 338 reporting pending tails, final totals equal a fresh prep; fleet 10 runs over all harnesses, 0 failed, 2 statically unreadable sources in every run, warm runs 0.49-0.58 s. live.py and measure.py now accept exit 3 with the unreadable count recorded (live requires it to stay equal across runs).",
+          "links": [
+            "../plan.dd.json#acceptance_criteria/ac-0002",
+            "../plan.dd.json#acceptance_criteria/ac-0004",
+            "../plan.dd.json#acceptance_criteria/ac-0006",
+            "backpressure.dd.json#rows/bp-0006"
+          ]
+        },
+        {
+          "id": "lg-0010",
+          "at": "2026-09-29T09:36:06+00:00",
+          "text": "a952e35 closes a PM-found gap against dw-0e01 before the phase-2 review: unisphere-proof prep previously covered only the JSON-document snapshot. It now drives a Copilot CLI legacy JSON document, a VS Code mutation journal and a Cursor IDE SQLite store (synthetic state-v1/v2.vscdb generated from the committed synthetic ide.json) through the built and installed CLI; each is prepped, unchanged by an equal-content rewrite, replaced as generation 1 on a content change, and the document and SQLite keys are returned by prep record. Proof passed locally; built and installed step projections are equal. The reviewer was asked to hold on b4958ad until re-verify.",
+          "links": [
+            "tasks/phase-2/tasks.dd.json#done_when/tk-000e",
+            "backpressure.dd.json#rows/bp-0006"
+          ]
+        },
+        {
+          "id": "lg-0011",
+          "at": "2026-09-29T09:56:23+00:00",
+          "text": "Independent composition review rv-028-composition-p2-r1 APPROVED with 0 findings (reviewer pij-panicky-anteater, github-copilot/claude-sonnet-5.5; subject 19ace79fd493350525323dd5da0cff8e3d3a020c; recorded via harness builder review, assets/team/review-composition-rv-028-composition-p2-r1.dd.json). The reviewer independently re-ran unisphere-proof prep (JSON document, mutation journal and SQLite snapshots through built/installed CLI), 89 phase-2 and 61 phase-1 regression tests, arch-check and the workspace check; verified both prime rulings in code; accepted every measured number and the AC-000c memory reading (wave budget bounds the depth-scaling term; the state held in full scales with source count); accepted composition decisions (a) record limit = batch limit, (b) empty VS Code documents unreadable, (c) prep glob spans directories, (d) compactions_v coalesce for basis none, (e) snapshot record addressing with journal refusal, (f) exit-3-aware proof scripts. Docs (ac-000d): prep topic states per-harness coverage, dialect nulls, incremental discovery, commit waves and limits; research-recipes topic lists the 24 recipes with the one-line DuckDB command; README and docs/cli.md updated; vd-0015 green at 19ace79.",
+          "links": [
+            "team/review-composition-rv-028-composition-p2-r1.dd.json#review",
+            "../plan.dd.json#acceptance_criteria/ac-0006",
+            "../plan.dd.json#acceptance_criteria/ac-0009",
+            "../plan.dd.json#acceptance_criteria/ac-000c",
+            "../plan.dd.json#acceptance_criteria/ac-000d"
+          ]
+        }
+      ]
+    }
+  ]
+}

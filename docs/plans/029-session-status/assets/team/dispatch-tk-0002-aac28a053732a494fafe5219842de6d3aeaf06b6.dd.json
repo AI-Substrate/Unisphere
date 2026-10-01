@@ -1,0 +1,102 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "dispatch",
+      "value": {
+        "record_type": "dispatch",
+        "id": "dispatch-tk-0002-aac28a053732a494fafe5219842de6d3aeaf06b6",
+        "recorded_at": "2026-09-29T06:19:21.328Z",
+        "unit_id": "tk-0002",
+        "packet": {
+          "path": "docs/plans/029-session-status/assets/team/packet-tk-0002-aac28a053732a494fafe5219842de6d3aeaf06b6.dd.json",
+          "sha256": "ed4b9b8a0bffa3bdb7f659b20e43de6fe86855a33aa7f8d1fdd48b0d1fd7ee9b"
+        },
+        "baseline": {
+          "path": "docs/plans/029-session-status/assets/team/baseline.dd.json",
+          "sha256": "5b629ab5f8ad173db4fc2d461daefb9369ba22476b4cf9e7229f810c2ae8050b"
+        },
+        "allocation": {
+          "path": "/Users/jordanknight/substrate/unisphere/unishpere-main/.git/builder/allocations/allocation-al-034-dbf6c9b8-6c5e-4463-8fa5-bec16f43280c.dd.json",
+          "sha256": "c7db18676867f385fc6787de5f4de523076d71dfcdd20bbb9e44e548fbbd3e16"
+        },
+        "requested": {
+          "role": "coder",
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5.5",
+          "source": {
+            "harness": "guide",
+            "model": "guide"
+          }
+        },
+        "observed": {
+          "peer_id": "pij-soft-rodent",
+          "root": "/Users/jordanknight/substrate/unisphere/unisphere-029-sdk",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5.5",
+          "native_session": "01a0ebd1-3fc7-74e7-af99-4cd0528e8802",
+          "pid": 2524,
+          "evidence": [
+            "pij-rs state: {\"id\":\"pij-soft-rodent\",\"liveness\":\"active\",\"cwd\":\"/Users/jordanknight/substrate/unisphere/unisphere-029-sdk\",\"harness\":\"omp\",\"boundModel\":\"github-copilot/claude-opus-5.5\",\"effort\":null,\"pid\":2524,\"procStart\":20260929161912,\"parent\":\"pij-specific-kiwi\"}",
+            "pij-rs list: {\"id\":\"pij-soft-rodent\",\"session\":\"01a0ebd1-3fc7-74e7-af99-4cd0528e8802\",\"folder\":\"/Users/jordanknight/substrate/unisphere/unisphere-029-sdk\",\"proc\":{\"pid\":2524,\"proc_start\":20260929161912},\"harness\":\"omp\",\"model\":\"github-copilot/claude-opus-5.5\"}",
+            "Existing native peer adopted without spawning; worker HEAD observed before metadata seeding: aac28a053732a494fafe5219842de6d3aeaf06b6. Existing commits and work were retained.",
+            "plan root HEAD at dispatch: 5aa976a58cac227565835f2837e4a914ac2711ea (sealed source aac28a053732a494fafe5219842de6d3aeaf06b6, a descendant: receipts/evidence committed after the seal)"
+          ],
+          "gaps": [
+            "Provider-served inference identity is unverified; these observations bind launch/session configuration only.",
+            "Native public state does not expose process argv or environment.",
+            "Effective effort is unverified; no effort override was observed."
+          ]
+        },
+        "seed_files": [
+          {
+            "path": "docs/plans/029-session-status/plan.dd.json",
+            "sha256": "72145b14324e289f86c5365f93785f3d76d2024e09595685c3f92a2f8235fa39"
+          },
+          {
+            "path": "docs/plans/029-session-status/plan.dd.md",
+            "sha256": "bf64baf400ed0f20eaa17e43f4e60621dc238989f92bdd347ef59138ffdd4eda"
+          },
+          {
+            "path": "docs/plans/029-session-status/assets/impl-guide.dd.json",
+            "sha256": "e967cc78a50983e3beaaaef939f34c3a66b4aba0f179cab539ef8d8d078ee653"
+          },
+          {
+            "path": "docs/plans/029-session-status/assets/impl-guide.dd.md",
+            "sha256": "cabc10a653ab148ee1891d4a7748305df18736f290729e6f468ea3463a9bf0b4"
+          },
+          {
+            "path": "docs/plans/029-session-status/assets/team/baseline.dd.json",
+            "sha256": "5b629ab5f8ad173db4fc2d461daefb9369ba22476b4cf9e7229f810c2ae8050b"
+          },
+          {
+            "path": "docs/plans/029-session-status/assets/team/baseline.dd.md",
+            "sha256": "b1876711c72340f62a5b94950e212da519f431842d14419f14578b6d97362d12"
+          },
+          {
+            "path": "docs/plans/029-session-status/assets/reviews/decomposition-r2.receipt.dd.json",
+            "sha256": "9875a5f932959271e31655a42540b111d7afff67e155a1dba4cc1111c72778a9"
+          },
+          {
+            "path": "docs/plans/029-session-status/assets/team/packet-tk-0002-aac28a053732a494fafe5219842de6d3aeaf06b6.dd.json",
+            "sha256": "ed4b9b8a0bffa3bdb7f659b20e43de6fe86855a33aa7f8d1fdd48b0d1fd7ee9b"
+          },
+          {
+            "path": "docs/plans/029-session-status/assets/team/packet-tk-0002-aac28a053732a494fafe5219842de6d3aeaf06b6.dd.md",
+            "sha256": "656b58590c8424fac14bb6a84d62f41b13c555c42b8f8216c642138d17ae9388"
+          }
+        ],
+        "warnings": [],
+        "delivery": {
+          "message_id": "f478d81a-a0cd-4743-8d41-f78524a7d581",
+          "outcome": "queued",
+          "recorded_at": "2026-09-29T06:19:21.439Z"
+        }
+      }
+    }
+  ],
+  "references": []
+}

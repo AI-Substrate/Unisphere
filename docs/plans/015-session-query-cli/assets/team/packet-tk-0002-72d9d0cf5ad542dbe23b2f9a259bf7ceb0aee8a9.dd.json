@@ -1,0 +1,110 @@
+{
+  "dd": {
+    "schema": "builder/work-packet"
+  },
+  "sections": [
+    {
+      "name": "packet",
+      "value": {
+        "record_type": "packet",
+        "id": "packet-tk-0002-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9",
+        "recorded_at": "2026-09-10T04:53:31.932Z",
+        "nonce": "cc96a4a2-3bc6-47c6-9c47-a6c755017187",
+        "unit": {
+          "id": "tk-0002",
+          "name": "Claude and Codex query facts",
+          "role": "coder",
+          "responsibility": "Share existing JSON decode/classification; implement QueryAdapter for the existing adapter types. Preserve explicit header/session/turn/part evidence, user versus tool-result/context/summary distinction, call identity, clocks and source-qualified usage; keep existing OTLP map output and partition invariance unchanged.",
+          "paths": [
+            "crates/adapter-claude/**",
+            "crates/adapter-codex/**",
+            "docs/claude-adapter.md",
+            "docs/codex-adapter.md"
+          ],
+          "reads": [
+            {
+              "owner": "tk-0001",
+              "paths": [
+                "crates/core/src/**",
+                "crates/testkit/src/query.rs",
+                "docs/plans/015-session-query-cli/assets/impl-guide.dd.json",
+                "docs/plans/015-session-query-cli/assets/query-contract.md"
+              ]
+            }
+          ],
+          "interface": "QueryAdapter::inspect(NativeQueryInput, ContentAccess, &QueryLimits)->InspectedSource using C3–C8 observation facts; format-specific interpretation stays in this owner. No SDK graph/filter or file I/O in adapters. Return the exact C21 InspectedSource/SourcePartition/Coverage/AvailabilityIssue types from the reviewed baseline, never lane-local lookalikes.",
+          "depends_on": [
+            "tk-0001"
+          ],
+          "wave": 1,
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0001",
+            "../plan.dd.json#acceptance_criteria/ac-0002",
+            "../plan.dd.json#acceptance_criteria/ac-0003",
+            "../plan.dd.json#acceptance_criteria/ac-0008",
+            "../plan.dd.json#acceptance_criteria/ac-0009",
+            "../plan.dd.json#acceptance_criteria/ac-000c"
+          ],
+          "proof": [
+            "impl-guide.dd.json#checks/bp-0002",
+            "impl-guide.dd.json#checks/bp-000f"
+          ],
+          "notes": "Starts from baseline/fakes, no sibling implementation import. Own adapter query edge fixtures and capability documentation. Skip build/lint/tests/formatters during concurrent work; PM runs declared proof on composed delivery. Done conditions: Claude distinguishes initiating user text from tool-result-only user content and exposes exact tool_use.id/tool_result.tool_use_id; Codex distinguishes session_meta/turn_context/response_item from duplicate event summaries and exposes explicit turn/call IDs. Header/cwd/native ID and independent native usage scopes are retained as facts. Unknown/opaque fields remain unavailable. Lane contributes request markers and pairing evidence to ac-0008/ac-0009; SDK owns logical turn construction, identity joins and invocation pairing."
+        },
+        "plan": {
+          "path": "docs/plans/015-session-query-cli/plan.dd.json",
+          "sha256": "23e11ee7ec867315349aab8df11282da08bf211a6c86e27a3782292ba5bcecef"
+        },
+        "guide": {
+          "path": "docs/plans/015-session-query-cli/assets/impl-guide.dd.json",
+          "sha256": "5caed35ffa6f28570c16b6bc42baf47ce4403012069e429eeeaeb4e02f04c88f"
+        },
+        "baseline": {
+          "path": "docs/plans/015-session-query-cli/assets/team/baseline.dd.json",
+          "sha256": "c8f8ddfb487d7a97a0e9de1bca0d13927aa7faa472b46415c26c7e37496be00c"
+        },
+        "source_sha": "72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9",
+        "allocation": {
+          "path": "/Users/jordanknight/substrate/unisphere/unishpere-main/.git/builder/allocations/allocation-al-019-a2e67436-746a-4b9d-b4ef-fdb77b9b1b7c.dd.json",
+          "sha256": "aa4124472957073035ba6b768a4c861c998fe3df6604d669d7823dbbaea4f4b2"
+        },
+        "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0002",
+        "parent": "pij-empirical-tiger",
+        "requested": {
+          "role": "coder",
+          "harness": "omp",
+          "model": "github-copilot/gpt-5.6-sol-fast",
+          "effort": "high",
+          "source": {
+            "harness": "guide",
+            "model": "guide",
+            "effort": "guide"
+          }
+        },
+        "forbidden": [
+          ".the-flow-state.json",
+          "the-flow.json",
+          "the-flow.md",
+          "docs/plans/015-session-query-cli/plan.dd.json",
+          "docs/plans/015-session-query-cli/assets/impl-guide.dd.json",
+          "docs/plans/015-session-query-cli/assets/team",
+          ".harness/government/",
+          "Global settings, deployed skills, unrelated workspaces and changes on main without user authorization.",
+          "Pushes, PRs, merges and destructive operations without user authorization; canonical lifecycle mutations and nested peers without PM approval."
+        ],
+        "instructions": [
+          "You own crates/adapter-claude/**, crates/adapter-codex/**, docs/claude-adapter.md, docs/codex-adapter.md.",
+          "You may read crates/core/src/**, crates/testkit/src/query.rs, docs/plans/015-session-query-cli/assets/impl-guide.dd.json, docs/plans/015-session-query-cli/assets/query-contract.md (owner tk-0001); immutable plan docs/plans/015-session-query-cli/plan.dd.json and guide docs/plans/015-session-query-cli/assets/impl-guide.dd.json.",
+          "Your job: Share existing JSON decode/classification; implement QueryAdapter for the existing adapter types. Preserve explicit header/session/turn/part evidence, user versus tool-result/context/summary distinction, call identity, clocks and source-qualified usage; keep existing OTLP map output and partition invariance unchanged.",
+          "Done means Users discover repository-associated supported sources and sessions without knowing native storage layouts; exact/tree/worktree scope is component-safe and unreadable, absent, unsupported and unassociated sources are distinguishable. (../plan.dd.json#acceptance_criteria/ac-0001); Source representations are distinct from logical sessions; scoped identities, proven copies, subagents, forks and unresolved conflicts produce consistent list/tree/extract/statistics behavior without synthesising absent native conversation IDs. (../plan.dd.json#acceptance_criteria/ac-0002); Sessions, turns, messages, tools and events share a documented versioned schema, typed availability and traceable source revisions/watermarks; source-only fragments are not invented higher-level entities. (../plan.dd.json#acceptance_criteria/ac-0003); Turn reconstruction follows versioned source-supported boundaries, preserving branches/compaction and stable ordinals; tool-result or injected-context records do not become extra initiating user requests. (../plan.dd.json#acceptance_criteria/ac-0008); Tool invocations pair start/result/progress by scoped native evidence, preserve original names and normalised families, and expose retries, incomplete/unknown outcomes and duration basis without adjacency or text guessing. (../plan.dd.json#acceptance_criteria/ac-0009); Default outputs and diagnostics omit names/titles, messages, command arguments/results, reasoning and free-form identity content; explicit content opt-in is enforced consistently across formats, errors, examples and any temporary state. (../plan.dd.json#acceptance_criteria/ac-000c). Interface: QueryAdapter::inspect(NativeQueryInput, ContentAccess, &QueryLimits)->InspectedSource using C3–C8 observation facts; format-specific interpretation stays in this owner. No SDK graph/filter or file I/O in adapters. Return the exact C21 InspectedSource/SourcePartition/Coverage/AvailabilityIssue types from the reviewed baseline, never lane-local lookalikes.. Proof: impl-guide.dd.json#checks/bp-0002, impl-guide.dd.json#checks/bp-000f.",
+          "Work packet: docs/plans/015-session-query-cli/assets/team/packet-tk-0002-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.json. Use the measured SHA-256 in the dispatch message for the optional advisory builder self-check.",
+          "Expected checkout /Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0002; source commit 72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9. A self-check warning names a mismatch to inspect; it is not permission or a second work grant.",
+          "Receiving this packet means do the unit. Its write/read maps guide you, not fence source access; out-of-map edits need no approval or justification. Prefer frozen interfaces for independent work. Return committed changes, proof and visible file/owning_unit warnings to pij-empirical-tiger.",
+          "Optional read-only comparison: harness builder on-track docs/plans/015-session-query-cli/plan.dd.json --unit tk-0002 [--from <ref>] [--to <ref>] [--untracked]. No readiness, seal, review or receipt prerequisite; no writes; exit 0. Show compared, basis, measured from/to SHAs, includes_worktree/includes_untracked, warnings and issues. Unavailable comparison returns compared:false plus actionable issues.",
+          "On-track defaults to the sealed source, otherwise HEAD; malformed basis is an issue, not fallback. It includes committed touched paths (even reverted writes) plus tracked staged/unstaged work; --untracked explicitly adds new paths. Explicit --to is committed-only. Omitting --unit compares PM maps using imported integration_sha, otherwise the sealed source or HEAD."
+        ]
+      }
+    }
+  ],
+  "references": []
+}

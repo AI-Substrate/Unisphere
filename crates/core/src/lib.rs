@@ -7,11 +7,16 @@ mod catalog;
 pub mod collection;
 mod config;
 mod errors;
+pub mod git_notes;
 mod ports;
+pub mod prep;
+pub mod query;
 pub mod snapshot;
 mod snapshot_collection;
+pub mod status;
 pub use catalog::{AdapterCapabilities, AdapterDescriptor, LocationHint};
 pub use collection::*;
+pub use git_notes::*;
 pub use snapshot::*;
 pub use snapshot_collection::{
     SnapshotCheckpoint, SnapshotCollection, SnapshotCollectionApi, SnapshotRequest,

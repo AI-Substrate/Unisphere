@@ -1,0 +1,108 @@
+{
+  "dd": {
+    "schema": "builder/work-packet"
+  },
+  "sections": [
+    {
+      "name": "packet",
+      "value": {
+        "record_type": "packet",
+        "id": "packet-tk-0005-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9",
+        "recorded_at": "2026-09-10T04:54:54.046Z",
+        "nonce": "db3c45c4-220d-459d-a57e-982f30149053",
+        "unit": {
+          "id": "tk-0005",
+          "name": "VS Code document and journal query facts",
+          "role": "coder",
+          "responsibility": "Reuse journal::reduce then versioned request/response containment and serialized tool facts. Preserve current-revision provenance and unsupported fields; completion/confirmation is not execution success. Author only evidence-backed workspace association metadata handling, never infer a workspace hash as cwd.",
+          "paths": [
+            "crates/adapter-vscode-copilot/**",
+            "docs/vscode-copilot-adapter.md"
+          ],
+          "reads": [
+            {
+              "owner": "tk-0001",
+              "paths": [
+                "crates/core/src/**",
+                "crates/testkit/src/query.rs",
+                "docs/plans/015-session-query-cli/assets/impl-guide.dd.json",
+                "docs/plans/015-session-query-cli/assets/query-contract.md"
+              ]
+            }
+          ],
+          "interface": "QueryAdapter::inspect(NativeQueryInput, ContentAccess, &QueryLimits)->InspectedSource using C3–C8 observation facts; format-specific interpretation stays in this owner. No SDK graph/filter or file I/O in adapters. Return the exact C21 InspectedSource/SourcePartition/Coverage/AvailabilityIssue types from the reviewed baseline, never lane-local lookalikes.",
+          "depends_on": [
+            "tk-0001"
+          ],
+          "wave": 1,
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0001",
+            "../plan.dd.json#acceptance_criteria/ac-0002",
+            "../plan.dd.json#acceptance_criteria/ac-0003",
+            "../plan.dd.json#acceptance_criteria/ac-0008",
+            "../plan.dd.json#acceptance_criteria/ac-0009",
+            "../plan.dd.json#acceptance_criteria/ac-000c"
+          ],
+          "proof": [
+            "impl-guide.dd.json#checks/bp-0005",
+            "impl-guide.dd.json#checks/bp-000f"
+          ],
+          "notes": "Starts from baseline/fakes, no sibling implementation import. Own adapter query edge fixtures and capability documentation. Skip build/lint/tests/formatters during concurrent work; PM runs declared proof on composed delivery. Done conditions: JSON v1/v2/v3 request/response containment and final reduced journal state agree, with exact revision/key provenance; deleted/overwritten journal history is not fabricated. Serialized tool IDs and isComplete/isConfirmed are retained with unknown execution outcome unless native evidence says more. Workspace hashes alone are unassociated. Lane contributes native containment and availability floors to ac-0008/ac-0009; SDK owns episode/call reduction."
+        },
+        "plan": {
+          "path": "docs/plans/015-session-query-cli/plan.dd.json",
+          "sha256": "23e11ee7ec867315349aab8df11282da08bf211a6c86e27a3782292ba5bcecef"
+        },
+        "guide": {
+          "path": "docs/plans/015-session-query-cli/assets/impl-guide.dd.json",
+          "sha256": "5caed35ffa6f28570c16b6bc42baf47ce4403012069e429eeeaeb4e02f04c88f"
+        },
+        "baseline": {
+          "path": "docs/plans/015-session-query-cli/assets/team/baseline.dd.json",
+          "sha256": "c8f8ddfb487d7a97a0e9de1bca0d13927aa7faa472b46415c26c7e37496be00c"
+        },
+        "source_sha": "72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9",
+        "allocation": {
+          "path": "/Users/jordanknight/substrate/unisphere/unishpere-main/.git/builder/allocations/allocation-al-024-a5f7bab4-f3f8-4363-8b75-a430ef296e8d.dd.json",
+          "sha256": "4727a6f5ac5591d565ab1c56aedcf7dab7547a9e457910fb2b0f61294bc59eab"
+        },
+        "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0005",
+        "parent": "pij-empirical-tiger",
+        "requested": {
+          "role": "coder",
+          "harness": "omp",
+          "model": "github-copilot/gpt-5.6-sol-fast",
+          "effort": "high",
+          "source": {
+            "harness": "guide",
+            "model": "guide",
+            "effort": "guide"
+          }
+        },
+        "forbidden": [
+          ".the-flow-state.json",
+          "the-flow.json",
+          "the-flow.md",
+          "docs/plans/015-session-query-cli/plan.dd.json",
+          "docs/plans/015-session-query-cli/assets/impl-guide.dd.json",
+          "docs/plans/015-session-query-cli/assets/team",
+          ".harness/government/",
+          "Global settings, deployed skills, unrelated workspaces and changes on main without user authorization.",
+          "Pushes, PRs, merges and destructive operations without user authorization; canonical lifecycle mutations and nested peers without PM approval."
+        ],
+        "instructions": [
+          "You own crates/adapter-vscode-copilot/**, docs/vscode-copilot-adapter.md.",
+          "You may read crates/core/src/**, crates/testkit/src/query.rs, docs/plans/015-session-query-cli/assets/impl-guide.dd.json, docs/plans/015-session-query-cli/assets/query-contract.md (owner tk-0001); immutable plan docs/plans/015-session-query-cli/plan.dd.json and guide docs/plans/015-session-query-cli/assets/impl-guide.dd.json.",
+          "Your job: Reuse journal::reduce then versioned request/response containment and serialized tool facts. Preserve current-revision provenance and unsupported fields; completion/confirmation is not execution success. Author only evidence-backed workspace association metadata handling, never infer a workspace hash as cwd.",
+          "Done means Users discover repository-associated supported sources and sessions without knowing native storage layouts; exact/tree/worktree scope is component-safe and unreadable, absent, unsupported and unassociated sources are distinguishable. (../plan.dd.json#acceptance_criteria/ac-0001); Source representations are distinct from logical sessions; scoped identities, proven copies, subagents, forks and unresolved conflicts produce consistent list/tree/extract/statistics behavior without synthesising absent native conversation IDs. (../plan.dd.json#acceptance_criteria/ac-0002); Sessions, turns, messages, tools and events share a documented versioned schema, typed availability and traceable source revisions/watermarks; source-only fragments are not invented higher-level entities. (../plan.dd.json#acceptance_criteria/ac-0003); Turn reconstruction follows versioned source-supported boundaries, preserving branches/compaction and stable ordinals; tool-result or injected-context records do not become extra initiating user requests. (../plan.dd.json#acceptance_criteria/ac-0008); Tool invocations pair start/result/progress by scoped native evidence, preserve original names and normalised families, and expose retries, incomplete/unknown outcomes and duration basis without adjacency or text guessing. (../plan.dd.json#acceptance_criteria/ac-0009); Default outputs and diagnostics omit names/titles, messages, command arguments/results, reasoning and free-form identity content; explicit content opt-in is enforced consistently across formats, errors, examples and any temporary state. (../plan.dd.json#acceptance_criteria/ac-000c). Interface: QueryAdapter::inspect(NativeQueryInput, ContentAccess, &QueryLimits)->InspectedSource using C3–C8 observation facts; format-specific interpretation stays in this owner. No SDK graph/filter or file I/O in adapters. Return the exact C21 InspectedSource/SourcePartition/Coverage/AvailabilityIssue types from the reviewed baseline, never lane-local lookalikes.. Proof: impl-guide.dd.json#checks/bp-0005, impl-guide.dd.json#checks/bp-000f.",
+          "Work packet: docs/plans/015-session-query-cli/assets/team/packet-tk-0005-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.json. Use the measured SHA-256 in the dispatch message for the optional advisory builder self-check.",
+          "Expected checkout /Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0005; source commit 72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9. A self-check warning names a mismatch to inspect; it is not permission or a second work grant.",
+          "Receiving this packet means do the unit. Its write/read maps guide you, not fence source access; out-of-map edits need no approval or justification. Prefer frozen interfaces for independent work. Return committed changes, proof and visible file/owning_unit warnings to pij-empirical-tiger.",
+          "Optional read-only comparison: harness builder on-track docs/plans/015-session-query-cli/plan.dd.json --unit tk-0005 [--from <ref>] [--to <ref>] [--untracked]. No readiness, seal, review or receipt prerequisite; no writes; exit 0. Show compared, basis, measured from/to SHAs, includes_worktree/includes_untracked, warnings and issues. Unavailable comparison returns compared:false plus actionable issues.",
+          "On-track defaults to the sealed source, otherwise HEAD; malformed basis is an issue, not fallback. It includes committed touched paths (even reverted writes) plus tracked staged/unstaged work; --untracked explicitly adds new paths. Explicit --to is committed-only. Omitting --unit compares PM maps using imported integration_sha, otherwise the sealed source or HEAD."
+        ]
+      }
+    }
+  ],
+  "references": []
+}

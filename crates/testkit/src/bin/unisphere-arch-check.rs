@@ -12,9 +12,14 @@ use std::{
 // dependencies must obey the same boundary even on a machine that never builds them.
 fn allowed(package: &str, dependency: &str, kind: &str) -> bool {
     match (package, kind) {
-        ("unisphere-core", "normal") => matches!(dependency, "serde" | "serde_json"),
+        ("unisphere-core", "normal") => {
+            matches!(dependency, "serde" | "serde_json" | "sha2" | "time")
+        }
         ("unisphere-sdk", "normal") => {
-            matches!(dependency, "unisphere-core" | "serde" | "serde_json")
+            matches!(
+                dependency,
+                "unisphere-core" | "serde" | "serde_json" | "regex" | "globset" | "sha2" | "time"
+            )
         }
         ("unisphere-cli", "normal") => {
             matches!(dependency, "unisphere-core" | "clap" | "serde_json")
@@ -33,12 +38,41 @@ fn allowed(package: &str, dependency: &str, kind: &str) -> bool {
                 | "unisphere-adapter-cursor"
                 | "unisphere-loader-snapshot"
                 | "unisphere-output-otlp"
+                | "unisphere-loader-query"
+                | "unisphere-output-query"
+                | "unisphere-loader-git"
+                | "unisphere-adapter-git-ai"
+                | "unisphere-output-prep"
         ),
-        ("unisphere-loader-jsonl", "normal") => matches!(dependency, "unisphere-core" | "libc"),
+        // The prep target store is the only Parquet/Arrow owner.
+        ("unisphere-output-prep", "normal") => matches!(
+            dependency,
+            "unisphere-core" | "serde" | "serde_json" | "parquet" | "arrow-json" | "arrow-schema"
+        ),
+        ("unisphere-loader-jsonl", "normal") => {
+            matches!(dependency, "unisphere-core" | "libc" | "sha2")
+        }
         ("unisphere-loader-snapshot", "normal") => matches!(
             dependency,
             "unisphere-core" | "libc" | "serde" | "serde_json" | "sha2" | "rusqlite"
         ),
+        ("unisphere-loader-query", "normal") => matches!(
+            dependency,
+            "unisphere-core"
+                | "unisphere-loader-jsonl"
+                | "globset"
+                | "unisphere-loader-snapshot"
+                | "serde_json"
+                | "sha2"
+                | "libc"
+        ),
+        ("unisphere-output-query", "normal") => {
+            matches!(dependency, "unisphere-core" | "serde" | "serde_json")
+        }
+        ("unisphere-loader-git", "normal") => matches!(dependency, "unisphere-core" | "libc"),
+        ("unisphere-adapter-git-ai", "normal") => {
+            matches!(dependency, "unisphere-core" | "serde" | "serde_json")
+        }
         (
             "unisphere-adapter-claude"
             | "unisphere-adapter-codex"
@@ -63,9 +97,12 @@ fn allowed(package: &str, dependency: &str, kind: &str) -> bool {
                 "unisphere-testkit" | "tempfile" | "serde_json" | "rusqlite"
             )
         }
+        ("unisphere-cli", "dev") => matches!(
+            dependency,
+            "unisphere-testkit" | "unisphere-output-query" | "tempfile" | "serde_json"
+        ),
         (
             "unisphere-sdk"
-            | "unisphere-cli"
             | "unisphere-loader-jsonl"
             | "unisphere-adapter-claude"
             | "unisphere-adapter-codex"
@@ -75,7 +112,12 @@ fn allowed(package: &str, dependency: &str, kind: &str) -> bool {
             | "unisphere-adapter-vscode-copilot"
             | "unisphere-adapter-cursor"
             | "unisphere-loader-snapshot"
-            | "unisphere-output-otlp",
+            | "unisphere-output-otlp"
+            | "unisphere-loader-query"
+            | "unisphere-output-query"
+            | "unisphere-loader-git"
+            | "unisphere-adapter-git-ai"
+            | "unisphere-output-prep",
             "dev",
         ) => matches!(dependency, "unisphere-testkit" | "tempfile" | "serde_json"),
         _ => false,
@@ -120,6 +162,11 @@ fn check(graph: &Value) -> Result<usize, String> {
                 | "unisphere-adapter-cursor"
                 | "unisphere-loader-snapshot"
                 | "unisphere-output-otlp"
+                | "unisphere-loader-query"
+                | "unisphere-output-query"
+                | "unisphere-loader-git"
+                | "unisphere-adapter-git-ai"
+                | "unisphere-output-prep"
         ) {
             return Err(format!("unapproved workspace package {name}"));
         }
@@ -339,6 +386,33 @@ mod tests {
             )))
             .is_ok()
         );
+    }
+
+    #[test]
+    fn query_adapters_cannot_depend_outward_on_services_or_cli() {
+        for (package, forbidden) in [
+            ("unisphere-loader-query", "unisphere-sdk"),
+            ("unisphere-output-query", "unisphere-cli"),
+        ] {
+            let mut graph = fixture(include_str!("../../fixtures/architecture/allowed.json"));
+            let adapter = graph["packages"]
+                .as_array_mut()
+                .unwrap()
+                .iter_mut()
+                .find(|entry| entry["name"] == package)
+                .unwrap();
+            adapter["dependencies"]
+                .as_array_mut()
+                .unwrap()
+                .push(serde_json::json!({
+                    "name": forbidden, "kind": null, "path": "../forbidden"
+                }));
+            let error = check(&graph).unwrap_err();
+            assert!(
+                error.contains(&format!("{package} -> {forbidden}")),
+                "{error}"
+            );
+        }
     }
 
     #[test]

@@ -1,0 +1,139 @@
+{
+  "recorded_at": "2026-09-10T22:00:29.190Z",
+  "scope": "Actual CLI on isolated real Git linked worktree; pre-fix creates output in note-store path, post-fix refuses before staging across repo/common/per-worktree roots with/without Git and source-ID/repo scope. Parent directory unchanged asserted.",
+  "runs": [
+    {
+      "receipt": {
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "-p",
+          "unisphere-app",
+          "--test",
+          "git_query",
+          "query_output_cannot_create_files_in_git_source_roots"
+        ],
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+        "before": {
+          "head": {
+            "args": [
+              "rev-parse",
+              "HEAD"
+            ],
+            "exit": 0,
+            "stdout": "78af49ce85915a83566a4f7333a804dc1a9397a7\n",
+            "stderr": ""
+          },
+          "status": {
+            "args": [
+              "status",
+              "--porcelain"
+            ],
+            "exit": 0,
+            "stdout": " M crates/app/tests/git_query.rs\n M crates/testkit/src/bin/proof/git_query.rs\n?? docs/plans/015-session-query-cli/assets/git-query-integration.json\n",
+            "stderr": ""
+          }
+        },
+        "after": {
+          "head": {
+            "args": [
+              "rev-parse",
+              "HEAD"
+            ],
+            "exit": 0,
+            "stdout": "78af49ce85915a83566a4f7333a804dc1a9397a7\n",
+            "stderr": ""
+          },
+          "status": {
+            "args": [
+              "status",
+              "--porcelain"
+            ],
+            "exit": 0,
+            "stdout": " M crates/app/tests/git_query.rs\n M crates/testkit/src/bin/proof/git_query.rs\n?? docs/plans/015-session-query-cli/assets/git-query-integration.json\n",
+            "stderr": ""
+          }
+        },
+        "started_at": "2026-09-10T21:56:13.473Z",
+        "finished_at": "2026-09-10T21:56:16.999Z",
+        "exit": 101,
+        "signal": null,
+        "stdout_path": ".harness/temp/pij-empirical-tiger/git-output-before.stdout",
+        "stderr_path": ".harness/temp/pij-empirical-tiger/git-output-before.stderr"
+      },
+      "stdout": "\nrunning 1 test\ntest query_output_cannot_create_files_in_git_source_roots ... FAILED\n\nfailures:\n\n---- query_output_cannot_create_files_in_git_source_roots stdout ----\n\nthread 'query_output_cannot_create_files_in_git_source_roots' (1481128261) panicked at crates/app/tests/git_query.rs:277:5:\nassertion `left == right` failed\n  left: Some(0)\n right: Some(1)\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n\n\nfailures:\n    query_output_cannot_create_files_in_git_source_roots\n\ntest result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 1.48s\n\n",
+      "stderr": "   Compiling unisphere-app v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/app)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.30s\n     Running tests/git_query.rs (target/debug/deps/git_query-188e352f4f6db86b)\nerror: test failed, to rerun pass `-p unisphere-app --test git_query`\n"
+    },
+    {
+      "receipt": {
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "-p",
+          "unisphere-app",
+          "--test",
+          "git_query",
+          "-p",
+          "unisphere-cli",
+          "--test",
+          "query_frontend",
+          "--test",
+          "git_notes"
+        ],
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+        "before": {
+          "head": {
+            "args": [
+              "rev-parse",
+              "HEAD"
+            ],
+            "exit": 0,
+            "stdout": "78af49ce85915a83566a4f7333a804dc1a9397a7\n",
+            "stderr": ""
+          },
+          "status": {
+            "args": [
+              "status",
+              "--porcelain"
+            ],
+            "exit": 0,
+            "stdout": " M crates/app/src/adapters.rs\n M crates/app/src/git_query.rs\n M crates/app/src/main.rs\n M crates/app/tests/git_query.rs\n M crates/cli/src/git_notes.rs\n M crates/cli/src/output.rs\n M crates/cli/src/query.rs\n M crates/core/src/git_notes.rs\n M crates/testkit/src/bin/proof/git_query.rs\n?? docs/plans/015-session-query-cli/assets/git-query-integration.json\n",
+            "stderr": ""
+          }
+        },
+        "after": {
+          "head": {
+            "args": [
+              "rev-parse",
+              "HEAD"
+            ],
+            "exit": 0,
+            "stdout": "78af49ce85915a83566a4f7333a804dc1a9397a7\n",
+            "stderr": ""
+          },
+          "status": {
+            "args": [
+              "status",
+              "--porcelain"
+            ],
+            "exit": 0,
+            "stdout": " M crates/app/src/adapters.rs\n M crates/app/src/git_query.rs\n M crates/app/src/main.rs\n M crates/app/tests/git_query.rs\n M crates/cli/src/git_notes.rs\n M crates/cli/src/output.rs\n M crates/cli/src/query.rs\n M crates/core/src/git_notes.rs\n M crates/testkit/src/bin/proof/git_query.rs\n?? docs/plans/015-session-query-cli/assets/git-query-integration.json\n",
+            "stderr": ""
+          }
+        },
+        "started_at": "2026-09-10T21:59:55.929Z",
+        "finished_at": "2026-09-10T22:00:06.284Z",
+        "exit": 0,
+        "signal": null,
+        "stdout_path": ".harness/temp/pij-empirical-tiger/git-output-after.stdout",
+        "stderr_path": ".harness/temp/pij-empirical-tiger/git-output-after.stderr"
+      },
+      "stdout": "\nrunning 4 tests\ntest missing_git_is_actionable_and_empty_notes_are_a_complete_selection ... ok\ntest query_output_cannot_create_files_in_git_source_roots ... ok\ntest note_revision_invalidates_cursor_and_bad_note_is_not_empty_success ... ok\ntest declared_attribution_session_is_queryable_without_inventing_a_transcript ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.86s\n\n\nrunning 10 tests\ntest invalid_typed_variant_fails_before_constructing_port ... ok\ntest compatibility_wrapper_preserves_native_invalid_input_envelope ... ok\ntest export_keeps_otlp_stdout_data_only_and_reports_guidance_on_stderr ... ok\ntest constructor_failures_keep_kind_and_cause_specific_recovery ... ok\ntest export_refuses_source_paths_and_never_collects_into_them ... ok\ntest compatibility_wrapper_uses_root_help_without_constructing_port ... ok\ntest typed_runner_lists_with_actionable_empty_and_nonempty_outcomes ... ok\ntest failed_export_removes_stage_and_never_publishes_partial_bytes ... ok\ntest successful_file_export_publishes_new_private_output ... ok\ntest existing_export_is_not_overwritten_and_preserves_output_error_code ... ok\n\ntest result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 19 tests\ntest pij_resolution_and_failures_use_only_the_diagnostic_channel ... ok\ntest diagnostic_mode_is_selected_before_parse_consumes_argv ... ok\ntest resolved_pij_continuation_uses_pinned_query_ids ... ok\ntest csv_rows_parse_separately_from_loss_and_coverage_diagnostics ... ok\ntest bundled_docs_and_schema_are_real_static_routes ... ok\ntest raw_rows_stay_clean_and_guidance_uses_diagnostic_channel ... ok\ntest generated_actions_withhold_private_paths_and_parse_after_binding ... ok\ntest pij_turn_range_stays_pending_and_duration_threshold_is_finite_float ... ok\ntest typed_query_initialization_failures_keep_stdout_clean ... ok\ntest static_lookup_errors_name_valid_alternatives ... ok\ntest parsed_static_and_config_commands_execute_without_reparsing ... ok\ntest stdin_framing_is_explicit_scope_bound_and_preserved_in_actions ... ok\ntest seven_staged_examples_parse_after_declared_bindings ... ok\ntest native_and_query_session_routes_are_unambiguous ... ok\ntest pij_selector_produces_explicit_pending_targets ... ok\ntest failed_file_serialization_never_publishes_partial_destination ... ok\ntest existing_query_destination_fails_before_query_execution ... ok\ntest pij_selector_rejects_contradictory_or_unsafe_identity_inputs ... ok\ntest complete_catalogue_grammar_parses_to_typed_commands ... ok\n\ntest result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s\n\n",
+      "stderr": "   Compiling unisphere-core v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/core)\n   Compiling unisphere-output-query v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/output-query)\n   Compiling unisphere-cli v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/cli)\n   Compiling unisphere-loader-jsonl v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/loader-jsonl)\n   Compiling unisphere-testkit v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/testkit)\n   Compiling unisphere-loader-snapshot v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/loader-snapshot)\n   Compiling unisphere-loader-git v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/loader-git)\n   Compiling unisphere-adapter-codex v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/adapter-codex)\n   Compiling unisphere-adapter-git-ai v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/adapter-git-ai)\n   Compiling unisphere-adapter-vscode-copilot v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/adapter-vscode-copilot)\n   Compiling unisphere-adapter-pi v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/adapter-pi)\n   Compiling unisphere-adapter-claude v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/adapter-claude)\n   Compiling unisphere-adapter-omp v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/adapter-omp)\n   Compiling unisphere-adapter-copilot-cli v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/adapter-copilot-cli)\n   Compiling unisphere-output-otlp v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/output-otlp)\n   Compiling unisphere-sdk v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/sdk)\n   Compiling unisphere-adapter-cursor v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/adapter-cursor)\n   Compiling unisphere-loader-query v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/loader-query)\n   Compiling unisphere-app v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/app)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.41s\n     Running tests/git_query.rs (target/debug/deps/git_query-188e352f4f6db86b)\n     Running tests/git_notes.rs (target/debug/deps/git_notes-8cef0e08cc82e554)\n     Running tests/query_frontend.rs (target/debug/deps/query_frontend-b233823fc09150aa)\n"
+    }
+  ]
+}

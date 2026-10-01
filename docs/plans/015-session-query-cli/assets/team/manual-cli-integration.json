@@ -1,0 +1,24 @@
+{
+  "recorded_at": "2026-09-10T08:53:32.263Z",
+  "kind": "manual-product-only-integration",
+  "source_sha": "4f4a6eef348fac18508b438ed9b216a8c982d460",
+  "candidate_sha": "10e72f900e744fe6c83ba7601ba0e3570c12a27a",
+  "checkpoint_sha": "f4c8b3570a851f9008183fff3f045d8f30a6307b",
+  "integration_parent": "048a32d990dd8bb879912fd6675f4bb150f35423",
+  "method": "Exact fenced git binary diff applied with index/three-way safety; original candidate refs and delivery retained, not a history merge or Builder composition receipt.",
+  "paths": [
+    "crates/cli/Cargo.toml",
+    "crates/cli/src/args.rs",
+    "crates/cli/src/catalog.rs",
+    "crates/cli/src/lib.rs",
+    "crates/cli/src/output.rs",
+    "crates/cli/src/query.rs",
+    "crates/cli/src/sessions.rs",
+    "crates/cli/src/snapshots.rs",
+    "crates/cli/tests/frontend.rs",
+    "crates/cli/tests/query_frontend.rs",
+    "crates/cli/tests/sessions.rs",
+    "docs/cli.md"
+  ],
+  "validation": "unrun while resolver coder edits"
+}

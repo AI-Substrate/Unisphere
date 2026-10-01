@@ -22,6 +22,20 @@ export function resolveProgram(name) {
   throw new Error(`Executable ${name} is absent from PATH`);
 }
 
+const OUTPUT_TAIL = 2_000;
+
+/** A passing result with stdout/stderr cut to their last OUTPUT_TAIL characters. */
+export function boundedOutput(result) {
+  const tail = text => (text.length > OUTPUT_TAIL ? text.slice(-OUTPUT_TAIL) : text);
+  return {
+    ...result,
+    stdout: tail(result.stdout ?? ''),
+    stderr: tail(result.stderr ?? ''),
+    stdout_bytes: (result.stdout ?? '').length,
+    stderr_bytes: (result.stderr ?? '').length,
+  };
+}
+
 export function observeVersion(name, stdout) {
   const release = stdout.match(/^release:\s*(\S+)/m)?.[1]
     ?? stdout.match(/^(?:rustc|cargo|clippy|rustfmt)\s+(\S+)/m)?.[1];
@@ -89,7 +103,10 @@ export async function runChecks(ctx, locate = resolveProgram) {
   for (const [name, command, args] of gates) {
     try {
       const result = await ctx.exec(command, args, { timeoutMs: 300_000 });
-      evidence.push({ name, command, args, ...result });
+      // A passing gate keeps a bounded tail: full test logs pushed the envelope
+      // past 64 KiB, which older harness runtimes could not parse. Failures
+      // keep their complete output.
+      evidence.push({ name, command, args, ...(result.ok ? boundedOutput(result) : result) });
       if (!result.ok) {
         return ctx.error('E_PRODUCT_CHECK_FAILED', `${name} failed (exit ${result.code})`, {
           details: { toolchain, gates: evidence }, next_action: `Run ${command} ${args.join(' ')}, fix the failure, then rerun harness checks --json.`,

@@ -1,0 +1,46 @@
+{
+ "largest_by_session": {
+  "bytes": 221555970,
+  "exit": 0,
+  "wall_ms": 1782,
+  "ok": true,
+  "calls": 2443
+ },
+ "largest_seat_by_pij": {
+  "bytes": 212463803,
+  "exit": 0,
+  "wall_ms": 844,
+  "ok": true,
+  "basis": "pij_registry"
+ },
+ "live_append": {
+  "runs": 10,
+  "all_exit_0": true,
+  "pending_tail_seen": 0,
+  "median_wall_ms": 1171
+ },
+ "fifty_seats": {
+  "cold_ms": 5299,
+  "failed": 0,
+  "n": 50,
+  "warm_bytes_read": 661,
+  "warm_ms": [
+   11.39,
+   0.16,
+   0.57,
+   0.2,
+   0.16
+  ],
+  "total_bytes": 1653899305
+ },
+ "native_pane": {
+  "panes": 5,
+  "resolved": 5,
+  "median_ms": 51.9
+ },
+ "model_switch": {
+  "models": 2,
+  "current_is_newest": true
+ },
+ "failures": []
+}

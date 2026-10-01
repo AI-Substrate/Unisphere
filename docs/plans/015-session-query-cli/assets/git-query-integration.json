@@ -1,0 +1,13 @@
+{
+  "source_subject": "71182b502b1d5a63a2237237b117580cdc19e2f5",
+  "history_merge": "ad6ae02339330e966cf85b0e2d73175bc78459ad",
+  "accepted_upstream": "cf4931ed084d892050d43ed98cfcbb62b0c2fe7e",
+  "authority": "Jordan PROCEED; Main granted normal history-preserving merge into plan015 only",
+  "architecture": "One application registry composes native collectors, LocalQuerySource and an injected GitNoteLoader/QueryAdapter bridge. Core/SDK continue to own semantic selection, immutable query views, privacy and statistics.",
+  "query_scope": "--repo PATH --source-adapter git-ai loads refs/notes/ai using standard Git. --source PATH --source-adapter git-ai treats PATH as the explicit repository; returned SourceId can select the same note from the current repository. No separate Git-AI executable, cache, daemon, history union or remote fetch.",
+  "identity": "SourceId hashes git-ai, git_notes, canonical common repository directory, notes ref and target commit; notes tip and blob are revision, not source identity. NativeLocator pins all five values. Declared attribution session IDs remain repository/source-scoped and never join a transcript by agent display identity.",
+  "semantics": "Declared sessions may be listed with transcript_available=false. Legacy prompts/humans/unresolved references stay source/event-only. No message/turn/tool/timestamp is invented. Attribution details are consent-gated event parts.",
+  "budgets": "Query limits are capped by existing native GitNotesLimits defaults. Note input bytes/record/source counts consume the combined budget before native file providers receive the remaining capacity. Native hard safety ceilings are not loosened.",
+  "safety": "Query files may be created in a checkout but never admitted common/per-worktree Git directories. Native note exports retain full-triple exclusion including checkout. One shared pure core predicate underlies two named policies; staging waits for source identity validation. Missing source boundaries fail closed with source recovery; existing-output refusals do not claim partial bytes. The upstream Git object reader and SDK collector are unchanged.",
+  "proof": "Exact source passed391workspace tests and all6harness boot modes, including installed query recipe7 and unchanged native Git Notes SDK/CLI parity. Full raw proof assets/verification/boot-71182b50.json; independent exact-source APPROVE assets/reviews/git-convergence-final-pij-armed-cow.json."
+}

@@ -52,11 +52,86 @@
           "path": "../testkit"
         }
       ]
+    },
+    {
+      "name": "unisphere-loader-query",
+      "id": "loader-query",
+      "dependencies": [
+        {
+          "name": "unisphere-core",
+          "kind": null,
+          "path": "../core"
+        },
+        {
+          "name": "unisphere-loader-jsonl",
+          "kind": null,
+          "path": "../loader-jsonl"
+        },
+        {
+          "name": "unisphere-loader-snapshot",
+          "kind": null,
+          "path": "../loader-snapshot"
+        },
+        {
+          "name": "serde_json",
+          "kind": null
+        },
+        {
+          "name": "sha2",
+          "kind": null
+        },
+        {
+          "name": "libc",
+          "kind": null
+        },
+        {
+          "name": "globset",
+          "kind": null
+        }
+      ]
+    },
+    {
+      "name": "unisphere-output-query",
+      "id": "output-query",
+      "dependencies": [
+        {
+          "name": "unisphere-core",
+          "kind": null,
+          "path": "../core"
+        },
+        {
+          "name": "serde_json",
+          "kind": null
+        },
+        {
+          "name": "serde",
+          "kind": null
+        }
+      ]
+    },
+    {
+      "name": "unisphere-app",
+      "id": "app",
+      "dependencies": [
+        {
+          "name": "unisphere-loader-query",
+          "kind": null,
+          "path": "../loader-query"
+        },
+        {
+          "name": "unisphere-output-query",
+          "kind": null,
+          "path": "../output-query"
+        }
+      ]
     }
   ],
   "workspace_members": [
     "core",
     "testkit",
-    "sdk"
+    "sdk",
+    "loader-query",
+    "output-query",
+    "app"
   ]
 }

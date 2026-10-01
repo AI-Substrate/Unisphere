@@ -1,0 +1,294 @@
+{
+  "status": "Synthetic planning examples, not captured CLI output or native telemetry.",
+  "repo": "/workspace/demo-flight-bag",
+  "sessions": [
+    {
+      "id": "s-demo-1",
+      "native_id": "native-session-a",
+      "harness": "claude-code",
+      "name": "Airspace parser",
+      "started_at": "2026-09-01T10:00:00Z",
+      "turn_count": 2,
+      "message_count": 4,
+      "tool_call_count": 3,
+      "source_ids": [
+        "src-demo-1"
+      ]
+    },
+    {
+      "id": "s-demo-2",
+      "native_id": "native-session-b",
+      "harness": "codex",
+      "name": "Build check",
+      "started_at": "2026-09-02T11:00:00Z",
+      "turn_count": 1,
+      "message_count": 2,
+      "tool_call_count": 1,
+      "source_ids": [
+        "src-demo-2"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "src-demo-1",
+      "adapter": "claude-code",
+      "format": "jsonl",
+      "project_path": "/workspace/demo-flight-bag",
+      "association": "native.cwd",
+      "read_status": "readable",
+      "revision": "synthetic-revision-a"
+    },
+    {
+      "id": "src-demo-2",
+      "adapter": "codex",
+      "format": "jsonl",
+      "project_path": "/workspace/demo-flight-bag",
+      "association": "native.cwd",
+      "read_status": "readable",
+      "revision": "synthetic-revision-b"
+    }
+  ],
+  "turns": [
+    {
+      "id": "t-demo-1",
+      "session_id": "s-demo-1",
+      "ordinal": 1,
+      "started_at": "2026-09-01T10:00:00Z",
+      "message_ids": [
+        "m-demo-1",
+        "m-demo-2"
+      ],
+      "call_ids": [
+        "c-demo-1",
+        "c-demo-2"
+      ],
+      "boundary_basis": "synthetic explicit native boundary"
+    },
+    {
+      "id": "t-demo-2",
+      "session_id": "s-demo-1",
+      "ordinal": 2,
+      "started_at": "2026-09-01T10:02:00Z",
+      "message_ids": [
+        "m-demo-3",
+        "m-demo-4"
+      ],
+      "call_ids": [
+        "c-demo-3"
+      ],
+      "boundary_basis": "synthetic explicit native boundary"
+    },
+    {
+      "id": "t-demo-3",
+      "session_id": "s-demo-2",
+      "ordinal": 1,
+      "started_at": "2026-09-02T11:00:00Z",
+      "message_ids": [
+        "m-demo-5",
+        "m-demo-6"
+      ],
+      "call_ids": [
+        "c-demo-4"
+      ],
+      "boundary_basis": "synthetic explicit start; terminal absent"
+    }
+  ],
+  "messages": [
+    {
+      "id": "m-demo-1",
+      "session_id": "s-demo-1",
+      "turn_id": "t-demo-1",
+      "role": "user",
+      "timestamp": "2026-09-01T10:00:00Z",
+      "text": "Check the parser."
+    },
+    {
+      "id": "m-demo-2",
+      "session_id": "s-demo-1",
+      "turn_id": "t-demo-1",
+      "role": "assistant",
+      "timestamp": "2026-09-01T10:00:04Z",
+      "text": "Tests passed."
+    },
+    {
+      "id": "m-demo-3",
+      "session_id": "s-demo-1",
+      "turn_id": "t-demo-2",
+      "role": "user",
+      "timestamp": "2026-09-01T10:02:00Z",
+      "text": "Run lint."
+    },
+    {
+      "id": "m-demo-4",
+      "session_id": "s-demo-1",
+      "turn_id": "t-demo-2",
+      "role": "assistant",
+      "timestamp": "2026-09-01T10:02:02Z",
+      "text": "Lint failed."
+    },
+    {
+      "id": "m-demo-5",
+      "session_id": "s-demo-2",
+      "turn_id": "t-demo-3",
+      "role": "user",
+      "timestamp": "2026-09-02T11:00:00Z",
+      "text": "Check the build."
+    },
+    {
+      "id": "m-demo-6",
+      "session_id": "s-demo-2",
+      "turn_id": "t-demo-3",
+      "role": "assistant",
+      "timestamp": "2026-09-02T11:00:03Z",
+      "text": "The build is still running."
+    }
+  ],
+  "tools": [
+    {
+      "id": "c-demo-1",
+      "session_id": "s-demo-1",
+      "turn_id": "t-demo-1",
+      "tool_name": "Bash",
+      "tool_family": "shell",
+      "command": "cargo test",
+      "started_at": "2026-09-01T10:00:01Z",
+      "duration_ms": 1500,
+      "duration_basis": "matched-source-times",
+      "status": "succeeded",
+      "exit_code": 0
+    },
+    {
+      "id": "c-demo-2",
+      "session_id": "s-demo-1",
+      "turn_id": "t-demo-1",
+      "tool_name": "Read",
+      "tool_family": "file-read",
+      "command": null,
+      "started_at": "2026-09-01T10:00:03Z",
+      "duration_ms": 50,
+      "duration_basis": "matched-source-times",
+      "status": "succeeded",
+      "exit_code": null
+    },
+    {
+      "id": "c-demo-3",
+      "session_id": "s-demo-1",
+      "turn_id": "t-demo-2",
+      "tool_name": "Bash",
+      "tool_family": "shell",
+      "command": "cargo clippy",
+      "started_at": "2026-09-01T10:02:01Z",
+      "duration_ms": 500,
+      "duration_basis": "matched-source-times",
+      "status": "failed",
+      "exit_code": 101
+    },
+    {
+      "id": "c-demo-4",
+      "session_id": "s-demo-2",
+      "turn_id": "t-demo-3",
+      "tool_name": "exec_command",
+      "tool_family": "shell",
+      "command": "cargo test",
+      "started_at": "2026-09-02T11:00:01Z",
+      "duration_ms": null,
+      "duration_basis": "missing-completion",
+      "status": "incomplete",
+      "exit_code": null
+    }
+  ],
+  "events": [
+    {
+      "id": "e-demo-1",
+      "kind": "user_message",
+      "timestamp": "2026-09-01T10:00:00Z",
+      "session_id": "s-demo-1",
+      "message_id": "m-demo-1"
+    },
+    {
+      "id": "e-demo-2",
+      "kind": "tool_start",
+      "timestamp": "2026-09-01T10:00:01Z",
+      "session_id": "s-demo-1",
+      "call_id": "c-demo-1"
+    },
+    {
+      "id": "e-demo-3",
+      "kind": "tool_end",
+      "timestamp": "2026-09-01T10:00:02.500Z",
+      "session_id": "s-demo-1",
+      "call_id": "c-demo-1"
+    },
+    {
+      "id": "e-demo-4",
+      "kind": "tool_start",
+      "timestamp": "2026-09-01T10:00:03Z",
+      "session_id": "s-demo-1",
+      "call_id": "c-demo-2"
+    },
+    {
+      "id": "e-demo-5",
+      "kind": "tool_end",
+      "timestamp": "2026-09-01T10:00:03.050Z",
+      "session_id": "s-demo-1",
+      "call_id": "c-demo-2"
+    },
+    {
+      "id": "e-demo-6",
+      "kind": "assistant_message",
+      "timestamp": "2026-09-01T10:00:04Z",
+      "session_id": "s-demo-1",
+      "message_id": "m-demo-2"
+    },
+    {
+      "id": "e-demo-7",
+      "kind": "user_message",
+      "timestamp": "2026-09-01T10:02:00Z",
+      "session_id": "s-demo-1",
+      "message_id": "m-demo-3"
+    },
+    {
+      "id": "e-demo-8",
+      "kind": "tool_start",
+      "timestamp": "2026-09-01T10:02:01Z",
+      "session_id": "s-demo-1",
+      "call_id": "c-demo-3"
+    },
+    {
+      "id": "e-demo-9",
+      "kind": "tool_end",
+      "timestamp": "2026-09-01T10:02:01.500Z",
+      "session_id": "s-demo-1",
+      "call_id": "c-demo-3"
+    },
+    {
+      "id": "e-demo-10",
+      "kind": "assistant_message",
+      "timestamp": "2026-09-01T10:02:02Z",
+      "session_id": "s-demo-1",
+      "message_id": "m-demo-4"
+    },
+    {
+      "id": "e-demo-11",
+      "kind": "user_message",
+      "timestamp": "2026-09-02T11:00:00Z",
+      "session_id": "s-demo-2",
+      "message_id": "m-demo-5"
+    },
+    {
+      "id": "e-demo-12",
+      "kind": "tool_start",
+      "timestamp": "2026-09-02T11:00:01Z",
+      "session_id": "s-demo-2",
+      "call_id": "c-demo-4"
+    },
+    {
+      "id": "e-demo-13",
+      "kind": "assistant_message",
+      "timestamp": "2026-09-02T11:00:03Z",
+      "session_id": "s-demo-2",
+      "message_id": "m-demo-6"
+    }
+  ]
+}

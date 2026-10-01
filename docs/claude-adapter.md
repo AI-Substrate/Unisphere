@@ -11,6 +11,34 @@ This page describes native extraction, not a second registry or native-format
 fidelity guarantee. The supported dialect is demonstrated by synthetic
 `claude-basic.jsonl` and `claude-parts.jsonl` fixtures in `unisphere-testkit`.
 
+## Query observations
+
+`ClaudeCodeAdapter` also implements the pure core `QueryAdapter` port for supplied
+JSONL records. Query inspection never performs discovery or I/O and returns the
+caller-supplied source revision on every observation. The versioned
+`claude-code/query-v1` rule creates a conversation partition only from an explicit
+`sessionId`; an optional `agentId` remains a separate participant key so reused
+session IDs do not collapse subagents. Records without a native session ID remain
+in a source-only partition rather than receiving an invented conversation ID.
+Explicit `cwd` values become source-qualified `NativeCwd` association observations;
+scope matching remains the SDK's responsibility.
+
+User text is an initiating request only when the native user message contains a
+text part. A user record containing only `tool_result` parts is a tool response,
+`isMeta: true` is injected context, and `isCompactSummary: true` is a summary.
+These markers are evidence for later SDK reconstruction; the adapter does not
+construct logical turns. `tool_use.id` and `tool_result.tool_use_id` are retained
+as exact scoped call identities. Original tool names remain unchanged while known
+names receive a separate family such as `shell`, `file-read`, or `file-write`.
+Missing call IDs stay unavailable and are never derived from adjacency or text.
+
+Native message usage is emitted as an invocation-scoped observation with only
+independently valid counters. Native timestamps retain a native clock basis.
+Message text, reasoning, tool inputs, and tool outputs are represented as
+`SensitiveOmitted` unless the supplied `ContentAccess` authorizes that exact field
+or explicit emission. Unsupported parts remain typed `NotSupported` markers even
+with content consent; inspection never dumps opaque payloads.
+
 ## Physical records, not reconstructed operations
 
 Every valid JSON physical record produces one source-derived

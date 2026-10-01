@@ -1,7 +1,8 @@
 # Oh My Pi JSONL adapter
 
-`unisphere-adapter-omp` exports the stateless `OmpAdapter: SessionAdapter` and
-`DESCRIPTOR` with selection/provenance ID `oh-my-pi`. This is **not** the Pi
+`unisphere-adapter-omp` exports the stateless `OmpAdapter`, implementing both
+`SessionAdapter` and `QueryAdapter`, plus `DESCRIPTOR` with selection/provenance
+ID `oh-my-pi`. This is **not** the Pi
 adapter: Oh My Pi has a fixed mutable title prefix and additional native entry,
 message, usage and reference shapes.
 
@@ -49,6 +50,39 @@ retitles. A supplied `title_change` audit entry is independently exported, but
 is not a guarantee that every slot rewrite has an audit entry. Re-reading the
 file from the start can observe the current slot, but this mapper performs no
 reconciliation, deletion handling or title refresh itself.
+
+## Query inspection
+
+`QueryAdapter::inspect` accepts only caller-supplied JSONL `NativeQueryInput::Records` and
+returns the shared core `InspectedSource` contract. It uses policy
+`oh-my-pi-v3-query-v1`; it opens no path and never parses its own OTLP output. The JSON
+decoder is shared with `SessionAdapter::map`, while query classification runs before any
+destructive field removal. Existing OTLP bytes and record-local mapping semantics are
+unchanged.
+
+A validated v3 `session` header creates a `Conversation` source partition with
+`ValidatedHeader` membership. Its native `id`, timestamp, `cwd` association, optional title
+and unresolved `parentSession` lineage reference remain source-qualified. The adapter does
+not open or traverse `parentSession`. Missing or unsupported headers leave source-only
+evidence with typed availability rather than inventing a conversation ID. Every tree entry
+retains its native record ID, direct `parentId`, source offset and native order; duplicate IDs
+remain explicit conflict evidence. No branch is selected as active and physical order is not
+used to infer ancestry.
+
+Explicit user messages are the only initiating request markers. Assistant/developer messages,
+tool results, injected/custom records and compaction/branch summaries remain distinct.
+Assistant `toolCall` parts expose native call ID/name, a registered family when known and
+arguments only under `ContentAccess`; `toolResult` exposes its native call identity, outcome
+and content under the same policy. Pairing is left to the SDK. Bash/Python execution records
+are source controls, not invented model tool calls. Compaction `firstKeptEntryId` and branch
+`fromId` are typed links, never replay instructions.
+
+Outer entry time and integral inner message epoch-millisecond time remain separate
+observations. Assistant duration/TTFT are retained as `native_response_timing` message facts,
+never as tool duration. Native assistant usage remains a source-qualified cumulative snapshot;
+it is not summed, paired or promoted to a session total. Default inspection retains only
+typed `SensitiveOmitted` parts for message text, reasoning, arguments and results; explicit
+content access is required to retain those payloads for local filtering or emission.
 
 ## Messages and opt-in content
 
@@ -129,15 +163,17 @@ not deduplicated and must not blindly be summed as independent billable calls.
 ## Proof and remaining boundaries
 
 `crates/adapter-omp/tests/fixtures/native.jsonl` is synthetic, authored from public
-source structure; no private session payloads were read or copied. The regression
-suite covers shared conformance, metadata/content separation, split-batch
-invariance, title UTF-8 framing, parent identity, structured tools/references,
-measured usage, invalid counts/time, custom/control separation and safe failures.
-
+source structure; no private session payloads were read or copied. The mapping and
+query regression suites cover shared conformance, metadata/content separation,
+split-batch invariance, validated header membership, native cwd, parent-tree/control
+links, request markers, call/result facts, title UTF-8 framing, structured
+tools/references, measured usage, separate clocks, conflicts, invalid counts/time,
+custom/control separation and safe failures.
 PM-run proof after coordinated workspace registration/lockfile resolution:
 
 ```sh
 cargo test --locked -p unisphere-adapter-omp --test mapping
+cargo test --locked -p unisphere-adapter-omp --test query
 cargo clippy --locked -p unisphere-adapter-omp --all-targets -- -D warnings
 cargo fmt --all -- --check
 ```

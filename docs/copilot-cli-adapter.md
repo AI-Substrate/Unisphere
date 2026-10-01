@@ -43,6 +43,58 @@ CLI resume is claimed. The cursor is only safe under the loader's append-only
 source assumption; rewinds, in-place history edits and deleted records are not
 reconciled by this mapper.
 
+### Query inspection
+
+The same `CopilotCliAdapter` also implements the pure `QueryAdapter` port for
+caller-supplied `NativeQueryInput::Records`. The policy identifier is
+`copilot-cli-events-query-v1`; it is recorded on the returned `SourceEvidence`
+beside the loader-supplied revision. Inspection does not call the telemetry
+mapper, allocate discarded `TelemetryRecord` values, read files, or change the
+record-local OTLP projection above.
+
+Each JSONL record remains one `Observation` with its exact `Jsonl` locator,
+native event `id`, `parentId`, source-local offset order, event timestamp and
+native kind. A validated `session.start` or `session.resume` header establishes
+source-local session membership for following records. A top-level `agentId`
+qualifies a separate participant partition; it is never collapsed into the main
+participant merely because the native session ID is shared. Idless events remain
+source observations with unavailable branch identity rather than receiving a
+synthetic conversation or event ID.
+
+The inspection facets preserve only evidence the format supplies:
+
+- User messages are initiating request markers. System/developer messages are
+  injected markers; tool results, progress, context changes and compaction are
+  never initiating requests.
+- Native `turnId`, `messageId`, `toolCallId`, `parentToolCallId` and event-parent
+  links stay explicit. The adapter does not construct logical turns or pair calls.
+- Tool starts and assistant tool requests are `ToolCall` facts. Completion maps an
+  explicit `success` or `cancelled` state to `succeeded`, `failed` or `cancelled`;
+  absent terminal state remains `unknown`. Partial/progress/delta events remain
+  `ToolProgress`. Missing starts/results remain unpaired for the SDK to classify.
+- Tool duration and exit status are not interpreted from unregistered generic
+  fields. Endpoint timing, incomplete calls, retries, duplicate terminals and
+  clock compatibility are SDK reconstruction decisions, never adjacency or text
+  guesses here.
+- The exact native tool name is retained. Only a closed adapter table assigns the
+  `shell`, `file-read` or `file-write` family; every other name has unknown family.
+- Context `cwd` and `gitRoot` become record-range association observations. A
+  following context event closes the prior range. Branch values remain native
+  branch evidence. No remote URL, prompt mention or basename becomes repository
+  association.
+- Per-call assistant usage and message output observations are `invocation`;
+  direct shutdown/checkpoint token totals are `cumulative_snapshot`. Empty or
+  differently shaped native accounting records do not become zero-valued usage.
+  These scopes must not be summed as interchangeable consumption.
+
+Message text/reasoning, tool input/output/progress, titles and model names are
+retained only when the corresponding `ContentAccess` field permits local
+inspection or content emission. Denied payloads carry typed `sensitive_omitted`
+availability. Structural correlation IDs remain available internally so privacy
+projection cannot destroy identity or pairing evidence. Invalid/missing clocks,
+unsupported attachments and malformed supported fields use typed availability;
+no parser text or native payload is placed in diagnostics.
+
 ### Supported event projection
 
 | Native family | Projection |
@@ -178,6 +230,24 @@ Chat messages have **no inferred occurrence time**. Session `startTime` supplies
 only the header timestamp; it never timestamps each chat message or a timeline
 item missing its own time. No native model/usage fields were observed, so this
 legacy projection emits no model attribution or usage counters.
+
+### Legacy query views
+
+`CopilotCliAdapterSnapshot` implements `QueryAdapter` for the same supplied
+`NativeSnapshot`; its policy identifier is `copilot-cli-legacy-query-v1`.
+Inspection returns a source-only header partition plus distinct `legacy_chat` and
+`legacy_timeline` partitions when those arrays exist. Every observation carries
+the exact snapshot key and revision. Array positions are revision-local order,
+not stable cross-revision native IDs.
+
+Both views may contain equal text and equal tool call IDs. They stay independent
+evidence partitions: the adapter performs no cross-view deduplication, pairing or
+turn merge. Native user roles are initiating markers within their own view;
+tool-role chat entries are tool-response markers. Chat entries have a typed
+`not_captured` timestamp and never inherit `startTime`. Timeline entries use only
+their own valid timestamp. Tool completion without an explicit success field has
+`unknown` outcome, not success. Legacy content and tool arguments/results obey the
+same field-scoped `ContentAccess` boundary as current events.
 
 With content opt-in:
 

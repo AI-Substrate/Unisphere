@@ -1,0 +1,8 @@
+{
+  "recorded_at": "2026-09-10T22:08:15.333Z",
+  "query_policy": "Query outputs may be created in the checkout but not common/per-worktree Git stores. Native note export retains full triple exclusion.",
+  "unknown_identity": "Fail closed for file output when an admitted Git source identity cannot be established; its stores may live outside the selected repository (linked worktrees). Emit source access/Git-unavailable recovery, not ChooseNewOutput. Explicitly excluded Git sources impose no output guard.",
+  "preflight": "Noncreating check catches existing/dangling target, missing/non-directory parent. OS permission failure may occur only at create after query reads; no promised no-read-on-permission-failure. No partial bytes/retryability claimed before destination writes.",
+  "shared_predicate": "Core GitNotesListing exposes named native/query policies through one pure helper; both shells canonicalize parent. No duplicate root lists or presentation logic in QuerySource.",
+  "evidence": "verification/git-source-output-safety.json; refined matrix pins exit/code and includes positive checkout output and Git-less nonGit output."
+}

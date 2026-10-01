@@ -1,0 +1,95 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "review",
+      "value": {
+        "record_type": "review",
+        "id": "rv-028-decomposition-r1",
+        "recorded_at": "2026-09-29T04:40:49+00:00",
+        "scope": "decomposition",
+        "subject_sha": "d37b43180a35602b064400e31a14413d9c229b83",
+        "plan": {
+          "path": "docs/plans/028-prep-canonical-tables/plan.dd.json",
+          "sha256": "e1872f2cc578e37b275fad3b3057c05b38ed9f7e719de360696c32bbcf5d6f86"
+        },
+        "guide": {
+          "path": "docs/plans/028-prep-canonical-tables/assets/impl-guide.dd.json",
+          "sha256": "bafc934ed01117b6149aba0322f11c4e9fe32cc2a678284a3e7d7909caca1d82"
+        },
+        "reviewer_id": "pij-panicky-anteater",
+        "requested": {
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-sonnet-5.5",
+          "source": {
+            "harness": "guide",
+            "model": "guide"
+          }
+        },
+        "observed": {
+          "peer_id": "pij-panicky-anteater",
+          "root": "/Users/jordanknight/substrate/unisphere/unisphere-028-review",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/claude-sonnet-5.5",
+          "native_session": "01a0eb71-0bdc-74bd-97d4-6f85f7527e72",
+          "pid": 53353,
+          "argv": [
+            "omp",
+            "--auto-approve",
+            "--model",
+            "github-copilot/claude-sonnet-5.5"
+          ],
+          "evidence": [
+            "pij whoami --json (model github-copilot/claude-sonnet-5.5, provider github-copilot, parent pij-native-tick)",
+            "ps -o pid,args -p 53353",
+            "git -C unisphere-028-review log -1 --format=%H (d37b43180a35602b064400e31a14413d9c229b83) matched git -C unisphere-prep log -1 -- reviewer-decomposition-r1.md",
+            "sha256sum of plan.dd.json, assets/impl-guide.dd.json, assets/backpressure.dd.json in the clone — all three match the packet bindings table",
+            "harness builder guide docs/plans/028-prep-canonical-tables --check in the clone: status ok, 3 capability-owner warnings (cp-0006, cp-0009, cp-000c, all owner ph-62fe)",
+            "read plan.dd.md, original-ask.md, assets/impl-guide.dd.json (full), assets/backpressure.dd.json (full) at the subject",
+            "read POC crates/core/src/prep.rs, crates/sdk/src/prep.rs, crates/loader-jsonl/src/prep.rs, crates/adapter-claude/src/prep.rs, crates/output-prep/src/lib.rs, crates/cli/src/prep.rs, crates/app/src/main.rs",
+            "read unishpere-main/scratch/session-status-prime-answers.md and cross-checked SessionFacts fields against Plan 029's stated needs",
+            "spot-verified 3 backpressure probes against source: unisphere-arch-check.rs allowlist/scan scope (crates/core/src + unisphere-adapter-* only), unisphere-proof.rs mode list (stops at git-notes, no prep mode), crates/app/tests/adapter_catalog.rs:119 (cli_persisted_resume == false today)"
+          ],
+          "gaps": [
+            "No provider-side attestation available beyond the harness-reported model string and the omp models catalogue listing named in the guide's roles table; per the guide's own caveat this listing is not provider attestation.",
+            "effort was not requested/observed (null in pij whoami)",
+            "Did not run cargo test / harness checks / harness boot myself; decomposition review scope is text+code inspection per the packet's evidence list, which names only harness builder guide --check as the command to run."
+          ]
+        },
+        "verdict": "changes-requested",
+        "report": {
+          "path": "docs/plans/028-prep-canonical-tables/assets/reviews/decomposition-r1.md",
+          "sha256": "e75dce62e54995307ec7ad2d8e6b6429959333d25fefdc84e2f47482117e55c2"
+        },
+        "findings": [
+          {
+            "id": "F-01",
+            "severity": "medium",
+            "description": "AC-0007 requires a per-source outcome vocabulary including 'skipped', but the frozen v2 PrepSourceStatus enum (New | Unchanged | Appended | Replaced{reason} | Unreadable | Unsupported | Missing) has no Skipped variant and no stated mapping from 'skipped' to 'Missing' or any other variant. Discovery-time skip counts (symlinks/hidden) are a separate axis (PrepSkipCounts) and don't resolve this. Needs PM disposition before core::prep is sealed.",
+            "disposition": "open",
+            "evidence": "plan.dd.md ac-0007 text vs impl-guide.dd.json architecture.contracts 'Outcomes' clause (PrepSourceStatus enum)"
+          },
+          {
+            "id": "F-02",
+            "severity": "medium",
+            "description": "The frozen v2 row schema (calls: ts, ts_ms, input, cw_1h, cw_5m, cache_read, output; turns: started_ts, started_ts_ms; row-prefix native_offset, native_key) is not annotated Option<> anywhere in architecture.contracts, and the POC's current PrepCallRow makes ts:String/ts_ms:i64 non-optional today. The guide's own planned phase-2 lanes (Cursor transcript: 'no ids, timestamps, models or usage... explicit nulls'; VS Code Copilot and Codex: usage 'omitted') require these same fields to be null, contradicting the frozen non-optional schema and risking the exact 'PM contract delta' to a sealed core::prep the guide says it wants to avoid.",
+            "disposition": "open",
+            "evidence": "impl-guide.dd.json architecture.contracts 'Rows' clause and 'Planned phase-2 lanes' clause; crates/core/src/prep.rs:57-77 (PrepCallRow ts/ts_ms non-optional in the current POC)"
+          },
+          {
+            "id": "F-03",
+            "severity": "low",
+            "description": "Capability cp-000b (AC-000b privacy/safety) lists proof [vd-0002, vd-0003, vd-0005, vd-0008] but omits vd-0006, which is the JSONL loader test that actually asserts read-only opens — the concrete proof of the 'native stores opened read-only' half of the claim. tk-0003 (the loader's owner) is also absent from cp-000b's ownership. The check exists and is already required by tk-0003's own responsibility text; this is a capability-to-check traceability gap, not a missing proof.",
+            "disposition": "open",
+            "evidence": "impl-guide.dd.json capabilities/cp-000b vs checks/vd-0006 description"
+          }
+        ]
+      }
+    }
+  ],
+  "references": []
+}

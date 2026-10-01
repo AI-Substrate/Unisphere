@@ -1,0 +1,833 @@
+{
+  "status": "Preferred-direction command contract; NOT current runtime capability",
+  "fixture": "synthetic-query-fixture.json",
+  "common_contract": "query-contract.md",
+  "documentation_contract": "documentation-design.md",
+  "commands": [
+    {
+      "command": "adapters list",
+      "why": "Discover supported formats before scanning private stores.",
+      "user_question": "Does this release understand my harness?",
+      "example_argv": [
+        "unisphere",
+        "adapters",
+        "list",
+        "--json"
+      ],
+      "expected_projection": {
+        "adapter_ids": [
+          "claude-code",
+          "codex"
+        ],
+        "illustration": "subset only; actual registry includes every supported adapter"
+      },
+      "interpretation": "Capabilities describe support, not detected installations.",
+      "failure_or_limit": "Unsupported source is not guessed from a similar filename.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "sources list",
+      "why": "Diagnose where repository work can be read and attributed.",
+      "user_question": "Which stores contain evidence for this repo?",
+      "example_argv": [
+        "unisphere",
+        "sources",
+        "list",
+        "--repo",
+        ".",
+        "--include-content",
+        "--format",
+        "json"
+      ],
+      "expected_projection": {
+        "rows": [
+          {
+            "id": "src-demo-1",
+            "adapter": "claude-code",
+            "format": "jsonl",
+            "project_path": "/workspace/demo-flight-bag",
+            "association": "native.cwd",
+            "read_status": "readable",
+            "revision": "synthetic-revision-a"
+          },
+          {
+            "id": "src-demo-2",
+            "adapter": "codex",
+            "format": "jsonl",
+            "project_path": "/workspace/demo-flight-bag",
+            "association": "native.cwd",
+            "read_status": "readable",
+            "revision": "synthetic-revision-b"
+          }
+        ],
+        "coverage": {
+          "unreadable": 0,
+          "unassociated": 0
+        }
+      },
+      "interpretation": "Two readable associated source representations; not two sessions by definition.",
+      "failure_or_limit": "Unreadable and unassociated sources appear as coverage categories, not silent zeroes.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "sources check",
+      "why": "Explain empty discovery before users widen scans unsafely.",
+      "user_question": "Why is a source missing or rejected?",
+      "example_argv": [
+        "unisphere",
+        "sources",
+        "check",
+        "--source",
+        "src-demo-1",
+        "--format",
+        "json"
+      ],
+      "expected_projection": {
+        "id": "src-demo-1",
+        "read_status": "readable",
+        "association": "native.cwd",
+        "format": "jsonl"
+      },
+      "interpretation": "Read-only structural readiness, not a promise that every source field is known.",
+      "failure_or_limit": "An invalid ref/path or permission failure is operational failure, not no sessions.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "sessions list",
+      "why": "Find prior work by user-facing metadata rather than filename archaeology.",
+      "user_question": "Where is the airspace work?",
+      "example_argv": [
+        "unisphere",
+        "sessions",
+        "list",
+        "--repo",
+        ".",
+        "--name",
+        "*Airspace*",
+        "--harness",
+        "claude-code",
+        "--source-adapter",
+        "claude-code",
+        "--include-content",
+        "--format",
+        "json"
+      ],
+      "expected_projection": {
+        "rows": [
+          {
+            "id": "s-demo-1",
+            "native_id": "native-session-a",
+            "harness": "claude-code",
+            "name": "Airspace parser",
+            "started_at": "2026-09-01T10:00:00Z",
+            "turn_count": 2,
+            "message_count": 4,
+            "tool_call_count": 3,
+            "source_ids": [
+              "src-demo-1"
+            ]
+          }
+        ],
+        "matched": 1
+      },
+      "interpretation": "One logical session after proven representation deduplication.",
+      "failure_or_limit": "Names may be absent; ambiguous native IDs cannot select an arbitrary session.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "sessions show",
+      "why": "Orient a reader before dumping a large transcript.",
+      "user_question": "What is this run and which evidence supports it?",
+      "example_argv": [
+        "unisphere",
+        "sessions",
+        "show",
+        "s-demo-1",
+        "--repo",
+        ".",
+        "--include-content",
+        "--format",
+        "json"
+      ],
+      "expected_projection": {
+        "id": "s-demo-1",
+        "native_id": "native-session-a",
+        "harness": "claude-code",
+        "name": "Airspace parser",
+        "started_at": "2026-09-01T10:00:00Z",
+        "turn_count": 2,
+        "message_count": 4,
+        "tool_call_count": 3,
+        "source_ids": [
+          "src-demo-1"
+        ]
+      },
+      "interpretation": "Observed counts and source links; missing fields remain explicitly unavailable.",
+      "failure_or_limit": "Missing transcript does not erase a metadata-only known session.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "sessions tree",
+      "why": "Understand delegation and forks without conflating them.",
+      "user_question": "Did this run delegate, fork or resume?",
+      "example_argv": [
+        "unisphere",
+        "sessions",
+        "tree",
+        "s-demo-1",
+        "--repo",
+        ".",
+        "--format",
+        "json"
+      ],
+      "expected_projection": {
+        "root": "s-demo-1",
+        "children": [],
+        "lineage_coverage": "no child relationship observed in fixture"
+      },
+      "interpretation": "No observed children is not proof that the source captured every child.",
+      "failure_or_limit": "Cycles/dangling parents are flagged; no parent is inferred from equal text.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "sessions stats",
+      "why": "Estimate the size and shape of selected work before reading it.",
+      "user_question": "How much observed activity is in this repo?",
+      "example_argv": [
+        "unisphere",
+        "sessions",
+        "stats",
+        "--repo",
+        ".",
+        "--format",
+        "json"
+      ],
+      "expected_projection": {
+        "sessions": 2,
+        "turns": 3,
+        "messages": 6,
+        "tool_calls": 4
+      },
+      "interpretation": "Observed fixture counts, not a productivity score or full-history guarantee.",
+      "failure_or_limit": "Partial or unresolved evidence qualifies totals; cumulative usage is not blindly summed.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "sessions extract",
+      "why": "Share or archive the selected readable view without hand-copying.",
+      "user_question": "Can I take this conversation into a review?",
+      "example_argv": [
+        "unisphere",
+        "sessions",
+        "extract",
+        "--repo",
+        ".",
+        "--session",
+        "s-demo-1",
+        "--include-content",
+        "--format",
+        "markdown"
+      ],
+      "expected_projection": {
+        "session": "s-demo-1",
+        "turn_ids": [
+          "t-demo-1",
+          "t-demo-2"
+        ],
+        "message_ids": [
+          "m-demo-1",
+          "m-demo-2",
+          "m-demo-3",
+          "m-demo-4"
+        ]
+      },
+      "interpretation": "Human-readable complete selected view with provenance and uncertainty notes.",
+      "failure_or_limit": "Not a raw lossless archive; payload omission without consent is intentional.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "sessions export",
+      "why": "Preserve the existing standards-based explicit-source integration.",
+      "user_question": "How do I send native telemetry to my own OTLP importer?",
+      "example_argv": [
+        "unisphere",
+        "sessions",
+        "export",
+        "--adapter",
+        "claude-code",
+        "--input",
+        "/fixtures/native/session-a.jsonl"
+      ],
+      "expected_projection": {
+        "top_level_key": "resourceLogs",
+        "format": "OTLP LogsData JSONL"
+      },
+      "interpretation": "Existing operation stays distinct from query-view/Markdown extraction.",
+      "failure_or_limit": "Creates new output only; no persisted resume/exactly-once claim.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "turns list",
+      "why": "Navigate requests and their work rather than physical records.",
+      "user_question": "Which turns used multiple tools?",
+      "example_argv": [
+        "unisphere",
+        "turns",
+        "list",
+        "--repo",
+        ".",
+        "--session",
+        "s-demo-1",
+        "--min-tool-calls",
+        "2",
+        "--format",
+        "json"
+      ],
+      "expected_projection": {
+        "rows": [
+          {
+            "id": "t-demo-1",
+            "session_id": "s-demo-1",
+            "ordinal": 1,
+            "started_at": "2026-09-01T10:00:00Z",
+            "message_ids": [
+              "m-demo-1",
+              "m-demo-2"
+            ],
+            "call_ids": [
+              "c-demo-1",
+              "c-demo-2"
+            ],
+            "boundary_basis": "synthetic explicit native boundary"
+          }
+        ],
+        "matched": 1
+      },
+      "interpretation": "A turn keeps its stable full-view ordinal after filtering.",
+      "failure_or_limit": "Unresolvable fragments remain events; no one-line-one-turn fallback.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "turns show",
+      "why": "Inspect one episode with its associated calls and responses.",
+      "user_question": "What happened after this particular request?",
+      "example_argv": [
+        "unisphere",
+        "turns",
+        "show",
+        "t-demo-2",
+        "--repo",
+        ".",
+        "--format",
+        "json"
+      ],
+      "expected_projection": {
+        "id": "t-demo-2",
+        "session_id": "s-demo-1",
+        "ordinal": 2,
+        "started_at": "2026-09-01T10:02:00Z",
+        "message_ids": [
+          "m-demo-3",
+          "m-demo-4"
+        ],
+        "call_ids": [
+          "c-demo-3"
+        ],
+        "boundary_basis": "synthetic explicit native boundary"
+      },
+      "interpretation": "One request episode, with links to the failed invocation and messages.",
+      "failure_or_limit": "Source boundary and pairing uncertainty are visible.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "turns stats",
+      "why": "Compare the observed number of request episodes across sessions.",
+      "user_question": "Which sessions contain the most turns?",
+      "example_argv": [
+        "unisphere",
+        "turns",
+        "stats",
+        "--repo",
+        ".",
+        "--group-by",
+        "session_id",
+        "--metrics",
+        "count",
+        "--sort=-count",
+        "--format",
+        "json"
+      ],
+      "expected_projection": {
+        "rows": [
+          {
+            "session_id": "s-demo-1",
+            "count": 2
+          },
+          {
+            "session_id": "s-demo-2",
+            "count": 1
+          }
+        ]
+      },
+      "interpretation": "Counts source-supported turns, not token records or progress messages.",
+      "failure_or_limit": "Incomplete boundaries have named coverage, not fabricated complete turns.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "turns extract",
+      "why": "Keep enough context to understand a failure.",
+      "user_question": "Give me failed shell turns and the preceding request episode.",
+      "example_argv": [
+        "unisphere",
+        "turns",
+        "extract",
+        "--repo",
+        ".",
+        "--has-tool-family",
+        "shell",
+        "--has-errors",
+        "--context-before",
+        "1",
+        "--include-content",
+        "--format",
+        "jsonl"
+      ],
+      "expected_projection": {
+        "rows": [
+          {
+            "id": "t-demo-1",
+            "selection_role": "context"
+          },
+          {
+            "id": "t-demo-2",
+            "selection_role": "match"
+          }
+        ],
+        "matched": 1,
+        "emitted": 2
+      },
+      "interpretation": "Context expands after matching and stays within the same session branch.",
+      "failure_or_limit": "Context may lie outside the filter window and must be labelled.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "messages list",
+      "why": "Remove tool/system noise when reviewing user intent.",
+      "user_question": "What did users actually ask?",
+      "example_argv": [
+        "unisphere",
+        "messages",
+        "list",
+        "--repo",
+        ".",
+        "--role",
+        "user",
+        "--format",
+        "json"
+      ],
+      "expected_projection": {
+        "ids": [
+          "m-demo-1",
+          "m-demo-3",
+          "m-demo-5"
+        ],
+        "content_included": false
+      },
+      "interpretation": "Role/identity metadata only unless content is explicitly requested.",
+      "failure_or_limit": "Content-search permission does not imply permission to echo text/snippets.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "messages show",
+      "why": "Read one exact message without guessing its location.",
+      "user_question": "Show the response referenced by this result.",
+      "example_argv": [
+        "unisphere",
+        "messages",
+        "show",
+        "m-demo-4",
+        "--repo",
+        ".",
+        "--include-content",
+        "--format",
+        "json"
+      ],
+      "expected_projection": {
+        "id": "m-demo-4",
+        "session_id": "s-demo-1",
+        "turn_id": "t-demo-2",
+        "role": "assistant",
+        "timestamp": "2026-09-01T10:02:02Z",
+        "text": "Lint failed."
+      },
+      "interpretation": "Exact selected message and provenance, not a generated summary.",
+      "failure_or_limit": "Unknown or ambiguous ID fails with a selection recovery action.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "messages extract",
+      "why": "Collect requests from an event-time window for prompt review.",
+      "user_question": "Which user requests were made on September 1?",
+      "example_argv": [
+        "unisphere",
+        "messages",
+        "extract",
+        "--repo",
+        ".",
+        "--role",
+        "user",
+        "--since",
+        "2026-09-01",
+        "--until",
+        "2026-09-02",
+        "--time-field",
+        "timestamp",
+        "--include-content",
+        "--format",
+        "text"
+      ],
+      "expected_projection": {
+        "lines": [
+          "Check the parser.",
+          "Run lint."
+        ],
+        "message_ids": [
+          "m-demo-1",
+          "m-demo-3"
+        ]
+      },
+      "interpretation": "Filters message timestamps, not session start dates.",
+      "failure_or_limit": "Half-open UTC window; undated messages excluded unless explicitly included.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "tools list",
+      "why": "Find operational failures without reading whole conversations.",
+      "user_question": "Which invocations failed?",
+      "example_argv": [
+        "unisphere",
+        "tools",
+        "list",
+        "--repo",
+        ".",
+        "--status",
+        "failed",
+        "--include-content",
+        "--format",
+        "json"
+      ],
+      "expected_projection": {
+        "ids": [
+          "c-demo-3"
+        ],
+        "tool_names": [
+          "Bash"
+        ],
+        "exit_codes": [
+          101
+        ]
+      },
+      "interpretation": "One invocation, not separate start and result rows.",
+      "failure_or_limit": "Incomplete/unknown calls are not classified as success or failure by absence.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "tools show",
+      "why": "Explain a particular execution and its observed timing.",
+      "user_question": "What was this call and why did it fail?",
+      "example_argv": [
+        "unisphere",
+        "tools",
+        "show",
+        "c-demo-3",
+        "--repo",
+        ".",
+        "--include-content",
+        "--format",
+        "json"
+      ],
+      "expected_projection": {
+        "id": "c-demo-3",
+        "session_id": "s-demo-1",
+        "turn_id": "t-demo-2",
+        "tool_name": "Bash",
+        "tool_family": "shell",
+        "command": "cargo clippy",
+        "started_at": "2026-09-01T10:02:01Z",
+        "duration_ms": 500,
+        "duration_basis": "matched-source-times",
+        "status": "failed",
+        "exit_code": 101
+      },
+      "interpretation": "Command is inert data; duration carries a measurement basis.",
+      "failure_or_limit": "No command execution, URL dereference or attachment loading.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "tools stats",
+      "why": "Measure the selected calls without distorting missing samples.",
+      "user_question": "How slow are shell calls, and how many are unfinished?",
+      "example_argv": [
+        "unisphere",
+        "tools",
+        "stats",
+        "--repo",
+        ".",
+        "--tool-family",
+        "shell",
+        "--metrics",
+        "count,measured_count,missing_duration_count,failures,mean_ms,p50_ms,p95_ms",
+        "--format",
+        "json"
+      ],
+      "expected_projection": {
+        "count": 3,
+        "measured_count": 2,
+        "missing_duration_count": 1,
+        "failures": 1,
+        "mean_ms": 1000,
+        "p50_ms": 500,
+        "p95_ms": 1500
+      },
+      "interpretation": "Nearest-rank percentiles over 1500ms and 500ms; missing duration is not zero.",
+      "failure_or_limit": "No measured calls yields null mean/percentiles, not an arithmetic error.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "tools extract",
+      "why": "Feed real structured invocations into existing analysis tools.",
+      "user_question": "List every shell command and its timing for a pipeline.",
+      "example_argv": [
+        "unisphere",
+        "tools",
+        "extract",
+        "--repo",
+        ".",
+        "--tool-family",
+        "shell",
+        "--include-content",
+        "--columns",
+        "id,command,duration_ms,status",
+        "--format",
+        "jsonl"
+      ],
+      "expected_projection": {
+        "rows": [
+          {
+            "id": "c-demo-1",
+            "command": "cargo test",
+            "duration_ms": 1500,
+            "status": "succeeded"
+          },
+          {
+            "id": "c-demo-3",
+            "command": "cargo clippy",
+            "duration_ms": 500,
+            "status": "failed"
+          },
+          {
+            "id": "c-demo-4",
+            "command": "cargo test",
+            "duration_ms": null,
+            "status": "incomplete"
+          }
+        ]
+      },
+      "interpretation": "Three calls remain visible, including the incomplete call with null duration.",
+      "failure_or_limit": "Payload columns require content consent; statistics cannot silently drop the missing sample count.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "events list",
+      "why": "Inspect the source-derived substrate when a higher-level view is unclear.",
+      "user_question": "Which tool-start events were observed?",
+      "example_argv": [
+        "unisphere",
+        "events",
+        "list",
+        "--repo",
+        ".",
+        "--kind",
+        "tool_start",
+        "--format",
+        "json"
+      ],
+      "expected_projection": {
+        "ids": [
+          "e-demo-2",
+          "e-demo-4",
+          "e-demo-8",
+          "e-demo-12"
+        ]
+      },
+      "interpretation": "Event rows preserve source provenance and do not claim to be complete calls.",
+      "failure_or_limit": "Unknown kinds remain named source events rather than invented standard GenAI operations.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "events show",
+      "why": "Trace an aggregate or projection back to a particular source event.",
+      "user_question": "What evidence produced this result?",
+      "example_argv": [
+        "unisphere",
+        "events",
+        "show",
+        "e-demo-9",
+        "--repo",
+        ".",
+        "--format",
+        "json"
+      ],
+      "expected_projection": {
+        "id": "e-demo-9",
+        "kind": "tool_end",
+        "timestamp": "2026-09-01T10:02:01.500Z",
+        "session_id": "s-demo-1",
+        "call_id": "c-demo-3"
+      },
+      "interpretation": "A terminal event supports one pairing, not an independently counted extra invocation.",
+      "failure_or_limit": "A missing source revision is reported; never silently read different bytes.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "events extract",
+      "why": "Provide a narrow event slice for another consumer/debugger.",
+      "user_question": "Extract the September 2 event window.",
+      "example_argv": [
+        "unisphere",
+        "events",
+        "extract",
+        "--repo",
+        ".",
+        "--since",
+        "2026-09-02",
+        "--until",
+        "2026-09-03",
+        "--format",
+        "jsonl"
+      ],
+      "expected_projection": {
+        "ids": [
+          "e-demo-11",
+          "e-demo-12",
+          "e-demo-13"
+        ]
+      },
+      "interpretation": "Normalised query-event rows, not OTLP unless using the explicit OTLP export path.",
+      "failure_or_limit": "No whole-session completeness inferred from reaching the current EOF.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "schema show",
+      "why": "Let people and agents discover fields without reading Rust source.",
+      "user_question": "Which timing fields can I filter and aggregate?",
+      "example_argv": [
+        "unisphere",
+        "schema",
+        "show",
+        "tools",
+        "--json"
+      ],
+      "expected_projection": {
+        "dataset": "tools",
+        "fields": [
+          {
+            "name": "duration_ms",
+            "type": "number|null",
+            "unit": "ms",
+            "sensitive": false
+          },
+          {
+            "name": "command",
+            "type": "string|null",
+            "sensitive": true
+          }
+        ],
+        "illustration": "field subset"
+      },
+      "interpretation": "The real response includes all supported fields, filters, units and availability rules.",
+      "failure_or_limit": "Unsupported dataset/field is an argument error, not an empty result.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "docs list",
+      "why": "Make operating guidance discoverable before any source access.",
+      "user_question": "Where do I start and what can I learn next?",
+      "example_argv": [
+        "unisphere",
+        "docs",
+        "list",
+        "--json"
+      ],
+      "expected_projection": {
+        "topics": [
+          "start",
+          "agents",
+          "find-sessions",
+          "inspect-conversations",
+          "filter-time-and-text",
+          "extract-context",
+          "tool-analysis",
+          "output-and-schema",
+          "privacy-and-coverage",
+          "sdk",
+          "troubleshooting",
+          "git-ai-notes"
+        ]
+      },
+      "interpretation": "Topic availability is release-bound; Git-ai page ships only with the actual landed feature.",
+      "failure_or_limit": "Works with no stores/Git/Git AI/config/network; not a source-discovery operation.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "docs get",
+      "why": "Teach a workflow with interpretation and recovery, not only flags.",
+      "user_question": "How do I analyse shell timing without counting unknown durations as zero?",
+      "example_argv": [
+        "unisphere",
+        "docs",
+        "get",
+        "tool-analysis",
+        "--human"
+      ],
+      "expected_projection": {
+        "sections": [
+          "Question",
+          "Prerequisites",
+          "Select shell calls",
+          "Interpret duration basis",
+          "Aggregate measured samples",
+          "Handle missing completions",
+          "Related topics"
+        ]
+      },
+      "interpretation": "One complete version-matched operating page bundled in the installed binary.",
+      "failure_or_limit": "Unknown topic names real alternatives and exits nonzero without opening sources.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    },
+    {
+      "command": "config check",
+      "why": "Preserve explicit configuration validation without side effects.",
+      "user_question": "Is this source configuration valid before I scan anything?",
+      "example_argv": [
+        "unisphere",
+        "config",
+        "check",
+        "--json"
+      ],
+      "expected_projection": {
+        "ok": true,
+        "command": "config.check",
+        "v": 1,
+        "data": {
+          "configuration": {
+            "source_roots": []
+          }
+        }
+      },
+      "interpretation": "Existing configuration behavior remains independent of discovery and collection.",
+      "failure_or_limit": "No ambient config lookup or source scan added to config check.",
+      "status": "proposed; output is synthetic contract illustration, not executed behavior"
+    }
+  ]
+}

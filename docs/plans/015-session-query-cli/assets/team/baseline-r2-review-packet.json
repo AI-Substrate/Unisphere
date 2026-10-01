@@ -1,0 +1,71 @@
+{
+  "goal": "Final independent R1/F8 delta review of the actual corrected wave0 baseline; no repeat broad research",
+  "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+  "subject_sha": "4c3c665f757ddaeb1469753853018cb18febe538",
+  "plan": {
+    "path": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/plan.dd.json",
+    "sha256": "23e11ee7ec867315349aab8df11282da08bf211a6c86e27a3782292ba5bcecef"
+  },
+  "guide": {
+    "path": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/impl-guide.dd.json",
+    "sha256": "0b886259f6227b42b45939bb8bdb9f9ebaad48169a35a296cdb4c1f7b9ddecc7"
+  },
+  "requested": {
+    "harness": "omp",
+    "model": "github-copilot/claude-opus-5",
+    "effort": "high"
+  },
+  "read": [
+    "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/reviews/baseline-r1-pij-armed-cow.json",
+    "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/team/baseline-r1-decisions.json",
+    "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/verification/c25-oracle-reproduction.json",
+    "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/verification/c25-independent-derivation.py",
+    "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/verification/c25-independent-derivation.json",
+    "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/tasks/phase-1/tasks.dd.json"
+  ],
+  "code_scope": [
+    "crates/core/src/query/mod.rs",
+    "crates/core/src/query/model.rs",
+    "crates/core/src/query/source.rs",
+    "crates/core/src/query/error.rs",
+    "crates/core/src/query/schema.rs",
+    "crates/testkit/src/query.rs",
+    "crates/core/tests/query_contract.rs",
+    "crates/core/src/query/identity.rs",
+    "crates/core/src/query/fingerprint.rs",
+    "crates/core/src/lib.rs",
+    "crates/sdk/src/lib.rs",
+    "crates/testkit/src/lib.rs",
+    "crates/testkit/src/bin/unisphere-arch-check.rs",
+    "Cargo.toml",
+    "Cargo.lock",
+    "crates/core/Cargo.toml",
+    "crates/sdk/Cargo.toml",
+    "crates/testkit/fixtures/architecture/allowed.json"
+  ],
+  "proof": {
+    "focused": "57 passed incl28 query-contract tests; raw baseline-r1-focused.json",
+    "oracle": "Python stdlib oracle reproduction passed; original delivered bytes hash-verified",
+    "exact_source": "PM executing full boot and expanded external SDK consumer now; results will be assets/verification/baseline-proof-4c3c665f.json"
+  },
+  "checks": [
+    "Judge actual complete C21/C22/C23/C25 declarations, field registry, fakes/fixtures, hashes and typed actions/errors against guide; do not approve from passing tests alone",
+    "Focus privacy boundary: projected rows cannot bypass consent, raw observations not serializable, untrusted saved inputs validated; null differs from absence",
+    "Source selection before I/O, native provenance and revision checks, bounded DTO contracts and incomplete offline evidence",
+    "Stable typed timestamp selection, Turns-only ranges without requiring branch prematurely, closed nonrecursive canonical view digest; query-binding precedence and F11/F12",
+    "Public SDK external usability, appropriate core architecture and meaningful tests; flag missing contracts required by downstream coders, not unimplemented service/CLI slated for later lanes"
+  ],
+  "restrictions": [
+    "Read-only product/plan/guide/task/team/flow/main; skip all builds/tests/lint/formatters; PM owns composed validation",
+    "Do not repeat R3 guide approval as baseline approval; evaluate this exact subject and current document hashes",
+    "No commit/push/merge/global repair; do not reassign canonical ownership",
+    "Forbidden .the-flow-state.json, the-flow.json, the-flow.md, all canonical team/ledger directories except explicit review output paths",
+    "Follow pij wire discipline C10; native root remains main so read absolute plan workspace paths"
+  ],
+  "output": {
+    "report": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/reviews/baseline-r2-pij-armed-cow.json",
+    "receipt": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/reviews/baseline-r2-pij-armed-cow-receipt.json",
+    "format": "Write JSON evidence-backed report and raw ReviewReceipt matching builder/team review shape: scope decomposition (baseline seal grammar), exact subject/plan/guide/report SHA256, reviewer identity plus actual observed runtime/gaps, verdict and findings with severity/disposition. Scope explicitly actual wave0 baseline, not full plan acceptance. No unresolved material finding may accompany approved. Wait for PM proof result before final approval. Send paths and short outcome."
+  },
+  "prior_subject": "819fc30ae5d721fe2a2100ae9eef5692f10eac63"
+}

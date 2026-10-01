@@ -1,0 +1,114 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "review",
+      "value": {
+        "record_type": "review",
+        "id": "rv-029-decomposition-r1",
+        "recorded_at": "2026-09-29T06:13:02+00:00",
+        "scope": "decomposition",
+        "subject_sha": "a025ef0ff805c4882aec95ee6b4f70ae013bc12f",
+        "plan": {
+          "path": "docs/plans/029-session-status/plan.dd.json",
+          "sha256": "72145b14324e289f86c5365f93785f3d76d2024e09595685c3f92a2f8235fa39"
+        },
+        "guide": {
+          "path": "docs/plans/029-session-status/assets/impl-guide.dd.json",
+          "sha256": "c84d28b7b92b21dbba384b756e37a9aab9f69bb68e847e391b87b29176262609"
+        },
+        "reviewer_id": "pij-easy-seahorse",
+        "requested": {
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-sonnet-5.5",
+          "source": {
+            "harness": "guide",
+            "model": "guide"
+          }
+        },
+        "observed": {
+          "peer_id": "pij-easy-seahorse",
+          "root": "/Users/jordanknight/substrate/unisphere/unishpere-main",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/claude-sonnet-5.5",
+          "native_session": "01a0ebc8-c5b2-7268-8017-4ce7ad943e15",
+          "pid": 25009,
+          "argv": [
+            "omp",
+            "--auto-approve",
+            "--model",
+            "github-copilot/claude-sonnet-5.5"
+          ],
+          "evidence": [
+            "sha256sum plan.dd.json and assets/impl-guide.dd.json in unisphere-session-status match the packet bindings; git log -1 for the packet path = a025ef0ff805c4882aec95ee6b4f70ae013bc12f",
+            "read plan.dd.json and impl-guide.dd.json in full",
+            "read crates/core/src/status.rs (327 lines), crates/core/tests/status_contract.rs, crates/testkit/src/status.rs (311 lines)",
+            "read crates/sdk/src/prep.rs (PrepBinding, PrepResume, fold_source), crates/core/src/prep.rs (PrepLoader, PrepSourceStat, SessionFacts, CompactionSample), crates/testkit/src/prep.rs MemoryLoader, crates/loader-jsonl/src/prep.rs stat/anchor",
+            "diffed sdk/core prep.rs against unisphere-prep HEAD 99ac093: identical",
+            "ran: cargo test --locked -p unisphere-core --test status_contract -> 6 passed",
+            "ran: cargo run --locked -p unisphere-testkit --bin unisphere-arch-check -> 110 edges accepted",
+            "ran: cargo clippy --locked -p unisphere-testkit -p unisphere-core -- -D warnings -> clean"
+          ],
+          "gaps": [
+            "Did not run harness checks --json / boot --json; no wave-1 code exists yet to run them against.",
+            "No provider-side attestation of the model beyond the harness-reported model string and pij seat record."
+          ]
+        },
+        "verdict": "changes-requested",
+        "report": {
+          "path": "docs/plans/029-session-status/assets/reviews/decomposition-r1.md",
+          "sha256": "09c0c5a15ef825de7d8ef46064f33a641f31a3e7849817eca23a501b0c04e78a"
+        },
+        "findings": [
+          {
+            "id": "F-01",
+            "severity": "medium",
+            "description": "StatusService::new(Vec<PrepBinding>) has no source root; PrepLoader::stat/discover require a root, so default-location and explicit-path lookup cannot be implemented without ambient state. Add roots (Vec<PrepSourceSet>) and an explicit-path-under-root rule.",
+            "disposition": "open"
+          },
+          {
+            "id": "F-02",
+            "severity": "medium",
+            "description": "testkit ScriptedFold only emits CallSighting::First with unique msg_id, so last-call Update max-merge/dedup (ac-0003) is unprovable by tk-0002 without editing the sealed baseline. Add sighting and msg_id to the call step plus one baseline test before seal.",
+            "disposition": "open"
+          },
+          {
+            "id": "F-03",
+            "severity": "medium",
+            "description": "status_incremental takes StatusCursor by value, so an error loses the cursor and callers must clone per call (50 warm seats < 100 ms). Take Option<&StatusCursor>, make it Clone+Send+Sync, treat a cursor for a different target as a visible reset, and exclude source from the incremental==cold comparison.",
+            "disposition": "open"
+          },
+          {
+            "id": "F-04",
+            "severity": "medium",
+            "description": "Ownership of resolved.target.transcript and of the resolved block for explicit queries is undefined; core docs say resolved is CLI-filled only for pij/pane while ac-0001 requires it on every result. SDK sets status.target.transcript; CLI copies into resolved and always fills it (basis explicit).",
+            "disposition": "open"
+          },
+          {
+            "id": "F-05",
+            "severity": "low",
+            "description": "The unknown-fact name vocabulary is free text and SessionStatus::empty leaves unknown empty; freeze a const list or guide table.",
+            "disposition": "open"
+          },
+          {
+            "id": "F-06",
+            "severity": "low",
+            "description": "cp-0001 proof omits vd-0004 and vd-0008 (50 ms pane budget).",
+            "disposition": "open"
+          },
+          {
+            "id": "F-07",
+            "severity": "low",
+            "description": "ContextSample.total is i64 while used_tokens is u64; specify negative/missing maps to unknown. Keep the cursor accumulators compact.",
+            "disposition": "open"
+          }
+        ]
+      }
+    }
+  ],
+  "references": []
+}

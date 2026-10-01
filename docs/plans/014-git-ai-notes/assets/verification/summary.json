@@ -1,0 +1,167 @@
+{
+  "recorded_at": "2026-09-10T00:32:27.427Z",
+  "branch": "builder/014-git-ai-notes",
+  "base_commit": "2fb5b15349873cd62ccd75c94fdfedae40d561f5",
+  "scope": "Independent read-only Git-ai-format Git Notes through core ports, SDK, registered CLI and OTLP output; no Git AI dependency or retired telemetry/query CLI.",
+  "verification": {
+    "full_readiness": {
+      "command": [
+        "harness",
+        "boot",
+        "--json"
+      ],
+      "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes",
+      "exit": 0,
+      "ready": true,
+      "scope": "configuration-native-sessions-and-git-notes",
+      "artifact": "boot-attempt-2.json"
+    },
+    "quality_gates": [
+      {
+        "name": "format",
+        "exit": 0
+      },
+      {
+        "name": "clippy",
+        "exit": 0
+      },
+      {
+        "name": "tests",
+        "exit": 0
+      },
+      {
+        "name": "rustdoc",
+        "exit": 0
+      },
+      {
+        "name": "architecture",
+        "exit": 0
+      },
+      {
+        "name": "harness-regression",
+        "exit": 0
+      }
+    ],
+    "proof_modes": [
+      {
+        "name": "composition",
+        "command": "/opt/homebrew/bin/cargo",
+        "args": [
+          "run",
+          "--locked",
+          "-p",
+          "unisphere-testkit",
+          "--bin",
+          "unisphere-proof",
+          "--",
+          "composition"
+        ],
+        "exit": 0
+      },
+      {
+        "name": "sdk-consumer",
+        "command": "/opt/homebrew/bin/cargo",
+        "args": [
+          "run",
+          "--locked",
+          "-p",
+          "unisphere-testkit",
+          "--bin",
+          "unisphere-proof",
+          "--",
+          "sdk-consumer"
+        ],
+        "exit": 0
+      },
+      {
+        "name": "installed-cli",
+        "command": "/opt/homebrew/bin/cargo",
+        "args": [
+          "run",
+          "--locked",
+          "-p",
+          "unisphere-testkit",
+          "--bin",
+          "unisphere-proof",
+          "--",
+          "installed-cli"
+        ],
+        "exit": 0
+      },
+      {
+        "name": "collection",
+        "command": "/opt/homebrew/bin/cargo",
+        "args": [
+          "run",
+          "--locked",
+          "-p",
+          "unisphere-testkit",
+          "--bin",
+          "unisphere-proof",
+          "--",
+          "collection"
+        ],
+        "exit": 0
+      },
+      {
+        "name": "native",
+        "command": "/opt/homebrew/bin/cargo",
+        "args": [
+          "run",
+          "--locked",
+          "-p",
+          "unisphere-testkit",
+          "--bin",
+          "unisphere-proof",
+          "--",
+          "native"
+        ],
+        "exit": 0
+      },
+      {
+        "name": "git-notes",
+        "command": "/opt/homebrew/bin/cargo",
+        "args": [
+          "run",
+          "--locked",
+          "-p",
+          "unisphere-testkit",
+          "--bin",
+          "unisphere-proof",
+          "--",
+          "git-notes"
+        ],
+        "exit": 0
+      }
+    ],
+    "additional_smoke": "sha256-cli-smoke.json",
+    "source_manifest_match": {
+      "files": 30,
+      "matched": true
+    }
+  },
+  "review": {
+    "guide": "../reviews/guide-r2-pij-armed-cow.md",
+    "guide_sha256": "0663554ff3439b83cd5992621e26b778928c71087941971b736f7d5a47303378",
+    "implementation": "Pending separate review of the committed candidate; no implementation approval claimed."
+  },
+  "accounting": {
+    "criteria_checked": 10,
+    "implementation_units_checked": 4,
+    "receipt": "../execution-log.dd.json#entries/lg-0004",
+    "dd_validation": "0 errors; 22 E432 untracked execution-log link warnings before commit, expected to resolve once tracked."
+  },
+  "cleanup": {
+    "throwaway_repositories_removed": true,
+    "owned_observe_bucket_cleared": true,
+    "retro": ".harness/records/retro/2026-09-10/001-014-git-ai-notes.md"
+  },
+  "limitations": [
+    "Observed Darwin/Unix synthetic fixtures, not every platform/dialect.",
+    "No network-denial trace; standard Git controls and promisor refusal exercised.",
+    "Negative-only ownership fixture forces standard Git ownership check; positive Git-AI-absent proof uses actual Git directly.",
+    "Caller-controlled output parents; concurrent malicious path replacement is not claimed safe.",
+    "Independent implementation review pending."
+  ],
+  "api": "api-checkpoint.json"
+}

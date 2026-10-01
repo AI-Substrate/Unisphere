@@ -1,0 +1,10 @@
+{
+  "coder": {
+    "harness": "omp",
+    "model": "github-copilot/gpt-6-astra"
+  },
+  "reviewer": {
+    "harness": "omp",
+    "model": "github-copilot/claude-opus-5"
+  }
+}

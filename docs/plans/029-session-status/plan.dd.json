@@ -1,0 +1,208 @@
+{
+  "dd": {
+    "schema": "builder/plan"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Session status",
+        "slug": "session-status",
+        "ordinal": 29,
+        "status": "ready",
+        "summary": "`unisphere sessions status` + SDK op: give a pij id, tmux pane, or session id + harness and get one harness-neutral JSON of general session facts (current model, context used of window and %, turns, compactions, created, last updated, last call cache state).",
+        "backpressure": "assets/backpressure.dd.json#rows"
+      }
+    },
+    {
+      "name": "summary",
+      "value": "Agents and pij need quick, general facts about any agent session without knowing that harness's file format. Add `unisphere sessions status` and a matching SDK operation. Input is a pij id, a tmux pane id, or a native session id + harness (several targets per call). Output is one harness-neutral `SessionStatus` shape: current model, context used / window / percent, created, last updated and idle time, last call tokens and cache state, turn counts, compaction count and last compaction. Every fact says where it came from (native, derived, table) or is unknown. It is a single streaming pass over the live transcript built on Plan 028's session-facts fold, so it works on large, growing sessions where the query stack hits limits."
+    },
+    {
+      "name": "goals",
+      "value": [
+        "Check any agent session by pij id, tmux pane or session id and get the same facts shape regardless of harness.",
+        "Facts are correct for the questions people actually ask: current model (not the first one), context x of y, idle time, compactions, turns.",
+        "Fast enough to call casually: about a second for a 200 MB live session, and pane lookup in a blink."
+      ]
+    },
+    {
+      "name": "non_goals",
+      "value": [
+        "Account-level plan usage (5h/weekly %) and cost/pricing: pij owns those.",
+        "Reading Plan 028 prepped tables as a second source (deferred; live fold only).",
+        "Changing the existing query stack, or forking the Plan 028 fold (missing fold facts are requested via the prime).",
+        "Daemons, watchers, writes to native stores or pij, content output.",
+        "Push, PR or merge without the operator."
+      ]
+    },
+    {
+      "name": "acceptance_criteria",
+      "value": [
+        {
+          "id": "ac-0001",
+          "claim": "Lookup: `unisphere sessions status` accepts `--pij ID`, `--pane %N`, or `--session ID --harness H`, repeatable in one call. Each result has a `resolved` block (pij id, harness, session id, transcript path, basis). Pane lookup uses pij's seat list with a live-process check, else a native lookup (tmux pane -> child harness process -> the harness's own session record); disagreements are returned, not picked. Unknown seat, seat with no session, dead binding, pane not found and unsupported harness are distinct errors. Native pane lookup takes under 50 ms.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0002",
+          "claim": "One shape: every harness returns the same versioned `SessionStatus` JSON; each fact carries a basis (native, derived, table@vN, mtime-fallback) or is listed as unknown. A harness that does not record a fact never reports 0 for it.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0003",
+          "claim": "Model and context: current model is the latest main-chain, non-synthetic call's model, with a pending /model switch reported separately and a model history. A fixture that switches model mid-session reports the new model. Context used = last deduplicated main-chain call input + cache read + cache write; window is native when recorded, else a labelled versioned model table, else unknown; percent only when both are known.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0004",
+          "claim": "Activity facts: created, last updated (latest native event; file mtime only as labelled fallback), idle seconds, last call time and tokens with cache read and 1h/5m write split, inferred cache TTL bucket, stop reason when available, total turns and last-hour turns by trigger (human vs peer etc.), compaction count (manual/auto) and last compaction time/pre/post tokens, or unknown.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0005",
+          "claim": "Big and live: the 211 MB live Claude transcript returns status by session id and by `--pij` in about a second cold with no limit error; a file being appended reports its complete prefix and never fails.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0006",
+          "claim": "SDK and CLI parity: the SDK op takes an explicit target (harness, session id, optional transcript path) and never calls pij or tmux (that lookup is CLI-only). It returns (SessionStatus, cursor): an opaque caller-held cursor makes the next call read only appended bytes, resetting visibly on shrink/replace. 50 warm seats re-status in under 100 ms, measured. SessionStatus is serde with a schema version. The op's crate graph has no rusqlite/libsqlite3-sys/parquet/arrow (checked). An external SDK consumer and the installed CLI are exercised; harness checks and boot stay green. Metadata only, native stores read-only, no real data in fixtures.",
+          "state": "unchecked"
+        },
+        {
+          "id": "ac-0007",
+          "claim": "Harnesses: Claude Code in phase 1; Oh My Pi and Codex in phase 2 using Plan 028's folds. Other harnesses return an explicit unsupported result. A bundled docs topic and the SDK doc describe the command, the shape and each fact's definition.",
+          "state": "unchecked"
+        }
+      ]
+    },
+    {
+      "name": "phases",
+      "value": [
+        {
+          "id": "ph-a624",
+          "title": "Claude status end to end",
+          "brief": "SessionStatus contract, SDK op and `sessions status` CLI for Claude Code over the Plan 028 fold; pij/pane/session lookup; model, context, activity, turn and compaction facts; big-live-file proof; docs. Independent review.",
+          "state": "unchecked",
+          "tasks": "assets/tasks/phase-1/tasks.dd.json#tasks"
+        },
+        {
+          "id": "ph-b2c1",
+          "title": "Oh My Pi, Copilot CLI and Codex",
+          "brief": "Status folds for OMP (first), Copilot CLI, then Codex, macOS + Linux; same SessionStatus contract; native context window where recorded. Plan: assets/phase-2-plan.md. Each harness is pushed and pinged to pij-yelling-trout as it lands.",
+          "state": "unchecked",
+          "depends_on": [
+            "ph-a624"
+          ],
+          "tasks": "assets/tasks/phase-2/tasks.dd.json#tasks"
+        }
+      ]
+    },
+    {
+      "name": "tasks",
+      "value": []
+    },
+    {
+      "name": "done_when",
+      "value": {}
+    },
+    {
+      "name": "research_context",
+      "value": "Query stack `sessions show --pij` fails UNI-QUERY-LIMIT on live seats (measured 3/3, 5-6 s each, 2026-09-29). Plan 028 fold already yields per-call model/usage with 1h/5m split, typed compaction boundaries, turn triggers and limit events (Claude only today). pij list --json maps pane->seat->session in 0.24 s (duplicate pane rows exist; liveness required). Claude writes ~/.claude/sessions/<pid>.json with sessionId and tmux pane; pane_pid is the shell, harness is a child. Claude transcripts record per-call model and a `/model` command record."
+    },
+    {
+      "name": "testing_strategy",
+      "value": {
+        "approach": "Synthetic fixtures through the pure fold and status derivation (incl. model switch, compaction, live tail); resolver tests with fake pij/tmux/process inputs; real-machine proof on the 211 MB live session and live panes, numbers only in committed evidence."
+      }
+    },
+    {
+      "name": "documentation_strategy",
+      "value": {
+        "location": "crates/cli bundled docs topic, docs/sdk.md, docs/cli.md",
+        "approach": "One topic with the JSON shape and fact definitions; examples executed in tests."
+      }
+    },
+    {
+      "name": "risks_assumptions",
+      "value": "Depends on Plan 028 landing first (029 rebases on it). Facts missing from the 028 fold (stop_reason, /model command record, post-compaction tokens) are requested via the prime to 028 PM pij-native-tick; until then they are unknown. Pane ids are reused by tmux, so every pane answer is liveness-checked. OMP/Codex phase waits on 028 phase 2 folds."
+    },
+    {
+      "name": "open_questions",
+      "value": []
+    },
+    {
+      "name": "workshop_opportunities",
+      "value": []
+    },
+    {
+      "name": "clarifications",
+      "value": [
+        {
+          "question": "Build on what?",
+          "answer": "Plan 028 streaming fold, not the query stack. New verb + SDK op, not columns on sessions show. Claude first, then OMP, then Codex.",
+          "source": "Prime pij-suspicious-meadowlark, 2026-09-29"
+        },
+        {
+          "question": "Pane lookup ownership?",
+          "answer": "pane->seat from existing pij list + liveness (no pij change in v1); pane->native session is Unisphere's loader; conflicts returned.",
+          "source": "Prime, 2026-09-29"
+        },
+        {
+          "question": "Prepped-target second source?",
+          "answer": "Deferred: live fold only, per KISS.",
+          "source": "Jordan, 2026-09-29 (KISS)"
+        },
+        {
+          "question": "Seats and models?",
+          "answer": "PM pij-specific-kiwi. Coder: OMP harness, github-copilot Claude Opus 5.5. Reviewer: Claude Sonnet 5.5 based, available when pij-curly-kiwi finishes; only reviewer dispatch waits.",
+          "source": "Jordan, 2026-09-29"
+        },
+        {
+          "question": "Compaction count with no markers?",
+          "answer": "Claude: 0 (it records compaction markers). Unknown only for harnesses without markers.",
+          "source": "Prime / Plan 028 PM, 2026-09-29"
+        },
+        {
+          "question": "Embedding consumer needs?",
+          "answer": "pij-rs Plan 157 embeds the SDK op: explicit target, incremental cursor, no sqlite in graph, serde SessionStatus. Push of this branch needs Jordan approval.",
+          "source": "pij-yelling-trout ask; reply scratch/session-status-029-reply-plan157.md"
+        },
+        {
+          "question": "Push approval?",
+          "answer": "Approved: push builder/029-session-status once the SDK code lands (for Plan 157 rev pin). PR/merge still separate.",
+          "source": "Jordan, 2026-09-29"
+        }
+      ]
+    },
+    {
+      "name": "planning_seam",
+      "value": []
+    },
+    {
+      "name": "gate_matrix",
+      "value": []
+    },
+    {
+      "name": "implementation_summary",
+      "value": "Operator rulings after composition (2026-09-30, Jordan via pij-far-jackal): (1) ac-0001 pane budget accepted as about 50 ms, bounded by one ps call (measured native median 28-54 ms, ps alone ~44 ms); vd-0008 now fails only above 75 ms median. (2) Branch push approved and done at 0d48d80 for Pij Plan 157. (3) Scope addition: session status must work on macOS and Linux (proven in an ubuntu:24.04 container and ubuntu CI). Windows was requested then dropped the same day (Jordan): no new Windows work; existing Unisphere Windows behaviour is kept. core::status::StatusFailureKind::UnsupportedPlatform remains in the contract, unused. Composition review r1 (changes-requested): F-01 session ids must be one path component (fixed); F-02 window-table 200k/1M ambiguity documented (fixed); F-03 native Claude pane record not procStart-checked (accepted: Claude writes procStart in UTC, ps in local time; pane id match + live descendant pid narrow it); F-04 builder compose --verify refuses after phase 2 was added post-seal (accepted: guide checks run directly at the reviewed SHA; stated in the PR)."
+    },
+    {
+      "name": "key_findings",
+      "value": []
+    },
+    {
+      "name": "acceptance_coverage",
+      "value": []
+    },
+    {
+      "name": "risks",
+      "value": []
+    },
+    {
+      "name": "execution_guardrails",
+      "value": []
+    }
+  ],
+  "references": []
+}

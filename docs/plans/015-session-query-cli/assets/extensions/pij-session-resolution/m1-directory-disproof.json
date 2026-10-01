@@ -1,0 +1,37 @@
+{
+  "recorded_at": "2026-09-10T09:54:58.159Z",
+  "scope": "Actual built CLI under controlled Pij v2 mapping and synthetic native source; source-native cwd differs from process cwd",
+  "runs": [
+    {
+      "argv": [
+        "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/target/debug/unisphere",
+        "sessions",
+        "show",
+        "--pij",
+        "pij-fixture-seat",
+        "--json"
+      ],
+      "cwd": "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-pij-cwd-LRiT74/other-directory",
+      "stdout": "{\"ok\":true,\"command\":\"sessions.show\",\"v\":1,\"data\":{\"schema_version\":1,\"dataset\":\"sessions\",\"query\":{\"dataset\":\"sessions\",\"operation\":\"show\",\"scope_digest\":\"504ee6108db37404b361884e158de5af53f85b1194ff88931c7f1a030d539de6\"},\"rows\":[{\"schema_version\":1,\"dataset\":\"sessions\",\"id\":\"q1:session:fcc7d4a8bc017c464ab98023b7ff4b6dd1119724104ca6e654f0072b2c7a0825\",\"source_refs\":[{\"source_id\":\"q1:source:65b1bc8586ea168a0dbc14311787ab5ce7a6f8080e4faa06ebb0996eb2ee6e6b\",\"revision\":\"sha256:eb3ce5b62d1e75fd365f3252b8585ca5b72aca979f6b40ffcb76af6ef68e6b7a\",\"locator_kind\":\"jsonl\",\"offset\":0},{\"source_id\":\"q1:source:65b1bc8586ea168a0dbc14311787ab5ce7a6f8080e4faa06ebb0996eb2ee6e6b\",\"revision\":\"sha256:eb3ce5b62d1e75fd365f3252b8585ca5b72aca979f6b40ffcb76af6ef68e6b7a\",\"locator_kind\":\"jsonl\",\"offset\":242},{\"source_id\":\"q1:source:65b1bc8586ea168a0dbc14311787ab5ce7a6f8080e4faa06ebb0996eb2ee6e6b\",\"revision\":\"sha256:eb3ce5b62d1e75fd365f3252b8585ca5b72aca979f6b40ffcb76af6ef68e6b7a\",\"locator_kind\":\"jsonl\",\"offset\":574},{\"source_id\":\"q1:source:65b1bc8586ea168a0dbc14311787ab5ce7a6f8080e4faa06ebb0996eb2ee6e6b\",\"revision\":\"sha256:eb3ce5b62d1e75fd365f3252b8585ca5b72aca979f6b40ffcb76af6ef68e6b7a\",\"locator_kind\":\"jsonl\",\"offset\":891}],\"fields\":{\"adapter\":\"claude-code\",\"harness\":\"claude-code\"}}],\"coverage\":{\"discovered_sources\":1,\"loaded_sources\":1,\"selected_sources\":1,\"source_status\":{\"readable\":1},\"association_status\":{},\"excluded_adapters\":[\"codex\",\"copilot-cli\",\"copilot-cli-snapshot\",\"cursor-ide\",\"cursor-transcript\",\"oh-my-pi\",\"pi\",\"vscode-copilot\"],\"source_read_complete\":true,\"issues\":[]},\"universe\":{\"source_view_digest\":\"042a2bb7a2867a23eae5306385ee1009b465f9201d35402a275a4ce2e196c849\",\"selection_digest\":\"6a2ef651564958f910587a0749e672220f848c4b5786e473564e8288c3ac1b3f\",\"columns_digest\":\"bff905bfce84e87d6931e60864c9639c8a562aa5dc04fd167d85b807d800a584\",\"columns\":[\"id\",\"source_refs\",\"started_at\",\"harness\",\"adapter\"],\"applied_limit\":null,\"rows_complete_for_selection\":\"complete\",\"partitions_complete\":\"complete\",\"basis\":\"live_view\",\"bounded_by_input\":false},\"matched\":1,\"emitted\":1,\"next_cursor\":null},\"next_action\":{\"summary\":\"Read the bundled workflow before issuing the next query.\",\"argv\":[\"unisphere\",\"docs\",\"get\",\"start\",\"--human\"],\"required_inputs\":[]}}\n",
+      "stderr": "{\"command\":\"pij.resolve\",\"data\":{\"harness\":\"claude-code\",\"pij_id\":\"pij-fixture-seat\",\"session_id\":\"q1:session:fcc7d4a8bc017c464ab98023b7ff4b6dd1119724104ca6e654f0072b2c7a0825\",\"source_id\":\"q1:source:65b1bc8586ea168a0dbc14311787ab5ce7a6f8080e4faa06ebb0996eb2ee6e6b\"},\"ok\":true,\"v\":1}\n",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/target/debug/unisphere",
+        "sessions",
+        "list",
+        "--repo",
+        ".",
+        "--harness",
+        "claude-code",
+        "--json"
+      ],
+      "cwd": "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-pij-cwd-LRiT74/other-directory",
+      "stdout": "{\"ok\":true,\"command\":\"sessions.list\",\"v\":1,\"data\":{\"schema_version\":1,\"dataset\":\"sessions\",\"query\":{\"dataset\":\"sessions\",\"operation\":\"list\",\"scope_digest\":\"6a5f0a29502a37452253dc5a8d45d63ef9ee2d653ea1fcf2095bf09cdd99307a\"},\"rows\":[],\"coverage\":{\"discovered_sources\":1,\"loaded_sources\":1,\"selected_sources\":1,\"source_status\":{\"readable\":1},\"association_status\":{},\"excluded_adapters\":[\"codex\",\"copilot-cli\",\"copilot-cli-snapshot\",\"cursor-ide\",\"cursor-transcript\",\"oh-my-pi\",\"pi\",\"vscode-copilot\"],\"source_read_complete\":true,\"issues\":[]},\"universe\":{\"source_view_digest\":\"dabf4b08f4a2b9dfd858a42946def616e456cc4a281f5772d4c14accccf8b856\",\"selection_digest\":\"9f8d94a81bc3211f280e73ba3fc1dc6111708c1bc86ea5699f18fd83c0660b74\",\"columns_digest\":\"bff905bfce84e87d6931e60864c9639c8a562aa5dc04fd167d85b807d800a584\",\"columns\":[\"id\",\"source_refs\",\"started_at\",\"harness\",\"adapter\"],\"applied_limit\":50,\"rows_complete_for_selection\":\"complete\",\"partitions_complete\":\"complete\",\"basis\":\"live_view\",\"bounded_by_input\":false},\"matched\":0,\"emitted\":0,\"next_cursor\":null},\"next_action\":{\"summary\":\"Narrow the selection with the named required inputs, then repeat the query.\",\"argv\":[],\"required_inputs\":[\"repository_path\"]}}\n",
+      "stderr": "",
+      "exit": 0
+    }
+  ],
+  "conclusion": "Pij selection does not inherit repository association filtering: metadata discovery yields native facts, then app pins SourceId before SDK reconstruction. Ordinary repo query correctly emits0 from the unrelated child directory; Pij resolves and emits1."
+}

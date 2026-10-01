@@ -1,0 +1,112 @@
+{
+  "recorded_at": "2026-09-10T02:32:49.613Z",
+  "authority": "Jordan explicitly directed the PM to delegate implementation to coders",
+  "scope": "PM-owned wave0 baseline implementation assistance only; not a sealed wave1 Builder dispatch",
+  "source_sha": "819fc30ae5d721fe2a2100ae9eef5692f10eac63",
+  "allocation_owner": "external",
+  "allocation_method": "Explicit local non-hardlinked Git clones; authority record is outside both clone roots",
+  "pm": "pij-empirical-tiger",
+  "model": "github-copilot/gpt-5.6-sol-fast",
+  "harness": "omp",
+  "effort": "high",
+  "contracts": {
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/baseline-coders/contracts",
+    "write_paths": [
+      "crates/core/src/query/**"
+    ],
+    "responsibility": "Complete core query DTOs/ports/schema/identity/fingerprint/validation including F11; no runtime query service or adapters",
+    "peer": "pij-generous-godfrey",
+    "branch": "work/015-baseline-r1",
+    "observed": {
+      "harness": "omp",
+      "model": "github-copilot/gpt-5.6-sol-fast",
+      "effort": "high",
+      "pid": 90738,
+      "native_session": "01a0892a-6eeb-7674-9a87-de34296f962a",
+      "root": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/baseline-coders/contracts"
+    },
+    "canary": {
+      "dispatch": "dispatch-52b4369d06183bafbbd85eba58bdfce2",
+      "command_outcome": "E-RS-CANARY-PENDING at deadline",
+      "recipient_ack": "later exact dispatch acknowledgement",
+      "model_observed": "github-copilot/gpt-5.6-sol-fast",
+      "provider_attestation": false
+    },
+    "latest_candidate": "35b714bfc59caaf1400b17b0ff431c316ba45cd2",
+    "wip": "Latest owned candidate delivered; no further implementation assignment",
+    "historical_branch": "work/015-baseline-contracts"
+  },
+  "proof": {
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/baseline-coders/proof",
+    "write_paths": [
+      "crates/testkit/src/query.rs",
+      "crates/testkit/fixtures/query/shared-v1.json",
+      "crates/core/tests/query_contract.rs"
+    ],
+    "responsibility": "Public query fakes, synthetic fixture and meaningful baseline behavior proof against the shared contract; coordinate exact constructors with contracts coder",
+    "peer": "pij-glorious-galliform",
+    "branch": "work/015-baseline-r1",
+    "observed": {
+      "harness": "omp",
+      "model": "github-copilot/gpt-5.6-sol-fast",
+      "effort": "high",
+      "pid": 90780,
+      "native_session": "01a0892a-6ee8-7450-b4ec-071b5c3842eb",
+      "root": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/.harness/temp/pij-empirical-tiger/baseline-coders/proof"
+    },
+    "canary": {
+      "dispatch": "dispatch-4d46c2e98aff630414908345453892e3",
+      "command_outcome": "E-RS-CANARY-PENDING at deadline",
+      "recipient_ack": "later exact dispatch acknowledgement",
+      "packet_sha256": "d556e2da365b04b4b2caa2bff5449084a1f4697c185f2d2bc8f4cfda9b73c9c3",
+      "model_observed": "github-copilot/gpt-5.6-sol-fast",
+      "provider_attestation": false
+    },
+    "latest_candidate": "7fbd36d1359969795af425f119538f7789ef1bcb",
+    "wip": "Latest owned candidate delivered; no further implementation assignment",
+    "historical_branch": "work/015-baseline-proof"
+  },
+  "shared_contract": "Reviewed guide C1-C25 plus baseline-followups.json; core coder publishes exact API early to proof coder; no sibling implementation edit",
+  "pm_owned": [
+    "All Cargo manifests/lockfiles",
+    "core/testkit module mounts",
+    "architecture checker",
+    "canonical plan/guide/tasks/review/baseline records",
+    "integration, formatting, validation, quality acceptance and independent review"
+  ],
+  "guardrails": [
+    "No builds/tests/lint/formatters while baseline helpers work concurrently",
+    "No source stores, global settings, push/merge or other workspace edits",
+    "Candidate delivery only; actual baseline proof/review/seal precedes normal Builder coder waves"
+  ],
+  "state": "R1/F8 candidates delivered and composed; fresh proof/review/seal pending",
+  "composed": {
+    "contracts": "35b714bfc59caaf1400b17b0ff431c316ba45cd2",
+    "proof": "7fbd36d1359969795af425f119538f7789ef1bcb",
+    "query_contract_tests_passed": 28,
+    "focused_tests_passed": 57,
+    "baseline_sealed": false,
+    "review": "pending R2"
+  },
+  "updated_at": "2026-09-10T04:38:52.906Z",
+  "initial_source_sha": "b652810b7134348da45929079b723daeae30123a",
+  "terminal_lifecycle": {
+    "recorded_at": "2026-09-10T07:51:33.537Z",
+    "completed_peers_retired": [
+      "pij-closed-barracuda",
+      "pij-exact-partridge",
+      "pij-fiscal-millicent",
+      "pij-forward-jerren",
+      "pij-generous-godfrey",
+      "pij-glorious-galliform",
+      "pij-outstanding-whale",
+      "pij-planned-thrush",
+      "pij-subtle-sole",
+      "pij-total-heron",
+      "pij-variable-inigo"
+    ],
+    "retained_live_worker": "pij-unfortunate-rat",
+    "clones_and_refs_preserved": true,
+    "evidence": "terminal-cleanup.json"
+  }
+}

@@ -1,6 +1,10 @@
 //! Pure physical-record projection of Oh My Pi JSONL, including its mutable title slot.
 //! No source, sidecar, environment, clock, or output access occurs here.
 #![forbid(unsafe_code)]
+mod prep;
+mod query;
+pub use prep::{OmpPrepFold, PREP_POLICY_VERSION};
+pub use query::POLICY_VERSION;
 
 use std::collections::BTreeMap;
 
@@ -29,7 +33,7 @@ pub const DESCRIPTOR: AdapterDescriptor = AdapterDescriptor {
         output_formats: &["otlp-jsonl"],
         sdk_caller_owned_cursor: true,
         cursor_source_assumption: "Append-only entries in the same source generation; in-place title-slot changes before the cursor are not refreshed",
-        cli_persisted_resume: false,
+        cli_persisted_resume: true,
         delayed_revision_reconciliation: false,
         lossless_archive: false,
     },
@@ -57,7 +61,7 @@ impl SessionAdapter for OmpAdapter {
             .ok_or_else(|| PipelineError::new(PipelineErrorKind::InvalidInput, None))?;
         let mut batch = MappedBatch::default();
         for native in records {
-            let value = serde_json::from_slice(&native.bytes).map_err(|_| {
+            let value = decode(&native.bytes).map_err(|()| {
                 PipelineError::new(PipelineErrorKind::InvalidData, Some(native.offset))
             })?;
             let mut mapping = Mapping {
@@ -80,6 +84,10 @@ struct Mapping<'a> {
 }
 
 type Attributes = BTreeMap<String, Value>;
+
+fn decode(bytes: &[u8]) -> Result<Value, ()> {
+    serde_json::from_slice(bytes).map_err(|_| ())
+}
 
 impl Mapping<'_> {
     fn diagnostic(&mut self, code: MappingDiagnosticCode) {

@@ -1,0 +1,36 @@
+{
+  "scope": "Guide-only corrections awaiting R3; no implementation, baseline or dispatch approval",
+  "review_subject": "42a6cc0ecf82716827a29f42a4a84496e18bf67f",
+  "review_report": "guide-r2-pij-armed-cow.md",
+  "guide_version": 4,
+  "prior_r1_findings": "All eight independently verified fixed by R2; original evidence remains unchanged",
+  "findings": [
+    {
+      "id": "F9",
+      "disposition": "fixed_in_guide",
+      "change": "C5 delegates exclusively to closed C25 ViewDigestBasis. Coverage no longer embeds a universe; QueryResponse owns data.universe exactly once. Source selection, admitted roots, policy versions, source-read facts, ContentAccess/retained fields and immutable input origin are bound, while all response/query/pagination/action/cursor fields are explicitly excluded. Encoding and metamorphic proof enter the reviewed wave0 freeze set.",
+      "evidence": [
+        "impl-guide.dd.json#architecture C3/C5/C21/C23/C25",
+        "impl-guide.dd.json#units/tk-0001",
+        "impl-guide.dd.json#units/tk-0008",
+        "query-contract.md#filtering-time-and-ordering",
+        "query-contract.md#output-contracts"
+      ]
+    },
+    {
+      "id": "F10",
+      "disposition": "fixed_in_guide",
+      "change": "The sessions-list primary catalogue argv now includes --source-adapter claude-code and its rendered workflow example matches. CLI unit additionally owns an explicit routing regression matrix, including query --source-adapter git-ai versus legacy --adapter git-ai, rather than inferring coverage from one example per leaf.",
+      "evidence": [
+        "command-catalog.json sessions list example_argv",
+        "workflows-and-command-reference.md sessions list example",
+        "impl-guide.dd.json#units/tk-000b"
+      ]
+    }
+  ],
+  "receipt_adaptation": {
+    "raw": "guide-r2-pij-armed-cow-receipt.json",
+    "canonical": "../team/review-decomposition-r2.dd.json",
+    "note": "Raw proposal preserved unchanged. Supplemental prior_review/prior_findings remain in raw/report; canonical builder/team wrapper retains every schema-supported review field and was accepted by harness builder review as changes-requested."
+  }
+}

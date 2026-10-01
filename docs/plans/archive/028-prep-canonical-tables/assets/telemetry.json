@@ -1,0 +1,25 @@
+{
+ "record": "Plan 028 attribution telemetry (numbers only)",
+ "branch": "builder/028-prep-canonical-tables",
+ "base_sha": "1469998cd750d23d2420feb83cf8e93a0841b347",
+ "as_of_sha": "4cbe003fb287bf456faa9ed8664dfb0a184ffe88",
+ "commits": 99,
+ "with_ai_note": 87,
+ "without_ai_note": 12,
+ "without_ai_note_are": "harness builder compose replays of coder lane commits (import integration); the original lane commits carry refs/notes/ai in their coder clones, preserved by builder close",
+ "replayed_units": [
+  "tk-0002",
+  "tk-0003",
+  "tk-0004",
+  "tk-0005",
+  "tk-0007",
+  "tk-0008",
+  "tk-0009",
+  "tk-000a",
+  "tk-000b",
+  "tk-000c",
+  "tk-000d"
+ ],
+ "pm_commit_path": "harness commit to the git-ai collector socket; 41 of 41 PM commits carrying the Pij-Plan 028 trailer have a refs/notes/ai note",
+ "trace2_target": "af_unix socket (git-ai daemon)"
+}

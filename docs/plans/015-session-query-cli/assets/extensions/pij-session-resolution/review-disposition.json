@@ -1,0 +1,8 @@
+{
+  "recorded_at": "2026-09-10T09:32:10.579Z",
+  "review": "review-pij-armed-cow.json",
+  "R1": "Added mandatory numeric envelope v2 check before decoding identity; missing/unsupported/string versions have a process regression. Tests unrun while CLI owner edits.",
+  "R2": "Preserved std-only process boundary; explicitly documents real CLI rather than forking wrapper. Kill/reap applies to direct child; no descendant-cleanup guarantee. No unsafe/group-kill scope added.",
+  "untrusted_text": "ResolvedPijSession docs name native ID/cwd/machine as external untrusted hints; app matches native decoded session identity and never opens the returned cwd.",
+  "test_count": "Original candidate had8 tests. PM removed a static wording/tautology test; observed composition then had7 passing tests. Protocol regression adds1 new behavioral test; next run count must be measured."
+}

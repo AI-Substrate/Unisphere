@@ -1,0 +1,230 @@
+{
+  "recorded_at": "2026-09-10T09:24:10.579Z",
+  "scope": "Actual pre-Pij built working CLI; six non-Git recipe workflows, narrowed to available synthetic Claude harness explicitly. Not final committed proof or Git recipe execution.",
+  "fixture_records": [
+    {
+      "type": "user",
+      "sessionId": "recipe-session",
+      "uuid": "u1",
+      "cwd": "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+      "timestamp": "2026-09-01T12:00:00Z",
+      "message": {
+        "role": "user",
+        "content": "fixture PRIVATE-RECIPE-PROMPT"
+      }
+    },
+    {
+      "type": "assistant",
+      "sessionId": "recipe-session",
+      "uuid": "a1",
+      "parentUuid": "u1",
+      "cwd": "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+      "timestamp": "2026-09-01T12:00:01Z",
+      "message": {
+        "role": "assistant",
+        "content": [
+          {
+            "type": "tool_use",
+            "id": "call1",
+            "name": "Bash",
+            "input": {
+              "command": "PRIVATE-RECIPE-COMMAND"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "user",
+      "sessionId": "recipe-session",
+      "uuid": "r1",
+      "parentUuid": "a1",
+      "cwd": "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+      "timestamp": "2026-09-01T12:00:02Z",
+      "message": {
+        "role": "user",
+        "content": [
+          {
+            "type": "tool_result",
+            "tool_use_id": "call1",
+            "content": "error fixture",
+            "is_error": true
+          }
+        ]
+      }
+    },
+    {
+      "type": "user",
+      "sessionId": "recipe-session",
+      "uuid": "u2",
+      "parentUuid": "r1",
+      "cwd": "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+      "timestamp": "2026-09-01T12:00:03Z",
+      "message": {
+        "role": "user",
+        "content": "another fixture request"
+      }
+    }
+  ],
+  "runs": [
+    {
+      "argv": [
+        "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/target/debug/unisphere",
+        "sessions",
+        "list",
+        "--repo",
+        "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+        "--harness",
+        "claude-code",
+        "--json"
+      ],
+      "cwd": "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+      "stdout": "{\"ok\":true,\"command\":\"sessions.list\",\"v\":1,\"data\":{\"schema_version\":1,\"dataset\":\"sessions\",\"query\":{\"dataset\":\"sessions\",\"operation\":\"list\",\"scope_digest\":\"95ac0e59d198057c81b8de4e5c74bd844ac3b4d6cb7444a333bb51a9e4b8d4f4\"},\"rows\":[{\"schema_version\":1,\"dataset\":\"sessions\",\"id\":\"q1:session:07e7e3c808b4da91fe1389ba358d3e3e083f4b9593c9a8c503b0b795f9809d16\",\"source_refs\":[{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":0},{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":248},{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":586},{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":909}],\"fields\":{\"adapter\":\"claude-code\",\"harness\":\"claude-code\"}}],\"coverage\":{\"discovered_sources\":1,\"loaded_sources\":1,\"selected_sources\":1,\"source_status\":{\"readable\":1},\"association_status\":{},\"excluded_adapters\":[\"codex\",\"copilot-cli\",\"copilot-cli-snapshot\",\"cursor-ide\",\"cursor-transcript\",\"oh-my-pi\",\"pi\",\"vscode-copilot\"],\"source_read_complete\":true,\"issues\":[]},\"universe\":{\"source_view_digest\":\"30c1c390bca49181c4d5b4728dee29be21ef1a466898d99506253833a1823cbe\",\"selection_digest\":\"3a022827aa86a0cc4b38230361a1624c347c7bee8085b70829349e635c98420d\",\"columns_digest\":\"bff905bfce84e87d6931e60864c9639c8a562aa5dc04fd167d85b807d800a584\",\"columns\":[\"id\",\"source_refs\",\"started_at\",\"harness\",\"adapter\"],\"applied_limit\":50,\"rows_complete_for_selection\":\"complete\",\"partitions_complete\":\"complete\",\"basis\":\"live_view\",\"bounded_by_input\":false},\"matched\":1,\"emitted\":1,\"next_cursor\":null},\"next_action\":{\"summary\":\"Inspect the selected entity and its evidence coverage.\",\"argv\":[\"unisphere\",\"sessions\",\"show\",\"q1:session:07e7e3c808b4da91fe1389ba358d3e3e083f4b9593c9a8c503b0b795f9809d16\",\"--repo\"],\"required_inputs\":[\"repository_path\"]}}\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/target/debug/unisphere",
+        "sources",
+        "list",
+        "--repo",
+        "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+        "--format",
+        "json"
+      ],
+      "cwd": "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+      "stdout": "{\"ok\":true,\"command\":\"sources.list\",\"v\":1,\"data\":{\"schema_version\":1,\"dataset\":\"sources\",\"query\":{\"dataset\":\"sources\",\"operation\":\"list\",\"scope_digest\":\"95ac0e59d198057c81b8de4e5c74bd844ac3b4d6cb7444a333bb51a9e4b8d4f4\"},\"rows\":[{\"schema_version\":1,\"dataset\":\"sources\",\"id\":\"q1:source:15ddedaaa08bdd21df0c2a24c3ee150a117b11eeebf2f7221911341f7b8777cd\",\"source_refs\":[],\"fields\":{\"adapter\":\"copilot-cli-snapshot\",\"harness\":\"copilot-cli\",\"read_status\":\"absent\"}},{\"schema_version\":1,\"dataset\":\"sources\",\"id\":\"q1:source:1600471ae7eb63cef850104cc9929419f1c087b90dd9f1ebbda9affb075a2e72\",\"source_refs\":[],\"fields\":{\"adapter\":\"vscode-copilot\",\"harness\":\"copilot\",\"read_status\":\"absent\"}},{\"schema_version\":1,\"dataset\":\"sources\",\"id\":\"q1:source:1d670d586c4aba319478ca33dd51244421fbe60f7b03b3d84907ed64739641a7\",\"source_refs\":[],\"fields\":{\"adapter\":\"copilot-cli\",\"harness\":\"copilot-cli\",\"read_status\":\"absent\"}},{\"schema_version\":1,\"dataset\":\"sources\",\"id\":\"q1:source:1d76736dee5368df860dc98fa15aa2fd9b0833ca33eb75d3314c5c12ee2ac24c\",\"source_refs\":[],\"fields\":{\"adapter\":\"vscode-copilot\",\"harness\":\"copilot\",\"read_status\":\"unsupported\"}},{\"schema_version\":1,\"dataset\":\"sources\",\"id\":\"q1:source:2cb3fd1a2c68eaadd01f927c72e68bc77fb735674cd74496f750f8a01c0dedd7\",\"source_refs\":[],\"fields\":{\"adapter\":\"vscode-copilot\",\"harness\":\"copilot\",\"read_status\":\"unsupported\"}},{\"schema_version\":1,\"dataset\":\"sources\",\"id\":\"q1:source:3159a682a180825764e8ad1572a013298ea4d94017a82f267ba0ac6ee72ac306\",\"source_refs\":[],\"fields\":{\"adapter\":\"cursor-ide\",\"harness\":\"cursor\",\"read_status\":\"unsupported\"}},{\"schema_version\":1,\"dataset\":\"sources\",\"id\":\"q1:source:4c824c7c147a454bb3d9429dfc1c43323bf4146a5b904c34da205cba430aa0f8\",\"source_refs\":[],\"fields\":{\"adapter\":\"pi\",\"harness\":\"pi\",\"read_status\":\"absent\"}},{\"schema_version\":1,\"dataset\":\"sources\",\"id\":\"q1:source:6d554a0fa9f67160afbc9bba6d8b8f2747a0748caf47c5f71ba575dedb10986d\",\"source_refs\":[],\"fields\":{\"adapter\":\"vscode-copilot\",\"harness\":\"copilot\",\"read_status\":\"absent\"}},{\"schema_version\":1,\"dataset\":\"sources\",\"id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"source_refs\":[{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":0},{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":248},{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":586},{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":909}],\"fields\":{\"adapter\":\"claude-code\",\"harness\":\"claude-code\",\"read_status\":\"readable\"}},{\"schema_version\":1,\"dataset\":\"sources\",\"id\":\"q1:source:8141e58c923809b4613e5459be2ee01b8060a0b44023beda1cebf32723c8d1bd\",\"source_refs\":[],\"fields\":{\"adapter\":\"codex\",\"harness\":\"codex\",\"read_status\":\"absent\"}},{\"schema_version\":1,\"dataset\":\"sources\",\"id\":\"q1:source:8dd787be1973afb3a3d82865851ba4a01ed82b531a67d3ec40191492c671d67c\",\"source_refs\":[],\"fields\":{\"adapter\":\"cursor-ide\",\"harness\":\"cursor\",\"read_status\":\"absent\"}},{\"schema_version\":1,\"dataset\":\"sources\",\"id\":\"q1:source:943a75e40bc396f1d2acc93f38cc16475918b37ef129e376c28ea5aa961200d7\",\"source_refs\":[],\"fields\":{\"adapter\":\"vscode-copilot\",\"harness\":\"copilot\",\"read_status\":\"unsupported\"}},{\"schema_version\":1,\"dataset\":\"sources\",\"id\":\"q1:source:943e64376ead12abec1e62bbd6a8c9d813923e0f7c12923d9933504b6dea3954\",\"source_refs\":[],\"fields\":{\"adapter\":\"oh-my-pi\",\"harness\":\"oh-my-pi\",\"read_status\":\"absent\"}},{\"schema_version\":1,\"dataset\":\"sources\",\"id\":\"q1:source:a556ec45449612358b51b7874777239cc54d68260c56e67abe0a8ac1bcfd6a9a\",\"source_refs\":[],\"fields\":{\"adapter\":\"vscode-copilot\",\"harness\":\"copilot\",\"read_status\":\"unsupported\"}},{\"schema_version\":1,\"dataset\":\"sources\",\"id\":\"q1:source:aff5478cd3b05750fe0ba5e79519d0964254feed722ce2f54d892994853cde9d\",\"source_refs\":[],\"fields\":{\"adapter\":\"cursor-transcript\",\"harness\":\"cursor\",\"read_status\":\"absent\"}},{\"schema_version\":1,\"dataset\":\"sources\",\"id\":\"q1:source:b817448a1d83b0c273a3b3e4c8380d085273371af735c3a767f0d2f92f364e67\",\"source_refs\":[],\"fields\":{\"adapter\":\"cursor-ide\",\"harness\":\"cursor\",\"read_status\":\"unsupported\"}}],\"coverage\":{\"discovered_sources\":16,\"loaded_sources\":1,\"selected_sources\":1,\"source_status\":{\"absent\":9,\"readable\":1,\"unsupported\":6},\"association_status\":{},\"excluded_adapters\":[],\"source_read_complete\":false,\"issues\":[{\"code\":\"absent\",\"field\":null,\"source\":\"q1:source:8141e58c923809b4613e5459be2ee01b8060a0b44023beda1cebf32723c8d1bd\",\"entity\":null,\"offset\":null},{\"code\":\"absent\",\"field\":null,\"source\":\"q1:source:1d670d586c4aba319478ca33dd51244421fbe60f7b03b3d84907ed64739641a7\",\"entity\":null,\"offset\":null},{\"code\":\"absent\",\"field\":null,\"source\":\"q1:source:15ddedaaa08bdd21df0c2a24c3ee150a117b11eeebf2f7221911341f7b8777cd\",\"entity\":null,\"offset\":null},{\"code\":\"absent\",\"field\":null,\"source\":\"q1:source:8dd787be1973afb3a3d82865851ba4a01ed82b531a67d3ec40191492c671d67c\",\"entity\":null,\"offset\":null},{\"code\":\"not_supported\",\"field\":null,\"source\":\"q1:source:b817448a1d83b0c273a3b3e4c8380d085273371af735c3a767f0d2f92f364e67\",\"entity\":null,\"offset\":null},{\"code\":\"not_supported\",\"field\":null,\"source\":\"q1:source:3159a682a180825764e8ad1572a013298ea4d94017a82f267ba0ac6ee72ac306\",\"entity\":null,\"offset\":null},{\"code\":\"absent\",\"field\":null,\"source\":\"q1:source:aff5478cd3b05750fe0ba5e79519d0964254feed722ce2f54d892994853cde9d\",\"entity\":null,\"offset\":null},{\"code\":\"absent\",\"field\":null,\"source\":\"q1:source:943e64376ead12abec1e62bbd6a8c9d813923e0f7c12923d9933504b6dea3954\",\"entity\":null,\"offset\":null},{\"code\":\"absent\",\"field\":null,\"source\":\"q1:source:4c824c7c147a454bb3d9429dfc1c43323bf4146a5b904c34da205cba430aa0f8\",\"entity\":null,\"offset\":null},{\"code\":\"absent\",\"field\":null,\"source\":\"q1:source:6d554a0fa9f67160afbc9bba6d8b8f2747a0748caf47c5f71ba575dedb10986d\",\"entity\":null,\"offset\":null},{\"code\":\"absent\",\"field\":null,\"source\":\"q1:source:1600471ae7eb63cef850104cc9929419f1c087b90dd9f1ebbda9affb075a2e72\",\"entity\":null,\"offset\":null},{\"code\":\"not_supported\",\"field\":null,\"source\":\"q1:source:a556ec45449612358b51b7874777239cc54d68260c56e67abe0a8ac1bcfd6a9a\",\"entity\":null,\"offset\":null},{\"code\":\"not_supported\",\"field\":null,\"source\":\"q1:source:2cb3fd1a2c68eaadd01f927c72e68bc77fb735674cd74496f750f8a01c0dedd7\",\"entity\":null,\"offset\":null},{\"code\":\"not_supported\",\"field\":null,\"source\":\"q1:source:943a75e40bc396f1d2acc93f38cc16475918b37ef129e376c28ea5aa961200d7\",\"entity\":null,\"offset\":null},{\"code\":\"not_supported\",\"field\":null,\"source\":\"q1:source:1d76736dee5368df860dc98fa15aa2fd9b0833ca33eb75d3314c5c12ee2ac24c\",\"entity\":null,\"offset\":null}]},\"universe\":{\"source_view_digest\":\"d75b990732a9b998618d423ef447fd75634b0b338d871cbeb423c196f6315211\",\"selection_digest\":\"80943383afaa71e7af219c989913e54e9c96f4a5a99a56ff5777fc0f93f25b32\",\"columns_digest\":\"486ddba41c4f1812d314d6a81dabcbff0d8fdb078fbfa093ad8962103fa5f68a\",\"columns\":[\"id\",\"source_refs\",\"adapter\",\"harness\",\"read_status\"],\"applied_limit\":50,\"rows_complete_for_selection\":\"complete\",\"partitions_complete\":\"complete\",\"basis\":\"live_view\",\"bounded_by_input\":false},\"matched\":16,\"emitted\":16,\"next_cursor\":null},\"next_action\":{\"summary\":\"Inspect source coverage before changing the selection.\",\"argv\":[\"unisphere\",\"sources\",\"list\",\"--repo\"],\"required_inputs\":[\"repository_path\"]}}\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/target/debug/unisphere",
+        "sessions",
+        "tree",
+        "q1:session:07e7e3c808b4da91fe1389ba358d3e3e083f4b9593c9a8c503b0b795f9809d16",
+        "--repo",
+        "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+        "--harness",
+        "claude-code",
+        "--format",
+        "json"
+      ],
+      "cwd": "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+      "stdout": "{\"ok\":true,\"command\":\"sessions.tree\",\"v\":1,\"data\":{\"schema_version\":1,\"dataset\":\"sessions\",\"query\":{\"dataset\":\"sessions\",\"operation\":\"tree\",\"scope_digest\":\"95ac0e59d198057c81b8de4e5c74bd844ac3b4d6cb7444a333bb51a9e4b8d4f4\"},\"rows\":[{\"schema_version\":1,\"dataset\":\"sessions\",\"id\":\"q1:session:07e7e3c808b4da91fe1389ba358d3e3e083f4b9593c9a8c503b0b795f9809d16\",\"source_refs\":[{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":0},{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":248},{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":586},{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":909}],\"fields\":{\"adapter\":\"claude-code\",\"harness\":\"claude-code\"}}],\"coverage\":{\"discovered_sources\":1,\"loaded_sources\":1,\"selected_sources\":1,\"source_status\":{\"readable\":1},\"association_status\":{},\"excluded_adapters\":[\"codex\",\"copilot-cli\",\"copilot-cli-snapshot\",\"cursor-ide\",\"cursor-transcript\",\"oh-my-pi\",\"pi\",\"vscode-copilot\"],\"source_read_complete\":true,\"issues\":[]},\"universe\":{\"source_view_digest\":\"30c1c390bca49181c4d5b4728dee29be21ef1a466898d99506253833a1823cbe\",\"selection_digest\":\"6527b9ecdaba3e4cfb93d7ce62d82ff0fa34088d739f04b3a66355a1335c988a\",\"columns_digest\":\"bff905bfce84e87d6931e60864c9639c8a562aa5dc04fd167d85b807d800a584\",\"columns\":[\"id\",\"source_refs\",\"started_at\",\"harness\",\"adapter\"],\"applied_limit\":null,\"rows_complete_for_selection\":\"complete\",\"partitions_complete\":\"complete\",\"basis\":\"live_view\",\"bounded_by_input\":false},\"matched\":1,\"emitted\":1,\"next_cursor\":null},\"next_action\":{\"summary\":\"Read the bundled workflow before issuing the next query.\",\"argv\":[\"unisphere\",\"docs\",\"get\",\"start\",\"--human\"],\"required_inputs\":[]}}\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/target/debug/unisphere",
+        "messages",
+        "list",
+        "--repo",
+        "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+        "--harness",
+        "claude-code",
+        "--role",
+        "user",
+        "--since",
+        "2026-09-01",
+        "--until",
+        "2026-09-02",
+        "--contains",
+        "fixture",
+        "--format",
+        "json"
+      ],
+      "cwd": "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+      "stdout": "{\"ok\":true,\"command\":\"messages.list\",\"v\":1,\"data\":{\"schema_version\":1,\"dataset\":\"messages\",\"query\":{\"dataset\":\"messages\",\"operation\":\"list\",\"scope_digest\":\"95ac0e59d198057c81b8de4e5c74bd844ac3b4d6cb7444a333bb51a9e4b8d4f4\"},\"rows\":[{\"schema_version\":1,\"dataset\":\"messages\",\"id\":\"q1:message:5f2339ad247b363827da3596f832d81598b17b0510aac64bd41b98d1b5952a16\",\"source_refs\":[{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":0}],\"fields\":{\"role\":\"user\",\"session_id\":\"q1:session:07e7e3c808b4da91fe1389ba358d3e3e083f4b9593c9a8c503b0b795f9809d16\",\"timestamp\":\"2026-09-01T12:00:00Z\"}},{\"schema_version\":1,\"dataset\":\"messages\",\"id\":\"q1:message:b26ed44c1ab1de8868735939549286567c784a61ebf1dddc9d6e16568af90bda\",\"source_refs\":[{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":909}],\"fields\":{\"role\":\"user\",\"session_id\":\"q1:session:07e7e3c808b4da91fe1389ba358d3e3e083f4b9593c9a8c503b0b795f9809d16\",\"timestamp\":\"2026-09-01T12:00:03Z\"}}],\"coverage\":{\"discovered_sources\":1,\"loaded_sources\":1,\"selected_sources\":1,\"source_status\":{\"readable\":1},\"association_status\":{},\"excluded_adapters\":[\"codex\",\"copilot-cli\",\"copilot-cli-snapshot\",\"cursor-ide\",\"cursor-transcript\",\"oh-my-pi\",\"pi\",\"vscode-copilot\"],\"source_read_complete\":true,\"issues\":[]},\"universe\":{\"source_view_digest\":\"e835c4244cfd43f0eea8d5fc1fc8e4b601cce868d08c1972770865b23537ead4\",\"selection_digest\":\"55a2f9b477d72e822762bdf8b2516d70d54616284d3334f3cf3efda47b79c17e\",\"columns_digest\":\"5ece91d621ea06d8dfee417d05647a6e58ea5b3dcfe4be3c6be1cf5e94595c5a\",\"columns\":[\"id\",\"source_refs\",\"session_id\",\"role\",\"timestamp\"],\"applied_limit\":50,\"rows_complete_for_selection\":\"complete\",\"partitions_complete\":\"complete\",\"basis\":\"live_view\",\"bounded_by_input\":false},\"matched\":2,\"emitted\":2,\"next_cursor\":null},\"next_action\":{\"summary\":\"Inspect the selected entity and its evidence coverage.\",\"argv\":[\"unisphere\",\"messages\",\"show\",\"q1:message:5f2339ad247b363827da3596f832d81598b17b0510aac64bd41b98d1b5952a16\",\"--repo\"],\"required_inputs\":[\"repository_path\"]}}\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/target/debug/unisphere",
+        "turns",
+        "extract",
+        "--repo",
+        "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+        "--harness",
+        "claude-code",
+        "--has-errors",
+        "--context-before",
+        "1",
+        "--context-after",
+        "1",
+        "--include-content",
+        "--format",
+        "jsonl"
+      ],
+      "cwd": "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+      "stdout": "{\"schema_version\":1,\"dataset\":\"turns\",\"id\":\"q1:turn:cc7fd1ada1ae2a794fa609b7e768a40f13b6746904be357c33f3a153fe8bb7ca\",\"source_refs\":[{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":0},{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":248},{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":586}],\"is_context\":false,\"ordinal\":1,\"session_id\":\"q1:session:07e7e3c808b4da91fe1389ba358d3e3e083f4b9593c9a8c503b0b795f9809d16\",\"started_at\":\"2026-09-01T12:00:00Z\"}\n{\"schema_version\":1,\"dataset\":\"turns\",\"id\":\"q1:turn:6247cef1280b7c628b8e9c29529f2dbdb7baec665e42f91cc02288bc34b3a027\",\"source_refs\":[{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":909}],\"is_context\":true,\"ordinal\":2,\"session_id\":\"q1:session:07e7e3c808b4da91fe1389ba358d3e3e083f4b9593c9a8c503b0b795f9809d16\",\"started_at\":\"2026-09-01T12:00:03Z\"}\n",
+      "stderr": "{\"command\":\"turns.extract\",\"data\":{\"emitted\":2,\"matched\":1},\"next_action\":{\"argv\":[\"unisphere\",\"docs\",\"get\",\"start\",\"--human\"],\"required_inputs\":[],\"summary\":\"Read the bundled workflow before issuing the next query.\"},\"ok\":true,\"v\":1}\n",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/target/debug/unisphere",
+        "tools",
+        "stats",
+        "--repo",
+        "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+        "--harness",
+        "claude-code",
+        "--group-by",
+        "tool_family",
+        "--metric",
+        "count",
+        "--metric",
+        "measured_count",
+        "--metric",
+        "missing_duration_count",
+        "--metric",
+        "failures",
+        "--metric",
+        "p95_ms",
+        "--format",
+        "json"
+      ],
+      "cwd": "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+      "stdout": "{\"ok\":true,\"command\":\"tools.stats\",\"v\":1,\"data\":{\"schema_version\":1,\"dataset\":\"tools\",\"query\":{\"dataset\":\"tools\",\"operation\":\"stats\",\"scope_digest\":\"95ac0e59d198057c81b8de4e5c74bd844ac3b4d6cb7444a333bb51a9e4b8d4f4\"},\"rows\":[{\"schema_version\":1,\"dataset\":\"tools\",\"id\":\"q1:group:294da5257711cce40ac37231327bb38f13ebaac1bf01eb06b76be29bde94e369\",\"source_refs\":[{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":248},{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":586}],\"fields\":{\"count\":1,\"failures\":1,\"measured_count\":1,\"missing_duration_count\":0,\"p95_ms\":1000.0,\"tool_family\":\"shell\"}}],\"coverage\":{\"discovered_sources\":1,\"loaded_sources\":1,\"selected_sources\":1,\"source_status\":{\"readable\":1},\"association_status\":{},\"excluded_adapters\":[\"codex\",\"copilot-cli\",\"copilot-cli-snapshot\",\"cursor-ide\",\"cursor-transcript\",\"oh-my-pi\",\"pi\",\"vscode-copilot\"],\"source_read_complete\":true,\"issues\":[]},\"universe\":{\"source_view_digest\":\"30c1c390bca49181c4d5b4728dee29be21ef1a466898d99506253833a1823cbe\",\"selection_digest\":\"d8c00ad1e05439fd2b21358239e48fe2990d12befd6c4bcc922214aae1e813a8\",\"columns_digest\":\"d7390e18d9f4f07ae7eb31819594c8c7df2ec403219f10a475d92e4541c515b8\",\"columns\":[\"id\",\"source_refs\",\"tool_family\",\"count\",\"measured_count\",\"missing_duration_count\",\"failures\",\"p95_ms\"],\"applied_limit\":null,\"rows_complete_for_selection\":\"complete\",\"partitions_complete\":\"complete\",\"basis\":\"live_view\",\"bounded_by_input\":false},\"matched\":1,\"emitted\":1,\"next_cursor\":null},\"next_action\":{\"summary\":\"Read the bundled workflow before issuing the next query.\",\"argv\":[\"unisphere\",\"docs\",\"get\",\"start\",\"--human\"],\"required_inputs\":[]}}\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/target/debug/unisphere",
+        "sessions",
+        "list",
+        "--input",
+        "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr/saved-sessions.json",
+        "--format",
+        "json"
+      ],
+      "cwd": "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+      "stdout": "{\"ok\":true,\"command\":\"sessions.list\",\"v\":1,\"data\":{\"schema_version\":1,\"dataset\":\"sessions\",\"query\":{\"dataset\":\"sessions\",\"operation\":\"list\",\"scope_digest\":\"f549c6c3814d3c02ddb6c66ca188beb7a58dfcfb6f420b41bac0153ef61d3a18\"},\"rows\":[{\"schema_version\":1,\"dataset\":\"sessions\",\"id\":\"q1:session:07e7e3c808b4da91fe1389ba358d3e3e083f4b9593c9a8c503b0b795f9809d16\",\"source_refs\":[{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":0},{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":248},{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":586},{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":909}],\"fields\":{\"adapter\":\"claude-code\",\"harness\":\"claude-code\"}}],\"coverage\":{\"discovered_sources\":1,\"loaded_sources\":1,\"selected_sources\":1,\"source_status\":{\"readable\":1},\"association_status\":{},\"excluded_adapters\":[\"codex\",\"copilot-cli\",\"copilot-cli-snapshot\",\"cursor-ide\",\"cursor-transcript\",\"oh-my-pi\",\"pi\",\"vscode-copilot\"],\"source_read_complete\":true,\"issues\":[]},\"universe\":{\"source_view_digest\":\"1085d0daa49ab0121ebf0aba3d4c4cc7649bfb6d09b2f9b540674e87bd324855\",\"selection_digest\":\"3eb76bf7816e186130dd187ad24e60ff3bdd6d446aefb97bbaa9176c589d4657\",\"columns_digest\":\"bff905bfce84e87d6931e60864c9639c8a562aa5dc04fd167d85b807d800a584\",\"columns\":[\"id\",\"source_refs\",\"started_at\",\"harness\",\"adapter\"],\"applied_limit\":50,\"rows_complete_for_selection\":\"complete\",\"partitions_complete\":\"complete\",\"basis\":\"saved_selection\",\"bounded_by_input\":false},\"matched\":1,\"emitted\":1,\"next_cursor\":null},\"next_action\":{\"summary\":\"Inspect the selected entity and its evidence coverage.\",\"argv\":[\"unisphere\",\"sessions\",\"show\",\"q1:session:07e7e3c808b4da91fe1389ba358d3e3e083f4b9593c9a8c503b0b795f9809d16\",\"--input\"],\"required_inputs\":[\"input_path\"]}}\n",
+      "stderr": "",
+      "exit": 0
+    }
+  ],
+  "assertions": {
+    "stats": {
+      "count": 1,
+      "failures": 1,
+      "measured_count": 1,
+      "missing_duration_count": 0,
+      "p95_ms": 1000,
+      "tool_family": "shell"
+    },
+    "context": {
+      "matched": 1,
+      "emitted": 2,
+      "context_rows": 1
+    },
+    "filter_matches": 2,
+    "search_did_not_authorize_payload": true,
+    "offline_native_identity_preserved": true
+  }
+}

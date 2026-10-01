@@ -1,0 +1,46 @@
+{
+  "recorded_at": "2026-09-10T09:19:24.846Z",
+  "authority": "Jordan approved optional Pij-ID implementation; PM narrow follow-on",
+  "source_sha": "10e72f900e744fe6c83ba7601ba0e3570c12a27a",
+  "peer": "pij-unfortunate-rat",
+  "goal": "One optional shared --pij ID query selector; defer lookup to app without changing frozen core query ports",
+  "owned_paths": [
+    "crates/cli/src/args.rs",
+    "crates/cli/src/query.rs",
+    "crates/cli/src/lib.rs",
+    "crates/cli/tests/query_frontend.rs",
+    "crates/cli/docs/find-sessions.md",
+    "crates/cli/docs/troubleshooting.md"
+  ],
+  "interface": {
+    "variant": "ParsedCommand::PijQuery(PijQueryCommand)",
+    "command": "pub struct PijQueryCommand { pub id:String, pub query:QueryCommand, pub target:PijTarget }; pub enum PijTarget { Query, SessionShow, SourceCheck }",
+    "resolution": "--pij is an alternative scope. Validated pending request is not executable until app replaces scope/session and applies PijTarget. SessionShow and SourceCheck temporarily carry List explicitly as unresolved frontend state; final SDK operation is Show or Check with real native-derived IDs.",
+    "failure": "pub fn emit_pij_failure(code:&str,message:&str,next_action:&str,mode:OutputMode,stderr:&mut dyn Write)->u8; emits safe app-supplied static strings, stable JSON error envelope/next_action or human error, exit1 unless writing fails (also1). No stdout parameter.",
+    "provenance": "pub fn emit_pij_resolution(pij_id:&str,harness:&str,session_id:EntityId,source_id:SourceId,mode:OutputMode,stderr:&mut dyn Write)->std::io::Result<()>; one JSON diagnostic record or human summary. Do not emit raw native session ID, machine, cwd or source path. IDs passed by PM are explicit seat or validated hashes."
+  },
+  "rules": [
+    "Shared --pij on Sources/Sessions/Turns/Messages/Tools/Events query leaves; no native export/root/native Git Notes changes. Sources may resolve source scope; session restriction for row queries is PM responsibility.",
+    "Exactly one source scope: --pij conflicts with --repo,--source,--input and non-default --repo-scope; reject --session,--native-id,--harness,--source-adapter and corresponding excluded harness/adapter selectors when --pij used to avoid contradictory native identities. Reject invalid/empty/leading-option/control IDs safely. Do not echo rejected text.",
+    "For sessions show permit missing positional entity only with --pij; reject simultaneous explicit entity and --pij for sessions show. Other dataset show still requires its own entity ID and may use --pij as source scope. Existing session tree positional grammar remains unchanged; --pij may scope it but not invent an entity.",
+    "All non-Pij parse/DTO behavior remains unchanged, no new QueryRequest field/core enum. QueryCommand stays unchanged.",
+    "App resolves one native mapping, locates/verifies actual source+session and executes once. Generated query actions use the replaced explicit SourceId/session binding, never the live --pij alias; retain continuation instruction original_query_options. No resolver calls in CLI.",
+    "Use current CLI escaping for dynamic seat/harness strings; human diagnostics must neutralize control/bidi, machine JSON must escape correctly. Existing unknown/missing/static errors need concrete recovery.",
+    "Publish exports and focused parser conflict/shape/provenance/clean-stream tests. Docs explain latest mapping per new query, pinned native source on continuation, retired seats valid, optional Pij availability and no remote/history/cache.",
+    "No source/prose-pinning, mock-forwarding or bare not-throw tests. Skip all build/test/lint/format/startup.",
+    "Preserve original candidate10e72f9; commit follow-on separately through harness commit; deliver exact SHA/paths/unrun checks.",
+    "For pending Pij queries only, validate a clone with turn_range=None until canonical session resolution; retain requested range and revalidate after app inserts the exact session filter. Normal queries stay strict."
+  ],
+  "forbidden": [
+    ".the-flow-state.json",
+    "the-flow.json",
+    "the-flow.md",
+    "canonical plan/guide/tasks/receipts",
+    "app",
+    "loader/core/SDK",
+    "root manifests/lock",
+    "global tooling",
+    "push/merge",
+    "peer transport logs"
+  ]
+}

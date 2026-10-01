@@ -1,0 +1,438 @@
+{
+  "recorded_at": "2026-09-10T04:55:41.893Z",
+  "pm": "pij-empirical-tiger",
+  "sealed_source": "72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9",
+  "published_source": "99ea782e86fc1ebc4ea09bf8d4e7624dc87dc3bc",
+  "launched": [
+    {
+      "unit": "tk-0002",
+      "name": "Claude and Codex query facts",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0002",
+      "dispatch": {
+        "path": "docs/plans/015-session-query-cli/assets/team/dispatch-tk-0002-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.json",
+        "sha256": "934f76ceabed353983bd6dec516f318d493f48317e04a994d339dc3f79843ce4"
+      },
+      "peer": "pij-fiscal-millicent",
+      "requested": {
+        "role": "coder",
+        "harness": "omp",
+        "model": "github-copilot/gpt-5.6-sol-fast",
+        "effort": "high",
+        "source": {
+          "harness": "guide",
+          "model": "guide",
+          "effort": "guide"
+        }
+      },
+      "observed": {
+        "peer_id": "pij-fiscal-millicent",
+        "root": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0002",
+        "ready": true,
+        "harness": "omp",
+        "model": "github-copilot/gpt-5.6-sol-fast",
+        "effort": "high",
+        "native_session": "01a089a9-f089-70b5-a550-84f1b8791771",
+        "pid": 76018,
+        "evidence": [
+          "pij-rs state: {\"id\":\"pij-fiscal-millicent\",\"liveness\":\"active\",\"cwd\":\"/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0002\",\"harness\":\"omp\",\"boundModel\":\"github-copilot/gpt-5.6-sol-fast\",\"effort\":\"high\",\"pid\":76018,\"procStart\":20260910145329,\"parent\":\"pij-empirical-tiger\"}",
+          "pij-rs list: {\"id\":\"pij-fiscal-millicent\",\"session\":\"01a089a9-f089-70b5-a550-84f1b8791771\",\"folder\":\"/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0002\",\"proc\":{\"pid\":76018,\"proc_start\":20260910145329},\"harness\":\"omp\",\"model\":\"github-copilot/gpt-5.6-sol-fast\",\"effort\":\"high\"}",
+          "plan root HEAD at dispatch: 99ea782e86fc1ebc4ea09bf8d4e7624dc87dc3bc (sealed source 72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9, a descendant: receipts/evidence committed after the seal)"
+        ],
+        "gaps": [
+          "Provider-served inference identity is unverified; these observations bind launch/session configuration only.",
+          "Native public state does not expose process argv or environment."
+        ]
+      },
+      "delivery": {
+        "message_id": "302fa63a-459f-46b9-b189-fb9db0ce13c9",
+        "outcome": "queued",
+        "recorded_at": "2026-09-10T04:53:33.138Z"
+      }
+    },
+    {
+      "unit": "tk-0003",
+      "name": "Oh My Pi and Pi query facts",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0003",
+      "dispatch": {
+        "path": "docs/plans/015-session-query-cli/assets/team/dispatch-tk-0003-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.json",
+        "sha256": "bad5e73f3ba6f744c86dc9bea7d9f523b1d16100669c80d0ca5fef81874ff60f"
+      },
+      "peer": "pij-variable-inigo",
+      "requested": {
+        "role": "coder",
+        "harness": "omp",
+        "model": "github-copilot/gpt-5.6-sol-fast",
+        "effort": "high",
+        "source": {
+          "harness": "guide",
+          "model": "guide",
+          "effort": "guide"
+        }
+      },
+      "observed": {
+        "peer_id": "pij-variable-inigo",
+        "root": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0003",
+        "ready": true,
+        "harness": "omp",
+        "model": "github-copilot/gpt-5.6-sol-fast",
+        "effort": "high",
+        "native_session": "01a089aa-7a8d-7221-9f58-6cbeab7d0c21",
+        "pid": 98286,
+        "evidence": [
+          "pij-rs state: {\"id\":\"pij-variable-inigo\",\"liveness\":\"active\",\"cwd\":\"/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0003\",\"harness\":\"omp\",\"boundModel\":\"github-copilot/gpt-5.6-sol-fast\",\"effort\":\"high\",\"pid\":98286,\"procStart\":20260910145400,\"parent\":\"pij-empirical-tiger\"}",
+          "pij-rs list: {\"id\":\"pij-variable-inigo\",\"session\":\"01a089aa-7a8d-7221-9f58-6cbeab7d0c21\",\"folder\":\"/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0003\",\"proc\":{\"pid\":98286,\"proc_start\":20260910145400},\"harness\":\"omp\",\"model\":\"github-copilot/gpt-5.6-sol-fast\",\"effort\":\"high\"}",
+          "plan root HEAD at dispatch: 99ea782e86fc1ebc4ea09bf8d4e7624dc87dc3bc (sealed source 72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9, a descendant: receipts/evidence committed after the seal)"
+        ],
+        "gaps": [
+          "Provider-served inference identity is unverified; these observations bind launch/session configuration only.",
+          "Native public state does not expose process argv or environment."
+        ]
+      },
+      "delivery": {
+        "message_id": "acf65b5c-a371-4191-88f8-a1e24ec95217",
+        "outcome": "queued",
+        "recorded_at": "2026-09-10T04:54:08.507Z"
+      }
+    },
+    {
+      "unit": "tk-0004",
+      "name": "Copilot current and legacy query facts",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0004",
+      "dispatch": {
+        "path": "docs/plans/015-session-query-cli/assets/team/dispatch-tk-0004-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.json",
+        "sha256": "65063a03187e6af7e658e203c62879fec19887ba0f5c6843e13d902bfd25bca4"
+      },
+      "peer": "pij-planned-thrush",
+      "requested": {
+        "role": "coder",
+        "harness": "omp",
+        "model": "github-copilot/gpt-5.6-sol-fast",
+        "effort": "high",
+        "source": {
+          "harness": "guide",
+          "model": "guide",
+          "effort": "guide"
+        }
+      },
+      "observed": {
+        "peer_id": "pij-planned-thrush",
+        "root": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0004",
+        "ready": true,
+        "harness": "omp",
+        "model": "github-copilot/gpt-5.6-sol-fast",
+        "effort": "high",
+        "native_session": "01a089aa-c991-7051-a35b-89c21029969b",
+        "pid": 8379,
+        "evidence": [
+          "pij-rs state: {\"id\":\"pij-planned-thrush\",\"liveness\":\"active\",\"cwd\":\"/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0004\",\"harness\":\"omp\",\"boundModel\":\"github-copilot/gpt-5.6-sol-fast\",\"effort\":\"high\",\"pid\":8379,\"procStart\":20260910145420,\"parent\":\"pij-empirical-tiger\"}",
+          "pij-rs list: {\"id\":\"pij-planned-thrush\",\"session\":\"01a089aa-c991-7051-a35b-89c21029969b\",\"folder\":\"/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0004\",\"proc\":{\"pid\":8379,\"proc_start\":20260910145420},\"harness\":\"omp\",\"model\":\"github-copilot/gpt-5.6-sol-fast\",\"effort\":\"high\"}",
+          "plan root HEAD at dispatch: 99ea782e86fc1ebc4ea09bf8d4e7624dc87dc3bc (sealed source 72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9, a descendant: receipts/evidence committed after the seal)"
+        ],
+        "gaps": [
+          "Provider-served inference identity is unverified; these observations bind launch/session configuration only.",
+          "Native public state does not expose process argv or environment."
+        ]
+      },
+      "delivery": {
+        "message_id": "09aee017-d68d-4367-8470-c609cc17476b",
+        "outcome": "queued",
+        "recorded_at": "2026-09-10T04:54:30.347Z"
+      }
+    },
+    {
+      "unit": "tk-0005",
+      "name": "VS Code document and journal query facts",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0005",
+      "dispatch": {
+        "path": "docs/plans/015-session-query-cli/assets/team/dispatch-tk-0005-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.json",
+        "sha256": "3d97dd35905cfd9fcd9274a9307b2a09f908397822367b7a09ebc1de144cbbc9"
+      },
+      "peer": "pij-outstanding-whale",
+      "requested": {
+        "role": "coder",
+        "harness": "omp",
+        "model": "github-copilot/gpt-5.6-sol-fast",
+        "effort": "high",
+        "source": {
+          "harness": "guide",
+          "model": "guide",
+          "effort": "guide"
+        }
+      },
+      "observed": {
+        "peer_id": "pij-outstanding-whale",
+        "root": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0005",
+        "ready": true,
+        "harness": "omp",
+        "model": "github-copilot/gpt-5.6-sol-fast",
+        "effort": "high",
+        "native_session": "01a089ab-2d76-7678-bf46-58d63ecc0456",
+        "pid": 18319,
+        "evidence": [
+          "pij-rs state: {\"id\":\"pij-outstanding-whale\",\"liveness\":\"active\",\"cwd\":\"/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0005\",\"harness\":\"omp\",\"boundModel\":\"github-copilot/gpt-5.6-sol-fast\",\"effort\":\"high\",\"pid\":18319,\"procStart\":20260910145440,\"parent\":\"pij-empirical-tiger\"}",
+          "pij-rs list: {\"id\":\"pij-outstanding-whale\",\"session\":\"01a089ab-2d76-7678-bf46-58d63ecc0456\",\"folder\":\"/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0005\",\"proc\":{\"pid\":18319,\"proc_start\":20260910145440},\"harness\":\"omp\",\"model\":\"github-copilot/gpt-5.6-sol-fast\",\"effort\":\"high\"}",
+          "plan root HEAD at dispatch: 99ea782e86fc1ebc4ea09bf8d4e7624dc87dc3bc (sealed source 72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9, a descendant: receipts/evidence committed after the seal)"
+        ],
+        "gaps": [
+          "Provider-served inference identity is unverified; these observations bind launch/session configuration only.",
+          "Native public state does not expose process argv or environment."
+        ]
+      },
+      "delivery": {
+        "message_id": "461c08b4-746e-442b-b5cc-6ae4eb331f8a",
+        "outcome": "queued",
+        "recorded_at": "2026-09-10T04:54:54.934Z"
+      }
+    },
+    {
+      "unit": "tk-0006",
+      "name": "Cursor transcript and IDE query facts",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0006",
+      "dispatch": {
+        "path": "docs/plans/015-session-query-cli/assets/team/dispatch-tk-0006-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.json",
+        "sha256": "4bb11e859616699b0143bf94d309303edb2576ddf0dc618083c8ed1a6ab7ae3d"
+      },
+      "peer": "pij-total-heron",
+      "requested": {
+        "role": "coder",
+        "harness": "omp",
+        "model": "github-copilot/gpt-5.6-sol-fast",
+        "effort": "high",
+        "source": {
+          "harness": "guide",
+          "model": "guide",
+          "effort": "guide"
+        }
+      },
+      "observed": {
+        "peer_id": "pij-total-heron",
+        "root": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0006",
+        "ready": true,
+        "harness": "omp",
+        "model": "github-copilot/gpt-5.6-sol-fast",
+        "effort": "high",
+        "native_session": "01a089ab-8772-7175-a725-89cc50696621",
+        "pid": 33305,
+        "evidence": [
+          "pij-rs state: {\"id\":\"pij-total-heron\",\"liveness\":\"active\",\"cwd\":\"/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0006\",\"harness\":\"omp\",\"boundModel\":\"github-copilot/gpt-5.6-sol-fast\",\"effort\":\"high\",\"pid\":33305,\"procStart\":20260910145509,\"parent\":\"pij-empirical-tiger\"}",
+          "pij-rs list: {\"id\":\"pij-total-heron\",\"session\":\"01a089ab-8772-7175-a725-89cc50696621\",\"folder\":\"/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0006\",\"proc\":{\"pid\":33305,\"proc_start\":20260910145509},\"harness\":\"omp\",\"model\":\"github-copilot/gpt-5.6-sol-fast\",\"effort\":\"high\"}",
+          "plan root HEAD at dispatch: 99ea782e86fc1ebc4ea09bf8d4e7624dc87dc3bc (sealed source 72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9, a descendant: receipts/evidence committed after the seal)"
+        ],
+        "gaps": [
+          "Provider-served inference identity is unverified; these observations bind launch/session configuration only.",
+          "Native public state does not expose process argv or environment."
+        ]
+      },
+      "delivery": {
+        "message_id": "bbc27fe0-e39d-44a9-b555-c6b6c909feef",
+        "outcome": "queued",
+        "recorded_at": "2026-09-10T04:55:16.861Z"
+      }
+    },
+    {
+      "unit": "tk-0007",
+      "name": "Bounded local discovery and input provider",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0007",
+      "dispatch": {
+        "path": "docs/plans/015-session-query-cli/assets/team/dispatch-tk-0007-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.json",
+        "sha256": "7b102c9ac353d95699137387a389682464b042eab966584840ecf08a08b8dddd"
+      },
+      "peer": "pij-exact-partridge",
+      "requested": {
+        "role": "coder",
+        "harness": "omp",
+        "model": "github-copilot/gpt-5.6-sol-fast",
+        "effort": "high",
+        "source": {
+          "harness": "guide",
+          "model": "guide",
+          "effort": "guide"
+        }
+      },
+      "observed": {
+        "peer_id": "pij-exact-partridge",
+        "root": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0007",
+        "ready": true,
+        "harness": "omp",
+        "model": "github-copilot/gpt-5.6-sol-fast",
+        "effort": "high",
+        "native_session": "01a089a9-f08a-77e4-8dce-d44f56b537eb",
+        "pid": 75951,
+        "evidence": [
+          "pij-rs state: {\"id\":\"pij-exact-partridge\",\"liveness\":\"active\",\"cwd\":\"/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0007\",\"harness\":\"omp\",\"boundModel\":\"github-copilot/gpt-5.6-sol-fast\",\"effort\":\"high\",\"pid\":75951,\"procStart\":20260910145329,\"parent\":\"pij-empirical-tiger\"}",
+          "pij-rs list: {\"id\":\"pij-exact-partridge\",\"session\":\"01a089a9-f08a-77e4-8dce-d44f56b537eb\",\"folder\":\"/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0007\",\"proc\":{\"pid\":75951,\"proc_start\":20260910145329},\"harness\":\"omp\",\"model\":\"github-copilot/gpt-5.6-sol-fast\",\"effort\":\"high\"}",
+          "plan root HEAD at dispatch: 99ea782e86fc1ebc4ea09bf8d4e7624dc87dc3bc (sealed source 72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9, a descendant: receipts/evidence committed after the seal)"
+        ],
+        "gaps": [
+          "Provider-served inference identity is unverified; these observations bind launch/session configuration only.",
+          "Native public state does not expose process argv or environment."
+        ]
+      },
+      "delivery": {
+        "message_id": "b20918c5-045d-483a-9460-b5e348732603",
+        "outcome": "queued",
+        "recorded_at": "2026-09-10T04:53:32.757Z"
+      }
+    },
+    {
+      "unit": "tk-0008",
+      "name": "Coherent SDK query engine",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0008",
+      "dispatch": {
+        "path": "docs/plans/015-session-query-cli/assets/team/dispatch-tk-0008-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.json",
+        "sha256": "fbcd3b9c2e892cc40070b9e64fae126f69d76a0f999505ee71ac7dbcae76f3cd"
+      },
+      "peer": "pij-forward-jerren",
+      "requested": {
+        "role": "coder",
+        "harness": "omp",
+        "model": "github-copilot/gpt-5.6-sol-fast",
+        "effort": "high",
+        "source": {
+          "harness": "guide",
+          "model": "guide",
+          "effort": "guide"
+        }
+      },
+      "observed": {
+        "peer_id": "pij-forward-jerren",
+        "root": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0008",
+        "ready": true,
+        "harness": "omp",
+        "model": "github-copilot/gpt-5.6-sol-fast",
+        "effort": "high",
+        "native_session": "01a089a9-f08a-7260-bcda-18bf37dab282",
+        "pid": 76126,
+        "evidence": [
+          "pij-rs state: {\"id\":\"pij-forward-jerren\",\"liveness\":\"active\",\"cwd\":\"/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0008\",\"harness\":\"omp\",\"boundModel\":\"github-copilot/gpt-5.6-sol-fast\",\"effort\":\"high\",\"pid\":76126,\"procStart\":20260910145329,\"parent\":\"pij-empirical-tiger\"}",
+          "pij-rs list: {\"id\":\"pij-forward-jerren\",\"session\":\"01a089a9-f08a-7260-bcda-18bf37dab282\",\"folder\":\"/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0008\",\"proc\":{\"pid\":76126,\"proc_start\":20260910145329},\"harness\":\"omp\",\"model\":\"github-copilot/gpt-5.6-sol-fast\",\"effort\":\"high\"}",
+          "plan root HEAD at dispatch: 99ea782e86fc1ebc4ea09bf8d4e7624dc87dc3bc (sealed source 72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9, a descendant: receipts/evidence committed after the seal)"
+        ],
+        "gaps": [
+          "Provider-served inference identity is unverified; these observations bind launch/session configuration only.",
+          "Native public state does not expose process argv or environment."
+        ]
+      },
+      "delivery": {
+        "message_id": "cea0eaba-9da4-446e-a5e0-9f840fa68eca",
+        "outcome": "queued",
+        "recorded_at": "2026-09-10T04:53:33.011Z"
+      }
+    },
+    {
+      "unit": "tk-0009",
+      "name": "Reusable query output adapters",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0009",
+      "dispatch": {
+        "path": "docs/plans/015-session-query-cli/assets/team/dispatch-tk-0009-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.json",
+        "sha256": "52a4f76fdca9194023c46084464f174b913a9b30ad2b4ea6d4ca6b2d24d02022"
+      },
+      "peer": "pij-closed-barracuda",
+      "requested": {
+        "role": "coder",
+        "harness": "omp",
+        "model": "github-copilot/gpt-5.6-sol-fast",
+        "effort": "high",
+        "source": {
+          "harness": "guide",
+          "model": "guide",
+          "effort": "guide"
+        }
+      },
+      "observed": {
+        "peer_id": "pij-closed-barracuda",
+        "root": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0009",
+        "ready": true,
+        "harness": "omp",
+        "model": "github-copilot/gpt-5.6-sol-fast",
+        "effort": "high",
+        "native_session": "01a089a9-f08e-72bb-a021-4654f16e423d",
+        "pid": 75913,
+        "evidence": [
+          "pij-rs state: {\"id\":\"pij-closed-barracuda\",\"liveness\":\"active\",\"cwd\":\"/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0009\",\"harness\":\"omp\",\"boundModel\":\"github-copilot/gpt-5.6-sol-fast\",\"effort\":\"high\",\"pid\":75913,\"procStart\":20260910145329,\"parent\":\"pij-empirical-tiger\"}",
+          "pij-rs list: {\"id\":\"pij-closed-barracuda\",\"session\":\"01a089a9-f08e-72bb-a021-4654f16e423d\",\"folder\":\"/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-0009\",\"proc\":{\"pid\":75913,\"proc_start\":20260910145329},\"harness\":\"omp\",\"model\":\"github-copilot/gpt-5.6-sol-fast\",\"effort\":\"high\"}",
+          "plan root HEAD at dispatch: 99ea782e86fc1ebc4ea09bf8d4e7624dc87dc3bc (sealed source 72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9, a descendant: receipts/evidence committed after the seal)"
+        ],
+        "gaps": [
+          "Provider-served inference identity is unverified; these observations bind launch/session configuration only.",
+          "Native public state does not expose process argv or environment."
+        ]
+      },
+      "delivery": {
+        "message_id": "b8a87112-ea73-4267-bec3-ac676c1cc56f",
+        "outcome": "queued",
+        "recorded_at": "2026-09-10T04:53:33.142Z"
+      }
+    },
+    {
+      "unit": "tk-000a",
+      "name": "Bundled offline docs and recipes",
+      "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-000a",
+      "dispatch": {
+        "path": "docs/plans/015-session-query-cli/assets/team/dispatch-tk-000a-72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9.dd.json",
+        "sha256": "78080e0b0eedb8da2ef8423b0ef6a4e3ba37378579be5662972bfbe6dd463d38"
+      },
+      "peer": "pij-subtle-sole",
+      "requested": {
+        "role": "coder",
+        "harness": "omp",
+        "model": "github-copilot/gpt-5.6-sol-fast",
+        "effort": "high",
+        "source": {
+          "harness": "guide",
+          "model": "guide",
+          "effort": "guide"
+        }
+      },
+      "observed": {
+        "peer_id": "pij-subtle-sole",
+        "root": "/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-000a",
+        "ready": true,
+        "harness": "omp",
+        "model": "github-copilot/gpt-5.6-sol-fast",
+        "effort": "high",
+        "native_session": "01a089a9-f08b-728e-af6b-2c3074b03348",
+        "pid": 76079,
+        "evidence": [
+          "pij-rs state: {\"id\":\"pij-subtle-sole\",\"liveness\":\"active\",\"cwd\":\"/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-000a\",\"harness\":\"omp\",\"boundModel\":\"github-copilot/gpt-5.6-sol-fast\",\"effort\":\"high\",\"pid\":76079,\"procStart\":20260910145329,\"parent\":\"pij-empirical-tiger\"}",
+          "pij-rs list: {\"id\":\"pij-subtle-sole\",\"session\":\"01a089a9-f08b-728e-af6b-2c3074b03348\",\"folder\":\"/Users/jordanknight/substrate/unisphere/unisphere-query-coders-015/tk-000a\",\"proc\":{\"pid\":76079,\"proc_start\":20260910145329},\"harness\":\"omp\",\"model\":\"github-copilot/gpt-5.6-sol-fast\",\"effort\":\"high\"}",
+          "plan root HEAD at dispatch: 99ea782e86fc1ebc4ea09bf8d4e7624dc87dc3bc (sealed source 72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9, a descendant: receipts/evidence committed after the seal)"
+        ],
+        "gaps": [
+          "Provider-served inference identity is unverified; these observations bind launch/session configuration only.",
+          "Native public state does not expose process argv or environment."
+        ]
+      },
+      "delivery": {
+        "message_id": "db98e2fb-10fa-41a6-9ae1-6bc506c1f524",
+        "outcome": "queued",
+        "recorded_at": "2026-09-10T04:53:33.141Z"
+      }
+    }
+  ],
+  "not_released": {
+    "unit": "tk-000b",
+    "reason": "CLI integration depends on SDK/writer/docs-parser delivery"
+  },
+  "allocation_recovery": "Initial nested-root attempts refused E477 without launch. Separate sibling clones used. Four E472 shared reservation-lock refusals then retried serially; nine actual launches succeeded.",
+  "validation_owner": "PM only after deliveries; candidate commits are not accepted product proof",
+  "terminal_lifecycle": {
+    "recorded_at": "2026-09-10T07:51:33.537Z",
+    "completed_peers_retired": [
+      "pij-closed-barracuda",
+      "pij-exact-partridge",
+      "pij-fiscal-millicent",
+      "pij-forward-jerren",
+      "pij-generous-godfrey",
+      "pij-glorious-galliform",
+      "pij-outstanding-whale",
+      "pij-planned-thrush",
+      "pij-subtle-sole",
+      "pij-total-heron",
+      "pij-variable-inigo"
+    ],
+    "retained_live_worker": "pij-unfortunate-rat",
+    "clones_and_refs_preserved": true,
+    "evidence": "terminal-cleanup.json"
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "record_type": "review",
+  "id": "rv-plan015-composed-pij-cli-pij-armed-cow",
+  "kind": "composed-cli-and-optional-selector-review",
+  "title": "Independent read-only review of the composed Pij selector and CLI query plumbing",
+  "code_subject": {
+    "commit": "f818e2f5e6c4e5fb34ab8a00c34cc9928dc0d283",
+    "subject_line": "feat(query): integrate optional Pij selector and verified CLI workflows",
+    "parent": "c7908e943439a6f860f403ce87b3be70d2d04da9",
+    "authored": "2026-09-10T19:47:00+1000",
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+    "reviewed_blob_ids": {
+      "crates/app/src/pij.rs": "18be912f5530b6b34394b511f993635642a4fbe6",
+      "crates/cli/src/args.rs": "b135bdfae03e40326860774a479dbbd3ee8f606b",
+      "crates/cli/src/query.rs": "f898d6e3ee3005a46e116bf5f6c559320f50183c",
+      "crates/loader-query/src/pij.rs": "a353996ad511a871cebd34fb71546e0e0b12c99e",
+      "crates/output-query/src/lib.rs": "dee3b7025b6bd938007867813178a2bd5efe937f",
+      "crates/app/tests/pij_query.rs": "8c08c1cf4d732f3c214ef04c7a8e946c996f030f",
+      "crates/app/tests/query_workflows.rs": "b80f51c07cccf9eb117d3db8fb5a4737f3b41300"
+    },
+    "note": "Every claim below is read from committed bytes at this commit via git show, never from the working tree."
+  },
+  "execution_subject": {
+    "status": "NOT MINE, NOT OBSERVED, NOT ASSERTED",
+    "detail": "The PM reports a quality gate passing at f818 and a foundation smoke failure caused by the proof comparing whole config envelopes across an intended CLI-only next_action addition, then two proof-only descendants: d42051770f1b99f23a9d040b2fcbf58eb820ed31 and 3cb4404d507db76693ccfa81f2a44bc187249347, with a full boot still running.",
+    "why_kept_separate": "Product bytes and proof bytes are different subjects with different failure modes. I reviewed the first. I did not observe any run, and no result here anticipates the boot.",
+    "descendant_scope_verified": "I confirmed the shape of the d4205177 delta myself rather than taking it on report: 3 files, and within crates/testkit only unisphere-proof.rs. No app, CLI, loader or resolver byte differs from the code subject. I did not inspect 3cb4404d."
+  },
+  "verdict": "APPROVE THE SOURCE, STATICALLY. The optional selector is genuinely optional, it refuses rather than guesses at every branch where guessing was available, and the identity pinning survives the mapping changing underneath it. One medium finding, M1, is a message defect rather than a behaviour defect and I would fix it before users meet it. Three low items. No security finding. This is not a composition or Builder acceptance, and it says nothing about Git Notes native or query runtime, which remain excluded pending the authorised history merge.",
+  "recorded_at": "2026-09-10T09:52:25Z\n",
+  "recorded_at_local": "2026-09-10T19:52:25+1000\n",
+  "reviewer": {
+    "seat": "pij-armed-cow",
+    "role": "independent read-only reviewer",
+    "harness": "OMP",
+    "model_id_as_exposed": "github-copilot/claude-opus-5",
+    "effort_as_exposed": "high",
+    "note": "Model and effort are exposed strings, not a provider attestation."
+  },
+  "method": "Static reading of committed bytes, plus the upstream Pij source at /Users/jordanknight/pi-hacking/pij for wire claims, plus guide contracts C19 and C20 read from assets/impl-guide.dd.json at the subject. No build, test, lint or formatter was run and no file was written outside my own scratch.",
+  "findings": [
+    {
+      "id": "M1",
+      "severity": "medium",
+      "blocking": false,
+      "title": "A --pij query can only ever see the current directory tree, and the failure it produces does not say so.",
+      "chain_of_evidence": [
+        "cli/src/args.rs:1536-1550 \u2014 when --pij is present the scope is forced to QueryScope::Repository{path: absolute(context.cwd), scope: tree}. The user cannot supply --repo alongside it: args.rs:1525-1528 rejects that with UNI-CLI-PIJ-CONFLICT.",
+        "loader-query/src/lib.rs:239-241 \u2014 repository_roots with a non-Worktrees scope returns exactly [canonicalize(cwd)], and lib.rs:798-800 passes those roots into load_candidates, which is what associates discovered transcripts with the requested tree.",
+        "app/src/pij.rs \u2014 when nothing matches, the failure is UNI-PIJ-TRANSCRIPT-MISSING with the recovery text 'Use a local native --source or run on the source host.'"
+      ],
+      "consequence": "A seat resolves perfectly, Pij hands back a valid native session ID, the transcript is present and readable on this machine, and the query still reports that no matching transcript was found, purely because the shell is standing in a different directory. The recovery text names the HOST but never the DIRECTORY, so the one user who is on the right host and in the wrong directory is told to check the thing that is already correct. Meanwhile --repo, the flag that would widen the search, is refused by design.",
+      "what_i_am_not_asking_for": "Not automatic retargeting. The resolver holds the seat's own cwd hint and deliberately declines to act on it, which is correct: the packet makes cwd a hint, and silently relocating a query on the strength of it would be exactly the guessing this design otherwise refuses. The behaviour is right.",
+      "suggested_change": "Say the true thing in the message. The resolved cwd hint is in hand at the point of failure, so the recovery can name the directory the seat recorded and tell the user to run there, or to pass an explicit native --source. That converts a dead end into one actionable step and costs no new behaviour.",
+      "why_medium": "It is the difference between a feature that appears broken and one that explains itself, on the most likely first-use path."
+    },
+    {
+      "id": "L1",
+      "severity": "low",
+      "blocking": false,
+      "title": "Every Pij failure exits 1, so the exit status cannot distinguish them.",
+      "evidence": "cli/src/query.rs:464-500 \u2014 emit_pij_failure discards the write result with `let _ = result;` and returns 1 unconditionally. The comparable query path, emit_query_failure_inner at query.rs:398-434, returns a typed status through query_failure_exit.",
+      "assessment": "A missing executable, an unknown seat and a resolved seat with no local transcript are operationally different answers, and a shell script gets one number for all three. The JSON and human renderings do carry distinct codes, so nothing is hidden, but the CLI's own convention elsewhere is a typed exit and this path departs from it. A second consequence of the discarded result: a stderr that fails to write is indistinguishable from a clean refusal."
+    },
+    {
+      "id": "L2",
+      "severity": "low",
+      "blocking": false,
+      "title": "Executable resolution honours relative PATH entries against the working directory.",
+      "evidence": "app/src/main.rs:146-164 \u2014 find_executable splits PATH and, for any entry that is not absolute, joins it onto context.cwd before canonicalizing and checking the executable bit. An empty PATH element, which POSIX defines as the current directory and which a trailing colon produces, therefore resolves ./pij from wherever the CLI is run.",
+      "honest_framing": "This is not introduced here. The same function already resolved git, so the behaviour predates the Pij work and it is faithful to POSIX and to what a shell would do. What is new is the exposure: a file named pij is a more plausible thing to find sitting in an arbitrary checked-out repository than a file named git, and this CLI is designed to be run inside arbitrary repositories.",
+      "suggested_change": "Skip non-absolute PATH entries. One line, and it costs nothing anyone wants."
+    },
+    {
+      "id": "L3",
+      "severity": "low",
+      "blocking": false,
+      "title": "The guide's ParsedCommand enumeration is now stale.",
+      "evidence": "C20 enumerates ParsedCommand as Config|Catalog|Docs|Schema|Query|NativeRootList|NativeGitNotesList|NativeExport|Help|Version. args.rs:585-596 adds PijQuery(PijQueryCommand).",
+      "assessment": "I read this as documentation drift, not a breach. C20's actual demand is that the app dispatch a typed result and never scan argv, and PijQuery serves that demand rather than undermining it: --pij is a selector on existing query forms, PijQueryCommand wraps a fully built QueryCommand, and the app matches a variant instead of sniffing a flag. The list is a superset of what the guide wrote down. Reconciliation is the PM's, and I claim no composition acceptance."
+    }
+  ],
+  "things_i_checked_and_found_right": [
+    "R1 is implemented AND correctly placed, which is the part that could have gone wrong. loader-query/src/pij.rs:228-231 rejects any envelope whose v is not 2, before the ok branch. That ordering would break unknown-seat detection if Pij's refusals omitted or varied v, so I checked upstream: Envelope.v is a plain u32 with no skip_serializing_if (core/src/model.rs:533-540) and refused() sets it to ENVELOPE_VERSION (model.rs:591-602). Refusals carry v=2, UnknownSeat still reaches the user, and a future v=3 refusal now becomes InvalidResponse, which is the intended refuse-rather-than-half-read outcome.",
+    "The R2 and R8 documentation landed as real sentences on the type and the function, naming the forking-wrapper limitation and the untrusted-text status of the returned hints, with no invented process-tree guarantee.",
+    "C19 field sensitivity is honoured where it would have been easiest to break. emit_pij_resolution (query.rs:503-540) publishes the seat ID, the harness, and the minted local session and source IDs, and withholds native_session_id, which C19 names sensitive. The provenance line proves the pin without echoing the native identity.",
+    "Human diagnostics reuse the P4 escape policy: safe_human_identifier (query.rs:542+) neutralises controls and the same bidi set, so the earlier terminal-spoofing fix was not left behind at this new output surface.",
+    "The mixed-selector refusal is exhaustive and its error text is accurate. query_scope (args.rs:1525-1546) rejects --pij against repo, source, input, a non-default repo_scope, session, native_id, harness, exclude_harness, source_adapter and exclude_source_adapter, which is exactly the list UNI-CLI-PIJ-CONFLICT prints. C20's requirement that mixed selectors never be assigned silent precedence is met literally.",
+    "validate_pij_id (args.rs:1728-1738) rejects empty, leading '-', whitespace and control characters. That closes the shape I noted in the earlier resolver review, where an id beginning with a dash would have been passed through to argv, and it is strictly stronger than the loader's own check.",
+    "The turn-range deferral is sound, and I traced it before doubting it. args.rs:1458-1463 validates a clone with turn_range removed on the Pij path, because at parse time the session filter does not yet exist and validation at model.rs:656-661 requires Dataset::Turns plus an exact session selection. The real request is validated later: execute_view calls request.validate() at engine.rs:213, by which point app/src/pij.rs has pushed SessionId In [Id(session_id)], which has_exact_session_selection (model.rs:537-556) accepts for a single Session-kind id. Nothing escapes validation; the check simply happens where it can succeed.",
+    "Identity pinning survives a mapping change. app/src/pij.rs discovers with ContentAccess::default(), re-opens only the verified source by id, and then re-checks native_id and harness against the resolved values on the opened view, so a source that changed underneath is caught rather than served.",
+    "Ambiguity refuses instead of choosing. Two distinct codes, UNI-PIJ-AMBIGUOUS-SOURCE and UNI-PIJ-AMBIGUOUS-SESSION, and a third, UNI-PIJ-SELECTION, for a tree request naming a session other than the resolved one. No copy is picked automatically.",
+    "The finite-duration correction is complete, not local. args.rs:1697-1710 replaces the unsigned filter with a duration_filter that rejects non-finite and negative values and emits FieldValue::Float. I checked for siblings with the same bug: DurationMs is the only FiniteF64 field that is filterable at all, since FailureRate, MeanMs, MinMs, MaxMs, P50Ms and P95Ms are declared NO_PREDICATES in core/src/query/schema.rs. There is no second flag carrying the defect.",
+    "CSV formula safety is better than the usual version. spreadsheet_danger (output-query/src/lib.rs:355-361) catches a leading tab or CR and skips leading whitespace before testing for = + - @, so a padded payload is still caught, and the quote prefix is applied only to string cells.",
+    "The added tests assert behaviour rather than plumbing. explicit_native_operation_never_invokes_pij is a real negative, continuation_uses_pinned_native_source_after_alias_changes pins the property that matters most here, optional_lookup_failure_categories_do_not_pollute_row_streams guards the stdout/stderr split, and finite_duration_thresholds_compare_to_native_observed_milliseconds is a genuine regression for the reproduced defect.",
+    "The d4205177 proof correction is the honest form of that fix. It requires next_action to be present and structurally actionable, a non-empty summary and array-shaped argv and required_inputs, and only then removes it before comparing SDK and CLI semantics. The lazy version of this change would have deleted the field unconditionally and hidden a missing next_action; this one fails loudly. Removing CLI guidance before a semantic comparison is also what C19 implies, since the envelope's next_action is a CLI concern the SDK does not own."
+  ],
+  "explicitly_not_claimed": [
+    "Any Builder or plan015 composition acceptance.",
+    "Any build, test, lint or formatter result; the PM's 363-test gate is the PM's measurement.",
+    "Any statement about the running boot capture at any descendant.",
+    "Anything about Git Notes native or query runtime, which the PM excluded pending the authorised history merge."
+  ]
+}

@@ -1,9 +1,9 @@
 # Telemetry fidelity: implemented boundaries and remaining gaps
 
-**These are source-derived JSONL and native snapshot projections, not a lossless
-archive or complete telemetry history.** A successful export means the selected
-representation was handled under the chosen policy. EOF or a snapshot revision
-never establishes that the producer has finished emitting or revising data.
+**These are source-derived JSONL, native snapshot and Git Notes attribution
+projections, not a lossless archive or complete telemetry history.** A successful
+export means the selected representation was handled under its policy. EOF,
+snapshot revision or pinned notes ref never establishes producer finality.
 
 Full fidelity means preserving the telemetry the source actually makes available,
 including native facts not yet understood by our mapping, and identifying what was
@@ -28,6 +28,7 @@ full-fidelity retention.
 | [VS Code Copilot](vscode-copilot-adapter.md) | v1/v2/v3 snapshots and pure kind0/1/2/3 journal reduction into final request/response state; scoped usage/tool observations. | Fourteen regressions; real JSON/journal SDK/CLI/installed parity, changed/deleted requests and partial/late journal scenarios. | Historical versions of the unversioned journal envelope, unsupported parts/sidecars and full edit history are unsupported. Sparse expansion is bounded; producer-omitted LM tool parameters are a source limitation. |
 | [Cursor transcripts](cursor-adapter.md) | Native role/text/idless tools, overview/control and turn-ended records. | Ten transcript regressions and real export parity. | The native serializer discards model/usage/timing/IDs/tool results: source limitations, not facts to reconstruct. Full-write fallback exceeds append-only cursor guarantees. |
 | [Cursor IDE SQLite](cursor-adapter.md) | Composer-declared bubble order/identity, explicit native dates/model configuration, measured counters and opt-in native tools. | Thirteen IDE regressions; real read-only SQLite export parity, late rows, changed values and empty deletion replacement. | Alternate branches/blob state, unavailable composerHeaders cross-table joins and opaque CLI BLOB codec are explicitly unsupported; no complete Cursor CLI blob-store claim. |
+| [Git-ai-format Git Notes](cli.md#git-notes-attribution) | Commit/file/inclusive-line attribution, declared and unresolved native identities, source statistics and pinned repository/ref/commit/blob provenance. | Real external SDK/installed CLI parity with Git AI unavailable, mixed-format/privacy/empty/error/bounds cases, bare/nested worktrees, unchanged source state and output guards. | Not conversations, timings, token totals or full history; no cross-note identity lookup, private-cache access or tracking-ref aggregation. Unsupported variants/non-commit targets fail; absent notes do not prove absent AI activity. |
 
 All rows use synthetic fixtures and bounded structural/source evidence, not copied
 private transcripts. Referenced attachments/context/spills remain unresolved by
@@ -55,6 +56,23 @@ installed CLI across every registered dialect and both content policies, then
 real changed/deleted JSON and SQLite sources, incomplete/late journals and a
 partial destination write without checkpoint publication. This is bounded runtime
 evidence, not all-platform, all-dialect, network-denial or full-fidelity proof.
+
+`unisphere-proof git-notes` separately exercises the Unix Git-object source with
+ordinary synthetic Git repositories and an explicit standard Git executable in
+sealed empty-PATH product processes. The parser imports no Git AI code and needs
+no Git AI installation. Human strings/custom attributes/messages require content
+permission; identity content is not duplicated onto every attributed range.
+Unresolved syntactically valid keys remain evidence, and unknown counts/timing
+are not synthesized. The selection manifest is a replacement projection, not
+retained history. Old pinned objects can disappear after Git garbage collection.
+No retired harness telemetry ingestion or broad query CLI is introduced.
+
+Subprocess/environment controls and promisor refusal prevent supported commands
+from requesting network access; this is not an observed network-denial trace.
+The ownership negative proof forces standard Git's ownership check through a
+negative-only fixture; successful Git-AI-absent proof uses the real Git binary
+directly, without wrappers. Canonical output-root checks assume caller-controlled
+destination parents and do not claim protection against concurrent path replacement.
 
 ## Original Claude JSONL baseline
 

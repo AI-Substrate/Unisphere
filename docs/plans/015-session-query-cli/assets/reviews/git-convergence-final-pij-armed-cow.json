@@ -1,0 +1,112 @@
+{
+  "record_type": "review-conclusion",
+  "id": "rv-plan015-git-convergence-final-pij-armed-cow",
+  "code_subject": {
+    "commit": "71182b502b1d5a63a2237237b117580cdc19e2f5",
+    "subject": "fix(query): scope destination protection to admitted Git stores",
+    "author_date": "Fri Sep 11 08:08:33 2026 +1000",
+    "parent": "63cc530528867338c3acce2ef1a172cdbf0e3fa3",
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+    "branch": "builder/015-session-query-cli",
+    "worktree_clean": true,
+    "chain_reviewed": [
+      "78af49ce85915a83566a4f7333a804dc1a9397a7",
+      "63cc530528867338c3acce2ef1a172cdbf0e3fa3",
+      "71182b502b1d5a63a2237237b117580cdc19e2f5"
+    ],
+    "merge_integrity": "ad6ae023 preserves parents c87e00cf and cf4931ed; cf4931ed (accepted plan014 closeout) verified as an ancestor of the subject."
+  },
+  "recorded_at": "2026-09-10T22:11:07Z\n",
+  "recorded_at_local": "2026-09-11T08:11:07+1000\n",
+  "reviewer": {
+    "seat": "pij-armed-cow",
+    "role": "independent read-only reviewer",
+    "method": "static read of committed bytes via git show at each subject; no build, test, lint, format, proof or boot executed by me"
+  },
+  "verdict": "APPROVE the source at 71182b50 on static grounds. Every finding I raised across this convergence is closed, resolved by a better design than I proposed, or withdrawn by me. No material issue remains open in the code I read.",
+  "scope_reviewed": [
+    "crates/adapter-git-ai/src/lib.rs shared classifier and native map_note preservation",
+    "crates/adapter-git-ai/src/query.rs QueryAdapter projection",
+    "crates/sdk/src/query/view.rs Attribution to consent-gated event parts",
+    "crates/app/src/git_query.rs bridge, admission, combined budgets, destination guard",
+    "crates/app/src/{main,adapters}.rs composition root",
+    "crates/cli/src/git_notes.rs typed parser and staged output",
+    "crates/cli/src/{query,output}.rs staging and failure classification",
+    "crates/core/src/git_notes.rs listing contract and output-root predicate",
+    "regressions in crates/app/tests/git_query.rs, crates/cli/tests/{git_notes,query_frontend}.rs"
+  ],
+  "findings_closed": [
+    {
+      "id": "G1",
+      "resolution": "Fail-closed at git_query.rs:204-206 and :230 precedes every early return, so the guard cannot be skipped on partial or ID-based paths."
+    },
+    {
+      "id": "G4",
+      "resolution": "query.rs:142-150 splits output_destination_failure (OutputFailure, discard_partial:false, non-retryable, exit 1 preserved) from output_failure, which is retained only for genuine mid-write and publish failures where partial bytes really are possible. That discrimination is correct and is finer than what I asked for."
+    },
+    {
+      "id": "G5",
+      "resolution": "Non-creating preflight retained for missing parent, not-a-directory, dangling link and existing target; symlink_metadata used; create() calls preflight rather than duplicating it. The readonly precheck is removed, so a 0555 directory owned by another user no longer produces a false refusal."
+    },
+    {
+      "id": "G6",
+      "resolution": "One shared root predicate in core (outside_output_roots) with absolute_utf8 carried inside it, so a shell that skips normalization fails closed. Both shells canonicalize the parent and rejoin the leaf. No presentation type crosses into the bridge."
+    },
+    {
+      "id": "S2",
+      "resolution": "Split into two named pure policies: allows_output_path (full triple, native export) and allows_query_output_path (repository_id and git_dir only). A query may write into the checkout; neither may write into a Git store."
+    },
+    {
+      "id": "S3",
+      "resolution": "Regression now pins exit 2 with UNI-QUERY-ARGUMENT when Git resolves and exit 1 with UNI-QUERY-SOURCE-READ when it does not, so it can no longer pass by failing for the wrong reason."
+    },
+    {
+      "id": "S4",
+      "resolution": "git_read_failure maps the unknown-store-identity case to UnreadableSource + FixSource with a per-error reason, ending the inconsistency where the same environmental fact produced exit 1 at git_query.rs:80-87 and exit 2 at :204-206. The per-error discrimination is better than the flat GitUnavailable mapping I suggested."
+    }
+  ],
+  "withdrawn_by_reviewer": [
+    {
+      "id": "M1",
+      "claim": "That --pij forcing a cwd repository scope could hide a readable transcript.",
+      "cause": "Traced repository_roots forward from where it is built and assumed its consumer; app::pij drops the discovered view at pij.rs:92 and re-opens under Source{Id}, where association filtering cannot apply.",
+      "note": "The remedy I proposed would have piped untrusted wire text into a terminal diagnostic. The PM's refusal was correct on both counts."
+    },
+    {
+      "id": "native-parity",
+      "claim": "That the query path would disagree with git_notes::export, which I said classified an existing destination as InvalidInput.",
+      "cause": "Attributed the whole export output-failure surface to the salient InvalidInput branch without following create's error through output_error at git_notes.rs:333-335; tests/git_notes.rs:367-387 pins exit 1 and UNI-WRITE. The paths were already in parity."
+    },
+    {
+      "id": "S1",
+      "claim": "That the fail-closed guard should allow destinations outside the caller-selected repository.",
+      "cause": "Assumed the protected roots are contained in the repository subtree, contradicting the very reason I required a linked-worktree regression: a linked worktree's common and per-worktree git dirs can live anywhere, /tmp included. Without the loader they cannot be enumerated, so no destination can be proven clear."
+    }
+  ],
+  "reviewer_error_pattern": "Three withdrawals with one shape: asserting a containment or a mapping from the branch that is salient rather than the branch that fires, while an invariant I had already established sat unused in my own notes. Recorded so the corrections outlive the review.",
+  "native_api_preservation": {
+    "assessment": "Preserved. The map_note refactor onto classify_note keeps every native invariant I could identify in the pre-refactor bytes.",
+    "checks": [
+      "Record accounting is identical: 1 note_metadata record, one per identity across prompts/sessions/humans, one per attestation range - matching classify_note's count formula exactly. The pre-count fails with the same RecordLimit the incremental push would have produced, only earlier, and map_note discards records on error either way.",
+      "Attestation parsing invariants intact: the --- split, NoDuplicates metadata, the allowed() key set, the authorship/3.0.0 schema gate, per-identity validation, strictly increasing non-overlapping ranges (start <= previous_end rejected), file_index/entry_index accounting and the trailing entry_index == 0 check.",
+      "The new retained-bytes bound is a strict under-estimate of the eventual payload (string lengths only, no JSON overhead), so it cannot reject a note that account_git_record would have accepted, and BatchLimit is remapped to PipelineErrorKind::OutputLimit, preserving the native error classification.",
+      "identity_attributes is still called with MappingOptions::default() on the attribution path, so content is retained once on the declared identity rather than copied per line range, as before.",
+      "attestation_key's map_name narrowing to &'static str and file's Cow to String are type and allocation changes with no behavioural effect."
+    ]
+  },
+  "attribution_and_consent": {
+    "c15_source_only": "Upheld. Every emitted observation carries timestamp: None with an explicit NotCaptured diagnostic on FieldId::Timestamp, session created_at is None, and available_fields omits Timestamp. No conversation, turn text or timing is synthesised, and no facet joins across adapters.",
+    "consent_gate": "Real. view.rs:719-735 emits the structured attribution part only when access.permits_payload(FieldId::Parts), and otherwise substitutes ObservationPart::Unavailable(AvailabilityCode::SensitiveOmitted). permits_payload is emit_content || inspect_fields.contains(field) (model.rs:707-709). declared_agent returns None without that consent, and the attribution range omits the file path without it, so the adapter fails closed independently of the view.",
+    "provenance": "inspect() binds source.revision to notes_tip:note_blob and re-validates the supplied GitNoteRef before any projection, so a source cannot claim a revision it does not carry."
+  },
+  "budgets": "GitSource consumption is bounded before the local source runs: sources, total input bytes and observations are subtracted with checked_sub, max_source_bytes is clamped against the remaining total, git-ai is removed from the local selection and added to its exclusions so no adapter is counted twice, and the combined view is re-validated against the original limits at git_query.rs:142. The re-validation is the backstop that makes the arithmetic non-load-bearing.",
+  "regressions_assessed_not_executed": "The destination regression covers both Git stores, Git present and absent, Repository and SourceId scope and --allow-partial, and asserts target absence plus unchanged parent directory entries - the last of which is what actually proves non-mutation rather than mere failure. Two positive tests now bound the rule: output into the checkout succeeds with git-ai admitted, and output succeeds on a Git-less machine when the selection excludes Git. query_frontend.rs pins discard_partial false and retryable false. I did not run any of them and I do not restate the PM's counts as mine.",
+  "remaining_scope_boundary": "Destination protection is established for admitted Git stores only. crates/cli/src/sessions.rs:124 and crates/cli/src/snapshots.rs:83 still call StagedOutput::create with no store guard, and the Pij path restricts the selection to a non-Git harness so the guard never runs there. Writing into a native transcript store remains unprotected. That is this change's deliberate scope, not an established general property, and it should not be read as one.",
+  "what_is_not_claimed": [
+    "No build, test, lint, format, proof or boot result. The 63cc full boot and the exact 71182 boot are unobserved by me; nothing about either is claimed or anticipated.",
+    "No Git Notes acceptance, no plan015 acceptance and no Builder composition acceptance. This is a source review.",
+    "Test counts, boot totals and mode coverage reported by the PM are their measurement, not mine.",
+    "Prior first-wave findings P2 (crates/cli/src/docs.rs not declared in crates/cli/src/lib.rs) and P3 (start.md and example-cases.json describing verbs no parser accepts) remain open and PM-owned; they are outside this convergence.",
+    "Prior non-Git and Pij approval at f818e2f5 is unaltered."
+  ]
+}

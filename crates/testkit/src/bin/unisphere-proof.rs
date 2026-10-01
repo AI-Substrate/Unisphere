@@ -12,8 +12,18 @@ use unisphere_testkit::{fixtures, sealed_command};
 
 #[path = "proof/collection.rs"]
 mod collection;
+#[path = "proof/git_notes.rs"]
+mod git_notes;
+#[path = "proof/git_query.rs"]
+mod git_query;
 #[path = "proof/native.rs"]
 mod native;
+#[path = "proof/prep.rs"]
+mod prep;
+#[path = "proof/query.rs"]
+mod query;
+#[path = "proof/status.rs"]
+mod status;
 
 type ProofResult<T> = Result<T, String>;
 
@@ -315,7 +325,18 @@ fn parity_case(
         &config_args(path, mode, false),
     )?;
     let sdk_value = machine(&sdk_output, code, "config.check")?;
-    let cli_value = machine(&cli_output, code, "config.check")?;
+    let mut cli_value = machine(&cli_output, code, "config.check")?;
+    let action = cli_value
+        .as_object_mut()
+        .and_then(|value| value.remove("next_action"))
+        .ok_or("configuration CLI lacks next action")?;
+    if action["summary"].as_str().is_none_or(str::is_empty)
+        || !action["argv"].is_array()
+        || !action["required_inputs"].is_array()
+    {
+        return Err("configuration CLI action lacks actionable shape".into());
+    }
+    // Guidance belongs to the CLI envelope, not the SDK configuration semantics.
     if sdk_value != cli_value {
         return Err(format!(
             "{name}: SDK/CLI semantic mismatch\nSDK: {sdk_value}\nCLI: {cli_value}"
@@ -550,14 +571,22 @@ fn installed_cli(repo: &Path, scratch: &Path) -> ProofResult<()> {
             "root",
         ]),
     )?;
-    machine(&invalid_args, 2, "config.check")?;
+    expect_status(&invalid_args, 2, "conflicting root arguments")?;
+    let failure: Value = serde_json::from_slice(&invalid_args.stdout).map_err(|e| e.to_string())?;
+    if !invalid_args.stderr.is_empty()
+        || failure["ok"] != false
+        || failure["error"]["code"] != "UNI-CLI-ARGUMENT"
+        || failure["next_action"].as_str().is_none_or(str::is_empty)
+    {
+        return Err("installed CLI lost typed root-argument recovery or stream routing".into());
+    }
     Ok(())
 }
 
 fn run() -> ProofResult<()> {
     let mut args = env::args_os().skip(1);
     let mode = args.next().ok_or(
-        "usage: unisphere-proof composition|sdk-consumer|installed-cli|collection|native [--repo ROOT]",
+        "usage: unisphere-proof composition|sdk-consumer|installed-cli|collection|native|git-notes|prep|status [--repo ROOT]",
     )?;
     let repo = match args.next().as_deref() {
         None => env::current_dir().map_err(|e| e.to_string())?,
@@ -582,15 +611,27 @@ fn run() -> ProofResult<()> {
         Some("installed-cli") => installed_cli(&repo, scratch.path()),
         Some("collection") => collection::run(&repo, scratch.path()),
         Some("native") => native::run(&repo, scratch.path()),
+        Some("git-notes") => git_notes::run(&repo, scratch.path()),
+        Some("prep") => prep::run(&repo, scratch.path()),
+        Some("status") => status::run(&repo, scratch.path()),
         _ => Err("unknown proof command".into()),
     };
     result?;
     let scope = match mode.to_str() {
+        Some("git-notes") => {
+            "explicit local Git Notes attribution without Git AI; not complete conversations or history"
+        }
         Some("native") => {
-            "explicit native JSONL and revision snapshots; not lossless or final completeness"
+            "explicit native JSONL/revision snapshots plus installed query workflows; not Git Notes queries, lossless capture or final completeness"
         }
         Some("collection") => {
             "explicit Claude JSONL projection; not lossless or final completeness"
+        }
+        Some("prep") => {
+            "incremental Claude JSONL plus revisioned JSON document, mutation journal and SQLite snapshots over synthetic sources through the built/installed CLI, Claude through an external SDK consumer with its own store; not real-corpus parity or the other append folds"
+        }
+        Some("status") => {
+            "session status for a synthetic Claude session: built/installed CLI and an external SDK consumer with a caller-held cursor; not real sessions or other harnesses"
         }
         _ => "configuration foundation",
     };

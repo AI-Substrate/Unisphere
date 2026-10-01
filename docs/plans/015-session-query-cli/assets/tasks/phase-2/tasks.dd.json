@@ -1,0 +1,266 @@
+{
+  "dd": {
+    "schema": "builder/plan"
+  },
+  "sections": [
+    {
+      "name": "meta",
+      "value": {
+        "title": "Session turn message tool and event workflows",
+        "slug": "phase-2",
+        "status": "ready",
+        "summary": "All declared query operations and formats are exposed through the real injectable CLI frontend with bundled recipes and actionable outcomes; no new native registry or CLI-owned semantic engine."
+      }
+    },
+    {
+      "name": "summary",
+      "value": "All declared query operations and formats are exposed through the real injectable CLI frontend with bundled recipes and actionable outcomes; no new native registry or CLI-owned semantic engine. Real parser, serializer and frontend behavior with shared core facts and then SDK composition; no assertion that authored fixtures alone prove an installed binary."
+    },
+    {
+      "name": "tasks",
+      "value": [
+        {
+          "id": "tk-0001",
+          "title": "Reusable query output adapters",
+          "phase": "ph-1372",
+          "state": "checked",
+          "success": "Implement QueryWriter over validated projected rows for JSON, JSONL, CSV, text and Markdown; enforce byte limits, CSV safety/encoding, terminal and Markdown controls, and truthful partial-write errors. This is serialization, not matching/privacy authorization or source access.",
+          "notes": "Guide unit: tk-0009; wave 1; owner role coder. Exact paths/reads/interfaces/dependencies: ../../impl-guide.dd.json#units/tk-0009. Approved decomposition receipt: ../../team/review-decomposition-approved.dd.json. New crate manifest owned here; PM owns workspace registration/architecture. No SDK or CLI dependency; test against core projected fixtures. Skip validation while concurrent. PM quality acceptance is mandatory: candidate code is inspected for correctness, maintainability and needless allocations/duplication, exercised through applicable composed behavior and independently reviewed. A compile or coder completion claim is not acceptance.",
+          "satisfies_toward": [
+            "../../../plan.dd.json#acceptance_criteria/ac-000c",
+            "../../../plan.dd.json#acceptance_criteria/ac-000d",
+            "../../../plan.dd.json#acceptance_criteria/ac-000e",
+            "../../../plan.dd.json#acceptance_criteria/ac-0017",
+            "../../../plan.dd.json#acceptance_criteria/ac-0018"
+          ],
+          "done": "tasks.dd.json#done_when/tk-0001",
+          "receipt": "../../execution-log.dd.json#entries/lg-0001"
+        },
+        {
+          "id": "tk-0002",
+          "title": "Bundled offline docs and recipes",
+          "phase": "ph-1372",
+          "state": "unchecked",
+          "success": "Author the static docs registry and package-local Markdown with all required topics, command-level creative use cases, seven workflow recipes, error recovery and next actions. Author machine-readable synthetic example cases and external SDK recipe sources against the frozen interfaces; no private comparator reports or real transcripts.",
+          "notes": "Guide unit: tk-000a; wave 1; owner role coder. Exact paths/reads/interfaces/dependencies: ../../impl-guide.dd.json#units/tk-000a. Approved decomposition receipt: ../../team/review-decomposition-approved.dd.json. Dedicated docs owner; package content and fixture cases can be authored against baseline before handlers exist. CLI owner mounts docs.rs in wave2; docs owner does not edit shared root routing/exports. Skip validation while concurrent; no companion-skill deliverable assumed. PM quality acceptance is mandatory: candidate code is inspected for correctness, maintainability and needless allocations/duplication, exercised through applicable composed behavior and independently reviewed. A compile or coder completion claim is not acceptance.",
+          "satisfies_toward": [
+            "../../../plan.dd.json#acceptance_criteria/ac-0011",
+            "../../../plan.dd.json#acceptance_criteria/ac-0012",
+            "../../../plan.dd.json#acceptance_criteria/ac-0013",
+            "../../../plan.dd.json#acceptance_criteria/ac-0016",
+            "../../../plan.dd.json#acceptance_criteria/ac-0017",
+            "../../../plan.dd.json#acceptance_criteria/ac-0018"
+          ],
+          "done": "tasks.dd.json#done_when/tk-0002",
+          "receipt": "../../execution-log.dd.json#entries/lg-0001"
+        },
+        {
+          "id": "tk-0003",
+          "title": "Thin complete CLI and actionable outcomes",
+          "phase": "ph-1372",
+          "state": "unchecked",
+          "success": "Implement the complete 27-leaf grammar and injected query frontend, mount docs, preserve config/catalog/legacy list/export, and add useful next actions plus actionable errors to every outcome. Keep matching/reconstruction/privacy/stats in QueryApi; render through injected QueryWriter. Own create-new staging/publication and stream/error routing.",
+          "notes": "Guide unit: tk-000b; wave 2; owner role coder. Exact paths/reads/interfaces/dependencies: ../../impl-guide.dd.json#units/tk-000b. Approved decomposition receipt: ../../team/review-decomposition-approved.dd.json. Wave2 consumes committed docs/output deliveries, uses FakeQueryApi and actual output adapter in tests rather than waiting for SDK engine. Delete directly affected wording/implementation-pinning tests instead of re-pinning prose. Git-note specific frontend changes are a PM convergence boundary after the owner handoff. Skip validation while concurrent. Named routing acceptance: catalogue sessions list --repo . --harness claude-code reaches QueryApi; --source-adapter git-ai selects query facts; --adapter git-ai --repo selects the existing native note listing; --root selects native JSONL listing; sessions export preserves native OTLP. Reject mixed forms with actionable guidance, and preserve semantic data/streams while adding next-action metadata. CSV schema/loss diagnostics direct availability-sensitive consumers to JSON/JSONL. The routing regression matrix is owned here, not inferred solely from one primary example per catalogue leaf; explicitly cover query --source-adapter git-ai versus native --adapter git-ai, legacy --root and all rejected mixtures. PM quality acceptance is mandatory: candidate code is inspected for correctness, maintainability and needless allocations/duplication, exercised through applicable composed behavior and independently reviewed. A compile or coder completion claim is not acceptance.",
+          "satisfies_toward": [
+            "../../../plan.dd.json#acceptance_criteria/ac-0004",
+            "../../../plan.dd.json#acceptance_criteria/ac-0005",
+            "../../../plan.dd.json#acceptance_criteria/ac-000c",
+            "../../../plan.dd.json#acceptance_criteria/ac-000d",
+            "../../../plan.dd.json#acceptance_criteria/ac-000e",
+            "../../../plan.dd.json#acceptance_criteria/ac-0011",
+            "../../../plan.dd.json#acceptance_criteria/ac-0012",
+            "../../../plan.dd.json#acceptance_criteria/ac-0013",
+            "../../../plan.dd.json#acceptance_criteria/ac-0017",
+            "../../../plan.dd.json#acceptance_criteria/ac-0018"
+          ],
+          "done": "tasks.dd.json#done_when/tk-0003",
+          "receipt": "../../execution-log.dd.json#entries"
+        }
+      ]
+    },
+    {
+      "name": "done_when",
+      "value": {
+        "tk-0001": [
+          {
+            "id": "dw-0001",
+            "assertion": "All declared formats expose the documented shapes and units; JSONL remains row-only and OTLP is never represented as query JSON.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-000d"
+          },
+          {
+            "id": "dw-0002",
+            "assertion": "CSV escaping, terminal/Markdown controls and nested projections do not bypass content consent or serialize hidden raw data.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-000c"
+          },
+          {
+            "id": "dw-0003",
+            "assertion": "Counted writes, flush/broken-pipe failures and partial destinations cannot produce a completed result/checkpoint.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-000e"
+          },
+          {
+            "id": "dw-0004",
+            "assertion": "Raw data streams contain no next-action banners or fake summary rows.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0017"
+          },
+          {
+            "id": "dw-0005",
+            "assertion": "CSV format capabilities and diagnostics explicitly name absent/null/empty losses and guide exact-availability consumers to JSON/JSONL.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-000d"
+          }
+        ],
+        "tk-0002": [
+          {
+            "id": "dw-0006",
+            "assertion": "Bundled topic/schema discovery works without runtime config, source stores, Git or network.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0011"
+          },
+          {
+            "id": "dw-0007",
+            "assertion": "Every command has meaningful use cases and each of seven recipes has real argv, expected interpretation, limits, recovery and next steps.",
+            "state": "unchecked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0012"
+          },
+          {
+            "id": "dw-0008",
+            "assertion": "Topic links resolve and example commands/SDK sources are checked against actual parser/schema/public APIs, not a duplicate registry.",
+            "state": "unchecked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0013"
+          },
+          {
+            "id": "dw-0009",
+            "assertion": "Examples are synthetic and evidence-qualified; private reports and unauthorized transcripts are absent.",
+            "state": "unchecked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0016"
+          },
+          {
+            "id": "dw-000a",
+            "assertion": "Docs steer successful, empty and failed interactions to useful supported next steps rather than generic dead ends.",
+            "state": "unchecked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0017"
+          }
+        ],
+        "tk-0003": [
+          {
+            "id": "dw-000b",
+            "assertion": "The one real root parser sends --root and legacy --adapter forms to native handlers, --source-adapter forms to QueryApi, and rejects mixed forms without default-adapter fallback; all 27 leaves and old native semantic data/streams remain valid.",
+            "state": "unchecked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0004"
+          },
+          {
+            "id": "dw-000c",
+            "assertion": "Output-mode conflicts are rejected; row selection does not change with TTY and raw data channels stay clean.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-000d"
+          },
+          {
+            "id": "dw-000d",
+            "assertion": "Output files are staged/create-new and failures leave existing destinations/source stores intact.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-000e"
+          },
+          {
+            "id": "dw-000e",
+            "assertion": "Each success/zero/partial/help/version/export outcome emits a useful parser-valid action; required inputs and privacy consent stay explicit.",
+            "state": "unchecked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0017"
+          },
+          {
+            "id": "dw-000f",
+            "assertion": "All error families yield safe cause-specific alternatives/retry conditions, with best-effort diagnostics and nonzero exit on write failure.",
+            "state": "unchecked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0018"
+          },
+          {
+            "id": "dw-0010",
+            "assertion": "Cursor mismatch reasons remain machine-visible and generate cause-specific safe next actions, not a generic source-changed message.",
+            "state": "checked",
+            "pressure": "../../backpressure.dd.json#rows/bp-0018"
+          }
+        ]
+      }
+    },
+    {
+      "name": "goals",
+      "value": []
+    },
+    {
+      "name": "non_goals",
+      "value": []
+    },
+    {
+      "name": "acceptance_criteria",
+      "value": []
+    },
+    {
+      "name": "phases",
+      "value": []
+    },
+    {
+      "name": "research_context",
+      "value": ""
+    },
+    {
+      "name": "testing_strategy",
+      "value": {
+        "approach": "Use each assertion's selected pressure and the exact guide check; no unexecuted test or imported commit is runtime proof.",
+        "phase_boundary": "Real parser, serializer and frontend behavior with shared core facts and then SDK composition; no assertion that authored fixtures alone prove an installed binary.",
+        "concurrency": "No build/test/lint/formatter while concurrent edits are in flight; PM executes final composed lanes and targeted fixes.",
+        "proof_grades": "Existing boot proves native projections only. BUILD/EXTEND checks must be implemented and run before assertions become checked."
+      }
+    },
+    {
+      "name": "documentation_strategy",
+      "value": {}
+    },
+    {
+      "name": "risks_assumptions",
+      "value": ""
+    },
+    {
+      "name": "open_questions",
+      "value": []
+    },
+    {
+      "name": "workshop_opportunities",
+      "value": []
+    },
+    {
+      "name": "clarifications",
+      "value": []
+    },
+    {
+      "name": "planning_seam",
+      "value": []
+    },
+    {
+      "name": "gate_matrix",
+      "value": []
+    },
+    {
+      "name": "implementation_summary",
+      "value": ""
+    },
+    {
+      "name": "key_findings",
+      "value": []
+    },
+    {
+      "name": "acceptance_coverage",
+      "value": []
+    },
+    {
+      "name": "risks",
+      "value": []
+    },
+    {
+      "name": "execution_guardrails",
+      "value": []
+    }
+  ]
+}

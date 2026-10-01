@@ -2,9 +2,9 @@
 
 **Standardise agent-harness telemetry into one common format for easier integration and reporting.**
 
-Unisphere is a **Rust SDK and CLI** that reads supported native session formats and
-converts them to **OTLP LogsData JSONL**. Instead of building a separate parser into
-every integration, use one collection API and one output format.
+Unisphere is a **Rust SDK and CLI** that reads supported native session formats
+and Git-ai-format Git Notes, projecting source facts to **OTLP LogsData JSONL**.
+Use one SDK and output format instead of building a parser into every integration.
 
 Adapters provide an extension path for other harnesses. That is the goal—not a
 claim that every harness, version or field is already supported. Unisphere is not
@@ -108,6 +108,35 @@ unisphere sessions export --adapter vscode-copilot --input /absolute/path/sessio
 unisphere sessions export --adapter cursor-ide --input /absolute/path/state.vscdb
 ```
 
+Git Notes attribution needs standard Git, not a Git AI installation:
+
+```sh
+unisphere sessions list --adapter git-ai --repo /absolute/repository
+unisphere sessions export --adapter git-ai --repo /absolute/repository --git-executable /usr/bin/git
+```
+
+This reads an explicit local notes ref without modifying the source or fetching.
+Metadata is the default; human strings/custom attributes/legacy messages require
+`--include-content`. Attribution is not a complete conversation or token ledger.
+
+For research, `prep` incrementally folds every session under the catalogue's
+default roots (plus any explicit `--root`) into canonical metadata tables:
+
+```sh
+unisphere prep --target $HOME/unisphere-prep --human
+unisphere prep --target $HOME/unisphere-prep --root claude-code:alt=$HOME/.claude-alt/projects
+```
+
+Re-runs read only appended records; unchanged sources cost one `stat`. Snapshot
+sources (JSON documents, mutation journals, Cursor's SQLite store) are re-read
+whole only when their stat changes and folded only when their revision changes.
+Every run reports per-source status and skipped symlinks/hidden entries. Query the
+Parquet tables through the canonical views in `TARGET/views.sql` with an external
+DuckDB; `unisphere docs get prep --human` has the table contract. Named research
+recipes print ready-to-run DuckDB scripts, for example
+`unisphere prep recipe daily --target DIR | duckdb`; see
+`unisphere docs get research-recipes --human`.
+
 See the [CLI reference](docs/cli.md) for limits, native session selectors,
 configuration inspection, output envelopes and exit codes. For example,
 `unisphere config check --json` inspects configuration without reading sessions.
@@ -125,6 +154,7 @@ configuration inspection, output envelopes and exit codes. For example,
 | VS Code Copilot | `vscode-copilot` | Session JSON or native mutation journal |
 | Cursor transcripts | `cursor-transcript` | Agent-transcript JSONL |
 | Cursor IDE | `cursor-ide` | Read-only `cursorDiskKV` SQLite snapshot |
+| Git-ai-format attribution | `git-ai` | Read-only commit-attached Git Notes; Git AI not required |
 
 These are projections of documented native facts, not universal version coverage.
 Cursor's opaque CLI blob store is not the IDE or transcript format and is not
@@ -219,9 +249,10 @@ Unisphere deliberately leaves those choices to the caller.
 
 - Metadata-only is the default, **not anonymity**: paths, IDs, model and kind may remain.
 - Content is opt-in; sidecars, attachments and referenced artifacts are not opened implicitly.
-- JSONL CLI reruns start at byte zero. SDK byte cursors assume the documented source behavior.
+- JSONL export reruns start at byte zero. SDK byte cursors assume the documented source behavior.
+- `unisphere prep` persists per-source cursors and fold checkpoints in its target for harnesses with a prep binding (Claude Code in this release); others are reported `unsupported`.
 - Snapshot exports describe a complete current replacement projection, not retained revision history.
-- No persisted CLI resume, lossless raw archive, exactly-once ingestion or session-finality guarantee is made.
+- No lossless raw archive, exactly-once ingestion or session-finality guarantee is made.
 
 Read the [full fidelity assessment](docs/fidelity.md) before treating an export as
 a complete transcript or aggregating native usage snapshots.

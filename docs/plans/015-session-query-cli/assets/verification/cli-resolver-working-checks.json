@@ -1,0 +1,201 @@
+{
+  "recorded_at": "2026-09-10T09:30:20.848Z",
+  "scope": "Pre-Pij-CLI working composition, full captured focused checks. Last run7 resolver tests and all CLI parser/query tests passed; one mock plumbing assertion in native test failed and was then removed. Latest Pij app and selector integration remain unrun.",
+  "runs": [
+    {
+      "receipt": {
+        "command": [
+          "cargo",
+          "test",
+          "--offline",
+          "-p",
+          "unisphere-app",
+          "-p",
+          "unisphere-cli",
+          "-p",
+          "unisphere-loader-query"
+        ],
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+        "before": {
+          "head": {
+            "args": [
+              "rev-parse",
+              "HEAD"
+            ],
+            "exit": 0,
+            "stdout": "048a32d990dd8bb879912fd6675f4bb150f35423\n",
+            "stderr": ""
+          },
+          "status": {
+            "args": [
+              "status",
+              "--porcelain"
+            ],
+            "exit": 0,
+            "stdout": " M crates/app/src/adapters.rs\n M crates/app/src/main.rs\nM  crates/cli/Cargo.toml\nMM crates/cli/src/args.rs\nMM crates/cli/src/catalog.rs\nMM crates/cli/src/lib.rs\nMM crates/cli/src/output.rs\nAM crates/cli/src/query.rs\nMM crates/cli/src/sessions.rs\nMM crates/cli/src/snapshots.rs\nMM crates/cli/tests/frontend.rs\nAM crates/cli/tests/query_frontend.rs\nMM crates/cli/tests/sessions.rs\nM  crates/loader-query/Cargo.toml\nMM crates/loader-query/src/lib.rs\nAM crates/loader-query/src/pij.rs\n M crates/loader-query/tests/discovery.rs\nAM crates/loader-query/tests/pij.rs\nM  docs/cli.md\n M docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/allocation.json\n?? docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/delivery.json\n?? docs/plans/015-session-query-cli/assets/team/manual-cli-integration.json\n",
+            "stderr": ""
+          }
+        },
+        "after": {
+          "head": {
+            "args": [
+              "rev-parse",
+              "HEAD"
+            ],
+            "exit": 0,
+            "stdout": "048a32d990dd8bb879912fd6675f4bb150f35423\n",
+            "stderr": ""
+          },
+          "status": {
+            "args": [
+              "status",
+              "--porcelain"
+            ],
+            "exit": 0,
+            "stdout": " M Cargo.lock\n M crates/app/src/adapters.rs\n M crates/app/src/main.rs\nM  crates/cli/Cargo.toml\nMM crates/cli/src/args.rs\nMM crates/cli/src/catalog.rs\nMM crates/cli/src/lib.rs\nMM crates/cli/src/output.rs\nAM crates/cli/src/query.rs\nMM crates/cli/src/sessions.rs\nMM crates/cli/src/snapshots.rs\nMM crates/cli/tests/frontend.rs\nAM crates/cli/tests/query_frontend.rs\nMM crates/cli/tests/sessions.rs\nM  crates/loader-query/Cargo.toml\nMM crates/loader-query/src/lib.rs\nAM crates/loader-query/src/pij.rs\n M crates/loader-query/tests/discovery.rs\nAM crates/loader-query/tests/pij.rs\nM  docs/cli.md\n M docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/allocation.json\n?? docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/delivery.json\n?? docs/plans/015-session-query-cli/assets/team/manual-cli-integration.json\n",
+            "stderr": ""
+          }
+        },
+        "started_at": "2026-09-10T09:02:12.243Z",
+        "finished_at": "2026-09-10T09:02:14.836Z",
+        "exit": 101,
+        "signal": null,
+        "stdout_path": ".harness/temp/pij-empirical-tiger/composed-query-working.stdout",
+        "stderr_path": ".harness/temp/pij-empirical-tiger/composed-query-working.stderr"
+      },
+      "stdout": "",
+      "stderr": "   Compiling unisphere-cli v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/cli)\n   Compiling unisphere-adapter-omp v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/adapter-omp)\n   Compiling unisphere-adapter-pi v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/adapter-pi)\n   Compiling unisphere-adapter-cursor v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/adapter-cursor)\n   Compiling unisphere-loader-query v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/loader-query)\n   Compiling unisphere-app v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/app)\nerror[E0277]: `QueryRequest` doesn't implement `Debug`\n    --> crates/cli/tests/query_frontend.rs:774:5\n     |\n 774 |     assert_eq!(query.requests(), vec![command.request]);\n     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `Debug` is not implemented for `QueryRequest`\n     |\nhelp: the trait `Debug` is implemented for `Vec<T, A>`\n    --> /opt/homebrew/Cellar/rust/1.95.0/lib/rustlib/src/rust/library/alloc/src/vec/mod.rs:4242:1\n     |\n4242 | impl<T: fmt::Debug, A: Allocator> fmt::Debug for Vec<T, A> {\n     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nerror[E0277]: `?` couldn't convert the error to `QueryFailure`\n   --> crates/app/src/adapters.rs:283:32\n    |\n273 | ) -> Result<QueryRegistration, QueryFailure> {\n    |      --------------------------------------- expected `QueryFailure` because of this\n...\n283 |         HarnessId::new(harness)?,\n    |         -----------------------^ the trait `std::convert::From<QueryNameError>` is not implemented for `QueryFailure`\n    |         |\n    |         this can't be annotated with `?` because it has type `Result<_, QueryNameError>`\n    |\n    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait\n\nFor more information about this error, try `rustc --explain E0277`.\nerror: could not compile `unisphere-app` (bin \"unisphere\") due to 1 previous error\nwarning: build failed, waiting for other jobs to finish...\nerror: could not compile `unisphere-cli` (test \"query_frontend\") due to 2 previous errors\nerror: could not compile `unisphere-app` (bin \"unisphere\" test) due to 1 previous error\n"
+    },
+    {
+      "receipt": {
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "-p",
+          "unisphere-app",
+          "-p",
+          "unisphere-cli",
+          "-p",
+          "unisphere-loader-query"
+        ],
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+        "before": {
+          "head": {
+            "args": [
+              "rev-parse",
+              "HEAD"
+            ],
+            "exit": 0,
+            "stdout": "048a32d990dd8bb879912fd6675f4bb150f35423\n",
+            "stderr": ""
+          },
+          "status": {
+            "args": [
+              "status",
+              "--porcelain"
+            ],
+            "exit": 0,
+            "stdout": " M Cargo.lock\n M crates/app/src/adapters.rs\n M crates/app/src/main.rs\nM  crates/cli/Cargo.toml\nMM crates/cli/src/args.rs\nMM crates/cli/src/catalog.rs\nMM crates/cli/src/lib.rs\nMM crates/cli/src/output.rs\nAM crates/cli/src/query.rs\nMM crates/cli/src/sessions.rs\nMM crates/cli/src/snapshots.rs\nMM crates/cli/tests/frontend.rs\nAM crates/cli/tests/query_frontend.rs\nMM crates/cli/tests/sessions.rs\nM  crates/loader-query/Cargo.toml\nMM crates/loader-query/src/lib.rs\nAM crates/loader-query/src/pij.rs\n M crates/loader-query/tests/discovery.rs\nAM crates/loader-query/tests/pij.rs\nM  docs/cli.md\n M docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/allocation.json\n?? docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/delivery.json\n?? docs/plans/015-session-query-cli/assets/team/manual-cli-integration.json\n",
+            "stderr": ""
+          }
+        },
+        "after": {
+          "head": {
+            "args": [
+              "rev-parse",
+              "HEAD"
+            ],
+            "exit": 0,
+            "stdout": "048a32d990dd8bb879912fd6675f4bb150f35423\n",
+            "stderr": ""
+          },
+          "status": {
+            "args": [
+              "status",
+              "--porcelain"
+            ],
+            "exit": 0,
+            "stdout": " M Cargo.lock\n M crates/app/src/adapters.rs\n M crates/app/src/main.rs\nM  crates/cli/Cargo.toml\nMM crates/cli/src/args.rs\nMM crates/cli/src/catalog.rs\nMM crates/cli/src/lib.rs\nMM crates/cli/src/output.rs\nAM crates/cli/src/query.rs\nMM crates/cli/src/sessions.rs\nMM crates/cli/src/snapshots.rs\nMM crates/cli/tests/frontend.rs\nAM crates/cli/tests/query_frontend.rs\nMM crates/cli/tests/sessions.rs\nM  crates/loader-query/Cargo.toml\nMM crates/loader-query/src/lib.rs\nAM crates/loader-query/src/pij.rs\n M crates/loader-query/tests/discovery.rs\nAM crates/loader-query/tests/pij.rs\nM  docs/cli.md\n M docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/allocation.json\n?? docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/delivery.json\n?? docs/plans/015-session-query-cli/assets/team/manual-cli-integration.json\n",
+            "stderr": ""
+          }
+        },
+        "started_at": "2026-09-10T09:06:45.611Z",
+        "finished_at": "2026-09-10T09:06:48.396Z",
+        "exit": 101,
+        "signal": null,
+        "stdout_path": ".harness/temp/pij-empirical-tiger/composed-query-working-2.stdout",
+        "stderr_path": ".harness/temp/pij-empirical-tiger/composed-query-working-2.stderr"
+      },
+      "stdout": "\nrunning 2 tests\ntest adapters::tests::another_adapter_needs_one_registration_and_no_core_or_claude_change ... ok\ntest adapters::tests::production_catalog_ids_match_exported_provenance ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s\n\n\nrunning 3 tests\ntest catalog_argument_errors_keep_the_catalog_label_and_hide_input ... FAILED\ntest catalog_does_not_resolve_inaccessible_store_roots ... ok\ntest catalog_json_is_static_under_hostile_environment ... ok\n\nfailures:\n\n---- catalog_argument_errors_keep_the_catalog_label_and_hide_input stdout ----\n\nthread 'catalog_argument_errors_keep_the_catalog_label_and_hide_input' (1423849974) panicked at crates/app/tests/adapter_catalog.rs:162:5:\nassertion `left == right` failed\n  left: String(\"parse\")\n right: \"adapters.list\"\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n\n\nfailures:\n    catalog_argument_errors_keep_the_catalog_label_and_hide_input\n\ntest result: FAILED. 2 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.69s\n\n",
+      "stderr": "   Compiling unisphere-cli v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/cli)\n   Compiling unisphere-app v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/app)\n   Compiling unisphere-loader-query v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/loader-query)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.82s\n     Running unittests src/main.rs (target/debug/deps/unisphere-f9a5d5c35147082d)\n     Running tests/adapter_catalog.rs (target/debug/deps/adapter_catalog-0ff15722ec632ac2)\nerror: test failed, to rerun pass `-p unisphere-app --test adapter_catalog`\n"
+    },
+    {
+      "receipt": {
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--no-fail-fast",
+          "-p",
+          "unisphere-app",
+          "-p",
+          "unisphere-cli",
+          "-p",
+          "unisphere-loader-query"
+        ],
+        "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+        "before": {
+          "head": {
+            "args": [
+              "rev-parse",
+              "HEAD"
+            ],
+            "exit": 0,
+            "stdout": "048a32d990dd8bb879912fd6675f4bb150f35423\n",
+            "stderr": ""
+          },
+          "status": {
+            "args": [
+              "status",
+              "--porcelain"
+            ],
+            "exit": 0,
+            "stdout": " M Cargo.lock\n M crates/app/src/adapters.rs\n M crates/app/src/main.rs\n M crates/app/tests/adapter_catalog.rs\nM  crates/cli/Cargo.toml\nMM crates/cli/src/args.rs\nMM crates/cli/src/catalog.rs\nMM crates/cli/src/lib.rs\nMM crates/cli/src/output.rs\nAM crates/cli/src/query.rs\nMM crates/cli/src/sessions.rs\nMM crates/cli/src/snapshots.rs\n D crates/cli/tests/docs_bundle.rs\nMM crates/cli/tests/frontend.rs\nAM crates/cli/tests/query_frontend.rs\nMM crates/cli/tests/sessions.rs\nM  crates/loader-query/Cargo.toml\nMM crates/loader-query/src/lib.rs\nAM crates/loader-query/src/pij.rs\n M crates/loader-query/tests/discovery.rs\nAM crates/loader-query/tests/pij.rs\nM  docs/cli.md\n M docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/allocation.json\n?? docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/delivery.json\n?? docs/plans/015-session-query-cli/assets/team/manual-cli-integration.json\n",
+            "stderr": ""
+          }
+        },
+        "after": {
+          "head": {
+            "args": [
+              "rev-parse",
+              "HEAD"
+            ],
+            "exit": 0,
+            "stdout": "048a32d990dd8bb879912fd6675f4bb150f35423\n",
+            "stderr": ""
+          },
+          "status": {
+            "args": [
+              "status",
+              "--porcelain"
+            ],
+            "exit": 0,
+            "stdout": " M Cargo.lock\n M crates/app/src/adapters.rs\n M crates/app/src/main.rs\n M crates/app/tests/adapter_catalog.rs\nM  crates/cli/Cargo.toml\nMM crates/cli/src/args.rs\nMM crates/cli/src/catalog.rs\nMM crates/cli/src/lib.rs\nMM crates/cli/src/output.rs\nAM crates/cli/src/query.rs\nMM crates/cli/src/sessions.rs\nMM crates/cli/src/snapshots.rs\n D crates/cli/tests/docs_bundle.rs\nMM crates/cli/tests/frontend.rs\nAM crates/cli/tests/query_frontend.rs\nMM crates/cli/tests/sessions.rs\nM  crates/loader-query/Cargo.toml\nMM crates/loader-query/src/lib.rs\nAM crates/loader-query/src/pij.rs\n M crates/loader-query/tests/discovery.rs\nAM crates/loader-query/tests/pij.rs\nM  docs/cli.md\n M docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/allocation.json\n?? docs/plans/015-session-query-cli/assets/extensions/pij-session-resolution/delivery.json\n?? docs/plans/015-session-query-cli/assets/team/manual-cli-integration.json\n",
+            "stderr": ""
+          }
+        },
+        "started_at": "2026-09-10T09:11:48.860Z",
+        "finished_at": "2026-09-10T09:11:56.506Z",
+        "exit": 101,
+        "signal": null,
+        "stdout_path": ".harness/temp/pij-empirical-tiger/composed-query-working-3.stdout",
+        "stderr_path": ".harness/temp/pij-empirical-tiger/composed-query-working-3.stderr"
+      },
+      "stdout": "\nrunning 2 tests\ntest adapters::tests::another_adapter_needs_one_registration_and_no_core_or_claude_change ... ok\ntest adapters::tests::production_catalog_ids_match_exported_provenance ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s\n\n\nrunning 3 tests\ntest catalog_argument_errors_hide_input_and_retain_machine_classification ... ok\ntest catalog_does_not_resolve_inaccessible_store_roots ... ok\ntest catalog_json_is_static_under_hostile_environment ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.66s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 18 tests\ntest a_relative_context_cannot_silently_create_a_relative_file_request ... ok\ntest non_utf8_file_paths_are_preserved_but_non_utf8_root_values_are_rejected_safely ... ok\ntest config_paths_are_resolved_lexically_without_discovery_or_canonicalization ... ok\ntest blank_root_is_configuration_input_not_a_parser_diagnostic ... ok\ntest defaults_call_only_the_injected_inspector_and_render_its_report ... ok\ntest global_modes_work_before_between_and_after_subcommands ... ok\ntest output_escapes_control_characters_without_changing_semantic_data ... ok\ntest conflicting_modes_always_fail_in_json_regardless_of_order_or_terminal ... ok\ntest request_values_never_leak_into_failure_diagnostics ... ok\ntest repeated_roots_and_explicit_clear_have_distinct_requests ... ok\ntest mode_looking_values_and_end_of_options_do_not_select_a_mode ... ok\ntest failure_output_errors_override_argument_exit_and_tolerate_broken_stderr ... ok\ntest failures_preserve_core_semantics_and_structural_location ... ok\ntest output_modes_override_terminal_status_for_success_and_failure ... ok\ntest version_uses_explicit_context_and_selected_mode_without_inspection ... ok\ntest invalid_invocations_are_safe_typed_failures_without_port_calls ... ok\ntest short_writes_are_completed_and_write_or_flush_failures_exit_one_safely ... ok\ntest help_at_every_command_level_honors_output_mode_without_inspection ... ok\n\ntest result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s\n\n\nrunning 13 tests\ntest diagnostic_mode_is_selected_before_parse_consumes_argv ... ok\ntest raw_rows_stay_clean_and_guidance_uses_diagnostic_channel ... ok\ntest typed_query_initialization_failures_keep_stdout_clean ... ok\ntest generated_actions_withhold_private_paths_and_parse_after_binding ... ok\ntest static_lookup_errors_name_valid_alternatives ... ok\ntest bundled_docs_and_schema_are_real_static_routes ... ok\ntest stdin_framing_is_explicit_scope_bound_and_preserved_in_actions ... ok\ntest failed_file_serialization_never_publishes_partial_destination ... ok\ntest existing_query_destination_fails_before_query_execution ... ok\ntest parsed_static_and_config_commands_execute_without_reparsing ... ok\ntest seven_staged_examples_parse_after_declared_bindings ... ok\ntest native_and_query_session_routes_are_unambiguous ... ok\ntest complete_catalogue_grammar_parses_to_typed_commands ... ok\n\ntest result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s\n\n\nrunning 8 tests\ntest invalid_invocation_does_not_echo_sensitive_arguments ... ok\ntest rejected_destination_does_not_report_success ... ok\ntest loader_failure_is_safe_and_not_a_telemetry_record ... ok\ntest export_keeps_diagnostics_off_telemetry_stdout_and_passes_explicit_policy ... ok\ntest empty_listing_says_nonrecursive_and_names_leaf_directory_remedy ... ok\ntest parsed_native_commands_execute_without_second_parsing ... FAILED\ntest zero_limits_fail_before_file_creation_or_collector_calls ... ok\ntest output_file_is_never_overwritten ... ok\n\nfailures:\n\n---- parsed_native_commands_execute_without_second_parsing stdout ----\n\nthread 'parsed_native_commands_execute_without_second_parsing' (1424225232) panicked at crates/cli/tests/sessions.rs:58:5:\nassertion `left == right` failed\n  left: 0\n right: 1\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n\n\nfailures:\n    parsed_native_commands_execute_without_second_parsing\n\ntest result: FAILED. 7 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 6 tests\ntest supplied_stdin_is_bounded_and_never_opens_registered_sources ... ok\ntest explicit_adapter_selects_declared_document_or_journal_framing_outside_hint_roots ... ok\ntest discovery_keeps_absent_unreadable_unsupported_and_unassociated_distinct ... ok\ntest source_selection_precedes_discovery_and_io ... ok\ntest explicit_source_aliases_preserve_identity_and_authorized_selector ... ok\ntest worktree_scope_transports_git_verified_roots ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.35s\n\n\nrunning 7 tests\ntest invalid_input_and_limits_fail_before_process_execution ... ok\ntest unknown_seat_and_known_seat_without_native_identity_are_distinct ... ok\ntest output_and_elapsed_time_are_bounded ... ok\ntest every_call_reads_current_mapping_and_translates_supported_harnesses ... ok\ntest missing_executable_and_lookup_transport_failure_are_distinct ... ok\ntest live_and_tombstoned_seats_resolve_only_typed_identity_and_hints ... ok\ntest malformed_or_mismatched_identity_is_rejected_without_guessing ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.99s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+      "stderr": "   Compiling unisphere-app v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/crates/app)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.86s\n     Running unittests src/main.rs (target/debug/deps/unisphere-f9a5d5c35147082d)\n     Running tests/adapter_catalog.rs (target/debug/deps/adapter_catalog-0ff15722ec632ac2)\n     Running unittests src/lib.rs (target/debug/deps/unisphere_cli-b2c66a86934b67a7)\n     Running tests/frontend.rs (target/debug/deps/frontend-9c792da0f4630f82)\n     Running tests/query_frontend.rs (target/debug/deps/query_frontend-b233823fc09150aa)\n     Running tests/sessions.rs (target/debug/deps/sessions-b4bfb4cfa984acb4)\nerror: test failed, to rerun pass `-p unisphere-cli --test sessions`\n     Running unittests src/lib.rs (target/debug/deps/unisphere_loader_query-1fc695b695e39f0e)\n     Running tests/discovery.rs (target/debug/deps/discovery-942f102001c1c715)\n     Running tests/pij.rs (target/debug/deps/pij-3bf02ba28d086387)\n   Doc-tests unisphere_cli\n   Doc-tests unisphere_loader_query\nerror: 1 target failed:\n    `-p unisphere-cli --test sessions`\n"
+    }
+  ]
+}

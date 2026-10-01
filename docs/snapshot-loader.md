@@ -105,6 +105,49 @@ are not normalized. Source path, selection, timestamps and SQLite page layout
 are excluded: relocation and mapper selection preserve content identity. Revision
 identity is not append-only progress, session finality or complete native fidelity.
 
+## Local query composition
+
+`unisphere-loader-query::LocalQuerySource` is the bounded imperative shell that
+selects registered representations before discovery, then delegates document,
+journal and SQLite framing to `FileSnapshotLoader`. The snapshot loader's format,
+transaction, size and revision contracts above remain unchanged. Pure query
+adapters receive only the resulting `NativeSnapshot` and injected content policy;
+they receive no filesystem, environment, process or network capability.
+
+Each `QueryRegistration` binds one catalogue descriptor, harness identity,
+`NativeRepresentation`, query-policy version and injected core `QueryAdapter`.
+SQLite table identity is part of the registered representation and source ID.
+Descriptors containing multiple storage formats are registered once per format;
+unsupported descriptor/representation combinations remain visible as an
+unsupported source rather than being guessed from file contents.
+
+`LocalQueryContext` supplies the platform label, symbolic location bases,
+optional absolute Git executable and optional typed stdin bytes. The provider
+never consults HOME, current-directory defaults or remote services. It expands
+only selected registrations' declared `LocationHint` roots, skips symlink
+traversal outside each supplied base, does not follow directory symlinks, and
+bounds both matching sources and directory entries. The directory-entry ceiling
+is `64 * QueryLimits::max_sources`; exceeding it is a resource refusal, not a
+truncated successful view.
+
+Repository `exact` and `tree` requests transport the canonical requested root to
+the SDK, which owns component-wise association semantics. `worktrees` additionally
+uses only the injected standard Git executable's bounded porcelain output and
+transports canonical verified roots. Missing Git capability fails with
+`GitUnavailable`; it never silently degrades to tree scope.
+
+Discovery emits separate `read_status` values for absent registered locations,
+unreadable stores, unsupported platforms/representations and readable sources.
+Readable adapter output with no repository association remains explicitly
+unassociated. These source-only facts are not promoted into sessions, turns,
+messages or tools. Per-source failures make coverage incomplete; excluded
+registrations are recorded as safe metadata and are never enumerated or opened.
+
+Explicit offline files are bounded, regular, no-follow inputs. Stdin bytes and
+their query JSON/JSONL format are caller-owned `ProvidedInput`; the provider does
+not sniff ambiguous single-row JSONL. Offline input returns saved bytes directly
+to SDK validation and cannot trigger registered-source discovery or enrichment.
+
 ## Synthetic regression surface
 
 PM-owned proof command, after PM-managed dependency/lockfile update:

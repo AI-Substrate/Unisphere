@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { APPROVED, observeVersion, runChecks } from './checks.mjs';
+import { APPROVED, boundedOutput, observeVersion, runChecks } from './checks.mjs';
 
 const versions = [
   'rustc 1.95.0 (59807616e 2026-04-14)\nrelease: 1.95.0\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\n',
@@ -85,4 +85,13 @@ test('all gates run once after coherent observations without boot recursion', as
   assert.equal(result.status, 'ok');
   assert.deepEqual(result.data.gates.map(gate => gate.name), ['format', 'clippy', 'tests', 'rustdoc', 'architecture', 'harness-regression']);
   assert.ok(calls.every(([, args]) => !args.includes('boot')));
+});
+
+test('passing gates keep a bounded output tail; the envelope stays small', () => {
+  const long = 'x'.repeat(10_000) + 'END';
+  const bounded = boundedOutput({ ok: true, code: 0, stdout: long, stderr: '' });
+  assert.equal(bounded.stdout.length, 2_000);
+  assert.ok(bounded.stdout.endsWith('END'));
+  assert.equal(bounded.stdout_bytes, long.length);
+  assert.equal(bounded.stderr, '');
 });

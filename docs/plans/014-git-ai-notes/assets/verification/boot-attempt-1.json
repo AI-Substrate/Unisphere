@@ -1,0 +1,62 @@
+{
+  "command": [
+    "harness",
+    "boot",
+    "--json"
+  ],
+  "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes",
+  "base_commit": "2fb5b15349873cd62ccd75c94fdfedae40d561f5",
+  "working_tree": true,
+  "source_sha256": {
+    "Cargo.toml": "f79762a9a985ee3ddeaa702d559e9328f84483fbaf53c861a26148f675b5e04d",
+    "Cargo.lock": "b05f75ab6cd9ffb38523823659b7d978bbf30098c361f5f8254f861dd78ea01f",
+    "crates/core/src/lib.rs": "abcb01a2e783abcdd43a9b06dc1e29ab0d195095cc476886bd05a6bafaa02816",
+    "crates/core/src/git_notes.rs": "4261f117f598726da973fd6fc80ca546d65a368a7acc33d8982f7c5723c61571",
+    "crates/loader-git/Cargo.toml": "b094980b1dc8e1612c28404ba068bb990c2ef45dce27d4753b269892c0a6bad3",
+    "crates/loader-git/src/lib.rs": "290641f77b7ce0aa9a282f9ee57d75abff99d036469251b7a1708a8cb76612a2",
+    "crates/loader-git/tests/storage.rs": "7376402eceb100f1bed663bd5b9edfda0ccac610019753465d1f858ec47201cf",
+    "crates/adapter-git-ai/Cargo.toml": "17d0ddfdbfec8d455e005c70150a3bd16973a1f4e9c12d93d92da3bc9edf5213",
+    "crates/adapter-git-ai/src/lib.rs": "031abe0b018b5ab66d3aab245a5b42c47882d0b23897963c45f9db0ee52e1a96",
+    "crates/adapter-git-ai/tests/format.rs": "d650001118ca864e8303b54502706b01c1f93f2ab83878bd7cd029324a094cf1",
+    "crates/adapter-git-ai/fixtures/mixed.notes": "3d8837cad9e0ab0a91899c74b9a7ec923e707ce30c54eb901b1bb6fc138618ec",
+    "crates/sdk/src/lib.rs": "c9508b6ed4f84543f6481ca77be8ea1c3e85564991477897c19ef97b087cb06c",
+    "crates/sdk/src/git_notes.rs": "9168746c6bb57816199b56708c56887f47704fbf037d01a25d8fd4b87921d229",
+    "crates/cli/src/lib.rs": "1773625d564a0574ea4c1ab8ddc6544732b2567abf3ec7fcbf128f16bb2ab59b",
+    "crates/cli/src/git_notes.rs": "4721e0ff811b7e8db7baceb67b6765ef7e35e863dbeeb6eaa442d825780a9a00",
+    "crates/app/Cargo.toml": "eb6bb642486ddb4be6eb97a63cd1630b4bacecc9305aad91ab52135493054669",
+    "crates/app/src/adapters.rs": "4fbf7f65848bc3a9f13f22326277dfafd8401eeaa85a6fb0b80f1d1c0bc640f4",
+    "crates/app/tests/adapter_catalog.rs": "440793c2c9e3afe5ac446ccffa67d9a151913ca1db490e085cbe7d3b63c02495",
+    "crates/testkit/src/lib.rs": "58b7eac576a6a02e00ef9e483fad72c4209291041bf42314b42dcd8f17ddc31f",
+    "crates/testkit/src/git_notes.rs": "661a3316ae147fd9d76f6fd2ec47a88017304aa76c08fd8909da77895a6612d6",
+    "crates/testkit/src/bin/unisphere-arch-check.rs": "670fa7adbdd8c3eabb77725f37cc6729b3f45456c57ef35c0e60215a580ece01",
+    "crates/testkit/src/bin/unisphere-proof.rs": "42bab80dc1c05c63cb0cb256c97bc4349ddd019859a97087edd38c3f46628499",
+    "crates/testkit/src/bin/proof/native.rs": "4f3a4dac4ab99d7c523d3be842dc8de4676c6a6eb7fa61587212cc176b77e52a",
+    "crates/testkit/src/bin/proof/git_notes.rs": "1ae2a01613062f3b4d50c5df959701660e458fa1524d3ddfea407eb523e4ce9f",
+    "crates/testkit/fixtures/consumer/git-notes-Cargo.toml.template": "692554cf43f68dac2090127526b612810515fe6942b612d23fbb907e099fb5e0",
+    "crates/testkit/fixtures/consumer/git-notes-main.rs": "cf0574c30c3dc3374acb1e17807503a50872c5c70ddebab2da28f42163ca239b",
+    ".harness/extensions/boot/boot.mjs": "2853bb08900be56d079d9eebb3019af22094495c6994a000cabd88ea16f1972b",
+    ".harness/extensions/boot/extension.test.mjs": "9c4d87ef4c04a0d4283bdda9b110e83445ec4e67b311211ddcd1624fe76b0c32",
+    ".harness/extensions/boot/extension.ts": "b5910f3e9d71cdbdde29a979b27ac1108c4403910f814bb63760631b386c2d02",
+    ".harness/extensions/boot/instructions.md": "c8e1e51c3fbd69ae854fff9fc096f5919cb93fc944ef94ee1ee75df5b6ef6479"
+  },
+  "started_at": "2026-09-10T00:09:46.594Z",
+  "finished_at": "2026-09-10T00:09:49.462Z",
+  "exit": 1,
+  "stdout": {
+    "command": "boot",
+    "status": "error",
+    "timestamp": "2026-09-10T00:09:49.457Z",
+    "error": {
+      "code": "E_CHECKS_FAILED",
+      "message": "harness checks failed (exit 1)",
+      "details": {
+        "code": 1,
+        "stdout": "{\"command\":\"checks\",\"status\":\"error\",\"timestamp\":\"2026-09-10T00:09:49.453Z\",\"error\":{\"code\":\"E_PRODUCT_CHECK_FAILED\",\"message\":\"clippy failed (exit 101)\",\"details\":{\"toolchain\":{\"rustc\":{\"release\":\"1.95.0\",\"normalized_release\":\"1.95.0\",\"commit\":\"59807616e1fa2540724bfbac14d7976d7e4a3860\",\"commit_metadata\":\"emitted\",\"release_matches\":true,\"commit_matches\":true,\"approved\":true,\"provenance\":{\"invoked\":\"/opt/homebrew/bin/rustc\",\"resolved\":\"/opt/homebrew/Cellar/rust/1.95.0/bin/rustc\"},\"args\":[\"-vV\"],\"code\":0,\"stdout\":\"rustc 1.95.0 (59807616e 2026-04-14) (Homebrew)\\nbinary: rustc\\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\\ncommit-date: 2026-04-14\\nhost: aarch64-apple-darwin\\nrelease: 1.95.0\\nLLVM version: 22.1.3\\n\",\"stderr\":\"\"},\"cargo\":{\"release\":\"1.95.0\",\"normalized_release\":\"1.95.0\",\"commit\":\"f2d3ce0bd7f24a49f8f72d9000448f8838c4e850\",\"commit_metadata\":\"emitted\",\"release_matches\":true,\"commit_matches\":true,\"approved\":true,\"provenance\":{\"invoked\":\"/opt/homebrew/bin/cargo\",\"resolved\":\"/opt/homebrew/Cellar/rust/1.95.0/bin/cargo\"},\"args\":[\"-vV\"],\"code\":0,\"stdout\":\"cargo 1.95.0 (f2d3ce0bd 2026-03-21) (Homebrew)\\nrelease: 1.95.0\\ncommit-hash: f2d3ce0bd7f24a49f8f72d9000448f8838c4e850\\ncommit-date: 2026-03-21\\nhost: aarch64-apple-darwin\\nlibgit2: 1.9.3 (sys:0.20.4 system)\\nlibcurl: 8.7.1 (sys:0.4.83+curl-8.15.0 system ssl:(SecureTransport) LibreSSL/3.3.6)\\nos: Mac OS 26.6.2 [64-bit]\\n\",\"stderr\":\"\"},\"clippy\":{\"release\":\"0.1.95\",\"normalized_release\":\"0.1.95\",\"commit\":\"59807616e1\",\"commit_metadata\":\"emitted\",\"release_matches\":true,\"commit_matches\":true,\"approved\":true,\"provenance\":{\"invoked\":\"/opt/homebrew/bin/cargo\",\"resolved\":\"/opt/homebrew/Cellar/rust/1.95.0/bin/cargo\"},\"args\":[\"clippy\",\"--version\"],\"code\":0,\"stdout\":\"clippy 0.1.95 (59807616e1 2026-04-14)\\n\",\"stderr\":\"\",\"binaries\":{\"cargo-clippy\":{\"invoked\":\"/opt/homebrew/bin/cargo-clippy\",\"resolved\":\"/opt/homebrew/Cellar/rust/1.95.0/bin/cargo-clippy\"},\"clippy-driver\":{\"invoked\":\"/opt/homebrew/bin/clippy-driver\",\"resolved\":\"/opt/homebrew/Cellar/rust/1.95.0/bin/clippy-driver\"}}},\"rustfmt\":{\"release\":\"1.9.0-stable\",\"normalized_release\":\"1.9.0\",\"commit\":\"59807616e1\",\"commit_metadata\":\"emitted\",\"release_matches\":true,\"commit_matches\":true,\"approved\":true,\"provenance\":{\"invoked\":\"/opt/homebrew/bin/cargo\",\"resolved\":\"/opt/homebrew/Cellar/rust/1.95.0/bin/cargo\"},\"args\":[\"fmt\",\"--version\"],\"code\":0,\"stdout\":\"rustfmt 1.9.0-stable (59807616e1 2026-04-14)\\n\",\"stderr\":\"\",\"binaries\":{\"cargo-fmt\":{\"invoked\":\"/opt/homebrew/bin/cargo-fmt\",\"resolved\":\"/opt/homebrew/Cellar/rust/1.95.0/bin/cargo-fmt\"},\"rustfmt\":{\"invoked\":\"/opt/homebrew/bin/rustfmt\",\"resolved\":\"/opt/homebrew/Cellar/rust/1.95.0/bin/rustfmt\"}}}},\"gates\":[{\"name\":\"format\",\"command\":\"/opt/homebrew/bin/cargo\",\"args\":[\"fmt\",\"--all\",\"--check\"],\"code\":0,\"stdout\":\"\",\"stderr\":\"\",\"ok\":true},{\"name\":\"clippy\",\"command\":\"/opt/homebrew/bin/cargo\",\"args\":[\"clippy\",\"--workspace\",\"--all-targets\",\"--locked\",\"--\",\"-D\",\"warnings\"],\"code\":101,\"stdout\":\"\",\"stderr\":\"    Checking unisphere-core v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/core)\\n    Checking unisphere-testkit v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/testkit)\\n    Checking unisphere-adapter-copilot-cli v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/adapter-copilot-cli)\\n    Checking unisphere-adapter-cursor v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/adapter-cursor)\\n    Checking unisphere-loader-snapshot v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/loader-snapshot)\\n    Checking unisphere-sdk v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/sdk)\\n    Checking unisphere-cli v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/cli)\\n    Checking unisphere-output-otlp v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/output-otlp)\\n    Checking unisphere-loader-git v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/loader-git)\\n    Checking unisphere-adapter-omp v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/adapter-omp)\\n    Checking unisphere-loader-jsonl v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/loader-jsonl)\\n    Checking unisphere-adapter-codex v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/adapter-codex)\\n    Checking unisphere-adapter-claude v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/adapter-claude)\\n    Checking unisphere-adapter-git-ai v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/adapter-git-ai)\\n    Checking unisphere-adapter-pi v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/adapter-pi)\\n    Checking unisphere-adapter-vscode-copilot v0.1.0 (/Users/jordanknight/substrate/unisphere/unisphere-git-ai-notes/crates/adapter-vscode-copilot)\\nerror: this boolean expression can be simplified\\n   --> crates/adapter-git-ai/src/lib.rs:359:54\\n    |\\n359 |             .is_some_and(|value| !value.is_null() && !value.as_i64().is_some_and(|n| n >= 0))\\n    |                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `value.as_i64().is_none_or(|n| n < 0)`\\n    |\\n    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#nonminimal_bool\\n    = note: `-D clippy::nonminimal-bool` implied by `-D warnings`\\n    = help: to override `-D warnings` add `#[allow(clippy::nonminimal_bool)]`\\n\\nerror: could not compile `unisphere-adapter-git-ai` (lib) due to 1 previous error\\nwarning: build failed, waiting for other jobs to finish...\\nerror: this `if` statement can be collapsed\\n   --> crates/loader-git/src/lib.rs:194:17\\n    |\\n194 | /                 if let Some(status) = status {\\n195 | |                     if pipes.iter().all(Option::is_some) {\\n196 | |                         return Ok(Output {\\n197 | |                             status,\\n...   |\\n202 | |                 }\\n    | |_________________^\\n    |\\n    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#collapsible_if\\n    = note: `-D clippy::collapsible-if` implied by `-D warnings`\\n    = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`\\nhelp: collapse nested if block\\n    |\\n194 ~                 if let Some(status) = status\\n195 ~                     && pipes.iter().all(Option::is_some) {\\n196 |                         return Ok(Output {\\n...\\n200 |                         });\\n201 ~                     }\\n    |\\n\\nerror: could not compile `unisphere-loader-git` (lib) due to 1 previous error\\n\",\"ok\":false}]}},\"next_action\":\"Run /opt/homebrew/bin/cargo clippy --workspace --all-targets --locked -- -D warnings, fix the failure, then rerun harness checks --json.\"}\n",
+        "stderr": "",
+        "ok": false
+      }
+    },
+    "next_action": "Run harness checks --json, repair its reported failure, then rerun harness boot --json."
+  },
+  "stderr": ""
+}

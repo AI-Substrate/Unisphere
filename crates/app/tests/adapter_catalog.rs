@@ -42,6 +42,7 @@ fn descriptor(output: &Output) -> serde_json::Value {
             "cursor-transcript",
             "cursor-ide",
             "vscode-copilot",
+            "git-ai",
         ])
     );
     for adapter in adapters {
@@ -115,7 +116,7 @@ fn catalog_json_is_static_under_hostile_environment() {
         entry["capabilities"]["cursor_source_assumption"],
         "append_only"
     );
-    assert_eq!(entry["capabilities"]["cli_persisted_resume"], false);
+    assert_eq!(entry["capabilities"]["cli_persisted_resume"], true);
     assert_eq!(
         entry["capabilities"]["delayed_revision_reconciliation"],
         false
@@ -146,7 +147,7 @@ fn catalog_does_not_resolve_inaccessible_store_roots() {
 }
 
 #[test]
-fn catalog_argument_errors_keep_the_catalog_label_and_hide_input() {
+fn catalog_argument_errors_hide_input_and_retain_machine_classification() {
     let root = tempfile::tempdir().unwrap();
     let output = catalog(
         root.path(),
@@ -159,8 +160,7 @@ fn catalog_argument_errors_keep_the_catalog_label_and_hide_input() {
     let document: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
     assert_eq!(document["ok"], false);
     assert_eq!(document["v"], 1);
-    assert_eq!(document["command"], "adapters.list");
-    assert_eq!(document["error"]["kind"], "invalid_arguments");
+    assert_eq!(document["error"]["code"], "UNI-CLI-ARGUMENT");
     assert!(
         !String::from_utf8(output.stdout)
             .unwrap()

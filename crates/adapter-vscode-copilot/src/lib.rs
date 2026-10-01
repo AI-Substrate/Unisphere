@@ -4,14 +4,29 @@
 #![forbid(unsafe_code)]
 
 mod journal;
+mod prep;
 
-use std::collections::BTreeMap;
+pub use prep::{DOCUMENT_PREP_POLICY_VERSION, JOURNAL_PREP_POLICY_VERSION, VsCodeCopilotPrepFold};
+
+use std::{
+    collections::{BTreeMap, BTreeSet},
+    path::{Path, PathBuf},
+};
 
 use serde_json::{Map, Value, json};
 use unisphere_core::{
     AdapterCapabilities, AdapterDescriptor, LocationHint, MappedSnapshot, MappingDiagnosticCode,
     MappingOptions, NativeSnapshot, PipelineError, PipelineErrorKind, SnapshotAdapter,
     SnapshotDiagnostic, SnapshotFormat, TelemetryRecord,
+    query::{
+        AssociationBasis, AssociationExtent, AssociationObservation, AvailabilityCode,
+        AvailabilityIssue, BranchEvidence, ContentAccess, FieldId, InspectedSource, LimitKind,
+        MembershipPolicy, MessageRole, NativeLocator, NativeQueryInput, NativeSequence,
+        Observation, ObservationFacet, ObservationPart, Outcome, PartitionId, QueryAdapter,
+        QueryFailure, QueryFailureCode, QueryLimits, RecoveryAction, RequestMarker,
+        SessionEvidenceKey, SourceEvidence, SourceLocator, SourcePartition, SourceProblem,
+        SourceReadStatus, SourceRef, SourceViewKind, Timestamp, TimestampBasis,
+    },
 };
 
 /// Metadata for the snapshot runner registered by the application composition root.
@@ -68,7 +83,7 @@ pub const DESCRIPTOR: AdapterDescriptor = AdapterDescriptor {
         output_formats: &["otlp-jsonl"],
         sdk_caller_owned_cursor: false,
         cursor_source_assumption: "whole_source_revision",
-        cli_persisted_resume: false,
+        cli_persisted_resume: true,
         delayed_revision_reconciliation: false,
         lossless_archive: false,
     },
@@ -654,5 +669,1008 @@ impl Mapping<'_> {
                 .attributes
                 .insert("unisphere.vscode.usage".into(), Value::Object(usage));
         }
+    }
+}
+
+/// Source-local reconstruction policy used by query registrations for both
+/// whole documents and reduced journals.
+pub const QUERY_POLICY_VERSION: &str = "vscode-request-containment-v1";
+
+impl QueryAdapter for VsCodeCopilotAdapter {
+    fn inspect(
+        &self,
+        input: NativeQueryInput<'_>,
+        access: ContentAccess,
+        limits: &QueryLimits,
+    ) -> Result<InspectedSource, QueryFailure> {
+        limits.validate()?;
+        let NativeQueryInput::Snapshot { source, snapshot } = input else {
+            return Err(unsupported_query_source(None));
+        };
+        source.validate()?;
+        if source.adapter.as_str() != DESCRIPTOR.id
+            || source.query_policy_version != QUERY_POLICY_VERSION
+            || snapshot.source.validate().is_err()
+            || snapshot.revision != source.revision
+            || matches!(&source.locator, SourceLocator::LocalPath(path) if path != &snapshot.source.path)
+        {
+            return Err(QueryFailure::invalid_data());
+        }
+        let input_bytes = snapshot.records.iter().try_fold(0usize, |total, record| {
+            total
+                .checked_add(record.key.len())
+                .and_then(|total| total.checked_add(record.bytes.len()))
+                .ok_or_else(|| QueryFailure::limit(LimitKind::SourceBytes))
+        })?;
+        if input_bytes > limits.max_source_bytes || input_bytes > limits.max_total_input_bytes {
+            return Err(QueryFailure::limit(LimitKind::SourceBytes));
+        }
+        if access.emit_content && input_bytes > limits.max_retained_bytes {
+            return Err(QueryFailure::limit(LimitKind::RetainedBytes));
+        }
+
+        let (value, root_key) = match snapshot.source.format {
+            SnapshotFormat::JsonDocument => {
+                let [record] = snapshot.records.as_slice() else {
+                    return Err(QueryFailure::invalid_data());
+                };
+                if record.key != "document" {
+                    return Err(QueryFailure::invalid_data());
+                }
+                let value = serde_json::from_slice(&record.bytes)
+                    .map_err(|_| QueryFailure::invalid_data())?;
+                (value, "document")
+            }
+            SnapshotFormat::JsonJournal => (
+                journal::reduce(snapshot).map_err(query_reduction_failure)?,
+                "journal:reduced",
+            ),
+            SnapshotFormat::SqliteKeyValue { .. } => {
+                return Err(unsupported_query_source(Some(source.id)));
+            }
+        };
+        let mapping = QueryMapping {
+            source: source.clone(),
+            access: &access,
+            limits,
+            root_key,
+            partitions: Vec::new(),
+            observations: Vec::new(),
+            issues: Vec::new(),
+        };
+        mapping.inspect(&value, snapshot.source.session_id.as_deref())
+    }
+}
+
+fn unsupported_query_source(source: Option<unisphere_core::query::SourceId>) -> QueryFailure {
+    QueryFailure::new(
+        QueryFailureCode::UnsupportedSource,
+        RecoveryAction::FixSource {
+            reason: SourceProblem::UnsupportedDialect,
+            source,
+        },
+    )
+}
+
+fn query_reduction_failure(error: PipelineError) -> QueryFailure {
+    if error.kind() == PipelineErrorKind::BatchLimit {
+        QueryFailure::limit(LimitKind::RetainedBytes)
+    } else {
+        QueryFailure::invalid_data()
+    }
+}
+
+struct QueryMapping<'a> {
+    source: SourceEvidence,
+    access: &'a ContentAccess,
+    limits: &'a QueryLimits,
+    root_key: &'static str,
+    partitions: Vec<SourcePartition>,
+    observations: Vec<Observation>,
+    issues: Vec<AvailabilityIssue>,
+}
+
+impl QueryMapping<'_> {
+    fn inspect(
+        mut self,
+        value: &Value,
+        selected_session: Option<&str>,
+    ) -> Result<InspectedSource, QueryFailure> {
+        let session = value.as_object().ok_or_else(QueryFailure::invalid_data)?;
+        let version = match session.get("version") {
+            None => 1,
+            Some(value)
+                if value
+                    .as_u64()
+                    .is_some_and(|version| matches!(version, 2 | 3)) =>
+            {
+                value.as_u64().unwrap_or(1)
+            }
+            _ => {
+                self.source.read_status = SourceReadStatus::Unsupported;
+                self.add_issue(AvailabilityCode::NotSupported, None);
+                return self.finish();
+            }
+        };
+        let session_id = session
+            .get("sessionId")
+            .and_then(Value::as_str)
+            .filter(|id| !id.is_empty())
+            .map(str::to_owned);
+        if selected_session.is_some_and(|selected| session_id.as_deref() != Some(selected)) {
+            return Err(QueryFailure::invalid_data());
+        }
+        let partition = PartitionId::derive(
+            self.source.id,
+            session_id
+                .as_deref()
+                .map(str::as_bytes)
+                .unwrap_or_else(|| self.source.revision.as_bytes()),
+        );
+        if self
+            .source
+            .associations
+            .iter()
+            .any(|association| association.partition != partition)
+        {
+            return Err(QueryFailure::invalid_data());
+        }
+        let mut associations = self.source.associations.clone();
+        self.native_workspace_association(session, partition, &mut associations);
+        self.source.associations = associations.clone();
+        if associations.is_empty() {
+            self.add_issue(AvailabilityCode::Unassociated, Some(FieldId::ProjectPath));
+        }
+
+        let membership = if session_id.is_some() {
+            MembershipPolicy::NativeContainment
+        } else {
+            MembershipPolicy::Unavailable
+        };
+        self.partitions.push(SourcePartition {
+            id: partition,
+            native_session_id: session_id.clone(),
+            participant_id: None,
+            view: if session_id.is_some() {
+                SourceViewKind::Conversation
+            } else {
+                SourceViewKind::SourceOnly
+            },
+            membership,
+            associations: associations.clone(),
+        });
+        self.declare_available_fields(version);
+
+        let session_key = session_id.as_ref().map(|id| SessionEvidenceKey {
+            namespace: "vscode-chat-session".into(),
+            native_id: id.clone(),
+            participant_id: None,
+            parent_native_id: None,
+            fork_native_id: None,
+            membership_basis: MembershipPolicy::NativeContainment,
+        });
+        if let Some(id) = &session_id {
+            let mut diagnostics = Vec::new();
+            let created_at = self.timestamp(
+                session.get("creationDate"),
+                FieldId::StartedAt,
+                &mut diagnostics,
+            );
+            let title_field = if version == 2 {
+                "computedTitle"
+            } else {
+                "customTitle"
+            };
+            let name =
+                self.sensitive_string(session.get(title_field), FieldId::Name, &mut diagnostics);
+            let models = session
+                .get("requests")
+                .and_then(Value::as_array)
+                .into_iter()
+                .flatten()
+                .filter_map(Value::as_object)
+                .filter_map(|request| request.get("modelId").and_then(Value::as_str))
+                .map(str::to_owned)
+                .collect::<BTreeSet<_>>()
+                .into_iter()
+                .collect();
+            self.push_observation(Observation {
+                source_ref: self.source_ref(self.root_key),
+                native_record_id: Some(id.clone()),
+                session: session_key.clone(),
+                branch: BranchEvidence::Linear { partition },
+                parent_ids: Vec::new(),
+                sequence: native_sequence(&[0]),
+                timestamp: created_at.clone(),
+                facets: vec![ObservationFacet::SessionMetadata {
+                    native_id: id.clone(),
+                    name,
+                    models,
+                    created_at,
+                    associations: associations.clone(),
+                    lineage: Vec::new(),
+                }],
+                diagnostics,
+            })?;
+        }
+
+        let Some(requests) = session.get("requests").and_then(Value::as_array) else {
+            self.add_issue(AvailabilityCode::NotCaptured, Some(FieldId::Parts));
+            return self.finish();
+        };
+        for (index, request) in requests.iter().enumerate() {
+            self.request(request, index, partition, session_key.clone())?;
+        }
+        if has_any_fields(
+            session,
+            &[
+                "responderUsername",
+                "initialLocation",
+                "hasPendingEdits",
+                "inputState",
+                "repoData",
+                "pendingRequests",
+            ],
+        ) {
+            self.add_issue(AvailabilityCode::NotSupported, None);
+        }
+
+        if has_unknown_fields(
+            session,
+            &[
+                "version",
+                "sessionId",
+                "creationDate",
+                "responderUsername",
+                "customTitle",
+                "computedTitle",
+                "requests",
+                "initialLocation",
+                "hasPendingEdits",
+                "inputState",
+                "repoData",
+                "pendingRequests",
+                "workingDirectory",
+            ],
+        ) {
+            self.add_issue(AvailabilityCode::NotSupported, None);
+        }
+        self.finish()
+    }
+
+    fn request(
+        &mut self,
+        value: &Value,
+        index: usize,
+        partition: PartitionId,
+        session: Option<SessionEvidenceKey>,
+    ) -> Result<(), QueryFailure> {
+        let Some(request) = value.as_object() else {
+            self.add_issue(AvailabilityCode::NotCaptured, Some(FieldId::Parts));
+            return Ok(());
+        };
+        let request_id = request
+            .get("requestId")
+            .and_then(Value::as_str)
+            .filter(|id| !id.is_empty())
+            .map(str::to_owned);
+        let turn_id = request_id
+            .clone()
+            .unwrap_or_else(|| format!("request-index:{index}"));
+        let message_key = format!("{}#/requests/{index}/message", self.root_key);
+        let mut diagnostics = Vec::new();
+        let parts = self.request_parts(request.get("message"), &mut diagnostics);
+        let timestamp = self.timestamp(
+            request.get("timestamp"),
+            FieldId::Timestamp,
+            &mut diagnostics,
+        );
+        let injected = request.get("isSystemInitiated") == Some(&Value::Bool(true));
+        self.push_observation(Observation {
+            source_ref: self.source_ref(&message_key),
+            native_record_id: request_id.clone(),
+            session: session.clone(),
+            branch: BranchEvidence::Linear { partition },
+            parent_ids: Vec::new(),
+            sequence: native_sequence(&[1, index as u64, 0]),
+            timestamp,
+            facets: vec![ObservationFacet::Message {
+                native_id: request_id.clone(),
+                role: MessageRole::User,
+                parts,
+                request_marker: if injected {
+                    RequestMarker::Injected
+                } else {
+                    RequestMarker::Initiating
+                },
+                turn_id: Some(turn_id.clone()),
+            }],
+            diagnostics,
+        })?;
+
+        if request
+            .get("response")
+            .is_some_and(|response| !response.is_null())
+        {
+            self.response(request, index, partition, session, request_id, turn_id)?;
+        }
+        if has_any_fields(
+            request,
+            &[
+                "agent",
+                "isHidden",
+                "hiddenFromTranscript",
+                "shouldBeRemovedOnSend",
+                "isCanceled",
+                "modelState",
+                "promptTokens",
+                "completionTokens",
+                "modelTotals",
+                "copilotCredits",
+                "sessionCopilotCredits",
+                "variableData",
+                "result",
+                "responseMarkdownInfo",
+                "followups",
+                "vote",
+                "slashCommand",
+                "usedContext",
+                "contentReferences",
+                "codeCitations",
+                "timeSpentWaiting",
+                "outputBuffer",
+                "promptTokenDetails",
+                "elapsedMs",
+                "modeInfo",
+                "systemInitiatedLabel",
+                "terminalExecutionId",
+                "origin",
+                "confirmation",
+                "editedFileEvents",
+            ],
+        ) {
+            self.add_issue(AvailabilityCode::NotSupported, None);
+        }
+        if has_unknown_fields(
+            request,
+            &[
+                "requestId",
+                "message",
+                "timestamp",
+                "modelId",
+                "response",
+                "responseId",
+                "responseTimestamp",
+                "agent",
+                "isHidden",
+                "hiddenFromTranscript",
+                "shouldBeRemovedOnSend",
+                "isSystemInitiated",
+                "isCanceled",
+                "modelState",
+                "promptTokens",
+                "completionTokens",
+                "modelTotals",
+                "copilotCredits",
+                "sessionCopilotCredits",
+                "variableData",
+                "result",
+                "responseMarkdownInfo",
+                "followups",
+                "vote",
+                "slashCommand",
+                "usedContext",
+                "contentReferences",
+                "codeCitations",
+                "timeSpentWaiting",
+                "outputBuffer",
+                "promptTokenDetails",
+                "elapsedMs",
+                "modeInfo",
+                "systemInitiatedLabel",
+                "terminalExecutionId",
+                "origin",
+                "confirmation",
+                "editedFileEvents",
+            ],
+        ) {
+            self.add_issue(AvailabilityCode::NotSupported, None);
+        }
+        Ok(())
+    }
+
+    fn response(
+        &mut self,
+        request: &Map<String, Value>,
+        request_index: usize,
+        partition: PartitionId,
+        session: Option<SessionEvidenceKey>,
+        request_id: Option<String>,
+        turn_id: String,
+    ) -> Result<(), QueryFailure> {
+        let response_id = request
+            .get("responseId")
+            .and_then(Value::as_str)
+            .filter(|id| !id.is_empty())
+            .map(str::to_owned);
+        let response_key = format!("{}#/requests/{request_index}/response", self.root_key);
+        let mut diagnostics = Vec::new();
+        let timestamp = self.timestamp(
+            request.get("responseTimestamp"),
+            FieldId::Timestamp,
+            &mut diagnostics,
+        );
+        let mut parts = Vec::new();
+        match request.get("response") {
+            Some(Value::String(text)) => {
+                parts.push(self.sensitive_part(
+                    ObservationPart::Text(text.clone()),
+                    FieldId::Text,
+                    &mut diagnostics,
+                ));
+            }
+            Some(Value::Array(values)) => {
+                for (part_index, value) in values.iter().enumerate() {
+                    let Some(part) = value.as_object() else {
+                        self.issue_into(
+                            &mut diagnostics,
+                            AvailabilityCode::NotCaptured,
+                            Some(FieldId::Parts),
+                        );
+                        continue;
+                    };
+                    if part.get("kind").and_then(Value::as_str) == Some("toolInvocationSerialized")
+                    {
+                        self.tool(
+                            part,
+                            (request_index, part_index),
+                            partition,
+                            session.clone(),
+                            response_id.as_ref().or(request_id.as_ref()).cloned(),
+                            &turn_id,
+                        )?;
+                        continue;
+                    }
+                    self.response_part(part, &mut parts, &mut diagnostics);
+                }
+            }
+            _ => self.issue_into(
+                &mut diagnostics,
+                AvailabilityCode::NotCaptured,
+                Some(FieldId::Parts),
+            ),
+        }
+        self.push_observation(Observation {
+            source_ref: self.source_ref(&response_key),
+            native_record_id: response_id.clone(),
+            session,
+            branch: BranchEvidence::Linear { partition },
+            parent_ids: request_id.into_iter().collect(),
+            sequence: native_sequence(&[1, request_index as u64, 1]),
+            timestamp,
+            facets: vec![ObservationFacet::Message {
+                native_id: response_id,
+                role: MessageRole::Assistant,
+                parts,
+                request_marker: RequestMarker::Unknown,
+                turn_id: Some(turn_id),
+            }],
+            diagnostics,
+        })
+    }
+
+    fn tool(
+        &mut self,
+        part: &Map<String, Value>,
+        (request_index, part_index): (usize, usize),
+        partition: PartitionId,
+        session: Option<SessionEvidenceKey>,
+        parent_id: Option<String>,
+        turn_id: &str,
+    ) -> Result<(), QueryFailure> {
+        let call_id = part
+            .get("toolCallId")
+            .and_then(Value::as_str)
+            .filter(|id| !id.is_empty());
+        let name = part
+            .get("toolId")
+            .and_then(Value::as_str)
+            .filter(|name| !name.is_empty());
+        let (Some(call_id), Some(name)) = (call_id, name) else {
+            self.add_issue(AvailabilityCode::NotCaptured, Some(FieldId::CallId));
+            return Ok(());
+        };
+        let key = format!(
+            "{}#/requests/{request_index}/response/{part_index}",
+            self.root_key
+        );
+        let mut diagnostics = Vec::new();
+        let mut status = Map::new();
+        if let Some(is_complete) = part.get("isComplete") {
+            if is_complete.is_boolean() {
+                status.insert("is_complete".into(), is_complete.clone());
+            } else {
+                self.issue_into(
+                    &mut diagnostics,
+                    AvailabilityCode::NotCaptured,
+                    Some(FieldId::Status),
+                );
+            }
+        }
+        if let Some(confirmed) = part.get("isConfirmed") {
+            if confirmed.is_boolean() {
+                status.insert("is_confirmed".into(), confirmed.clone());
+            } else if let Some(kind) = confirmed
+                .get("type")
+                .filter(|value| value.is_string() || value.as_i64().is_some())
+            {
+                status.insert("confirmation_kind".into(), kind.clone());
+            } else {
+                self.issue_into(
+                    &mut diagnostics,
+                    AvailabilityCode::NotCaptured,
+                    Some(FieldId::Status),
+                );
+            }
+        }
+        if let Some(subagent) = part
+            .get("subAgentInvocationId")
+            .and_then(Value::as_str)
+            .filter(|id| !id.is_empty())
+        {
+            status.insert("subagent_id".into(), json!(subagent));
+        }
+        let mut facets = vec![ObservationFacet::ToolCall {
+            native_call_id: call_id.into(),
+            native_name: name.into(),
+            family: tool_family(name).map(str::to_owned),
+            input: vec![ObservationPart::Unavailable(AvailabilityCode::NotCaptured)],
+            turn_id: Some(turn_id.into()),
+        }];
+        self.issue_into(
+            &mut diagnostics,
+            AvailabilityCode::NotCaptured,
+            Some(FieldId::Input),
+        );
+        if !status.is_empty() {
+            facets.push(ObservationFacet::ToolProgress {
+                native_call_id: call_id.into(),
+                parts: vec![ObservationPart::Structured(Value::Object(status))],
+            });
+        }
+        if let Some(result) = part.get("resultDetails") {
+            let output = if self.access.permits_payload(FieldId::Output) {
+                vec![ObservationPart::Structured(result.clone())]
+            } else {
+                self.issue_into(
+                    &mut diagnostics,
+                    AvailabilityCode::SensitiveOmitted,
+                    Some(FieldId::Output),
+                );
+                vec![ObservationPart::Unavailable(
+                    AvailabilityCode::SensitiveOmitted,
+                )]
+            };
+            facets.push(ObservationFacet::ToolResult {
+                native_call_id: call_id.into(),
+                native_name: Some(name.into()),
+                output,
+                outcome: Outcome::Unknown,
+                exit_code: None,
+                reported_duration_ms: None,
+                turn_id: Some(turn_id.into()),
+            });
+            self.issue_into(
+                &mut diagnostics,
+                AvailabilityCode::NotCaptured,
+                Some(FieldId::Status),
+            );
+        } else {
+            self.issue_into(
+                &mut diagnostics,
+                AvailabilityCode::NotCaptured,
+                Some(FieldId::Output),
+            );
+        }
+        self.issue_into(
+            &mut diagnostics,
+            AvailabilityCode::NotCaptured,
+            Some(FieldId::DurationMs),
+        );
+        self.issue_into(
+            &mut diagnostics,
+            AvailabilityCode::NotCaptured,
+            Some(FieldId::ExitCode),
+        );
+        if has_any_fields(
+            part,
+            &[
+                "invocationMessage",
+                "originMessage",
+                "pastTenseMessage",
+                "toolSpecificData",
+            ],
+        ) {
+            self.issue_into(
+                &mut diagnostics,
+                AvailabilityCode::NotSupported,
+                Some(FieldId::Parts),
+            );
+        }
+        if has_unknown_fields(
+            part,
+            &[
+                "kind",
+                "toolId",
+                "toolCallId",
+                "subAgentInvocationId",
+                "isComplete",
+                "isConfirmed",
+                "invocationMessage",
+                "originMessage",
+                "pastTenseMessage",
+                "resultDetails",
+                "toolSpecificData",
+            ],
+        ) {
+            self.issue_into(
+                &mut diagnostics,
+                AvailabilityCode::NotSupported,
+                Some(FieldId::Parts),
+            );
+        }
+        self.push_observation(Observation {
+            source_ref: self.source_ref(&key),
+            native_record_id: Some(call_id.into()),
+            session,
+            branch: BranchEvidence::Linear { partition },
+            parent_ids: parent_id.into_iter().collect(),
+            sequence: native_sequence(&[1, request_index as u64, 2, part_index as u64]),
+            timestamp: None,
+            facets,
+            diagnostics,
+        })
+    }
+
+    fn request_parts(
+        &mut self,
+        value: Option<&Value>,
+        diagnostics: &mut Vec<AvailabilityIssue>,
+    ) -> Vec<ObservationPart> {
+        let text = match value {
+            Some(Value::String(text)) => Some(text.as_str()),
+            Some(Value::Object(message)) => message.get("text").and_then(Value::as_str),
+            _ => None,
+        };
+        match text {
+            Some(text) => vec![self.sensitive_part(
+                ObservationPart::Text(text.into()),
+                FieldId::Text,
+                diagnostics,
+            )],
+            None => {
+                self.issue_into(
+                    diagnostics,
+                    AvailabilityCode::NotCaptured,
+                    Some(FieldId::Text),
+                );
+                vec![ObservationPart::Unavailable(AvailabilityCode::NotCaptured)]
+            }
+        }
+    }
+
+    fn response_part(
+        &mut self,
+        part: &Map<String, Value>,
+        parts: &mut Vec<ObservationPart>,
+        diagnostics: &mut Vec<AvailabilityIssue>,
+    ) {
+        match part.get("kind").and_then(Value::as_str) {
+            None => {
+                if let Some(text) = part.get("value").and_then(Value::as_str) {
+                    parts.push(self.sensitive_part(
+                        ObservationPart::Text(text.into()),
+                        FieldId::Text,
+                        diagnostics,
+                    ));
+                } else {
+                    self.issue_into(
+                        diagnostics,
+                        AvailabilityCode::NotCaptured,
+                        Some(FieldId::Parts),
+                    );
+                }
+            }
+            Some("markdownContent") => {
+                if let Some(text) = part
+                    .get("content")
+                    .and_then(|content| content.get("value"))
+                    .and_then(Value::as_str)
+                {
+                    parts.push(self.sensitive_part(
+                        ObservationPart::Text(text.into()),
+                        FieldId::Text,
+                        diagnostics,
+                    ));
+                } else {
+                    self.issue_into(
+                        diagnostics,
+                        AvailabilityCode::NotCaptured,
+                        Some(FieldId::Text),
+                    );
+                }
+            }
+            Some("thinking") => match part.get("value") {
+                Some(Value::String(reasoning)) => parts.push(self.sensitive_part(
+                    ObservationPart::Reasoning(reasoning.clone()),
+                    FieldId::Parts,
+                    diagnostics,
+                )),
+                Some(Value::Array(values)) if values.iter().all(Value::is_string) => {
+                    for reasoning in values.iter().filter_map(Value::as_str) {
+                        parts.push(self.sensitive_part(
+                            ObservationPart::Reasoning(reasoning.into()),
+                            FieldId::Parts,
+                            diagnostics,
+                        ));
+                    }
+                }
+                _ => self.issue_into(
+                    diagnostics,
+                    AvailabilityCode::NotCaptured,
+                    Some(FieldId::Parts),
+                ),
+            },
+            _ => {
+                parts.push(ObservationPart::Unavailable(AvailabilityCode::NotSupported));
+                self.issue_into(
+                    diagnostics,
+                    AvailabilityCode::NotSupported,
+                    Some(FieldId::Parts),
+                );
+            }
+        }
+    }
+
+    fn sensitive_part(
+        &mut self,
+        part: ObservationPart,
+        field: FieldId,
+        diagnostics: &mut Vec<AvailabilityIssue>,
+    ) -> ObservationPart {
+        if self.access.permits_payload(field) || self.access.permits_payload(FieldId::Parts) {
+            part
+        } else {
+            self.issue_into(diagnostics, AvailabilityCode::SensitiveOmitted, Some(field));
+            ObservationPart::Unavailable(AvailabilityCode::SensitiveOmitted)
+        }
+    }
+
+    fn sensitive_string(
+        &mut self,
+        value: Option<&Value>,
+        field: FieldId,
+        diagnostics: &mut Vec<AvailabilityIssue>,
+    ) -> Option<String> {
+        let value = value?.as_str();
+        match value {
+            Some(value) if self.access.permits_payload(field) => Some(value.into()),
+            Some(_) => {
+                self.issue_into(diagnostics, AvailabilityCode::SensitiveOmitted, Some(field));
+                None
+            }
+            None => {
+                self.issue_into(diagnostics, AvailabilityCode::NotCaptured, Some(field));
+                None
+            }
+        }
+    }
+
+    fn timestamp(
+        &mut self,
+        value: Option<&Value>,
+        field: FieldId,
+        diagnostics: &mut Vec<AvailabilityIssue>,
+    ) -> Option<Timestamp> {
+        let value = value?;
+        let timestamp = value
+            .as_u64()
+            .and_then(|millis| i128::from(millis).checked_mul(1_000_000))
+            .and_then(|nanos| Timestamp::new(nanos, TimestampBasis::Native).ok());
+        if timestamp.is_none() {
+            self.issue_into(diagnostics, AvailabilityCode::InvalidClock, Some(field));
+        }
+        timestamp
+    }
+
+    fn native_workspace_association(
+        &mut self,
+        session: &Map<String, Value>,
+        partition: PartitionId,
+        associations: &mut Vec<AssociationObservation>,
+    ) {
+        match session.get("workingDirectory") {
+            Some(Value::String(uri)) => match local_file_uri(uri) {
+                Some(path) => {
+                    let association = AssociationObservation {
+                        basis: AssociationBasis::NativeCwd,
+                        path: Some(path),
+                        partition,
+                        applies_to: AssociationExtent::Partition,
+                    };
+                    if !associations.contains(&association) {
+                        associations.push(association);
+                    }
+                }
+                None => self.add_issue(AvailabilityCode::NotSupported, Some(FieldId::ProjectPath)),
+            },
+            Some(_) => self.add_issue(AvailabilityCode::NotSupported, Some(FieldId::ProjectPath)),
+            None if session.contains_key("repoData") && associations.is_empty() => {
+                self.add_issue(AvailabilityCode::Unassociated, Some(FieldId::ProjectPath))
+            }
+            None => {}
+        }
+    }
+
+    fn declare_available_fields(&mut self, version: u64) {
+        self.source.available_fields.extend([
+            FieldId::Id,
+            FieldId::SourceRefs,
+            FieldId::NativeId,
+            FieldId::Harness,
+            FieldId::Adapter,
+            FieldId::Availability,
+            FieldId::Format,
+            FieldId::ReadStatus,
+            FieldId::Association,
+            FieldId::Revision,
+            FieldId::ProjectPath,
+            FieldId::SourcePath,
+            FieldId::Models,
+            FieldId::StartedAt,
+            FieldId::FirstEventAt,
+            FieldId::ParentIds,
+            FieldId::TurnId,
+            FieldId::Role,
+            FieldId::Timestamp,
+            FieldId::Text,
+            FieldId::Parts,
+            FieldId::Model,
+            FieldId::MessageId,
+            FieldId::Kind,
+        ]);
+        if version >= 2 {
+            self.source.available_fields.insert(FieldId::Name);
+        }
+        if version >= 3 {
+            self.source.available_fields.extend([
+                FieldId::ToolName,
+                FieldId::ToolFamily,
+                FieldId::Status,
+                FieldId::StatusReason,
+                FieldId::Input,
+                FieldId::Output,
+                FieldId::CallId,
+            ]);
+        }
+    }
+
+    fn source_ref(&self, key: &str) -> SourceRef {
+        SourceRef {
+            source_id: self.source.id,
+            revision: self.source.revision.clone(),
+            locator: NativeLocator::Snapshot { key: key.into() },
+            subrecord: key.into(),
+        }
+    }
+
+    fn push_observation(&mut self, observation: Observation) -> Result<(), QueryFailure> {
+        if self.observations.len() == self.limits.max_observations_and_rows {
+            return Err(QueryFailure::limit(LimitKind::ObservationsAndRows));
+        }
+        self.issues.extend(observation.diagnostics.iter().cloned());
+        self.observations.push(observation);
+        Ok(())
+    }
+
+    fn issue_into(
+        &mut self,
+        diagnostics: &mut Vec<AvailabilityIssue>,
+        code: AvailabilityCode,
+        field: Option<FieldId>,
+    ) {
+        diagnostics.push(self.issue(code, field));
+    }
+
+    fn add_issue(&mut self, code: AvailabilityCode, field: Option<FieldId>) {
+        let issue = self.issue(code, field);
+        if !self.issues.contains(&issue) {
+            self.issues.push(issue);
+        }
+    }
+
+    fn issue(&self, code: AvailabilityCode, field: Option<FieldId>) -> AvailabilityIssue {
+        AvailabilityIssue {
+            code,
+            field,
+            source: Some(self.source.id),
+            entity: None,
+            offset: None,
+        }
+    }
+
+    fn finish(self) -> Result<InspectedSource, QueryFailure> {
+        let inspected = InspectedSource {
+            source: self.source,
+            partitions: self.partitions,
+            observations: self.observations,
+            issues: self.issues,
+        };
+        inspected.validate(self.limits)?;
+        Ok(inspected)
+    }
+}
+
+fn native_sequence(parts: &[u64]) -> NativeSequence {
+    let mut key = Vec::with_capacity(std::mem::size_of_val(parts));
+    for part in parts {
+        key.extend_from_slice(&part.to_be_bytes());
+    }
+    NativeSequence { version: 1, key }
+}
+
+fn has_any_fields(object: &Map<String, Value>, fields: &[&str]) -> bool {
+    fields.iter().any(|field| object.contains_key(*field))
+}
+
+fn has_unknown_fields(object: &Map<String, Value>, supported: &[&str]) -> bool {
+    object
+        .keys()
+        .any(|field| !supported.contains(&field.as_str()))
+}
+
+fn tool_family(name: &str) -> Option<&'static str> {
+    match name {
+        "read_file" => Some("file-read"),
+        "create_file" | "insert_edit_into_file" | "replace_string_in_file" => Some("file-write"),
+        "run_in_terminal" | "run_terminal_command" => Some("shell"),
+        "file_search" | "grep_search" | "semantic_search" => Some("search"),
+        _ => None,
+    }
+}
+
+fn local_file_uri(uri: &str) -> Option<PathBuf> {
+    let encoded = uri.strip_prefix("file://")?;
+    if !encoded.starts_with('/') || encoded.contains('?') || encoded.contains('#') {
+        return None;
+    }
+    let bytes = encoded.as_bytes();
+    let mut decoded = Vec::with_capacity(bytes.len());
+    let mut index = 0;
+    while index < bytes.len() {
+        if bytes[index] == b'%' {
+            let high = hex_value(*bytes.get(index + 1)?)?;
+            let low = hex_value(*bytes.get(index + 2)?)?;
+            decoded.push((high << 4) | low);
+            index += 3;
+        } else {
+            decoded.push(bytes[index]);
+            index += 1;
+        }
+    }
+    if decoded.contains(&0) {
+        return None;
+    }
+    let decoded = String::from_utf8(decoded).ok()?;
+    let path = Path::new(&decoded);
+    path.is_absolute().then(|| path.to_path_buf())
+}
+
+fn hex_value(byte: u8) -> Option<u8> {
+    match byte {
+        b'0'..=b'9' => Some(byte - b'0'),
+        b'a'..=b'f' => Some(byte - b'a' + 10),
+        b'A'..=b'F' => Some(byte - b'A' + 10),
+        _ => None,
     }
 }

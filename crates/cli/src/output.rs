@@ -1,8 +1,13 @@
-use std::io::{self, Write};
+use std::{
+    fs::{File, OpenOptions},
+    io::{self, Write},
+    path::{Path, PathBuf},
+    sync::atomic::{AtomicU64, Ordering},
+};
 
 use unisphere_core::{AdapterDescriptor, Failure, FailureKind, InspectionReport};
 
-use crate::args::Mode;
+use crate::args::OutputMode;
 
 #[derive(Clone, Copy)]
 pub(crate) enum Response<'a> {
@@ -16,7 +21,7 @@ pub(crate) enum Response<'a> {
 
 pub(crate) fn emit(
     response: Response<'_>,
-    mode: Mode,
+    mode: OutputMode,
     stdout: &mut dyn Write,
     stderr: &mut dyn Write,
 ) -> u8 {
@@ -30,16 +35,23 @@ pub(crate) fn emit(
         _ => 0,
     };
     let result = match mode {
-        Mode::Json => json(response, stdout).and_then(|()| stdout.flush()),
-        Mode::Human if matches!(response, Response::Failure(_) | Response::CatalogFailure(_)) => {
+        OutputMode::Json => json(response, stdout).and_then(|()| stdout.flush()),
+        OutputMode::JsonDiagnostic
+            if matches!(response, Response::Failure(_) | Response::CatalogFailure(_)) =>
+        {
+            json(response, stderr).and_then(|()| stderr.flush())
+        }
+        OutputMode::JsonDiagnostic => json(response, stdout).and_then(|()| stdout.flush()),
+        OutputMode::Human
+            if matches!(response, Response::Failure(_) | Response::CatalogFailure(_)) =>
+        {
             human(response, stderr).and_then(|()| stderr.flush())
         }
-        Mode::Human => human(response, stdout).and_then(|()| stdout.flush()),
+        OutputMode::Human => human(response, stdout).and_then(|()| stdout.flush()),
     };
     if result.is_err() {
-        // The failed writer may already contain a prefix. Do not append a second
-        // machine envelope or expose raw I/O diagnostics. A broken stderr is OK.
-        let _ = stderr.write_all(b"unisphere: could not write output.\n");
+        let _ = stderr
+            .write_all(b"unisphere: output incomplete; choose a healthy destination and retry.\n");
         let _ = stderr.flush();
         1
     } else {
@@ -54,24 +66,52 @@ fn json(response: Response<'_>, writer: &mut dyn Write) -> io::Result<()> {
                 b"{\"ok\":true,\"command\":\"adapters.list\",\"v\":1,\"data\":{\"adapters\":",
             )?;
             serde_json::to_writer(&mut *writer, adapters)?;
-            writer.write_all(b"}}\n")
+            writer.write_all(b"},\"next_action\":")?;
+            write_action(
+                writer,
+                "Choose a registered adapter, then read the source-discovery workflow.",
+                &["unisphere", "docs", "get", "find-sessions", "--human"],
+                &[],
+            )?;
+            writer.write_all(b"}\n")
         }
         Response::Report(report) => {
             writer.write_all(b"{\"ok\":true,\"command\":\"config.check\",\"v\":1,\"data\":")?;
             serde_json::to_writer(&mut *writer, report)?;
+            writer.write_all(b",\"next_action\":")?;
+            write_action(
+                writer,
+                "Choose the intended repository, then inspect its source coverage.",
+                &["unisphere", "sources", "list", "--repo"],
+                &["repository_path"],
+            )?;
             writer.write_all(b"}\n")
         }
         Response::Help(text) => {
             writer.write_all(b"{\"ok\":true,\"command\":\"help\",\"v\":1,\"data\":{\"text\":")?;
             serde_json::to_writer(&mut *writer, text)?;
-            writer.write_all(b"}}\n")
+            writer.write_all(b"},\"next_action\":")?;
+            write_action(
+                writer,
+                "Read the bundled start workflow.",
+                &["unisphere", "docs", "get", "start", "--human"],
+                &[],
+            )?;
+            writer.write_all(b"}\n")
         }
         Response::Version(version) => {
             writer.write_all(
                 b"{\"ok\":true,\"command\":\"version\",\"v\":1,\"data\":{\"version\":",
             )?;
             serde_json::to_writer(&mut *writer, version)?;
-            writer.write_all(b"}}\n")
+            writer.write_all(b"},\"next_action\":")?;
+            write_action(
+                writer,
+                "Inspect this version's command grammar.",
+                &["unisphere", "--help"],
+                &[],
+            )?;
+            writer.write_all(b"}\n")
         }
         Response::Failure(failure) => json_failure(writer, "config.check", failure),
         Response::CatalogFailure(failure) => json_failure(writer, "adapters.list", failure),
@@ -93,7 +133,26 @@ fn json_failure(writer: &mut dyn Write, command: &str, failure: &Failure) -> io:
     serde_json::to_writer(&mut *writer, &failure.retryable())?;
     writer.write_all(b",\"location\":")?;
     serde_json::to_writer(&mut *writer, &failure.location())?;
-    writer.write_all(b"}}\n")
+    writer.write_all(b"},\"next_action\":")?;
+    write_action(writer, failure.fix(), &["unisphere", "--help"], &[])?;
+    writer.write_all(b"}\n")
+}
+
+fn write_action(
+    writer: &mut dyn Write,
+    summary: &str,
+    argv: &[&str],
+    required_inputs: &[&str],
+) -> io::Result<()> {
+    serde_json::to_writer(
+        writer,
+        &serde_json::json!({
+            "summary": summary,
+            "argv": argv,
+            "required_inputs": required_inputs,
+        }),
+    )
+    .map_err(io::Error::other)
 }
 
 fn human(response: Response<'_>, writer: &mut dyn Write) -> io::Result<()> {
@@ -136,10 +195,19 @@ fn human(response: Response<'_>, writer: &mut dyn Write) -> io::Result<()> {
                     capabilities.lossless_archive
                 )?;
             }
-            Ok(())
+            writeln!(
+                writer,
+                "Next: read `unisphere docs get find-sessions --human`."
+            )
         }
-        Response::Help(text) => writer.write_all(text.as_bytes()),
-        Response::Version(version) => writeln!(writer, "unisphere {version}"),
+        Response::Help(text) => {
+            writer.write_all(text.as_bytes())?;
+            writeln!(writer, "Next: run `unisphere docs get start --human`.")
+        }
+        Response::Version(version) => {
+            writeln!(writer, "unisphere {version}")?;
+            writeln!(writer, "Next: run `unisphere --help`.")
+        }
         Response::Report(report) => {
             writeln!(writer, "Configuration valid.")?;
             writeln!(
@@ -149,12 +217,13 @@ fn human(response: Response<'_>, writer: &mut dyn Write) -> io::Result<()> {
             )?;
             for root in &report.configuration.source_roots {
                 writer.write_all(b"  ")?;
-                // JSON string escaping preserves exact values while preventing
-                // embedded newlines or terminal-control sequences from running.
                 serde_json::to_writer(&mut *writer, root)?;
                 writer.write_all(b"\n")?;
             }
-            Ok(())
+            writeln!(
+                writer,
+                "Next: run `unisphere sources list --repo PATH --format json`."
+            )
         }
         Response::Failure(failure) | Response::CatalogFailure(failure) => {
             writeln!(writer, "{}: {}", failure.code(), failure.message())?;
@@ -176,7 +245,84 @@ fn human(response: Response<'_>, writer: &mut dyn Write) -> io::Result<()> {
                     writeln!(writer, "Column: {column}")?;
                 }
             }
-            writeln!(writer, "Fix: {}", failure.fix())
+            writeln!(writer, "Fix: {}", failure.fix())?;
+            writeln!(writer, "Next: {}", failure.fix())
         }
+    }
+}
+
+static STAGE_SEQUENCE: AtomicU64 = AtomicU64::new(0);
+
+pub(crate) struct StagedOutput {
+    target: PathBuf,
+    stage: PathBuf,
+    file: Option<File>,
+}
+
+fn open_stage(path: &Path) -> io::Result<File> {
+    let mut options = OpenOptions::new();
+    options.write(true).create_new(true);
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::OpenOptionsExt;
+        options.mode(0o600);
+    }
+    options.open(path)
+}
+
+impl StagedOutput {
+    pub(crate) fn preflight(target: &Path) -> io::Result<()> {
+        match std::fs::symlink_metadata(target) {
+            Ok(_) => return Err(io::ErrorKind::AlreadyExists.into()),
+            Err(error) if error.kind() == io::ErrorKind::NotFound => {}
+            Err(error) => return Err(error),
+        }
+        let parent = target.parent().ok_or(io::ErrorKind::InvalidInput)?;
+        let metadata = parent.metadata()?;
+        if !metadata.is_dir() {
+            return Err(io::ErrorKind::NotADirectory.into());
+        }
+        Ok(())
+    }
+    pub(crate) fn create(target: &Path) -> io::Result<Self> {
+        Self::preflight(target)?;
+        let parent = target.parent().ok_or(io::ErrorKind::InvalidInput)?;
+        for _ in 0..32 {
+            let sequence = STAGE_SEQUENCE.fetch_add(1, Ordering::Relaxed);
+            let stage = parent.join(format!(
+                ".unisphere-output-{}-{sequence}.tmp",
+                std::process::id()
+            ));
+            match open_stage(&stage) {
+                Ok(file) => {
+                    return Ok(Self {
+                        target: target.to_owned(),
+                        stage,
+                        file: Some(file),
+                    });
+                }
+                Err(error) if error.kind() == io::ErrorKind::AlreadyExists => continue,
+                Err(error) => return Err(error),
+            }
+        }
+        Err(io::ErrorKind::AlreadyExists.into())
+    }
+
+    pub(crate) fn writer(&mut self) -> &mut File {
+        self.file.as_mut().expect("staged output is not published")
+    }
+
+    pub(crate) fn publish(mut self) -> io::Result<()> {
+        self.writer().flush()?;
+        drop(self.file.take());
+        std::fs::hard_link(&self.stage, &self.target)?;
+        let _ = std::fs::remove_file(&self.stage);
+        Ok(())
+    }
+}
+
+impl Drop for StagedOutput {
+    fn drop(&mut self) {
+        let _ = std::fs::remove_file(&self.stage);
     }
 }

@@ -7,6 +7,11 @@ architecture informed the ports/adapters, configuration and proof approach.
 Future substantial source reuse must retain the applicable upstream copyright,
 licence and provenance notices; research influence is not a claim of code reuse.
 
+Git-ai-format Git Notes support is independently implemented from the documented
+`authorship/3.0.0` input format. No Git AI source, executable, crate/library,
+private cache or service is a dependency. The concrete loader invokes only the
+caller-selected standard Git binary; synthetic fixtures are authored locally.
+
 ## Direct Rust dependencies
 
 These versions and licence expressions were read from the composed

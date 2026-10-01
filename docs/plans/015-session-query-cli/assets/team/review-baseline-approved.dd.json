@@ -1,0 +1,71 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "review",
+      "value": {
+        "record_type": "review",
+        "id": "rv-plan015-baseline-r2-n1-pij-armed-cow",
+        "recorded_at": "2026-09-10T04:52:00Z",
+        "scope": "decomposition",
+        "subject_sha": "72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9",
+        "plan": {
+          "path": "docs/plans/015-session-query-cli/plan.dd.json",
+          "sha256": "23e11ee7ec867315349aab8df11282da08bf211a6c86e27a3782292ba5bcecef"
+        },
+        "guide": {
+          "path": "docs/plans/015-session-query-cli/assets/impl-guide.dd.json",
+          "sha256": "5caed35ffa6f28570c16b6bc42baf47ce4403012069e429eeeaeb4e02f04c88f"
+        },
+        "report": {
+          "path": "docs/plans/015-session-query-cli/assets/reviews/baseline-r2-n1-pij-armed-cow.json",
+          "sha256": "5da35ec416f1a2e15b08ea16282f9824510b37e4195c12dbc0b9779ea7f69666"
+        },
+        "reviewer_id": "pij-armed-cow",
+        "requested": {
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5",
+          "effort": "high",
+          "source": {
+            "harness": "guide",
+            "model": "guide",
+            "effort": "guide"
+          }
+        },
+        "observed": {
+          "peer_id": "pij-armed-cow",
+          "root": "/Users/jordanknight/substrate/unisphere/unishpere-main",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5",
+          "effort": "high",
+          "pid": 48187,
+          "native_session": "01a08872-82bb-7641-b1dc-3964616e3e0a",
+          "evidence": [
+            "PM transcribed the independent raw receipt without changing its verdict: /Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/reviews/baseline-r2-n1-pij-armed-cow-receipt.json",
+            "Runtime fields observed by pij state; configuration identity is not provider attestation."
+          ],
+          "gaps": [
+            "Read-only: no build, test, lint, formatter or proof command was executed for this addendum.",
+            "No proof rerun for the doc-only subject; assets/verification/baseline-proof-4c3c665f.json remains the exercised-code evidence and is valid here only because the code trees are byte-identical.",
+            "Carried: absent loader-query/output-query crate directories behind declared workspace dependencies, marked [INFERENCE] in R2.",
+            "Carried: runtime C25 metamorphs unproven, bound to unchecked dw-002a under bp-0008."
+          ]
+        },
+        "verdict": "approved",
+        "findings": [
+          {
+            "id": "N1",
+            "severity": "low",
+            "description": "C21 now enumerates FormatLoss with all five variants including TimestampBasis; verified as a pure 15-character insertion, the only contract text changed, with crates/, Cargo.toml and Cargo.lock tree objects byte-identical to 4c3c665f.",
+            "disposition": "fixed"
+          }
+        ]
+      }
+    }
+  ],
+  "references": []
+}

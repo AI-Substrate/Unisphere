@@ -1,0 +1,129 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "review",
+      "value": {
+        "record_type": "review",
+        "id": "rv-plan015-guide-r1-pij-armed-cow",
+        "recorded_at": "2026-09-10T01:02:56Z",
+        "scope": "decomposition",
+        "subject_sha": "e1da02513fd509c1d7ffac919a3bdb3f4ffbbd55",
+        "reviewer_id": "pij-armed-cow",
+        "requested": {
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5",
+          "effort": "high",
+          "source": {
+            "harness": "guide",
+            "model": "guide",
+            "effort": "guide"
+          }
+        },
+        "verdict": "changes-requested",
+        "findings": [
+          {
+            "id": "F1",
+            "severity": "high",
+            "description": "The sessions namespace and the --adapter flag carry conflicting meanings and no contract fixes routing. Committed app/main.rs:33-43 routes argv[1]==sessions into the private registry, adapters.rs dispatch (284-304) selects the row through requested_session_adapter which defaults to claude-code, and the legacy sessions list parser accepts only --root/--max-sessions. The proposed leaf 'unisphere sessions list --repo . --name ... --harness ...' carries no --adapter and would route to the legacy parser and exit 2, while --adapter is simultaneously declared a query identity filter and consumed as a dispatch selector, and --repo means association scope on query leaves but a Git repository on the plan014 git-ai leaf. Load-bearing for ac-0004 and for the realisability of C14 suggested actions. Minimal fix: add a routing clause fixing argv ownership for sessions <op>, the legacy-versus-query discrimination rule, and one meaning per leaf for --adapter and --repo; make it named acceptance on tk-000b/tk-000d with a regression asserting every existing invocation still exits 0.",
+            "disposition": "open",
+            "evidence": "guide C1 and C17; command-catalog.json:96; workflows-and-command-reference.md:74; committed 9250b8f6 crates/app/src/main.rs:33-43, crates/app/src/adapters.rs:284-304, crates/cli/src/sessions.rs:22-28 and 51-67, crates/cli/src/git_notes.rs grammar"
+          },
+          {
+            "id": "F2",
+            "severity": "high",
+            "description": "Types on the five-lane parallelism seam are named but never specified. InspectedSource is the return type of QueryAdapter::inspect, implemented independently by tk-0002 through tk-0006 in wave 1, and has no field list anywhere in the guide; the same holds for Coverage, AvailabilityIssue, BranchEvidence, SavedFormat, RecoveryAction and ContentAccess, with QueryOutputOptions only partly given in C19. The guide enumerates comparable types exhaustively elsewhere (Observation and facets in C4, SourceEvidence/SourceRef/NativeLocator in C3, QueryRequest in C9, DatasetSchema and six row shapes in C18), so the omissions fall exactly on the cross-lane boundary. tk-0001 is chartered to freeze and review exported signatures, but composition sets no gate preventing wave-1 lanes from starting before that freeze is reviewed. Minimal fix: enumerate the seven types at C4 rigour, or name them as the wave-0 freeze set and gate wave-1 dispatch on a reviewed baseline receipt covering exactly those signatures.",
+            "disposition": "open",
+            "evidence": "guide C2, C4, C12, C14, C19; units tk-0001 through tk-0006; baseline section; composition step 2"
+          },
+          {
+            "id": "F3",
+            "severity": "medium",
+            "description": "Source selection cannot influence loading, so an excluded store can fail the query. QuerySource::load receives only scope, limits and access (C2), while harness/adapter identity live in QueryRequest.filters (C9) and are applied after load. Under Repository scope a --harness filter still enumerates and decodes every registered store, and an unreadable or over-budget store the user excluded either fails the query (C13) or forces --allow-partial, which C9 scopes to named source-read failures, weakening the guarantee for stores never selected. C6 offers only explicit --source as remedy. Contradicts the distinguishability intent of ac-0001 and the no-false-success intent of ac-000e. Minimal fix: pass a typed SourceSelection derived by the SDK into load, or state that identity filters are post-load and require unselected-store read failures to degrade to coverage diagnostics rather than query failure; name the choice in tk-0007's interface. Raised independently by the PM and confirmed against the frozen contract.",
+            "disposition": "open",
+            "evidence": "guide C2 QuerySource::load signature; C6 discovery remedy; C9 filters and allow_partial; C13 explicit-failure rule"
+          },
+          {
+            "id": "F4",
+            "severity": "medium",
+            "description": "C8's global ambiguity rule contradicts C8's own context rule and the command catalogue. C8 requires range, context and linear text extraction to have an unambiguous selected session/branch and otherwise return AmbiguousBranch, but two sentences later scopes context per matched row ('in the same session/branch'). Only --range needs a single session, because C7 defines turn ordinals within a selected session/branch view. Read literally the rule rejects the catalogue's own example 'unisphere turns extract --repo . --has-tool-family shell --has-errors --context-before 1 --include-content --format jsonl', which workflow 2 depends on and which C16 requires recipes to compose. Minimal fix: restrict uniqueness to --range and linear-text extraction, state that context windows partition per matched row's session/branch, and reserve AmbiguousBranch for a selector resolving to multiple candidates. Raised independently by the PM and confirmed against the frozen contract.",
+            "disposition": "open",
+            "evidence": "guide C8 both sentences; C7 TurnRow ordinal definition; command-catalog.json:375; workflows-and-command-reference.md workflow 2 at lines 19-25; guide C16"
+          },
+          {
+            "id": "F5",
+            "severity": "medium",
+            "description": "Saved input validates coverage but has no completeness rule. The saved envelope is a projection that may legitimately be column-reduced, limit-truncated or cursor-paginated (C19 data shape includes coverage, matched, emitted and next_cursor), yet no contract states that emitted<matched, a present next_cursor or a reduced column set constrains what may be computed offline. Consequently C8 context unions can silently return fewer neighbours than an online run, and C11 statistics over a truncated universe can be presented with the same exactness language as a complete one. The envelope already carries the fields needed to detect this; nothing requires their use. Minimal fix: record applied selection/limit/column digests and a completeness flag in the saved envelope, and require offline context, statistics and reconstruction either to refuse with a typed availability failure or to label results bounded-by-input, never exact. Raised independently by the PM and confirmed against the frozen contract.",
+            "disposition": "open",
+            "evidence": "guide C3 QueryInput::Saved; C9 offline availability validation; C19 envelope shape; C8 context union; C11 statistics exactness language; composition saved-input step"
+          },
+          {
+            "id": "F6",
+            "severity": "medium",
+            "description": "Per-lane acceptance does not discriminate and one unit holds most of the semantic risk. Units tk-0002 through tk-0006 each declare the identical acceptance set ac-0001, ac-0002, ac-0003, ac-0008, ac-0009, ac-000c despite C7 and C15 giving those dialects very different capability floors, so no lane has a falsifiable target distinct from its siblings. tk-0008 declares 15 of 24 acceptance criteria and owns identity, reconstruction, filtering, time, ordering, continuation, branches, context, tools, duration, statistics, privacy projection and offline validation. The single-owner decision for that engine is correct and is not challenged; the accountability shape around it is. Minimal fix: give each parser lane dataset-specific done-conditions naming its own dialect reconstruction, pairing and availability rows, state which portions of ac-0008/ac-0009 belong to the lane versus the SDK, and split tk-0008's acceptance into ordered internal milestones against the existing bp-0008 target.",
+            "disposition": "open",
+            "evidence": "guide units tk-0002 through tk-0006 and tk-0008 acceptance arrays; capabilities section owner mapping; fan_out rationale; C7 and C15 capability floors"
+          },
+          {
+            "id": "F7",
+            "severity": "low",
+            "description": "C17's registry anchor points at the pre-plan014 file. 'adapters.rs:13-255' matches base 2fb5b153 where dispatch is 224-244 and pub fn run is 246, but at the integration target 9250b8f6 that C15 binds the file is 516 lines with ADAPTERS 28-209, dispatch 284-304 and pub fn run 306, so the cited range excludes the dispatch function F1 requires changing. The companion anchor main.rs:14-53 remains correct. Minimal fix: re-anchor to 9250b8f6 or cite symbols rather than line ranges.",
+            "disposition": "open",
+            "evidence": "guide C17; git show 2fb5b15:crates/app/src/adapters.rs and git show 9250b8f6:crates/app/src/adapters.rs symbol line numbers"
+          },
+          {
+            "id": "F8",
+            "severity": "low",
+            "description": "CSV cannot carry the availability distinction the schema promises. C18 requires projected absence to remain distinct from a present null while C12 specifies CSV as 'null empty', and a CSV cell cannot separate absent, null and empty string, making ac-0003 typed availability lossy on that channel. The consequence is declared rather than hidden, but consumers meet it silently. Minimal fix: name CSV as the lossy channel in the schema and docs and direct callers to JSON/JSONL where the distinction matters.",
+            "disposition": "open",
+            "evidence": "guide C12 CSV rules; C18 absence-versus-null requirement; plan ac-0003 and ac-000d"
+          }
+        ],
+        "plan": {
+          "path": "docs/plans/015-session-query-cli/plan.dd.json",
+          "sha256": "9fbb66391ed715e2a13909251664eb7eb726bc3441e6d6ad444ca26fc74d1f9d"
+        },
+        "guide": {
+          "path": "docs/plans/015-session-query-cli/assets/impl-guide.dd.json",
+          "sha256": "e55f44f9ffaf1732cf163c7e315aff2354af407ff8cd1d44772b9e9988b7f014"
+        },
+        "report": {
+          "path": "docs/plans/015-session-query-cli/assets/reviews/guide-r1-pij-armed-cow.md",
+          "sha256": "bab9e3598bca5a4516eb228bd2ebc107e5aa2fd644b54fe5a3cc3d21eecd0f1d"
+        },
+        "observed": {
+          "peer_id": "pij-armed-cow",
+          "root": "/Users/jordanknight/substrate/unisphere/unishpere-main",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5",
+          "effort": "high",
+          "pid": 48187,
+          "evidence": [
+            "Recomputed plan.dd.json sha256 in the reviewed workspace: 9fbb66391ed715e2a13909251664eb7eb726bc3441e6d6ad444ca26fc74d1f9d, matching the packet.",
+            "Recomputed assets/impl-guide.dd.json sha256: e55f44f9ffaf1732cf163c7e315aff2354af407ff8cd1d44772b9e9988b7f014, matching the packet.",
+            "git rev-parse HEAD in the reviewed workspace equals subject e1da02513fd509c1d7ffac919a3bdb3f4ffbbd55; only untracked path is assets/reviews/.",
+            "Read guide contracts C1-C19 in full plus capabilities, units, baseline, fan_out, isolation, roles, checks, composition, review and risks sections.",
+            "Read plan (24 acceptance criteria, 3 phases), backpressure.dd.json (24 rows, all unchecked), query-contract.md, documentation-design.md, command-catalog.json, workflows-and-command-reference.md, synthetic-query-fixture.json, verification/guide-authoring-v2.json, phase task files and team templates.",
+            "Verified C15 plan014 bindings against committed 9250b8f6f9084598433bc49d0077303df80cabc3 via git show: crates/core/src/git_notes.rs sha256 4261f117f598726da973fd6fc80ca546d65a368a7acc33d8982f7c5723c61571 and crates/adapter-git-ai/src/lib.rs sha256 57d902344041538cbaf96bec8a35348fa44b66e7b346c22825321e34e8567d60; both also match that commit's boot-attempt-2.json source manifest.",
+            "Verified committed routing reality at 9250b8f6: app/main.rs:33-43 argv[1] sessions|adapters dispatch; adapters.rs ADAPTERS 28-209, dispatch 284-304, pub fn run 306; cli/src/sessions.rs requested_session_adapter default claude-code and List accepting only --root/--max-sessions.",
+            "Verified verification/guide-authoring-v2.json records new_query_implementation_executed=false and independent_review=pending, and contains no architectural-judgement key.",
+            "pij ack of dispatch-6362a00428d7fe36bf5f7d4e88a53a7d returned state=acked, seat=pij-armed-cow, packet sha256 3ea9165624c2b69afa23766abcdda7662b4773c3b6391be99db29ca39c3c285c, at 1789001509319; packet digest was recomputed before reading and matched.",
+            "Read-only throughout: no product/plan/guide/task edits, no build, test, lint or formatter, no commit, push, merge, allocation or global change; writes confined to the two packet-named report paths."
+          ],
+          "gaps": [
+            "Canary timing: the CLI's original dispatch command returned E-RS-CANARY-PENDING at its deadline for dispatch-6362a00428d7fe36bf5f7d4e88a53a7d; the matching acknowledgement arrived afterwards and correlated late. The original command is not reclassified as a pass.",
+            "No proposed plan015 behaviour was executed; all 24 backpressure rows are unchecked and every declared check is BUILD or EXTEND.",
+            "The existing passing harness boot proves current native projections only, at the scope C17 already states; it is not evidence for any query capability.",
+            "Phase task artifacts are empty (tasks=[] and done_when={} in phases 1-3), so no per-task done-condition existed to review; the guide capabilities section is the only current acceptance-to-owner binding.",
+            "Requested launch/catalog model and effort identity are exposed strings, not provider attestation."
+          ],
+          "native_session": "01a08872-82bb-7641-b1dc-3964616e3e0a"
+        }
+      }
+    }
+  ]
+}

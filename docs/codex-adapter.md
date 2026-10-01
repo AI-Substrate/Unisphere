@@ -8,6 +8,41 @@ The usual location hint is `.codex/sessions/YYYY/MM/DD/rollout-*.jsonl`; the hin
 is not discovery or evidence that Codex is installed. The shared JSONL loader's
 Unix export and caller-owned append-only cursor limitations still apply.
 
+## Query observations
+
+`CodexAdapter` implements the pure core `QueryAdapter` port over supplied rollout
+records. The versioned `codex/query-v1` membership rule starts a conversation
+partition only at a valid `session_meta.payload.id` header and applies that header
+to following records until another header. The separate native `session_id` is
+kept as a native lineage link; it is not substituted for the thread ID. A header
+`cwd` becomes a source-qualified `NativeCwd` association. Records before a valid
+header remain source-only, and no filename or adjacent store supplies missing
+membership.
+
+An explicit `turn_context.turn_id` scopes following response and event facts until
+the next context/header; an item-level native turn ID wins for that item. Only
+`response_item.message` with role `user` is an initiating request. System and
+developer response messages are injected context. `event_msg.user_message`,
+`agent_message`, and reasoning events remain summary controls, not duplicate
+logical messages. Compaction remains an explicit control fact rather than a new
+turn. Logical turn construction and conflict resolution belong to the SDK.
+
+Function/custom tool starts and outputs preserve exact `call_id`, original name,
+known normalized family, native turn scope, and content availability. Execution
+begin/end events remain separately sourced progress/result evidence; an explicit
+exit code determines that event result's success/failure, while a response-item
+output without native status remains `unknown`. No adjacency or command text is
+used for pairing. Native `last_token_usage` is retained as turn-scoped evidence
+and `total_token_usage` as an independent cumulative snapshot; counters are never
+subtracted or summed.
+
+Default query inspection stores `SensitiveOmitted` markers for readable message,
+reasoning, input, and output payloads. `ContentAccess` must authorize the relevant
+field or explicit emission. Encrypted/opaque or unsupported content stays typed
+`NotSupported` even after opt-in, so content consent never becomes a raw payload
+dump. Every observation retains the supplied source revision, locator, native
+sequence, and native timestamp basis.
+
 ## Physical records, not reconstructed turns
 
 Every syntactically valid supplied JSON value produces one

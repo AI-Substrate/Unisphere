@@ -1,0 +1,70 @@
+{
+  "review": "guide-r1-pij-armed-cow.md",
+  "adjudication": "guide-r1-adjudication.json",
+  "guide_version": 3,
+  "implementation_started": false,
+  "findings": [
+    {
+      "id": "F1",
+      "status": "addressed",
+      "decision": "Dedicated --git-executable ABSOLUTE_PATH; run_git_notes parses before invoking statically typed app constructor closure; sealed positive SDK/CLI proof injects real standard Git, PATH remains empty; missing Git tested separately."
+    },
+    {
+      "id": "F2",
+      "status": "addressed",
+      "decision": "Named run_git_notes frontend/parser, SourceRepresentation::GitNotes registry row, repository fixture branch and precise static descriptor/capabilities with empty locations. Existing frontends/invocations unchanged. Reject rationale that additive syntax is inherently prohibited."
+    },
+    {
+      "id": "F3",
+      "status": "addressed",
+      "decision": "Every record including manifest has the four required common keys and Git format/structural revision keys. Exact object-native provenance, field meanings and selection-scoped manifest semantics are specified. No source offsets/timestamps/spans."
+    },
+    {
+      "id": "F4",
+      "status": "addressed",
+      "decision": "Syntactically valid unresolved attribution keys emit source evidence with identity_resolution=unresolved, no synthesis or cross-note lookup. Selected non-commit targets are explicit UnsupportedTarget failures; missing objects ObjectRead; no silent dropping."
+    },
+    {
+      "id": "F5a",
+      "status": "rejected_by_Main",
+      "decision": "Retain documented 7-character compatibility keys independently, verbatim. Specification section1.2.3.1 line193 explicitly SHOULD-accepts them; no private cache/implementation needed."
+    },
+    {
+      "id": "F5b/F5c",
+      "status": "addressed",
+      "decision": "Explicit normal unquoted/optionally quoted paths, positive single-line numbers, inclusive ranges and comma-separated combinations."
+    },
+    {
+      "id": "F6",
+      "status": "addressed",
+      "decision": "Exact narrow boot extension/check-regression and operating-doc ownership added. Real git-notes proof joins boot with honest scope; failure propagation, not repinned wording, is the readiness contract."
+    },
+    {
+      "id": "F7",
+      "status": "addressed",
+      "decision": "Explicit Commits/read_note use pinned nonrecursive literal-pathspec fanout lookup, not whole tree. All remains bounded. Unix only, typed UnsafeRepository refusal with actionable guidance and no global safe.directory override."
+    },
+    {
+      "id": "known-loader-name",
+      "status": "addressed",
+      "decision": "Concrete GitObjectLoader is distinct from the core GitNoteLoader trait."
+    },
+    {
+      "id": "known-output-roots",
+      "status": "addressed",
+      "decision": "Canonical selected worktree top-level, per-worktree Git directory and common Git directory are excluded from new outputs, including nested repo input/symlink parent aliases. Caller-owned output-parent race assumption is explicit."
+    },
+    {
+      "id": "output-expansion",
+      "status": "clarified",
+      "decision": "16 MiB input is not claimed to fit 32 MiB output; existing writer independently rejects encoded overflow before touching destination."
+    }
+  ],
+  "validation": "harness builder guide --check passed exit0; DD validation of plan, guide, tasks and backpressure each passed exit0 with 0 errors/0 warnings. Independent focused R2 remains pending; no approval or implemented behavior claimed.",
+  "digests_sha256": {
+    "plan.dd.json": "e832077b4c7a3c27ea5d3f444a13862c1984170193626dfc7b4ae3f20676ced8",
+    "assets/impl-guide.dd.json": "0663554ff3439b83cd5992621e26b778928c71087941971b736f7d5a47303378",
+    "assets/backpressure.dd.json": "d47def329de281718086bf6150dafb203641fa70524d1659e2cc787d3a94f9d2",
+    "assets/tasks/phase-1/tasks.dd.json": "fe69cc003382f924aa8b1e4b748810a38b659133d21a9aca8e0e4770761c10fa"
+  }
+}

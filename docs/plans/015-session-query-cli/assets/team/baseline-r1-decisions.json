@@ -1,0 +1,36 @@
+{
+  "recorded_at": "2026-09-10T04:28:42.477Z",
+  "review": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/docs/plans/015-session-query-cli/assets/reviews/baseline-r1-pij-armed-cow.json",
+  "review_verdict": "changes-requested",
+  "subject": "819fc30ae5d721fe2a2100ae9eef5692f10eac63",
+  "decisions": {
+    "F1": "PM adds workspace dependency entries and architecture allowlist/graph proof for unisphere-loader-query and unisphere-output-query. No fake runtime crates; actual implementations remain their allocated lanes.",
+    "F2": "All six datasets declare native_id/harness/adapter/availability with the SAME existing sensitivity and predicate conventions. NativeId stays sensitive; default metadata projections stay safe.",
+    "F3": "Keep behavior tests, no source-text checks or tautological mutation of objects the digest never receives. A known fixed independently calculated digest vector can defend closed preimage/repeated encoding; assert request option changes alter query binding while an actual shared view produces the same source digest. Add true invalid-input and selection boundary cases.",
+    "F4": "Replace unused JSON design bytes with a real typed Rust fixture: pub fn shared_query_fixture() -> Vec<InspectedSource> in testkit/src/query.rs. Preserve representative two-source native observations, initiating user vs tool-response facts, supported clocks and undated/partial source. Remove SHARED_QUERY_FIXTURE and dead shared-v1.json; do NOT add Serialize/Deserialize to raw production evidence just for fixtures. Exercise the fixture via native validation/provenance rejection in testkit library tests and actual external SDK consumer; PM adjusts freeze/read references and baseline check to include testkit.",
+    "F5": "Keep C10 scalar RFC3339 wire timestamps. Add TimestampBasis::SuppliedUnknown (wire supplied_unknown), use it in BOTH Timestamp Deserialize and projected_value_from_json. No input string may fabricate Native. Add FormatLoss::TimestampBasis (wire timestamp_basis) to formats that cannot preserve the basis, including Json/Jsonl for timestamp-bearing datasets; lossy must agree with losses. PM explicitly documents this field-level loss; no native timestamp instant/duration/history fabrication. Native adapters still pass their observed basis explicitly. Compare time bounds by instant, not basis tie-break.",
+    "F6": "QueryRequest validation errors must recover against self.dataset when dataset context is known. Dataset-independent Timestamp/range/Has/SourceSelection errors use one new neutral RecoveryAction::ReadQueryHelp; never name an unrelated dataset. Preserve typed causes and safe fixed messages. QueryRequest::validate public signature stays unchanged; lower-level signatures preferably unchanged. Core coder publishes any necessary exact helper/API change to proof coder before consumption.",
+    "F7": "Sources/messages/events have no Stats operation: set grouping_fields empty. Do not add new Stats support.",
+    "F8": "Timestamp PartialEq/Eq/PartialOrd/Ord compare unix_nanos only. Basis remains metadata and cannot perturb equal-instant filtering, row sorting, cursor positions, or round-trip value equality."
+  },
+  "status": "Core F2/F5/F6/F7 candidate integrated; F8 and proof pending; no fresh acceptance",
+  "owners": {
+    "pm": [
+      "F1",
+      "guide/plan/proof receipts",
+      "integration and acceptance"
+    ],
+    "contracts": [
+      "F2",
+      "F5",
+      "F6",
+      "F7",
+      "F8"
+    ],
+    "proof": [
+      "F3",
+      "F4",
+      "regressions for contracts"
+    ]
+  }
+}

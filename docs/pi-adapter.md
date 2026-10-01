@@ -1,7 +1,7 @@
 # Pi JSONL adapter
 
-`unisphere_adapter_pi::PiAdapter` implements the core `SessionAdapter` port.
-`DESCRIPTOR.id`, `PiAdapter::name()` and emitted adapter provenance are `pi`.
+`unisphere_adapter_pi::PiAdapter` implements the core `SessionAdapter` and
+`QueryAdapter` ports.
 The mapper accepts supplied `NativeRecord` bytes and a validated explicit
 `SessionRef`; it performs no filesystem, environment, network, clock, discovery,
 sidecar or output access. The application composition root owns registration.
@@ -25,6 +25,37 @@ native record kind. Native `id` and non-null `parentId` retain tree identity;
 IDs are not deduplicated. Header `id` supplies `gen_ai.conversation.id` on that
 header only. No session ID, model, active branch or context is propagated across
 records or batches. A resumed batch needs no header replay.
+
+## Query inspection
+
+`QueryAdapter::inspect` accepts only caller-supplied JSONL `NativeQueryInput::Records` and
+returns the shared core `InspectedSource` contract under policy `pi-v3-query-v1`. It performs
+no discovery or I/O. The JSON decoder is shared with `SessionAdapter::map`; query
+classification consumes native values directly rather than reparsing projected OTLP.
+
+A validated v3 header creates a `Conversation` partition with `ValidatedHeader` membership.
+Header `id`, timestamp, native `cwd` association and unresolved `parentSession` lineage
+reference remain source-qualified. `parentSession` is never opened or traversed. Missing or
+unsupported headers produce source-only observations and typed availability, not an invented
+conversation. Each entry preserves its native ID, direct `parentId`, physical offset and
+source-local order. Repeated entry IDs stay separate and carry conflict availability. The
+adapter neither chooses an active leaf nor turns physical adjacency into branch ancestry.
+
+Only native `message:user` records are marked initiating. Assistant, `toolResult`, custom,
+injected, compaction and branch-summary shapes retain distinct message/control markers.
+Assistant tool calls and tool results expose their original call ID/name plus a registered
+family when known; arguments/results require `ContentAccess`. The adapter does not pair calls,
+infer retries or turn bash execution records into model invocations. Compaction
+`firstKeptEntryId` and branch `fromId` remain explicit typed links for SDK reconstruction.
+
+Outer entry RFC3339 time and inner message epoch-millisecond time are emitted as separate
+native observations. Assistant usage has `Turn` scope, tool-result usage has `Invocation`
+scope, and compaction/branch-summary usage has `CumulativeSnapshot` scope. No scope is summed
+or inherited across records. Metadata-only inspection uses typed `SensitiveOmitted` parts;
+payload text, reasoning, call arguments and results are retained only for explicitly
+authorised local filtering or content emission.
+
+## OTLP native projections
 
 | Native record / role | Projection |
 |---|---|
@@ -126,12 +157,14 @@ is Unix-only. Storage limits and output limits remain loader/writer concerns.
 
 ## PM validation handoff
 
-Worker-authored coverage is in `crates/adapter-pi/tests/mapping.rs`, using the
-18-record synthetic `tests/fixtures/v3-tree.jsonl` and shared testkit conformance.
-It covers privacy, structured opt-in, tree identity, split/replay equivalence,
-usage scopes/subsets, timestamps, unsupported shapes, safe failures and explicit
-source validation. The worker did not run formatting, lint, builds, tests or boot;
-these are PM-owned coordinated proof, not claimed successes.
+Worker-authored coverage is in `crates/adapter-pi/tests/mapping.rs` and
+`crates/adapter-pi/tests/query.rs`, using the 18-record synthetic
+`tests/fixtures/v3-tree.jsonl` and shared testkit conformance. It covers privacy,
+structured opt-in, tree identity, split/replay equivalence, query membership,
+request markers, call/result facts, usage scopes/subsets, timestamps, conflicts,
+unsupported shapes, safe failures and explicit source validation. The worker did
+not run formatting, lint, builds, tests or boot; these are PM-owned coordinated
+proof, not claimed successes.
 
 After the PM admits the crate and updates the workspace lockfile, run:
 

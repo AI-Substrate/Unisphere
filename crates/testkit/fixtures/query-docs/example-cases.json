@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "description": "Synthetic query-documentation cases. Expected values describe consumer-visible semantics, not private comparator output.",
+  "fixtures": {
+    "shared_native": {
+      "kind": "rust_fixture",
+      "source": "crates/testkit/src/query.rs#shared_query_fixture",
+      "synthetic": true,
+      "authorisation": "repository test fixture"
+    },
+    "saved_sessions": {
+      "kind": "versioned_query_json",
+      "source": "generated from shared_native by the public query writer",
+      "synthetic": true,
+      "authorisation": "repository test fixture"
+    }
+  },
+  "cases": [
+    {
+      "id": "find-repository-sessions",
+      "topic": "find-sessions",
+      "question": "Which supported stores and sessions are associated with this repository?",
+      "argv": ["unisphere", "sources", "list", "--repo", "${REPO}", "--format", "json"],
+      "fixture": "shared_native",
+      "bindings": {
+        "REPO": {"kind": "path", "value": "/fixtures/project"}
+      },
+      "expect": {
+        "semantic_fields": ["data.dataset", "data.rows[].id", "data.rows[].fields.read_status", "data.coverage", "data.universe", "next_action"],
+        "exit": 0,
+        "privacy": {"content_emitted": false, "forbidden_markers": ["fixture user request"]},
+        "action": {"kind": "inspect_entity_or_coverage", "executable_after_bindings": true, "automatic": false}
+      }
+    },
+    {
+      "id": "inspect-conversation-lineage",
+      "topic": "inspect-conversations",
+      "question": "Which evidence-backed branches belong to the selected session?",
+      "argv": ["unisphere", "sessions", "tree", "${SESSION_ID}", "--repo", "${REPO}", "--columns", "parent_ids,branch_ids", "--format", "json"],
+      "fixture": "shared_native",
+      "bindings": {
+        "REPO": {"kind": "path", "value": "/fixtures/project"},
+        "SESSION_ID": {"kind": "result_pointer", "from_case": "find-repository-sessions", "pointer": "/data/rows/0/session_ids/0"}
+      },
+      "expect": {
+        "semantic_fields": ["data.dataset", "data.rows[].id", "data.rows[].fields.parent_ids", "data.rows[].fields.branch_ids", "data.coverage", "next_action"],
+        "exit": 0,
+        "privacy": {"content_emitted": false, "forbidden_markers": ["fixture user request"]},
+        "action": {"kind": "inspect_entity_or_recipe", "executable_after_bindings": true, "automatic": false}
+      }
+    },
+    {
+      "id": "filter-half-open-time-and-text",
+      "topic": "filter-time-and-text",
+      "question": "Which user messages contain a literal during one UTC day?",
+      "argv": ["unisphere", "messages", "list", "--repo", "${REPO}", "--role", "user", "--since", "2026-09-01", "--until", "2026-09-02", "--contains", "fixture", "--format", "json"],
+      "fixture": "shared_native",
+      "bindings": {
+        "REPO": {"kind": "path", "value": "/fixtures/project"}
+      },
+      "expect": {
+        "semantic_fields": ["data.dataset", "data.rows[].id", "data.rows[].fields.role", "data.rows[].fields.timestamp", "data.matched", "next_action"],
+        "exit": 0,
+        "privacy": {"content_inspected": true, "content_emitted": false, "forbidden_fields": ["text", "parts"]},
+        "action": {"kind": "inspect_entity_or_narrow_selection", "executable_after_bindings": true, "automatic": false}
+      }
+    },
+    {
+      "id": "extract-error-context",
+      "topic": "extract-context",
+      "question": "Which neighbouring turns support review of an error-bearing turn?",
+      "argv": ["unisphere", "turns", "extract", "--repo", "${REPO}", "--has-errors", "--context-before", "1", "--context-after", "1", "--include-content", "--format", "jsonl"],
+      "fixture": "shared_native",
+      "bindings": {
+        "REPO": {"kind": "path", "value": "/fixtures/project"}
+      },
+      "expect": {
+        "semantic_fields": ["rows[].schema_version", "rows[].dataset", "rows[].id", "rows[].is_context", "diagnostic.data.matched", "diagnostic.data.emitted"],
+        "exit": 0,
+        "privacy": {"content_emitted": true, "explicit_consent": true, "stdout_guidance_records": 0},
+        "action": {"kind": "inspect_coverage_or_next_recipe", "channel": "stderr", "automatic": false}
+      }
+    },
+    {
+      "id": "analyse-tool-failures-and-latency",
+      "topic": "tool-analysis",
+      "question": "What outcomes and measured durations are justified for each tool family?",
+      "argv": ["unisphere", "tools", "stats", "--repo", "${REPO}", "--group-by", "tool_family", "--metric", "count", "--metric", "measured_count", "--metric", "missing_duration_count", "--metric", "failures", "--metric", "p95_ms", "--format", "json"],
+      "fixture": "shared_native",
+      "bindings": {
+        "REPO": {"kind": "path", "value": "/fixtures/project"}
+      },
+      "expect": {
+        "semantic_fields": ["data.rows[].fields.tool_family", "data.rows[].fields.count", "data.rows[].fields.measured_count", "data.rows[].fields.missing_duration_count", "data.rows[].fields.failures", "data.rows[].fields.p95_ms", "data.coverage", "next_action"],
+        "exit": 0,
+        "privacy": {"content_emitted": false, "forbidden_fields": ["command", "input", "output"]},
+        "action": {"kind": "inspect_entity_or_narrow_selection", "executable_after_bindings": true, "automatic": false}
+      }
+    },
+    {
+      "id": "repeat-query-offline",
+      "topic": "agents",
+      "question": "What session evidence can be queried from a supplied saved view without live enrichment?",
+      "argv": ["unisphere", "sessions", "list", "--input", "${SAVED_INPUT}", "--format", "json"],
+      "fixture": "saved_sessions",
+      "bindings": {
+        "SAVED_INPUT": {"kind": "path", "value": "/fixtures/saved-sessions.json"}
+      },
+      "expect": {
+        "semantic_fields": ["data.dataset", "data.rows[].id", "data.universe.basis", "data.universe.bounded_by_input", "data.coverage", "next_action"],
+        "exit": 0,
+        "privacy": {"live_source_access": false, "config_access": false, "git_access": false},
+        "action": {"kind": "inspect_entity_or_supply_complete_input", "executable_after_bindings": true, "automatic": false}
+      }
+    },
+    {
+      "id": "review-git-ai-attribution",
+      "topic": "git-ai",
+      "question": "Which session or source facts are supported by registered Git-AI attribution?",
+      "argv": ["unisphere", "sessions", "list", "--repo", "${REPO}", "--source-adapter", "git-ai", "--columns", "transcript_available", "--format", "json"],
+      "fixture": "shared_native",
+      "bindings": {
+        "REPO": {"kind": "path", "value": "/fixtures/project"}
+      },
+      "expect": {
+        "semantic_fields": ["data.dataset", "data.rows[].id", "data.rows[].source_refs", "data.rows[].fields.transcript_available", "data.coverage", "next_action"],
+        "exit": 0,
+        "privacy": {"content_emitted": false, "claims_transcript_from_attribution_alone": false},
+        "action": {"kind": "inspect_entity_or_coverage", "executable_after_bindings": true, "automatic": false}
+      }
+    }
+  ]
+}

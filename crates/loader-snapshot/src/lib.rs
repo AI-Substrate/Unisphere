@@ -5,8 +5,11 @@
 
 use unisphere_core::{NativeSnapshot, PipelineError, SnapshotLimits, SnapshotLoader, SnapshotRef};
 
+mod prep;
 #[cfg(unix)]
 mod unix;
+
+pub use prep::SnapshotPrepLoader;
 
 /// Stateless JSON document, LF journal and read-only SQLite snapshot loader.
 #[derive(Debug, Default, Clone, Copy)]

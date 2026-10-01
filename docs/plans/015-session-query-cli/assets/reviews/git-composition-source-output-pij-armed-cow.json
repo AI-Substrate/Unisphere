@@ -1,0 +1,83 @@
+{
+  "record_type": "review-finding",
+  "id": "rv-plan015-git-composition-source-output-safety-pij-armed-cow",
+  "code_subject": {
+    "commit": "78af49ce85915a83566a4f7333a804dc1a9397a7",
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+    "branch": "builder/015-session-query-cli",
+    "worktree_clean": true,
+    "merge_parents_verified": {
+      "ad6ae023": [
+        "c87e00cf",
+        "cf4931ed"
+      ],
+      "cf4931ed_is_ancestor": true
+    }
+  },
+  "recorded_at": "2026-09-10T21:56:22Z\n",
+  "recorded_at_local": "2026-09-11T07:56:22+1000\n",
+  "reviewer": {
+    "seat": "pij-armed-cow",
+    "role": "independent read-only reviewer",
+    "method": "static read of committed bytes via git show; no build, test, lint, format or proof run"
+  },
+  "question_adjudicated": "Does the new Git query path need the native GitNotesListing source-root refusal to uphold source-store non-mutation, and is the proposed deferred-staging candidate sufficient?",
+  "verdict": "CONFIRMED as a material finding, and your candidate is the right shape but is NOT yet sufficient. Four early returns in GitSource::load leave the guard unreached while the query still succeeds, and the proposed failure mapping would misdescribe the refusal.",
+  "evidence": {
+    "canonical_refusal": "crates/cli/src/git_notes.rs:322-341 output_path canonicalizes the PARENT and rejoins the leaf, then refuses when the result starts_with repository_id (common dir), git_dir, or worktree_root. Parent canonicalization is what makes it correct for a not-yet-existing leaf and for a symlinked parent; any relocation must keep it.",
+    "generic_path_unprotected": "crates/cli/src/query.rs:36-50 requires an absolute --output and nothing more; line 51-64 goes straight to StagedOutput::create. crates/cli/src/sessions.rs:124 and crates/cli/src/snapshots.rs:83 do the same. The refusal exists on exactly ONE of four staged-write paths.",
+    "staging_writes_into_the_store": "crates/cli/src/output.rs:274-298 creates .unisphere-output-<pid>-<seq>.tmp in target.parent() with create_new, then publish() hard-links to target and leaves it. Your position is correct on the code: Drop is best-effort only, and the stage file lands INSIDE the protected directory before any query runs. The guard must therefore precede create(), not publish().",
+    "repo_is_genuinely_read": "crates/app/src/main.rs:73-81 and adapters::git_query_source(context.cwd, find_executable(\"git\")) admit git-ai for every non-Offline scope that the selection admits, so a default query in a repository reads its notes and can be told to write into that same repository's .git."
+  },
+  "gaps_in_the_candidate": [
+    {
+      "id": "G1",
+      "severity": "blocking",
+      "claim": "Placing the call after GitNotesListing validation (git_query.rs:240-242) leaves four earlier returns that admit the repository, return Ok, and let the CLI stage anyway: line 210 (loader None under Source{Id}), 212-221 (loader None), 225-234 (list_notes error under Source{Id}), 235-238 (list_notes error). In all four the command SUCCEEDS.",
+      "why_it_matters": "It makes the refusal contingent on git being present and the listing succeeding. A safety guard whose outcome depends on the environment is worse than a missing one, because the same command is safe on your machine and unsafe on a machine without git on PATH.",
+      "smallest_correction": "When git is admitted and an output path was supplied, decide before the loader match at line 201: if the store identity cannot be established, refuse the output rather than proceed. Then tighten with the exact triple once the listing validates. Two calls, one predicate."
+    },
+    {
+      "id": "G2",
+      "severity": "material",
+      "claim": "The --source Id coverage you claim holds only when the loader exists and list_notes succeeds, because 210 and 233 return before any listing. Same root cause as G1; resolving G1 resolves it."
+    },
+    {
+      "id": "G3",
+      "severity": "scope-note",
+      "claim": "When git is not admitted (git_query.rs:68-78) GitSource::load is never called, so no guard runs. That is defensible, since the repository is not read, but it should be stated as deliberate scope so the guard is not later mistaken for a universal destination check."
+    },
+    {
+      "id": "G4",
+      "severity": "material",
+      "claim": "Do not map the refusal onto the existing output_failure() at query.rs:128-136. It is OutputFailure + ChooseNewOutput{discard_partial:true} + retryable_after_recovery(true): it tells the operator to discard partial bytes that were never written and implies a transient fault. A refusal is an invalid argument, which is exactly how the native path classifies it (GitNotesError::InvalidInput). Use an argument-class failure with discard_partial:false and a recovery that names choosing a destination outside the repository."
+    },
+    {
+      "id": "G5",
+      "severity": "material",
+      "claim": "Deferring StagedOutput::create until after execute moves destination failures (missing parent, unwritable directory) from before the query to after it, which is a change to the file-path behaviour you intend to preserve. Retaining only the exists() check does not cover those.",
+      "smallest_correction": "Keep a non-creating precheck at the current point (parent exists and is a directory, target absent) and defer only the creation of the stage file. Note that exists() follows symlinks, so a dangling symlink target still passes and fails later at hard_link; that is pre-existing, not introduced here."
+    },
+    {
+      "id": "G6",
+      "severity": "design",
+      "claim": "Exposing the validator from unisphere_cli and calling it inside app::git_query has a QuerySource port implementation calling the presentation crate. It is dependency-legal (unisphere-cli is already an app dependency) but inverts intent.",
+      "smallest_correction": "Expose it as a pure path predicate over (&Path, &GitNotesListing) returning the canonicalized path or a refusal, with no JSON, next_action or GitNotesError presentation attached, and let git_query map it to QueryFailure. One validator, no presentation leaking into a port."
+    }
+  ],
+  "regression_shape": {
+    "must_assert": "That the store is unchanged, not merely that the exit code is nonzero. The defect is a file appearing in the store, so the assertion is: no new ref file at the target AND no .unisphere-output-*.tmp residue in target.parent().",
+    "cases": [
+      "<repo>/.git/refs/notes/new under a plain repository",
+      "a LINKED worktree, where git_dir is .git/worktrees/<name> and repository_id is the common dir - this is the only case that proves the triple rather than a single root",
+      "--source Id scope",
+      "git absent from PATH, per G1, to prove the guard is not environment-contingent"
+    ]
+  },
+  "what_is_not_claimed": [
+    "No build, test, lint, format or boot result. The exact boot you are waiting on is unobserved by me and I anticipate nothing about it.",
+    "No Git Notes acceptance and no plan015 or Builder composition acceptance.",
+    "This record adjudicates the source-output question only; my wider review of the 78af49ce delta is still in progress and is not concluded here.",
+    "Prior non-Git and Pij approval at f818e2f5 is unaltered by this record."
+  ]
+}

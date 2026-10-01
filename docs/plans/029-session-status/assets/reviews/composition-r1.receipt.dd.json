@@ -1,0 +1,95 @@
+{
+  "dd": {
+    "schema": "builder/team"
+  },
+  "sections": [
+    {
+      "name": "review",
+      "value": {
+        "record_type": "review",
+        "id": "rv-029-composition-r1",
+        "recorded_at": "2026-09-30T01:33:56+00:00",
+        "scope": "composition",
+        "subject_sha": "21409164430ff7fdda06a2068ae6b9d0ad1a7a6e",
+        "plan": {
+          "path": "docs/plans/029-session-status/plan.dd.json",
+          "sha256": "0f39e29e0e98cd650865d6e215811f639819b872a921d75f51a33f706af23c1e"
+        },
+        "guide": {
+          "path": "docs/plans/029-session-status/assets/impl-guide.dd.json",
+          "sha256": "e967cc78a50983e3beaaaef939f34c3a66b4aba0f179cab539ef8d8d078ee653"
+        },
+        "reviewer_id": "pij-easy-seahorse",
+        "requested": {
+          "role": "reviewer",
+          "harness": "omp",
+          "model": "github-copilot/claude-sonnet-5.5",
+          "source": {
+            "harness": "guide",
+            "model": "guide"
+          }
+        },
+        "observed": {
+          "peer_id": "pij-easy-seahorse",
+          "root": "/Users/jordanknight/substrate/unisphere/unishpere-main",
+          "ready": true,
+          "harness": "omp",
+          "model": "github-copilot/claude-sonnet-5.5",
+          "native_session": "01a0ebc8-c5b2-7268-8017-4ce7ad943e15",
+          "pid": 25009,
+          "argv": [
+            "omp",
+            "--auto-approve",
+            "--model",
+            "github-copilot/claude-sonnet-5.5"
+          ],
+          "evidence": [
+            "Subject 21409164430f\u2026 is the packet commit; parent ef47ccce189b2542f56bc92ba15e11ef99e5f98f is the verified code (worktree clean).",
+            "cargo test --locked: sdk status 7 passed, loader-query status_target 9 passed, cli status 22 passed; harness checks --json exit 0 status ok.",
+            "Built CLI at ef47ccc: sessions status --harness claude-code --session '../../../x/z' read /tmp/rv/x/z.jsonl outside the configured root (F-01).",
+            "Real OMP spot-check: sessions status --pij pij-easy-seahorse --json resolved via pij_registry, 56 calls, 6 peer turns, unknown [], compaction trigger null with unknown_trigger 4.",
+            "Read crates/sdk/src/status.rs and crates/loader-query/src/status_target.rs in full; read assets/proof/status-real-evidence.json and linux/linux-evidence.json (failures [])."
+          ],
+          "gaps": [
+            "Did not run harness boot --json, CI, the Linux container proof or the real-machine script; relied on the evidence files.",
+            "Phase-2 folds for Codex/Pi/Copilot CLI/VS Code/Cursor not spot-checked against real sessions.",
+            "No provider-side model attestation beyond the harness-reported model string and the pij seat record."
+          ]
+        },
+        "verdict": "changes-requested",
+        "report": {
+          "path": "docs/plans/029-session-status/assets/reviews/composition-r1.md",
+          "sha256": "28069a1032dd5f4fc0a7fa5c095e6c5a50b0bc2b5e03faaa643b1d030638e380"
+        },
+        "findings": [
+          {
+            "id": "F-01",
+            "severity": "medium",
+            "description": "StatusService::locate joins the unchecked session_id into set.root.join('<id>.jsonl' | '<id>/events.jsonl'); an id with '..' matches the fold glob and reads a .jsonl outside the configured root. Reject any session_id that is not one path component at the SDK boundary and add a contract test.",
+            "disposition": "open",
+            "evidence": "crates/sdk/src/status.rs locate(), no-transcript branch; reproduced with the built CLI: sessions status --harness claude-code --session '../../../x/z' returned a full status with target.transcript=/tmp/rv/x/z.jsonl, outside ~/.claude/projects."
+          },
+          {
+            "id": "F-02",
+            "severity": "low",
+            "description": "MODEL_WINDOWS maps Claude Opus/Fable to 1M although transcripts do not distinguish 200k and 1M variants; percent may be understated. Basis is table and named, but docs/session-status.md does not state the limit.",
+            "disposition": "open"
+          },
+          {
+            "id": "F-03",
+            "severity": "low",
+            "description": "Native Claude pane record is accepted without a procStart check, so a recycled pid in the same pane could name a stale session; the record's pane id is checked, which narrows it.",
+            "disposition": "open"
+          },
+          {
+            "id": "F-04",
+            "severity": "low",
+            "description": "Builder compose --verify refuses E475 because phase 2 was added after seal; direct guide checks are acceptable for landing (CI green, harness checks ok) but the guide should be re-sealed or amended before the PR.",
+            "disposition": "open"
+          }
+        ]
+      }
+    }
+  ],
+  "references": []
+}

@@ -1,0 +1,65 @@
+{
+  "recorded_at": "2026-09-10T10:05:21.296Z",
+  "product_subject": "f818e2f5e6c4e5fb34ab8a00c34cc9928dc0d283",
+  "scope": "Actual built CLI on owned synthetic source; query-option and source-view invalidation are distinct; raw stdout remains empty on both errors",
+  "runs": [
+    {
+      "argv": [
+        "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/target/debug/unisphere",
+        "messages",
+        "list",
+        "--source",
+        "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr/.claude/projects/fixture/session.jsonl",
+        "--source-adapter",
+        "claude-code",
+        "--limit",
+        "1",
+        "--json"
+      ],
+      "cwd": "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+      "stdout": "{\"ok\":true,\"command\":\"messages.list\",\"v\":1,\"data\":{\"schema_version\":1,\"dataset\":\"messages\",\"query\":{\"dataset\":\"messages\",\"operation\":\"list\",\"scope_digest\":\"2ea817c9e5b3fb45965fab1f27c81c8c05cf4480d070f1be2c96e3492072e65d\"},\"rows\":[{\"schema_version\":1,\"dataset\":\"messages\",\"id\":\"q1:message:5f2339ad247b363827da3596f832d81598b17b0510aac64bd41b98d1b5952a16\",\"source_refs\":[{\"source_id\":\"q1:source:76c1fb100273768d5c8b1a7be43861cae1ffc7e1ee25a5ae34bc6103f9cec070\",\"revision\":\"sha256:48b32d2bc763e99def08ca207709a37eaf8eb639c57ec7e16bf7b21a71aae734\",\"locator_kind\":\"jsonl\",\"offset\":0}],\"fields\":{\"role\":\"user\",\"session_id\":\"q1:session:07e7e3c808b4da91fe1389ba358d3e3e083f4b9593c9a8c503b0b795f9809d16\",\"timestamp\":\"2026-09-01T12:00:00Z\"}}],\"coverage\":{\"discovered_sources\":1,\"loaded_sources\":1,\"selected_sources\":1,\"source_status\":{\"readable\":1},\"association_status\":{},\"excluded_adapters\":[\"codex\",\"copilot-cli\",\"copilot-cli-snapshot\",\"cursor-ide\",\"cursor-transcript\",\"oh-my-pi\",\"pi\",\"vscode-copilot\"],\"source_read_complete\":true,\"issues\":[]},\"universe\":{\"source_view_digest\":\"d501423e865a1f66c961b84f618cd5c8798e40975a8a49d440749a8e5f9c2474\",\"selection_digest\":\"29c1ec77bf5d9e93310cb61e295ec04db276c288a75e1ebe87a825c4c51a5e2d\",\"columns_digest\":\"5ece91d621ea06d8dfee417d05647a6e58ea5b3dcfe4be3c6be1cf5e94595c5a\",\"columns\":[\"id\",\"source_refs\",\"session_id\",\"role\",\"timestamp\"],\"applied_limit\":1,\"rows_complete_for_selection\":\"subset\",\"partitions_complete\":\"complete\",\"basis\":\"live_view\",\"bounded_by_input\":false},\"matched\":4,\"emitted\":1,\"next_cursor\":\"q1.d501423e865a1f66c961b84f618cd5c8798e40975a8a49d440749a8e5f9c2474.29c1ec77bf5d9e93310cb61e295ec04db276c288a75e1ebe87a825c4c51a5e2d.1.432ce7d6c63493ced33e2be248cdc65f18f8575fb753611e0dfd9141802dbace\"},\"next_action\":{\"summary\":\"Repeat the original query options against the same source view with this cursor.\",\"argv\":[\"unisphere\",\"messages\",\"list\",\"--source-adapter\",\"claude-code\",\"--source\",\"--cursor\",\"q1.d501423e865a1f66c961b84f618cd5c8798e40975a8a49d440749a8e5f9c2474.29c1ec77bf5d9e93310cb61e295ec04db276c288a75e1ebe87a825c4c51a5e2d.1.432ce7d6c63493ced33e2be248cdc65f18f8575fb753611e0dfd9141802dbace\"],\"required_inputs\":[\"source_path\",\"original_query_options\"]}}\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/target/debug/unisphere",
+        "messages",
+        "list",
+        "--source",
+        "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr/.claude/projects/fixture/session.jsonl",
+        "--source-adapter",
+        "claude-code",
+        "--limit",
+        "2",
+        "--json",
+        "--cursor",
+        "q1.d501423e865a1f66c961b84f618cd5c8798e40975a8a49d440749a8e5f9c2474.29c1ec77bf5d9e93310cb61e295ec04db276c288a75e1ebe87a825c4c51a5e2d.1.432ce7d6c63493ced33e2be248cdc65f18f8575fb753611e0dfd9141802dbace"
+      ],
+      "cwd": "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+      "stdout": "",
+      "stderr": "{\"command\":\"messages.list\",\"error\":{\"code\":\"UNI-QUERY-CURSOR\",\"location\":{\"entity\":null,\"field\":null,\"offset\":null,\"source\":null},\"message\":\"The continuation belongs to different query options.\",\"reason\":\"query_options_changed\",\"recovery\":{\"kind\":\"start_fresh_query\"},\"retryable\":false},\"next_action\":\"Start without a continuation, or repeat the original query options exactly.\",\"ok\":false,\"v\":1}\n",
+      "exit": 1
+    },
+    {
+      "argv": [
+        "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli/target/debug/unisphere",
+        "messages",
+        "list",
+        "--source",
+        "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr/.claude/projects/fixture/session.jsonl",
+        "--source-adapter",
+        "claude-code",
+        "--limit",
+        "1",
+        "--json",
+        "--cursor",
+        "q1.d501423e865a1f66c961b84f618cd5c8798e40975a8a49d440749a8e5f9c2474.29c1ec77bf5d9e93310cb61e295ec04db276c288a75e1ebe87a825c4c51a5e2d.1.432ce7d6c63493ced33e2be248cdc65f18f8575fb753611e0dfd9141802dbace"
+      ],
+      "cwd": "/var/folders/mv/9mcvlzg504b158ctlswmgwph0000gn/T/unisphere-query-recipes-Zrycvr",
+      "stdout": "",
+      "stderr": "{\"command\":\"messages.list\",\"error\":{\"code\":\"UNI-QUERY-CURSOR\",\"location\":{\"entity\":null,\"field\":null,\"offset\":null,\"source\":null},\"message\":\"The source view changed since this continuation was issued.\",\"reason\":\"source_view_changed\",\"recovery\":{\"kind\":\"reopen_view\"},\"retryable\":false},\"next_action\":\"Open a fresh source view before issuing a new query.\",\"ok\":false,\"v\":1}\n",
+      "exit": 1
+    }
+  ]
+}

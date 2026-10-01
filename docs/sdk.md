@@ -256,3 +256,347 @@ The manifest identifies `replace_projection`, record count, source selection,
 content policy and unknown finality. A revision is an observation of that bounded
 source representation, not producer finality or a global clock. Caller-side
 history, destination transactions and cross-source deduplication remain separate.
+
+## Prepare canonical tables in process
+
+`unisphere prep` is composed from public ports, so an external consumer runs the
+same incremental prep in process with its own store. `unisphere_sdk::prep`
+re-exports the `core::prep` contract: `PrepLoader` (read-only discovery, stat,
+bounded reads to the last complete LF, anchors, `record_at`), the pure
+`PrepFold`/`PrepFoldSession`, and `PrepStore` (`state`, `load`, `commit` rows
+before state, `compact`). Core and SDK carry no Parquet, SQLite or engine
+dependency; `unisphere-output-prep`'s `ParquetPrepStore` is one store, and any
+`PrepStore` — including an in-memory one — is another.
+
+```rust
+use std::sync::Arc;
+use unisphere_sdk::prep::{
+    PrepApi, PrepBinding, PrepOptions, PrepReadLimits, PrepRequest, PrepSourceSet, Preparer,
+};
+use unisphere_sdk::{ReadLimits, SnapshotLimits};
+use unisphere_adapter_claude::ClaudePrepFold;
+use unisphere_loader_jsonl::FileSessionLoader;
+
+# fn run(my_store: impl unisphere_sdk::prep::PrepStore) -> Result<(), unisphere_sdk::PipelineError> {
+let preparer = Preparer::new(
+    vec![PrepBinding { fold: Arc::new(ClaudePrepFold), loader: Arc::new(FileSessionLoader) }],
+    my_store,
+);
+let report = preparer.prep(&PrepRequest {
+    target: "/explicit/target".into(),
+    roots: vec![PrepSourceSet {
+        harness: "claude-code".into(),
+        label: "default".into(),
+        root: "/home/me/.claude/projects".into(),
+    }],
+    options: PrepOptions::default(), // metadata only
+    limits: PrepReadLimits {
+        read: ReadLimits { max_records: usize::MAX, ..ReadLimits::default() },
+        snapshot: SnapshotLimits::default(),
+    },
+    threads: 4,
+    modified_since_ns: None,
+})?;
+// report.sets: per-set coverage; report.sources: every source neither unchanged nor skipped.
+# Ok(()) }
+```
+
+`Preparer` owns every prep decision: root binding by harness (an unbound harness
+is reported `supported: false` with its sources `unsupported`), change detection
+into `new`/`unchanged`/`appended`/`replaced{reason}`/`skipped`/`unreadable`/
+`missing`, generations, pending tails, bounded parallelism and the content gate on
+`record`. The CLI builds the same `PrepRequest` and renders the returned
+`PrepReport`; the equivalent command is:
+
+```sh
+unisphere prep --target /explicit/target --harness claude-code --threads 4
+```
+
+`fold_source` is the single-source fold `prep` itself runs, without a store or
+target directory — for example, live session status from `SessionFacts`:
+
+```rust
+use unisphere_sdk::prep::{fold_source, PrepLoader, PrepOptions, PrepReadLimits, PrepSourceSet};
+use unisphere_adapter_claude::ClaudePrepFold;
+use unisphere_loader_jsonl::FileSessionLoader;
+
+# fn run(set: PrepSourceSet, limits: PrepReadLimits) -> Result<(), unisphere_sdk::PipelineError> {
+let loader = FileSessionLoader;
+let stat = loader.stat(&set.root, &set.root.join("project/session.jsonl"))?;
+let folded = fold_source(
+    &loader, &ClaudePrepFold, &stat, &set.source_key(&stat.file),
+    0, None, PrepOptions::default(), limits,
+    &mut |rows| { /* this batch's calls/turns/triggers/events/tool_uses */ },
+)?;
+// folded.facts: SessionFacts; keep folded.cursor + folded.checkpoint as a
+// PrepResume to continue from the last complete record next time.
+# Ok(()) }
+```
+
+## Session status for an explicit target
+
+`unisphere_core::status` defines one harness-neutral, serde `SessionStatus`
+(`schema_version` 1) and two ports: `SessionStatusApi::status(&StatusTarget,
+now_ms)` for an explicit target, and `TargetResolver::resolve(&StatusQuery)` for
+Pij seats and tmux panes. `unisphere_sdk::status::StatusService::new(bindings,
+roots)` implements `SessionStatusApi` over the same `PrepBinding` fold as prep
+and never calls Pij, tmux or process lookups; time is always the caller's
+`now_ms`. An embedding application keeps an opaque `StatusCursor` so a re-status
+reads only appended bytes:
+
+```rust
+use unisphere_core::status::StatusTarget;
+use unisphere_sdk::status::StatusService; // StatusCursor lives beside it
+
+# fn run(service: &StatusService, now_ms: i64) -> Result<(), unisphere_core::status::StatusFailure> {
+let target = StatusTarget {
+    harness: "claude-code".into(),
+    session_id: "b9cf6f3c-2a9f-4f14-a012-80cba68f831e".into(),
+    transcript: None, // discovered under the roots by file stem
+};
+let (status, cursor) = service.status_incremental(&target, None, now_ms)?;
+// later: only appended bytes are read; keep the old cursor on error
+let (status, cursor) = service.status_incremental(&target, Some(&cursor), now_ms)?;
+# Ok(()) }
+```
+
+`status.target.transcript` is the file read. A shrink, replacement, anchor
+mismatch or a cursor for another target refolds cold and names the reason in
+`status.source.reset`; an incremental result equals a cold one except `source`.
+Every fact is `{value, basis}` with basis `native`, `derived`, `table`
+(`context.window_table` names the versioned table, `model-windows@1`) or
+`mtime_fallback`, or absent and named in `unknown` (the closed
+`UNKNOWN_FACTS` vocabulary); an unrecorded fact is never 0. Definitions:
+
+| Fact | Definition |
+|---|---|
+| `model.current` | Latest main-chain, non-synthetic call's model |
+| `model.pending_switch` | A `/model` switch recorded after that call |
+| `context.used_tokens` | Latest main-chain call input + cache read + cache write |
+| `context.window_tokens` | Native when recorded, else `model-windows@1`, else unknown; `percent` only when both are known |
+| `last_call.ttl_bucket` / `cache_warm` | `1h`/`5m` from the last call's cache-write split; warm while `now_ms` − last call < TTL |
+| `timeline.last_updated_ms` | Latest native event, else transcript mtime (`mtime_fallback`); `idle_seconds` from it |
+| `turns` | Total and last-hour turns, each by origin |
+| `compaction` | Manual/auto counts (Claude: no markers is 0) and the last compaction |
+
+Failures are typed `StatusFailure { kind, message }` with a stable `code()` and
+`recovery()`; messages never carry transcript content. Pij/pane resolution is the
+CLI's `unisphere_loader_query::status_target::StatusTargetResolver::new(runner,
+procs, fs, home)`, built on injected `CommandRunner`, `ProcessTable` and
+`StatusFs` ports (`SystemCommandRunner`, `PsProcessTable`, `SystemFs` are the
+system adapters). The equivalent command is:
+
+```sh
+unisphere sessions status --session b9cf6f3c-2a9f-4f14-a012-80cba68f831e --harness claude-code --json
+```
+
+## Query supplied session evidence in process
+
+`QueryService<S>` implements `QueryApi` for any injected `S: QuerySource`. The
+source receives a typed `SourceSelection` before it enumerates or reads stores;
+the SDK never discovers HOME, the current directory, Git, native clients or a
+network service on its own. A caller can execute a one-shot request or retain an
+immutable `QueryView` and call `execute_view` repeatedly without another source
+read:
+
+```rust
+use unisphere_sdk::{QueryService, execute_view};
+use unisphere_sdk::query::{
+    Dataset, Operation, QueryApi, QueryFailure, QueryRequest, QuerySource,
+};
+
+fn inspect<S: QuerySource>(
+    service: &QueryService<S>,
+    request: &QueryRequest,
+) -> Result<(), QueryFailure> {
+    let response = service.execute(request)?;
+    assert_eq!(response.dataset, Dataset::Sessions);
+
+    let view = service.open_view(request)?;
+    let same_semantics = execute_view(&view, request)?;
+    assert_eq!(same_semantics.query.operation, Operation::List.kind());
+    Ok(())
+}
+# let _ = inspect::<unisphere_testkit::query::FakeQuerySource>;
+```
+
+The `unisphere_sdk::query` facade re-exports the core query vocabulary.
+`QuerySource::load` accepts only the explicit `QueryScope`, pre-I/O
+`SourceSelection`, `QueryLimits` and derived `ContentAccess`, and returns either
+a supplied `NativeQueryView` or
+bounded versioned saved input. Concrete discovery/loaders remain separate
+adapters composed by the application.
+
+### Immutable view and typed datasets
+
+`QueryView` owns six typed collections: `SourceRow`, `SessionRow`, `TurnRow`,
+`MessageRow`, `ToolRow` and `EventRow`. These raw in-process evidence rows are
+not serializable. `execute_view` selects the same rows for list, show, tree,
+extract and statistics, then returns only validated `ProjectedRow` values.
+
+Local entity IDs never masquerade as native conversation IDs. Session identity
+is scoped by source, native namespace and participant evidence. Source-only
+fragments remain source/event evidence when session membership is unavailable.
+Initiating request markers create turns; tool-result, injected-context and
+summary records do not. Calls pair with results/progress only by a supported
+native call ID inside the same session/branch. Missing, duplicate or reversed
+evidence remains explicitly incomplete, ambiguous or invalid-clock rather than
+being paired by adjacency or text.
+Validated native parent trees derive one branch per terminal path. Shared-prefix
+rows carry every descendant branch membership; the SDK never selects an active
+leaf. Turn continuation, tool pairing and context expansion use those exact
+memberships, so sibling branches cannot collapse into one transcript.
+
+Every view exposes `digest()`, `admitted_scope()`, `source_selection()`,
+`retained_capability()` and `input_basis()`. The digest binds schema and
+reconstruction versions, admitted scope/repository roots, selected source IDs,
+revisions and policy versions, association/read facts, retained fields and saved
+input origin. It deliberately excludes row filters, output columns, page size,
+cursors, result universes, actions and matched/emitted counts. Reopen a view when
+the source revision, admission or required retained capability changes.
+
+### Filters, time, ordering and continuation
+
+Filters are typed: different field/operator groups combine with AND, repeated
+values in one group combine with OR, then exclusions subtract. Literal contains,
+Rust regex and glob matching are distinct and case-sensitive unless
+`ignore_case` is set. Unsupported fields or predicates fail against the dataset
+schema; unknown values do not satisfy positive comparisons. Adapter and harness
+equal/in/exclude predicates additionally become the pre-I/O `SourceSelection`.
+
+`since` is inclusive and `until` exclusive. Date-only values are UTC midnight.
+Sessions, turns and tools default to `started_at`; messages and events use
+`timestamp`. Session creation, first observed event and source-file modification
+are separate facts. Undated rows match a bounded time window only when
+`include_undated` is explicit. Unknown sort values remain last in either
+direction, with stable entity-ID tie-breaking.
+
+List defaults to 50 rows; `limit: Some(0)` means all within `QueryLimits`.
+Continuation tokens contain only a version, view digest, normalized request
+digest, next index and corruption checksum. They carry no paths, content or sort
+payload and are not authorization. Changed request options and changed source
+views produce distinct stale-cursor reasons instead of silently restarting.
+
+Turn/message context expands after matching and stays within each admitted
+session/branch native order. Overlapping windows are unioned; contextual rows
+may therefore fall outside the original time predicate. Every emitted row carries
+the metadata-only `is_context` boolean (`false` for a match, `true` for an added
+neighbour), even when explicit columns omit it. Offline context requires complete
+partition/order/membership metadata rather than silently shortening a window.
+
+### Privacy and saved input
+
+Metadata projection is the default. Native IDs, names/models, paths, message
+text/parts, tool names/commands/arguments/results and reasoning are sensitive.
+A sensitive search authorizes local inspection of only that field; it does not
+authorize emission. Requesting a sensitive column requires `include_content`,
+otherwise `UNI-QUERY-CONTENT-CONSENT` returns a typed
+`UseMetadataOrConsent` recovery. Responses contain approved projections, safe
+coverage, a per-response `ResultUniverse` and a semantic `QueryAction`; they do
+not contain the raw `QueryView`.
+
+Saved `QueryJsonV1` input validates the versioned response envelope, coverage,
+universe, unique row IDs, field types and source revisions. Standalone
+`QueryJsonlV1` rows are always a bounded provided-row universe with unknown
+completeness; EOF is not proof of complete capture. Filtering/list/show can use
+available rows. Statistics remain explicitly input-bounded, while context or
+higher-level reconstruction that needs missing partition evidence returns
+`InputSubset` with `UseCompleteInput`. Neither path triggers live enrichment.
+
+### Statistics and limits
+
+Statistics reduce the full logical matched set before group pagination. Tool
+duration metrics include only finite source-reported or valid paired-clock
+measurements; missing durations are counted separately. Percentiles use exact
+nearest-rank `ceil(p*n)`. Failure-rate denominator is
+`succeeded + failed + cancelled`; cancellation is neither success nor failure,
+and incomplete/unknown calls are excluded. Cumulative usage snapshots contribute
+only the latest compatible native-owned value instead of being summed as replayed
+usage.
+Derived aggregate and usage metric fields are valid only for statistics. Using
+one as a column or sort key on a row operation returns
+`UnsupportedOperation` before `QuerySource::load`; source-qualified row fields
+such as a tool call's `duration_ms` remain available to regular operations.
+
+`QueryLimits` bound source/input bytes, observations and rows, retained payload,
+patterns and scanned text, context neighbours, branch memberships, cursor size
+and output size. Invalid, zero, overflowing or over-hard-ceiling limits fail
+before source I/O. Bound violations and availability failures carry stable codes,
+safe explanations and typed recovery actions; no diagnostic includes raw source
+payload or a content-bearing filter value.
+
+`QueryLimits::default()` permits 1 GiB of total input, equal to that field's
+existing hard ceiling. Other defaults remain independent: 64 MiB per source,
+200,000 observations/rows, 256 MiB retained data and 128 MiB output. Raising the
+input allowance does not raise these budgets or change query materialisation
+and paging behavior.
+
+## Read Git-ai-format Git Notes
+
+Add path dependencies on `crates/loader-git`, `crates/adapter-git-ai` and
+`crates/output-otlp`. These are Unisphere implementations, not Git AI libraries.
+The SDK itself still depends inward on core, not concrete loaders/adapters.
+Standard Git is the only Git-side runtime prerequisite; Git AI need not exist.
+
+```rust
+use unisphere_sdk::{
+    GitNoteSelection, GitNotesApi, GitNotesCollector, GitNotesLimits,
+    GitNotesRequest, GitNotesScope, MappingOptions,
+};
+use unisphere_loader_git::GitObjectLoader;
+use unisphere_adapter_git_ai::GitAiAdapter;
+use unisphere_output_otlp::OtlpJsonlWriter;
+
+let collector = GitNotesCollector::new(
+    GitObjectLoader::new("/usr/bin/git".into()),
+    GitAiAdapter,
+    OtlpJsonlWriter,
+);
+let scope = GitNotesScope {
+    repository: "/explicit/repository".into(),
+    notes_ref: "refs/notes/ai".into(),
+    selection: GitNoteSelection::All,
+};
+let limits = GitNotesLimits::default();
+let listing = collector.list_notes(&scope, limits)?;
+let mut output = Vec::new();
+let result = collector.collect_notes(
+    &GitNotesRequest { scope, limits, options: MappingOptions::default() },
+    &mut output,
+)?;
+# Ok::<(), unisphere_sdk::GitNotesError>(())
+```
+
+Use a trusted absolute standard Git executable. `GitObjectLoader` runs on Unix;
+the pure `GitAiAdapter` accepts supplied `LoadedGitNote` values on any platform.
+Neither parser nor SDK reads environment/configuration, invokes Git AI, or
+dereferences message URLs. There is no upstream Git AI code/library dependency.
+
+`GitNoteSelection::Commits(vec![full_oid])` selects exact lowercase SHA-1/SHA-256
+commit IDs. Duplicates collapse deterministically; an empty vector selects
+nothing, unlike `All`. Selected lookup follows only matching Git-notes fanout
+paths, so an unrelated large notes tree need not fit the all-notes listing budget.
+No tracking refs are discovered or aggregated.
+
+The listing retains the canonical selected repository, Git common-directory
+identity, per-worktree Git directory, optional worktree top-level, requested ref
+and pinned ref tip. Each `GitNoteRef` adds target commit and note blob. Through
+the `GitNoteLoader` trait, `read_note(&reference, limits)` verifies membership
+against that immutable tip, even after the named ref changes. This pins identity,
+not retention: later Git garbage collection can make old objects unreadable.
+
+Missing valid refs (`notes_tip: None`) and existing empty selections (`Some(tip)`)
+are successful, distinct results. Invalid refs, non-commit selected targets,
+missing objects, unsupported/malformed notes, ownership refusal, unavailable Git,
+deadlines and limits are typed `GitNotesError` failures. Unknown source values
+are not filled with zero. Valid unresolved attribution keys remain explicit
+unresolved evidence, without speculative cross-note or cache lookup.
+
+Collection stages the complete bounded selection and writes one OTLP batch with
+a closing `unisphere.git_notes.snapshot` manifest, including for empty results.
+`records_written` includes that manifest. No result is accepted after mapping,
+write or flush failure; a destination failure can leave partial bytes. Consumers
+replace only the identified repository/ref/selection after accepting the entire
+batch. There is no persisted cursor, history store or exactly-once guarantee.
+See [CLI limits](cli.md#git-notes-attribution) and the
+[Git Notes profile](telemetry-profile.md#git-notes-attribution-and-selection-manifests).

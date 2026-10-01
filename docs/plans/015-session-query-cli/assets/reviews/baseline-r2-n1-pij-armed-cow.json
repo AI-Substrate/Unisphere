@@ -1,0 +1,78 @@
+{
+  "record_type": "review",
+  "id": "rv-plan015-baseline-r2-n1-pij-armed-cow",
+  "title": "Basis addendum: N1 closure and rebinding of the existing R2 approval to the doc-only subject 72d9d0cf",
+  "kind": "addendum",
+  "not_a_new_review": "This record performs no new assessment. It closes N1 and rebinds the conditional approval already issued in rv-plan015-baseline-r2-pij-armed-cow to the raw basis that now carries the corrected guide. No contract, code, proof, oracle or finding was re-evaluated.",
+  "applies": {
+    "review": "rv-plan015-baseline-r2-pij-armed-cow",
+    "report": "docs/plans/015-session-query-cli/assets/reviews/baseline-r2-pij-armed-cow.json",
+    "report_sha256": "fb59ed36b99b32c0133846f204d362ed5db826441051ae0402dd419645e33f62",
+    "receipt": "docs/plans/015-session-query-cli/assets/reviews/baseline-r2-pij-armed-cow-receipt.json",
+    "receipt_sha256": "aafdd629bbba1a4160acca3131ab61c05a6c4c3d165a2edb897bf10db8baf166",
+    "immutability": "The R2 report and receipt remain immutable at code subject 4c3c665f and guide 0b886259. This addendum does not amend, supersede or reopen them."
+  },
+  "reviewer": {
+    "seat": "pij-armed-cow",
+    "role": "independent reviewer",
+    "harness": "omp",
+    "model_id_exposed": "github-copilot/claude-opus-5",
+    "effort_exposed": "high",
+    "settings_source": "guide",
+    "native_session": "01a08872-82bb-7641-b1dc-3964616e3e0a",
+    "attestation_note": "Harness/model/effort are locally observed configuration strings only; no provider attestation is claimed."
+  },
+  "recorded_at": "2026-09-10T04:52:00Z",
+  "basis": {
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+    "subject_sha": "72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9",
+    "head_at_review": "72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9",
+    "prior_subject_sha": "4c3c665f757ddaeb1469753853018cb18febe538",
+    "commit": "72d9d0cf docs(query): align frozen timestamp loss vocabulary",
+    "plan_sha256": "23e11ee7ec867315349aab8df11282da08bf211a6c86e27a3782292ba5bcecef",
+    "plan_unchanged": true,
+    "guide_sha256": "5caed35ffa6f28570c16b6bc42baf47ce4403012069e429eeeaeb4e02f04c88f",
+    "prior_guide_sha256": "0b886259f6227b42b45939bb8bdb9f9ebaad48169a35a296cdb4c1f7b9ddecc7",
+    "worktree_state": "guide bytes in the worktree hash equal to the committed bytes at this subject"
+  },
+  "delta_verification": {
+    "method": "Independent inspection of committed bytes at both subjects; no reliance on the authoring claim.",
+    "files_changed": "2 files, +2 -2: assets/impl-guide.dd.json and its generated sibling assets/impl-guide.dd.md.",
+    "code_identity": "Tree objects for crates/, Cargo.toml and Cargo.lock are byte-identical between 4c3c665f and 72d9d0cf (crates tree 2b43e9ce958aa9639d889f27813511c8a6a006fc at both). No reviewed code changed.",
+    "guide_delta": "Section list identical; only the architecture section differs; contract id list identical; C21 is the only contract whose text changed, from 5151 to 5166 characters. The change is a pure insertion of the 15-character literal '|TimestampBasis' with zero removed characters. All top-level guide keys outside sections are equal.",
+    "resulting_text": "FormatLoss=AbsenceNullEmptyCollapse|StructuredAsJsonText|HumanRounding|PresentationOnly|TimestampBasis",
+    "conclusion": "This is exactly and only the edit the R2 seal condition permitted without re-review."
+  },
+  "n1_closure": {
+    "id": "N1",
+    "severity": "low",
+    "disposition": "fixed",
+    "was": "C21 enumerated FormatLoss with four variants while C10 v6 and crates/core/src/query/schema.rs:28 required five.",
+    "now": "C21 enumerates all five; the guide is self-consistent and agrees with the code approved in R2.",
+    "closed_by": "72d9d0cf5ad542dbe23b2f9a259bf7ceb0aee8a9"
+  },
+  "observations": [
+    {
+      "id": "O1",
+      "severity": "informational",
+      "blocking": false,
+      "note": "meta.version remains 6 and meta.updated remains 2026-09-10T04:24:42.377Z, so two distinct guide byte-strings at 4c3c665f and 72d9d0cf both self-identify as v6 with the same updated timestamp. This does not affect the binding, because the seal binds guide_sha256 rather than a version label, and the edit corrected a transcription error rather than changing v6 semantics. Recorded only so that a later reader resolving 'guide v6' to bytes uses the hash and not the label."
+    }
+  ],
+  "verdict": "approved",
+  "verdict_basis": "The R2 approval, whose sole outstanding condition was N1, applied to code that is byte-identical at this subject. N1 is now closed by exactly the permitted edit, so the approval binds here unconditionally.",
+  "conditions_outstanding": "none",
+  "seal": {
+    "baseline_sealed": false,
+    "reviewer_position": "Independent review is complete. This reviewer raises no remaining condition against subject 72d9d0cf and does not gate the seal.",
+    "recommendation": "Seal the wave0 baseline at 72d9d0cf and release the wave1 lanes.",
+    "seal_authority_note": "Sealing is the PM's act, not the reviewer's; this record supplies the independent-review binding it requires.",
+    "no_approved_with_unresolved_material_findings": true
+  },
+  "reviewer_gaps": [
+    "Read-only: this reviewer executed no build, test, lint, formatter or proof command for this addendum.",
+    "No proof rerun was requested or performed for the doc-only subject; the exercised-code evidence remains assets/verification/baseline-proof-4c3c665f.json, which is valid here because the code trees are byte-identical.",
+    "Carried forward from R2: the two declared workspace dependency entries point at crate directories that do not exist yet, marked [INFERENCE] because cargo was not run to demonstrate that unconsumed [workspace.dependencies] templates stay unresolved.",
+    "Carried forward from R2: runtime C25 metamorphs remain unproven and bound to unchecked tasks phase-1 dw-002a under bp-0008."
+  ]
+}

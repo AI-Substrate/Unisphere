@@ -1,0 +1,109 @@
+{
+  "dd": {
+    "schema": "builder/work-packet"
+  },
+  "sections": [
+    {
+      "name": "packet",
+      "value": {
+        "record_type": "packet",
+        "id": "packet-tk-0003-aac28a053732a494fafe5219842de6d3aeaf06b6",
+        "recorded_at": "2026-09-29T06:20:09.252Z",
+        "nonce": "ef3064e8-729e-47b1-a615-99718b6b54f1",
+        "unit": {
+          "id": "tk-0003",
+          "name": "CLI sessions status and target resolver",
+          "role": "coder",
+          "responsibility": "`unisphere sessions status` argv (repeatable --pij/--pane/--session with --harness, --json default when piped), envelope with one result or failure per query, human table; StatusTargetResolver in loader-query: pij list --json + recorded proc (pid, proc_start) liveness, tmux list-panes -> bounded child walk -> Claude ~/.claude/sessions/<pid>.json (sessionId, tmux pane), conflicts returned not picked, distinct failures; injected command runner / process table / filesystem so tests use fakes. Docs topic session-status.md, docs/cli.md and docs/sdk.md sections.",
+          "paths": [
+            "crates/cli/src/status.rs",
+            "crates/cli/src/args.rs",
+            "crates/cli/src/lib.rs",
+            "crates/cli/src/docs.rs",
+            "crates/cli/docs/session-status.md",
+            "crates/cli/tests/status.rs",
+            "crates/loader-query/src/status_target.rs",
+            "crates/loader-query/src/lib.rs",
+            "crates/loader-query/tests/status_target.rs",
+            "docs/cli.md",
+            "docs/sdk.md"
+          ],
+          "reads": [
+            {
+              "owner": "tk-0001",
+              "paths": [
+                "crates/core/src/status.rs",
+                "crates/core/src/lib.rs",
+                "crates/testkit/src/status.rs"
+              ]
+            }
+          ],
+          "interface": "unisphere_cli status frontend taking &dyn SessionStatusApi + &dyn TargetResolver; loader_query::StatusTargetResolver::new(runner, procs, fs, home): TargetResolver.",
+          "depends_on": [
+            "tk-0001"
+          ],
+          "wave": 1,
+          "acceptance": [
+            "../plan.dd.json#acceptance_criteria/ac-0001",
+            "../plan.dd.json#acceptance_criteria/ac-0007"
+          ],
+          "proof": [
+            "impl-guide.dd.json#checks/vd-0003",
+            "impl-guide.dd.json#checks/vd-0004"
+          ]
+        },
+        "plan": {
+          "path": "docs/plans/029-session-status/plan.dd.json",
+          "sha256": "72145b14324e289f86c5365f93785f3d76d2024e09595685c3f92a2f8235fa39"
+        },
+        "guide": {
+          "path": "docs/plans/029-session-status/assets/impl-guide.dd.json",
+          "sha256": "e967cc78a50983e3beaaaef939f34c3a66b4aba0f179cab539ef8d8d078ee653"
+        },
+        "baseline": {
+          "path": "docs/plans/029-session-status/assets/team/baseline.dd.json",
+          "sha256": "5b629ab5f8ad173db4fc2d461daefb9369ba22476b4cf9e7229f810c2ae8050b"
+        },
+        "source_sha": "aac28a053732a494fafe5219842de6d3aeaf06b6",
+        "allocation": {
+          "path": "/Users/jordanknight/substrate/unisphere/unishpere-main/.git/builder/allocations/allocation-al-035-4dd686ed-8a46-4b13-88d1-d587489afe38.dd.json",
+          "sha256": "3f5bb8cffcae14d3b30450a5f1201fd007df0a8dcec100d926e90f881a2e1439"
+        },
+        "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-029-cli",
+        "parent": "pij-specific-kiwi",
+        "requested": {
+          "role": "coder",
+          "harness": "omp",
+          "model": "github-copilot/claude-opus-5.5",
+          "source": {
+            "harness": "guide",
+            "model": "guide"
+          }
+        },
+        "forbidden": [
+          ".the-flow-state.json",
+          "the-flow.json",
+          "the-flow.md",
+          "docs/plans/029-session-status/plan.dd.json",
+          "docs/plans/029-session-status/assets/impl-guide.dd.json",
+          "docs/plans/029-session-status/assets/team",
+          ".harness/government/",
+          "Global settings, deployed skills, unrelated workspaces and changes on main without user authorization.",
+          "Pushes, PRs, merges and destructive operations without user authorization; canonical lifecycle mutations and nested peers without PM approval."
+        ],
+        "instructions": [
+          "You own crates/cli/src/status.rs, crates/cli/src/args.rs, crates/cli/src/lib.rs, crates/cli/src/docs.rs, crates/cli/docs/session-status.md, crates/cli/tests/status.rs, crates/loader-query/src/status_target.rs, crates/loader-query/src/lib.rs, crates/loader-query/tests/status_target.rs, docs/cli.md, docs/sdk.md.",
+          "You may read crates/core/src/status.rs, crates/core/src/lib.rs, crates/testkit/src/status.rs (owner tk-0001); immutable plan docs/plans/029-session-status/plan.dd.json and guide docs/plans/029-session-status/assets/impl-guide.dd.json.",
+          "Your job: `unisphere sessions status` argv (repeatable --pij/--pane/--session with --harness, --json default when piped), envelope with one result or failure per query, human table; StatusTargetResolver in loader-query: pij list --json + recorded proc (pid, proc_start) liveness, tmux list-panes -> bounded child walk -> Claude ~/.claude/sessions/<pid>.json (sessionId, tmux pane), conflicts returned not picked, distinct failures; injected command runner / process table / filesystem so tests use fakes. Docs topic session-status.md, docs/cli.md and docs/sdk.md sections.",
+          "Done means Lookup: `unisphere sessions status` accepts `--pij ID`, `--pane %N`, or `--session ID --harness H`, repeatable in one call. Each result has a `resolved` block (pij id, harness, session id, transcript path, basis). Pane lookup uses pij's seat list with a live-process check, else a native lookup (tmux pane -> child harness process -> the harness's own session record); disagreements are returned, not picked. Unknown seat, seat with no session, dead binding, pane not found and unsupported harness are distinct errors. Native pane lookup takes under 50 ms. (../plan.dd.json#acceptance_criteria/ac-0001); Harnesses: Claude Code in phase 1; Oh My Pi and Codex in phase 2 using Plan 028's folds. Other harnesses return an explicit unsupported result. A bundled docs topic and the SDK doc describe the command, the shape and each fact's definition. (../plan.dd.json#acceptance_criteria/ac-0007). Interface: unisphere_cli status frontend taking &dyn SessionStatusApi + &dyn TargetResolver; loader_query::StatusTargetResolver::new(runner, procs, fs, home): TargetResolver.. Proof: impl-guide.dd.json#checks/vd-0003, impl-guide.dd.json#checks/vd-0004.",
+          "Work packet: docs/plans/029-session-status/assets/team/packet-tk-0003-aac28a053732a494fafe5219842de6d3aeaf06b6.dd.json. Use the measured SHA-256 in the dispatch message for the optional advisory builder self-check.",
+          "Existing checkout /Users/jordanknight/substrate/unisphere/unisphere-029-cli was observed at aac28a053732a494fafe5219842de6d3aeaf06b6; its sealed source is aac28a053732a494fafe5219842de6d3aeaf06b6. A progressed-HEAD self-check warning is orientation, not a demand to undo work.",
+          "This packet binds existing work; it is not a new work release. Preserve completed commits and current work, continue only remaining unit work, and return the intended committed delivery with this packet digest to pij-specific-kiwi. Maps remain guidance; no replay or out-of-map approval is required.",
+          "Optional read-only comparison: harness builder on-track docs/plans/029-session-status/plan.dd.json --unit tk-0003 [--from <ref>] [--to <ref>] [--untracked]. No readiness, seal, review or receipt prerequisite; no writes; exit 0. Show compared, basis, measured from/to SHAs, includes_worktree/includes_untracked, warnings and issues. Unavailable comparison returns compared:false plus actionable issues.",
+          "On-track defaults to the sealed source, otherwise HEAD; malformed basis is an issue, not fallback. It includes committed touched paths (even reverted writes) plus tracked staged/unstaged work; --untracked explicitly adds new paths. Explicit --to is committed-only. Omitting --unit compares PM maps using imported integration_sha, otherwise the sealed source or HEAD."
+        ]
+      }
+    }
+  ],
+  "references": []
+}

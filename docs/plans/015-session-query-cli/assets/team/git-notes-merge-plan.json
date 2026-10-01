@@ -1,0 +1,39 @@
+{
+  "recorded_at": "2026-09-10T21:35:45.985Z",
+  "authorization": "Jordan: PROCEED",
+  "destination": "builder/015-session-query-cli",
+  "checkpoint": "c87e00cf8b976cfacb01d8c88b0d6465011d5157",
+  "incoming": "cf4931ed084d892050d43ed98cfcbb62b0c2fe7e",
+  "accepted_upstream_runtime": "9250b8f6f9084598433bc49d0077303df80cabc3",
+  "merge_base": "1469998cd750d23d2420feb83cf8e93a0841b347",
+  "overlaps": [
+    ".harness/engineering-harness.md",
+    ".harness/extensions/boot/boot.mjs",
+    "Cargo.lock",
+    "Cargo.toml",
+    "crates/app/Cargo.toml",
+    "crates/app/src/adapters.rs",
+    "crates/app/tests/adapter_catalog.rs",
+    "crates/cli/src/lib.rs",
+    "crates/core/src/lib.rs",
+    "crates/sdk/src/lib.rs",
+    "crates/testkit/src/bin/proof/native.rs",
+    "crates/testkit/src/bin/unisphere-arch-check.rs",
+    "crates/testkit/src/bin/unisphere-proof.rs",
+    "crates/testkit/src/lib.rs",
+    "docs/cli.md",
+    "docs/sdk.md"
+  ],
+  "steps": [
+    "Preserve checkpoint ref; normal no-fast-forward no-commit merge of accepted source",
+    "Resolve only observed shared conflicts: union package/exports and retain single typed app parser/registry; keep upstream Git Notes loader/mapper contracts",
+    "Implement pure note query classification over supplied bytes and app-owned QuerySource bridge; no telemetry roundtrip or fabricated transcript/turn/timing",
+    "Run native Git Notes regression, query recipe7 and built/installed exact-source proof; independent review before claiming merged acceptance"
+  ],
+  "rollback": "Preserved checkpoint ref; do not reset/destructively roll back without operator direction",
+  "limits": [
+    "No edits to plan014/main/worker clones",
+    "No push",
+    "Sealed plan015 records unchanged; prior evidence remains bound to prior sources"
+  ]
+}

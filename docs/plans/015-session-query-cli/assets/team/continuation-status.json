@@ -1,0 +1,76 @@
+{
+  "recorded_at": "2026-09-10T22:14:38.711Z",
+  "authorization": "Jordan: PROCEED",
+  "source_sha": "71182b502b1d5a63a2237237b117580cdc19e2f5",
+  "previous_pause_lifted": true,
+  "cli_peer": "pij-unfortunate-rat",
+  "cli_checkpoint": "10e72f900e744fe6c83ba7601ba0e3570c12a27a",
+  "status": "Approved Git Notes history convergence complete; exact merged source verified and independently approved",
+  "review_dispositions": {
+    "P1": "closed by independent exact-source review",
+    "A5": "resolved by schema-binding-addendum; frozen guide unchanged",
+    "P5": "withdrawn by reviewer; original grouping IDs preserved",
+    "P4": "Closed in source at771f94a6; regression reproduced/passed; boot observed ready with truncated captured stdout",
+    "P6": "Closed in source at771f94a6; package proof and observed ready boot",
+    "P7": "Closed in source at771f94a6; package proof and observed ready boot",
+    "P2": "Closed by actual built/installed docs under isolated runtime",
+    "P3": "Closed: all7examples parse and all7workflows have actual built/installed runtime proof, including Git Notes recipe7 at final merged source."
+  },
+  "interrupted_proof": {
+    "command": [
+      "harness",
+      "boot",
+      "--json"
+    ],
+    "cwd": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+    "source_sha": "771f94a6d478dd50d74b661b2592d67bd0eeaa1a",
+    "result": "Eval capture timed out after240 seconds; no completion output retained; no success claimed",
+    "retry_job": "bg_2"
+  },
+  "extension": {
+    "authority": "Jordan: yep brief it and get a coder on it.",
+    "packet": "assets/extensions/pij-session-resolution/packet.json",
+    "resolver_peer": "pij-bold-parrotfish",
+    "candidate": "ae809f3cd2c49d42f01814e4db91ae5bd6853f7c",
+    "status": "Integrated and verified:8 resolver tests,5 actual CLI Pij scenarios; source is independently approved at f818 with matching product bytes in final source",
+    "cli_packet": "assets/extensions/pij-session-resolution/cli-packet.json",
+    "sealed_roster_unchanged": true
+  },
+  "merge": {
+    "source": "cf4931ed084d892050d43ed98cfcbb62b0c2fe7e",
+    "history_merge": "ad6ae02339330e966cf85b0e2d73175bc78459ad",
+    "parents": [
+      "c87e00cf8b976cfacb01d8c88b0d6465011d5157",
+      "cf4931ed084d892050d43ed98cfcbb62b0c2fe7e"
+    ],
+    "approved_by": "Jordan PROCEED and Main convergence grant",
+    "status": "Completed normal two-parent merge; native Git/query composition verified, no push/main/source-owner writes"
+  },
+  "current_followups": [
+    "Main owns eventual PR/main landing; no push/PR authority was granted by PROCEED",
+    "Retain formal Builder staging/receipt gap; do not fabricate successful official dispatch/composition",
+    "Whole-plan post-flight and remaining criterion grading use exact receipts; historical records remain immutable"
+  ],
+  "proof": {
+    "path": "assets/verification/boot-71182b50.json",
+    "source_sha": "71182b502b1d5a63a2237237b117580cdc19e2f5",
+    "ready": true,
+    "exit": 0,
+    "workspace_tests": 391,
+    "proof_modes": [
+      "composition",
+      "sdk-consumer",
+      "installed-cli",
+      "collection",
+      "native",
+      "git-notes"
+    ],
+    "scope": "Exact merged native/Git Notes/query/Pij controlled scenarios; no universal fidelity/finality claim"
+  },
+  "cli_follow_on": "073d321752221398a9097cca3c3a999a0f5a40f5",
+  "review": "assets/reviews/git-convergence-final-pij-armed-cow.json",
+  "git_convergence_candidates": {
+    "native_cli": "8c25da3e19edb7ba4ceb9d2cb8a0c58cc085711d",
+    "pure_query": "98c8f2553358913fdd1e276ee0cc19f78986a5ce"
+  }
+}

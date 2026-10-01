@@ -1,0 +1,16 @@
+{
+  "recorded_at": "2026-09-10T09:41:19.044Z",
+  "nonblocking_review_observations": [
+    {
+      "id": "first-wave-O1",
+      "decision": "Do not broaden P4 beyond the reviewed Bidi_Control reordering harm in this change.",
+      "reason": "Other invisible Cf characters can be legitimate Unicode text; escaping that separate class changes presentation and needs its own scoped policy/proof. Existing accepted fix preserves machine values and closes the twelve bidi controls."
+    },
+    {
+      "id": "pij-R2",
+      "decision": "Document the real-CLI direct-child boundary; no forking-wrapper/process-tree control added.",
+      "reason": "Supported pij state does not launch children or auto-start the daemon; arbitrary wrappers are outside this optional executable contract. Deadline plus OS reap is not advertised as hard real-time or descendant cleanup."
+    }
+  ],
+  "proof_improvement": "Existing native installed-CLI proof now also invokes query::run, using real source data and the already built/installed binaries. It covers numeric predicate interoperability, context, privacy, offline identity and docs/schema without another install or mock QueryApi."
+}

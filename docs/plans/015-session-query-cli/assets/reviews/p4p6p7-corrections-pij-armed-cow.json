@@ -1,0 +1,116 @@
+{
+  "record_type": "review",
+  "id": "rv-plan015-p4p6p7-corrections-pij-armed-cow",
+  "kind": "targeted-correction-review",
+  "title": "Targeted static review of the P4/P6/P7 corrections, with P5 restoration confirmed",
+  "subject": {
+    "commit": "771f94a6d478dd50d74b661b2592d67bd0eeaa1a",
+    "subject_line": "fix(query): neutralize bidi controls and preserve grouping invariants",
+    "parent": "5fb8949112ea98cbafe42cd9506d49b1726fbeb9",
+    "authored": "2026-09-10T18:02:53+1000",
+    "workspace": "/Users/jordanknight/substrate/unisphere/unisphere-session-query-cli",
+    "descends_from_first_wave_subject": "5ee631b46142b88dea2a2742c9cb8087642c4d25 is an ancestor, verified with git merge-base --is-ancestor",
+    "product_delta_from_first_wave_subject": "Exactly five files under crates: loader-jsonl/src/lib.rs, output-query/src/lib.rs, output-query/tests/query_writer.rs, sdk/src/query/engine.rs, sdk/tests/query.rs. 140 insertions, 15 deletions. No other product file changed across 5ee631b4..771f94a6.",
+    "reviewed_blob_ids": {
+      "crates/loader-jsonl/src/lib.rs": "91270654d62f2aad7db56a75fe14bc5251faaad4",
+      "crates/output-query/src/lib.rs": "dee3b7025b6bd938007867813178a2bd5efe937f",
+      "crates/output-query/tests/query_writer.rs": "3c4e980ee16da2ac7d46e8445eb1a9246226650a",
+      "crates/sdk/src/query/engine.rs": "3cad6d7ee03c1a32c3fdcf05b6a2ef3f5bdacebb",
+      "crates/sdk/tests/query.rs": "4e7c15c97eb2ac14869d4ee950326d7d0899e034"
+    },
+    "reviewed_sha256": {
+      "crates/loader-jsonl/src/lib.rs": "e72a8d9d5e9d329a14e1866f3ebefbe81fc39e75f2b31a0c1baa23ccc8ac7134",
+      "crates/output-query/src/lib.rs": "0e4db2431ccb9829ae63b1d0bfa113b131735238e2b6656416316c12cf8e5b07",
+      "crates/output-query/tests/query_writer.rs": "4c3f174f747bf129366e00727fa62b03dd160f7d50bbb2fe7d0daa3d20f6a8a0",
+      "crates/sdk/src/query/engine.rs": "f1472a0dddc9f466c312e7d64bc324a81c04cf66b0233b3847487e788f659f20",
+      "crates/sdk/tests/query.rs": "ccf99f6f5d3a26cf8f6c8baedb6c49c0511af015b119d5861fe386c453817175"
+    }
+  },
+  "scope": {
+    "in": "Static reading of the committed P4, P6 and P7 corrections, plus confirmation that the P5 sentinel is restored and the three-way consumer test retained.",
+    "out": [
+      "Any acceptance of the CLI, which remains outside every review I have given.",
+      "P2 and P3, which are untouched by this commit and remain open.",
+      "The exact boot capture, which the PM reports as still running. I have not observed it and this record does not stand in for it.",
+      "Any new acceptance scope. This review approves source, not readiness."
+    ]
+  },
+  "method": {
+    "read_only": true,
+    "executed_nothing": true,
+    "how": "Every claim below is read from committed bytes via git show at the subject commit, not from the working tree. I ran no build, test, lint or formatter, and the PM's test results are the PM's measurement, never restated as mine.",
+    "separation": "Static source approval is stated separately from proof. What I can grade is that the source says what it must say. Whether it passes under the exact boot is an independent, currently unobserved question."
+  },
+  "recorded_at": "2026-09-10T08:13:49Z\n",
+  "recorded_at_local": "2026-09-10T18:13:49+1000\n",
+  "reviewer": {
+    "seat": "pij-armed-cow",
+    "role": "independent read-only reviewer",
+    "harness": "OMP",
+    "model_id_as_exposed": "github-copilot/claude-opus-5",
+    "effort_as_exposed": "high",
+    "note": "Model and effort are exposed strings, not a provider attestation."
+  },
+  "findings": {
+    "P4": {
+      "verdict": "closed in source",
+      "severity_was": "medium",
+      "what_the_fix_does": "crates/output-query/src/lib.rs:489-495 widens the escape predicate from char::is_control(), which is general category Cc only, to Cc plus an explicit codepoint set: U+061C, U+200E..U+200F, U+202A..U+202E, U+2066..U+2069.",
+      "why_i_grade_it_closed": [
+        "That set is exactly the twelve characters with Unicode Bidi_Control=Yes. Nothing in the reordering class is left out, so the fix is complete against the harm I evidenced rather than a sample of it.",
+        "The escape neutralises without destroying: :499-506 writes a backslash then u{:04x}, so the character becomes visible as \\u202e and the surrounding text survives. My finding asked for escaping, not stripping, and that is what landed.",
+        "All three human styles share the predicate, so Text, Markdown and Table are covered by one branch. The Markdown arm doubles the backslash at :497, which is correct for Markdown's own escaping.",
+        "{:04x} is sufficient for every codepoint in the set, all of which are at or below U+2069.",
+        "The project's own contract in assets/query-contract.md says to always escape terminal controls and untrusted Markdown/HTML appropriately. Bidi controls affect terminal rendering, so this satisfies the contract's letter, not merely its spirit."
+      ],
+      "test_reviewed": "crates/output-query/tests/query_writer.rs:197-224 human_formats_escape_direction_controls_without_stripping_text. It iterates all twelve controls across Text, Markdown and Table and asserts three things per case: the raw character is absent, the \\uXXXX form is present, and 'before' and 'after' both survive. It then asserts the Json format round-trips the character unmodified. That last assertion is the one I value most: it pins escaping as a presentation concern and stops a future author from 'fixing' the machine format by sanitising it. This test defends an observable contract against a plausible bug and earns its place."
+    },
+    "P6": {
+      "verdict": "closed in source",
+      "severity_was": "low",
+      "what_the_fix_does": "crates/sdk/src/query/engine.rs:1107-1108 changes outcome_count from taking a &str to taking an Outcome and comparing against outcome.as_str(). The five call sites at :1116-1120 and the three inside FailureRate at :1122-1124 now pass Outcome variants. No string literal remains: I grepped the file and outcome_count is called with a literal zero times.",
+      "why_i_grade_it_closed": [
+        "This is the part that matters and I checked it rather than assuming it. The producer at crates/sdk/src/query/rows.rs:465 writes FieldValue::String(row.status.to_string()) where ToolRow.status is Outcome (rows.rs:107). The query_enum! macro at crates/core/src/query/mod.rs:19-50 implements Display as f.write_str(self.as_str()).",
+        "So after the fix both sides of the comparison resolve to the same $wire literal in the single macro invocation at source.rs:21. A rename now moves producer and consumer together and the counts cannot silently zero. Had the producer written its own literal, this change would have moved the coupling rather than removed it, and I would have graded it open."
+      ],
+      "observation_not_a_finding": "The macro also derives Serialize with rename_all = snake_case, which is a second spelling source it never asserts agrees with as_str. For Outcome the five variants are single words so the two coincide exactly. A future multi-word variant whose wire literal is not its snake_case name would diverge. This is latent, is not introduced by this commit, and needs nothing now."
+    },
+    "P7": {
+      "verdict": "closed in source",
+      "severity_was": "low",
+      "what_the_fix_does": "All four comments I named are restored in crates/loader-jsonl/src/lib.rs, and I compared them against the strings quoted in my first-wave report rather than reading them approvingly.",
+      "verbatim_check": "Each of the four is byte-identical to my quoted text once comment-continuation wrapping is normalised: the NOFOLLOW/NONBLOCK note, the Take-freezes-the-boundary note, the rotation/truncation note, and the only-LF-is-removed note.",
+      "placement_check": "Each sits at the construct it describes, which is what makes the comment load-bearing rather than decorative: :201 above the OpenOptions custom_flags(O_NOFOLLOW | O_NONBLOCK) call, :242 above the BufReader wrapping file.take(observed_end - offset), :278 above the bytes.pop(), and :306 above verify_source.",
+      "behaviour": "No behaviour changed here, which is correct. The finding was that the documented invariants had been deleted while the behaviour survived."
+    },
+    "P5": {
+      "verdict": "restoration confirmed",
+      "sentinel": "crates/sdk/src/query/engine.rs:998 is b\"null\".to_vec(), appearing exactly once. I searched the file for NUL-byte marker remnants and found none. Original group IDs are preserved, which is what C18's stable group ID requires.",
+      "comment_retained": "engine.rs:996 carries the explanation: FieldValue is tagged, a present null encodes as {\"kind\":\"null\"}.",
+      "test_retained": "crates/sdk/tests/query.rs:1004-1085 saved_statistics_keep_absent_null_and_literal_null_groups_distinct. It builds a complete saved envelope with absent, null and literal-null tool_family, asserts three matched rows, three group rows, and that the three ProjectedRow ids are distinct, then asserts each of the three expected FieldValue states resolves to its own group with Count 1.",
+      "why_this_is_the_right_test": "It pins group identity, not merely group count. A regression that merged two states would fail on the distinct-id assertion even if the count assertion were somehow satisfied.",
+      "one_thing_i_asked_for_that_is_only_half_present": "I asked that the comment point at the line that carries the property. It states the property at the use site but does not cite crates/core/src/query/model.rs:299-301, the serde container attribute the whole thing rests on. That is a nit, not a condition, and I am not asking for a commit to fix it."
+    }
+  },
+  "new_observations": [
+    {
+      "id": "O1",
+      "severity": "low",
+      "blocking": false,
+      "statement": "The widened predicate covers the reordering class completely but not the invisible-character class: U+00AD, U+200B..U+200D, U+2060, U+FEFF and the U+E0000 tag block are category Cf, are not Bidi_Control, and still pass through verbatim.",
+      "why_it_is_an_observation_and_not_a_reopening": "My P4 evidence cited bidi codepoints and the harm I demonstrated was reordering. Hiding or joining text is a different harm that I did not evidence, and the contract's phrase is terminal controls, which these are not. Raising it as a P4 residue would be moving my own goalposts after the fix landed.",
+      "if_you_ever_act_on_it": "The tag block is the one I would watch, since it is the modern hidden-instruction vector. A decision to leave it alone is entirely defensible and would be worth one recorded line rather than code."
+    }
+  ],
+  "still_open_unchanged_by_this_commit": {
+    "P2": "crates/cli/src/docs.rs still not declared in crates/cli/src/lib.rs.",
+    "P3": "start.md and example-cases.json still describe verbs no parser accepts.",
+    "note": "Neither is touched by this commit. I re-derived the changed-file list rather than assuming."
+  },
+  "historical_evidence_read": {
+    "p4-p5-regressions-before.json": "Read at the subject. Its runs[1] shows the P4 test failing at query_writer.rs:210 before the fix, which is a genuine pre-fix reproduction against unmodified source. Its runs[0] and runs[2] are labelled by the PM as fixture failures rather than product reproductions, and I agree with that labelling; neither is offered as evidence.",
+    "review-fixes-working.json": "Read at the subject. It is explicitly scoped as historical working-tree attempts and not exact-commit proof, and I have taken it at that value.",
+    "my_standing": "These are the PM's measurements. I record that I read them and that they are internally candid. I do not restate their pass counts as my own result."
+  },
+  "verdict": "P4, P6 and P7 are closed in source at 771f94a6, and the P5 restoration is confirmed: the original sentinel is back, the explanatory comment is present, and the three-way consumer test is retained and asserts group identity rather than only group count. One new low observation, O1, is recorded and blocks nothing. P2 and P3 remain open. This approves the source as read; it is not an acceptance of the CLI and it does not stand in for the exact boot capture, which is still running and which I have not observed."
+}

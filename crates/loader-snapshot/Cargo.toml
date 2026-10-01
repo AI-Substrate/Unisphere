@@ -14,7 +14,7 @@ libc.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 sha2 = "0.10"
-rusqlite = { version = "0.37", features = ["bundled", "limits", "modern_sqlite"] }
+rusqlite = { version = "0.40", features = ["bundled", "limits", "modern_sqlite"] }
 
 [dev-dependencies]
 tempfile.workspace = true

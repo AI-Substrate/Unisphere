@@ -6,10 +6,10 @@
     {
       "name": "meta",
       "value": {
-        "title": "Oh My Pi and Codex",
+        "title": "Phase 2 \u2014 Oh My Pi, Copilot CLI and Codex",
         "slug": "phase-2",
-        "status": "draft",
-        "summary": ""
+        "status": "ready",
+        "summary": "Gap-fix tasks on Plan 028 folds plus SDK contract deltas."
       }
     },
     {
@@ -18,11 +18,104 @@
     },
     {
       "name": "tasks",
-      "value": []
+      "value": [
+        {
+          "id": "tk-0101",
+          "title": "Oh My Pi fold gap-fix (coder)",
+          "phase": "ph-b2c1",
+          "state": "checked",
+          "success": "OMP status facts verified on live seats.",
+          "done": "tasks.dd.json#done_when/tk-0101",
+          "satisfies_toward": [
+            "../../../plan.dd.json#acceptance_criteria/ac-0004",
+            "../../../plan.dd.json#acceptance_criteria/ac-0007"
+          ]
+        },
+        {
+          "id": "tk-0102",
+          "title": "Copilot CLI fold gap-fix (coder)",
+          "phase": "ph-b2c1",
+          "state": "checked",
+          "success": "Copilot window and native cache TTL.",
+          "done": "tasks.dd.json#done_when/tk-0102",
+          "satisfies_toward": [
+            "../../../plan.dd.json#acceptance_criteria/ac-0004",
+            "../../../plan.dd.json#acceptance_criteria/ac-0007"
+          ]
+        },
+        {
+          "id": "tk-0103",
+          "title": "Codex fold gap-fix (coder)",
+          "phase": "ph-b2c1",
+          "state": "checked",
+          "success": "Native window and post-compaction tokens.",
+          "done": "tasks.dd.json#done_when/tk-0103",
+          "satisfies_toward": [
+            "../../../plan.dd.json#acceptance_criteria/ac-0004",
+            "../../../plan.dd.json#acceptance_criteria/ac-0007"
+          ]
+        },
+        {
+          "id": "tk-0104",
+          "title": "SDK deltas, composition review and landing (PM)",
+          "phase": "ph-b2c1",
+          "state": "checked",
+          "success": "Contract deltas, review r2 approval, PR #10 merged.",
+          "done": "tasks.dd.json#done_when/tk-0104",
+          "satisfies_toward": [
+            "../../../plan.dd.json#acceptance_criteria/ac-0001",
+            "../../../plan.dd.json#acceptance_criteria/ac-0002",
+            "../../../plan.dd.json#acceptance_criteria/ac-0003",
+            "../../../plan.dd.json#acceptance_criteria/ac-0005",
+            "../../../plan.dd.json#acceptance_criteria/ac-0006"
+          ],
+          "satisfies": [
+            "../../../plan.dd.json#acceptance_criteria/ac-0004",
+            "../../../plan.dd.json#acceptance_criteria/ac-0007"
+          ]
+        }
+      ]
     },
     {
       "name": "done_when",
-      "value": {}
+      "value": {
+        "tk-0101": [
+          {
+            "id": "dw-0201",
+            "assertion": "OMP fold tests pass and live-seat used tokens match native snapshots.",
+            "state": "checked",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0006",
+            "pressure": "../../backpressure.dd.json#rows/bp-0006"
+          }
+        ],
+        "tk-0102": [
+          {
+            "id": "dw-0202",
+            "assertion": "Copilot fold tests pass and 1779 sessions match an independent recomputation.",
+            "state": "checked",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0006",
+            "pressure": "../../backpressure.dd.json#rows/bp-0006"
+          }
+        ],
+        "tk-0103": [
+          {
+            "id": "dw-0203",
+            "assertion": "Codex fold tests pass on all local rollouts.",
+            "state": "checked",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0006",
+            "pressure": "../../backpressure.dd.json#rows/bp-0006"
+          }
+        ],
+        "tk-0104": [
+          {
+            "id": "dw-0204",
+            "assertion": "Composition review approved and PR merged with green required checks.",
+            "state": "checked",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0007",
+            "pressure": "../../backpressure.dd.json#rows/bp-0007"
+          }
+        ]
+      }
     },
     {
       "name": "goals",

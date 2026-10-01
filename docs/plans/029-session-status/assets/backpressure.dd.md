@@ -12,13 +12,21 @@
 | title | Backpressure survey |
 | plan | [meta](../plan.dd.md#meta) |
 | basis_sha | — |
-| certainty | Partial |
+| certainty | Proven |
 
 <a id="rows"></a>
 
 ## Rows
 
-_No entries._
+| id | criterion | phase | mode | tier | proof | state | note | receipt | probe |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| bp-0001 | ac-0002 contract: core::status serde, basis vocabulary, unknown list | ph-a624 | EXISTS | computational | cargo test --locked -p unisphere-core --test status_contract | [x] checked | — | execution-log.dd.json#entries/lg-0001 | — |
+| bp-0002 | ac-0003/0004/0006 SDK StatusService facts, cursor and incremental == cold | ph-a624 | BUILD | computational | cargo test --locked -p unisphere-sdk --test status | [x] checked | — | execution-log.dd.json#entries/lg-0002 | — |
+| bp-0003 | ac-0001/0007 CLI frontend and pij/tmux resolver | ph-a624 | BUILD | computational | cargo test --locked -p unisphere-cli --test status; cargo test --locked -p unisphere-loader-query --test status_target | [x] checked | — | execution-log.dd.json#entries/lg-0002 | — |
+| bp-0004 | ac-0002/0006 assembled CLI + external SDK consumer parity | ph-a624 | EXTEND | computational | cargo run --locked -p unisphere-testkit --bin unisphere-proof -- status | [x] checked | — | execution-log.dd.json#entries/lg-0003 | — |
+| bp-0005 | ac-0001/0003/0005/0006 real-machine timing and live files | ph-a624 | BUILD | computational | python3 docs/plans/029-session-status/assets/proof/status_real.py --scratch .harness/temp/status-real | [x] checked | — | execution-log.dd.json#entries/lg-0004 | — |
+| bp-0006 | ac-0004/0007 per-harness fold facts (OMP, Codex, Copilot CLI) | ph-b2c1 | EXISTS | computational | cargo test --locked -p unisphere-adapter-{omp,codex,copilot-cli} --test prep | [x] checked | — | execution-log.dd.json#entries/lg-0006 | — |
+| bp-0007 | whole-repo quality lane and readiness | ph-b2c1 | EXISTS | computational | harness checks --json; harness boot --json; CI foundation ubuntu/macos | [x] checked | — | execution-log.dd.json#entries/lg-0007 | — |
 
 <a id="sensors"></a>
 

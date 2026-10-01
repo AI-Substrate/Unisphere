@@ -8,12 +8,83 @@
       "value": {
         "title": "Backpressure survey",
         "plan": "../plan.dd.json#meta",
-        "certainty": "Partial"
+        "certainty": "Proven"
       }
     },
     {
       "name": "rows",
-      "value": []
+      "value": [
+        {
+          "id": "bp-0001",
+          "criterion": "ac-0002 contract: core::status serde, basis vocabulary, unknown list",
+          "phase": "ph-a624",
+          "mode": "EXISTS",
+          "tier": "computational",
+          "proof": "cargo test --locked -p unisphere-core --test status_contract",
+          "state": "checked",
+          "receipt": "execution-log.dd.json#entries/lg-0001"
+        },
+        {
+          "id": "bp-0002",
+          "criterion": "ac-0003/0004/0006 SDK StatusService facts, cursor and incremental == cold",
+          "phase": "ph-a624",
+          "mode": "BUILD",
+          "tier": "computational",
+          "proof": "cargo test --locked -p unisphere-sdk --test status",
+          "state": "checked",
+          "receipt": "execution-log.dd.json#entries/lg-0002"
+        },
+        {
+          "id": "bp-0003",
+          "criterion": "ac-0001/0007 CLI frontend and pij/tmux resolver",
+          "phase": "ph-a624",
+          "mode": "BUILD",
+          "tier": "computational",
+          "proof": "cargo test --locked -p unisphere-cli --test status; cargo test --locked -p unisphere-loader-query --test status_target",
+          "state": "checked",
+          "receipt": "execution-log.dd.json#entries/lg-0002"
+        },
+        {
+          "id": "bp-0004",
+          "criterion": "ac-0002/0006 assembled CLI + external SDK consumer parity",
+          "phase": "ph-a624",
+          "mode": "EXTEND",
+          "tier": "computational",
+          "proof": "cargo run --locked -p unisphere-testkit --bin unisphere-proof -- status",
+          "state": "checked",
+          "receipt": "execution-log.dd.json#entries/lg-0003"
+        },
+        {
+          "id": "bp-0005",
+          "criterion": "ac-0001/0003/0005/0006 real-machine timing and live files",
+          "phase": "ph-a624",
+          "mode": "BUILD",
+          "tier": "computational",
+          "proof": "python3 docs/plans/029-session-status/assets/proof/status_real.py --scratch .harness/temp/status-real",
+          "state": "checked",
+          "receipt": "execution-log.dd.json#entries/lg-0004"
+        },
+        {
+          "id": "bp-0006",
+          "criterion": "ac-0004/0007 per-harness fold facts (OMP, Codex, Copilot CLI)",
+          "phase": "ph-b2c1",
+          "mode": "EXISTS",
+          "tier": "computational",
+          "proof": "cargo test --locked -p unisphere-adapter-{omp,codex,copilot-cli} --test prep",
+          "state": "checked",
+          "receipt": "execution-log.dd.json#entries/lg-0006"
+        },
+        {
+          "id": "bp-0007",
+          "criterion": "whole-repo quality lane and readiness",
+          "phase": "ph-b2c1",
+          "mode": "EXISTS",
+          "tier": "computational",
+          "proof": "harness checks --json; harness boot --json; CI foundation ubuntu/macos",
+          "state": "checked",
+          "receipt": "execution-log.dd.json#entries/lg-0007"
+        }
+      ]
     },
     {
       "name": "sensors",

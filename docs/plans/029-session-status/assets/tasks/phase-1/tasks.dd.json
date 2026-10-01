@@ -6,10 +6,10 @@
     {
       "name": "meta",
       "value": {
-        "title": "Claude status end to end",
+        "title": "Phase 1 \u2014 Claude status end to end",
         "slug": "phase-1",
-        "status": "draft",
-        "summary": ""
+        "status": "ready",
+        "summary": "Four tasks mirroring guide v1 units tk-0001\u2026tk-0004."
       }
     },
     {
@@ -18,11 +18,110 @@
     },
     {
       "name": "tasks",
-      "value": []
+      "value": [
+        {
+          "id": "tk-0001",
+          "title": "Status contract baseline (PM)",
+          "phase": "ph-a624",
+          "state": "checked",
+          "success": "Sealed core::status v1 + testkit fakes.",
+          "done": "tasks.dd.json#done_when/tk-0001",
+          "satisfies_toward": [
+            "../../../plan.dd.json#acceptance_criteria/ac-0002"
+          ],
+          "satisfies": [
+            "../../../plan.dd.json#acceptance_criteria/ac-0002"
+          ]
+        },
+        {
+          "id": "tk-0002",
+          "title": "SDK StatusService (coder)",
+          "phase": "ph-a624",
+          "state": "checked",
+          "success": "Incremental status over the prep fold with a caller-held cursor.",
+          "done": "tasks.dd.json#done_when/tk-0002",
+          "satisfies_toward": [
+            "../../../plan.dd.json#acceptance_criteria/ac-0003",
+            "../../../plan.dd.json#acceptance_criteria/ac-0004",
+            "../../../plan.dd.json#acceptance_criteria/ac-0006"
+          ],
+          "satisfies": [
+            "../../../plan.dd.json#acceptance_criteria/ac-0003"
+          ]
+        },
+        {
+          "id": "tk-0003",
+          "title": "CLI sessions status + target resolver (coder)",
+          "phase": "ph-a624",
+          "state": "checked",
+          "success": "--pij/--pane/--session lookup with distinct failures.",
+          "done": "tasks.dd.json#done_when/tk-0003",
+          "satisfies_toward": [
+            "../../../plan.dd.json#acceptance_criteria/ac-0001",
+            "../../../plan.dd.json#acceptance_criteria/ac-0007"
+          ],
+          "satisfies": [
+            "../../../plan.dd.json#acceptance_criteria/ac-0001"
+          ]
+        },
+        {
+          "id": "tk-0004",
+          "title": "Composition and real-workload proof (PM)",
+          "phase": "ph-a624",
+          "state": "checked",
+          "success": "Wired app, proof mode, real-machine and Linux proof.",
+          "done": "tasks.dd.json#done_when/tk-0004",
+          "satisfies_toward": [
+            "../../../plan.dd.json#acceptance_criteria/ac-0005",
+            "../../../plan.dd.json#acceptance_criteria/ac-0006"
+          ],
+          "satisfies": [
+            "../../../plan.dd.json#acceptance_criteria/ac-0005",
+            "../../../plan.dd.json#acceptance_criteria/ac-0006"
+          ]
+        }
+      ]
     },
     {
       "name": "done_when",
-      "value": {}
+      "value": {
+        "tk-0001": [
+          {
+            "id": "dw-0101",
+            "assertion": "core::status contract tests pass and the baseline is sealed with an approved decomposition review.",
+            "state": "checked",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0001",
+            "pressure": "../../backpressure.dd.json#rows/bp-0001"
+          }
+        ],
+        "tk-0002": [
+          {
+            "id": "dw-0102",
+            "assertion": "SDK status tests pass and warm work is bounded by appended records.",
+            "state": "checked",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0002",
+            "pressure": "../../backpressure.dd.json#rows/bp-0002"
+          }
+        ],
+        "tk-0003": [
+          {
+            "id": "dw-0103",
+            "assertion": "CLI and resolver tests pass; pane lookup resolves live seats.",
+            "state": "checked",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0002",
+            "pressure": "../../backpressure.dd.json#rows/bp-0003"
+          }
+        ],
+        "tk-0004": [
+          {
+            "id": "dw-0104",
+            "assertion": "unisphere-proof status passes and real-machine evidence has no failures.",
+            "state": "checked",
+            "proven_by": "../../execution-log.dd.json#entries/lg-0004",
+            "pressure": "../../backpressure.dd.json#rows/bp-0005"
+          }
+        ]
+      }
     },
     {
       "name": "goals",

@@ -1,0 +1,31 @@
+.harness/records/retro/2026-10-01/001-029-session-status.md
+  s_042162115c1f28::t_7497892891412f 7-90
+  s_042162115c1f28::t_81c4ebef73b73f 4-6
+  s_042162115c1f28::t_cae0f20e668b85 1-3
+docs/plans/029-session-status/assets/execution-log.dd.json
+  s_042162115c1f28::t_fcf15530154676 1-96
+docs/plans/029-session-status/assets/execution-log.dd.md
+  s_042162115c1f28::t_51f69d5dfa454d 1-29
+docs/plans/029-session-status/assets/post-flight.md
+  s_042162115c1f28::t_aba550304af7d6 1-47
+docs/plans/029-session-status/plan.dd.json
+  s_042162115c1f28::t_6d393723f1d365 45-46,51-52,57-58,63-64,69-70,75-76,81-82,93-95,101,105-106
+docs/plans/029-session-status/plan.dd.md
+  s_042162115c1f28::t_aa6b117bdb92e5 56-62,70-71
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "42ec946bf2500813ee224afac0c99dafe30434a1",
+  "prompts": {},
+  "sessions": {
+    "s_042162115c1f28": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4b3f9ea7-6ca1-47b0-93c3-82069b1452f9",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

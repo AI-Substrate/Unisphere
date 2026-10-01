@@ -1,0 +1,33 @@
+docs/plans/029-session-status/assets/backpressure.dd.json
+  s_042162115c1f28::t_b71f7bec8d79d0 11,16-87
+docs/plans/029-session-status/assets/backpressure.dd.md
+  s_042162115c1f28::t_5615f9d79aa2d3 15,21-29
+docs/plans/029-session-status/assets/tasks/phase-1/tasks.dd.json
+  s_042162115c1f28::t_9043885ae37a3f 9,11-12,21-83,87-124
+docs/plans/029-session-status/assets/tasks/phase-1/tasks.dd.md
+  s_042162115c1f28::t_6ad7a8f4367843 2,12,15,17,36-41,47-69
+docs/plans/029-session-status/assets/tasks/phase-2/tasks.dd.json
+  s_042162115c1f28::t_caa8cd517d9686 9,11-12,21-77,81-118
+docs/plans/029-session-status/assets/tasks/phase-2/tasks.dd.md
+  s_042162115c1f28::t_1978bddab07dea 2,12,15,17,36-41,47-69
+docs/plans/029-session-status/plan.dd.json
+  s_042162115c1f28::t_a63fdb1a03ab8f 46-47,53-54,60-61,67-68,74-75,81-82,88-89
+docs/plans/029-session-status/plan.dd.md
+  s_042162115c1f28::t_959c59b48518a9 56-62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "e8bc40897b0748dc613c4262712d36add1f1b8ca",
+  "prompts": {},
+  "sessions": {
+    "s_042162115c1f28": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4b3f9ea7-6ca1-47b0-93c3-82069b1452f9",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

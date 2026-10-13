@@ -1,0 +1,14 @@
+.harness/government/spine.md
+  h_9e71e8b09f7cf2 23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "a9e270d7f550b74dc8ec7ee6225e1ee4d5870d20",
+  "prompts": {},
+  "humans": {
+    "h_9e71e8b09f7cf2": {
+      "author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

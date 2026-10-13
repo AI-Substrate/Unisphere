@@ -26,9 +26,9 @@ use globset::{Glob, GlobMatcher};
 use unisphere_core::{PipelineError, ReadCursor, ReadLimits, SnapshotLimits};
 
 use crate::prep::{
-    CacheWriteBasis, CallSighting, PrepBinding, PrepCallRow, PrepEventKind, PrepFoldSession,
-    PrepOptions, PrepReadLimits, PrepRows, PrepSourceKind, PrepSourceSet, PrepSourceStat,
-    SessionFacts, advance, derived_root_label,
+    CacheWriteBasis, CallSighting, PrepBinding, PrepCallDetail, PrepCallRow, PrepEventKind,
+    PrepFoldSession, PrepOptions, PrepReadLimits, PrepRows, PrepSourceKind, PrepSourceSet,
+    PrepSourceStat, SessionFacts, advance, derived_root_label,
 };
 
 pub use unisphere_core::status::*;
@@ -89,6 +89,8 @@ struct TrackedCall {
     /// The harness recorded which TTL class each cache write used.
     ttl_split: bool,
     stop_reason: Option<String>,
+    /// Router, native-TTL and native-cost facts of the call.
+    detail: PrepCallDetail,
 }
 
 impl TrackedCall {
@@ -104,6 +106,7 @@ impl TrackedCall {
             cw_5m: row.cw_5m,
             ttl_split: row.cache_write_basis == CacheWriteBasis::Split,
             stop_reason: row.stop_reason.clone(),
+            detail: row.detail.clone(),
         }
     }
 
@@ -113,8 +116,9 @@ impl TrackedCall {
             && self.request_id == row.request_id
     }
 
-    /// Per-field maximum of the counters and the last recorded stop reason,
-    /// exactly as one merged sighting; the time stays the first sighting's.
+    /// Per-field maximum of the counters, the last recorded stop reason and
+    /// the first recorded router/TTL/cost-unit facts, exactly as one merged
+    /// sighting (`calls_v`); the time stays the first sighting's.
     fn merge(&mut self, row: &PrepCallRow) {
         let max = |a: Option<i64>, b: Option<i64>| a.max(b);
         self.input = max(self.input, row.input);
@@ -125,6 +129,18 @@ impl TrackedCall {
         self.ttl_split |= row.cache_write_basis == CacheWriteBasis::Split;
         if row.stop_reason.is_some() {
             self.stop_reason.clone_from(&row.stop_reason);
+        }
+        let (into, from) = (&mut self.detail, &row.detail);
+        into.cw_other = max(into.cw_other, from.cw_other);
+        into.native_cost = max(into.native_cost, from.native_cost);
+        into.cache_write_ttl_s = into.cache_write_ttl_s.or(from.cache_write_ttl_s);
+        for (slot, value) in [
+            (&mut into.selected_model, &from.selected_model),
+            (&mut into.native_cost_unit, &from.native_cost_unit),
+        ] {
+            if slot.is_none() {
+                slot.clone_from(value);
+            }
         }
     }
 }
@@ -404,6 +420,10 @@ fn derive(
                     .map(|((_, ttl), at)| Fact::new(now_ms - at < ttl, Basis::Derived)),
             ),
         };
+        let native = |value: Option<i64>| non_negative(value).map(|v| Fact::new(v, Basis::Native));
+        let text =
+            |value: &Option<String>| value.clone().map(|value| Fact::new(value, Basis::Native));
+        let detail = &call.detail;
         LastCall {
             at_ms: call.at_ms,
             input: non_negative(call.input),
@@ -414,6 +434,19 @@ fn derive(
             ttl_bucket,
             cache_warm,
             stop_reason: call.stop_reason.clone(),
+            // A zero the fallback rule implied (no native TTL) is derived.
+            cache_write_other: non_negative(detail.cw_other).map(|v| {
+                let basis = if call.ttl_split {
+                    Basis::Native
+                } else {
+                    Basis::Derived
+                };
+                Fact::new(v, basis)
+            }),
+            cache_write_ttl_s: native(detail.cache_write_ttl_s),
+            selected_model: text(&detail.selected_model),
+            native_cost: native(detail.native_cost),
+            native_cost_unit: text(&detail.native_cost_unit),
         }
     });
 
@@ -482,6 +515,26 @@ fn derive(
         (
             "last_call.stop_reason",
             last_call.is_some_and(|c| c.stop_reason.is_some()),
+        ),
+        (
+            "last_call.cache_write_other",
+            last_call.is_some_and(|c| c.cache_write_other.is_some()),
+        ),
+        (
+            "last_call.cache_write_ttl_s",
+            last_call.is_some_and(|c| c.cache_write_ttl_s.is_some()),
+        ),
+        (
+            "last_call.selected_model",
+            last_call.is_some_and(|c| c.selected_model.is_some()),
+        ),
+        (
+            "last_call.native_cost",
+            last_call.is_some_and(|c| c.native_cost.is_some()),
+        ),
+        (
+            "last_call.native_cost_unit",
+            last_call.is_some_and(|c| c.native_cost_unit.is_some()),
         ),
         ("timeline.created_ms", status.timeline.created_ms.is_some()),
         (

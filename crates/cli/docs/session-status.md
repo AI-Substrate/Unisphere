@@ -47,12 +47,16 @@ Every fact is a `{value, basis}` pair or bare value, or it is absent and its nam
 | `model.current` | Model of the latest main-chain, non-synthetic call |
 | `model.pending_switch` | A `/model` switch recorded after that call; the next call uses it |
 | `model.history` | Main-chain model spans in order: model, first/last call time, calls |
-| `context.used_tokens` | Latest main-chain call's input + cache read + cache write (native) |
+| `context.used_tokens` | Latest main-chain call's input + cache read + cache write (native); input is uncached, so this is the call's prompt size |
 | `context.window_tokens` | Native when recorded, else `model-windows@1` table (basis `table`), else unknown. Claude Code transcripts do not say whether a model ran with a 200k or 1M window; the table assumes the larger one, so `percent` can understate how full a 200k session is. Windows for GPT models differ by provider and are left unknown. |
 | `context.percent`, `context.display` | Only when used and window are both known, e.g. `250k of 1M (25%)` |
 | `last_call` | Time, input, output, cache read, 1h and 5m cache writes, stop reason when recorded |
 | `last_call.ttl_bucket` | `1h` or `5m`, from where the last call wrote cache (derived) |
 | `last_call.cache_warm` | Now minus last call time is under the TTL (derived) |
+| `last_call.cache_write_other` | Cache-write tokens whose native TTL is neither 1 h nor 5 m, e.g. Copilot GPT models' 1800 s (native); `derived` 0 when no native TTL was recorded and the 1 h/5 m fallback took the write |
+| `last_call.cache_write_ttl_s` | Native TTL in seconds of the last call's cache write |
+| `last_call.selected_model` | The model the session selected when a model router chose the served model (`model.current`), e.g. `hydrafusion` (native) |
+| `last_call.native_cost`, `last_call.native_cost_unit` | The harness's own cost of the last call and its unit, e.g. `nano_aiu` (native); never converted to money |
 | `timeline.created_ms` | First native event |
 | `timeline.last_updated_ms` | Latest native event, else transcript mtime (`mtime_fallback`) |
 | `timeline.idle_seconds` | Now minus last updated |
@@ -69,7 +73,7 @@ Timestamps are epoch milliseconds. `schema_version` is 1. Output is metadata onl
 
 JSON: `{"ok": true, "command": "sessions.status", "v": 1, "data": {"results": [...], "failed": N}}`. Each result is `{"ok": true, "query", "status"}` or `{"ok": false, "query", "resolved", "error": {"kind", "code", "message", "fix"}}`; `resolved` is present when resolution succeeded but the status read failed.
 
-Human: one table row per query (model, context, idle, turns with last hour, compactions, cache state), then conflicts and failures with their fix.
+Human: one table row per query (model, with `via <selected model>` when a model router chose it, context, idle, turns with last hour, compactions, cache state), then conflicts and failures with their fix.
 
 Exit: 0 every query answered, 3 at least one query failed, 2 invalid arguments, 1 output could not be written.
 

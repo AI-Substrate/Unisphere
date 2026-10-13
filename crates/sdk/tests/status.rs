@@ -17,7 +17,7 @@ use unisphere_sdk::{
         PrepSourceKind, PrepSourceMeta, PrepSourceSet, SessionFacts,
     },
     status::{
-        Basis, MODEL_WINDOWS_TABLE, SessionStatus, SessionStatusApi, SourceStatus,
+        Basis, Fact, MODEL_WINDOWS_TABLE, SessionStatus, SessionStatusApi, SourceStatus,
         StatusFailureKind, StatusTarget, UNKNOWN_FACTS,
     },
 };
@@ -421,6 +421,91 @@ fn ttl_bucket_and_cache_warmth_from_the_last_call_write_split() {
     assert_eq!(last.cache_write_5m, Some(900));
     assert_eq!(last.ttl_bucket, None);
     assert!(unknown(&inferred, "last_call.ttl_bucket"));
+}
+
+#[test]
+fn last_call_reports_other_ttl_writes_router_model_and_native_cost() {
+    let f = fixture();
+    // A routed Copilot-style call: the router's synthetic model was selected,
+    // gpt-6-luna ran, and its write has a native 1800 s TTL (neither 1 h nor
+    // 5 m). The facts arrive with a later sighting of the same call.
+    f.append(
+        FILE,
+        &[
+            json!({"call": {"msg_id": "r1", "ts_ms": T0, "model": "gpt-6-luna", "output": 149, "basis": "fallback_1h"}}),
+            json!({"call": {"msg_id": "r1", "sighting": "update", "ts_ms": T0, "model": "gpt-6-luna", "input": 3, "cache_read": 27_556, "cw_1h": 0, "cw_5m": 0, "cw_other": 607, "ttl_s": 1800, "selected_model": "hydrafusion", "native_cost": 42_623_500, "native_cost_unit": "nano_aiu"}}),
+        ],
+    );
+    let status = f.cold("s1", T0 + MIN);
+    let last = status.last_call.as_ref().unwrap();
+    assert_eq!(last.cache_write_other, Some(Fact::new(607, Basis::Native)));
+    assert_eq!(last.cache_write_ttl_s, Some(Fact::new(1800, Basis::Native)));
+    assert_eq!(
+        last.selected_model,
+        Some(Fact::new("hydrafusion".to_owned(), Basis::Native))
+    );
+    assert_eq!(
+        status.model.current.as_ref().map(|m| m.value.as_str()),
+        Some("gpt-6-luna"),
+        "the served model stays model.current"
+    );
+    assert_eq!(last.native_cost, Some(Fact::new(42_623_500, Basis::Native)));
+    assert_eq!(
+        last.native_cost_unit,
+        Some(Fact::new("nano_aiu".to_owned(), Basis::Native))
+    );
+    // Existing fields are unchanged; the other-TTL write is not 1 h or 5 m.
+    assert_eq!(
+        (last.input, last.cache_write_1h, last.cache_write_5m),
+        (Some(3), Some(0), Some(0))
+    );
+    for name in [
+        "last_call.cache_write_other",
+        "last_call.cache_write_ttl_s",
+        "last_call.selected_model",
+        "last_call.native_cost",
+        "last_call.native_cost_unit",
+    ] {
+        assert!(!unknown(&status, name), "{name}");
+    }
+
+    // A harness recording none of them: absent and unknown, never zero.
+    f.append(
+        FILE,
+        &[json!({"call": {"ts_ms": T0 + 2 * MIN, "model": "claude-opus-5", "cw_1h": 500, "cw_5m": 0}})],
+    );
+    let plain = f.cold("s1", T0 + 3 * MIN);
+    let last = plain.last_call.as_ref().unwrap();
+    assert_eq!(
+        (
+            &last.cache_write_other,
+            &last.cache_write_ttl_s,
+            &last.native_cost
+        ),
+        (&None, &None, &None)
+    );
+    assert_eq!(
+        (&last.selected_model, &last.native_cost_unit),
+        (&None, &None)
+    );
+    for name in [
+        "last_call.cache_write_other",
+        "last_call.cache_write_ttl_s",
+        "last_call.selected_model",
+        "last_call.native_cost",
+        "last_call.native_cost_unit",
+    ] {
+        assert!(unknown(&plain, name), "{name}");
+    }
+
+    // A zero other-TTL write the 1 h/5 m fallback implied is derived, not native.
+    f.append(
+        FILE,
+        &[json!({"call": {"ts_ms": T0 + 4 * MIN, "model": "gpt-6-luna", "cw_1h": 20, "cw_5m": 0, "cw_other": 0, "basis": "fallback_1h"}})],
+    );
+    let fallback = f.cold("s1", T0 + 5 * MIN);
+    let other = fallback.last_call.unwrap().cache_write_other.unwrap();
+    assert_eq!((other.value, other.basis), (0, Basis::Derived));
 }
 
 #[test]

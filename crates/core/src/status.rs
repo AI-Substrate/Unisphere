@@ -29,6 +29,11 @@ pub const UNKNOWN_FACTS: &[&str] = &[
     "last_call.ttl_bucket",
     "last_call.cache_warm",
     "last_call.stop_reason",
+    "last_call.cache_write_other",
+    "last_call.cache_write_ttl_s",
+    "last_call.selected_model",
+    "last_call.native_cost",
+    "last_call.native_cost_unit",
     "timeline.created_ms",
     "timeline.last_updated_ms",
     "compaction.counts",
@@ -166,6 +171,19 @@ pub struct LastCall {
     /// `now - at < ttl`.
     pub cache_warm: Option<Fact<bool>>,
     pub stop_reason: Option<String>,
+    /// Cache-write tokens whose native TTL is neither 1 h nor 5 m (e.g. a
+    /// Copilot GPT model's 1800 s); `Derived` 0 when the write's TTL was not
+    /// recorded and the documented 1 h/5 m fallback took it.
+    pub cache_write_other: Option<Fact<u64>>,
+    /// Native TTL, in seconds, of the last call's cache write.
+    pub cache_write_ttl_s: Option<Fact<u64>>,
+    /// The model the session selected when a model router chose the model
+    /// that ran (`model.current`), e.g. `hydrafusion`.
+    pub selected_model: Option<Fact<String>>,
+    /// Native cost of the last call in `native_cost_unit`; never money.
+    pub native_cost: Option<Fact<u64>>,
+    /// Unit of `native_cost`, e.g. `nano_aiu`.
+    pub native_cost_unit: Option<Fact<String>>,
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]

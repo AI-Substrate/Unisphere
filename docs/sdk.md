@@ -375,6 +375,9 @@ Every fact is `{value, basis}` with basis `native`, `derived`, `table`
 | `context.used_tokens` | Latest main-chain call input + cache read + cache write |
 | `context.window_tokens` | Native when recorded, else `model-windows@1`, else unknown; `percent` only when both are known |
 | `last_call.ttl_bucket` / `cache_warm` | `1h`/`5m` from the last call's cache-write split; warm while `now_ms` − last call < TTL |
+| `last_call.cache_write_other` / `cache_write_ttl_s` | Cache writes with a native TTL other than 1 h or 5 m, and the write's native TTL in seconds |
+| `last_call.selected_model` | A model router's selected (synthetic) model beside the served `model.current` |
+| `last_call.native_cost` / `native_cost_unit` | The harness's native cost of the last call and its unit (`nano_aiu`), never money |
 | `timeline.last_updated_ms` | Latest native event, else transcript mtime (`mtime_fallback`); `idle_seconds` from it |
 | `turns` | Total and last-hour turns, each by origin |
 | `compaction` | Manual/auto counts (Claude: no markers is 0) and the last compaction |

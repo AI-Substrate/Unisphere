@@ -8,9 +8,10 @@ use serde_json::{Value, json};
 use unisphere_core::{
     PipelineError, PipelineErrorKind,
     prep::{
-        CacheWriteBasis, CallSighting, PREP_CHECKPOINT_FORMAT, PrepCallRow, PrepCheckpoint,
-        PrepEventKind, PrepEventRow, PrepFold, PrepFoldSession, PrepInput, PrepOptions, PrepRows,
-        PrepSourceKind, PrepSourceMeta, PrepTurnRow, SessionFacts, TurnOrigin,
+        CacheWriteBasis, CallSighting, PREP_CHECKPOINT_FORMAT, PrepCallDetail, PrepCallRow,
+        PrepCheckpoint, PrepEventKind, PrepEventRow, PrepFold, PrepFoldSession, PrepInput,
+        PrepOptions, PrepRows, PrepSourceKind, PrepSourceMeta, PrepTurnRow, SessionFacts,
+        TurnOrigin,
     },
     status::{
         Resolved, SessionStatus, SessionStatusApi, StatusFailure, StatusQuery, StatusTarget,
@@ -30,7 +31,8 @@ fn error(kind: PipelineErrorKind) -> PipelineError {
 /// every row and fact without a real dialect:
 ///
 /// - `{"call": {"ts_ms", "model", "input", "cw_1h", "cw_5m", "cache_read",
-///   "output", "stop_reason", "sidechain", "turn_no", "sighting", "msg_id", "basis"}}`
+///   "output", "stop_reason", "sidechain", "turn_no", "sighting", "msg_id", "basis",
+///   "cw_other", "ttl_s", "selected_model", "native_cost", "native_cost_unit"}}`
 ///   → one call row; `sighting` is `first` (default) or `update`, and `msg_id`
 ///   defaults to `msg-<offset>` (repeat it with `update` to model a re-sighting)
 /// - `{"turn": {"turn_no", "ts_ms", "origin"}}` → one turn row (origin in the
@@ -174,7 +176,15 @@ impl PrepFoldSession for ScriptedSession {
                     turn_no: int(c, "turn_no"),
                     call_in_turn: None,
                     records: 1,
-                    detail: Default::default(),
+                    detail: PrepCallDetail {
+                        selected_model: text(c, "selected_model"),
+                        route_id: None,
+                        route_phase_id: None,
+                        cw_other: int(c, "cw_other"),
+                        cache_write_ttl_s: int(c, "ttl_s"),
+                        native_cost: int(c, "native_cost"),
+                        native_cost_unit: text(c, "native_cost_unit"),
+                    },
                 });
             } else if let Some(t) = step.get("turn") {
                 rows.turns.push(PrepTurnRow {

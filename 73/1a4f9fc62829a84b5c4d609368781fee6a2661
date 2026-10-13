@@ -1,0 +1,81 @@
+README.md
+  s_7759b95b7c85f1::t_252a43351e76a6 135-140
+crates/adapter-claude/src/prep.rs
+  s_236b6ea430b3ea::t_25136d3a576c3a 890
+crates/adapter-codex/src/prep.rs
+  s_236b6ea430b3ea::t_0c3ba324cfdd0c 1118
+crates/adapter-copilot-cli/src/query.rs
+  s_7759b95b7c85f1::t_e764d99839277e 595-608
+crates/adapter-copilot-cli/tests/fixtures/prep/sess-router/events.jsonl
+  s_7759b95b7c85f1::t_d8bb70723cbd69 1-32
+crates/adapter-cursor/src/prep.rs
+  s_236b6ea430b3ea::t_be3c4ecbebeea1 928
+crates/adapter-omp/src/prep.rs
+  s_236b6ea430b3ea::t_9d3a05ebba6c62 1004
+crates/adapter-pi/src/prep.rs
+  s_236b6ea430b3ea::t_84c06c5d88d558 955
+crates/adapter-vscode-copilot/src/prep.rs
+  s_236b6ea430b3ea::t_efdcd9b8e88c42 397
+crates/cli/docs/prep.md
+  s_7759b95b7c85f1::t_f769c13a53d89e 33-36,46,48,56,64-65,132-133
+crates/cli/docs/research-recipes.md
+  s_7759b95b7c85f1::t_ef76f8052c9984 5,27-28,48-50,54-55,57-58,74-75
+crates/cli/recipes/call-timeline.sql
+  s_7759b95b7c85f1::t_b91d65bebf54aa 4
+crates/cli/recipes/calls_x.sql
+  s_7759b95b7c85f1::t_4f533adca1eb9d 3-4,6-7,17,20,22,25-26
+crates/cli/recipes/daily-tokens.sql
+  s_7759b95b7c85f1::t_d2cc6698a9a278 4
+crates/cli/recipes/routed-cost.sql
+  s_236b6ea430b3ea::t_c50c341423e34d 1-11
+crates/cli/recipes/routed-turns.sql
+  s_7759b95b7c85f1::t_d78f46d7f42386 1-11
+crates/cli/recipes/turn-cost.sql
+  s_7759b95b7c85f1::t_65627a46bd1285 4
+crates/cli/recipes/turns_x.sql
+  s_7759b95b7c85f1::t_d82e7eda0a506a 8
+crates/cli/src/prep.rs
+  s_236b6ea430b3ea::t_1a381e991353e2 60,402-409
+crates/cli/src/recipes.rs
+  s_7759b95b7c85f1::t_15f0b8720eb888 83-87
+crates/cli/tests/prep.rs
+  s_236b6ea430b3ea::t_6fe8cb2f8604f9 187-188
+crates/core/tests/prep_contract.rs
+  s_236b6ea430b3ea::t_714dafcbe1d677 28,138,149-152
+crates/output-prep/src/compact.rs
+  s_7759b95b7c85f1::t_3704fdc91f28ac 7-9,57-59,92-102,177-245
+crates/output-prep/src/lib.rs
+  s_7759b95b7c85f1::t_8ad978ff9c52f9 6,47-48,89-97,335-336,557-562,618-619
+crates/output-prep/src/schema.rs
+  s_7759b95b7c85f1::t_613ba72724662c 50-56,115-169
+crates/testkit/src/status.rs
+  s_236b6ea430b3ea::t_e80afdeae1cf79 177
+docs/copilot-cli-adapter.md
+  s_7759b95b7c85f1::t_34be7fa972e96e 50,85-90,111-112,141-152
+docs/fidelity.md
+  s_7759b95b7c85f1::t_e66a021acae095 26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "731a4f9fc62829a84b5c4d609368781fee6a2661",
+  "prompts": {},
+  "sessions": {
+    "s_236b6ea430b3ea": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8029f851-2223-4b78-b2d2-a52d73465917",
+        "model": "unknown"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    },
+    "s_7759b95b7c85f1": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "dacb2e6c-5b32-4254-86f1-bceb29f6aa86",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

@@ -15,6 +15,7 @@ use unisphere_core::{NativeSnapshot, SnapshotFormat, SnapshotRecord, SnapshotRef
 
 const EVENTS: &[u8] = include_bytes!("fixtures/events.jsonl");
 const LEGACY: &[u8] = include_bytes!("fixtures/legacy.json");
+const ROUTER: &[u8] = include_bytes!("fixtures/prep/sess-router/events.jsonl");
 
 fn source(adapter: &str, representation: &str, revision: &str) -> SourceEvidence {
     SourceEvidence {
@@ -36,9 +37,12 @@ fn source(adapter: &str, representation: &str, revision: &str) -> SourceEvidence
 }
 
 fn current_records() -> Vec<NativeRecord> {
+    jsonl_records(EVENTS)
+}
+
+fn jsonl_records(text: &[u8]) -> Vec<NativeRecord> {
     let mut offset = 0_u64;
-    EVENTS
-        .split(|byte| *byte == b'\n')
+    text.split(|byte| *byte == b'\n')
         .filter(|line| !line.is_empty())
         .map(|line| {
             let record = NativeRecord {
@@ -410,5 +414,60 @@ fn declared_source_bounds_refuse_before_decoding() {
     assert_eq!(
         failure.kind(),
         unisphere_core::query::QueryFailureCode::ResourceLimit
+    );
+}
+
+#[test]
+fn usage_records_are_per_call_invocation_usage_and_router_totals_are_not() {
+    let source = source(DESCRIPTOR.id, "copilot-cli-events-jsonl", "router-r1");
+    let records = jsonl_records(ROUTER);
+    let inspected = CopilotCliAdapter
+        .inspect(
+            NativeQueryInput::Records {
+                source: &source,
+                records: &records,
+            },
+            ContentAccess::default(),
+            &QueryLimits::default(),
+        )
+        .unwrap();
+    let usage: Vec<_> = inspected
+        .observations
+        .iter()
+        .flat_map(|observation| &observation.facets)
+        .filter_map(|facet| match facet {
+            ObservationFacet::Usage {
+                owner,
+                scope,
+                counters,
+            } => Some((owner.as_deref(), *scope, counters)),
+            _ => None,
+        })
+        .collect();
+    // One invocation per `session.usage_record`; phase and decision totals
+    // would double count and are not usage facets.
+    assert_eq!(usage.len(), 9);
+    assert!(
+        usage
+            .iter()
+            .all(|(_, scope, _)| *scope == UsageScope::Invocation)
+    );
+    let (_, _, repair) = usage
+        .iter()
+        .find(|(owner, _, _)| *owner == Some("prov-api-f2-r1"))
+        .unwrap();
+    assert_eq!(
+        (
+            repair.input_tokens,
+            repair.output_tokens,
+            repair.cache_read_tokens,
+            repair.cache_write_tokens
+        ),
+        (Some(38803), Some(187), Some(0), Some(38799))
+    );
+    let input: u64 = usage.iter().filter_map(|(_, _, c)| c.input_tokens).sum();
+    assert_eq!(
+        input,
+        1665 + 22887 + 23115 + 23350 + 1511 + 1603 + 38803 + 40503 + 4250
     );
 }

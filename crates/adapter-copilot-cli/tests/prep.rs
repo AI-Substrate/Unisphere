@@ -2,9 +2,11 @@
 //!
 //! `fixtures/prep/sess-0001/events.jsonl` exercises the events dialect (calls
 //! split across message and usage records, subagent and utility calls, typed
-//! events, tool uses, malformed and untimed lines); `fixtures/prep/legacy-0001.json`
-//! the legacy document. Every text field says "placeholder". The pre-existing
-//! `fixtures/{events.jsonl,legacy.json}` mark every sensitive value "SENSITIVE".
+//! events, tool uses, malformed and untimed lines); `fixtures/prep/sess-router/events.jsonl`
+//! a current-CLI model-router (HydraFusion) session with `session.usage_record`
+//! usage; `fixtures/prep/legacy-0001.json` the legacy document. Every text
+//! field says "placeholder". The pre-existing `fixtures/{events.jsonl,legacy.json}`
+//! mark every sensitive value "SENSITIVE".
 
 use unisphere_adapter_copilot_cli::{
     CopilotCliLegacyPrepFold, CopilotCliPrepFold, DESCRIPTOR, LEGACY_PREP_POLICY_VERSION,
@@ -15,8 +17,8 @@ use unisphere_core::{
     prep::{
         CacheWriteBasis, CallSighting, CompactionCounts, CompactionSample, ContextSample,
         ModelSwitch, PREP_CHECKPOINT_FORMAT, PrepCallRow, PrepCheckpoint, PrepEventKind, PrepFold,
-        PrepInput, PrepOptions, PrepRows, PrepSourceKind, PrepSourceMeta, SessionFacts,
-        SessionSkips, ToolOutcome, ToolSighting, TurnOrigin,
+        PrepInput, PrepOptions, PrepRows, PrepSourceKind, PrepSourceMeta, RouteSighting,
+        SessionFacts, SessionSkips, ToolOutcome, ToolSighting, TurnOrigin,
     },
 };
 
@@ -25,6 +27,10 @@ const EVENTS: &str = include_str!("fixtures/prep/sess-0001/events.jsonl");
 const LEGACY: &str = include_str!("fixtures/prep/legacy-0001.json");
 const SENSITIVE_EVENTS: &str = include_str!("fixtures/events.jsonl");
 const SENSITIVE_LEGACY: &str = include_str!("fixtures/legacy.json");
+/// Synthetic router session shaped like a current (1.0.97) Copilot CLI
+/// HydraFusion session: `session.usage_record` usage, fusion decisions,
+/// phases and totals, real model names and counters, placeholder text.
+const ROUTER: &str = include_str!("fixtures/prep/sess-router/events.jsonl");
 
 fn records(text: &str) -> Vec<NativeRecord> {
     let mut offset = 0;
@@ -121,7 +127,8 @@ fn fold_legacy(document: &str, options: PrepOptions) -> Run {
 }
 
 /// The canonical reader's merge: one row per (msg_id, request_id) keeping the
-/// first sighting's ordering facts, per-field maxima and the sum of records.
+/// first sighting's ordering facts, per-field maxima, the sum of records, the
+/// first non-null router/TTL/cost-unit facts and a native-TTL basis.
 fn canonical(rows: &PrepRows) -> PrepRows {
     let max = |a: Option<i64>, b: Option<i64>| match (a, b) {
         (Some(a), Some(b)) => Some(a.max(b)),
@@ -141,6 +148,23 @@ fn canonical(rows: &PrepRows) -> PrepRows {
                 first.cache_read = max(first.cache_read, call.cache_read);
                 first.output = max(first.output, call.output);
                 first.records += call.records;
+                if call.cache_write_basis == CacheWriteBasis::Split {
+                    first.cache_write_basis = CacheWriteBasis::Split;
+                }
+                let (into, from) = (&mut first.detail, &call.detail);
+                into.cw_other = max(into.cw_other, from.cw_other);
+                into.native_cost = max(into.native_cost, from.native_cost);
+                into.cache_write_ttl_s = into.cache_write_ttl_s.or(from.cache_write_ttl_s);
+                for (slot, value) in [
+                    (&mut into.selected_model, &from.selected_model),
+                    (&mut into.route_id, &from.route_id),
+                    (&mut into.route_phase_id, &from.route_phase_id),
+                    (&mut into.native_cost_unit, &from.native_cost_unit),
+                ] {
+                    if slot.is_none() {
+                        slot.clone_from(value);
+                    }
+                }
             }
             None => {
                 assert_eq!(call.sighting, CallSighting::First);
@@ -160,7 +184,7 @@ fn fold_identities_match_the_catalogue_descriptors() {
     assert_eq!(events.harness(), "copilot-cli");
     assert_eq!(events.harness(), DESCRIPTOR.id);
     assert_eq!(events.policy(), PREP_POLICY_VERSION);
-    assert_eq!(PREP_POLICY_VERSION, "copilot-cli/prep-v3");
+    assert_eq!(PREP_POLICY_VERSION, "copilot-cli/prep-v4");
     assert_eq!(events.kind(), PrepSourceKind::Append);
     assert_eq!(events.pattern(), "*/events.jsonl");
     assert_eq!(events.describe(EVENTS_FILE), PrepSourceMeta::default());
@@ -1044,7 +1068,7 @@ fn foreign_checkpoints_and_the_other_representation_are_refused() {
     let meta = PrepSourceMeta::default();
     let good = fold(EVENTS).checkpoint;
     assert_eq!(good.format, PREP_CHECKPOINT_FORMAT);
-    assert_eq!(good.policy, "copilot-cli/prep-v3");
+    assert_eq!(good.policy, "copilot-cli/prep-v4");
     let refused = |fold: &dyn PrepFold, checkpoint: PrepCheckpoint| {
         fold.open(&meta, "s", 0, Some(&checkpoint))
             .err()
@@ -1157,4 +1181,448 @@ fn sensitive_fixture_values_never_leave_the_default_fold() {
         let emitted = format!("{:?}{:?}", run.rows, facts);
         assert!(!emitted.contains("SENSITIVE"), "{emitted}");
     }
+}
+
+// ---------------------------------------------------------------------------
+// Model routers and `session.usage_record`
+// ---------------------------------------------------------------------------
+
+/// (call id, model ran, selected model, router phase, sidechain,
+/// [input, cw_1h, cw_5m, cache_read, output, cw_other], native TTL, basis,
+/// nano-AIU, records)
+type RouterCall<'a> = (
+    &'a str,
+    &'a str,
+    Option<&'a str>,
+    Option<&'a str>,
+    bool,
+    [Option<i64>; 6],
+    Option<i64>,
+    CacheWriteBasis,
+    Option<i64>,
+    i64,
+);
+
+fn router_call(call: &PrepCallRow) -> RouterCall<'_> {
+    let d = &call.detail;
+    (
+        call.msg_id.as_deref().unwrap_or_default(),
+        call.model.as_deref().unwrap_or_default(),
+        d.selected_model.as_deref(),
+        d.route_phase_id.as_deref(),
+        call.is_sidechain,
+        [
+            call.input,
+            call.cw_1h,
+            call.cw_5m,
+            call.cache_read,
+            call.output,
+            d.cw_other,
+        ],
+        d.cache_write_ttl_s,
+        call.cache_write_basis,
+        d.native_cost,
+        call.records,
+    )
+}
+
+#[test]
+fn usage_records_fold_into_calls_with_native_ttl_cost_and_the_model_that_ran() {
+    use CacheWriteBasis::{Fallback5m, Split};
+    let s = Some;
+    let hf = Some("hydrafusion");
+    let run = fold(ROUTER);
+    let calls = canonical(&run.rows).calls;
+    let expected: Vec<RouterCall<'static>> = vec![
+        // Subagent call: 1800 s TTL is neither 1 h nor 5 m, so it is cw_other.
+        (
+            "api-s1",
+            "gpt-5.6-luna",
+            None,
+            None,
+            true,
+            [s(1665), s(0), s(0), s(0), s(15), s(1662)],
+            s(1800),
+            Split,
+            s(43_410_000),
+            2,
+        ),
+        (
+            "api-f1-1",
+            "gpt-6-luna",
+            hf,
+            Some("fusion-0001:phase:0"),
+            false,
+            [s(22887), s(0), s(0), s(0), s(32), s(22884)],
+            s(1800),
+            Split,
+            s(287_680_000),
+            2,
+        ),
+        // Utility call: its native 1800 s TTL is honoured the same way.
+        (
+            "util-0001",
+            "gpt-5.4-nano",
+            None,
+            None,
+            true,
+            [s(545), s(0), s(0), s(0), s(43), s(12)],
+            s(1800),
+            Split,
+            None,
+            1,
+        ),
+        (
+            "api-f2-s1",
+            "gpt-6.1-sol",
+            hf,
+            Some("fusion-0002:phase:0"),
+            false,
+            [s(23115), s(0), s(0), s(0), s(18), s(23112)],
+            s(1800),
+            Split,
+            s(5_796_600_000),
+            1,
+        ),
+        (
+            "api-f2-s2",
+            "gpt-6.1-sol",
+            hf,
+            Some("fusion-0002:phase:0"),
+            false,
+            [s(23350), s(0), s(0), s(23112), s(20), s(235)],
+            s(1800),
+            Split,
+            s(310_470_000),
+            1,
+        ),
+        // The judge reviews outside the root conversation: a sidechain call;
+        // no native TTL, so the documented fallback applies.
+        (
+            "api-f2-j1",
+            "gpt-6-luna",
+            hf,
+            Some("fusion-0002:judge"),
+            true,
+            [s(1511), s(0), s(1508), s(0), s(62), s(0)],
+            None,
+            Fallback5m,
+            s(21_980_000),
+            1,
+        ),
+        (
+            "api-f2-j2",
+            "gpt-6-luna",
+            hf,
+            Some("fusion-0002:judge"),
+            true,
+            [s(1603), s(0), s(92), s(1508), s(35), s(0)],
+            None,
+            Fallback5m,
+            s(4_438_000),
+            1,
+        ),
+        // Claude's native 300 s TTL is the 5 m class.
+        (
+            "api-f2-r1",
+            "claude-opus-5.5",
+            hf,
+            Some("fusion-0002:repair"),
+            false,
+            [s(38803), s(0), s(38799), s(0), s(187), s(0)],
+            s(300),
+            Split,
+            s(19_775_100_000),
+            2,
+        ),
+        (
+            "api-f2-r2",
+            "claude-opus-5.5",
+            hf,
+            Some("fusion-0002:repair"),
+            false,
+            [s(40503), s(0), s(1702), s(38799), s(122), s(0)],
+            s(300),
+            Split,
+            s(1_871_780_000),
+            2,
+        ),
+        (
+            "api-s2",
+            "gpt-5.6-luna",
+            None,
+            None,
+            true,
+            [s(4250), s(0), s(0), s(1662), s(143), s(2585)],
+            s(1800),
+            Split,
+            s(85_169_000),
+            2,
+        ),
+    ];
+    assert_eq!(calls.iter().map(router_call).collect::<Vec<_>>(), expected);
+    for call in &calls {
+        let unit = call.detail.native_cost.map(|_| "nano_aiu");
+        assert_eq!(call.detail.native_cost_unit.as_deref(), unit);
+    }
+    // Root-scope router calls open and stay in the turn their route serves.
+    let turn = |id: &str| {
+        calls
+            .iter()
+            .find(|c| c.msg_id.as_deref() == Some(id))
+            .unwrap()
+            .turn_no
+    };
+    assert_eq!(turn("api-f1-1"), Some(1));
+    assert_eq!(turn("api-f2-s1"), Some(2));
+    assert_eq!(turn("api-f2-r2"), Some(2));
+    assert_eq!(run.facts.turns, 2);
+    // The latest main-chain context is the repair call's, never the judge's:
+    // input + cache_read + every cache-write class.
+    let latest = run.facts.latest_context.unwrap();
+    assert_eq!(latest.model.as_deref(), Some("claude-opus-5.5"));
+    assert_eq!(latest.total, Some(40503 + 38799 + 1702));
+}
+
+#[test]
+fn router_decisions_and_phases_become_routes_and_route_phases() {
+    let rows = fold(ROUTER).rows;
+    let routes: Vec<_> = rows
+        .routes
+        .iter()
+        .map(|r| (r.route_id.as_deref().unwrap(), r.sighting, r.turn_no))
+        .collect();
+    assert_eq!(
+        routes,
+        [
+            ("fusion-0001", RouteSighting::Plan, None),
+            ("fusion-0001", RouteSighting::Outcome, Some(1)),
+            ("fusion-0002", RouteSighting::Plan, None),
+            ("fusion-0002", RouteSighting::Outcome, Some(2)),
+        ]
+    );
+    let plan = &rows.routes[2];
+    assert_eq!(plan.selected_model.as_deref(), Some("hydrafusion"));
+    assert_eq!(plan.pattern.as_deref(), Some("cascade"));
+    assert_eq!(
+        plan.rule_id.as_deref(),
+        Some("cascade_sol61_medium_luna6_high_opus55_medium")
+    );
+    assert_eq!(
+        (plan.route_source.as_deref(), plan.policy.as_deref()),
+        (Some("capi_plan"), Some("standard"))
+    );
+    assert_eq!(
+        plan.policy_version.as_deref(),
+        Some("hydrafusion_v2_2026-10-07")
+    );
+    assert_eq!(plan.latency_ms, Some(1109));
+    assert_eq!(
+        plan.scores.as_deref(),
+        Some(r#"{"codeGen":0.352,"debugging":0.0025,"reasoning":0.2118,"toolUse":0.1108}"#)
+    );
+    assert_eq!(
+        plan.planned_phases.as_deref(),
+        Some("primary/solver,judge/judge,repair/solver?")
+    );
+    assert_eq!(
+        [
+            plan.primary_model.as_deref(),
+            plan.secondary_model.as_deref(),
+            plan.judge_model.as_deref(),
+            plan.repair_model.as_deref(),
+            plan.fallback_model.as_deref(),
+        ],
+        [
+            Some("gpt-6.1-sol"),
+            Some("gpt-6-luna"),
+            Some("gpt-6-luna"),
+            Some("claude-opus-5.5"),
+            Some("gpt-6-luna"),
+        ]
+    );
+    assert_eq!(
+        (plan.final_model.as_deref(), plan.request_count),
+        (None, None)
+    );
+    let outcome = &rows.routes[3];
+    assert_eq!(outcome.final_model.as_deref(), Some("claude-opus-5.5"));
+    assert_eq!(outcome.outcome.as_deref(), Some("completed"));
+    assert_eq!(
+        (outcome.phase_count, outcome.request_count),
+        (Some(3), Some(6))
+    );
+    assert_eq!(outcome.native_cost_unit.as_deref(), Some("nano_aiu"));
+    assert_eq!(outcome.duration_ms, Some(163_458));
+
+    let phases: Vec<_> = rows
+        .route_phases
+        .iter()
+        .map(|p| {
+            (
+                p.phase_id.as_deref().unwrap(),
+                p.kind.as_deref().unwrap(),
+                p.scope.as_deref().unwrap(),
+                p.model.as_deref().unwrap(),
+                p.verdict.as_deref(),
+                p.turn_no,
+            )
+        })
+        .collect();
+    assert_eq!(
+        phases,
+        [
+            (
+                "fusion-0001:phase:0",
+                "primary",
+                "root",
+                "gpt-6-luna",
+                None,
+                Some(1)
+            ),
+            (
+                "fusion-0002:phase:0",
+                "primary",
+                "root",
+                "gpt-6.1-sol",
+                None,
+                Some(2)
+            ),
+            (
+                "fusion-0002:judge",
+                "judge",
+                "review",
+                "gpt-6-luna",
+                Some("reject"),
+                Some(2)
+            ),
+            (
+                "fusion-0002:repair",
+                "repair",
+                "root",
+                "claude-opus-5.5",
+                None,
+                Some(2)
+            ),
+        ]
+    );
+}
+
+#[test]
+fn route_phases_and_outcomes_reconcile_with_the_calls_they_attribute() {
+    let run = fold(ROUTER);
+    let calls = canonical(&run.rows).calls;
+    let totals = |phase: Option<&str>, route: Option<&str>| {
+        let mut sum = [0_i64; 6];
+        for call in calls.iter().filter(|c| {
+            phase.is_none_or(|p| c.detail.route_phase_id.as_deref() == Some(p))
+                && route.is_none_or(|r| c.detail.route_id.as_deref() == Some(r))
+        }) {
+            let write = call.cw_1h.unwrap_or(0)
+                + call.cw_5m.unwrap_or(0)
+                + call.detail.cw_other.unwrap_or(0);
+            for (slot, value) in sum.iter_mut().zip([
+                1,
+                call.input.unwrap(),
+                call.output.unwrap(),
+                call.cache_read.unwrap(),
+                write,
+                call.detail.native_cost.unwrap(),
+            ]) {
+                *slot += value;
+            }
+        }
+        sum
+    };
+    let native = |requests, input, output, read, write, cost: Option<i64>| {
+        [requests, input, output, read, write, cost].map(|v: Option<i64>| v.unwrap())
+    };
+    for phase in run
+        .rows
+        .route_phases
+        .iter()
+        .filter(|p| p.route_id.as_deref() == Some("fusion-0002"))
+    {
+        assert_eq!(
+            totals(phase.phase_id.as_deref(), None),
+            native(
+                phase.request_count,
+                phase.input,
+                phase.output,
+                phase.cache_read,
+                phase.cache_write,
+                phase.native_cost
+            ),
+            "{:?}",
+            phase.phase_id
+        );
+    }
+    let outcome = &run.rows.routes[3];
+    assert_eq!(
+        totals(None, Some("fusion-0002")),
+        native(
+            outcome.request_count,
+            outcome.input,
+            outcome.output,
+            outcome.cache_read,
+            outcome.cache_write,
+            outcome.native_cost
+        )
+    );
+    // Copilot also counts a subagent request made during the phase (api-s1)
+    // that carries no fusion tag: the native totals exceed the tagged calls
+    // by exactly that call.
+    let first = &run.rows.route_phases[0];
+    let tagged = totals(first.phase_id.as_deref(), None);
+    let s1 = calls
+        .iter()
+        .find(|c| c.msg_id.as_deref() == Some("api-s1"))
+        .unwrap();
+    let s1 = [
+        1,
+        s1.input.unwrap(),
+        s1.output.unwrap(),
+        s1.cache_read.unwrap(),
+        s1.detail.cw_other.unwrap(),
+        s1.detail.native_cost.unwrap(),
+    ];
+    let combined: Vec<i64> = tagged.iter().zip(s1).map(|(a, b)| a + b).collect();
+    assert_eq!(
+        combined,
+        native(
+            first.request_count,
+            first.input,
+            first.output,
+            first.cache_read,
+            first.cache_write,
+            first.native_cost
+        )
+    );
+}
+
+#[test]
+fn router_session_folds_identically_under_every_batch_split_and_resume() {
+    let whole = fold(ROUTER);
+    let expected = canonical(&whole.rows);
+    let n = records(ROUTER).len();
+    let mut plans: Vec<Vec<usize>> = (1..n).map(|k| vec![k]).collect();
+    plans.push((1..n).collect());
+    for splits in plans {
+        for resume in [false, true] {
+            let run = fold_with(ROUTER, &splits, resume, PrepOptions::default());
+            let label = format!("splits={splits:?} resume={resume}");
+            assert_eq!(canonical(&run.rows), expected, "{label}");
+            assert_eq!(run.facts, whole.facts, "{label}");
+            assert_eq!(run.checkpoint, whole.checkpoint, "{label}");
+        }
+    }
+}
+
+#[test]
+fn router_rows_carry_no_message_content() {
+    // Message, phase, hint and handoff text are placeholders; none may leave
+    // the fold as a row (the session's cwd is metadata, not a row field).
+    let rows = fold(ROUTER).rows;
+    let emitted = format!("{rows:?}");
+    assert!(!emitted.contains("placeholder"), "{emitted}");
 }

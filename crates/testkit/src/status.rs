@@ -174,6 +174,7 @@ impl PrepFoldSession for ScriptedSession {
                     turn_no: int(c, "turn_no"),
                     call_in_turn: None,
                     records: 1,
+                    detail: Default::default(),
                 });
             } else if let Some(t) = step.get("turn") {
                 rows.turns.push(PrepTurnRow {

@@ -592,6 +592,20 @@ fn current_facets(
                 });
             }
         }
+        // Current Copilot writes per-call usage here instead of `assistant.usage`.
+        "session.usage_record" => {
+            if let Some(usage) = data.get("usage").and_then(Value::as_object) {
+                let counters = usage_counters(usage, source_id, offset, issues);
+                if has_usage(&counters) {
+                    facets.push(ObservationFacet::Usage {
+                        owner: nonempty_string(usage, "providerCallId")
+                            .or_else(|| nonempty_string(usage, "apiCallId")),
+                        scope: UsageScope::Invocation,
+                        counters,
+                    });
+                }
+            }
+        }
         "session.usage_checkpoint" | "session.shutdown" => {
             let counters = usage_counters(data, source_id, offset, issues);
             if has_usage(&counters) {

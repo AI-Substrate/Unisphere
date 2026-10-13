@@ -9,7 +9,7 @@ use std::fmt::Write;
 use unisphere_core::prep::PREP_TABLE_SCHEMA_VERSION;
 
 /// Canonical view names, in definition order.
-pub const VIEWS: [&str; 8] = [
+pub const VIEWS: [&str; 10] = [
     "sources_v",
     "sessions_v",
     "calls_v",
@@ -18,6 +18,8 @@ pub const VIEWS: [&str; 8] = [
     "events_v",
     "tool_uses_v",
     "compactions_v",
+    "routes_v",
+    "route_phases_v",
 ];
 
 /// Keeps rows of each source's current generation (as published in `sources`).
@@ -42,6 +44,50 @@ const TOOL_FIELDS: [&str; 14] = [
     "outcome",
     "duration_ms",
     "turn_no",
+];
+
+const ROUTE_FIELDS: [&str; 32] = [
+    "native_offset",
+    "native_key",
+    "ts",
+    "ts_ms",
+    "turn_no",
+    "selected_model",
+    "pattern",
+    "rule_id",
+    "route_source",
+    "policy",
+    "policy_version",
+    "latency_ms",
+    "scores",
+    "planned_phases",
+    "primary_model",
+    "secondary_model",
+    "judge_model",
+    "repair_model",
+    "fallback_model",
+    "follow_up_model",
+    "final_model",
+    "outcome",
+    "degraded_reason",
+    "phase_count",
+    "request_count",
+    "input",
+    "output",
+    "cache_read",
+    "cache_write",
+    "native_cost",
+    "native_cost_unit",
+    "duration_ms",
+];
+
+/// Call facts a later sighting may be first to record: first non-null value.
+const CALL_FIRSTS: [&str; 5] = [
+    "selected_model",
+    "route_id",
+    "route_phase_id",
+    "cache_write_ttl_s",
+    "native_cost_unit",
 ];
 
 /// DuckDB source expression reading exactly the committed parts of `table`.
@@ -74,14 +120,19 @@ pub(crate) fn views_sql(parts: &[String]) -> String {
          -- or `SET file_search_path = 'TARGET';` before `.read TARGET/views.sql`.\n\
          -- *_v views keep only each source's current generation. calls_v merges the\n\
          -- sightings of one (source, generation, msg_id, request_id) call: counters\n\
-         -- take the per-field maximum, stop_reason the last non-null value, records\n\
-         -- the sum, every other field the first sighting's; a call with neither id\n\
-         -- is its own row. tool_uses_v merges the use and result sightings of one\n\
+         -- (including cw_other and native_cost) take the per-field maximum,\n\
+         -- stop_reason the last non-null value, records the sum, selected_model,\n\
+         -- route_id, route_phase_id, cache_write_ttl_s and native_cost_unit the first\n\
+         -- non-null value, cache_write_basis 'split' (native TTL) over a fallback,\n\
+         -- every other field the first sighting's; a call with neither id is its own\n\
+         -- row. tool_uses_v merges the use and result sightings of one\n\
          -- (source, generation, tool_use_id): each field is the first non-null value,\n\
-         -- use sightings first. compactions_v adds first_context_after, the context\n\
-         -- (input + cache_read + cw_1h + cw_5m; no cache write when the call records\n\
-         -- none, cache_write_basis 'none') of the first main-chain call after\n\
-         -- the boundary in the same source.\n\n"
+         -- use sightings first. routes_v merges the plan and outcome sightings of one\n\
+         -- (source, generation, route_id): each field is the first non-null value.\n\
+         -- compactions_v adds first_context_after, the context (input + cache_read +\n\
+         -- cw_1h + cw_5m + cw_other; no cache write when the call records none,\n\
+         -- cache_write_basis 'none') of the first main-chain call after the boundary\n\
+         -- in the same source.\n\n"
     );
     let _ = writeln!(
         sql,
@@ -93,6 +144,10 @@ pub(crate) fn views_sql(parts: &[String]) -> String {
     );
 
     let call_group = "PARTITION BY source, generation, msg_id, request_id, solo";
+    let call_firsts = CALL_FIRSTS
+        .iter()
+        .map(|f| format!("      first_value({f} IGNORE NULLS) OVER whole AS {f},\n"))
+        .collect::<String>();
     let _ = writeln!(
         sql,
         "CREATE OR REPLACE VIEW calls_v AS\n\
@@ -104,6 +159,10 @@ pub(crate) fn views_sql(parts: &[String]) -> String {
          \x20     max(cw_5m) OVER grp AS cw_5m,\n\
          \x20     max(cache_read) OVER grp AS cache_read,\n\
          \x20     max(output) OVER grp AS output,\n\
+         \x20     max(cw_other) OVER grp AS cw_other,\n\
+         \x20     max(native_cost) OVER grp AS native_cost,\n\
+         {call_firsts}\
+         \x20     first_value(cache_write_basis) OVER basis AS cache_write_basis,\n\
          \x20     CAST(sum(records) OVER grp AS BIGINT) AS records),\n\
          \x20   row_number() OVER ordered AS pos\n\
          \x20 FROM (\n\
@@ -115,6 +174,8 @@ pub(crate) fn views_sql(parts: &[String]) -> String {
          \x20 WINDOW grp AS ({call_group}),\n\
          \x20   ordered AS ({call_group} ORDER BY {NATIVE_ORDER}),\n\
          \x20   whole AS ({call_group} ORDER BY {NATIVE_ORDER}\n\
+         \x20     ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING),\n\
+         \x20   basis AS ({call_group} ORDER BY cache_write_basis <> 'split', {NATIVE_ORDER}\n\
          \x20     ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)\n\
          ) WHERE pos = 1;\n",
         parts_of(parts, "calls", true)
@@ -159,8 +220,9 @@ pub(crate) fn views_sql(parts: &[String]) -> String {
         "CREATE OR REPLACE VIEW compactions_v AS\n\
          SELECT e.*, (\n\
          \x20 SELECT c.input + c.cache_read + CASE WHEN c.cw_1h IS NULL AND c.cw_5m IS NULL\n\
+         \x20     AND c.cw_other IS NULL\n\
          \x20     THEN CASE WHEN c.cache_write_basis = 'none' THEN 0 END\n\
-         \x20     ELSE coalesce(c.cw_1h, 0) + coalesce(c.cw_5m, 0) END\n\
+         \x20     ELSE coalesce(c.cw_1h, 0) + coalesce(c.cw_5m, 0) + coalesce(c.cw_other, 0) END\n\
          \x20 FROM calls_v c\n\
          \x20 WHERE c.source = e.source AND c.generation = e.generation AND NOT c.is_sidechain\n\
          \x20   AND CASE WHEN e.native_offset IS NOT NULL AND c.native_offset IS NOT NULL\n\
@@ -170,7 +232,37 @@ pub(crate) fn views_sql(parts: &[String]) -> String {
          \x20 ORDER BY c.native_offset NULLS LAST, c.ts_ms NULLS LAST, c.native_key NULLS LAST,\n\
          \x20   c.msg_id NULLS LAST, c.request_id NULLS LAST\n\
          \x20 LIMIT 1) AS first_context_after\n\
-         FROM events_v e WHERE e.kind = 'compaction';"
+         FROM events_v e WHERE e.kind = 'compaction';\n"
+    );
+
+    let route_group = "PARTITION BY source, generation, route_id, solo";
+    let route_firsts = ROUTE_FIELDS
+        .iter()
+        .map(|f| format!("      first_value({f} IGNORE NULLS) OVER whole AS {f}"))
+        .collect::<Vec<_>>()
+        .join(",\n");
+    let _ = writeln!(
+        sql,
+        "CREATE OR REPLACE VIEW routes_v AS\n\
+         SELECT * EXCLUDE (sighting, filename, file_row_number, solo, pos) FROM (\n\
+         \x20 SELECT * REPLACE (\n{route_firsts}),\n\
+         \x20   row_number() OVER ordered AS pos\n\
+         \x20 FROM (\n\
+         \x20   SELECT p.*, CASE WHEN p.route_id IS NULL\n\
+         \x20     THEN p.filename || '#' || p.file_row_number END AS solo\n\
+         \x20   FROM {} p\n\
+         \x20   {CURRENT}\n\
+         \x20 )\n\
+         \x20 WINDOW ordered AS ({route_group} ORDER BY {NATIVE_ORDER}),\n\
+         \x20   whole AS ({route_group} ORDER BY {NATIVE_ORDER}\n\
+         \x20     ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)\n\
+         ) WHERE pos = 1;\n",
+        parts_of(parts, "routes", true)
+    );
+    let _ = writeln!(
+        sql,
+        "CREATE OR REPLACE VIEW route_phases_v AS\nSELECT p.* FROM {} p\n{CURRENT};",
+        parts_of(parts, "route_phases", false)
     );
     sql
 }

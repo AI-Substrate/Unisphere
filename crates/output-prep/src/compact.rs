@@ -4,7 +4,9 @@
 
 use std::collections::{BTreeMap, HashMap, hash_map::Entry};
 
-use unisphere_core::prep::{CallSighting, PrepCallRow, PrepToolUseRow, ToolSighting};
+use unisphere_core::prep::{
+    CacheWriteBasis, CallSighting, PrepCallRow, PrepRouteRow, PrepToolUseRow, ToolSighting,
+};
 
 /// Position of a row: rank of its part in file-name order (the order
 /// `views.sql` uses) and its row number inside the part.
@@ -52,8 +54,9 @@ fn max(a: Option<i64>, b: Option<i64>) -> Option<i64> {
 }
 
 /// One row per call: the first sighting's fields, per-field maximum counters,
-/// the last non-null stop reason and the summed record count. A call with
-/// neither id is never merged.
+/// the last non-null stop reason, the summed record count, the first non-null
+/// router/TTL/cost-unit facts and a native-TTL (`split`) basis over a fallback
+/// one. A call with neither id is never merged.
 pub(crate) fn calls(rows: Vec<(PrepCallRow, Pos)>, current: &Current<'_>) -> Vec<PrepCallRow> {
     let mut rows: Vec<_> = rows
         .into_iter()
@@ -86,6 +89,17 @@ pub(crate) fn calls(rows: Vec<(PrepCallRow, Pos)>, current: &Current<'_>) -> Vec
                     merged.stop_reason = row.stop_reason;
                 }
                 merged.records += row.records;
+                if row.cache_write_basis == CacheWriteBasis::Split {
+                    merged.cache_write_basis = CacheWriteBasis::Split;
+                }
+                let (into, from) = (&mut merged.detail, row.detail);
+                into.cw_other = max(into.cw_other, from.cw_other);
+                into.native_cost = max(into.native_cost, from.native_cost);
+                into.selected_model = into.selected_model.take().or(from.selected_model);
+                into.route_id = into.route_id.take().or(from.route_id);
+                into.route_phase_id = into.route_phase_id.take().or(from.route_phase_id);
+                into.cache_write_ttl_s = into.cache_write_ttl_s.or(from.cache_write_ttl_s);
+                into.native_cost_unit = into.native_cost_unit.take().or(from.native_cost_unit);
             }
             Entry::Vacant(slot) => {
                 slot.insert(out.len());
@@ -159,4 +173,73 @@ pub(crate) fn tool_uses(
             merged
         })
         .collect()
+}
+
+/// One row per routing decision: every field is the first non-null value over
+/// its sightings in native order. A row without a route id is never merged.
+pub(crate) fn routes(rows: Vec<(PrepRouteRow, Pos)>, current: &Current<'_>) -> Vec<PrepRouteRow> {
+    let mut rows: Vec<_> = rows
+        .into_iter()
+        .filter(|(r, _)| is_current(current, &r.source, r.generation))
+        .collect();
+    rows.sort_by_key(|(r, pos)| native_order(r.native_offset, *pos));
+    let mut index: HashMap<(String, u32, String), usize> = HashMap::new();
+    let mut out: Vec<PrepRouteRow> = Vec::with_capacity(rows.len());
+    for (row, _) in rows {
+        let Some(id) = row.route_id.clone() else {
+            out.push(row);
+            continue;
+        };
+        let slot = match index.entry((row.source.clone(), row.generation, id)) {
+            Entry::Occupied(slot) => *slot.get(),
+            Entry::Vacant(slot) => {
+                slot.insert(out.len());
+                out.push(row);
+                continue;
+            }
+        };
+        let merged = &mut out[slot];
+        macro_rules! fill {
+            ($($field:ident),*) => {$(
+                if merged.$field.is_none() {
+                    merged.$field = row.$field.clone();
+                }
+            )*};
+        }
+        fill!(
+            native_offset,
+            native_key,
+            ts,
+            ts_ms,
+            turn_no,
+            selected_model,
+            pattern,
+            rule_id,
+            route_source,
+            policy,
+            policy_version,
+            latency_ms,
+            scores,
+            planned_phases,
+            primary_model,
+            secondary_model,
+            judge_model,
+            repair_model,
+            fallback_model,
+            follow_up_model,
+            final_model,
+            outcome,
+            degraded_reason,
+            phase_count,
+            request_count,
+            input,
+            output,
+            cache_read,
+            cache_write,
+            native_cost,
+            native_cost_unit,
+            duration_ms
+        );
+    }
+    out
 }

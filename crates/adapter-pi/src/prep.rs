@@ -952,6 +952,7 @@ impl State {
             turn_no: None,
             call_in_turn: None,
             records: 1,
+            detail: Default::default(),
         };
         if self.committed.contains(&key) {
             row.sighting = CallSighting::Update;

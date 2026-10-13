@@ -25,7 +25,7 @@ fn text<T: serde::Serialize>(value: T) -> String {
 
 #[test]
 fn versions_are_the_published_contract() {
-    assert_eq!(PREP_TABLE_SCHEMA_VERSION, 2);
+    assert_eq!(PREP_TABLE_SCHEMA_VERSION, 3);
     assert_eq!(PREP_CHECKPOINT_FORMAT, 1);
     assert_eq!(DEFAULT_ROOT_LABEL, "default");
 }
@@ -135,6 +135,7 @@ fn unrecorded_row_fields_serialize_as_null_not_zero() {
         turn_no: None,
         call_in_turn: None,
         records: 1,
+        detail: Default::default(),
     };
     let value = serde_json::to_value(&row).unwrap();
     for field in [
@@ -145,6 +146,10 @@ fn unrecorded_row_fields_serialize_as_null_not_zero() {
         "cw_1h",
         "cache_read",
         "output",
+        "selected_model",
+        "cw_other",
+        "cache_write_ttl_s",
+        "native_cost",
     ] {
         assert_eq!(value[field], Value::Null, "{field}");
     }

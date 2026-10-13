@@ -925,6 +925,7 @@ fn untimed_call(source: &str, generation: u32) -> PrepCallRow {
         turn_no: None,
         call_in_turn: None,
         records: 1,
+        detail: Default::default(),
     }
 }
 

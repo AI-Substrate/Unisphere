@@ -17,10 +17,11 @@ use unisphere_core::{
     PipelineErrorKind, SourceIdentity,
     prep::{
         CacheWriteBasis, CallSighting, PREP_CHECKPOINT_FORMAT, PREP_TABLE_SCHEMA_VERSION,
-        PrepCallRow, PrepCheckpoint, PrepEventKind, PrepEventRow, PrepReplaceReason, PrepRows,
-        PrepSetState, PrepSourceKind, PrepSourceMeta, PrepSourceState, PrepSourceStatus, PrepState,
-        PrepStore, PrepToolUseRow, PrepTriggerRow, PrepTurnRow, SessionFacts, ToolOutcome,
-        ToolSighting, TurnOrigin,
+        PrepCallDetail, PrepCallRow, PrepCheckpoint, PrepEventKind, PrepEventRow,
+        PrepReplaceReason, PrepRoutePhaseRow, PrepRouteRow, PrepRows, PrepSetState, PrepSourceKind,
+        PrepSourceMeta, PrepSourceState, PrepSourceStatus, PrepState, PrepStore, PrepToolUseRow,
+        PrepTriggerRow, PrepTurnRow, RouteSighting, SessionFacts, ToolOutcome, ToolSighting,
+        TurnOrigin,
     },
 };
 use unisphere_output_prep::{
@@ -179,6 +180,7 @@ impl Call {
             turn_no: Some(1),
             call_in_turn: Some(1),
             records: 1,
+            detail: Default::default(),
         }
     }
 }
@@ -291,8 +293,87 @@ fn tool(
     }
 }
 
+fn route(
+    source: &str,
+    generation: u32,
+    offset: u64,
+    id: &str,
+    sighting: RouteSighting,
+) -> PrepRouteRow {
+    let plan = sighting == RouteSighting::Plan;
+    let outcome = !plan;
+    PrepRouteRow {
+        source: source.into(),
+        generation,
+        native_offset: Some(offset),
+        native_key: None,
+        sighting,
+        route_id: Some(id.into()),
+        ts: None,
+        ts_ms: Some(i64::try_from(offset).unwrap()),
+        turn_no: outcome.then_some(2),
+        selected_model: Some("router-x".into()),
+        pattern: Some("cascade".into()),
+        rule_id: plan.then(|| "rule-1".into()),
+        route_source: plan.then(|| "plan".into()),
+        policy: plan.then(|| "standard".into()),
+        policy_version: plan.then(|| "v1".into()),
+        latency_ms: plan.then_some(12),
+        scores: plan.then(|| r#"{"a":0.5}"#.into()),
+        planned_phases: plan.then(|| "primary/solver,judge/judge?".into()),
+        primary_model: plan.then(|| "model-a".into()),
+        secondary_model: None,
+        judge_model: plan.then(|| "model-b".into()),
+        repair_model: None,
+        fallback_model: None,
+        follow_up_model: Some("model-a".into()),
+        final_model: outcome.then(|| "model-a".into()),
+        outcome: outcome.then(|| "completed".into()),
+        degraded_reason: None,
+        phase_count: outcome.then_some(2),
+        request_count: outcome.then_some(3),
+        input: outcome.then_some(300),
+        output: outcome.then_some(30),
+        cache_read: outcome.then_some(200),
+        cache_write: outcome.then_some(90),
+        native_cost: outcome.then_some(5_000),
+        native_cost_unit: outcome.then(|| "nano_aiu".into()),
+        duration_ms: outcome.then_some(4_000),
+    }
+}
+
+fn route_phase(source: &str, generation: u32, offset: u64, id: &str) -> PrepRoutePhaseRow {
+    PrepRoutePhaseRow {
+        source: source.into(),
+        generation,
+        native_offset: Some(offset),
+        native_key: None,
+        route_id: Some(id.into()),
+        phase_id: Some(format!("{id}:0")),
+        ts: None,
+        ts_ms: Some(i64::try_from(offset).unwrap()),
+        turn_no: Some(2),
+        kind: Some("primary".into()),
+        role: Some("solver".into()),
+        scope: Some("root".into()),
+        model: Some("model-a".into()),
+        status: Some("succeeded".into()),
+        verdict: None,
+        duration_ms: Some(3_000),
+        request_count: Some(2),
+        input: Some(200),
+        output: Some(20),
+        cache_read: Some(150),
+        cache_write: Some(50),
+        native_cost: Some(4_000),
+        native_cost_unit: Some("nano_aiu".into()),
+    }
+}
+
 /// Four runs exercising appends, a replaced source, snapshot-style addresses,
-/// id-less calls and tool uses, repeated call and tool-use sightings.
+/// id-less calls and tool uses, repeated call and tool-use sightings, a call
+/// whose router and native-TTL facts arrive with a later sighting, and route
+/// plan/outcome sightings split across runs.
 fn runs() -> Vec<(PrepRows, Vec<(&'static str, u32)>)> {
     let snapshot_call = |generation, key, ids, ts_ms| {
         Call {
@@ -320,6 +401,10 @@ fn runs() -> Vec<(PrepRows, Vec<(&'static str, u32)>)> {
             .row(),
             snapshot_call(1, "k1", ("m9", "r9"), 400),
             snapshot_call(1, "k4", ("m10", "r10"), 600),
+            PrepCallRow {
+                cache_write_basis: CacheWriteBasis::Fallback1h,
+                ..Call::new(A, 1, 420, ("m5", "r5")).row()
+            },
         ],
         turns: vec![turn(A, 1, 0, 1), turn(B, 1, 0, 1)],
         triggers: vec![trigger(A, 1, 0)],
@@ -333,6 +418,11 @@ fn runs() -> Vec<(PrepRows, Vec<(&'static str, u32)>)> {
             tool(A, 1, Some(260), None, ToolSighting::Use),
             tool(B, 1, None, Some("t9"), ToolSighting::Use),
         ],
+        routes: vec![
+            route(A, 1, 5, "x1", RouteSighting::Plan),
+            route(B, 1, 7, "x9", RouteSighting::Plan),
+        ],
+        ..PrepRows::default()
     };
     let run2 = PrepRows {
         calls: vec![
@@ -345,6 +435,19 @@ fn runs() -> Vec<(PrepRows, Vec<(&'static str, u32)>)> {
             Call::new(A, 1, 450, ("m3", "r3")).row(),
             update(Call::new(A, 1, 500, ("m2", "r2")), 25, 9, Some("end_turn")),
             snapshot_call(2, "k1", ("m9", "r9"), 400),
+            PrepCallRow {
+                cw_1h: Some(0),
+                detail: PrepCallDetail {
+                    selected_model: Some("router-x".into()),
+                    route_id: Some("x1".into()),
+                    route_phase_id: Some("x1:0".into()),
+                    cw_other: Some(7),
+                    cache_write_ttl_s: Some(1800),
+                    native_cost: Some(100),
+                    native_cost_unit: Some("nano_aiu".into()),
+                },
+                ..update(Call::new(A, 1, 430, ("m5", "r5")), 10, 2, None)
+            },
         ],
         turns: vec![turn(A, 1, 440, 2), turn(B, 2, 0, 1)],
         triggers: vec![trigger(B, 2, 0)],
@@ -358,6 +461,8 @@ fn runs() -> Vec<(PrepRows, Vec<(&'static str, u32)>)> {
             },
             tool(B, 2, None, Some("t9"), ToolSighting::Result),
         ],
+        routes: vec![route(A, 1, 520, "x1", RouteSighting::Outcome)],
+        route_phases: vec![route_phase(A, 1, 515, "x1"), route_phase(B, 1, 8, "x9")],
     };
     let run3 = PrepRows {
         calls: vec![update(Call::new(A, 1, 600, ("m1", "r1")), 11, 8, None)],
@@ -513,6 +618,24 @@ fn views(target: &Path) -> BTreeMap<&'static str, Vec<String>> {
             merged.output = max_opt(group.iter().map(|(r, _)| r.output));
             merged.stop_reason = group.iter().rev().find_map(|(r, _)| r.stop_reason.clone());
             merged.records = group.iter().map(|(r, _)| r.records).sum();
+            if group
+                .iter()
+                .any(|(r, _)| r.cache_write_basis == CacheWriteBasis::Split)
+            {
+                merged.cache_write_basis = CacheWriteBasis::Split;
+            }
+            let detail = |f: fn(&PrepCallDetail) -> Option<String>| {
+                group.iter().find_map(|(r, _)| f(&r.detail))
+            };
+            merged.detail = PrepCallDetail {
+                selected_model: detail(|d| d.selected_model.clone()),
+                route_id: detail(|d| d.route_id.clone()),
+                route_phase_id: detail(|d| d.route_phase_id.clone()),
+                cw_other: max_opt(group.iter().map(|(r, _)| r.detail.cw_other)),
+                cache_write_ttl_s: group.iter().find_map(|(r, _)| r.detail.cache_write_ttl_s),
+                native_cost: max_opt(group.iter().map(|(r, _)| r.detail.native_cost)),
+                native_cost_unit: detail(|d| d.native_cost_unit.clone()),
+            };
             merged
         })
         .collect();
@@ -588,6 +711,44 @@ fn views(target: &Path) -> BTreeMap<&'static str, Vec<String>> {
         |r: &PrepEventRow| (r.source.clone(), r.generation),
         &is_current,
     );
+    let route_phases: Vec<PrepRoutePhaseRow> = current_of(
+        target,
+        parts,
+        "route_phases",
+        |r: &PrepRoutePhaseRow| (r.source.clone(), r.generation),
+        &is_current,
+    );
+
+    // routes_v: every field the first non-null value in native order.
+    let mut route_groups: BTreeMap<String, Vec<(Value, Order)>> = BTreeMap::new();
+    for (row, order) in positioned::<PrepRouteRow>(target, parts, "routes", |r| r.native_offset) {
+        if !is_current(&row.source, row.generation) {
+            continue;
+        }
+        let key = match &row.route_id {
+            Some(id) => serde_json::to_string(&(&row.source, row.generation, id)).unwrap(),
+            None => format!("solo {} {}", order.1, order.2),
+        };
+        route_groups
+            .entry(key)
+            .or_default()
+            .push((json_without(&row, &["sighting"]), order));
+    }
+    let routes: Vec<Value> = route_groups
+        .into_values()
+        .map(|mut group| {
+            group.sort_by(|a, b| a.1.cmp(&b.1));
+            let mut merged = serde_json::Map::new();
+            for (row, _) in &group {
+                for (field, value) in row.as_object().unwrap() {
+                    if !value.is_null() && !merged.contains_key(field) {
+                        merged.insert(field.clone(), value.clone());
+                    }
+                }
+            }
+            Value::Object(merged)
+        })
+        .collect();
 
     // compactions_v
     let compactions: Vec<Value> = events
@@ -614,10 +775,10 @@ fn views(target: &Path) -> BTreeMap<&'static str, Vec<String>> {
                     )
                 });
             let context = after.and_then(|c| {
-                let cache_write = match (c.cw_1h, c.cw_5m) {
-                    (None, None) if c.cache_write_basis == CacheWriteBasis::None => Some(0),
-                    (None, None) => None,
-                    (a, b) => Some(a.unwrap_or(0) + b.unwrap_or(0)),
+                let cache_write = match (c.cw_1h, c.cw_5m, c.detail.cw_other) {
+                    (None, None, None) if c.cache_write_basis == CacheWriteBasis::None => Some(0),
+                    (None, None, None) => None,
+                    (a, b, o) => Some(a.unwrap_or(0) + b.unwrap_or(0) + o.unwrap_or(0)),
                 };
                 Some(c.input? + c.cache_read? + cache_write?)
             });
@@ -673,6 +834,16 @@ fn views(target: &Path) -> BTreeMap<&'static str, Vec<String>> {
         ),
         ("tool_uses_v", sorted(tool_uses)),
         ("compactions_v", sorted(compactions)),
+        ("routes_v", sorted(routes)),
+        (
+            "route_phases_v",
+            sorted(
+                route_phases
+                    .iter()
+                    .map(|r| serde_json::to_value(r).unwrap())
+                    .collect(),
+            ),
+        ),
     ])
 }
 
@@ -1020,6 +1191,45 @@ fn compaction_view_rules_are_observable() {
         b.get("first_context_after").is_none(),
         "B generation 2 has no later call"
     );
+    // A later sighting's native-TTL basis outranks the first sighting's
+    // fallback; router, TTL and cost facts are the first non-null values.
+    let m5 = calls
+        .iter()
+        .find(|c| c["source"] == A && c["msg_id"] == "m5")
+        .unwrap();
+    assert_eq!(m5["native_offset"], 420);
+    assert_eq!(m5["cache_write_basis"], "split");
+    assert_eq!(
+        (m5["cw_1h"].clone(), m5["cw_other"].clone()),
+        (3.into(), 7.into())
+    );
+    assert_eq!(m5["cache_write_ttl_s"], 1800);
+    assert_eq!(
+        (m5["selected_model"].clone(), m5["route_id"].clone()),
+        ("router-x".into(), "x1".into())
+    );
+    assert_eq!(
+        (m5["native_cost"].clone(), m5["native_cost_unit"].clone()),
+        (100.into(), "nano_aiu".into())
+    );
+    // Route plan and outcome sightings merge across runs; a superseded
+    // generation's routes and phases are dropped.
+    let routes: Vec<Value> = views["routes_v"]
+        .iter()
+        .map(|r| serde_json::from_str(r).unwrap())
+        .collect();
+    assert_eq!(routes.len(), 1);
+    let x1 = &routes[0];
+    assert_eq!(
+        (x1["native_offset"].clone(), x1["rule_id"].clone()),
+        (5.into(), "rule-1".into())
+    );
+    assert_eq!(
+        (x1["final_model"].clone(), x1["native_cost"].clone()),
+        ("model-a".into(), 5_000.into())
+    );
+    assert_eq!(x1["turn_no"], 2);
+    assert_eq!(views["route_phases_v"].len(), 1);
 }
 
 #[test]

@@ -12,24 +12,38 @@
 //! Events rules:
 //!
 //! - One API call is one native `apiCallId` (else the `messageId` of an
-//!   id-less message). Its `assistant.message` records and its
-//!   `assistant.usage` record merge by per-field maximum; a sighting whose call
-//!   was first folded by an earlier batch or run is an `update`. `msg_id` is
-//!   the call id; `request_id` stays null because the usage record carries no
-//!   provider request id and every sighting of one call must share both keys.
+//!   id-less message). Its `assistant.message` records and its usage record —
+//!   `session.usage_record` (`data.usage`, current CLIs) or `assistant.usage`
+//!   (older CLIs), read by one rule — merge by per-field maximum; a sighting
+//!   whose call was first folded by an earlier batch or run is an `update`.
+//!   `msg_id` is the call id; `request_id` stays null because the usage record
+//!   carries no provider request id and every sighting of one call must share
+//!   both keys.
 //! - `model.model_call_success` records are the harness's utility model calls
 //!   (their ids never match a conversation call). They are calls with
 //!   `is_sidechain = true` and native `responseUsage`: `input` is the recorded
 //!   `prompt_tokens`, `cache_read` is `cached_tokens`, and a cache write is
-//!   split by its native `cache_ttl_seconds` (3600 → 1 h, 300 → 5 m).
-//! - Copilot records only an aggregate `cacheWriteTokens`, so every
-//!   conversation call names the documented fallback (main → 1 h, subagent →
-//!   5 m) in `cache_write_basis`, whichever of its records is sighted first;
-//!   the cache-write columns stay null until a usage record is folded. Every
-//!   other field is the first sighting's, as the canonical reader keeps it. No
-//!   stop reason is recorded: `stop_reason` is null.
+//!   attributed by its native `cache_ttl_seconds` as below.
+//! - Copilot records one aggregate cache write per call. With a native TTL
+//!   (`cacheTtlSeconds`, `cache_ttl_seconds`) it is attributed by that TTL:
+//!   3600 → `cw_1h`, 300 → `cw_5m`, any other (GPT models record 1800) →
+//!   `cw_other`, basis `split`, TTL in `cache_write_ttl_s`. Without one, the
+//!   documented fallback applies (main → 1 h, sidechain → 5 m) with `cw_other`
+//!   0. A `split` sighting outranks a fallback one; the cache-write columns stay
+//!   null until a usage record is folded. `copilotUsage.totalNanoAiu` (else
+//!   `totalNanoAiu`) is `native_cost` in `nano_aiu`. Every other field is the
+//!   first sighting's, router facts the first non-null, as the canonical
+//!   reader keeps them. No stop reason is recorded: `stop_reason` is null.
 //! - Records carrying a top-level `agentId` belong to a subagent: their calls
 //!   are sidechain calls and never open, or feed the context of, main turns.
+//! - Model router (HydraFusion): a usage record's `fusion` object names the
+//!   selected synthetic model, the decision (`route_id`) and the phase
+//!   (`route_phase_id`); `model` stays the model that ran. A phase whose
+//!   `conversationScope` is not `root` (the judge's review) is a sidechain call.
+//!   `session.fusion_resolved` is a route `plan` sighting,
+//!   `session.fusion_completed` its `outcome` sighting (with the current turn),
+//!   `assistant.fusion_phase_completed` a `route_phases` row; commit, handoff
+//!   and change-checkpoint records are not folded.
 //! - `user.message` records are triggers classified by native `source`, `agentId`
 //!   and the pij envelope; injected skill and instruction records are not
 //!   triggers. The next new main-chain call opens the pending turn.
@@ -74,17 +88,18 @@ use unisphere_core::{
     NativeRecord, NativeSnapshot, PipelineError, PipelineErrorKind, SnapshotFormat,
     prep::{
         CacheWriteBasis, CallSighting, CompactionCounts, CompactionSample, ContextSample,
-        ModelSwitch, PREP_CHECKPOINT_FORMAT, PrepCallRow, PrepCheckpoint, PrepEventKind,
-        PrepEventRow, PrepFold, PrepFoldSession, PrepInput, PrepOptions, PrepRows, PrepSourceKind,
-        PrepSourceMeta, PrepToolUseRow, PrepTriggerRow, PrepTurnRow, SessionFacts, ToolOutcome,
-        ToolSighting, TurnOrigin,
+        ModelSwitch, PREP_CHECKPOINT_FORMAT, PrepCallDetail, PrepCallRow, PrepCheckpoint,
+        PrepEventKind, PrepEventRow, PrepFold, PrepFoldSession, PrepInput, PrepOptions,
+        PrepRoutePhaseRow, PrepRouteRow, PrepRows, PrepSourceKind, PrepSourceMeta, PrepToolUseRow,
+        PrepTriggerRow, PrepTurnRow, RouteSighting, SessionFacts, ToolOutcome, ToolSighting,
+        TurnOrigin,
     },
 };
 
 use crate::{DESCRIPTOR, SNAPSHOT_DESCRIPTOR, query::tool_family};
 
 /// Events interpretation policy; bump on any rule change so every source re-emits.
-pub const PREP_POLICY_VERSION: &str = "copilot-cli/prep-v3";
+pub const PREP_POLICY_VERSION: &str = "copilot-cli/prep-v4";
 /// Legacy-document interpretation policy.
 pub const LEGACY_PREP_POLICY_VERSION: &str = "copilot-cli-snapshot/prep-v1";
 
@@ -205,10 +220,10 @@ impl PrepFold for CopilotCliLegacyPrepFold {
 // Shared row rules
 // ---------------------------------------------------------------------------
 
-/// input, cw_1h, cw_5m, cache_read, output; `None` = not recorded.
-type Tokens = [Option<i64>; 5];
+/// input, cw_1h, cw_5m, cache_read, output, cw_other; `None` = not recorded.
+type Tokens = [Option<i64>; 6];
 
-const NO_TOKENS: Tokens = [None; 5];
+const NO_TOKENS: Tokens = [None; 6];
 
 fn max_opt(a: Option<i64>, b: Option<i64>) -> Option<i64> {
     match (a, b) {
@@ -223,11 +238,16 @@ fn merge_tokens(into: &mut Tokens, from: &Tokens) {
     }
 }
 
+/// `cw_1h + cw_5m + cw_other`; `cw_other` is only ever recorded with the other two.
 fn cache_write(tokens: &Tokens) -> Option<i64> {
-    Some(tokens[1]?.saturating_add(tokens[2]?))
+    Some(
+        tokens[1]?
+            .saturating_add(tokens[2]?)
+            .saturating_add(tokens[5].unwrap_or(0)),
+    )
 }
 
-/// `input + cw_1h + cw_5m + cache_read`, only when all are recorded.
+/// `input + cw_1h + cw_5m + cw_other + cache_read`, only when all are recorded.
 fn context(tokens: &Tokens) -> Option<i64> {
     Some(
         tokens[0]?
@@ -252,12 +272,47 @@ fn aggregate_basis(sidechain: bool) -> CacheWriteBasis {
     }
 }
 
-/// `(cw_1h, cw_5m)` of an aggregate cache write under [`aggregate_basis`].
-fn fallback_write(total: Option<i64>, sidechain: bool) -> (Option<i64>, Option<i64>) {
-    match total {
-        None => (None, None),
-        Some(total) if sidechain => (Some(0), Some(total)),
-        Some(total) => (Some(total), Some(0)),
+/// `(cw_1h, cw_5m, cw_other)` and basis of one aggregate cache write: by its
+/// native TTL when recorded (3600 → 1 h, 300 → 5 m, any other → `cw_other`),
+/// else under [`aggregate_basis`]. `absent` is the basis when nothing is written.
+fn ttl_write(
+    written: Option<i64>,
+    ttl_s: Option<i64>,
+    sidechain: bool,
+    absent: CacheWriteBasis,
+) -> ([Option<i64>; 3], CacheWriteBasis) {
+    let Some(total) = written else {
+        return ([None; 3], absent);
+    };
+    let split = match ttl_s {
+        Some(3600) => [total, 0, 0],
+        Some(300) => [0, total, 0],
+        Some(_) => [0, 0, total],
+        None if sidechain => return ([Some(0), Some(total), Some(0)], aggregate_basis(true)),
+        None => return ([Some(total), Some(0), Some(0)], aggregate_basis(false)),
+    };
+    (split.map(Some), CacheWriteBasis::Split)
+}
+
+/// Unit of Copilot's native `totalNanoAiu` cost.
+const NANO_AIU: &str = "nano_aiu";
+
+/// Native nano-AIU cost of a usage object: `copilotUsage.totalNanoAiu`, else
+/// a top-level `totalNanoAiu`.
+fn nano_aiu(usage: &Map<String, Value>) -> Option<i64> {
+    usage
+        .get("copilotUsage")
+        .and_then(Value::as_object)
+        .and_then(|copilot| int(copilot, "totalNanoAiu"))
+        .or_else(|| int(usage, "totalNanoAiu"))
+}
+
+/// Call detail carrying a native cost, when one is recorded.
+fn cost_detail(cost: Option<i64>) -> PrepCallDetail {
+    PrepCallDetail {
+        native_cost: cost,
+        native_cost_unit: cost.map(|_| NANO_AIU.to_owned()),
+        ..PrepCallDetail::default()
     }
 }
 
@@ -352,7 +407,8 @@ struct OpenUse {
     msg_id: Option<String>,
 }
 
-/// One call sighting as the dialect records it.
+/// One call sighting as the dialect records it. `detail.cw_other` is taken
+/// from `tokens`.
 struct Sighting {
     key: u64,
     msg_id: Option<String>,
@@ -361,6 +417,7 @@ struct Sighting {
     tokens: Tokens,
     basis: CacheWriteBasis,
     sidechain: bool,
+    detail: PrepCallDetail,
 }
 
 /// Row state shared by both representations.
@@ -629,6 +686,7 @@ impl Core {
             tokens,
             basis,
             sidechain,
+            mut detail,
         } = sighting;
         self.repeat_facts(key, &tokens);
         if let Some(&index) = batch_calls.get(&key) {
@@ -639,8 +697,21 @@ impl Core {
             row.cache_read = max_opt(row.cache_read, tokens[3]);
             row.output = max_opt(row.output, tokens[4]);
             row.records += 1;
+            // A native-TTL attribution outranks a fallback one, as in `calls_v`.
+            if basis == CacheWriteBasis::Split {
+                row.cache_write_basis = basis;
+            }
+            let into = &mut row.detail;
+            into.cw_other = max_opt(into.cw_other, tokens[5]);
+            into.native_cost = max_opt(into.native_cost, detail.native_cost);
+            into.selected_model = into.selected_model.take().or(detail.selected_model);
+            into.route_id = into.route_id.take().or(detail.route_id);
+            into.route_phase_id = into.route_phase_id.take().or(detail.route_phase_id);
+            into.cache_write_ttl_s = into.cache_write_ttl_s.or(detail.cache_write_ttl_s);
+            into.native_cost_unit = into.native_cost_unit.take().or(detail.native_cost_unit);
             return;
         }
+        detail.cw_other = tokens[5];
         let (source, generation) = self.row_base();
         let mut row = PrepCallRow {
             source,
@@ -665,6 +736,7 @@ impl Core {
             turn_no: None,
             call_in_turn: None,
             records: 1,
+            detail,
         };
         if self.committed.contains(&key) {
             row.sighting = CallSighting::Update;
@@ -1044,9 +1116,10 @@ impl EventsSession {
                         msg_id: msg_id.clone(),
                         request_id: None,
                         model: text(data, "model"),
-                        tokens: [None, None, None, None, int(data, "outputTokens")],
+                        tokens: [None, None, None, None, int(data, "outputTokens"), None],
                         basis: aggregate_basis(sidechain),
                         sidechain,
+                        detail: PrepCallDetail::default(),
                     };
                     core.call(&at, sighting, &mut rows, &mut batch_calls);
                     for request in data
@@ -1067,24 +1140,19 @@ impl EventsSession {
                     }
                 }
                 "assistant.usage" => {
-                    let msg_id = text(data, "apiCallId");
-                    let (cw_1h, cw_5m) = fallback_write(int(data, "cacheWriteTokens"), sidechain);
-                    let sighting = Sighting {
-                        key: call_key(msg_id.as_deref(), native.offset),
-                        msg_id,
-                        request_id: None,
-                        model: text(data, "model"),
-                        tokens: [
-                            int(data, "inputTokens"),
-                            cw_1h,
-                            cw_5m,
-                            int(data, "cacheReadTokens"),
-                            int(data, "outputTokens"),
-                        ],
-                        basis: aggregate_basis(sidechain),
-                        sidechain,
-                    };
+                    let sighting = usage_call(data, sidechain, native.offset);
                     core.call(&at, sighting, &mut rows, &mut batch_calls);
+                }
+                "session.usage_record" => {
+                    if let Some(usage) = data.get("usage").and_then(Value::as_object) {
+                        let sighting = usage_call(usage, sidechain, native.offset);
+                        core.call(&at, sighting, &mut rows, &mut batch_calls);
+                    }
+                }
+                "session.fusion_resolved" => rows.routes.push(route_plan(core, &at, data)),
+                "session.fusion_completed" => rows.routes.push(route_outcome(core, &at, data)),
+                "assistant.fusion_phase_completed" => {
+                    rows.route_phases.push(route_phase(core, &at, data));
                 }
                 "model.model_call_success" => {
                     let sighting = utility_call(data, native.offset);
@@ -1231,16 +1299,13 @@ fn utility_call(data: &Map<String, Value>, offset: u64) -> Sighting {
     let details = object(&usage, "prompt_tokens_details").unwrap_or_default();
     let request_id = text(data, "requestId");
     let msg_id = text(data, "callId").or_else(|| request_id.clone());
-    let written = int(&details, "cache_creation_tokens");
-    let (cw_1h, cw_5m, basis) = match (written, int(&details, "cache_ttl_seconds")) {
-        (Some(total), Some(3600)) => (Some(total), Some(0), CacheWriteBasis::Split),
-        (Some(total), Some(300)) => (Some(0), Some(total), CacheWriteBasis::Split),
-        (None, _) => (None, None, CacheWriteBasis::None),
-        (total, _) => {
-            let (cw_1h, cw_5m) = fallback_write(total, true);
-            (cw_1h, cw_5m, aggregate_basis(true))
-        }
-    };
+    let ttl_s = int(&details, "cache_ttl_seconds");
+    let ([cw_1h, cw_5m, cw_other], basis) = ttl_write(
+        int(&details, "cache_creation_tokens"),
+        ttl_s,
+        true,
+        CacheWriteBasis::None,
+    );
     Sighting {
         key: call_key(msg_id.as_deref(), offset),
         msg_id,
@@ -1258,9 +1323,207 @@ fn utility_call(data: &Map<String, Value>, offset: u64) -> Sighting {
             cw_5m,
             int(&details, "cached_tokens"),
             int(&usage, "completion_tokens"),
+            cw_other,
         ],
         basis,
         sidechain: true,
+        detail: PrepCallDetail {
+            cache_write_ttl_s: ttl_s,
+            ..PrepCallDetail::default()
+        },
+    }
+}
+
+/// A conversation call's usage: an `assistant.usage` record's data or a
+/// `session.usage_record`'s `usage` object. A router phase (`fusion`) names
+/// the selected (synthetic) model, the decision and the phase; a phase outside
+/// the root conversation (e.g. a judge's review) is a sidechain call.
+fn usage_call(usage: &Map<String, Value>, agent: bool, offset: u64) -> Sighting {
+    let fusion = usage.get("fusion").and_then(Value::as_object);
+    let sidechain = agent
+        || fusion
+            .and_then(|f| text(f, "conversationScope"))
+            .is_some_and(|scope| scope != "root");
+    let ttl_s = int(usage, "cacheTtlSeconds");
+    let ([cw_1h, cw_5m, cw_other], basis) = ttl_write(
+        int(usage, "cacheWriteTokens"),
+        ttl_s,
+        sidechain,
+        aggregate_basis(sidechain),
+    );
+    let msg_id = text(usage, "apiCallId");
+    let mut detail = cost_detail(nano_aiu(usage));
+    detail.cache_write_ttl_s = ttl_s;
+    if let Some(fusion) = fusion {
+        detail.selected_model = text(fusion, "syntheticModel");
+        detail.route_id = text(fusion, "fusionId");
+        detail.route_phase_id = text(fusion, "phaseId");
+    }
+    Sighting {
+        key: call_key(msg_id.as_deref(), offset),
+        msg_id,
+        request_id: None,
+        model: text(usage, "model"),
+        tokens: [
+            int(usage, "inputTokens"),
+            cw_1h,
+            cw_5m,
+            int(usage, "cacheReadTokens"),
+            int(usage, "outputTokens"),
+            cw_other,
+        ],
+        basis,
+        sidechain,
+        detail,
+    }
+}
+
+/// A route row with only its address, time and sighting.
+fn route_row(
+    core: &Core,
+    at: &At<'_>,
+    sighting: RouteSighting,
+    data: &Map<String, Value>,
+) -> PrepRouteRow {
+    let (source, generation) = core.row_base();
+    PrepRouteRow {
+        source,
+        generation,
+        native_offset: at.offset,
+        native_key: at.key(),
+        sighting,
+        route_id: text(data, "fusionId"),
+        ts: at.ts(),
+        ts_ms: at.ts_ms,
+        turn_no: None,
+        selected_model: text(data, "syntheticModel"),
+        pattern: text(data, "pattern"),
+        rule_id: None,
+        route_source: None,
+        policy: None,
+        policy_version: None,
+        latency_ms: None,
+        scores: None,
+        planned_phases: None,
+        primary_model: None,
+        secondary_model: None,
+        judge_model: None,
+        repair_model: None,
+        fallback_model: None,
+        follow_up_model: text(data, "followUpModel"),
+        final_model: None,
+        outcome: None,
+        degraded_reason: None,
+        phase_count: None,
+        request_count: None,
+        input: None,
+        output: None,
+        cache_read: None,
+        cache_write: None,
+        native_cost: None,
+        native_cost_unit: None,
+        duration_ms: None,
+    }
+}
+
+/// `session.fusion_resolved`: the routing decision and its plan.
+fn route_plan(core: &Core, at: &At<'_>, data: &Map<String, Value>) -> PrepRouteRow {
+    let planned_phases = data.get("phasePlan").and_then(Value::as_array).map(|plan| {
+        plan.iter()
+            .filter_map(Value::as_object)
+            .map(|phase| {
+                let part = |key| text(phase, key).unwrap_or_default();
+                let conditional = phase.get("conditional") == Some(&Value::Bool(true));
+                format!(
+                    "{}/{}{}",
+                    part("kind"),
+                    part("role"),
+                    if conditional { "?" } else { "" }
+                )
+            })
+            .collect::<Vec<_>>()
+            .join(",")
+    });
+    let scores = data.get("scores").filter(|s| s.is_object()).map(|scores| {
+        let mut bytes = Vec::new();
+        canonical_json(scores, &mut bytes);
+        String::from_utf8_lossy(&bytes).into_owned()
+    });
+    PrepRouteRow {
+        rule_id: text(data, "ruleId"),
+        route_source: text(data, "routeSource"),
+        policy: text(data, "policy"),
+        policy_version: text(data, "policyVersion"),
+        latency_ms: data
+            .get("routingLatencyMs")
+            .and_then(Value::as_f64)
+            .filter(|ms| ms.is_finite())
+            .map(|ms| ms.round() as i64),
+        scores,
+        planned_phases,
+        primary_model: text(data, "primaryModel"),
+        secondary_model: text(data, "secondaryModel"),
+        judge_model: text(data, "judgeModel"),
+        repair_model: text(data, "repairModel"),
+        fallback_model: text(data, "fallbackModel"),
+        ..route_row(core, at, RouteSighting::Plan, data)
+    }
+}
+
+/// `session.fusion_completed`: the decision's outcome and native totals.
+fn route_outcome(core: &Core, at: &At<'_>, data: &Map<String, Value>) -> PrepRouteRow {
+    let cost = int(data, "totalNanoAiu");
+    PrepRouteRow {
+        turn_no: Some(core.turn_no),
+        final_model: text(data, "finalSourceModel"),
+        outcome: text(data, "outcome"),
+        degraded_reason: text(data, "degradedReason"),
+        phase_count: int(data, "phaseCount"),
+        request_count: int(data, "requestCount"),
+        input: int(data, "inputTokens"),
+        output: int(data, "outputTokens"),
+        cache_read: int(data, "cachedTokens"),
+        cache_write: int(data, "cacheWriteTokens"),
+        native_cost: cost,
+        native_cost_unit: cost.map(|_| NANO_AIU.to_owned()),
+        duration_ms: int(data, "durationMs"),
+        ..route_row(core, at, RouteSighting::Outcome, data)
+    }
+}
+
+/// `assistant.fusion_phase_completed`: one phase with its native usage.
+fn route_phase(core: &Core, at: &At<'_>, data: &Map<String, Value>) -> PrepRoutePhaseRow {
+    let empty = Map::new();
+    let usage = data
+        .get("usage")
+        .and_then(Value::as_object)
+        .unwrap_or(&empty);
+    let cost = int(usage, "totalNanoAiu");
+    let (source, generation) = core.row_base();
+    PrepRoutePhaseRow {
+        source,
+        generation,
+        native_offset: at.offset,
+        native_key: at.key(),
+        route_id: text(data, "fusionId"),
+        phase_id: text(data, "phaseId"),
+        ts: at.ts(),
+        ts_ms: at.ts_ms,
+        turn_no: Some(core.turn_no),
+        kind: text(data, "phaseKind"),
+        role: text(data, "role"),
+        scope: text(data, "conversationScope"),
+        model: text(data, "model"),
+        status: text(data, "status"),
+        verdict: text(data, "verdict"),
+        duration_ms: int(data, "durationMs"),
+        request_count: int(usage, "requestCount"),
+        input: int(usage, "inputTokens"),
+        output: int(usage, "outputTokens"),
+        cache_read: int(usage, "cachedTokens"),
+        cache_write: int(usage, "cacheWriteTokens"),
+        native_cost: cost,
+        native_cost_unit: cost.map(|_| NANO_AIU.to_owned()),
     }
 }
 
@@ -1392,6 +1655,7 @@ impl LegacySession {
                         tokens: NO_TOKENS,
                         basis: CacheWriteBasis::None,
                         sidechain: false,
+                        detail: PrepCallDetail::default(),
                     };
                     core.call(&at, sighting, &mut rows, &mut batch_calls);
                     for call in message

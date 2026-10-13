@@ -1,0 +1,49 @@
+crates/adapter-copilot-cli/src/prep.rs
+  s_1ef31aa6bf178a::t_2e3d92e32de5a2 22-25,28-29,37-39,107,305-307,312,316-327,1321-1325,1338,1341,1347,1362-1365,1380,1383,1495-1498,1536-1539
+crates/adapter-copilot-cli/src/query.rs
+  s_1ef31aa6bf178a::t_f98136371b0b42 1435-1438,1445-1460,1462,1464-1465
+crates/adapter-copilot-cli/tests/fixtures/prep/sess-router/events.jsonl
+  s_9749a3ee9e2592::t_b6683dffa209f0 15
+crates/adapter-copilot-cli/tests/prep.rs
+  s_1ef31aa6bf178a::t_246d4ecbf58b7a 187,228-229,250,261,272-273,347,505-506,526,536,1073,1238-1239,1248,1260,1266-1267,1274,1277,1286,1298,1312,1324,1337,1349,1361,1386-1387,1390-1391,1636-1648
+crates/adapter-copilot-cli/tests/query.rs
+  s_9749a3ee9e2592::t_99eb40cbdcf5af 163-164,467-468,470-476,478
+crates/cli/docs/prep.md
+  s_1ef31aa6bf178a::t_9e5f1b640365f9 35
+crates/core/src/prep.rs
+  s_7759b95b7c85f1::t_031dbfebe654e6 466-467,537-538,571
+docs/copilot-cli-adapter.md
+  s_1ef31aa6bf178a::t_134a6b295b64b3 91-94,140-145
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "9546f016f7b6fea21aa74f15637b5d3654dedbde",
+  "prompts": {},
+  "sessions": {
+    "s_1ef31aa6bf178a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cc2d2e8f-b8ca-4101-b706-075a4bf96be6",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    },
+    "s_7759b95b7c85f1": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "dacb2e6c-5b32-4254-86f1-bceb29f6aa86",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    },
+    "s_9749a3ee9e2592": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c59bbcb2-b448-48f2-89bd-3b38c1b9e81a",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

@@ -182,6 +182,7 @@ impl PrepFoldSession for ScriptedSession {
                         route_phase_id: None,
                         cw_other: int(c, "cw_other"),
                         cache_write_ttl_s: int(c, "ttl_s"),
+                        cache_expires_ms: int(c, "expires_ms"),
                         native_cost: int(c, "native_cost"),
                         native_cost_unit: text(c, "native_cost_unit"),
                     },

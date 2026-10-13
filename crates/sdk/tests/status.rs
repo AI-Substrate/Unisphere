@@ -509,6 +509,87 @@ fn last_call_reports_other_ttl_writes_router_model_and_native_cost() {
 }
 
 #[test]
+fn each_served_model_keeps_its_own_cache_warmth_and_context() {
+    let f = fixture();
+    let s = 1_000;
+    // A router alternates the served model call by call. Luna writes with a
+    // native 1800 s TTL, Opus with 300 s; a3's TTL and native expiry arrive
+    // with a later sighting, after Opus already served a4.
+    f.append(
+        FILE,
+        &[
+            json!({"call": {"msg_id": "a1", "ts_ms": T0, "model": "gpt-6-luna", "input": 3, "cache_read": 22_598, "cw_1h": 0, "cw_5m": 0, "cw_other": 2_062, "ttl_s": 1800, "expires_ms": T0 + 1_800 * s, "selected_model": "hydrafusion"}}),
+            json!({"call": {"msg_id": "a2", "ts_ms": T0 + 10 * s, "model": "claude-opus-5.5", "input": 4, "cache_read": 0, "cw_1h": 0, "cw_5m": 38_799, "ttl_s": 300, "expires_ms": T0 + 310 * s, "selected_model": "hydrafusion"}}),
+            json!({"call": {"msg_id": "a3", "ts_ms": T0 + 20 * s, "model": "gpt-6-luna", "input": 3, "cache_read": 24_660, "cw_1h": 0, "cw_5m": 0, "cw_other": 2_896, "selected_model": "hydrafusion"}}),
+            json!({"call": {"msg_id": "a4", "ts_ms": T0 + 30 * s, "model": "claude-opus-5.5", "input": 2, "cache_read": 38_799, "cw_1h": 0, "cw_5m": 1_702, "ttl_s": 300, "selected_model": "hydrafusion"}}),
+            json!({"call": {"msg_id": "a3", "sighting": "update", "ts_ms": T0 + 20 * s, "model": "gpt-6-luna", "ttl_s": 1800, "expires_ms": T0 + 1_820 * s}}),
+            json!({"call": {"msg_id": "u1", "ts_ms": T0 + 31 * s, "model": "gpt-5.4-nano", "input": 545, "sidechain": true}}),
+        ],
+    );
+    // Six minutes after a4: Opus's 300 s cache has expired, Luna's has not.
+    let now = T0 + 30 * s + 6 * MIN;
+    let status = f.cold("s1", now);
+    assert_eq!(
+        status.model.current.as_ref().map(|m| m.value.as_str()),
+        Some("claude-opus-5.5")
+    );
+    assert_eq!(status.last_call.as_ref().unwrap().input, Some(2));
+    let models: Vec<_> = status
+        .models
+        .iter()
+        .map(|m| (m.model.as_str(), m.calls, m.last_call_at_ms))
+        .collect();
+    assert_eq!(
+        models,
+        [
+            ("claude-opus-5.5", 2, Some(T0 + 30 * s)),
+            ("gpt-6-luna", 2, Some(T0 + 20 * s)),
+        ],
+        "latest call first; sidechain calls are not served-model caches"
+    );
+    let (opus, luna) = (&status.models[0], &status.models[1]);
+    assert_eq!(opus.cache_ttl_s, Some(Fact::new(300, Basis::Native)));
+    // a4 recorded no native expiry: derived from its time and TTL.
+    assert_eq!(
+        opus.cache_expires_ms,
+        Some(Fact::new(T0 + 330 * s, Basis::Derived))
+    );
+    assert_eq!(opus.cache_warm, Some(Fact::new(false, Basis::Derived)));
+    assert_eq!(
+        opus.last_context,
+        Some(Fact::new(2 + 38_799 + 1_702, Basis::Derived))
+    );
+    assert_eq!(luna.cache_ttl_s, Some(Fact::new(1800, Basis::Native)));
+    assert_eq!(
+        luna.cache_expires_ms,
+        Some(Fact::new(T0 + 1_820 * s, Basis::Native))
+    );
+    assert_eq!(luna.cache_warm, Some(Fact::new(true, Basis::Native)));
+    assert_eq!(
+        luna.last_context,
+        Some(Fact::new(3 + 24_660 + 2_896, Basis::Derived))
+    );
+
+    // Every batch split gives the same per-model view.
+    let (warm, cursor) = f.next("s1", None, now);
+    assert_eq!(facts_only(warm), facts_only(status.clone()));
+    f.append(
+        FILE,
+        &[json!({"call": {"msg_id": "a5", "ts_ms": now, "model": "gpt-6-luna", "input": 5, "cache_read": 27_556, "cw_1h": 0, "cw_5m": 0, "cw_other": 607, "ttl_s": 1800}})],
+    );
+    let (later, _) = f.next("s1", Some(&cursor), now + s);
+    assert_eq!(facts_only(later.clone()), facts_only(f.cold("s1", now + s)));
+    assert_eq!(
+        later
+            .models
+            .iter()
+            .map(|m| (m.model.as_str(), m.calls))
+            .collect::<Vec<_>>(),
+        [("gpt-6-luna", 3), ("claude-opus-5.5", 2)]
+    );
+}
+
+#[test]
 fn update_sightings_of_the_latest_call_merge_per_field() {
     let f = fixture();
     f.append(

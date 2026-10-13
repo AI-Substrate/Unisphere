@@ -372,6 +372,7 @@ Every fact is `{value, basis}` with basis `native`, `derived`, `table`
 |---|---|
 | `model.current` | Latest main-chain, non-synthetic call's model |
 | `model.pending_switch` | A `/model` switch recorded after that call |
+| `models[]` | Per served model, latest call first: calls, last call time, cache TTL, expiry (native, else derived), warmth and last context; a router may switch models every call |
 | `context.used_tokens` | Latest main-chain call input + cache read + cache write |
 | `context.window_tokens` | Native when recorded, else `model-windows@1`, else unknown; `percent` only when both are known |
 | `last_call.ttl_bucket` / `cache_warm` | `1h`/`5m` from the last call's cache-write split; warm while `now_ms` − last call < TTL |

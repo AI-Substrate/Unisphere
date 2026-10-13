@@ -46,7 +46,7 @@ The printed script is exactly three parts: `SET file_search_path = '<absolute TA
 | `fleet-idle` | fleet: idle longest | Main sessions ordered by time since their last native event |
 | `expensive-turns` | fleet: most expensive turns | The 50 turns with the most tokens, with the native offset of their opener |
 | `daily-tokens` | fleet: daily tokens | Per local day, harness, project (repository) and model: calls and token classes (including `cw_other`) |
-| `routed-turns` | routers: which models ran | Every routing decision: turn, selected (router) model, pattern, rule, route source, planned phases and models, the phases that ran in order with their models and verdicts, final model, outcome, native totals, cost, latency and duration |
+| `routed-turns` | routers: which models ran | Every routing decision: turn, selected (router) model, pattern, rule, route source, planned phases and models, the phases that ran in order with their declared models (and the models that actually served them when they differ) and verdicts, the decision's served models and mismatch flag, final model, outcome, native totals, cost, latency and duration |
 | `routed-cost` | routers: actual versus selected model | Per harness, selected model and model that ran (routed or not, main or sidechain): calls, token classes, `cw_other`, native cache-write TTLs, output and native cost with its unit |
 
 ## Reading the results

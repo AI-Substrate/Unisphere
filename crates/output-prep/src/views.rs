@@ -46,7 +46,7 @@ const TOOL_FIELDS: [&str; 14] = [
     "turn_no",
 ];
 
-const ROUTE_FIELDS: [&str; 32] = [
+const ROUTE_FIELDS: [&str; 35] = [
     "native_offset",
     "native_key",
     "ts",
@@ -79,14 +79,18 @@ const ROUTE_FIELDS: [&str; 32] = [
     "native_cost",
     "native_cost_unit",
     "duration_ms",
+    "served_models",
+    "served_model_count",
+    "model_mismatch",
 ];
 
 /// Call facts a later sighting may be first to record: first non-null value.
-const CALL_FIRSTS: [&str; 5] = [
+const CALL_FIRSTS: [&str; 6] = [
     "selected_model",
     "route_id",
     "route_phase_id",
     "cache_write_ttl_s",
+    "cache_expires_ms",
     "native_cost_unit",
 ];
 
@@ -122,7 +126,8 @@ pub(crate) fn views_sql(parts: &[String]) -> String {
          -- sightings of one (source, generation, msg_id, request_id) call: counters\n\
          -- (including cw_other and native_cost) take the per-field maximum,\n\
          -- stop_reason the last non-null value, records the sum, selected_model,\n\
-         -- route_id, route_phase_id, cache_write_ttl_s and native_cost_unit the first\n\
+         -- route_id, route_phase_id, cache_write_ttl_s, cache_expires_ms and\n\
+         -- native_cost_unit the first\n\
          -- non-null value, cache_write_basis 'split' (native TTL) over a fallback,\n\
          -- every other field the first sighting's; a call with neither id is its own\n\
          -- row. tool_uses_v merges the use and result sightings of one\n\

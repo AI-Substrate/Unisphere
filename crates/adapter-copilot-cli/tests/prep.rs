@@ -31,6 +31,9 @@ const SENSITIVE_LEGACY: &str = include_str!("fixtures/legacy.json");
 /// HydraFusion session: `session.usage_record` usage, fusion decisions,
 /// phases and totals, real model names and counters, placeholder text.
 const ROUTER: &str = include_str!("fixtures/prep/sess-router/events.jsonl");
+/// One HydraFusion phase whose router switches the served model on every
+/// call (gpt-6-luna, claude-opus-5.5, gpt-6-luna, claude-opus-5.5).
+const ALTERNATING: &str = include_str!("fixtures/prep/sess-alternating/events.jsonl");
 
 fn records(text: &str) -> Vec<NativeRecord> {
     let mut offset = 0;
@@ -155,6 +158,7 @@ fn canonical(rows: &PrepRows) -> PrepRows {
                 into.cw_other = max(into.cw_other, from.cw_other);
                 into.native_cost = max(into.native_cost, from.native_cost);
                 into.cache_write_ttl_s = into.cache_write_ttl_s.or(from.cache_write_ttl_s);
+                into.cache_expires_ms = into.cache_expires_ms.or(from.cache_expires_ms);
                 for (slot, value) in [
                     (&mut into.selected_model, &from.selected_model),
                     (&mut into.route_id, &from.route_id),
@@ -184,7 +188,7 @@ fn fold_identities_match_the_catalogue_descriptors() {
     assert_eq!(events.harness(), "copilot-cli");
     assert_eq!(events.harness(), DESCRIPTOR.id);
     assert_eq!(events.policy(), PREP_POLICY_VERSION);
-    assert_eq!(PREP_POLICY_VERSION, "copilot-cli/prep-v5");
+    assert_eq!(PREP_POLICY_VERSION, "copilot-cli/prep-v6");
     assert_eq!(events.kind(), PrepSourceKind::Append);
     assert_eq!(events.pattern(), "*/events.jsonl");
     assert_eq!(events.describe(EVENTS_FILE), PrepSourceMeta::default());
@@ -1070,7 +1074,7 @@ fn foreign_checkpoints_and_the_other_representation_are_refused() {
     let meta = PrepSourceMeta::default();
     let good = fold(EVENTS).checkpoint;
     assert_eq!(good.format, PREP_CHECKPOINT_FORMAT);
-    assert_eq!(good.policy, "copilot-cli/prep-v5");
+    assert_eq!(good.policy, "copilot-cli/prep-v6");
     let refused = |fold: &dyn PrepFold, checkpoint: PrepCheckpoint| {
         fold.open(&meta, "s", 0, Some(&checkpoint))
             .err()
@@ -1645,4 +1649,172 @@ fn inconsistent_native_prompt_counts_leave_uncached_input_unrecorded() {
         (call.input, call.cache_read, call.cw_5m, call.output),
         (None, Some(8), Some(5), Some(1))
     );
+}
+
+#[test]
+fn a_phase_that_switches_models_every_call_keeps_per_call_usage_exact() {
+    let run = fold(ALTERNATING);
+    let calls = canonical(&run.rows).calls;
+    // (call, served model, uncached input, cache read, cw_5m, cw_other, TTL,
+    // native expiry = record time + TTL, nano-AIU)
+    let got: Vec<_> = calls
+        .iter()
+        .map(|c| {
+            (
+                c.msg_id.as_deref().unwrap(),
+                c.model.as_deref().unwrap(),
+                c.input,
+                c.cache_read,
+                c.cw_5m,
+                c.detail.cw_other,
+                c.detail.cache_write_ttl_s,
+                c.detail.cache_expires_ms,
+                c.detail.native_cost,
+            )
+        })
+        .collect();
+    let s = Some;
+    assert_eq!(
+        got,
+        [
+            (
+                "api-a1",
+                "gpt-6-luna",
+                s(3),
+                s(22598),
+                s(0),
+                s(2062),
+                s(1800),
+                s(ms(10 + 1800)),
+                s(61_353_000)
+            ),
+            (
+                "api-a2",
+                "claude-opus-5.5",
+                s(4),
+                s(0),
+                s(38799),
+                s(0),
+                s(300),
+                s(ms(20 + 300)),
+                s(19_775_100_000)
+            ),
+            (
+                "api-a3",
+                "gpt-6-luna",
+                s(3),
+                s(24660),
+                s(0),
+                s(2896),
+                s(1800),
+                s(ms(30 + 1800)),
+                s(81_440_000)
+            ),
+            (
+                "api-a4",
+                "claude-opus-5.5",
+                s(2),
+                s(38799),
+                s(1702),
+                s(0),
+                s(300),
+                s(ms(40 + 300)),
+                s(1_871_780_000)
+            ),
+        ]
+    );
+    assert!(calls.iter().all(|c| {
+        c.detail.selected_model.as_deref() == Some("hydrafusion")
+            && c.detail.route_phase_id.as_deref() == Some("fusion-0101:phase:0")
+    }));
+
+    // The phase declared gpt-6-luna; two models served it.
+    let phase = &run.rows.route_phases[0];
+    assert_eq!(phase.model.as_deref(), Some("gpt-6-luna"));
+    assert_eq!(
+        (
+            phase.served_models.as_deref(),
+            phase.served_model_count,
+            phase.model_mismatch
+        ),
+        (Some("gpt-6-luna,claude-opus-5.5"), Some(2), Some(true))
+    );
+    // Per-call cost and tokens still add up to the phase's native totals.
+    let sum = |f: fn(&PrepCallRow) -> Option<i64>| calls.iter().filter_map(f).sum::<i64>();
+    assert_eq!(Some(sum(|c| c.detail.native_cost)), phase.native_cost);
+    assert_eq!(Some(sum(|c| c.input)), phase.input);
+    assert_eq!(Some(sum(|c| c.cache_read)), phase.cache_read);
+    assert_eq!(
+        Some(sum(|c| c.cw_5m) + sum(|c| c.detail.cw_other)),
+        phase.cache_write
+    );
+    let outcome = &run.rows.routes[1];
+    assert_eq!(outcome.final_model.as_deref(), Some("claude-opus-5.5"));
+    assert_eq!(
+        (
+            outcome.served_models.as_deref(),
+            outcome.served_model_count,
+            outcome.model_mismatch
+        ),
+        (Some("gpt-6-luna,claude-opus-5.5"), Some(2), Some(true))
+    );
+    assert_eq!(Some(sum(|c| c.detail.native_cost)), outcome.native_cost);
+}
+
+#[test]
+fn served_models_survive_every_batch_split_and_resume() {
+    let whole = fold(ALTERNATING);
+    let expected = canonical(&whole.rows);
+    let n = records(ALTERNATING).len();
+    let mut plans: Vec<Vec<usize>> = (1..n).map(|k| vec![k]).collect();
+    plans.push((1..n).collect());
+    for splits in plans {
+        for resume in [false, true] {
+            let run = fold_with(ALTERNATING, &splits, resume, PrepOptions::default());
+            let label = format!("splits={splits:?} resume={resume}");
+            assert_eq!(canonical(&run.rows), expected, "{label}");
+            assert_eq!(run.checkpoint, whole.checkpoint, "{label}");
+        }
+    }
+}
+
+#[test]
+fn single_model_phases_report_their_served_model_without_mismatch() {
+    let rows = fold(ROUTER).rows;
+    let phases: Vec<_> = rows
+        .route_phases
+        .iter()
+        .map(|p| {
+            (
+                p.served_models.as_deref(),
+                p.served_model_count,
+                p.model_mismatch,
+            )
+        })
+        .collect();
+    assert_eq!(
+        phases,
+        [
+            (Some("gpt-6-luna"), Some(1), Some(false)),
+            (Some("gpt-6.1-sol"), Some(1), Some(false)),
+            (Some("gpt-6-luna"), Some(1), Some(false)),
+            (Some("claude-opus-5.5"), Some(1), Some(false)),
+        ]
+    );
+    // The cascade served three models, each declared by one of its phases.
+    let cascade = &rows.routes[3];
+    assert_eq!(
+        (
+            cascade.served_models.as_deref(),
+            cascade.served_model_count,
+            cascade.model_mismatch
+        ),
+        (
+            Some("gpt-6.1-sol,gpt-6-luna,claude-opus-5.5"),
+            Some(3),
+            Some(false)
+        )
+    );
+    // Plan sightings carry no served facts; only outcomes do.
+    assert_eq!(rows.routes[2].served_model_count, None);
 }

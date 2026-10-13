@@ -339,6 +339,9 @@ fn route(
         native_cost: outcome.then_some(5_000),
         native_cost_unit: outcome.then(|| "nano_aiu".into()),
         duration_ms: outcome.then_some(4_000),
+        served_models: outcome.then(|| "model-a,model-c".into()),
+        served_model_count: outcome.then_some(2),
+        model_mismatch: outcome.then_some(true),
     }
 }
 
@@ -367,6 +370,9 @@ fn route_phase(source: &str, generation: u32, offset: u64, id: &str) -> PrepRout
         cache_write: Some(50),
         native_cost: Some(4_000),
         native_cost_unit: Some("nano_aiu".into()),
+        served_models: Some("model-a".into()),
+        served_model_count: Some(1),
+        model_mismatch: Some(false),
     }
 }
 
@@ -443,6 +449,7 @@ fn runs() -> Vec<(PrepRows, Vec<(&'static str, u32)>)> {
                     route_phase_id: Some("x1:0".into()),
                     cw_other: Some(7),
                     cache_write_ttl_s: Some(1800),
+                    cache_expires_ms: Some(1_800_430),
                     native_cost: Some(100),
                     native_cost_unit: Some("nano_aiu".into()),
                 },
@@ -633,6 +640,7 @@ fn views(target: &Path) -> BTreeMap<&'static str, Vec<String>> {
                 route_phase_id: detail(|d| d.route_phase_id.clone()),
                 cw_other: max_opt(group.iter().map(|(r, _)| r.detail.cw_other)),
                 cache_write_ttl_s: group.iter().find_map(|(r, _)| r.detail.cache_write_ttl_s),
+                cache_expires_ms: group.iter().find_map(|(r, _)| r.detail.cache_expires_ms),
                 native_cost: max_opt(group.iter().map(|(r, _)| r.detail.native_cost)),
                 native_cost_unit: detail(|d| d.native_cost_unit.clone()),
             };

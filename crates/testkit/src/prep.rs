@@ -190,6 +190,7 @@ fn merge_call(existing: &mut PrepCallRow, update: &PrepCallRow) {
     into.cw_other = max(into.cw_other, from.cw_other);
     into.native_cost = max(into.native_cost, from.native_cost);
     into.cache_write_ttl_s = into.cache_write_ttl_s.or(from.cache_write_ttl_s);
+    into.cache_expires_ms = into.cache_expires_ms.or(from.cache_expires_ms);
     for (slot, value) in [
         (&mut into.selected_model, &from.selected_model),
         (&mut into.route_id, &from.route_id),

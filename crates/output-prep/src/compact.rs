@@ -99,6 +99,7 @@ pub(crate) fn calls(rows: Vec<(PrepCallRow, Pos)>, current: &Current<'_>) -> Vec
                 into.route_id = into.route_id.take().or(from.route_id);
                 into.route_phase_id = into.route_phase_id.take().or(from.route_phase_id);
                 into.cache_write_ttl_s = into.cache_write_ttl_s.or(from.cache_write_ttl_s);
+                into.cache_expires_ms = into.cache_expires_ms.or(from.cache_expires_ms);
                 into.native_cost_unit = into.native_cost_unit.take().or(from.native_cost_unit);
             }
             Entry::Vacant(slot) => {
@@ -238,7 +239,10 @@ pub(crate) fn routes(rows: Vec<(PrepRouteRow, Pos)>, current: &Current<'_>) -> V
             cache_write,
             native_cost,
             native_cost_unit,
-            duration_ms
+            duration_ms,
+            served_models,
+            served_model_count,
+            model_mismatch
         );
     }
     out

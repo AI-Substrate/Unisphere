@@ -48,7 +48,12 @@
 //!   `session.fusion_resolved` is a route `plan` sighting,
 //!   `session.fusion_completed` its `outcome` sighting (with the current turn),
 //!   `assistant.fusion_phase_completed` a `route_phases` row; commit, handoff
-//!   and change-checkpoint records are not folded.
+//!   and change-checkpoint records are not folded. Nothing assumes one model
+//!   per phase or decision: the distinct models that served their tagged calls
+//!   (first-served order) are `served_models`/`served_model_count`, and
+//!   `model_mismatch` flags a served model the phase (or, for a decision, any
+//!   of its completed phases) did not declare. A call's native
+//!   `cacheExpiresAt` is `cache_expires_ms`.
 //! - `user.message` records are triggers classified by native `source`, `agentId`
 //!   and the pij envelope; injected skill and instruction records are not
 //!   triggers. The next new main-chain call opens the pending turn.
@@ -104,7 +109,7 @@ use unisphere_core::{
 use crate::{DESCRIPTOR, SNAPSHOT_DESCRIPTOR, query::tool_family};
 
 /// Events interpretation policy; bump on any rule change so every source re-emits.
-pub const PREP_POLICY_VERSION: &str = "copilot-cli/prep-v5";
+pub const PREP_POLICY_VERSION: &str = "copilot-cli/prep-v6";
 /// Legacy-document interpretation policy.
 pub const LEGACY_PREP_POLICY_VERSION: &str = "copilot-cli-snapshot/prep-v1";
 
@@ -172,6 +177,7 @@ impl PrepFold for CopilotCliPrepFold {
             || EventsSession {
                 core: Core::new(source, generation, Some(CompactionCounts::default())),
                 cache: CacheState::default(),
+                served: Served::default(),
             },
             |value| EventsSession::load(source, generation, value),
         )?;
@@ -726,6 +732,7 @@ impl Core {
             into.route_id = into.route_id.take().or(detail.route_id);
             into.route_phase_id = into.route_phase_id.take().or(detail.route_phase_id);
             into.cache_write_ttl_s = into.cache_write_ttl_s.or(detail.cache_write_ttl_s);
+            into.cache_expires_ms = into.cache_expires_ms.or(detail.cache_expires_ms);
             into.native_cost_unit = into.native_cost_unit.take().or(detail.native_cost_unit);
             return;
         }
@@ -1046,9 +1053,97 @@ impl CacheState {
     }
 }
 
+/// Models that served the tagged calls of each open router phase and
+/// decision, and the models a decision's completed phases declared. A router
+/// may change the model on every call; entries close with their phase or
+/// decision, so the state stays bounded by the open ones.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+struct Served {
+    phases: BTreeMap<String, Vec<String>>,
+    routes: BTreeMap<String, Vec<String>>,
+    declared: BTreeMap<String, Vec<String>>,
+}
+
+fn push_distinct(list: &mut Vec<String>, model: &str) {
+    if !list.iter().any(|m| m == model) {
+        list.push(model.to_owned());
+    }
+}
+
+/// `(served_models, served_model_count, model_mismatch)`: no tagged call is a
+/// count of 0; a mismatch needs a declared model to compare with.
+type ServedSummary = (Option<String>, Option<i64>, Option<bool>);
+
+fn summary(served: &[String], declared: &[String]) -> ServedSummary {
+    if served.is_empty() {
+        return (None, Some(0), None);
+    }
+    (
+        Some(served.join(",")),
+        Some(len_i64(served.len())),
+        (!declared.is_empty()).then(|| served.iter().any(|m| !declared.contains(m))),
+    )
+}
+
+impl Served {
+    fn save(&self) -> Value {
+        json!({ "phases": self.phases, "routes": self.routes, "declared": self.declared })
+    }
+
+    fn load(value: &Value) -> Option<Self> {
+        let object = value.as_object()?;
+        let map = |key: &str| serde_json::from_value(object.get(key)?.clone()).ok();
+        Some(Self {
+            phases: map("phases")?,
+            routes: map("routes")?,
+            declared: map("declared")?,
+        })
+    }
+
+    /// A call sighting tagged with a router decision and phase.
+    fn record(&mut self, sighting: &Sighting) {
+        let Some(model) = sighting.model.as_deref() else {
+            return;
+        };
+        if let Some(phase) = &sighting.detail.route_phase_id {
+            push_distinct(self.phases.entry(phase.clone()).or_default(), model);
+        }
+        if let Some(route) = &sighting.detail.route_id {
+            push_distinct(self.routes.entry(route.clone()).or_default(), model);
+        }
+    }
+
+    /// Close a phase: its served models against its declared `model`.
+    fn phase(&mut self, data: &Map<String, Value>) -> ServedSummary {
+        let declared: Vec<String> = text(data, "model").into_iter().collect();
+        if let (Some(route), Some(model)) = (text(data, "fusionId"), declared.first()) {
+            push_distinct(self.declared.entry(route).or_default(), model);
+        }
+        let served = text(data, "phaseId")
+            .and_then(|phase| self.phases.remove(&phase))
+            .unwrap_or_default();
+        summary(&served, &declared)
+    }
+
+    /// Close a decision: its served models against its phases' declared ones.
+    fn route(&mut self, data: &Map<String, Value>) -> ServedSummary {
+        let route = text(data, "fusionId");
+        let take = |map: &mut BTreeMap<String, Vec<String>>| {
+            route
+                .as_ref()
+                .and_then(|route| map.remove(route))
+                .unwrap_or_default()
+        };
+        let served = take(&mut self.routes);
+        let declared = take(&mut self.declared);
+        summary(&served, &declared)
+    }
+}
+
 struct EventsSession {
     core: Core,
     cache: CacheState,
+    served: Served,
 }
 
 impl PrepFoldSession for EventsSession {
@@ -1056,7 +1151,11 @@ impl PrepFoldSession for EventsSession {
         PrepCheckpoint {
             format: PREP_CHECKPOINT_FORMAT,
             policy: PREP_POLICY_VERSION.to_owned(),
-            fold: json!({ "core": self.core.save(), "cache": self.cache.save() }),
+            fold: json!({
+                "core": self.core.save(),
+                "cache": self.cache.save(),
+                "served": self.served.save(),
+            }),
         }
     }
 
@@ -1079,6 +1178,7 @@ impl EventsSession {
         Some(Self {
             core: Core::load(source, generation, object.get("core")?)?,
             cache: CacheState::load(object.get("cache")?)?,
+            served: Served::load(object.get("served")?)?,
         })
     }
 
@@ -1159,18 +1259,24 @@ impl EventsSession {
                 }
                 "assistant.usage" => {
                     let sighting = usage_call(data, sidechain, native.offset);
+                    self.served.record(&sighting);
                     core.call(&at, sighting, &mut rows, &mut batch_calls);
                 }
                 "session.usage_record" => {
                     if let Some(usage) = data.get("usage").and_then(Value::as_object) {
                         let sighting = usage_call(usage, sidechain, native.offset);
+                        self.served.record(&sighting);
                         core.call(&at, sighting, &mut rows, &mut batch_calls);
                     }
                 }
                 "session.fusion_resolved" => rows.routes.push(route_plan(core, &at, data)),
-                "session.fusion_completed" => rows.routes.push(route_outcome(core, &at, data)),
+                "session.fusion_completed" => {
+                    let served = self.served.route(data);
+                    rows.routes.push(route_outcome(core, &at, data, served));
+                }
                 "assistant.fusion_phase_completed" => {
-                    rows.route_phases.push(route_phase(core, &at, data));
+                    let served = self.served.phase(data);
+                    rows.route_phases.push(route_phase(core, &at, data, served));
                 }
                 "model.model_call_success" => {
                     let sighting = utility_call(data, native.offset);
@@ -1366,6 +1472,10 @@ fn usage_call(usage: &Map<String, Value>, agent: bool, offset: u64) -> Sighting 
     let msg_id = text(usage, "apiCallId");
     let mut detail = cost_detail(nano_aiu(usage));
     detail.cache_write_ttl_s = ttl_s;
+    detail.cache_expires_ms = usage
+        .get("cacheExpiresAt")
+        .and_then(Value::as_str)
+        .and_then(parse_ms);
     if let Some(fusion) = fusion {
         detail.selected_model = text(fusion, "syntheticModel");
         detail.route_id = text(fusion, "fusionId");
@@ -1435,6 +1545,9 @@ fn route_row(
         native_cost: None,
         native_cost_unit: None,
         duration_ms: None,
+        served_models: None,
+        served_model_count: None,
+        model_mismatch: None,
     }
 }
 
@@ -1482,8 +1595,14 @@ fn route_plan(core: &Core, at: &At<'_>, data: &Map<String, Value>) -> PrepRouteR
     }
 }
 
-/// `session.fusion_completed`: the decision's outcome and native totals.
-fn route_outcome(core: &Core, at: &At<'_>, data: &Map<String, Value>) -> PrepRouteRow {
+/// `session.fusion_completed`: the decision's outcome, native totals and the
+/// models that served its tagged calls.
+fn route_outcome(
+    core: &Core,
+    at: &At<'_>,
+    data: &Map<String, Value>,
+    (served_models, served_model_count, model_mismatch): ServedSummary,
+) -> PrepRouteRow {
     let cost = int(data, "totalNanoAiu");
     PrepRouteRow {
         turn_no: Some(core.turn_no),
@@ -1502,12 +1621,21 @@ fn route_outcome(core: &Core, at: &At<'_>, data: &Map<String, Value>) -> PrepRou
         native_cost: cost,
         native_cost_unit: cost.map(|_| NANO_AIU.to_owned()),
         duration_ms: int(data, "durationMs"),
+        served_models,
+        served_model_count,
+        model_mismatch,
         ..route_row(core, at, RouteSighting::Outcome, data)
     }
 }
 
-/// `assistant.fusion_phase_completed`: one phase with its native usage.
-fn route_phase(core: &Core, at: &At<'_>, data: &Map<String, Value>) -> PrepRoutePhaseRow {
+/// `assistant.fusion_phase_completed`: one phase with its native usage and the
+/// models that served its tagged calls (`model` stays the declared one).
+fn route_phase(
+    core: &Core,
+    at: &At<'_>,
+    data: &Map<String, Value>,
+    (served_models, served_model_count, model_mismatch): ServedSummary,
+) -> PrepRoutePhaseRow {
     let empty = Map::new();
     let usage = data
         .get("usage")
@@ -1542,6 +1670,9 @@ fn route_phase(core: &Core, at: &At<'_>, data: &Map<String, Value>) -> PrepRoute
         cache_write: int(usage, "cacheWriteTokens"),
         native_cost: cost,
         native_cost_unit: cost.map(|_| NANO_AIU.to_owned()),
+        served_models,
+        served_model_count,
+        model_mismatch,
     }
 }
 

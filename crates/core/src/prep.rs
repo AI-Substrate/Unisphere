@@ -22,7 +22,7 @@ use crate::{
 };
 
 /// Physical layout/column contract of the published tables.
-pub const PREP_TABLE_SCHEMA_VERSION: u32 = 3;
+pub const PREP_TABLE_SCHEMA_VERSION: u32 = 4;
 /// Envelope format of [`PrepCheckpoint`]; independent of any fold's policy.
 pub const PREP_CHECKPOINT_FORMAT: u32 = 1;
 /// Label of the adapter catalogue's default root for a harness.
@@ -439,6 +439,8 @@ pub struct PrepCallDetail {
     pub cw_other: Option<i64>,
     /// Native TTL, in seconds, of this call's cache write.
     pub cache_write_ttl_s: Option<i64>,
+    /// Native expiry (epoch ms) of the cache this call wrote or refreshed.
+    pub cache_expires_ms: Option<i64>,
     /// Native cost in `native_cost_unit`; never converted to money.
     pub native_cost: Option<i64>,
     pub native_cost_unit: Option<String>,
@@ -543,6 +545,12 @@ pub struct PrepRouteRow {
     pub native_cost: Option<i64>,
     pub native_cost_unit: Option<String>,
     pub duration_ms: Option<i64>,
+    /// Distinct models that served the decision's tagged calls, `,`-joined in
+    /// first-served order; a router may change the model on every call.
+    pub served_models: Option<String>,
+    pub served_model_count: Option<i64>,
+    /// A served model is not among the models its completed phases declared.
+    pub model_mismatch: Option<bool>,
 }
 
 /// One completed phase of a routing decision, with its native usage.
@@ -575,6 +583,12 @@ pub struct PrepRoutePhaseRow {
     pub cache_write: Option<i64>,
     pub native_cost: Option<i64>,
     pub native_cost_unit: Option<String>,
+    /// Distinct models that served the phase's tagged calls, `,`-joined in
+    /// first-served order; `model` stays the phase's declared model.
+    pub served_models: Option<String>,
+    pub served_model_count: Option<i64>,
+    /// A served model differs from the declared `model`.
+    pub model_mismatch: Option<bool>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

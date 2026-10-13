@@ -52,6 +52,7 @@ pub(crate) fn schema(table: &str) -> Arc<Schema> {
             ("route_phase_id", S, true),
             ("cw_other", I, true),
             ("cache_write_ttl_s", I, true),
+            ("cache_expires_ms", I, true),
             ("native_cost", I, true),
             ("native_cost_unit", S, true),
         ],
@@ -145,6 +146,9 @@ pub(crate) fn schema(table: &str) -> Arc<Schema> {
             ("native_cost", I, true),
             ("native_cost_unit", S, true),
             ("duration_ms", I, true),
+            ("served_models", S, true),
+            ("served_model_count", I, true),
+            ("model_mismatch", B, true),
         ],
         "route_phases" => vec![
             ("route_id", S, true),
@@ -166,6 +170,9 @@ pub(crate) fn schema(table: &str) -> Arc<Schema> {
             ("cache_write", I, true),
             ("native_cost", I, true),
             ("native_cost_unit", S, true),
+            ("served_models", S, true),
+            ("served_model_count", I, true),
+            ("model_mismatch", B, true),
         ],
         "sources" => {
             return columns(&[

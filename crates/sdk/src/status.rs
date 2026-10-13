@@ -134,6 +134,7 @@ impl TrackedCall {
         into.cw_other = max(into.cw_other, from.cw_other);
         into.native_cost = max(into.native_cost, from.native_cost);
         into.cache_write_ttl_s = into.cache_write_ttl_s.or(from.cache_write_ttl_s);
+        into.cache_expires_ms = into.cache_expires_ms.or(from.cache_expires_ms);
         for (slot, value) in [
             (&mut into.selected_model, &from.selected_model),
             (&mut into.native_cost_unit, &from.native_cost_unit),
@@ -145,6 +146,14 @@ impl TrackedCall {
     }
 }
 
+/// One served model's main-chain calls and its latest call.
+#[derive(Debug, Clone, PartialEq)]
+struct ModelTrack {
+    model: String,
+    calls: u64,
+    last: TrackedCall,
+}
+
 /// Bounded facts accumulated from rows; independent of how input was batched.
 #[derive(Debug, Clone, Default, PartialEq)]
 struct Accumulated {
@@ -152,6 +161,8 @@ struct Accumulated {
     /// Time of the latest main-chain, non-synthetic call that named a model.
     current_at_ms: Option<i64>,
     last_call: Option<TrackedCall>,
+    /// Per served model, latest call first, at most [`MAX_STATUS_MODELS`].
+    models: Vec<ModelTrack>,
     calls: CallCounts,
     turns_total: u64,
     turns_by_origin: BTreeMap<String, u64>,
@@ -205,6 +216,9 @@ impl Accumulated {
                 if let Some(last) = self.last_call.as_mut().filter(|l| l.same_call(row)) {
                     last.merge(row);
                 }
+                if let Some(track) = self.models.iter_mut().find(|t| t.last.same_call(row)) {
+                    track.last.merge(row);
+                }
             }
             CallSighting::First => {
                 self.calls.total += 1;
@@ -215,9 +229,27 @@ impl Accumulated {
                 self.last_call = Some(TrackedCall::new(row));
                 if let Some(model) = &row.model {
                     self.model(model, row.ts_ms);
+                    self.served(model, row);
                 }
             }
         }
+    }
+
+    /// The served model's track moves to the front with this call as latest.
+    fn served(&mut self, model: &str, row: &PrepCallRow) {
+        let calls = match self.models.iter().position(|t| t.model == model) {
+            Some(index) => self.models.remove(index).calls,
+            None => 0,
+        };
+        self.models.insert(
+            0,
+            ModelTrack {
+                model: model.to_owned(),
+                calls: calls + 1,
+                last: TrackedCall::new(row),
+            },
+        );
+        self.models.truncate(MAX_STATUS_MODELS);
     }
 
     fn model(&mut self, model: &str, ts: Option<i64>) {
@@ -491,6 +523,11 @@ fn derive(
         .is_some_and(|c| c.manual + c.auto + c.unknown_trigger == 0);
 
     status.calls = acc.calls;
+    status.models = acc
+        .models
+        .iter()
+        .map(|track| model_cache(track, now_ms))
+        .collect();
     status.limits_seen = acc.limits.clone();
 
     let last_call = status.last_call.as_ref();
@@ -974,6 +1011,41 @@ fn finish(
         reset: reset.map(str::to_owned),
     };
     (status, cursor)
+}
+
+/// One served model's cache facts from its latest call.
+fn model_cache(track: &ModelTrack, now_ms: i64) -> ModelCacheStatus {
+    let call = &track.last;
+    let detail = &call.detail;
+    let ttl = match non_negative(detail.cache_write_ttl_s).filter(|s| *s > 0) {
+        Some(seconds) => Some(Fact::new(seconds, Basis::Native)),
+        None if !call.ttl_split => None,
+        None if call.cw_1h.is_some_and(|v| v > 0) => Some(Fact::new(3600, Basis::Derived)),
+        None if call.cw_5m.is_some_and(|v| v > 0) => Some(Fact::new(300, Basis::Derived)),
+        None => None,
+    };
+    let expires = match detail.cache_expires_ms {
+        Some(expires) => Some(Fact::new(expires, Basis::Native)),
+        None => call.at_ms.zip(ttl.as_ref()).map(|(at, ttl)| {
+            let ttl_ms = i64::try_from(ttl.value).unwrap_or(i64::MAX / 1000) * 1000;
+            Fact::new(at.saturating_add(ttl_ms), Basis::Derived)
+        }),
+    };
+    let context = (|| {
+        let write = call.cw_1h? + call.cw_5m? + detail.cw_other.unwrap_or(0);
+        non_negative(Some(call.input? + call.cache_read? + write))
+    })();
+    ModelCacheStatus {
+        model: track.model.clone(),
+        calls: track.calls,
+        last_call_at_ms: call.at_ms,
+        cache_warm: expires
+            .as_ref()
+            .map(|e| Fact::new(now_ms < e.value, e.basis)),
+        cache_ttl_s: ttl,
+        cache_expires_ms: expires,
+        last_context: context.map(|c| Fact::new(c, Basis::Derived)),
+    }
 }
 
 #[cfg(test)]

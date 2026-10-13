@@ -25,7 +25,7 @@ fn text<T: serde::Serialize>(value: T) -> String {
 
 #[test]
 fn versions_are_the_published_contract() {
-    assert_eq!(PREP_TABLE_SCHEMA_VERSION, 3);
+    assert_eq!(PREP_TABLE_SCHEMA_VERSION, 4);
     assert_eq!(PREP_CHECKPOINT_FORMAT, 1);
     assert_eq!(DEFAULT_ROOT_LABEL, "default");
 }

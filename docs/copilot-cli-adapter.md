@@ -88,6 +88,10 @@ The inspection facets preserve only evidence the format supplies:
   decision totals are not usage facets: they overlap the calls they span. Empty
   or differently shaped native accounting records do not become zero-valued
   usage. These scopes must not be summed as interchangeable consumption.
+- A usage facet's `input_tokens` is uncached input, matching prep's `input`:
+  Copilot's `inputTokens` include the cache reads and writes it also records,
+  so `input_tokens = inputTokens − cacheReadTokens − cacheWriteTokens`. A
+  negative remainder is `projection_missing`, never clamped.
 
 Message text/reasoning, tool input/output/progress, titles and model names are
 retained only when the corresponding `ContentAccess` field permits local
@@ -133,9 +137,12 @@ does not imply those normally transient records exist in on-disk JSONL.
 
 Native `inputTokens`, `outputTokens`, `cacheReadTokens` and `cacheWriteTokens`
 map to the common `unisphere.usage.input_tokens`, `output_tokens`,
-`cache_read_input_tokens` and `cache_creation_input_tokens`. Additional native
-components are `unisphere.copilot.usage.reasoning_tokens`,
-`accepted_prediction_tokens` and `rejected_prediction_tokens`.
+`cache_read_input_tokens` and `cache_creation_input_tokens` as exact native
+snapshots: the exported `input_tokens` keeps Copilot's native count, which
+includes cached and written prompt tokens (query and prep report uncached
+input instead). Additional native components are
+`unisphere.copilot.usage.reasoning_tokens`, `accepted_prediction_tokens` and
+`rejected_prediction_tokens`.
 
 `unisphere.usage.scope` distinguishes `assistant_message`, `api_call`,
 `session_checkpoint`, `session_shutdown`, `compaction_api_call`,

@@ -19,10 +19,14 @@
 //!   `msg_id` is the call id; `request_id` stays null because the usage record
 //!   carries no provider request id and every sighting of one call must share
 //!   both keys.
+//! - `input` is uncached input, as in every dialect: Copilot's prompt count
+//!   (`inputTokens`, utility `prompt_tokens`) includes the cache reads and
+//!   writes it also records, so those are subtracted (a negative remainder is
+//!   not recorded). `input + cache_read + cache write` is then the context.
 //! - `model.model_call_success` records are the harness's utility model calls
 //!   (their ids never match a conversation call). They are calls with
-//!   `is_sidechain = true` and native `responseUsage`: `input` is the recorded
-//!   `prompt_tokens`, `cache_read` is `cached_tokens`, and a cache write is
+//!   `is_sidechain = true` and native `responseUsage`: `cache_read` is
+//!   `cached_tokens`, and a cache write (`cache_creation_tokens`) is
 //!   attributed by its native `cache_ttl_seconds` as below.
 //! - Copilot records one aggregate cache write per call. With a native TTL
 //!   (`cacheTtlSeconds`, `cache_ttl_seconds`) it is attributed by that TTL:
@@ -30,8 +34,9 @@
 //!   `cw_other`, basis `split`, TTL in `cache_write_ttl_s`. Without one, the
 //!   documented fallback applies (main → 1 h, sidechain → 5 m) with `cw_other`
 //!   0. A `split` sighting outranks a fallback one; the cache-write columns stay
-//!   null until a usage record is folded. `copilotUsage.totalNanoAiu` (else
-//!   `totalNanoAiu`) is `native_cost` in `nano_aiu`. Every other field is the
+//!   null until a usage record is folded. `copilotUsage.totalNanoAiu` (utility
+//!   calls: `copilotUsage.total_nano_aiu`; else `totalNanoAiu`) is
+//!   `native_cost` in `nano_aiu`; a recorded 0 is 0. Every other field is the
 //!   first sighting's, router facts the first non-null, as the canonical
 //!   reader keeps them. No stop reason is recorded: `stop_reason` is null.
 //! - Records carrying a top-level `agentId` belong to a subagent: their calls
@@ -99,7 +104,7 @@ use unisphere_core::{
 use crate::{DESCRIPTOR, SNAPSHOT_DESCRIPTOR, query::tool_family};
 
 /// Events interpretation policy; bump on any rule change so every source re-emits.
-pub const PREP_POLICY_VERSION: &str = "copilot-cli/prep-v4";
+pub const PREP_POLICY_VERSION: &str = "copilot-cli/prep-v5";
 /// Legacy-document interpretation policy.
 pub const LEGACY_PREP_POLICY_VERSION: &str = "copilot-cli-snapshot/prep-v1";
 
@@ -297,14 +302,27 @@ fn ttl_write(
 /// Unit of Copilot's native `totalNanoAiu` cost.
 const NANO_AIU: &str = "nano_aiu";
 
-/// Native nano-AIU cost of a usage object: `copilotUsage.totalNanoAiu`, else
-/// a top-level `totalNanoAiu`.
+/// Native nano-AIU cost of a usage object: `copilotUsage.totalNanoAiu`
+/// (`total_nano_aiu` on utility calls), else a top-level `totalNanoAiu`. A
+/// recorded 0 is 0; only an absent field is `None`.
 fn nano_aiu(usage: &Map<String, Value>) -> Option<i64> {
     usage
         .get("copilotUsage")
         .and_then(Value::as_object)
-        .and_then(|copilot| int(copilot, "totalNanoAiu"))
+        .and_then(|copilot| int(copilot, "totalNanoAiu").or_else(|| int(copilot, "total_nano_aiu")))
         .or_else(|| int(usage, "totalNanoAiu"))
+}
+
+/// Uncached input: Copilot's prompt-token count includes the cache reads and
+/// writes it also records, while `input` is uncached input in every dialect.
+/// The recorded components are subtracted; a negative remainder (inconsistent
+/// native counters) is not recorded rather than clamped.
+fn uncached(input: Option<i64>, cached: [Option<i64>; 2]) -> Option<i64> {
+    let mut rest = input?;
+    for part in cached.into_iter().flatten() {
+        rest = rest.checked_sub(part)?;
+    }
+    (rest >= 0).then_some(rest)
 }
 
 /// Call detail carrying a native cost, when one is recorded.
@@ -1300,12 +1318,11 @@ fn utility_call(data: &Map<String, Value>, offset: u64) -> Sighting {
     let request_id = text(data, "requestId");
     let msg_id = text(data, "callId").or_else(|| request_id.clone());
     let ttl_s = int(&details, "cache_ttl_seconds");
-    let ([cw_1h, cw_5m, cw_other], basis) = ttl_write(
-        int(&details, "cache_creation_tokens"),
-        ttl_s,
-        true,
-        CacheWriteBasis::None,
-    );
+    let written = int(&details, "cache_creation_tokens");
+    let cached = int(&details, "cached_tokens");
+    let ([cw_1h, cw_5m, cw_other], basis) = ttl_write(written, ttl_s, true, CacheWriteBasis::None);
+    let mut detail = cost_detail(nano_aiu(data));
+    detail.cache_write_ttl_s = ttl_s;
     Sighting {
         key: call_key(msg_id.as_deref(), offset),
         msg_id,
@@ -1318,19 +1335,16 @@ fn utility_call(data: &Map<String, Value>, offset: u64) -> Sighting {
             .and_then(Value::as_str)
             .map(str::to_owned),
         tokens: [
-            int(&usage, "prompt_tokens"),
+            uncached(int(&usage, "prompt_tokens"), [cached, written]),
             cw_1h,
             cw_5m,
-            int(&details, "cached_tokens"),
+            cached,
             int(&usage, "completion_tokens"),
             cw_other,
         ],
         basis,
         sidechain: true,
-        detail: PrepCallDetail {
-            cache_write_ttl_s: ttl_s,
-            ..PrepCallDetail::default()
-        },
+        detail,
     }
 }
 
@@ -1345,12 +1359,10 @@ fn usage_call(usage: &Map<String, Value>, agent: bool, offset: u64) -> Sighting 
             .and_then(|f| text(f, "conversationScope"))
             .is_some_and(|scope| scope != "root");
     let ttl_s = int(usage, "cacheTtlSeconds");
-    let ([cw_1h, cw_5m, cw_other], basis) = ttl_write(
-        int(usage, "cacheWriteTokens"),
-        ttl_s,
-        sidechain,
-        aggregate_basis(sidechain),
-    );
+    let written = int(usage, "cacheWriteTokens");
+    let read = int(usage, "cacheReadTokens");
+    let ([cw_1h, cw_5m, cw_other], basis) =
+        ttl_write(written, ttl_s, sidechain, aggregate_basis(sidechain));
     let msg_id = text(usage, "apiCallId");
     let mut detail = cost_detail(nano_aiu(usage));
     detail.cache_write_ttl_s = ttl_s;
@@ -1365,10 +1377,10 @@ fn usage_call(usage: &Map<String, Value>, agent: bool, offset: u64) -> Sighting 
         request_id: None,
         model: text(usage, "model"),
         tokens: [
-            int(usage, "inputTokens"),
+            uncached(int(usage, "inputTokens"), [read, written]),
             cw_1h,
             cw_5m,
-            int(usage, "cacheReadTokens"),
+            read,
             int(usage, "outputTokens"),
             cw_other,
         ],
@@ -1480,7 +1492,10 @@ fn route_outcome(core: &Core, at: &At<'_>, data: &Map<String, Value>) -> PrepRou
         degraded_reason: text(data, "degradedReason"),
         phase_count: int(data, "phaseCount"),
         request_count: int(data, "requestCount"),
-        input: int(data, "inputTokens"),
+        input: uncached(
+            int(data, "inputTokens"),
+            [int(data, "cachedTokens"), int(data, "cacheWriteTokens")],
+        ),
         output: int(data, "outputTokens"),
         cache_read: int(data, "cachedTokens"),
         cache_write: int(data, "cacheWriteTokens"),
@@ -1518,7 +1533,10 @@ fn route_phase(core: &Core, at: &At<'_>, data: &Map<String, Value>) -> PrepRoute
         verdict: text(data, "verdict"),
         duration_ms: int(data, "durationMs"),
         request_count: int(usage, "requestCount"),
-        input: int(usage, "inputTokens"),
+        input: uncached(
+            int(usage, "inputTokens"),
+            [int(usage, "cachedTokens"), int(usage, "cacheWriteTokens")],
+        ),
         output: int(usage, "outputTokens"),
         cache_read: int(usage, "cachedTokens"),
         cache_write: int(usage, "cacheWriteTokens"),

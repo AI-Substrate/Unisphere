@@ -184,7 +184,7 @@ fn fold_identities_match_the_catalogue_descriptors() {
     assert_eq!(events.harness(), "copilot-cli");
     assert_eq!(events.harness(), DESCRIPTOR.id);
     assert_eq!(events.policy(), PREP_POLICY_VERSION);
-    assert_eq!(PREP_POLICY_VERSION, "copilot-cli/prep-v4");
+    assert_eq!(PREP_POLICY_VERSION, "copilot-cli/prep-v5");
     assert_eq!(events.kind(), PrepSourceKind::Append);
     assert_eq!(events.pattern(), "*/events.jsonl");
     assert_eq!(events.describe(EVENTS_FILE), PrepSourceMeta::default());
@@ -225,7 +225,8 @@ fn calls_merge_message_and_usage_sightings_by_native_call_id() {
             "api-1",
             None,
             "model-a",
-            [Some(100), Some(20), Some(0), Some(50), Some(12)],
+            // Uncached input: inputTokens 100 − cache read 50 − cache write 20.
+            [Some(30), Some(20), Some(0), Some(50), Some(12)],
             CacheWriteBasis::Fallback1h,
             false,
             (-1, 1, 1),
@@ -246,7 +247,7 @@ fn calls_merge_message_and_usage_sightings_by_native_call_id() {
             "api-3",
             None,
             "model-a",
-            [Some(200), Some(10), Some(0), Some(120), Some(4)],
+            [Some(70), Some(10), Some(0), Some(120), Some(4)],
             CacheWriteBasis::Fallback1h,
             false,
             (11_000, 2, 1),
@@ -257,7 +258,7 @@ fn calls_merge_message_and_usage_sightings_by_native_call_id() {
             "api-4",
             None,
             "model-a",
-            [Some(30), Some(0), Some(5), Some(0), Some(3)],
+            [Some(25), Some(0), Some(5), Some(0), Some(3)],
             CacheWriteBasis::Fallback5m,
             true,
             (4000, 2, 2),
@@ -268,7 +269,8 @@ fn calls_merge_message_and_usage_sightings_by_native_call_id() {
             "util-1",
             Some("ureq-1"),
             "model-small",
-            [Some(40), Some(0), Some(8), Some(10), Some(6)],
+            // Utility: prompt_tokens 40 − cached 10 − cache creation 8.
+            [Some(22), Some(0), Some(8), Some(10), Some(6)],
             CacheWriteBasis::Split,
             true,
             (8000, 2, 3),
@@ -342,7 +344,7 @@ fn a_sighting_in_a_later_batch_is_an_update_without_ordering_facts() {
     );
     assert_eq!(
         (update.sighting, update.input, update.cw_1h, update.records),
-        (CallSighting::Update, Some(100), Some(20), 1)
+        (CallSighting::Update, Some(30), Some(20), 1)
     );
     assert_eq!(
         (update.gap_ms, update.turn_no, update.call_in_turn),
@@ -500,8 +502,8 @@ fn model_changes_compactions_errors_and_aborts_are_typed_events() {
                 Some("threshold"),
                 None,
                 (Some(400), Some(80)),
-                // The latest call is the subagent's: 30 + 5 + 0, 7 s before.
-                (Some(35), Some(7000)),
+                // The latest call is the subagent's: 25 + 5 + 0, 7 s before.
+                (Some(30), Some(7000)),
                 2
             ),
             (
@@ -521,7 +523,7 @@ fn model_changes_compactions_errors_and_aborts_are_typed_events() {
                 Some("manual"),
                 None,
                 (None, None),
-                (Some(58), Some(3000)),
+                (Some(40), Some(3000)),
                 2
             ),
             (
@@ -531,7 +533,7 @@ fn model_changes_compactions_errors_and_aborts_are_typed_events() {
                 Some("manual"),
                 None,
                 (Some(300), Some(60)),
-                (Some(58), Some(4000)),
+                (Some(40), Some(4000)),
                 2
             ),
             (
@@ -1068,7 +1070,7 @@ fn foreign_checkpoints_and_the_other_representation_are_refused() {
     let meta = PrepSourceMeta::default();
     let good = fold(EVENTS).checkpoint;
     assert_eq!(good.format, PREP_CHECKPOINT_FORMAT);
-    assert_eq!(good.policy, "copilot-cli/prep-v4");
+    assert_eq!(good.policy, "copilot-cli/prep-v5");
     let refused = |fold: &dyn PrepFold, checkpoint: PrepCheckpoint| {
         fold.open(&meta, "s", 0, Some(&checkpoint))
             .err()
@@ -1233,6 +1235,8 @@ fn usage_records_fold_into_calls_with_native_ttl_cost_and_the_model_that_ran() {
     let hf = Some("hydrafusion");
     let run = fold(ROUTER);
     let calls = canonical(&run.rows).calls;
+    // `input` is uncached: native inputTokens minus the cache reads and
+    // writes Copilot also records (e.g. 38803 − 0 − 38799 = 4).
     let expected: Vec<RouterCall<'static>> = vec![
         // Subagent call: 1800 s TTL is neither 1 h nor 5 m, so it is cw_other.
         (
@@ -1241,7 +1245,7 @@ fn usage_records_fold_into_calls_with_native_ttl_cost_and_the_model_that_ran() {
             None,
             None,
             true,
-            [s(1665), s(0), s(0), s(0), s(15), s(1662)],
+            [s(3), s(0), s(0), s(0), s(15), s(1662)],
             s(1800),
             Split,
             s(43_410_000),
@@ -1253,23 +1257,24 @@ fn usage_records_fold_into_calls_with_native_ttl_cost_and_the_model_that_ran() {
             hf,
             Some("fusion-0001:phase:0"),
             false,
-            [s(22887), s(0), s(0), s(0), s(32), s(22884)],
+            [s(3), s(0), s(0), s(0), s(32), s(22884)],
             s(1800),
             Split,
             s(287_680_000),
             2,
         ),
-        // Utility call: its native 1800 s TTL is honoured the same way.
+        // Utility call: its native 1800 s TTL is honoured the same way, and a
+        // recorded zero cost is 0, not null.
         (
             "util-0001",
             "gpt-5.4-nano",
             None,
             None,
             true,
-            [s(545), s(0), s(0), s(0), s(43), s(12)],
+            [s(533), s(0), s(0), s(0), s(43), s(12)],
             s(1800),
             Split,
-            None,
+            s(0),
             1,
         ),
         (
@@ -1278,7 +1283,7 @@ fn usage_records_fold_into_calls_with_native_ttl_cost_and_the_model_that_ran() {
             hf,
             Some("fusion-0002:phase:0"),
             false,
-            [s(23115), s(0), s(0), s(0), s(18), s(23112)],
+            [s(3), s(0), s(0), s(0), s(18), s(23112)],
             s(1800),
             Split,
             s(5_796_600_000),
@@ -1290,7 +1295,7 @@ fn usage_records_fold_into_calls_with_native_ttl_cost_and_the_model_that_ran() {
             hf,
             Some("fusion-0002:phase:0"),
             false,
-            [s(23350), s(0), s(0), s(23112), s(20), s(235)],
+            [s(3), s(0), s(0), s(23112), s(20), s(235)],
             s(1800),
             Split,
             s(310_470_000),
@@ -1304,7 +1309,7 @@ fn usage_records_fold_into_calls_with_native_ttl_cost_and_the_model_that_ran() {
             hf,
             Some("fusion-0002:judge"),
             true,
-            [s(1511), s(0), s(1508), s(0), s(62), s(0)],
+            [s(3), s(0), s(1508), s(0), s(62), s(0)],
             None,
             Fallback5m,
             s(21_980_000),
@@ -1316,7 +1321,7 @@ fn usage_records_fold_into_calls_with_native_ttl_cost_and_the_model_that_ran() {
             hf,
             Some("fusion-0002:judge"),
             true,
-            [s(1603), s(0), s(92), s(1508), s(35), s(0)],
+            [s(3), s(0), s(92), s(1508), s(35), s(0)],
             None,
             Fallback5m,
             s(4_438_000),
@@ -1329,7 +1334,7 @@ fn usage_records_fold_into_calls_with_native_ttl_cost_and_the_model_that_ran() {
             hf,
             Some("fusion-0002:repair"),
             false,
-            [s(38803), s(0), s(38799), s(0), s(187), s(0)],
+            [s(4), s(0), s(38799), s(0), s(187), s(0)],
             s(300),
             Split,
             s(19_775_100_000),
@@ -1341,7 +1346,7 @@ fn usage_records_fold_into_calls_with_native_ttl_cost_and_the_model_that_ran() {
             hf,
             Some("fusion-0002:repair"),
             false,
-            [s(40503), s(0), s(1702), s(38799), s(122), s(0)],
+            [s(2), s(0), s(1702), s(38799), s(122), s(0)],
             s(300),
             Split,
             s(1_871_780_000),
@@ -1353,7 +1358,7 @@ fn usage_records_fold_into_calls_with_native_ttl_cost_and_the_model_that_ran() {
             None,
             None,
             true,
-            [s(4250), s(0), s(0), s(1662), s(143), s(2585)],
+            [s(3), s(0), s(0), s(1662), s(143), s(2585)],
             s(1800),
             Split,
             s(85_169_000),
@@ -1378,10 +1383,12 @@ fn usage_records_fold_into_calls_with_native_ttl_cost_and_the_model_that_ran() {
     assert_eq!(turn("api-f2-r2"), Some(2));
     assert_eq!(run.facts.turns, 2);
     // The latest main-chain context is the repair call's, never the judge's:
-    // input + cache_read + every cache-write class.
+    // uncached input + cache_read + every cache-write class, which equals the
+    // native prompt count (inputTokens 40503).
     let latest = run.facts.latest_context.unwrap();
     assert_eq!(latest.model.as_deref(), Some("claude-opus-5.5"));
-    assert_eq!(latest.total, Some(40503 + 38799 + 1702));
+    assert_eq!(latest.input, Some(2));
+    assert_eq!(latest.total, Some(40503));
 }
 
 #[test]
@@ -1625,4 +1632,17 @@ fn router_rows_carry_no_message_content() {
     let rows = fold(ROUTER).rows;
     let emitted = format!("{rows:?}");
     assert!(!emitted.contains("placeholder"), "{emitted}");
+}
+
+#[test]
+fn inconsistent_native_prompt_counts_leave_uncached_input_unrecorded() {
+    // inputTokens below cache reads plus writes cannot be split into an
+    // uncached remainder: input is null (never clamped to zero); the cache
+    // counters stay as recorded.
+    let record = r#"{"type":"session.usage_record","timestamp":"2026-01-10T00:00:01.000Z","data":{"usage":{"apiCallId":"api-x","model":"model-a","inputTokens":10,"outputTokens":1,"cacheReadTokens":8,"cacheWriteTokens":5,"cacheTtlSeconds":300}}}"#;
+    let call = &fold(record).rows.calls[0];
+    assert_eq!(
+        (call.input, call.cache_read, call.cw_5m, call.output),
+        (None, Some(8), Some(5), Some(1))
+    );
 }

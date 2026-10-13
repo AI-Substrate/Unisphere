@@ -463,6 +463,8 @@ pub struct PrepCallRow {
     pub model: Option<String>,
     /// Native stop reason; the last non-null value across sightings.
     pub stop_reason: Option<String>,
+    /// Uncached input tokens: never includes `cache_read` or any cache write,
+    /// so `input + cache_read + cw_1h + cw_5m + cw_other` is the context.
     pub input: Option<i64>,
     pub cw_1h: Option<i64>,
     pub cw_5m: Option<i64>,
@@ -532,7 +534,8 @@ pub struct PrepRouteRow {
     pub degraded_reason: Option<String>,
     pub phase_count: Option<i64>,
     pub request_count: Option<i64>,
-    /// Native totals over every request the router attributes to the decision.
+    /// Native totals over every request the router attributes to the decision;
+    /// `input` is uncached, as on calls.
     pub input: Option<i64>,
     pub output: Option<i64>,
     pub cache_read: Option<i64>,
@@ -565,6 +568,7 @@ pub struct PrepRoutePhaseRow {
     pub verdict: Option<String>,
     pub duration_ms: Option<i64>,
     pub request_count: Option<i64>,
+    /// Uncached, as on calls.
     pub input: Option<i64>,
     pub output: Option<i64>,
     pub cache_read: Option<i64>,

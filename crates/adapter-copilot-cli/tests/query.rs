@@ -160,7 +160,8 @@ fn current_events_preserve_native_ids_context_outcomes_and_scoped_usage() {
             scope: UsageScope::Invocation,
             counters,
             ..
-        } if counters.input_tokens == Some(15)
+        // Uncached: native inputTokens 15 − cache read 4 − cache write 2.
+        } if counters.input_tokens == Some(9)
             && counters.output_tokens == Some(9)
             && counters.cache_read_tokens == Some(4)
             && counters.cache_write_tokens == Some(2)
@@ -463,11 +464,18 @@ fn usage_records_are_per_call_invocation_usage_and_router_totals_are_not() {
             repair.cache_read_tokens,
             repair.cache_write_tokens
         ),
-        (Some(38803), Some(187), Some(0), Some(38799))
+        // Uncached input: native inputTokens 38803 − 0 − 38799.
+        (Some(4), Some(187), Some(0), Some(38799))
     );
-    let input: u64 = usage.iter().filter_map(|(_, _, c)| c.input_tokens).sum();
+    // Uncached input plus cache reads and writes is the native prompt count.
+    let prompt: u64 = usage
+        .iter()
+        .map(|(_, _, c)| {
+            c.input_tokens.unwrap() + c.cache_read_tokens.unwrap() + c.cache_write_tokens.unwrap()
+        })
+        .sum();
     assert_eq!(
-        input,
+        prompt,
         1665 + 22887 + 23115 + 23350 + 1511 + 1603 + 38803 + 40503 + 4250
     );
 }

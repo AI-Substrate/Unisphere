@@ -1432,17 +1432,37 @@ fn event_links(kind: &str, data: Option<&Map<String, Value>>) -> Vec<BranchLink>
     links
 }
 
+/// Copilot's `inputTokens` include the cache reads and writes it also records;
+/// `input_tokens` is uncached input, matching prep's `input`, so recorded
+/// cache components are subtracted. A negative remainder (inconsistent native
+/// counters) is reported unavailable, never clamped.
 fn usage_counters(
     data: &Map<String, Value>,
     source_id: unisphere_core::query::SourceId,
     offset: u64,
     issues: &mut Vec<AvailabilityIssue>,
 ) -> UsageCounters {
+    let cache_read_tokens = token(data, "cacheReadTokens", source_id, offset, issues);
+    let cache_write_tokens = token(data, "cacheWriteTokens", source_id, offset, issues);
+    let input_tokens = token(data, "inputTokens", source_id, offset, issues).and_then(|input| {
+        let uncached = input
+            .checked_sub(cache_read_tokens.unwrap_or(0))
+            .and_then(|rest| rest.checked_sub(cache_write_tokens.unwrap_or(0)));
+        if uncached.is_none() {
+            issues.push(issue(
+                source_id,
+                Some(FieldId::InputTokens),
+                Some(offset),
+                AvailabilityCode::ProjectionMissing,
+            ));
+        }
+        uncached
+    });
     UsageCounters {
-        input_tokens: token(data, "inputTokens", source_id, offset, issues),
+        input_tokens,
         output_tokens: token(data, "outputTokens", source_id, offset, issues),
-        cache_read_tokens: token(data, "cacheReadTokens", source_id, offset, issues),
-        cache_write_tokens: token(data, "cacheWriteTokens", source_id, offset, issues),
+        cache_read_tokens,
+        cache_write_tokens,
     }
 }
 

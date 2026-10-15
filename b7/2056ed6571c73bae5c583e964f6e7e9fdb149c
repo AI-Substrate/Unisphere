@@ -1,0 +1,27 @@
+crates/cli/src/status.rs
+  s_9749a3ee9e2592::t_9138644345a3b6 228-236
+crates/core/src/status.rs
+  s_9749a3ee9e2592::t_8cf8ecbf275a8e 32-36,174-186
+crates/sdk/src/status.rs
+  s_9749a3ee9e2592::t_e5cda6414f7616 29-31,92-93,109,119-121,133-144,423-426,437-449,519-538
+crates/sdk/tests/status.rs
+  s_9749a3ee9e2592::t_7f5a5469e49ae5 20,426-510
+crates/testkit/src/status.rs
+  s_9749a3ee9e2592::t_5187411872fc79 11-14,34-35,179-187
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "b72056ed6571c73bae5c583e964f6e7e9fdb149c",
+  "prompts": {},
+  "sessions": {
+    "s_9749a3ee9e2592": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c59bbcb2-b448-48f2-89bd-3b38c1b9e81a",
+        "model": "unknown"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

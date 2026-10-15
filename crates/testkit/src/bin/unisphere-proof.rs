@@ -165,6 +165,21 @@ fn cargo_command(repo: &Path, scratch: &Path) -> ProofResult<Command> {
 }
 
 fn build(repo: &Path, scratch: &Path, args: &[&OsStr]) -> ProofResult<()> {
+    // An external consumer project has no lockfile of its own, so Cargo would
+    // resolve the newest registry releases. Seed it with the repository's lock
+    // so the consumer and the in-tree CLI compile the same dependency versions
+    // (a newer serde_json changed an error column and broke SDK/CLI parity).
+    if let Some(manifest) = args
+        .iter()
+        .position(|arg| *arg == OsStr::new("--manifest-path"))
+        .and_then(|index| args.get(index + 1))
+        .and_then(|manifest| Path::new(manifest).parent())
+    {
+        let lock = manifest.join("Cargo.lock");
+        if !lock.exists() {
+            fs::copy(repo.join("Cargo.lock"), &lock).map_err(|e| e.to_string())?;
+        }
+    }
     let mut command = cargo_command(repo, scratch)?;
     let output = capture(command.args(args))?;
     expect_status(&output, 0, "Cargo build/install")

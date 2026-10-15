@@ -57,7 +57,7 @@ pub fn run_prep(
                     "argv": ["unisphere", "prep", "--target"], "required_inputs": ["target"]})
             } else {
                 docs_action(
-                    "Load TARGET/views.sql in DuckDB and query the canonical views (calls_v, turns_v, triggers_v, events_v, compactions_v, tool_uses_v, sources_v, sessions_v); re-run prep to pick up appended records.",
+                    "Load TARGET/views.sql in DuckDB and query the canonical views (calls_v, turns_v, triggers_v, events_v, compactions_v, tool_uses_v, routes_v, route_phases_v, sources_v, sessions_v); re-run prep to pick up appended records.",
                 )
             };
             envelope(stdout, "prep", serde_json::to_value(&report), action)
@@ -399,8 +399,14 @@ fn human_record(
 
 fn table_counts(counts: &PrepTableCounts) -> String {
     format!(
-        "calls {}, turns {}, triggers {}, events {}, tool_uses {}",
-        counts.calls, counts.turns, counts.triggers, counts.events, counts.tool_uses
+        "calls {}, turns {}, triggers {}, events {}, tool_uses {}, routes {}, route_phases {}",
+        counts.calls,
+        counts.turns,
+        counts.triggers,
+        counts.events,
+        counts.tool_uses,
+        counts.routes,
+        counts.route_phases
     )
 }
 

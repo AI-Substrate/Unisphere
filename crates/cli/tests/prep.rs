@@ -184,6 +184,8 @@ fn report(unreadable: bool) -> PrepReport {
             triggers: 2,
             events: 1,
             tool_uses: 3,
+            routes: 0,
+            route_phases: 0,
         },
         commit: PrepCommit {
             parts_written: vec!["tables/calls/p1.parquet".into()],

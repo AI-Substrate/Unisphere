@@ -16,8 +16,8 @@ use unisphere_core::{
         CacheWriteBasis, CallSighting, NativeAddress, PREP_CHECKPOINT_FORMAT, PrepBatch,
         PrepCallRow, PrepCheckpoint, PrepCommit, PrepCompactReport, PrepDirIndex, PrepDirListing,
         PrepDiscovery, PrepFold, PrepFoldSession, PrepInput, PrepLoaded, PrepLoader, PrepOptions,
-        PrepReadLimits, PrepRows, PrepSkipCounts, PrepSourceKind, PrepSourceMeta, PrepSourceStat,
-        PrepState, PrepStore, SessionFacts,
+        PrepReadLimits, PrepRouteRow, PrepRows, PrepSkipCounts, PrepSourceKind, PrepSourceMeta,
+        PrepSourceStat, PrepState, PrepStore, SessionFacts,
     },
 };
 
@@ -75,7 +75,7 @@ impl MemoryPrepStore {
 
     /// Rows of each source's current generation only (the canonical filter),
     /// with call sightings merged per (source, generation, msg_id, request_id)
-    /// by per-field maximum and the last non-null stop reason.
+    /// and route sightings per (source, generation, route_id), as `views.sql`.
     pub fn canonical(&self) -> PrepRows {
         let inner = self.lock();
         let Some(state) = inner.state.as_ref() else {
@@ -132,6 +132,28 @@ impl MemoryPrepStore {
                     .filter(|r| current(&r.source, r.generation))
                     .cloned(),
             );
+            rows.route_phases.extend(
+                run.route_phases
+                    .iter()
+                    .filter(|r| current(&r.source, r.generation))
+                    .cloned(),
+            );
+            for route in run
+                .routes
+                .iter()
+                .filter(|r| current(&r.source, r.generation))
+            {
+                let same = |r: &&mut PrepRouteRow| {
+                    route.route_id.is_some()
+                        && r.source == route.source
+                        && r.generation == route.generation
+                        && r.route_id == route.route_id
+                };
+                match rows.routes.iter_mut().find(same) {
+                    Some(existing) => merge_route(existing, route),
+                    None => rows.routes.push(route.clone()),
+                }
+            }
         }
         rows.calls = calls;
         rows
@@ -144,11 +166,14 @@ impl MemoryPrepStore {
     }
 }
 
-fn merge_call(existing: &mut PrepCallRow, update: &PrepCallRow) {
-    let max = |a: Option<i64>, b: Option<i64>| match (a, b) {
+fn max(a: Option<i64>, b: Option<i64>) -> Option<i64> {
+    match (a, b) {
         (Some(a), Some(b)) => Some(a.max(b)),
         (a, b) => a.or(b),
-    };
+    }
+}
+
+fn merge_call(existing: &mut PrepCallRow, update: &PrepCallRow) {
     existing.input = max(existing.input, update.input);
     existing.cw_1h = max(existing.cw_1h, update.cw_1h);
     existing.cw_5m = max(existing.cw_5m, update.cw_5m);
@@ -158,6 +183,43 @@ fn merge_call(existing: &mut PrepCallRow, update: &PrepCallRow) {
         existing.stop_reason.clone_from(&update.stop_reason);
     }
     existing.records += update.records;
+    if update.cache_write_basis == CacheWriteBasis::Split {
+        existing.cache_write_basis = CacheWriteBasis::Split;
+    }
+    let (into, from) = (&mut existing.detail, &update.detail);
+    into.cw_other = max(into.cw_other, from.cw_other);
+    into.native_cost = max(into.native_cost, from.native_cost);
+    into.cache_write_ttl_s = into.cache_write_ttl_s.or(from.cache_write_ttl_s);
+    into.cache_expires_ms = into.cache_expires_ms.or(from.cache_expires_ms);
+    for (slot, value) in [
+        (&mut into.selected_model, &from.selected_model),
+        (&mut into.route_id, &from.route_id),
+        (&mut into.route_phase_id, &from.route_phase_id),
+        (&mut into.native_cost_unit, &from.native_cost_unit),
+    ] {
+        if slot.is_none() {
+            slot.clone_from(value);
+        }
+    }
+}
+
+/// Every field of a route is its first non-null value over its sightings.
+fn merge_route(existing: &mut PrepRouteRow, update: &PrepRouteRow) {
+    let mut merged = serde_json::to_value(&*existing).expect("route row serialises");
+    let later = serde_json::to_value(update).expect("route row serialises");
+    let (Some(merged_fields), Some(later_fields)) = (merged.as_object_mut(), later.as_object())
+    else {
+        return;
+    };
+    for (field, value) in later_fields {
+        if merged_fields
+            .get(field)
+            .is_some_and(serde_json::Value::is_null)
+        {
+            merged_fields.insert(field.clone(), value.clone());
+        }
+    }
+    *existing = serde_json::from_value(merged).expect("route row deserialises");
 }
 
 impl PrepStore for MemoryPrepStore {
@@ -757,6 +819,7 @@ impl PrepFoldSession for RecordingSession {
                 turn_no: None,
                 call_in_turn: None,
                 records: 1,
+                detail: Default::default(),
             });
         }
         Ok(rows)

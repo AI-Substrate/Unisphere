@@ -7,6 +7,7 @@ use unisphere_core::{
 use unisphere_testkit::collection::{assert_adapter_conformance, fixture_records};
 
 const EVENTS: &[u8] = include_bytes!("fixtures/events.jsonl");
+const ROUTER: &[u8] = include_bytes!("fixtures/prep/sess-router/events.jsonl");
 
 fn source() -> SessionRef {
     SessionRef {
@@ -395,4 +396,98 @@ fn source_validation_is_explicit_and_does_not_require_a_real_path() {
         batch.records[0].body.as_ref().unwrap()["parts"][0]["unisphere.is_error"],
         true
     );
+}
+
+#[test]
+fn usage_records_and_router_events_keep_usage_cache_cost_and_routing() {
+    let records = fixture_records(ROUTER);
+    assert_adapter_conformance(&CopilotCliAdapter, &source(), &records);
+    let batch = map(&records, false);
+    let kind = |kind: &'static str| {
+        batch
+            .records
+            .iter()
+            .filter(move |r| r.attributes["unisphere.source.kind"] == kind)
+    };
+    // `session.usage_record` keeps the call's usage, native cache TTL and
+    // nano-AIU cost, the model that ran and the router's attribution.
+    let repair = kind("session.usage_record")
+        .find(|r| r.attributes["unisphere.copilot.api_call.id"] == "api-f2-r1")
+        .unwrap();
+    for (key, value) in [
+        ("gen_ai.response.model", json!("claude-opus-5.5")),
+        ("unisphere.usage.scope", json!("api_call")),
+        ("unisphere.usage.input_tokens", json!(38803)),
+        ("unisphere.usage.output_tokens", json!(187)),
+        ("unisphere.usage.cache_read_input_tokens", json!(0)),
+        ("unisphere.usage.cache_creation_input_tokens", json!(38799)),
+        ("unisphere.copilot.usage.cache_ttl_seconds", json!(300)),
+        (
+            "unisphere.copilot.usage.total_nano_aiu",
+            json!(19_775_100_000_i64),
+        ),
+        ("unisphere.copilot.fusion.id", json!("fusion-0002")),
+        (
+            "unisphere.copilot.fusion.synthetic_model",
+            json!("hydrafusion"),
+        ),
+        ("unisphere.copilot.fusion.phase_kind", json!("repair")),
+        ("unisphere.copilot.fusion.scope", json!("root")),
+    ] {
+        assert_eq!(repair.attributes[key], value, "{key}");
+    }
+    assert_eq!(kind("session.usage_record").count(), 9);
+
+    let judge = kind("assistant.fusion_phase_completed")
+        .find(|r| r.attributes["unisphere.copilot.fusion.phase_kind"] == "judge")
+        .unwrap();
+    for (key, value) in [
+        ("unisphere.copilot.model", json!("gpt-6-luna")),
+        ("unisphere.copilot.fusion.verdict", json!("reject")),
+        ("unisphere.usage.scope", json!("router_phase")),
+        ("unisphere.copilot.usage.request_count", json!(2)),
+        ("unisphere.usage.input_tokens", json!(1511 + 1603)),
+        ("unisphere.usage.cache_read_input_tokens", json!(1508)),
+        (
+            "unisphere.usage.cache_creation_input_tokens",
+            json!(1508 + 92),
+        ),
+    ] {
+        assert_eq!(judge.attributes[key], value, "{key}");
+    }
+
+    let plan = kind("session.fusion_resolved").nth(1).unwrap();
+    assert_eq!(
+        plan.attributes["unisphere.copilot.fusion.rule_id"],
+        "cascade_sol61_medium_luna6_high_opus55_medium"
+    );
+    assert_eq!(
+        plan.attributes["unisphere.copilot.fusion.repair_model"],
+        "claude-opus-5.5"
+    );
+    assert_eq!(
+        plan.attributes["unisphere.copilot.fusion.scores"]["codeGen"],
+        0.352
+    );
+    let done = kind("session.fusion_completed").nth(1).unwrap();
+    assert_eq!(
+        done.attributes["unisphere.copilot.fusion.final_model"],
+        "claude-opus-5.5"
+    );
+    assert_eq!(done.attributes["unisphere.usage.scope"], "router_route");
+    assert_eq!(done.attributes["unisphere.copilot.usage.request_count"], 6);
+
+    // Phase, hint, handoff and changed-file text stay out without opt-in.
+    for record in &batch.records {
+        assert_eq!(record.body, None);
+        let attributes = serde_json::to_string(&record.attributes).unwrap();
+        assert!(!attributes.contains("placeholder"), "{attributes}");
+    }
+    let with_content = map(&records, true);
+    assert!(with_content.records.iter().any(|r| {
+        r.attributes["unisphere.source.kind"] == "assistant.fusion_phase_completed"
+            && r.body
+                .as_ref()
+                .is_some_and(|b| b.to_string().contains("placeholder"))
+    }));
 }

@@ -15,6 +15,7 @@ use unisphere_core::{NativeSnapshot, SnapshotFormat, SnapshotRecord, SnapshotRef
 
 const EVENTS: &[u8] = include_bytes!("fixtures/events.jsonl");
 const LEGACY: &[u8] = include_bytes!("fixtures/legacy.json");
+const ROUTER: &[u8] = include_bytes!("fixtures/prep/sess-router/events.jsonl");
 
 fn source(adapter: &str, representation: &str, revision: &str) -> SourceEvidence {
     SourceEvidence {
@@ -36,9 +37,12 @@ fn source(adapter: &str, representation: &str, revision: &str) -> SourceEvidence
 }
 
 fn current_records() -> Vec<NativeRecord> {
+    jsonl_records(EVENTS)
+}
+
+fn jsonl_records(text: &[u8]) -> Vec<NativeRecord> {
     let mut offset = 0_u64;
-    EVENTS
-        .split(|byte| *byte == b'\n')
+    text.split(|byte| *byte == b'\n')
         .filter(|line| !line.is_empty())
         .map(|line| {
             let record = NativeRecord {
@@ -156,7 +160,8 @@ fn current_events_preserve_native_ids_context_outcomes_and_scoped_usage() {
             scope: UsageScope::Invocation,
             counters,
             ..
-        } if counters.input_tokens == Some(15)
+        // Uncached: native inputTokens 15 − cache read 4 − cache write 2.
+        } if counters.input_tokens == Some(9)
             && counters.output_tokens == Some(9)
             && counters.cache_read_tokens == Some(4)
             && counters.cache_write_tokens == Some(2)
@@ -410,5 +415,67 @@ fn declared_source_bounds_refuse_before_decoding() {
     assert_eq!(
         failure.kind(),
         unisphere_core::query::QueryFailureCode::ResourceLimit
+    );
+}
+
+#[test]
+fn usage_records_are_per_call_invocation_usage_and_router_totals_are_not() {
+    let source = source(DESCRIPTOR.id, "copilot-cli-events-jsonl", "router-r1");
+    let records = jsonl_records(ROUTER);
+    let inspected = CopilotCliAdapter
+        .inspect(
+            NativeQueryInput::Records {
+                source: &source,
+                records: &records,
+            },
+            ContentAccess::default(),
+            &QueryLimits::default(),
+        )
+        .unwrap();
+    let usage: Vec<_> = inspected
+        .observations
+        .iter()
+        .flat_map(|observation| &observation.facets)
+        .filter_map(|facet| match facet {
+            ObservationFacet::Usage {
+                owner,
+                scope,
+                counters,
+            } => Some((owner.as_deref(), *scope, counters)),
+            _ => None,
+        })
+        .collect();
+    // One invocation per `session.usage_record`; phase and decision totals
+    // would double count and are not usage facets.
+    assert_eq!(usage.len(), 9);
+    assert!(
+        usage
+            .iter()
+            .all(|(_, scope, _)| *scope == UsageScope::Invocation)
+    );
+    let (_, _, repair) = usage
+        .iter()
+        .find(|(owner, _, _)| *owner == Some("prov-api-f2-r1"))
+        .unwrap();
+    assert_eq!(
+        (
+            repair.input_tokens,
+            repair.output_tokens,
+            repair.cache_read_tokens,
+            repair.cache_write_tokens
+        ),
+        // Uncached input: native inputTokens 38803 − 0 − 38799.
+        (Some(4), Some(187), Some(0), Some(38799))
+    );
+    // Uncached input plus cache reads and writes is the native prompt count.
+    let prompt: u64 = usage
+        .iter()
+        .map(|(_, _, c)| {
+            c.input_tokens.unwrap() + c.cache_read_tokens.unwrap() + c.cache_write_tokens.unwrap()
+        })
+        .sum();
+    assert_eq!(
+        prompt,
+        1665 + 22887 + 23115 + 23350 + 1511 + 1603 + 38803 + 40503 + 4250
     );
 }

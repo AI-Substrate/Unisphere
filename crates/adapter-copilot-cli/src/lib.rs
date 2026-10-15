@@ -21,7 +21,7 @@ pub use prep::{
 pub use snapshot::{CopilotCliAdapterSnapshot, SNAPSHOT_DESCRIPTOR};
 
 /// Versioned current-event membership and classification policy.
-pub const CURRENT_QUERY_POLICY_VERSION: &str = "copilot-cli-events-query-v1";
+pub const CURRENT_QUERY_POLICY_VERSION: &str = "copilot-cli-events-query-v2";
 /// Versioned legacy-document view and classification policy.
 pub const LEGACY_QUERY_POLICY_VERSION: &str = "copilot-cli-legacy-query-v1";
 
@@ -331,6 +331,145 @@ impl Mapping<'_> {
                 self.usage(data, "api_call");
                 None
             }
+            "session.usage_record" => {
+                if let Some(usage) = data.get("usage").and_then(|value| self.object(value)) {
+                    self.strings(
+                        usage,
+                        &[
+                            ("model", "gen_ai.response.model"),
+                            ("apiCallId", "unisphere.copilot.api_call.id"),
+                            ("providerCallId", "unisphere.copilot.provider_call.id"),
+                            ("initiator", "unisphere.copilot.usage.initiator"),
+                            (
+                                "interactionType",
+                                "unisphere.copilot.usage.interaction_type",
+                            ),
+                            ("cacheExpiresAt", "unisphere.copilot.usage.cache_expires_at"),
+                        ],
+                    );
+                    self.usage(usage, "api_call");
+                    self.numbers(
+                        usage,
+                        &[(
+                            "cacheTtlSeconds",
+                            "unisphere.copilot.usage.cache_ttl_seconds",
+                        )],
+                        false,
+                    );
+                    if let Some(fusion) = usage.get("fusion").and_then(|value| self.object(value)) {
+                        self.fusion(fusion);
+                    }
+                }
+                None
+            }
+            "session.fusion_resolved" => {
+                self.fusion(data);
+                self.strings(
+                    data,
+                    &[
+                        ("routeSource", "unisphere.copilot.fusion.route_source"),
+                        ("policyVersion", "unisphere.copilot.fusion.policy_version"),
+                        ("ruleId", "unisphere.copilot.fusion.rule_id"),
+                        ("primaryModel", "unisphere.copilot.fusion.primary_model"),
+                        ("secondaryModel", "unisphere.copilot.fusion.secondary_model"),
+                        ("judgeModel", "unisphere.copilot.fusion.judge_model"),
+                        ("repairModel", "unisphere.copilot.fusion.repair_model"),
+                        ("fallbackModel", "unisphere.copilot.fusion.fallback_model"),
+                    ],
+                );
+                self.numbers(
+                    data,
+                    &[(
+                        "routingLatencyMs",
+                        "unisphere.copilot.fusion.routing_latency_ms",
+                    )],
+                    true,
+                );
+                if let Some(value) = data.get("scores")
+                    && let Some(scores) = self.object(value)
+                {
+                    let mut retained = Map::new();
+                    for (name, score) in scores {
+                        if let Some(score) = self.number(score, true) {
+                            retained.insert(name.clone(), score);
+                        }
+                    }
+                    self.attributes.insert(
+                        "unisphere.copilot.fusion.scores".into(),
+                        Value::Object(retained),
+                    );
+                }
+                self.native_text(data, kind, &["hint"])
+            }
+            "assistant.fusion_phase_completed" => {
+                self.fusion(data);
+                self.strings(
+                    data,
+                    &[
+                        ("model", "unisphere.copilot.model"),
+                        ("status", "unisphere.copilot.fusion.status"),
+                        ("verdict", "unisphere.copilot.fusion.verdict"),
+                    ],
+                );
+                self.numbers(
+                    data,
+                    &[("durationMs", "unisphere.copilot.fusion.duration_ms")],
+                    false,
+                );
+                if let Some(usage) = data.get("usage").and_then(|value| self.object(value)) {
+                    self.router_usage(usage, "router_phase");
+                }
+                self.unsupported_fields(data, &["projectionMessage"]);
+                self.native_text(data, kind, &["content"])
+            }
+            "session.fusion_completed" => {
+                self.fusion(data);
+                self.strings(
+                    data,
+                    &[
+                        ("outcome", "unisphere.copilot.fusion.outcome"),
+                        ("finalSourceModel", "unisphere.copilot.fusion.final_model"),
+                        ("degradedReason", "unisphere.copilot.fusion.degraded_reason"),
+                    ],
+                );
+                self.numbers(
+                    data,
+                    &[
+                        ("phaseCount", "unisphere.copilot.fusion.phase_count"),
+                        ("durationMs", "unisphere.copilot.fusion.duration_ms"),
+                    ],
+                    false,
+                );
+                self.router_usage(data, "router_route");
+                None
+            }
+            "session.fusion_commit_started" | "session.fusion_handoff" => {
+                self.fusion(data);
+                self.strings(
+                    data,
+                    &[("targetModel", "unisphere.copilot.fusion.target_model")],
+                );
+                self.unsupported_fields(data, &["message"]);
+                None
+            }
+            "session.fusion_change_checkpoint" => {
+                if let Some(changes) = data.get("codeChanges").and_then(|value| self.object(value))
+                {
+                    self.numbers(
+                        changes,
+                        &[
+                            ("linesAdded", "unisphere.copilot.code_changes.lines_added"),
+                            (
+                                "linesRemoved",
+                                "unisphere.copilot.code_changes.lines_removed",
+                            ),
+                        ],
+                        false,
+                    );
+                    self.unsupported_fields(changes, &["filesModified"]);
+                }
+                None
+            }
             "session.start" | "session.resume" => {
                 self.strings(
                     data,
@@ -551,6 +690,47 @@ impl Mapping<'_> {
             );
             self.unsupported_fields(usage, &["tokenDetails"]);
         }
+    }
+
+    /// Router (HydraFusion) identities a fusion record or a usage record's
+    /// `fusion` object carries.
+    fn fusion(&mut self, data: &Map<String, Value>) {
+        self.strings(
+            data,
+            &[
+                ("fusionId", "unisphere.copilot.fusion.id"),
+                ("commitId", "unisphere.copilot.fusion.commit_id"),
+                ("phaseId", "unisphere.copilot.fusion.phase_id"),
+                ("sourcePhaseId", "unisphere.copilot.fusion.source_phase_id"),
+                ("targetPhaseId", "unisphere.copilot.fusion.target_phase_id"),
+                (
+                    "finalSourcePhaseId",
+                    "unisphere.copilot.fusion.final_phase_id",
+                ),
+                ("phaseKind", "unisphere.copilot.fusion.phase_kind"),
+                ("role", "unisphere.copilot.fusion.role"),
+                ("conversationScope", "unisphere.copilot.fusion.scope"),
+                ("syntheticModel", "unisphere.copilot.fusion.synthetic_model"),
+                ("pattern", "unisphere.copilot.fusion.pattern"),
+                ("policy", "unisphere.copilot.fusion.policy"),
+                ("sourceModel", "unisphere.copilot.fusion.source_model"),
+                ("followUpModel", "unisphere.copilot.fusion.follow_up_model"),
+            ],
+        );
+    }
+
+    /// A router phase's or decision's native totals: `cachedTokens` is the
+    /// cache-read count; `requestCount` the requests it spans.
+    fn router_usage(&mut self, data: &Map<String, Value>, scope: &str) {
+        self.usage(data, scope);
+        self.numbers(
+            data,
+            &[
+                ("cachedTokens", "unisphere.usage.cache_read_input_tokens"),
+                ("requestCount", "unisphere.copilot.usage.request_count"),
+            ],
+            false,
+        );
     }
 
     fn context_usage(&mut self, data: &Map<String, Value>) {

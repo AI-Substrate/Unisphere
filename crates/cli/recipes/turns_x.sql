@@ -5,7 +5,7 @@ turns_x AS (
     s.harness, s.project, s.is_sub, ss.session_id,
     coalesce(ss.seat_hint, ss.session_id, t.source) AS seat,
     count(c.source) AS calls,
-    sum(c.input) AS input, sum(c.cw_1h) AS cw_1h, sum(c.cw_5m) AS cw_5m,
+    sum(c.input) AS input, sum(c.cw_1h) AS cw_1h, sum(c.cw_5m) AS cw_5m, sum(c.cw_other) AS cw_other,
     sum(c.cache_read) AS cache_read, sum(c.output) AS output,
     coalesce(sum(c.total_tokens), 0) AS total_tokens,
     max(c.context) AS max_context,

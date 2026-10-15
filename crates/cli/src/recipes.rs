@@ -80,6 +80,11 @@ static RECIPES: &[Recipe] = &[
         "daily-tokens",
         "fleet: daily token classes by repo, model and harness"
     ),
+    recipe!("routed-turns", "routers: which models ran per routed turn"),
+    recipe!(
+        "routed-cost",
+        "routers: native cost and cache by actual versus selected model"
+    ),
 ];
 
 fn find(name: &str) -> Option<&'static Recipe> {

@@ -3,7 +3,7 @@
 //! Layout under the target directory:
 //! - `state.json`: the publication. Committed per-source cursors, fold
 //!   checkpoints and the list of committed parts, replaced by atomic rename;
-//! - `tables/{calls,turns,triggers,events,tool_uses}/*.parquet`: append-only
+//! - `tables/{calls,turns,triggers,events,tool_uses,routes,route_phases}/*.parquet`: append-only
 //!   parts (`run-NNNNNN.parquet` per run, `compact-NNNNNN-K.parquet` per
 //!   compaction); every fact table always has at least one (possibly empty) part;
 //! - `tables/sources.parquet`, `tables/sessions.parquet`: snapshots of the
@@ -44,8 +44,8 @@ use unisphere_core::{
     PipelineError, PipelineErrorKind,
     prep::{
         PREP_TABLE_SCHEMA_VERSION, PrepCallRow, PrepCommit, PrepCompactReport, PrepEventRow,
-        PrepLoaded, PrepRows, PrepState, PrepTableCounts, PrepToolUseRow, PrepTriggerRow,
-        PrepTurnRow,
+        PrepLoaded, PrepRoutePhaseRow, PrepRouteRow, PrepRows, PrepState, PrepTableCounts,
+        PrepToolUseRow, PrepTriggerRow, PrepTurnRow,
     },
 };
 
@@ -86,7 +86,15 @@ impl<'a> Published<'a> {
 }
 pub use views::VIEWS;
 
-pub const FACT_TABLES: [&str; 5] = ["calls", "turns", "triggers", "events", "tool_uses"];
+pub const FACT_TABLES: [&str; 7] = [
+    "calls",
+    "turns",
+    "triggers",
+    "events",
+    "tool_uses",
+    "routes",
+    "route_phases",
+];
 /// Parquet key-value metadata key holding [`PREP_TABLE_SCHEMA_VERSION`].
 pub const META_SCHEMA_VERSION: &str = "unisphere.table_schema_version";
 /// Parquet key-value metadata key naming the table a file belongs to.
@@ -324,6 +332,8 @@ fn set_count(counts: &mut PrepTableCounts, table: &str, value: u64) {
         "triggers" => counts.triggers = value,
         "events" => counts.events = value,
         "tool_uses" => counts.tool_uses = value,
+        "routes" => counts.routes = value,
+        "route_phases" => counts.route_phases = value,
         _ => unreachable!("unknown fact table"),
     }
 }
@@ -544,6 +554,12 @@ impl ParquetPrepStore {
                 |r: &PrepEventRow| (&r.source, r.generation)
             )),
             "tool_uses" => rewrite!(PrepToolUseRow, |rows| compact::tool_uses(rows, current)),
+            "routes" => rewrite!(PrepRouteRow, |rows| compact::routes(rows, current)),
+            "route_phases" => rewrite!(PrepRoutePhaseRow, |rows| compact::current_rows(
+                rows,
+                current,
+                |r: &PrepRoutePhaseRow| (&r.source, r.generation)
+            )),
             _ => unreachable!("unknown fact table"),
         })
     }
@@ -599,6 +615,8 @@ impl unisphere_core::prep::PrepStore for ParquetPrepStore {
         part!("triggers", &rows.triggers);
         part!("events", &rows.events);
         part!("tool_uses", &rows.tool_uses);
+        part!("routes", &rows.routes);
+        part!("route_phases", &rows.route_phases);
         let (bytes, snapshot_rows) = self.write_snapshots(state)?;
         commit.bytes_written += bytes;
         commit.snapshot_rows = snapshot_rows;

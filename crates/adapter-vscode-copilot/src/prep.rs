@@ -394,6 +394,7 @@ impl Folder<'_> {
             turn_no: Some(self.turn_no),
             call_in_turn: Some(1),
             records: 1,
+            detail: Default::default(),
         });
         self.facts.turns += 1;
         self.facts.calls += 1;

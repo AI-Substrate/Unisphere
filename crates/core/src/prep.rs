@@ -22,7 +22,7 @@ use crate::{
 };
 
 /// Physical layout/column contract of the published tables.
-pub const PREP_TABLE_SCHEMA_VERSION: u32 = 2;
+pub const PREP_TABLE_SCHEMA_VERSION: u32 = 4;
 /// Envelope format of [`PrepCheckpoint`]; independent of any fold's policy.
 pub const PREP_CHECKPOINT_FORMAT: u32 = 1;
 /// Label of the adapter catalogue's default root for a harness.
@@ -362,7 +362,9 @@ pub enum CallSighting {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum CacheWriteBasis {
-    /// Native 1 h / 5 m split.
+    /// Attributed by native TTL: a native 1 h / 5 m split, or one write whose
+    /// native TTL is recorded (`cache_write_ttl_s`; neither 1 h nor 5 m goes
+    /// to `cw_other`).
     Split,
     /// Aggregate only, attributed to 1 h (main sessions).
     #[serde(rename = "fallback_1h")]
@@ -421,6 +423,29 @@ pub enum ToolOutcome {
     Unknown,
 }
 
+/// Native facts of a call beyond the shared counters: router attribution,
+/// cache-write TTL and native cost. Every field is null when the dialect does
+/// not record it. Flattened into the `calls` table.
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub struct PrepCallDetail {
+    /// Model the session selected when a model router chose the model that
+    /// ran (`model`), e.g. the router's synthetic model; null when unrouted.
+    pub selected_model: Option<String>,
+    /// Routing decision this call served; joins `routes.route_id`.
+    pub route_id: Option<String>,
+    /// Router phase this call served; joins `route_phases.phase_id`.
+    pub route_phase_id: Option<String>,
+    /// Cache-write tokens whose native TTL is neither 1 h nor 5 m.
+    pub cw_other: Option<i64>,
+    /// Native TTL, in seconds, of this call's cache write.
+    pub cache_write_ttl_s: Option<i64>,
+    /// Native expiry (epoch ms) of the cache this call wrote or refreshed.
+    pub cache_expires_ms: Option<i64>,
+    /// Native cost in `native_cost_unit`; never converted to money.
+    pub native_cost: Option<i64>,
+    pub native_cost_unit: Option<String>,
+}
+
 /// One deduplicated API call sighting. Every row starts with
 /// `(source, generation, native_offset, native_key)`. Every field a dialect may
 /// not record is nullable; null means "not recorded", never zero or an estimate.
@@ -436,9 +461,12 @@ pub struct PrepCallRow {
     /// Native timestamp; null when the dialect records none.
     pub ts: Option<String>,
     pub ts_ms: Option<i64>,
+    /// Model that ran the call.
     pub model: Option<String>,
     /// Native stop reason; the last non-null value across sightings.
     pub stop_reason: Option<String>,
+    /// Uncached input tokens: never includes `cache_read` or any cache write,
+    /// so `input + cache_read + cw_1h + cw_5m + cw_other` is the context.
     pub input: Option<i64>,
     pub cw_1h: Option<i64>,
     pub cw_5m: Option<i64>,
@@ -452,6 +480,115 @@ pub struct PrepCallRow {
     pub call_in_turn: Option<i64>,
     /// Native records merged into this sighting.
     pub records: i64,
+    #[serde(flatten)]
+    pub detail: PrepCallDetail,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum RouteSighting {
+    /// The routing decision, recorded before the routed work runs.
+    Plan,
+    /// The decision's native outcome and totals.
+    Outcome,
+}
+
+/// One sighting of a model router's routing decision. A canonical reader
+/// merges the sightings of one `(source, generation, route_id)`: each field is
+/// the first non-null value in native order. Harness-neutral: a dialect maps
+/// its router's vocabulary into these columns and leaves the rest null.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct PrepRouteRow {
+    pub source: String,
+    pub generation: u32,
+    pub native_offset: Option<u64>,
+    pub native_key: Option<String>,
+    pub sighting: RouteSighting,
+    pub route_id: Option<String>,
+    pub ts: Option<String>,
+    pub ts_ms: Option<i64>,
+    /// Main-chain turn when the outcome was recorded; null on a plan sighting.
+    pub turn_no: Option<i64>,
+    /// The router's (synthetic) model the session selected.
+    pub selected_model: Option<String>,
+    /// Native routing pattern (e.g. single, cascade).
+    pub pattern: Option<String>,
+    pub rule_id: Option<String>,
+    pub route_source: Option<String>,
+    pub policy: Option<String>,
+    pub policy_version: Option<String>,
+    /// Native routing latency rounded to whole milliseconds.
+    pub latency_ms: Option<i64>,
+    /// Native classifier scores as compact JSON with sorted keys.
+    pub scores: Option<String>,
+    /// Planned phases as `kind/role` joined by `,`; a trailing `?` marks a
+    /// conditional phase.
+    pub planned_phases: Option<String>,
+    pub primary_model: Option<String>,
+    pub secondary_model: Option<String>,
+    pub judge_model: Option<String>,
+    pub repair_model: Option<String>,
+    pub fallback_model: Option<String>,
+    pub follow_up_model: Option<String>,
+    /// Model whose output the router committed.
+    pub final_model: Option<String>,
+    pub outcome: Option<String>,
+    pub degraded_reason: Option<String>,
+    pub phase_count: Option<i64>,
+    pub request_count: Option<i64>,
+    /// Native totals over every request the router attributes to the decision;
+    /// `input` is uncached, as on calls.
+    pub input: Option<i64>,
+    pub output: Option<i64>,
+    pub cache_read: Option<i64>,
+    pub cache_write: Option<i64>,
+    pub native_cost: Option<i64>,
+    pub native_cost_unit: Option<String>,
+    pub duration_ms: Option<i64>,
+    /// Distinct models that served the decision's tagged calls, `,`-joined in
+    /// first-served order; a router may change the model on every call.
+    pub served_models: Option<String>,
+    pub served_model_count: Option<i64>,
+    /// A served model is not among the models its completed phases declared.
+    pub model_mismatch: Option<bool>,
+}
+
+/// One completed phase of a routing decision, with its native usage.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct PrepRoutePhaseRow {
+    pub source: String,
+    pub generation: u32,
+    pub native_offset: Option<u64>,
+    pub native_key: Option<String>,
+    pub route_id: Option<String>,
+    pub phase_id: Option<String>,
+    pub ts: Option<String>,
+    pub ts_ms: Option<i64>,
+    pub turn_no: Option<i64>,
+    /// Native phase kind (e.g. primary, judge, repair).
+    pub kind: Option<String>,
+    pub role: Option<String>,
+    /// Native conversation scope of the phase (e.g. root, review).
+    pub scope: Option<String>,
+    /// Model that ran the phase.
+    pub model: Option<String>,
+    pub status: Option<String>,
+    pub verdict: Option<String>,
+    pub duration_ms: Option<i64>,
+    pub request_count: Option<i64>,
+    /// Uncached, as on calls.
+    pub input: Option<i64>,
+    pub output: Option<i64>,
+    pub cache_read: Option<i64>,
+    pub cache_write: Option<i64>,
+    pub native_cost: Option<i64>,
+    pub native_cost_unit: Option<String>,
+    /// Distinct models that served the phase's tagged calls, `,`-joined in
+    /// first-served order; `model` stays the phase's declared model.
+    pub served_models: Option<String>,
+    pub served_model_count: Option<i64>,
+    /// A served model differs from the declared `model`.
+    pub model_mismatch: Option<bool>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -552,6 +689,8 @@ pub struct PrepRows {
     pub triggers: Vec<PrepTriggerRow>,
     pub events: Vec<PrepEventRow>,
     pub tool_uses: Vec<PrepToolUseRow>,
+    pub routes: Vec<PrepRouteRow>,
+    pub route_phases: Vec<PrepRoutePhaseRow>,
 }
 
 impl PrepRows {
@@ -561,6 +700,8 @@ impl PrepRows {
             + self.triggers.len()
             + self.events.len()
             + self.tool_uses.len()
+            + self.routes.len()
+            + self.route_phases.len()
     }
     pub fn is_empty(&self) -> bool {
         self.len() == 0
@@ -571,6 +712,8 @@ impl PrepRows {
         self.triggers.extend(other.triggers);
         self.events.extend(other.events);
         self.tool_uses.extend(other.tool_uses);
+        self.routes.extend(other.routes);
+        self.route_phases.extend(other.route_phases);
     }
     pub fn counts(&self) -> PrepTableCounts {
         PrepTableCounts {
@@ -579,6 +722,8 @@ impl PrepRows {
             triggers: self.triggers.len() as u64,
             events: self.events.len() as u64,
             tool_uses: self.tool_uses.len() as u64,
+            routes: self.routes.len() as u64,
+            route_phases: self.route_phases.len() as u64,
         }
     }
 }
@@ -833,6 +978,8 @@ pub struct PrepTableCounts {
     pub triggers: u64,
     pub events: u64,
     pub tool_uses: u64,
+    pub routes: u64,
+    pub route_phases: u64,
 }
 
 impl std::ops::AddAssign for PrepTableCounts {
@@ -842,6 +989,8 @@ impl std::ops::AddAssign for PrepTableCounts {
         self.triggers += other.triggers;
         self.events += other.events;
         self.tool_uses += other.tool_uses;
+        self.routes += other.routes;
+        self.route_phases += other.route_phases;
     }
 }
 

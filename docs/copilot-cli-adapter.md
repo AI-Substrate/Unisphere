@@ -47,7 +47,7 @@ reconciled by this mapper.
 
 The same `CopilotCliAdapter` also implements the pure `QueryAdapter` port for
 caller-supplied `NativeQueryInput::Records`. The policy identifier is
-`copilot-cli-events-query-v1`; it is recorded on the returned `SourceEvidence`
+`copilot-cli-events-query-v2`; it is recorded on the returned `SourceEvidence`
 beside the loader-supplied revision. Inspection does not call the telemetry
 mapper, allocate discarded `TelemetryRecord` values, read files, or change the
 record-local OTLP projection above.
@@ -82,10 +82,16 @@ The inspection facets preserve only evidence the format supplies:
   following context event closes the prior range. Branch values remain native
   branch evidence. No remote URL, prompt mention or basename becomes repository
   association.
-- Per-call assistant usage and message output observations are `invocation`;
-  direct shutdown/checkpoint token totals are `cumulative_snapshot`. Empty or
-  differently shaped native accounting records do not become zero-valued usage.
-  These scopes must not be summed as interchangeable consumption.
+- Per-call assistant usage (`assistant.usage`, and `session.usage_record` from
+  current CLIs) and message output observations are `invocation`; direct
+  shutdown/checkpoint token totals are `cumulative_snapshot`. Router phase and
+  decision totals are not usage facets: they overlap the calls they span. Empty
+  or differently shaped native accounting records do not become zero-valued
+  usage. These scopes must not be summed as interchangeable consumption.
+- A usage facet's `input_tokens` is uncached input, matching prep's `input`:
+  Copilot's `inputTokens` include the cache reads and writes it also records,
+  so `input_tokens = inputTokens − cacheReadTokens − cacheWriteTokens`. A
+  negative remainder is `projection_missing`, never clamped.
 
 Message text/reasoning, tool input/output/progress, titles and model names are
 retained only when the corresponding `ContentAccess` field permits local
@@ -106,7 +112,8 @@ no parser text or native payload is placed in diagnostics.
 | `assistant.turn_start`, `assistant.turn_end`, `assistant.message_start` | Native turn/message/model identities, no invented content or role. |
 | `tool.execution_start`, `tool.execution_complete` | Tool-call and tool-response fragments with supplied IDs, structured arguments/results, success/error state and text result blocks. |
 | `tool.execution_partial_result`, `tool.execution_progress`, `assistant.tool_call_delta` | Explicit native fragment body with partial output, progress or raw input delta; never parsed/accumulated tool arguments. |
-| `assistant.usage`, `session.usage_checkpoint`, `session.shutdown`, `session.usage_info` | Independent measured usage/accounting and context-window observations, detailed below. |
+| `assistant.usage`, `session.usage_record`, `session.usage_checkpoint`, `session.shutdown`, `session.usage_info` | Independent measured usage/accounting and context-window observations, detailed below. Current CLIs (about 1.0.93 and later) write per-call usage as `session.usage_record` (`data.usage`) instead of `assistant.usage`. |
+| `session.fusion_resolved`, `assistant.fusion_phase_completed`, `session.fusion_completed`, `session.fusion_commit_started`, `session.fusion_handoff`, `session.fusion_change_checkpoint` | Model-router (HydraFusion) decision, phase, outcome, commit, handoff and change records under `unisphere.copilot.fusion.*`: ids, synthetic model, pattern, policy and version, rule, route source, routing latency, numeric scores, planned primary/secondary/judge/repair/fallback/follow-up models, phase kind/role/scope/model/status/verdict/duration, final model, outcome, phase count, and native phase/decision usage (scopes `router_phase`, `router_route`). Phase output, hint, handoff message and changed-file paths only in opt-in native bodies or as omitted content. |
 | `session.compaction_start`, `session.compaction_complete` | Administrative record; native compaction counters, separate compaction-call usage and opt-in summary/instructions/checkpoint reference. No generated assistant turn. |
 | `subagent.started/configured/completed/failed/selected/deselected` | Native agent/parent/tool-call/model identities and reported aggregate tokens when present; descriptions/display names/errors only in opt-in native bodies. |
 | `session.error/info/warning/title_changed`, `assistant.intent`, `abort` | Opt-in allowlisted message/title/intent/reason text in native administrative bodies. |
@@ -130,13 +137,26 @@ does not imply those normally transient records exist in on-disk JSONL.
 
 Native `inputTokens`, `outputTokens`, `cacheReadTokens` and `cacheWriteTokens`
 map to the common `unisphere.usage.input_tokens`, `output_tokens`,
-`cache_read_input_tokens` and `cache_creation_input_tokens`. Additional native
-components are `unisphere.copilot.usage.reasoning_tokens`,
-`accepted_prediction_tokens` and `rejected_prediction_tokens`.
+`cache_read_input_tokens` and `cache_creation_input_tokens` as exact native
+snapshots: the exported `input_tokens` keeps Copilot's native count, which
+includes cached and written prompt tokens (query and prep report uncached
+input instead). Additional native components are
+`unisphere.copilot.usage.reasoning_tokens`, `accepted_prediction_tokens` and
+`rejected_prediction_tokens`.
 
 `unisphere.usage.scope` distinguishes `assistant_message`, `api_call`,
-`session_checkpoint`, `session_shutdown`, `compaction_api_call`, and
-`subagent_reported_total`. Shutdown `modelMetrics` and `agentMetrics` remain
+`session_checkpoint`, `session_shutdown`, `compaction_api_call`,
+`subagent_reported_total`, `router_phase` and `router_route`. A
+`session.usage_record` is one `api_call` observation: its model is
+`gen_ai.response.model`, its native cache TTL and expiry
+`unisphere.copilot.usage.cache_ttl_seconds` and `cache_expires_at`, its
+initiator and interaction type `unisphere.copilot.usage.initiator` and
+`interaction_type`, and its router attribution the `unisphere.copilot.fusion.*`
+identities of its phase. Router phase and decision totals (`cachedTokens` maps
+to `cache_read_input_tokens`, `requestCount` to
+`unisphere.copilot.usage.request_count`) overlap the calls they span and can
+include an untagged subagent request; never add them to `api_call` usage.
+Shutdown `modelMetrics` and `agentMetrics` remain
 separate structured `unisphere.copilot.model_metrics` and `agent_metrics`
 attributes: exact native model/agent keys, allowlisted usage components,
 request count/cost and nano-AIU totals. Agent display names are excluded because

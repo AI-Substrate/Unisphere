@@ -225,6 +225,15 @@ fn row(label: &str, status: &SessionStatus) -> Vec<String> {
         (None, Some(pending)) => format!("? -> {} (pending)", safe(&pending.requested)),
         (None, None) => unknown(),
     };
+    // A model router chose the served model: name the selected one too.
+    let model = match status
+        .last_call
+        .as_ref()
+        .and_then(|call| call.selected_model.as_ref())
+    {
+        Some(selected) => format!("{model} via {}", safe(&selected.value)),
+        None => model,
+    };
     let context = status
         .context
         .display

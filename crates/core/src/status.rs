@@ -29,6 +29,11 @@ pub const UNKNOWN_FACTS: &[&str] = &[
     "last_call.ttl_bucket",
     "last_call.cache_warm",
     "last_call.stop_reason",
+    "last_call.cache_write_other",
+    "last_call.cache_write_ttl_s",
+    "last_call.selected_model",
+    "last_call.native_cost",
+    "last_call.native_cost_unit",
     "timeline.created_ms",
     "timeline.last_updated_ms",
     "compaction.counts",
@@ -129,6 +134,30 @@ pub struct ModelSpan {
     pub calls: u64,
 }
 
+/// Most served models [`SessionStatus::models`] lists (latest first).
+pub const MAX_STATUS_MODELS: usize = 64;
+
+/// Cache facts of one model that served main-chain calls. A model router may
+/// change the served model on every call, and each model keeps its own prompt
+/// cache, so a session can be warm on one model and cold on another.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ModelCacheStatus {
+    pub model: String,
+    /// Main-chain calls this model served.
+    pub calls: u64,
+    pub last_call_at_ms: Option<i64>,
+    /// TTL of its latest call's cache write: native when recorded, else
+    /// derived from a native 1 h/5 m split.
+    pub cache_ttl_s: Option<Fact<u64>>,
+    /// Native expiry recorded with its latest call, else derived
+    /// `last_call_at_ms + cache_ttl_s`.
+    pub cache_expires_ms: Option<Fact<i64>>,
+    /// `now < cache_expires_ms`.
+    pub cache_warm: Option<Fact<bool>>,
+    /// Its latest call's uncached input + cache read + cache writes.
+    pub last_context: Option<Fact<u64>>,
+}
+
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct ModelStatus {
     /// Model of the latest main-chain, non-synthetic call.
@@ -166,6 +195,19 @@ pub struct LastCall {
     /// `now - at < ttl`.
     pub cache_warm: Option<Fact<bool>>,
     pub stop_reason: Option<String>,
+    /// Cache-write tokens whose native TTL is neither 1 h nor 5 m (e.g. a
+    /// Copilot GPT model's 1800 s); `Derived` 0 when the write's TTL was not
+    /// recorded and the documented 1 h/5 m fallback took it.
+    pub cache_write_other: Option<Fact<u64>>,
+    /// Native TTL, in seconds, of the last call's cache write.
+    pub cache_write_ttl_s: Option<Fact<u64>>,
+    /// The model the session selected when a model router chose the model
+    /// that ran (`model.current`), e.g. `hydrafusion`.
+    pub selected_model: Option<Fact<String>>,
+    /// Native cost of the last call in `native_cost_unit`; never money.
+    pub native_cost: Option<Fact<u64>>,
+    /// Unit of `native_cost`, e.g. `nano_aiu`.
+    pub native_cost_unit: Option<Fact<String>>,
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
@@ -234,6 +276,10 @@ pub struct SessionStatus {
     pub source: SourceStatus,
     /// Facts this harness/session cannot supply; names from [`UNKNOWN_FACTS`].
     pub unknown: Vec<String>,
+    /// Per served model, latest call first, at most [`MAX_STATUS_MODELS`].
+    /// `model.current` and `last_call` stay the latest call overall.
+    #[serde(default)]
+    pub models: Vec<ModelCacheStatus>,
 }
 
 impl SessionStatus {
@@ -257,6 +303,7 @@ impl SessionStatus {
                 .iter()
                 .map(|name| (*name).to_owned())
                 .collect(),
+            models: Vec::new(),
         }
     }
 }

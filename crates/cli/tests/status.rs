@@ -9,8 +9,8 @@ use unisphere_cli::{
     run_docs, run_status,
 };
 use unisphere_core::status::{
-    Basis, Fact, ModelSwitchStatus, ResolveBasis, ResolveConflict, Resolved, SessionStatus,
-    StatusFailure, StatusFailureKind, StatusQuery, StatusTarget,
+    Basis, Fact, LastCall, ModelSwitchStatus, ResolveBasis, ResolveConflict, Resolved,
+    SessionStatus, StatusFailure, StatusFailureKind, StatusQuery, StatusTarget,
 };
 use unisphere_testkit::status::{FakeStatusApi, FakeTargetResolver};
 
@@ -445,6 +445,49 @@ fn human_table_has_one_row_per_query_then_conflicts_and_failures() {
         )),
         "{stdout}"
     );
+}
+
+#[test]
+fn a_routed_last_call_names_the_selected_model_beside_the_served_one() {
+    let mut routed = answered("copilot-cli", "s-routed");
+    routed.model.current = Some(Fact::new("gpt-6-luna".into(), Basis::Native));
+    routed.last_call = Some(LastCall {
+        selected_model: Some(Fact::new("hydrafusion".into(), Basis::Native)),
+        cache_write_other: Some(Fact::new(607, Basis::Native)),
+        native_cost: Some(Fact::new(42_623_500, Basis::Native)),
+        native_cost_unit: Some(Fact::new("nano_aiu".into(), Basis::Native)),
+        ..LastCall::default()
+    });
+    let api = FakeStatusApi::new().with(Ok(routed), &target("copilot-cli", "s-routed"));
+    let resolver = FakeTargetResolver::new();
+    let args = |mode| {
+        [
+            "unisphere",
+            "sessions",
+            "status",
+            "--session",
+            "s-routed",
+            "--harness",
+            "copilot-cli",
+            mode,
+        ]
+    };
+    let (exit, stdout, _) = run(&status_command(&args("--human"), false), &api, &resolver);
+    assert_eq!(exit, 0);
+    assert!(
+        stdout
+            .lines()
+            .nth(1)
+            .unwrap()
+            .contains("gpt-6-luna via hydrafusion"),
+        "{stdout}"
+    );
+    let (_, stdout, _) = run(&status_command(&args("--json"), false), &api, &resolver);
+    let value: Value = serde_json::from_str(&stdout).unwrap();
+    let last = &value["data"]["results"][0]["status"]["last_call"];
+    assert_eq!(last["selected_model"]["value"], "hydrafusion");
+    assert_eq!(last["cache_write_other"]["value"], 607);
+    assert_eq!(last["native_cost"]["basis"], "native");
 }
 
 /// `unisphere sessions status` lines inside ```sh fences.

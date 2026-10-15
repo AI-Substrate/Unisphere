@@ -132,9 +132,12 @@ sources (JSON documents, mutation journals, Cursor's SQLite store) are re-read
 whole only when their stat changes and folded only when their revision changes.
 Every run reports per-source status and skipped symlinks/hidden entries. Query the
 Parquet tables through the canonical views in `TARGET/views.sql` with an external
-DuckDB; `unisphere docs get prep --human` has the table contract. Named research
-recipes print ready-to-run DuckDB scripts, for example
-`unisphere prep recipe daily --target DIR | duckdb`; see
+DuckDB; `unisphere docs get prep --human` has the table contract. Calls keep the
+model that ran; for model routers (Copilot CLI's HydraFusion) `routes_v` and
+`route_phases_v` add each routing decision, the phases and models that ran, and
+native token, cache and cost totals. Named research recipes print ready-to-run
+DuckDB scripts, for example `unisphere prep recipe daily --target DIR | duckdb`
+or `unisphere prep recipe routed-turns --target DIR | duckdb`; see
 `unisphere docs get research-recipes --human`.
 
 See the [CLI reference](docs/cli.md) for limits, native session selectors,

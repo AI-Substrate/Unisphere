@@ -2,7 +2,7 @@
 
 ## Motivating question
 
-How much did my agents spend per day, what woke them, which messages rebuilt a cold cache, and where did the fleet loop, fan out or compact — without writing SQL from scratch?
+How much did my agents spend per day, what woke them, which messages rebuilt a cold cache, which models a model router actually ran, and where did the fleet loop, fan out or compact — without writing SQL from scratch?
 
 ## Run a recipe
 
@@ -24,8 +24,8 @@ The printed script is exactly three parts: `SET file_search_path = '<absolute TA
 |---|---|---|
 | `daily` | brief Q1 | Per local day: sessions, calls, token classes, cold calls, compactions, peer and human turns |
 | `hourly` | brief Q2 | Per local hour: calls, sessions, token classes, cold calls and their cache writes, peer messages |
-| `call-timeline` | brief Q3 | Every canonical call in order with seat, context, gap, turn, opener and cold flags |
-| `turn-cost` | brief Q4 | Every turn: opener, sender, calls, token classes, first-call gap and context, cold rebuild |
+| `call-timeline` | brief Q3 | Every canonical call in order with seat, context, other-TTL cache writes and native TTL, gap, turn, opener and cold flags |
+| `turn-cost` | brief Q4 | Every turn: opener, sender, calls, token classes (including `cw_other`), first-call gap and context, cold rebuild |
 | `trigger-kinds` | brief Q5 | Per turn origin: turns, calls, median calls per turn, token classes, cold wakes |
 | `sender-attribution` | brief Q6 | Per peer sender: turns opened, recipient sessions, turns of at most 3 calls, token classes, cold wakes |
 | `compactions` | brief Q7 | Every compaction: trigger, pre/post tokens, duration, idle gap, first context after |
@@ -45,13 +45,17 @@ The printed script is exactly three parts: `SET file_search_path = '<absolute TA
 | `tool-loops` | fleet: tool loops | The same tool and input hash repeated at least 3 times in one turn |
 | `fleet-idle` | fleet: idle longest | Main sessions ordered by time since their last native event |
 | `expensive-turns` | fleet: most expensive turns | The 50 turns with the most tokens, with the native offset of their opener |
-| `daily-tokens` | fleet: daily tokens | Per local day, harness, project (repository) and model: calls and token classes |
+| `daily-tokens` | fleet: daily tokens | Per local day, harness, project (repository) and model: calls and token classes (including `cw_other`) |
+| `routed-turns` | routers: which models ran | Every routing decision: turn, selected (router) model, pattern, rule, route source, planned phases and models, the phases that ran in order with their declared models (and the models that actually served them when they differ) and verdicts, the decision's served models and mismatch flag, final model, outcome, native totals, cost, latency and duration |
+| `routed-cost` | routers: actual versus selected model | Per harness, selected model and model that ran (routed or not, main or sidechain): calls, token classes, `cw_other`, native cache-write TTLs, output and native cost with its unit |
 
 ## Reading the results
 
-- **Token classes, not prices.** Recipes return `input`, `cache_read`, `cw_1h`, `cw_5m` (cache writes) and `output`. No price is applied; multiply by your own rates. Where a ranking is needed, recipes order by `total_tokens`, the sum of all five.
+- **Token classes, not prices.** Recipes return `input`, `cache_read`, `cw_1h`, `cw_5m` (cache writes) and `output`; `call-timeline`, `turn-cost`, `daily-tokens` and the router recipes also return `cw_other`, cache writes whose native TTL is neither 1 h nor 5 m (Copilot's GPT models record 1800 s). No price is applied; multiply by your own rates. Where a ranking is needed, recipes order by `total_tokens`, the sum of every class.
+- **Native cost is not money.** `native_cost` is the harness's own cost counter in `native_cost_unit` (Copilot: `nano_aiu`, nano AI units); it is summed as recorded and never converted to a currency.
 - **Null is unrecorded.** A dialect that does not record a counter leaves it null; sums skip nulls and never invent zeros.
-- **Derived flags.** `context = input + cache_read + cw_1h + cw_5m`. `cold`: context above 20000 with cache writes at least half of it. `ttl_s`: 300 for sidechains, 3600 for main sessions. `pred_cold`: the gap since the previous call exceeds `ttl_s`. An idle wake is `cold AND pred_cold`; a rebuild after compaction or restart is `cold AND NOT pred_cold`. `gap_s` is -1 for a source's first call.
+- **Derived flags.** `context = input + cache_read + cw_1h + cw_5m + cw_other`; `cache_write` is the three cache-write classes. `cold`: context above 20000 with cache writes at least half of it. `ttl_s`: the call's native `cache_write_ttl_s` when recorded, else 300 for sidechains and 3600 for main sessions. `pred_cold`: the gap since the previous call exceeds `ttl_s`. An idle wake is `cold AND pred_cold`; a rebuild after compaction or restart is `cold AND NOT pred_cold`. `gap_s` is -1 for a source's first call.
+- **Routers.** `model` is always the model that ran; `selected_model` is the router's synthetic model (e.g. `hydrafusion`) on routed calls and null otherwise, so `coalesce(selected_model, model)` is what the session selected. Route and phase totals are the router's own native counters; they can include requests the router attributes to a decision without tagging the call (Copilot counts a subagent request made during a phase), so compare them with calls rather than adding them to calls.
 - **Seats.** A seat is the session's pij seat hint when recorded, else its session id. Peer senders come from the turn opener.
 - **Local time.** Days, hours and buckets use DuckDB's `TimeZone` setting, your local zone by default. Pin it with `duckdb -cmd "SET TimeZone = 'UTC'"`.
 - **Current generation only.** Every recipe reads the `*_v` views, so rotated, truncated or rewritten sources never double count.
@@ -67,6 +71,8 @@ unisphere prep recipes --json
 unisphere prep recipe idle-tax --target $TARGET | duckdb
 unisphere prep recipe daily-tokens --target $TARGET | duckdb -csv
 unisphere prep recipe expensive-turns --target $TARGET | duckdb -json
+unisphere prep recipe routed-turns --target $TARGET | duckdb
+unisphere prep recipe routed-cost --target $TARGET | duckdb -csv
 unisphere prep recipe hourly --target $TARGET | duckdb -cmd "SET TimeZone = 'UTC'"
 unisphere prep recipe meter-replay --target $TARGET > meter-replay.sql
 ```

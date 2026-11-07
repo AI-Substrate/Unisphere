@@ -1,0 +1,29 @@
+crates/adapter-claude/src/lib.rs
+  s_7642731a918d80::t_80b68c518343ef 515-523,526
+crates/adapter-claude/tests/query.rs
+  s_bbb26e88b71e75::t_65157c4fe84a0f 130
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "cd60a19ba2e081d6ccc57fd06e9977784b9ad3e0",
+  "prompts": {},
+  "sessions": {
+    "s_7642731a918d80": {
+      "agent_id": {
+        "tool": "github-copilot-cli",
+        "id": "68915c58-e9f1-408d-9327-873d589f8ea0",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    },
+    "s_bbb26e88b71e75": {
+      "agent_id": {
+        "tool": "github-copilot-cli",
+        "id": "7c8a587b-d7e7-4cef-ac26-b7dfd31eb0e0",
+        "model": "claude-opus-5.5"
+      },
+      "human_author": "Jordan Knight <jakkaj@gmail.com>"
+    }
+  }
+}

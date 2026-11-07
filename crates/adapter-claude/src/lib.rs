@@ -512,9 +512,18 @@ fn inspect_claude_usage(
         || counters.cache_read_tokens.is_some()
         || counters.cache_write_tokens.is_some()
     {
+        // Claude writes one JSONL record per content block and repeats the
+        // message's usage on each; the records sharing `message.id` are
+        // snapshots of one API call, so statistics keep the latest per id.
+        // Without an id there is nothing to correlate: count the record once.
+        let scope = if owner.is_some() {
+            UsageScope::CumulativeSnapshot
+        } else {
+            UsageScope::Invocation
+        };
         facets.push(ObservationFacet::Usage {
             owner,
-            scope: UsageScope::Invocation,
+            scope,
             counters,
         });
     }

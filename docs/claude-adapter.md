@@ -32,8 +32,11 @@ as exact scoped call identities. Original tool names remain unchanged while know
 names receive a separate family such as `shell`, `file-read`, or `file-write`.
 Missing call IDs stay unavailable and are never derived from adjacency or text.
 
-Native message usage is emitted as an invocation-scoped observation with only
-independently valid counters. Native timestamps retain a native clock basis.
+Native message usage is emitted with only independently valid counters. Claude
+writes one record per content block and repeats the message's usage on each, so
+usage owned by a `message.id` is a cumulative snapshot: statistics keep the latest
+record per message instead of summing the repeats. Usage without a `message.id`
+is invocation-scoped and counted once. Native timestamps retain a native clock basis.
 Message text, reasoning, tool inputs, and tool outputs are represented as
 `SensitiveOmitted` unless the supplied `ContentAccess` authorizes that exact field
 or explicit emission. Unsupported parts remain typed `NotSupported` markers even

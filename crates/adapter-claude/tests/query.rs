@@ -127,7 +127,7 @@ fn query_preserves_native_membership_markers_calls_and_content_consent() {
             .any(|facet| matches!(
                 facet,
                 ObservationFacet::Usage {
-                    scope: UsageScope::Invocation,
+                    scope: UsageScope::CumulativeSnapshot,
                     ..
                 }
             ))
